@@ -1,0 +1,555 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the armazon-site package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: armazon-site\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: includes/admin/class-admin.php:33 includes/admin/class-admin.php:34
+#: includes/admin/class-admin.php:83 includes/class-bindings.php:45
+#: includes/class-settings.php:84
+msgid "Company details"
+msgstr ""
+
+#: includes/admin/class-admin.php:45 includes/class-content-types.php:54
+msgid "Clients"
+msgstr ""
+
+#: includes/admin/class-admin.php:46 includes/class-content-types.php:90
+msgid "Testimonials"
+msgstr ""
+
+#: includes/admin/class-admin.php:47 includes/class-content-types.php:116
+msgid "Locations"
+msgstr ""
+
+#: includes/admin/class-admin.php:48 includes/class-content-types.php:144
+msgid "Projects"
+msgstr ""
+
+#: includes/admin/class-admin.php:49 includes/class-content-types.php:176
+msgid "Portfolio"
+msgstr ""
+
+#: includes/admin/class-admin.php:84
+msgid ""
+"These details appear wherever a block is linked to them (Block Bindings, "
+"source «Company details»). Change them here and they change across the whole "
+"site."
+msgstr ""
+
+#: includes/admin/class-admin.php:89
+msgid "Company"
+msgstr ""
+
+#: includes/admin/class-admin.php:101
+msgid "Contact"
+msgstr ""
+
+#: includes/admin/class-admin.php:107
+msgid "International format, digits only, without +. Example: 34600000000."
+msgstr ""
+
+#: includes/admin/class-admin.php:108
+msgid "Text that appears already written when the chat opens."
+msgstr ""
+
+#: includes/admin/class-admin.php:112
+msgid "Social networks"
+msgstr ""
+
+#: includes/admin/class-admin.php:127
+msgid "Content types"
+msgstr ""
+
+#: includes/admin/class-admin.php:128
+msgid ""
+"Only the checked types appear in the menu and on the site. Unchecking a type "
+"does not delete its content: it comes back when it is checked again."
+msgstr ""
+
+#: includes/admin/class-admin.php:139
+msgid "Media"
+msgstr ""
+
+#: includes/admin/class-admin.php:143
+msgid "Allow SVG uploads (administrators only; files are sanitized)"
+msgstr ""
+
+#: includes/class-company.php:77
+msgid "Company name"
+msgstr ""
+
+#: includes/class-company.php:78
+msgid "Legal name"
+msgstr ""
+
+#: includes/class-company.php:79
+msgid "Tax ID"
+msgstr ""
+
+#: includes/class-company.php:80 includes/class-content-types.php:133
+msgid "Email"
+msgstr ""
+
+#: includes/class-company.php:81 includes/class-content-types.php:132
+msgid "Phone"
+msgstr ""
+
+#: includes/class-company.php:82
+msgid "Secondary phone"
+msgstr ""
+
+#: includes/class-company.php:83
+msgid "WhatsApp"
+msgstr ""
+
+#: includes/class-company.php:84
+msgid "WhatsApp message"
+msgstr ""
+
+#: includes/class-company.php:85 includes/class-content-types.php:131
+msgid "Address"
+msgstr ""
+
+#: includes/class-company.php:86 includes/class-content-types.php:134
+msgid "Opening hours"
+msgstr ""
+
+#: includes/class-company.php:87
+msgid "Map link"
+msgstr ""
+
+#: includes/class-company.php:88
+msgid "Facebook"
+msgstr ""
+
+#: includes/class-company.php:89
+msgid "Instagram"
+msgstr ""
+
+#: includes/class-company.php:90
+msgid "LinkedIn"
+msgstr ""
+
+#: includes/class-company.php:91
+msgid "X (Twitter)"
+msgstr ""
+
+#: includes/class-company.php:92
+msgid "YouTube"
+msgstr ""
+
+#: includes/class-company.php:93
+msgid "TikTok"
+msgstr ""
+
+#: includes/class-company.php:94
+msgid "Phone (link)"
+msgstr ""
+
+#: includes/class-company.php:95
+msgid "Email (link)"
+msgstr ""
+
+#: includes/class-company.php:96
+msgid "WhatsApp (link)"
+msgstr ""
+
+#: includes/class-content-types.php:51
+msgctxt "URL slug"
+msgid "clients"
+msgstr ""
+
+#: includes/class-content-types.php:55
+msgid "Client"
+msgstr ""
+
+#: includes/class-content-types.php:56
+msgid "Add client"
+msgstr ""
+
+#: includes/class-content-types.php:57
+msgid "Edit client"
+msgstr ""
+
+#: includes/class-content-types.php:58
+msgid "New client"
+msgstr ""
+
+#: includes/class-content-types.php:59
+msgid "View client"
+msgstr ""
+
+#: includes/class-content-types.php:60
+msgid "View clients"
+msgstr ""
+
+#: includes/class-content-types.php:61
+msgid "Search clients"
+msgstr ""
+
+#: includes/class-content-types.php:62
+msgid "No clients found."
+msgstr ""
+
+#: includes/class-content-types.php:63
+msgid "No clients found in Trash."
+msgstr ""
+
+#: includes/class-content-types.php:64
+msgid "All clients"
+msgstr ""
+
+#: includes/class-content-types.php:65
+msgid "Logo or photo"
+msgstr ""
+
+#: includes/class-content-types.php:66
+msgid "Set logo or photo"
+msgstr ""
+
+#: includes/class-content-types.php:70
+msgctxt "URL slug"
+msgid "client-sector"
+msgstr ""
+
+#: includes/class-content-types.php:72
+msgid "Sectors"
+msgstr ""
+
+#: includes/class-content-types.php:73
+msgid "Sector"
+msgstr ""
+
+#: includes/class-content-types.php:74
+msgid "Add sector"
+msgstr ""
+
+#: includes/class-content-types.php:75
+msgid "Edit sector"
+msgstr ""
+
+#: includes/class-content-types.php:76
+msgid "Search sectors"
+msgstr ""
+
+#: includes/class-content-types.php:77
+msgid "All sectors"
+msgstr ""
+
+#: includes/class-content-types.php:78
+msgid "No sectors found."
+msgstr ""
+
+#: includes/class-content-types.php:82
+msgid "Client website"
+msgstr ""
+
+#: includes/class-content-types.php:87
+msgctxt "URL slug"
+msgid "testimonials"
+msgstr ""
+
+#: includes/class-content-types.php:91
+msgid "Testimonial"
+msgstr ""
+
+#: includes/class-content-types.php:92
+msgid "Add testimonial"
+msgstr ""
+
+#: includes/class-content-types.php:93
+msgid "Edit testimonial"
+msgstr ""
+
+#: includes/class-content-types.php:94
+msgid "New testimonial"
+msgstr ""
+
+#: includes/class-content-types.php:95
+msgid "View testimonial"
+msgstr ""
+
+#: includes/class-content-types.php:96
+msgid "View testimonials"
+msgstr ""
+
+#: includes/class-content-types.php:97
+msgid "Search testimonials"
+msgstr ""
+
+#: includes/class-content-types.php:98
+msgid "No testimonials found."
+msgstr ""
+
+#: includes/class-content-types.php:99
+msgid "No testimonials found in Trash."
+msgstr ""
+
+#: includes/class-content-types.php:100
+msgid "All testimonials"
+msgstr ""
+
+#: includes/class-content-types.php:101
+msgid "Author photo"
+msgstr ""
+
+#: includes/class-content-types.php:102
+msgid "Set author photo"
+msgstr ""
+
+#: includes/class-content-types.php:105
+msgid "Author"
+msgstr ""
+
+#: includes/class-content-types.php:106
+msgid "Author role or company"
+msgstr ""
+
+#: includes/class-content-types.php:107
+msgid "Rating (1 to 5)"
+msgstr ""
+
+#: includes/class-content-types.php:108
+msgid "Related client"
+msgstr ""
+
+#: includes/class-content-types.php:113
+msgctxt "URL slug"
+msgid "locations"
+msgstr ""
+
+#: includes/class-content-types.php:117
+msgid "Location"
+msgstr ""
+
+#: includes/class-content-types.php:118
+msgid "Add location"
+msgstr ""
+
+#: includes/class-content-types.php:119
+msgid "Edit location"
+msgstr ""
+
+#: includes/class-content-types.php:120
+msgid "New location"
+msgstr ""
+
+#: includes/class-content-types.php:121
+msgid "View location"
+msgstr ""
+
+#: includes/class-content-types.php:122
+msgid "View locations"
+msgstr ""
+
+#: includes/class-content-types.php:123
+msgid "Search locations"
+msgstr ""
+
+#: includes/class-content-types.php:124
+msgid "No locations found."
+msgstr ""
+
+#: includes/class-content-types.php:125
+msgid "No locations found in Trash."
+msgstr ""
+
+#: includes/class-content-types.php:126
+msgid "All locations"
+msgstr ""
+
+#: includes/class-content-types.php:127
+msgid "Static map image"
+msgstr ""
+
+#: includes/class-content-types.php:128
+msgid "Set static map image"
+msgstr ""
+
+#: includes/class-content-types.php:135
+msgid "Google Maps link"
+msgstr ""
+
+#: includes/class-content-types.php:136
+msgid "Map embed URL"
+msgstr ""
+
+#: includes/class-content-types.php:141
+msgctxt "URL slug"
+msgid "projects"
+msgstr ""
+
+#: includes/class-content-types.php:145
+msgid "Project"
+msgstr ""
+
+#: includes/class-content-types.php:146
+msgid "Add project"
+msgstr ""
+
+#: includes/class-content-types.php:147
+msgid "Edit project"
+msgstr ""
+
+#: includes/class-content-types.php:148
+msgid "New project"
+msgstr ""
+
+#: includes/class-content-types.php:149
+msgid "View project"
+msgstr ""
+
+#: includes/class-content-types.php:150
+msgid "View projects"
+msgstr ""
+
+#: includes/class-content-types.php:151
+msgid "Search projects"
+msgstr ""
+
+#: includes/class-content-types.php:152
+msgid "No projects found."
+msgstr ""
+
+#: includes/class-content-types.php:153
+msgid "No projects found in Trash."
+msgstr ""
+
+#: includes/class-content-types.php:154
+msgid "All projects"
+msgstr ""
+
+#: includes/class-content-types.php:158
+msgctxt "URL slug"
+msgid "project-category"
+msgstr ""
+
+#: includes/class-content-types.php:160
+msgid "Project categories"
+msgstr ""
+
+#: includes/class-content-types.php:161
+msgid "Project category"
+msgstr ""
+
+#: includes/class-content-types.php:162 includes/class-content-types.php:194
+msgid "Add category"
+msgstr ""
+
+#: includes/class-content-types.php:163 includes/class-content-types.php:195
+msgid "Edit category"
+msgstr ""
+
+#: includes/class-content-types.php:164 includes/class-content-types.php:196
+msgid "Search categories"
+msgstr ""
+
+#: includes/class-content-types.php:165 includes/class-content-types.php:197
+msgid "All categories"
+msgstr ""
+
+#: includes/class-content-types.php:166 includes/class-content-types.php:198
+msgid "No categories found."
+msgstr ""
+
+#: includes/class-content-types.php:173
+msgctxt "URL slug"
+msgid "portfolio"
+msgstr ""
+
+#: includes/class-content-types.php:177
+msgid "Portfolio item"
+msgstr ""
+
+#: includes/class-content-types.php:178
+msgid "Add portfolio item"
+msgstr ""
+
+#: includes/class-content-types.php:179
+msgid "Edit portfolio item"
+msgstr ""
+
+#: includes/class-content-types.php:180
+msgid "New portfolio item"
+msgstr ""
+
+#: includes/class-content-types.php:181
+msgid "View portfolio item"
+msgstr ""
+
+#: includes/class-content-types.php:182
+msgid "View portfolio"
+msgstr ""
+
+#: includes/class-content-types.php:183
+msgid "Search portfolio"
+msgstr ""
+
+#: includes/class-content-types.php:184
+msgid "No portfolio items found."
+msgstr ""
+
+#: includes/class-content-types.php:185
+msgid "No portfolio items found in Trash."
+msgstr ""
+
+#: includes/class-content-types.php:186
+msgid "All portfolio items"
+msgstr ""
+
+#: includes/class-content-types.php:190
+msgctxt "URL slug"
+msgid "portfolio-category"
+msgstr ""
+
+#: includes/class-content-types.php:192
+msgid "Portfolio categories"
+msgstr ""
+
+#: includes/class-content-types.php:193
+msgid "Portfolio category"
+msgstr ""
+
+#: includes/class-settings.php:85
+msgid "Company details and site options of the Armazón Site plugin."
+msgstr ""
+
+#: includes/class-settings.php:185
+msgid "The email address is not valid. The previous one has been kept."
+msgstr ""
+
+#: includes/class-settings.php:198
+msgid ""
+"The WhatsApp number is not valid (international format, digits only). The "
+"previous one has been kept."
+msgstr ""
+
+#. translators: %s: the field name.
+#: includes/class-settings.php:241
+#, php-format
+msgid ""
+"The address in «%s» is not a valid web address. The previous one has been "
+"kept."
+msgstr ""
+
+#: includes/class-svg.php:90
+msgid "You are not allowed to upload SVG files."
+msgstr ""
+
+#: includes/class-svg.php:97
+msgid ""
+"This SVG file could not be read or is not safe, so it has not been uploaded."
+msgstr ""
