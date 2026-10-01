@@ -1,0 +1,8 @@
+# Nada de secretos en el repo (fila 21): este plugin no tiene ninguno.
+secretos/
+.env*
+languages/.tmp-*/
+*.log
+tests/.playground.log
+.DS_Store
+Thumbs.db

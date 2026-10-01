@@ -1,0 +1,301 @@
+<?php
+/**
+ * Los tipos de contenido habituales de una web corporativa, cada uno
+ * registrado SOLO si está activado en «Datos de la empresa» (enabled_types).
+ *
+ *   client       Clientes   /clientes/   taxonomía client_sector
+ *   testimonial  Opiniones  /opiniones/
+ *   location     Sedes      /sedes/
+ *   project      Proyectos  /proyectos/  taxonomía project_category
+ *   portfolio    Portfolio  /portfolio/  taxonomía portfolio_category
+ *
+ * Los nombres (tipo, taxonomía, meta) son CONTRATO: el tema y la carga de
+ * contenido los usan en bloques Consulta y en Block Bindings (core/post-meta).
+ *
+ * Desactivar un tipo NO borra nada: sus entradas siguen en wp_posts con su
+ * post_type, simplemente WordPress no las conoce mientras no esté registrado
+ * (ni en el menú, ni en REST, ni en la web). Al volver a activarlo aparecen
+ * tal cual. Ni aquí ni en uninstall.php se borra contenido.
+ *
+ * Cómo se mantiene:
+ * - Un tipo nuevo: TYPES de Settings (es el enum del esquema), definitions()
+ *   aquí, sus etiquetas, el README y una prueba. Es versión MENOR (añade).
+ *   Quitar o renombrar uno es MAYOR.
+ * - Un campo nuevo: en META de su tipo, con tipo y saneado. Si no empieza por
+ *   el nombre del tipo (`client_…`), no entra: así no choca con el meta de
+ *   otro plugin.
+ * - Caso frontera: «servicios». No está, a propósito: en estas webs un
+ *   servicio es una PÁGINA (con su diseño propio), no una ficha repetida. Si
+ *   una web necesita fichas de servicio, se valora aquí como tipo nuevo.
+ * - La trampa: el slug público se traduce con gettext (msgid en inglés,
+ *   «clients» → «clientes» en es_ES). Cambiar el idioma de la web CAMBIA las
+ *   URL. En una web ya publicada, fijarlo con el filtro
+ *   `armazon_site_rewrite_slug` antes de cambiar de idioma.
+ * - Y la otra: tras activar o desactivar un tipo hay que regenerar las reglas
+ *   de URL. Se hace solo (maybe_flush borra `rewrite_rules` y WordPress las
+ *   rehace en la siguiente carga), pero una caché de página puede servir un
+ *   404 viejo un rato.
+ */
+
+namespace Armazon\Site;
+
+defined( 'ABSPATH' ) || exit;
+
+final class Content_Types {
+
+	/** @return array<string, array> Definición de cada tipo, solo lo que cambia entre ellos. */
+	private static function definitions(): array {
+		return array(
+			'client'      => array(
+				'icon'     => 'dashicons-groups',
+				'slug'     => _x( 'clients', 'URL slug', 'armazon-site' ),
+				'supports' => array( 'title', 'thumbnail', 'excerpt', 'page-attributes', 'custom-fields' ),
+				'labels'   => array(
+					'name'               => __( 'Clients', 'armazon-site' ),
+					'singular_name'      => __( 'Client', 'armazon-site' ),
+					'add_new_item'       => __( 'Add client', 'armazon-site' ),
+					'edit_item'          => __( 'Edit client', 'armazon-site' ),
+					'new_item'           => __( 'New client', 'armazon-site' ),
+					'view_item'          => __( 'View client', 'armazon-site' ),
+					'view_items'         => __( 'View clients', 'armazon-site' ),
+					'search_items'       => __( 'Search clients', 'armazon-site' ),
+					'not_found'          => __( 'No clients found.', 'armazon-site' ),
+					'not_found_in_trash' => __( 'No clients found in Trash.', 'armazon-site' ),
+					'all_items'          => __( 'All clients', 'armazon-site' ),
+					'featured_image'     => __( 'Logo or photo', 'armazon-site' ),
+					'set_featured_image' => __( 'Set logo or photo', 'armazon-site' ),
+				),
+				'taxonomy' => array(
+					'name'   => 'client_sector',
+					'slug'   => _x( 'client-sector', 'URL slug', 'armazon-site' ),
+					'labels' => array(
+						'name'          => __( 'Sectors', 'armazon-site' ),
+						'singular_name' => __( 'Sector', 'armazon-site' ),
+						'add_new_item'  => __( 'Add sector', 'armazon-site' ),
+						'edit_item'     => __( 'Edit sector', 'armazon-site' ),
+						'search_items'  => __( 'Search sectors', 'armazon-site' ),
+						'all_items'     => __( 'All sectors', 'armazon-site' ),
+						'not_found'     => __( 'No sectors found.', 'armazon-site' ),
+					),
+				),
+				'meta'     => array(
+					'client_url' => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Client website', 'armazon-site' ) ),
+				),
+			),
+			'testimonial' => array(
+				'icon'     => 'dashicons-format-quote',
+				'slug'     => _x( 'testimonials', 'URL slug', 'armazon-site' ),
+				'supports' => array( 'title', 'editor', 'thumbnail', 'page-attributes', 'custom-fields' ),
+				'labels'   => array(
+					'name'               => __( 'Testimonials', 'armazon-site' ),
+					'singular_name'      => __( 'Testimonial', 'armazon-site' ),
+					'add_new_item'       => __( 'Add testimonial', 'armazon-site' ),
+					'edit_item'          => __( 'Edit testimonial', 'armazon-site' ),
+					'new_item'           => __( 'New testimonial', 'armazon-site' ),
+					'view_item'          => __( 'View testimonial', 'armazon-site' ),
+					'view_items'         => __( 'View testimonials', 'armazon-site' ),
+					'search_items'       => __( 'Search testimonials', 'armazon-site' ),
+					'not_found'          => __( 'No testimonials found.', 'armazon-site' ),
+					'not_found_in_trash' => __( 'No testimonials found in Trash.', 'armazon-site' ),
+					'all_items'          => __( 'All testimonials', 'armazon-site' ),
+					'featured_image'     => __( 'Author photo', 'armazon-site' ),
+					'set_featured_image' => __( 'Set author photo', 'armazon-site' ),
+				),
+				'meta'     => array(
+					'testimonial_author' => array( 'type' => 'string', 'sanitize' => 'text', 'label' => __( 'Author', 'armazon-site' ) ),
+					'testimonial_role'   => array( 'type' => 'string', 'sanitize' => 'text', 'label' => __( 'Author role or company', 'armazon-site' ) ),
+					'testimonial_rating' => array( 'type' => 'integer', 'sanitize' => 'rating', 'label' => __( 'Rating (1 to 5)', 'armazon-site' ) ),
+					'testimonial_client' => array( 'type' => 'integer', 'sanitize' => 'client', 'label' => __( 'Related client', 'armazon-site' ) ),
+				),
+			),
+			'location'    => array(
+				'icon'     => 'dashicons-location',
+				'slug'     => _x( 'locations', 'URL slug', 'armazon-site' ),
+				'supports' => array( 'title', 'editor', 'thumbnail', 'excerpt', 'page-attributes', 'custom-fields' ),
+				'labels'   => array(
+					'name'               => __( 'Locations', 'armazon-site' ),
+					'singular_name'      => __( 'Location', 'armazon-site' ),
+					'add_new_item'       => __( 'Add location', 'armazon-site' ),
+					'edit_item'          => __( 'Edit location', 'armazon-site' ),
+					'new_item'           => __( 'New location', 'armazon-site' ),
+					'view_item'          => __( 'View location', 'armazon-site' ),
+					'view_items'         => __( 'View locations', 'armazon-site' ),
+					'search_items'       => __( 'Search locations', 'armazon-site' ),
+					'not_found'          => __( 'No locations found.', 'armazon-site' ),
+					'not_found_in_trash' => __( 'No locations found in Trash.', 'armazon-site' ),
+					'all_items'          => __( 'All locations', 'armazon-site' ),
+					'featured_image'     => __( 'Static map image', 'armazon-site' ),
+					'set_featured_image' => __( 'Set static map image', 'armazon-site' ),
+				),
+				'meta'     => array(
+					'location_address'   => array( 'type' => 'string', 'sanitize' => 'textarea', 'label' => __( 'Address', 'armazon-site' ) ),
+					'location_phone'     => array( 'type' => 'string', 'sanitize' => 'text', 'label' => __( 'Phone', 'armazon-site' ) ),
+					'location_email'     => array( 'type' => 'string', 'sanitize' => 'email', 'label' => __( 'Email', 'armazon-site' ) ),
+					'location_schedule'  => array( 'type' => 'string', 'sanitize' => 'textarea', 'label' => __( 'Opening hours', 'armazon-site' ) ),
+					'location_map_url'   => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Google Maps link', 'armazon-site' ) ),
+					'location_map_embed' => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Map embed URL', 'armazon-site' ) ),
+				),
+			),
+			'project'     => array(
+				'icon'     => 'dashicons-portfolio',
+				'slug'     => _x( 'projects', 'URL slug', 'armazon-site' ),
+				'supports' => array( 'title', 'editor', 'thumbnail', 'excerpt', 'page-attributes', 'custom-fields', 'revisions' ),
+				'labels'   => array(
+					'name'               => __( 'Projects', 'armazon-site' ),
+					'singular_name'      => __( 'Project', 'armazon-site' ),
+					'add_new_item'       => __( 'Add project', 'armazon-site' ),
+					'edit_item'          => __( 'Edit project', 'armazon-site' ),
+					'new_item'           => __( 'New project', 'armazon-site' ),
+					'view_item'          => __( 'View project', 'armazon-site' ),
+					'view_items'         => __( 'View projects', 'armazon-site' ),
+					'search_items'       => __( 'Search projects', 'armazon-site' ),
+					'not_found'          => __( 'No projects found.', 'armazon-site' ),
+					'not_found_in_trash' => __( 'No projects found in Trash.', 'armazon-site' ),
+					'all_items'          => __( 'All projects', 'armazon-site' ),
+				),
+				'taxonomy' => array(
+					'name'   => 'project_category',
+					'slug'   => _x( 'project-category', 'URL slug', 'armazon-site' ),
+					'labels' => array(
+						'name'          => __( 'Project categories', 'armazon-site' ),
+						'singular_name' => __( 'Project category', 'armazon-site' ),
+						'add_new_item'  => __( 'Add category', 'armazon-site' ),
+						'edit_item'     => __( 'Edit category', 'armazon-site' ),
+						'search_items'  => __( 'Search categories', 'armazon-site' ),
+						'all_items'     => __( 'All categories', 'armazon-site' ),
+						'not_found'     => __( 'No categories found.', 'armazon-site' ),
+					),
+				),
+				'meta'     => array(),
+			),
+			'portfolio'   => array(
+				'icon'     => 'dashicons-images-alt2',
+				'slug'     => _x( 'portfolio', 'URL slug', 'armazon-site' ),
+				'supports' => array( 'title', 'editor', 'thumbnail', 'excerpt', 'page-attributes', 'custom-fields', 'revisions' ),
+				'labels'   => array(
+					'name'               => __( 'Portfolio', 'armazon-site' ),
+					'singular_name'      => __( 'Portfolio item', 'armazon-site' ),
+					'add_new_item'       => __( 'Add portfolio item', 'armazon-site' ),
+					'edit_item'          => __( 'Edit portfolio item', 'armazon-site' ),
+					'new_item'           => __( 'New portfolio item', 'armazon-site' ),
+					'view_item'          => __( 'View portfolio item', 'armazon-site' ),
+					'view_items'         => __( 'View portfolio', 'armazon-site' ),
+					'search_items'       => __( 'Search portfolio', 'armazon-site' ),
+					'not_found'          => __( 'No portfolio items found.', 'armazon-site' ),
+					'not_found_in_trash' => __( 'No portfolio items found in Trash.', 'armazon-site' ),
+					'all_items'          => __( 'All portfolio items', 'armazon-site' ),
+				),
+				'taxonomy' => array(
+					'name'   => 'portfolio_category',
+					'slug'   => _x( 'portfolio-category', 'URL slug', 'armazon-site' ),
+					'labels' => array(
+						'name'          => __( 'Portfolio categories', 'armazon-site' ),
+						'singular_name' => __( 'Portfolio category', 'armazon-site' ),
+						'add_new_item'  => __( 'Add category', 'armazon-site' ),
+						'edit_item'     => __( 'Edit category', 'armazon-site' ),
+						'search_items'  => __( 'Search categories', 'armazon-site' ),
+						'all_items'     => __( 'All categories', 'armazon-site' ),
+						'not_found'     => __( 'No categories found.', 'armazon-site' ),
+					),
+				),
+				'meta'     => array(),
+			),
+		);
+	}
+
+	/** Registra los tipos activados, con su taxonomía y sus campos. En init. */
+	public static function register(): void {
+		$definitions = self::definitions();
+		$position    = 21;
+		foreach ( Settings::enabled_types() as $type ) {
+			$def = $definitions[ $type ];
+			/**
+			 * Cambia el slug público de un tipo (o de su taxonomía) en una web.
+			 *
+			 * @param string $slug El slug traducido («clientes»).
+			 * @param string $name El tipo o la taxonomía («client», «client_sector»).
+			 */
+			$slug = (string) apply_filters( 'armazon_site_rewrite_slug', $def['slug'], $type );
+
+			register_post_type(
+				$type,
+				array(
+					'labels'        => $def['labels'] + array( 'menu_name' => $def['labels']['name'] ),
+					'public'        => true,
+					'show_in_rest'  => true,
+					'has_archive'   => $slug,
+					'rewrite'       => array( 'slug' => $slug, 'with_front' => false ),
+					'menu_icon'     => $def['icon'],
+					'menu_position' => $position++,
+					'supports'      => $def['supports'],
+				)
+			);
+
+			if ( isset( $def['taxonomy'] ) ) {
+				$tax = $def['taxonomy'];
+				register_taxonomy(
+					$tax['name'],
+					$type,
+					array(
+						'labels'            => $tax['labels'] + array( 'menu_name' => $tax['labels']['name'] ),
+						'hierarchical'      => true,
+						'public'            => true,
+						'show_in_rest'      => true,
+						'show_admin_column' => true,
+						'rewrite'           => array( 'slug' => (string) apply_filters( 'armazon_site_rewrite_slug', $tax['slug'], $tax['name'] ), 'with_front' => false ),
+					)
+				);
+			}
+
+			foreach ( $def['meta'] as $key => $meta ) {
+				register_post_meta(
+					$type,
+					$key,
+					array(
+						'type'              => $meta['type'],
+						'label'             => $meta['label'],
+						'single'            => true,
+						'default'           => 'integer' === $meta['type'] ? 0 : '',
+						'show_in_rest'      => true,
+						'sanitize_callback' => self::sanitizer( $meta['sanitize'] ),
+						'auth_callback'     => static fn( $allowed, $meta_key, $post_id ) => current_user_can( 'edit_post', $post_id ),
+					)
+				);
+			}
+		}
+	}
+
+	/** @return string[] Las claves de meta de un tipo (para la prueba y el README). */
+	public static function meta_keys( string $type ): array {
+		return array_keys( self::definitions()[ $type ]['meta'] ?? array() );
+	}
+
+	private static function sanitizer( string $kind ): callable {
+		return match ( $kind ) {
+			'url'      => static fn( $v ) => esc_url_raw( trim( (string) $v ), array( 'http', 'https' ) ),
+			'email'    => static fn( $v ) => is_email( trim( (string) $v ) ) ? sanitize_email( (string) $v ) : '',
+			'textarea' => static fn( $v ) => sanitize_textarea_field( (string) $v ),
+			// 0 = sin valoración; cualquier otra cosa se lleva al intervalo 1-5.
+			'rating'   => static fn( $v ) => (int) $v <= 0 ? 0 : min( 5, (int) $v ),
+			// Solo un id que sea de verdad un cliente; si no, 0.
+			'client'   => static fn( $v ) => ( (int) $v > 0 && 'client' === get_post_type( (int) $v ) ) ? (int) $v : 0,
+			default    => static fn( $v ) => sanitize_text_field( (string) $v ),
+		};
+	}
+
+	/**
+	 * Si cambian los tipos activados, se tiran las reglas de URL para que
+	 * WordPress las rehaga en la siguiente carga, ya con los tipos nuevos.
+	 * (flush_rewrite_rules() aquí las rehará con los tipos VIEJOS: esta carga
+	 * registró los de antes del cambio.)
+	 */
+	public static function maybe_flush( $old, $new ): void {
+		$old = is_array( $old ) ? (array) ( $old['enabled_types'] ?? array() ) : array();
+		$new = is_array( $new ) ? (array) ( $new['enabled_types'] ?? array() ) : array();
+		sort( $old );
+		sort( $new );
+		if ( $old !== $new ) {
+			delete_option( 'rewrite_rules' );
+		}
+	}
+}
