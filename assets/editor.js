@@ -16,9 +16,11 @@
  * - Una clave nueva no se toca aquí: sale de Company::keys() y labels().
  * - Caso frontera: el dato está vacío. Se enseña «[Nombre del dato]» en el
  *   editor para que se vea qué está enlazado; en la web sale vacío.
- * - La trampa: canUserEditValue es false a propósito. Si fuera true, el
- *   editor dejaría escribir en el párrafo enlazado y lo guardaría… en
- *   ninguna parte: los datos se cambian en «Datos de la empresa».
+ * - La trampa: no hay setValues y canUserEditValue es false a propósito. Si
+ *   fuera editable, el editor dejaría escribir en el párrafo enlazado y lo
+ *   guardaría… en ninguna parte: los datos se cambian en «Datos de la
+ *   empresa». (Medido en WP 7.1: sin setValues el núcleo ni siquiera guarda
+ *   canUserEditValue; se deja por claridad.)
  */
 ( function ( wp, data ) {
 	if ( ! wp || ! wp.blocks || ! wp.blocks.registerBlockBindingsSource || ! data ) {
@@ -35,6 +37,8 @@
 
 	wp.blocks.registerBlockBindingsSource( {
 		name: data.source,
+		// Sin esto el núcleo lo deja en [null] al fusionar con el registro de PHP.
+		usesContext: [],
 		getValues( { bindings } ) {
 			const out = {};
 			for ( const [ attribute, binding ] of Object.entries( bindings || {} ) ) {
