@@ -160,7 +160,7 @@ reactivarlo. Todos `public`, `show_in_rest` (ruta REST = nombre del tipo:
 
 | Tipo | Menú | Slug (es_ES) | Usa | Campos (`register_post_meta`, `single`, `show_in_rest`) | Taxonomía |
 |---|---|---|---|---|---|
-| `client` | Clientes | `/clientes/` | título = nombre, imagen destacada = logo/foto, extracto, orden manual | `client_url` (URL) | `client_sector` (jerárquica, slug `/sector/`) |
+| `client` | Clientes | `/clientes/` | título = nombre, imagen destacada = logo/foto, extracto, orden manual | `client_url` (URL), `client_image_fit` (`cover` por defecto o `contain`; otro valor → `cover`; 0.2.0) | `client_sector` (jerárquica, slug `/sector/`) |
 | `testimonial` | Opiniones | `/opiniones/` | título (interno), contenido = la opinión, imagen = foto del autor, orden | `testimonial_author`, `testimonial_role` (texto), `testimonial_rating` (entero 0-5; **0 = sin valoración**), `testimonial_client` (id de un `client`, o 0) | — |
 | `location` | Sedes | `/sedes/` | título = sede, contenido, imagen = mapa estático, extracto, orden | `location_address`, `location_schedule` (varias líneas), `location_phone`, `location_email`, `location_map_url` (enlace a Google Maps), `location_map_embed` (URL de embed para el bloque `armazon/map` del padre) | — |
 | `project` | Proyectos | `/proyectos/` | título, contenido, imagen, extracto, orden, revisiones | — | `project_category` (`/categoria-proyecto/`) |
@@ -192,6 +192,17 @@ Un campo dentro de la Consulta (el autor de una opinión):
 
 Filtro `armazon_site_rewrite_slug( $slug, $tipo_o_taxonomia )` para cambiar
 un slug en una web.
+
+**Clases que el plugin pone en una entrada** (filtro `post_class`: salen en
+el `<li>` de una Consulta y en la ficha). Describen el dato; **el plugin no
+pone CSS**, el aspecto es del tema:
+
+| Clase | Cuándo | Para qué (en el tema) |
+|---|---|---|
+| `has-image-fit-contain` | un `client` con `client_image_fit` = `contain` (0.2.0) | la imagen es un **logo**: que no se recorte, p. ej. `.has-image-fit-contain .wp-block-post-featured-image img { object-fit: contain; }` |
+
+Solo en la web: la vista previa de la Consulta en el editor la pinta JS y no
+pasa por `post_class` (deducido del núcleo, no probado).
 
 ### 4. SVG
 
@@ -232,7 +243,7 @@ que crea [tests/wp/armazon-site-test.php](tests/wp/armazon-site-test.php)).
 | [tests/settings.test.mjs](tests/settings.test.mjs) | 2 | guardar y leer por REST, fusión, saneado (correo/URL/WhatsApp inválidos no se guardan), esquema, autor sin permiso |
 | [tests/bindings.test.mjs](tests/bindings.test.mjs) | 2 | párrafo con el teléfono, botón con wa.me, tel: (también `phone_secondary_href`), mailto:, `<br>`, escapado, `social.<red>` |
 | [tests/location.test.mjs](tests/location.test.mjs) | 2 | fuente de sedes: por slug (botón texto+url, título, dirección, mailto, mapa), inexistente/borrador/fuera de contexto vacíos, por contexto en una Consulta |
-| [tests/types.test.mjs](tests/types.test.mjs) | 2 | tipo inexistente sin activar; activar/desactivar sin perder contenido; slug `/clientes/`; meta saneado; Consulta por `client_sector` con título e imagen |
+| [tests/types.test.mjs](tests/types.test.mjs) | 2 | tipo inexistente sin activar; activar/desactivar sin perder contenido; slug `/clientes/`; meta saneado; Consulta por `client_sector` con título e imagen; `client_image_fit` y la clase `has-image-fit-contain` |
 | [tests/svg.test.mjs](tests/svg.test.mjs) | 2 | SVG con `<script>` subido saneado (multipart y sideload), medidas, autor no puede, `allow_svg` apagado |
 | [tests/editor.test.mjs](tests/editor.test.mjs) | 3 | el editor enseña el valor enlazado y lista los datos (empresa y sede por slug); la pantalla de ajustes guarda, avisa y desactiva el último tipo |
 

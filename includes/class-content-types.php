@@ -26,6 +26,13 @@
  *   otro plugin. Un campo nuevo de `location` entra SOLO en la fuente
  *   `armazon-site/location` (Location lee meta_fields()): añade su fila en la
  *   tabla de esa fuente en el README.
+ * - Un campo con valor por defecto distinto de ''/0 lleva 'default' en META
+ *   (el primero, `client_image_fit` = 'cover', 0.2.0).
+ * - Clases de entrada (post_class): el plugin añade clases que DESCRIBEN el
+ *   dato (`has-image-fit-contain` en un cliente que es un logo) y nunca CSS.
+ *   Son contrato con los temas (README, tabla de clases). Caso frontera: un
+ *   cliente sin el campo guardado (de 0.1.0) vale 'cover' y no lleva clase,
+ *   así que un tema que no conozca la clase se ve igual que antes.
  * - Caso frontera: «servicios». No está, a propósito: en estas webs un
  *   servicio es una PÁGINA (con su diseño propio), no una ficha repetida. Si
  *   una web necesita fichas de servicio, se valora aquí como tipo nuevo.
@@ -81,7 +88,9 @@ final class Content_Types {
 					),
 				),
 				'meta'     => array(
-					'client_url' => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Client website', 'armazon-site' ) ),
+					'client_url'       => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Client website', 'armazon-site' ) ),
+					// 0.2.0. 'contain' = la imagen es un LOGO (no se recorta); ver post_class().
+					'client_image_fit' => array( 'type' => 'string', 'sanitize' => 'fit', 'default' => 'cover', 'label' => __( 'Image fit (cover for a photo, contain for a logo)', 'armazon-site' ) ),
 				),
 			),
 			'testimonial' => array(
@@ -257,7 +266,7 @@ final class Content_Types {
 						'type'              => $meta['type'],
 						'label'             => $meta['label'],
 						'single'            => true,
-						'default'           => 'integer' === $meta['type'] ? 0 : '',
+						'default'           => $meta['default'] ?? ( 'integer' === $meta['type'] ? 0 : '' ),
 						'show_in_rest'      => true,
 						'sanitize_callback' => self::sanitizer( $meta['sanitize'] ),
 						'auth_callback'     => static fn( $allowed, $meta_key, $post_id ) => current_user_can( 'edit_post', $post_id ),
@@ -286,8 +295,30 @@ final class Content_Types {
 			'rating'   => static fn( $v ) => (int) $v <= 0 ? 0 : min( 5, (int) $v ),
 			// Solo un id que sea de verdad un cliente; si no, 0.
 			'client'   => static fn( $v ) => ( (int) $v > 0 && 'client' === get_post_type( (int) $v ) ) ? (int) $v : 0,
+			// Solo dos valores; cualquier otro (o vacío) es el de por defecto.
+			'fit'      => static fn( $v ) => 'contain' === trim( (string) $v ) ? 'contain' : 'cover',
 			default    => static fn( $v ) => sanitize_text_field( (string) $v ),
 		};
+	}
+
+	/**
+	 * Filtro post_class: un cliente con client_image_fit = 'contain' lleva la
+	 * clase `has-image-fit-contain` (en su <li> de una Consulta, en su ficha).
+	 * El plugin NO pone CSS: cómo se pinta un logo es del tema (README).
+	 *
+	 * La trampa: es PHP, así que solo sale en la web. La vista previa de una
+	 * Consulta en el editor la pinta JS y no lleva esta clase: ahí los logos
+	 * se ven recortados aunque en la web no (deducido del núcleo, no probado).
+	 *
+	 * @param string[] $classes
+	 */
+	public static function post_class( $classes, $css_class = '', $post_id = 0 ): array {
+		$classes = (array) $classes;
+		$post_id = (int) $post_id;
+		if ( $post_id > 0 && 'client' === get_post_type( $post_id ) && 'contain' === get_post_meta( $post_id, 'client_image_fit', true ) ) {
+			$classes[] = 'has-image-fit-contain';
+		}
+		return $classes;
 	}
 
 	/**

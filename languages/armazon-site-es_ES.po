@@ -22,23 +22,23 @@ msgstr ""
 msgid "Company details"
 msgstr "Datos de la empresa"
 
-#: includes/admin/class-admin.php:45 includes/class-content-types.php:54
+#: includes/admin/class-admin.php:45 includes/class-content-types.php:63
 msgid "Clients"
 msgstr "Clientes"
 
-#: includes/admin/class-admin.php:46 includes/class-content-types.php:90
+#: includes/admin/class-admin.php:46 includes/class-content-types.php:101
 msgid "Testimonials"
 msgstr "Opiniones"
 
-#: includes/admin/class-admin.php:47 includes/class-content-types.php:116
+#: includes/admin/class-admin.php:47 includes/class-content-types.php:127
 msgid "Locations"
 msgstr "Sedes"
 
-#: includes/admin/class-admin.php:48 includes/class-content-types.php:144
+#: includes/admin/class-admin.php:48 includes/class-content-types.php:155
 msgid "Projects"
 msgstr "Proyectos"
 
-#: includes/admin/class-admin.php:49 includes/class-content-types.php:176
+#: includes/admin/class-admin.php:49 includes/class-content-types.php:187
 msgid "Portfolio"
 msgstr "Portfolio"
 
@@ -104,11 +104,11 @@ msgstr "Razón social"
 msgid "Tax ID"
 msgstr "NIF/CIF"
 
-#: includes/class-company.php:88 includes/class-content-types.php:133
+#: includes/class-company.php:88 includes/class-content-types.php:144
 msgid "Email"
 msgstr "Correo electrónico"
 
-#: includes/class-company.php:89 includes/class-content-types.php:132
+#: includes/class-company.php:89 includes/class-content-types.php:143
 msgid "Phone"
 msgstr "Teléfono"
 
@@ -124,11 +124,11 @@ msgstr "WhatsApp"
 msgid "WhatsApp message"
 msgstr "Mensaje de WhatsApp"
 
-#: includes/class-company.php:93 includes/class-content-types.php:131
+#: includes/class-company.php:93 includes/class-content-types.php:142
 msgid "Address"
 msgstr "Dirección"
 
-#: includes/class-company.php:94 includes/class-content-types.php:134
+#: includes/class-company.php:94 includes/class-content-types.php:145
 msgid "Opening hours"
 msgstr "Horario"
 
@@ -176,359 +176,363 @@ msgstr "Correo electrónico (enlace)"
 msgid "WhatsApp (link)"
 msgstr "WhatsApp (enlace)"
 
-#: includes/class-content-types.php:51
+#: includes/class-content-types.php:60
 msgctxt "URL slug"
 msgid "clients"
 msgstr "clientes"
 
-#: includes/class-content-types.php:55
+#: includes/class-content-types.php:64
 msgid "Client"
 msgstr "Cliente"
 
-#: includes/class-content-types.php:56
+#: includes/class-content-types.php:65
 msgid "Add client"
 msgstr "Añadir cliente"
 
-#: includes/class-content-types.php:57
+#: includes/class-content-types.php:66
 msgid "Edit client"
 msgstr "Editar cliente"
 
-#: includes/class-content-types.php:58
+#: includes/class-content-types.php:67
 msgid "New client"
 msgstr "Nuevo cliente"
 
-#: includes/class-content-types.php:59
+#: includes/class-content-types.php:68
 msgid "View client"
 msgstr "Ver cliente"
 
-#: includes/class-content-types.php:60
+#: includes/class-content-types.php:69
 msgid "View clients"
 msgstr "Ver clientes"
 
-#: includes/class-content-types.php:61
+#: includes/class-content-types.php:70
 msgid "Search clients"
 msgstr "Buscar clientes"
 
-#: includes/class-content-types.php:62
+#: includes/class-content-types.php:71
 msgid "No clients found."
 msgstr "No hay clientes."
 
-#: includes/class-content-types.php:63
+#: includes/class-content-types.php:72
 msgid "No clients found in Trash."
 msgstr "No hay clientes en la papelera."
 
-#: includes/class-content-types.php:64
+#: includes/class-content-types.php:73
 msgid "All clients"
 msgstr "Todos los clientes"
 
-#: includes/class-content-types.php:65
+#: includes/class-content-types.php:74
 msgid "Logo or photo"
 msgstr "Logo o foto"
 
-#: includes/class-content-types.php:66
+#: includes/class-content-types.php:75
 msgid "Set logo or photo"
 msgstr "Poner logo o foto"
 
-#: includes/class-content-types.php:70
+#: includes/class-content-types.php:79
 msgctxt "URL slug"
 msgid "client-sector"
 msgstr "sector"
 
-#: includes/class-content-types.php:72
+#: includes/class-content-types.php:81
 msgid "Sectors"
 msgstr "Sectores"
 
-#: includes/class-content-types.php:73
+#: includes/class-content-types.php:82
 msgid "Sector"
 msgstr "Sector"
 
-#: includes/class-content-types.php:74
+#: includes/class-content-types.php:83
 msgid "Add sector"
 msgstr "Añadir sector"
 
-#: includes/class-content-types.php:75
+#: includes/class-content-types.php:84
 msgid "Edit sector"
 msgstr "Editar sector"
 
-#: includes/class-content-types.php:76
+#: includes/class-content-types.php:85
 msgid "Search sectors"
 msgstr "Buscar sectores"
 
-#: includes/class-content-types.php:77
+#: includes/class-content-types.php:86
 msgid "All sectors"
 msgstr "Todos los sectores"
 
-#: includes/class-content-types.php:78
+#: includes/class-content-types.php:87
 msgid "No sectors found."
 msgstr "No hay sectores."
 
-#: includes/class-content-types.php:82
+#: includes/class-content-types.php:91
 msgid "Client website"
 msgstr "Web del cliente"
 
-#: includes/class-content-types.php:87
+#: includes/class-content-types.php:93
+msgid "Image fit (cover for a photo, contain for a logo)"
+msgstr "Encaje de la imagen (cover para una foto, contain para un logo)"
+
+#: includes/class-content-types.php:98
 msgctxt "URL slug"
 msgid "testimonials"
 msgstr "opiniones"
 
-#: includes/class-content-types.php:91
+#: includes/class-content-types.php:102
 msgid "Testimonial"
 msgstr "Opinión"
 
-#: includes/class-content-types.php:92
+#: includes/class-content-types.php:103
 msgid "Add testimonial"
 msgstr "Añadir opinión"
 
-#: includes/class-content-types.php:93
+#: includes/class-content-types.php:104
 msgid "Edit testimonial"
 msgstr "Editar opinión"
 
-#: includes/class-content-types.php:94
+#: includes/class-content-types.php:105
 msgid "New testimonial"
 msgstr "Nueva opinión"
 
-#: includes/class-content-types.php:95
+#: includes/class-content-types.php:106
 msgid "View testimonial"
 msgstr "Ver opinión"
 
-#: includes/class-content-types.php:96
+#: includes/class-content-types.php:107
 msgid "View testimonials"
 msgstr "Ver opiniones"
 
-#: includes/class-content-types.php:97
+#: includes/class-content-types.php:108
 msgid "Search testimonials"
 msgstr "Buscar opiniones"
 
-#: includes/class-content-types.php:98
+#: includes/class-content-types.php:109
 msgid "No testimonials found."
 msgstr "No hay opiniones."
 
-#: includes/class-content-types.php:99
+#: includes/class-content-types.php:110
 msgid "No testimonials found in Trash."
 msgstr "No hay opiniones en la papelera."
 
-#: includes/class-content-types.php:100
+#: includes/class-content-types.php:111
 msgid "All testimonials"
 msgstr "Todas las opiniones"
 
-#: includes/class-content-types.php:101
+#: includes/class-content-types.php:112
 msgid "Author photo"
 msgstr "Foto del autor"
 
-#: includes/class-content-types.php:102
+#: includes/class-content-types.php:113
 msgid "Set author photo"
 msgstr "Poner foto del autor"
 
-#: includes/class-content-types.php:105
+#: includes/class-content-types.php:116
 msgid "Author"
 msgstr "Autor"
 
-#: includes/class-content-types.php:106
+#: includes/class-content-types.php:117
 msgid "Author role or company"
 msgstr "Cargo o empresa del autor"
 
-#: includes/class-content-types.php:107
+#: includes/class-content-types.php:118
 msgid "Rating (1 to 5)"
 msgstr "Valoración (1 a 5)"
 
-#: includes/class-content-types.php:108
+#: includes/class-content-types.php:119
 msgid "Related client"
 msgstr "Cliente relacionado"
 
-#: includes/class-content-types.php:113
+#: includes/class-content-types.php:124
 msgctxt "URL slug"
 msgid "locations"
 msgstr "sedes"
 
-#: includes/class-content-types.php:117
+#: includes/class-content-types.php:128
 msgid "Location"
 msgstr "Sede"
 
-#: includes/class-content-types.php:118
+#: includes/class-content-types.php:129
 msgid "Add location"
 msgstr "Añadir sede"
 
-#: includes/class-content-types.php:119
+#: includes/class-content-types.php:130
 msgid "Edit location"
 msgstr "Editar sede"
 
-#: includes/class-content-types.php:120
+#: includes/class-content-types.php:131
 msgid "New location"
 msgstr "Nueva sede"
 
-#: includes/class-content-types.php:121
+#: includes/class-content-types.php:132
 msgid "View location"
 msgstr "Ver sede"
 
-#: includes/class-content-types.php:122
+#: includes/class-content-types.php:133
 msgid "View locations"
 msgstr "Ver sedes"
 
-#: includes/class-content-types.php:123
+#: includes/class-content-types.php:134
 msgid "Search locations"
 msgstr "Buscar sedes"
 
-#: includes/class-content-types.php:124
+#: includes/class-content-types.php:135
 msgid "No locations found."
 msgstr "No hay sedes."
 
-#: includes/class-content-types.php:125
+#: includes/class-content-types.php:136
 msgid "No locations found in Trash."
 msgstr "No hay sedes en la papelera."
 
-#: includes/class-content-types.php:126
+#: includes/class-content-types.php:137
 msgid "All locations"
 msgstr "Todas las sedes"
 
-#: includes/class-content-types.php:127
+#: includes/class-content-types.php:138
 msgid "Static map image"
 msgstr "Imagen estática del mapa"
 
-#: includes/class-content-types.php:128
+#: includes/class-content-types.php:139
 msgid "Set static map image"
 msgstr "Poner imagen estática del mapa"
 
-#: includes/class-content-types.php:135
+#: includes/class-content-types.php:146
 msgid "Google Maps link"
 msgstr "Enlace a Google Maps"
 
-#: includes/class-content-types.php:136
+#: includes/class-content-types.php:147
 msgid "Map embed URL"
 msgstr "URL para incrustar el mapa"
 
-#: includes/class-content-types.php:141
+#: includes/class-content-types.php:152
 msgctxt "URL slug"
 msgid "projects"
 msgstr "proyectos"
 
-#: includes/class-content-types.php:145
+#: includes/class-content-types.php:156
 msgid "Project"
 msgstr "Proyecto"
 
-#: includes/class-content-types.php:146
+#: includes/class-content-types.php:157
 msgid "Add project"
 msgstr "Añadir proyecto"
 
-#: includes/class-content-types.php:147
+#: includes/class-content-types.php:158
 msgid "Edit project"
 msgstr "Editar proyecto"
 
-#: includes/class-content-types.php:148
+#: includes/class-content-types.php:159
 msgid "New project"
 msgstr "Nuevo proyecto"
 
-#: includes/class-content-types.php:149
+#: includes/class-content-types.php:160
 msgid "View project"
 msgstr "Ver proyecto"
 
-#: includes/class-content-types.php:150
+#: includes/class-content-types.php:161
 msgid "View projects"
 msgstr "Ver proyectos"
 
-#: includes/class-content-types.php:151
+#: includes/class-content-types.php:162
 msgid "Search projects"
 msgstr "Buscar proyectos"
 
-#: includes/class-content-types.php:152
+#: includes/class-content-types.php:163
 msgid "No projects found."
 msgstr "No hay proyectos."
 
-#: includes/class-content-types.php:153
+#: includes/class-content-types.php:164
 msgid "No projects found in Trash."
 msgstr "No hay proyectos en la papelera."
 
-#: includes/class-content-types.php:154
+#: includes/class-content-types.php:165
 msgid "All projects"
 msgstr "Todos los proyectos"
 
-#: includes/class-content-types.php:158
+#: includes/class-content-types.php:169
 msgctxt "URL slug"
 msgid "project-category"
 msgstr "categoria-proyecto"
 
-#: includes/class-content-types.php:160
+#: includes/class-content-types.php:171
 msgid "Project categories"
 msgstr "Categorías de proyecto"
 
-#: includes/class-content-types.php:161
+#: includes/class-content-types.php:172
 msgid "Project category"
 msgstr "Categoría de proyecto"
 
-#: includes/class-content-types.php:162 includes/class-content-types.php:194
+#: includes/class-content-types.php:173 includes/class-content-types.php:205
 msgid "Add category"
 msgstr "Añadir categoría"
 
-#: includes/class-content-types.php:163 includes/class-content-types.php:195
+#: includes/class-content-types.php:174 includes/class-content-types.php:206
 msgid "Edit category"
 msgstr "Editar categoría"
 
-#: includes/class-content-types.php:164 includes/class-content-types.php:196
+#: includes/class-content-types.php:175 includes/class-content-types.php:207
 msgid "Search categories"
 msgstr "Buscar categorías"
 
-#: includes/class-content-types.php:165 includes/class-content-types.php:197
+#: includes/class-content-types.php:176 includes/class-content-types.php:208
 msgid "All categories"
 msgstr "Todas las categorías"
 
-#: includes/class-content-types.php:166 includes/class-content-types.php:198
+#: includes/class-content-types.php:177 includes/class-content-types.php:209
 msgid "No categories found."
 msgstr "No hay categorías."
 
-#: includes/class-content-types.php:173
+#: includes/class-content-types.php:184
 msgctxt "URL slug"
 msgid "portfolio"
 msgstr "portfolio"
 
-#: includes/class-content-types.php:177
+#: includes/class-content-types.php:188
 msgid "Portfolio item"
 msgstr "Trabajo del portfolio"
 
-#: includes/class-content-types.php:178
+#: includes/class-content-types.php:189
 msgid "Add portfolio item"
 msgstr "Añadir trabajo"
 
-#: includes/class-content-types.php:179
+#: includes/class-content-types.php:190
 msgid "Edit portfolio item"
 msgstr "Editar trabajo"
 
-#: includes/class-content-types.php:180
+#: includes/class-content-types.php:191
 msgid "New portfolio item"
 msgstr "Nuevo trabajo"
 
-#: includes/class-content-types.php:181
+#: includes/class-content-types.php:192
 msgid "View portfolio item"
 msgstr "Ver trabajo"
 
-#: includes/class-content-types.php:182
+#: includes/class-content-types.php:193
 msgid "View portfolio"
 msgstr "Ver portfolio"
 
-#: includes/class-content-types.php:183
+#: includes/class-content-types.php:194
 msgid "Search portfolio"
 msgstr "Buscar en el portfolio"
 
-#: includes/class-content-types.php:184
+#: includes/class-content-types.php:195
 msgid "No portfolio items found."
 msgstr "No hay trabajos en el portfolio."
 
-#: includes/class-content-types.php:185
+#: includes/class-content-types.php:196
 msgid "No portfolio items found in Trash."
 msgstr "No hay trabajos en la papelera."
 
-#: includes/class-content-types.php:186
+#: includes/class-content-types.php:197
 msgid "All portfolio items"
 msgstr "Todos los trabajos"
 
-#: includes/class-content-types.php:190
+#: includes/class-content-types.php:201
 msgctxt "URL slug"
 msgid "portfolio-category"
 msgstr "categoria-portfolio"
 
-#: includes/class-content-types.php:192
+#: includes/class-content-types.php:203
 msgid "Portfolio categories"
 msgstr "Categorías del portfolio"
 
-#: includes/class-content-types.php:193
+#: includes/class-content-types.php:204
 msgid "Portfolio category"
 msgstr "Categoría del portfolio"
 

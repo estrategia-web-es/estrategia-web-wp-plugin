@@ -15,6 +15,9 @@ Menor: solo añade. Ninguna web tiene que tocar nada.
   el contexto de una Consulta (`{"key":…}`). Claves `title`, los campos
   `location_*` y las derivadas `location_phone_href` y `location_email_href`.
   También en el editor.
+- Clientes que son un logo: campo `client_image_fit` (`cover` por defecto o
+  `contain`) y clase `has-image-fit-contain` en la entrada (post_class) cuando
+  vale `contain`. Sin CSS: lo pinta el tema.
 
 ## 0.1.0 — 02-10-2026
 

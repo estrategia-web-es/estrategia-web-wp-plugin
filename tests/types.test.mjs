@@ -104,3 +104,30 @@ test("una Consulta (core/query) de `client` filtrada por client_sector pinta los
   assert.ok(!list.includes("Restaurante Luna") && !list.includes(file(c.img)), "el de otro sector no sale");
   assert.ok(BASE);
 });
+
+test("client_image_fit (0.2.0): 'cover' por defecto, saneado a cover|contain, y 'contain' pone has-image-fit-contain en el <li> de la Consulta", async () => {
+  await saveCompany({ enabled_types: ["client"] });
+  const make = async (title, meta) => {
+    const c = await wp("/client", { method: "POST", body: { title, status: "publish", meta } });
+    assert.equal(c.status, 201, c.text);
+    return c.json;
+  };
+  const logo = await make("Fit Logo", { client_image_fit: "contain" });
+  const foto = await make("Fit Foto", {});
+  const raro = await make("Fit Raro", { client_image_fit: "stretch" });
+  assert.equal(logo.meta.client_image_fit, "contain");
+  assert.equal(foto.meta.client_image_fit, "cover", "por defecto");
+  assert.equal(raro.meta.client_image_fit, "cover", "otro valor se sanea a cover");
+
+  const query = JSON.stringify({ queryId: 8, query: { perPage: 10, pages: 0, offset: 0, postType: "client", order: "asc", orderBy: "title", inherit: false, search: "Fit " } });
+  const page = await seedPage(`<!-- wp:query ${query} -->
+<div class="wp-block-query"><!-- wp:post-template -->
+<!-- wp:post-title /-->
+<!-- /wp:post-template --></div>
+<!-- /wp:query -->`, "clientes-fit");
+  const { text } = await html(page.url);
+  const li = (title) => text.match(new RegExp(`<li[^>]*>(?:(?!</li>)[\\s\\S])*${title}`))?.[0].match(/<li[^>]*>/)[0];
+  assert.match(li("Fit Logo"), /\bhas-image-fit-contain\b/);
+  assert.doesNotMatch(li("Fit Foto"), /has-image-fit/);
+  assert.doesNotMatch(li("Fit Raro"), /has-image-fit/);
+});

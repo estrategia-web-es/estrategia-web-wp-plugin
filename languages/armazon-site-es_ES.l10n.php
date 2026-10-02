@@ -64,6 +64,7 @@ return array(
 		'All sectors' => 'Todos los sectores',
 		'No sectors found.' => 'No hay sectores.',
 		'Client website' => 'Web del cliente',
+		'Image fit (cover for a photo, contain for a logo)' => 'Encaje de la imagen (cover para una foto, contain para un logo)',
 		'URL slug' . "\x04" . 'testimonials' => 'opiniones',
 		'Testimonial' => 'Opinión',
 		'Add testimonial' => 'Añadir opinión',

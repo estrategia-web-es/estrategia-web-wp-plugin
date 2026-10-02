@@ -21,6 +21,7 @@ final class Plugin {
 		add_action( 'init', array( Bindings::class, 'register' ) );
 		add_action( 'init', array( Location::class, 'register' ) );
 		add_action( 'enqueue_block_editor_assets', array( Bindings::class, 'enqueue_editor' ) );
+		add_filter( 'post_class', array( Content_Types::class, 'post_class' ), 10, 3 );
 		add_action( 'update_option_' . Settings::OPTION, array( Content_Types::class, 'maybe_flush' ), 10, 2 );
 		add_action( 'add_option_' . Settings::OPTION, static fn( $name, $value ) => Content_Types::maybe_flush( array(), $value ), 10, 2 );
 		Svg::boot();
