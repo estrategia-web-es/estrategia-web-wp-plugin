@@ -3,8 +3,8 @@
  * Leer un dato de la empresa por su CLAVE de contrato: la que usan la fuente
  * de Block Bindings `armazon-site/company`, el editor y cualquier tema.
  *
- * Claves: las de Settings::DEFAULTS (menos enabled_types y allow_svg, que son
- * opciones y no datos), `social.<red>` con punto, y las DERIVADAS de abajo.
+ * Claves: las de Settings::DEFAULTS (menos enabled_types, allow_svg y
+ * rewrite_slugs, que son opciones y no datos: NOT_DATA), `social.<red>` con punto, y las DERIVADAS de abajo.
  *
  * Cómo se mantiene:
  * - Quién y cuándo: quien añada una clave, en el mismo commit que su prueba
@@ -32,7 +32,7 @@ final class Company {
 	public const DERIVED = array( 'phone_href', 'phone_secondary_href', 'email_href', 'whatsapp_href' );
 
 	/** Claves que son opciones del plugin, no datos que se enseñan. */
-	private const NOT_DATA = array( 'enabled_types', 'allow_svg', 'social' );
+	private const NOT_DATA = array( 'enabled_types', 'allow_svg', 'social', 'rewrite_slugs' );
 
 	/** Prefijo de país para teléfonos escritos sin él. */
 	public static function country_code(): string {

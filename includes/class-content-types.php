@@ -20,7 +20,14 @@
  * Cómo se mantiene:
  * - Un tipo nuevo: TYPES de Settings (es el enum del esquema), definitions()
  *   aquí, sus etiquetas, el README y una prueba. Es versión MENOR (añade).
- *   Quitar o renombrar uno es MAYOR.
+ *   Quitar o renombrar uno es MAYOR. Él y su taxonomía, también en
+ *   Settings::REWRITE_NAMES y DEFAULTS['rewrite_slugs'].
+ * - Slugs públicos (0.2.0, slug()): traducido ← `rewrite_slugs` de la opción
+ *   ← filtro `armazon_site_rewrite_slug`. Las rutas son del PLUGIN: una web
+ *   las fija en la opción (por REST o en la carga de contenido), no en su
+ *   tema. El filtro se queda para lo que no cabe ahí. Caso frontera: una web
+ *   con una PÁGINA /clientes/ y el tipo `client` activado; el archivo del tipo
+ *   la pisa, y se arregla con {"rewrite_slugs":{"client":"cliente"}}.
  * - Un campo nuevo: en META de su tipo, con tipo y saneado. Si no empieza por
  *   el nombre del tipo (`client_…`), no entra: así no choca con el meta de
  *   otro plugin. Un campo nuevo de `location` entra SOLO en la fuente
@@ -38,12 +45,14 @@
  *   una web necesita fichas de servicio, se valora aquí como tipo nuevo.
  * - La trampa: el slug público se traduce con gettext (msgid en inglés,
  *   «clients» → «clientes» en es_ES). Cambiar el idioma de la web CAMBIA las
- *   URL. En una web ya publicada, fijarlo con el filtro
- *   `armazon_site_rewrite_slug` antes de cambiar de idioma.
- * - Y la otra: tras activar o desactivar un tipo hay que regenerar las reglas
- *   de URL. Se hace solo (maybe_flush borra `rewrite_rules` y WordPress las
- *   rehace en la siguiente carga), pero una caché de página puede servir un
- *   404 viejo un rato.
+ *   URL. En una web ya publicada, fijarlo en `rewrite_slugs` antes de cambiar
+ *   de idioma.
+ * - Y la otra: tras activar o desactivar un tipo, o cambiar un slug fijado,
+ *   hay que regenerar las reglas de URL. Se hace solo (maybe_flush borra
+ *   `rewrite_rules` y WordPress las rehace en la siguiente carga), pero una
+ *   caché de página puede servir un 404 viejo un rato. Un slug cambiado por
+ *   el FILTRO no lo ve maybe_flush: quien cambie el filtro, que guarde los
+ *   enlaces permanentes.
  */
 
 namespace Armazon\Site;
@@ -219,14 +228,8 @@ final class Content_Types {
 		$definitions = self::definitions();
 		$position    = 21;
 		foreach ( Settings::enabled_types() as $type ) {
-			$def = $definitions[ $type ];
-			/**
-			 * Cambia el slug público de un tipo (o de su taxonomía) en una web.
-			 *
-			 * @param string $slug El slug traducido («clientes»).
-			 * @param string $name El tipo o la taxonomía («client», «client_sector»).
-			 */
-			$slug = (string) apply_filters( 'armazon_site_rewrite_slug', $def['slug'], $type );
+			$def  = $definitions[ $type ];
+			$slug = self::slug( $def['slug'], $type );
 
 			register_post_type(
 				$type,
@@ -253,7 +256,7 @@ final class Content_Types {
 						'public'            => true,
 						'show_in_rest'      => true,
 						'show_admin_column' => true,
-						'rewrite'           => array( 'slug' => (string) apply_filters( 'armazon_site_rewrite_slug', $tax['slug'], $tax['name'] ), 'with_front' => false ),
+						'rewrite'           => array( 'slug' => self::slug( $tax['slug'], $tax['name'] ), 'with_front' => false ),
 					)
 				);
 			}
@@ -274,6 +277,22 @@ final class Content_Types {
 				);
 			}
 		}
+	}
+
+	/**
+	 * El slug público de un tipo o taxonomía, por orden: el traducido
+	 * («clientes») ← el fijado en la opción (`rewrite_slugs`, 0.2.0) ← el filtro,
+	 * que sigue mandando sobre los dos.
+	 */
+	private static function slug( string $translated, string $name ): string {
+		$fixed = (string) ( ( (array) Settings::get( 'rewrite_slugs' ) )[ $name ] ?? '' );
+		/**
+		 * Cambia el slug público de un tipo (o de su taxonomía) en una web.
+		 *
+		 * @param string $slug El slug de `rewrite_slugs` si lo hay; si no, el traducido («clientes»).
+		 * @param string $name El tipo o la taxonomía («client», «client_sector»).
+		 */
+		return (string) apply_filters( 'armazon_site_rewrite_slug', '' !== $fixed ? $fixed : $translated, $name );
 	}
 
 	/** @return string[] Las claves de meta de un tipo (para la prueba y el README). */
@@ -322,17 +341,24 @@ final class Content_Types {
 	}
 
 	/**
-	 * Si cambian los tipos activados, se tiran las reglas de URL para que
-	 * WordPress las rehaga en la siguiente carga, ya con los tipos nuevos.
-	 * (flush_rewrite_rules() aquí las rehará con los tipos VIEJOS: esta carga
-	 * registró los de antes del cambio.)
+	 * Si cambian los tipos activados o un slug fijado (rewrite_slugs), se
+	 * tiran las reglas de URL para que WordPress las rehaga en la siguiente
+	 * carga, ya con lo nuevo. (flush_rewrite_rules() aquí las rehará con lo
+	 * VIEJO: esta carga registró los tipos de antes del cambio.)
 	 */
 	public static function maybe_flush( $old, $new ): void {
-		$old = is_array( $old ) ? (array) ( $old['enabled_types'] ?? array() ) : array();
-		$new = is_array( $new ) ? (array) ( $new['enabled_types'] ?? array() ) : array();
-		sort( $old );
-		sort( $new );
-		if ( $old !== $new ) {
+		$types = static function ( $o ): array {
+			$t = is_array( $o ) ? (array) ( $o['enabled_types'] ?? array() ) : array();
+			sort( $t );
+			return $t;
+		};
+		// Sin ninguno fijado da lo mismo array() que todos vacíos (una opción de 0.1.0).
+		$slugs = static fn( $o ): array => array_filter( is_array( $o ) ? (array) ( $o['rewrite_slugs'] ?? array() ) : array(), 'strlen' );
+		$a     = $slugs( $old );
+		$b     = $slugs( $new );
+		ksort( $a );
+		ksort( $b );
+		if ( $types( $old ) !== $types( $new ) || $a !== $b ) {
 			delete_option( 'rewrite_rules' );
 		}
 	}

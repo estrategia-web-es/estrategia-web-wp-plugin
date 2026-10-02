@@ -105,6 +105,27 @@ test("una Consulta (core/query) de `client` filtrada por client_sector pinta los
   assert.ok(BASE);
 });
 
+test("rewrite_slugs (0.2.0): mueve el archivo de client a /cliente/ sin filtro, la página /clientes/ queda libre, y vacío vuelve al de siempre", async () => {
+  await saveCompany({ enabled_types: ["client"], rewrite_slugs: { client: "cliente" } });
+  const c = await wp("/client", { method: "POST", body: { title: "Cliente movido", status: "publish" } });
+  assert.equal(c.status, 201, c.text);
+  assert.match(c.json.link, /\/cliente\/cliente-movido\/$/);
+  const single = await html(c.json.link);
+  assert.equal(single.status, 200, "las reglas se rehicieron al cambiar el slug");
+  assert.match(single.text, /Cliente movido/);
+  assert.equal((await html(BASE + "/cliente/")).status, 200, "el archivo, en /cliente/");
+
+  await seedPage("<!-- wp:paragraph --><p>pagina-clientes-propia</p><!-- /wp:paragraph -->", "clientes");
+  const own = await html(BASE + "/clientes/");
+  assert.equal(own.status, 200);
+  assert.match(own.text, /pagina-clientes-propia/, "/clientes/ es la PÁGINA, no el archivo");
+
+  await saveCompany({ rewrite_slugs: { client: "" } });
+  const back = await wp(`/client/${c.json.id}`);
+  assert.match(back.json.link, /\/clientes\/cliente-movido\/$/, "vacío = el slug de siempre");
+  assert.equal((await html(back.json.link)).status, 200);
+});
+
 test("client_image_fit (0.2.0): 'cover' por defecto, saneado a cover|contain, y 'contain' pone has-image-fit-contain en el <li> de la Consulta", async () => {
   await saveCompany({ enabled_types: ["client"] });
   const make = async (title, meta) => {

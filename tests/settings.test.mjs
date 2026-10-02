@@ -57,6 +57,27 @@ test("esquema: un tipo de contenido que no existe se rechaza entero (400)", asyn
   assert.equal(r.status, 400);
 });
 
+test("rewrite_slugs (0.2.0): sanitize_title, vacío por defecto, fusión por clave, nombre desconocido → 400", async () => {
+  const a = await saveCompany({ rewrite_slugs: { client: "Mi Cliente!" } });
+  assert.equal(a.rewrite_slugs.client, "mi-cliente");
+  assert.equal(a.rewrite_slugs.client_sector, "", "los no enviados existen, vacíos");
+  assert.equal(a.rewrite_slugs.portfolio_category, "");
+
+  const b = await saveCompany({ rewrite_slugs: { client_sector: "sector-x" } });
+  assert.equal(b.rewrite_slugs.client, "mi-cliente", "guardar una no borra las demás");
+  assert.equal(b.rewrite_slugs.client_sector, "sector-x");
+
+  const c = await saveCompany({ phone: "971 55 55 55" });
+  assert.deepEqual(c.rewrite_slugs, b.rewrite_slugs, "guardar otra clave no las toca");
+
+  const bad = await wp("/settings", { method: "POST", body: { armazon_site: { rewrite_slugs: { services: "servicios" } } } });
+  assert.equal(bad.status, 400, "solo tipos y taxonomías del plugin");
+
+  const read = await wp("/settings");
+  assert.deepEqual(read.json.armazon_site.rewrite_slugs, b.rewrite_slugs);
+  await saveCompany({ rewrite_slugs: { client: "", client_sector: "" } });
+});
+
 test("permisos: un autor no puede leer ni cambiar los datos por /wp/v2/settings", async () => {
   const r = await wp("/settings", { as: "author", method: "POST", body: { armazon_site: { phone: "000" } } });
   assert.equal(r.status, 403);

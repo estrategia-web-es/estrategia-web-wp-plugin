@@ -18,6 +18,12 @@ Menor: solo añade. Ninguna web tiene que tocar nada.
 - Clientes que son un logo: campo `client_image_fit` (`cover` por defecto o
   `contain`) y clase `has-image-fit-contain` en la entrada (post_class) cuando
   vale `contain`. Sin CSS: lo pinta el tema.
+- Slugs públicos por web: clave `rewrite_slugs` en la opción `armazon_site`
+  (objeto tipo-o-taxonomía → slug, `sanitize_title`, vacío = el de siempre,
+  fusión por clave). Se aplica antes del filtro `armazon_site_rewrite_slug`,
+  que sigue mandando, y al cambiar se rehacen las reglas de URL. Una web que
+  movía `/clientes/` con el filtro desde su tema puede pasarlo a la opción
+  (no obligatorio: el filtro sigue funcionando igual).
 
 ## 0.1.0 — 02-10-2026
 

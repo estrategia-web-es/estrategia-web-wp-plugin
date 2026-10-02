@@ -46,6 +46,7 @@ su esquema: `GET/POST /wp/v2/settings` → clave `armazon_site`.
 | `social` | objeto: `facebook`, `instagram`, `linkedin`, `x`, `youtube`, `tiktok` | URL http(s) cada una |
 | `enabled_types` | array ⊂ `client`, `testimonial`, `location`, `project`, `portfolio` | otro valor → **400** entero |
 | `allow_svg` | booleano | |
+| `rewrite_slugs` | objeto `nombre → slug` con los nombres `client`, `client_sector`, `testimonial`, `location`, `project`, `project_category`, `portfolio`, `portfolio_category` (0.2.0) | `sanitize_title` («Mi Cliente!» → `mi-cliente`); `''` = el de siempre; otro nombre → **400** entero. Se fusiona **por clave**. Al cambiar, se rehacen las reglas de URL |
 
 **Se guarda fusionando**: un POST con `{"armazon_site": {"phone": "…"}}` cambia
 el teléfono y deja lo demás. Así la carga de contenido rellena por partes.
@@ -66,7 +67,7 @@ En PHP, un tema lee un dato con `\Armazon\Site\Company::value( 'phone' )`
 
 ### 2. Fuente de Block Bindings `armazon-site/company`
 
-`args.key` = cualquier clave de arriba (menos `enabled_types` y `allow_svg`),
+`args.key` = cualquier clave de arriba (menos `enabled_types`, `allow_svg` y `rewrite_slugs`),
 `social.<red>` con punto, y cuatro **derivadas**:
 
 | Clave | Ejemplo |
@@ -190,8 +191,21 @@ Un campo dentro de la Consulta (el autor de una opinión):
 <!-- /wp:paragraph -->
 ```
 
-Filtro `armazon_site_rewrite_slug( $slug, $tipo_o_taxonomia )` para cambiar
-un slug en una web.
+**Slugs públicos por web: `rewrite_slugs`** en la opción (0.2.0). Las rutas
+son del plugin, no del tema: una web con una **página** `/clientes/` (que el
+archivo del tipo pisaría) mueve el archivo así, por REST o en su carga de
+contenido:
+
+```bash
+curl -u admin:APP_PASS -X POST https://web.test/wp-json/wp/v2/settings \
+  -H 'Content-Type: application/json' \
+  -d '{"armazon_site":{"rewrite_slugs":{"client":"cliente"}}}'
+```
+
+Orden: el slug traducido ← el de `rewrite_slugs` si no está vacío ← el filtro
+`armazon_site_rewrite_slug( $slug, $tipo_o_taxonomia )`, que **sigue
+mandando** (recibe ya el de la opción). Un cambio por el filtro no rehace las
+reglas solo; uno por la opción, sí.
 
 **Clases que el plugin pone en una entrada** (filtro `post_class`: salen en
 el `<li>` de una Consulta y en la ficha). Describen el dato; **el plugin no
@@ -240,10 +254,10 @@ que crea [tests/wp/armazon-site-test.php](tests/wp/armazon-site-test.php)).
 | Fichero | Nivel | Qué prueba |
 |---|---|---|
 | [tests/pure.test.mjs](tests/pure.test.mjs) | 1 | tel:/mailto:/wa.me; SVG hostil saneado, SVG inaceptables, medidas |
-| [tests/settings.test.mjs](tests/settings.test.mjs) | 2 | guardar y leer por REST, fusión, saneado (correo/URL/WhatsApp inválidos no se guardan), esquema, autor sin permiso |
+| [tests/settings.test.mjs](tests/settings.test.mjs) | 2 | guardar y leer por REST, fusión, saneado (correo/URL/WhatsApp inválidos no se guardan), esquema, `rewrite_slugs` (saneado, fusión por clave, 400), autor sin permiso |
 | [tests/bindings.test.mjs](tests/bindings.test.mjs) | 2 | párrafo con el teléfono, botón con wa.me, tel: (también `phone_secondary_href`), mailto:, `<br>`, escapado, `social.<red>` |
 | [tests/location.test.mjs](tests/location.test.mjs) | 2 | fuente de sedes: por slug (botón texto+url, título, dirección, mailto, mapa), inexistente/borrador/fuera de contexto vacíos, por contexto en una Consulta |
-| [tests/types.test.mjs](tests/types.test.mjs) | 2 | tipo inexistente sin activar; activar/desactivar sin perder contenido; slug `/clientes/`; meta saneado; Consulta por `client_sector` con título e imagen; `client_image_fit` y la clase `has-image-fit-contain` |
+| [tests/types.test.mjs](tests/types.test.mjs) | 2 | tipo inexistente sin activar; activar/desactivar sin perder contenido; slug `/clientes/`; meta saneado; Consulta por `client_sector` con título e imagen; `client_image_fit` y la clase `has-image-fit-contain`; `rewrite_slugs` mueve el archivo a `/cliente/` y deja libre la página `/clientes/` |
 | [tests/svg.test.mjs](tests/svg.test.mjs) | 2 | SVG con `<script>` subido saneado (multipart y sideload), medidas, autor no puede, `allow_svg` apagado |
 | [tests/editor.test.mjs](tests/editor.test.mjs) | 3 | el editor enseña el valor enlazado y lista los datos (empresa y sede por slug); la pantalla de ajustes guarda, avisa y desactiva el último tipo |
 
@@ -296,10 +310,10 @@ los tipos no se borra nunca ([uninstall.php](uninstall.php)).
   fichas de servicio, entra como tipo nuevo (versión menor).
 - **La trampa:** el slug público sale de gettext, así que **cambiar el idioma
   de una web cambia sus URL** (`clientes` ↔ `clients`). En una web publicada
-  que vaya a cambiar de idioma, fijar antes el slug con
-  `armazon_site_rewrite_slug`. Y la otra: activar o desactivar un tipo
-  regenera las reglas de URL en la siguiente carga; una caché de página puede
-  servir un 404 viejo un rato.
+  que vaya a cambiar de idioma, fijar antes el slug en `rewrite_slugs`. Y la
+  otra: activar o desactivar un tipo, o cambiar `rewrite_slugs`, regenera las
+  reglas de URL en la siguiente carga; una caché de página puede servir un
+  404 viejo un rato.
 - **Cada fichero dice cómo se mantiene en su cabecera.** Si cambias uno,
   revisa que su cabecera siga siendo verdad.
 

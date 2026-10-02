@@ -25,6 +25,16 @@
  * - Caso frontera: un dato que solo tiene UNA web (el número de registro
  *   sanitario de una clínica). No entra: va al tema hijo. Entra lo que tendría
  *   cualquier web corporativa.
+ * - Los objetos (`social`, `rewrite_slugs` desde 0.2.0) se fusionan también
+ *   POR CLAVE: mandar {"rewrite_slugs":{"client":"cliente"}} no borra el slug
+ *   fijado de `client_sector`. Y se guardan siempre con todas sus claves (las
+ *   no fijadas, ''), para que REST devuelva un objeto y no un [] vacío.
+ * - `rewrite_slugs` NO sale en la pantalla, a propósito: cambia URL
+ *   publicadas y lo fija quien monta la web (REST, carga de contenido). La
+ *   pantalla no lo manda, y la fusión lo conserva al guardarla.
+ * - Caso frontera de `rewrite_slugs`: un nombre que no es del plugin
+ *   («services») da 400 por REST (additionalProperties); por
+ *   `wp option update` se ignora en silencio.
  * - La trampa: el controlador REST de ajustes devuelve null para TODA la
  *   opción si lo guardado no cumple el esquema (un tipo distinto, una clave de
  *   enabled_types que ya no está en el enum). Por eso sanitize() deja siempre
@@ -44,6 +54,13 @@ final class Settings {
 	public const TYPES = array( 'client', 'testimonial', 'location', 'project', 'portfolio' );
 
 	public const SOCIAL = array( 'facebook', 'instagram', 'linkedin', 'x', 'youtube', 'tiktok' );
+
+	/**
+	 * Los nombres que admite `rewrite_slugs` (0.2.0): los tipos y las
+	 * taxonomías del plugin. Una taxonomía nueva en Content_Types entra aquí
+	 * también, o su slug no se podrá fijar.
+	 */
+	public const REWRITE_NAMES = array( 'client', 'client_sector', 'testimonial', 'location', 'project', 'project_category', 'portfolio', 'portfolio_category' );
 
 	/** Campos de texto de una línea. */
 	private const TEXT = array( 'company_name', 'legal_name', 'tax_id', 'phone', 'phone_secondary', 'whatsapp_message' );
@@ -73,6 +90,17 @@ final class Settings {
 		),
 		'enabled_types'    => array(),
 		'allow_svg'        => false,
+		// 0.2.0. Vacío = el slug traducido de siempre. Ver Content_Types::slug().
+		'rewrite_slugs'    => array(
+			'client'             => '',
+			'client_sector'      => '',
+			'testimonial'        => '',
+			'location'           => '',
+			'project'            => '',
+			'project_category'   => '',
+			'portfolio'          => '',
+			'portfolio_category' => '',
+		),
 	);
 
 	public static function register(): void {
@@ -96,6 +124,10 @@ final class Settings {
 		$social = array();
 		foreach ( self::SOCIAL as $network ) {
 			$social[ $network ] = $string;
+		}
+		$slugs = array();
+		foreach ( self::REWRITE_NAMES as $name ) {
+			$slugs[ $name ] = $string;
 		}
 		return array(
 			'type'                 => 'object',
@@ -126,6 +158,11 @@ final class Settings {
 					),
 				),
 				'allow_svg'        => array( 'type' => 'boolean' ),
+				'rewrite_slugs'    => array(
+					'type'                 => 'object',
+					'additionalProperties' => false,
+					'properties'           => $slugs,
+				),
 			),
 		);
 	}
@@ -136,6 +173,7 @@ final class Settings {
 		$stored = is_array( $stored ) ? $stored : array();
 		$all    = array_merge( self::DEFAULTS, $stored );
 		$all['social'] = array_merge( self::DEFAULTS['social'], is_array( $all['social'] ) ? $all['social'] : array() );
+		$all['rewrite_slugs'] = array_merge( self::DEFAULTS['rewrite_slugs'], is_array( $all['rewrite_slugs'] ) ? $all['rewrite_slugs'] : array() );
 		/**
 		 * Permite a una web fijar datos por código (por ejemplo, un entorno de
 		 * pruebas con otro teléfono).
@@ -162,7 +200,8 @@ final class Settings {
 		$current = get_option( self::OPTION, array() );
 		$out     = array_merge( self::DEFAULTS, is_array( $current ) ? $current : array() );
 		$out['social'] = array_merge( self::DEFAULTS['social'], is_array( $out['social'] ) ? $out['social'] : array() );
-		$input   = is_array( $input ) ? $input : ( is_object( $input ) ? (array) $input : array() );
+		$out['rewrite_slugs'] = array_merge( self::DEFAULTS['rewrite_slugs'], is_array( $out['rewrite_slugs'] ) ? $out['rewrite_slugs'] : array() );
+		$input   =is_array( $input ) ? $input : ( is_object( $input ) ? (array) $input : array() );
 
 		foreach ( self::TEXT as $key ) {
 			if ( array_key_exists( $key, $input ) ) {
@@ -221,9 +260,20 @@ final class Settings {
 			$out['allow_svg'] = rest_sanitize_boolean( $input['allow_svg'] );
 		}
 
+		// Por clave, como social: mandar un slug no borra los demás. Fuera de
+		// REST (que ya da 400) un nombre desconocido se ignora.
+		if ( isset( $input['rewrite_slugs'] ) && ( is_array( $input['rewrite_slugs'] ) || is_object( $input['rewrite_slugs'] ) ) ) {
+			foreach ( (array) $input['rewrite_slugs'] as $name => $slug ) {
+				if ( in_array( $name, self::REWRITE_NAMES, true ) ) {
+					$out['rewrite_slugs'][ $name ] = sanitize_title( (string) $slug );
+				}
+			}
+		}
+
 		// Solo las claves del contrato, con sus tipos exactos (ver «La trampa»).
-		$out              = array_intersect_key( $out, self::DEFAULTS );
-		$out['social']    = array_map( 'strval', array_intersect_key( $out['social'], self::DEFAULTS['social'] ) );
+		$out                  = array_intersect_key( $out, self::DEFAULTS );
+		$out['social']        = array_map( 'strval', array_intersect_key( $out['social'], self::DEFAULTS['social'] ) );
+		$out['rewrite_slugs'] = array_map( 'strval', array_intersect_key( $out['rewrite_slugs'], self::DEFAULTS['rewrite_slugs'] ) );
 		$out['allow_svg'] = (bool) $out['allow_svg'];
 		return $out;
 	}
