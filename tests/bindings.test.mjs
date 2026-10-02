@@ -26,6 +26,9 @@ const PAGE = `<!-- wp:paragraph ${bind("content", "phone")} -->
 <!-- /wp:button -->
 <!-- wp:button {"className":"t-mail",${bind("url", "email_href").slice(1, -1)}} -->
 <div class="wp-block-button t-mail"><a class="wp-block-button__link wp-element-button" href="#">Correo</a></div>
+<!-- /wp:button -->
+<!-- wp:button {"className":"t-tel2",${bind("url", "phone_secondary_href").slice(1, -1)}} -->
+<div class="wp-block-button t-tel2"><a class="wp-block-button__link wp-element-button" href="#">Llamar al otro</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons -->`;
 
@@ -35,6 +38,7 @@ before(async () => {
   await saveCompany({
     company_name: "Tom & Jerry <SL>",
     phone: "971 12 34 56",
+    phone_secondary: "+34 600 99 88 77",
     email: "hola@ejemplo.test",
     whatsapp: "34600111222",
     whatsapp_message: "Hola, quería información",
@@ -59,6 +63,11 @@ test("el botón con whatsapp_href lleva el wa.me correcto; phone_href y email_hr
   assert.equal(href("t-wa"), "https://wa.me/34600111222?text=Hola%2C%20quer%C3%ADa%20informaci%C3%B3n");
   assert.equal(href("t-tel"), "tel:+34971123456");
   assert.equal(href("t-mail"), "mailto:hola@ejemplo.test");
+});
+
+test("phone_secondary_href (0.2.0): el tel: del segundo teléfono", async () => {
+  const { text } = await html(page.url);
+  assert.equal(text.match(/t-tel2[^"]*"><a[^>]*href="([^"]*)"/)?.[1], "tel:+34600998877");
 });
 
 test("texto: varias líneas salen con <br>, el HTML del dato se escapa, social.<red> con punto funciona", async () => {

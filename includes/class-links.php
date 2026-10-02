@@ -6,9 +6,11 @@
  * (tests/pure.test.mjs) la corre con el PHP de la máquina, sin Playground.
  *
  * Cómo se mantiene:
- * - Un enlace derivado nuevo (por ejemplo `phone_secondary_href`) entra aquí,
- *   en Company::DERIVED, en la lista del editor (assets/editor.js) y en la
- *   tabla del README, en el mismo commit: es parte del contrato.
+ * - Un enlace derivado nuevo entra en Company::DERIVED, value() y labels(), y
+ *   en la tabla del README, en el mismo commit: es parte del contrato. Aquí
+ *   solo si es un enlace de una CLASE nueva; `phone_secondary_href` (0.2.0) y
+ *   `location_phone_href` reutilizan tel(). El editor (assets/editor.js) no
+ *   tiene lista propia: lee Company::keys() y labels().
  * - Caso frontera: un teléfono escrito SIN prefijo («971 12 34 56»). Se le
  *   pone el prefijo por defecto (34, filtrable con
  *   `armazon_site_default_country_code`). Uno con «00» delante se trata como

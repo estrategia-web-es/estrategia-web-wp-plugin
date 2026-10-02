@@ -19,6 +19,11 @@
  *
  * Cómo se mantiene:
  * - Una clave nueva se añade en Company (no aquí): esta clase no tiene lista.
+ * - Desde 0.2.0 hay una segunda fuente, `armazon-site/location` (los datos de
+ *   UNA sede), en includes/class-location.php. Comparte format() con esta y
+ *   el mismo script de editor; sus datos le llegan en window.armazonSiteLocation.
+ *   Si cambias cómo se pinta un texto o una URL, cambia en las dos: es lo que
+ *   se quiere.
  * - Caso frontera: dirección y horario tienen varias líneas. En atributos de
  *   TEXTO (content, text, alt…) los saltos salen como <br>; en atributos de
  *   URL (url, href) el valor va tal cual. Por eso se mira $attribute_name.
@@ -58,7 +63,15 @@ final class Bindings {
 		if ( '' === $key ) {
 			return null;
 		}
-		$value = Company::value( $key );
+		return self::format( Company::value( $key ), $attribute_name );
+	}
+
+	/**
+	 * Un valor en texto plano, listo para el atributo enlazado. Lo comparten
+	 * esta fuente y `armazon-site/location` (Location): el mismo tratamiento
+	 * en las dos, a propósito.
+	 */
+	public static function format( string $value, string $attribute_name ): string {
 		if ( in_array( $attribute_name, self::URL_ATTRIBUTES, true ) ) {
 			return '' === $value ? '' : esc_url_raw( $value, array( 'http', 'https', 'tel', 'mailto' ) );
 		}
@@ -80,5 +93,6 @@ final class Bindings {
 			'labels' => Company::labels(),
 		);
 		wp_add_inline_script( 'armazon-site-editor', 'window.armazonSiteCompany = ' . wp_json_encode( $data ) . ';', 'before' );
+		wp_add_inline_script( 'armazon-site-editor', 'window.armazonSiteLocation = ' . wp_json_encode( Location::editor_data() ) . ';', 'before' );
 	}
 }

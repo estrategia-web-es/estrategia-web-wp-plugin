@@ -76,3 +76,33 @@ test("pantalla «Datos de la empresa»: guarda, avisa del correo mal escrito y d
   assert.deepEqual(saved.enabled_types, [], "el oculto hace que «ninguno» llegue");
   assert.equal(saved.phone, "971 12 34 56", "lo que no se tocó sigue igual");
 });
+
+test("editor (0.2.0): un párrafo enlazado a armazon-site/location con slug ENSEÑA el dato de esa sede, y la fuente lista sus claves", async () => {
+  await saveCompany({ enabled_types: ["location"] });
+  const sede = await wp("/location", { method: "POST", body: { title: "Maioris", slug: "maioris", status: "publish", meta: { location_phone: "971 11 22 33" } } });
+  assert.equal(sede.status, 201, sede.text);
+  const page = await seedPage(
+    `<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"armazon-site/location","args":{"slug":"maioris","key":"location_phone"}}}}} -->
+<p>Texto de relleno</p>
+<!-- /wp:paragraph -->
+<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"armazon-site/location","args":{"slug":"maioris","key":"location_email"}}}}} -->
+<p>x</p>
+<!-- /wp:paragraph -->`,
+    "editor-sede"
+  );
+  await p.goto(`${BASE}/wp-admin/post.php?post=${page.id}&action=edit`);
+  await p.waitForFunction(() => window.wp?.data?.select("core/block-editor")?.getBlocks().length === 2, null, { timeout: 60000 });
+  const canvas = p.frameLocator('iframe[name="editor-canvas"]');
+  await canvas.locator("p.wp-block-paragraph", { hasText: "971 11 22 33" }).waitFor({ timeout: 15000 });
+  assert.match(await canvas.locator("p.wp-block-paragraph").nth(1).textContent(), /\[(Correo electrónico|Email)\]/, "un dato vacío enseña su nombre");
+
+  const source = await p.evaluate(() => {
+    const s = wp.blocks.getBlockBindingsSource("armazon-site/location");
+    return s && { label: s.label, fields: s.getFieldsList?.({}).map((f) => f.args.key), context: s.usesContext };
+  });
+  assert.ok(source, "la fuente de sedes está registrada en el editor");
+  assert.equal(source.label, "Datos de la sede");
+  assert.ok(source.fields.includes("title") && source.fields.includes("location_address") && source.fields.includes("location_phone_href"));
+  assert.ok(source.context.includes("postId"), "usa el contexto de la Consulta");
+  assert.deepEqual(errors, [], "sin errores de JavaScript en el editor");
+});

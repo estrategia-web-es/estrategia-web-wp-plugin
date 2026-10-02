@@ -7,8 +7,14 @@
  * opciones y no datos), `social.<red>` con punto, y las DERIVADAS de abajo.
  *
  * Cómo se mantiene:
- * - Una clave derivada nueva: DERIVED + value() + Links si es un enlace +
- *   assets/editor.js (FIELDS) + README. Es contrato: no se renombra.
+ * - Quién y cuándo: quien añada una clave, en el mismo commit que su prueba
+ *   (tests/bindings.test.mjs) y su fila en el README.
+ * - Una clave derivada nueva: DERIVED + value() + labels() (+ Links si es un
+ *   enlace de un tipo nuevo) + README. assets/editor.js NO se toca: lee las
+ *   claves de keys() y labels(). Es contrato: no se renombra. La última que
+ *   entró, `phone_secondary_href` (0.2.0), es el ejemplo.
+ * - Los datos de UNA sede no van aquí: son de la fuente `armazon-site/location`
+ *   (includes/class-location.php).
  * - Caso frontera: una clave que no existe («phone_mobile») devuelve '' y no
  *   un error: un bloque mal enlazado se ve vacío en la web y en el editor
  *   enseña el nombre de la clave, que es donde se nota.
@@ -23,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
 
 final class Company {
 
-	public const DERIVED = array( 'phone_href', 'email_href', 'whatsapp_href' );
+	public const DERIVED = array( 'phone_href', 'phone_secondary_href', 'email_href', 'whatsapp_href' );
 
 	/** Claves que son opciones del plugin, no datos que se enseñan. */
 	private const NOT_DATA = array( 'enabled_types', 'allow_svg', 'social' );
@@ -54,6 +60,8 @@ final class Company {
 		switch ( $key ) {
 			case 'phone_href':
 				return Links::tel( (string) $data['phone'], self::country_code() );
+			case 'phone_secondary_href':
+				return Links::tel( (string) $data['phone_secondary'], self::country_code() );
 			case 'email_href':
 				return Links::mailto( (string) $data['email'] );
 			case 'whatsapp_href':
@@ -92,7 +100,8 @@ final class Company {
 			'social.youtube'   => __( 'YouTube', 'armazon-site' ),
 			'social.tiktok'    => __( 'TikTok', 'armazon-site' ),
 			'phone_href'       => __( 'Phone (link)', 'armazon-site' ),
-			'email_href'       => __( 'Email (link)', 'armazon-site' ),
+			'phone_secondary_href' => __( 'Secondary phone (link)', 'armazon-site' ),
+			'email_href'      => __( 'Email (link)', 'armazon-site' ),
 			'whatsapp_href'    => __( 'WhatsApp (link)', 'armazon-site' ),
 		);
 	}

@@ -23,7 +23,9 @@
  *   Quitar o renombrar uno es MAYOR.
  * - Un campo nuevo: en META de su tipo, con tipo y saneado. Si no empieza por
  *   el nombre del tipo (`client_…`), no entra: así no choca con el meta de
- *   otro plugin.
+ *   otro plugin. Un campo nuevo de `location` entra SOLO en la fuente
+ *   `armazon-site/location` (Location lee meta_fields()): añade su fila en la
+ *   tabla de esa fuente en el README.
  * - Caso frontera: «servicios». No está, a propósito: en estas webs un
  *   servicio es una PÁGINA (con su diseño propio), no una ficha repetida. Si
  *   una web necesita fichas de servicio, se valora aquí como tipo nuevo.
@@ -268,6 +270,11 @@ final class Content_Types {
 	/** @return string[] Las claves de meta de un tipo (para la prueba y el README). */
 	public static function meta_keys( string $type ): array {
 		return array_keys( self::definitions()[ $type ]['meta'] ?? array() );
+	}
+
+	/** @return array<string,string> Clave de meta => nombre legible (la fuente de sedes los enseña en el editor). */
+	public static function meta_fields( string $type ): array {
+		return array_map( static fn( $meta ) => $meta['label'], self::definitions()[ $type ]['meta'] ?? array() );
 	}
 
 	private static function sanitizer( string $kind ): callable {

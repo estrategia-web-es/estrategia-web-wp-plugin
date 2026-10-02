@@ -30,6 +30,7 @@ require_once ARMAZON_SITE_DIR . 'includes/class-svg-sanitizer.php';
 require_once ARMAZON_SITE_DIR . 'includes/class-settings.php';
 require_once ARMAZON_SITE_DIR . 'includes/class-company.php';
 require_once ARMAZON_SITE_DIR . 'includes/class-bindings.php';
+require_once ARMAZON_SITE_DIR . 'includes/class-location.php';
 require_once ARMAZON_SITE_DIR . 'includes/class-content-types.php';
 require_once ARMAZON_SITE_DIR . 'includes/class-svg.php';
 require_once ARMAZON_SITE_DIR . 'includes/class-plugin.php';

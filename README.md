@@ -67,11 +67,12 @@ En PHP, un tema lee un dato con `\Armazon\Site\Company::value( 'phone' )`
 ### 2. Fuente de Block Bindings `armazon-site/company`
 
 `args.key` = cualquier clave de arriba (menos `enabled_types` y `allow_svg`),
-`social.<red>` con punto, y tres **derivadas**:
+`social.<red>` con punto, y cuatro **derivadas**:
 
 | Clave | Ejemplo |
 |---|---|
 | `phone_href` | `tel:+34971123456` (prefijo 34 si no lleva; filtro `armazon_site_default_country_code`) |
+| `phone_secondary_href` | ídem, de `phone_secondary` (0.2.0) |
 | `email_href` | `mailto:hola@empresa.com` |
 | `whatsapp_href` | `https://wa.me/34600111222?text=Hola%2C%20quer%C3%ADa…` |
 
@@ -106,6 +107,48 @@ tiene prueba propia; el `url` sí):
 <!-- wp:button {"metadata":{"bindings":{"text":{"source":"armazon-site/company","args":{"key":"phone"}},"url":{"source":"armazon-site/company","args":{"key":"phone_href"}}}}} -->
 <div class="wp-block-button"><a class="wp-block-button__link wp-element-button"></a></div>
 <!-- /wp:button -->
+```
+
+### 2 bis. Fuente de Block Bindings `armazon-site/location` (0.2.0)
+
+Los datos de **una sede** (tipo `location`, que tiene que estar activado).
+Dos formas de decir cuál, por los `args`:
+
+| args | Qué sede |
+|---|---|
+| `{"slug": "maioris", "key": "…"}` | esa, desde **cualquier** página. El identificador es el **slug** de la sede (su «enlace permanente»), no el título |
+| `{"key": "…"}` | la del **contexto**: dentro de una Consulta de sedes, la de cada fila (`postId`). Fuera de una sede, vacío |
+
+Claves:
+
+| Clave | Qué |
+|---|---|
+| `title` | el nombre de la sede |
+| `location_address`, `location_schedule` | varias líneas (salen con `<br>`) |
+| `location_phone`, `location_email`, `location_map_url`, `location_map_embed` | tal cual |
+| `location_phone_href` | `tel:+34971112233`, de `location_phone` (mismo prefijo que la empresa) |
+| `location_email_href` | `mailto:…`, de `location_email` |
+
+Mismo tratamiento que la de la empresa: texto escapado con `<br>`, y en `url`
+solo `http`, `https`, `tel` y `mailto`. **Una sede inexistente, en borrador o
+privada sale vacía** (en el editor, `[Nombre del dato]`). En el editor enseña
+el valor de las sedes publicadas al abrirlo; una sede creada después sale
+entre corchetes hasta recargar.
+
+Botón con el teléfono de la sede «maioris» (texto y url):
+
+```html
+<!-- wp:button {"metadata":{"bindings":{"text":{"source":"armazon-site/location","args":{"slug":"maioris","key":"location_phone"}},"url":{"source":"armazon-site/location","args":{"slug":"maioris","key":"location_phone_href"}}}}} -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button"></a></div>
+<!-- /wp:button -->
+```
+
+La dirección de cada sede dentro de una Consulta (`"postType":"location"`):
+
+```html
+<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"armazon-site/location","args":{"key":"location_address"}}}}} -->
+<p></p>
+<!-- /wp:paragraph -->
 ```
 
 ### 3. Tipos de contenido
@@ -187,10 +230,11 @@ que crea [tests/wp/armazon-site-test.php](tests/wp/armazon-site-test.php)).
 |---|---|---|
 | [tests/pure.test.mjs](tests/pure.test.mjs) | 1 | tel:/mailto:/wa.me; SVG hostil saneado, SVG inaceptables, medidas |
 | [tests/settings.test.mjs](tests/settings.test.mjs) | 2 | guardar y leer por REST, fusión, saneado (correo/URL/WhatsApp inválidos no se guardan), esquema, autor sin permiso |
-| [tests/bindings.test.mjs](tests/bindings.test.mjs) | 2 | párrafo con el teléfono, botón con wa.me, tel:, mailto:, `<br>`, escapado, `social.<red>` |
+| [tests/bindings.test.mjs](tests/bindings.test.mjs) | 2 | párrafo con el teléfono, botón con wa.me, tel: (también `phone_secondary_href`), mailto:, `<br>`, escapado, `social.<red>` |
+| [tests/location.test.mjs](tests/location.test.mjs) | 2 | fuente de sedes: por slug (botón texto+url, título, dirección, mailto, mapa), inexistente/borrador/fuera de contexto vacíos, por contexto en una Consulta |
 | [tests/types.test.mjs](tests/types.test.mjs) | 2 | tipo inexistente sin activar; activar/desactivar sin perder contenido; slug `/clientes/`; meta saneado; Consulta por `client_sector` con título e imagen |
 | [tests/svg.test.mjs](tests/svg.test.mjs) | 2 | SVG con `<script>` subido saneado (multipart y sideload), medidas, autor no puede, `allow_svg` apagado |
-| [tests/editor.test.mjs](tests/editor.test.mjs) | 3 | el editor enseña el valor enlazado y lista los datos; la pantalla de ajustes guarda, avisa y desactiva el último tipo |
+| [tests/editor.test.mjs](tests/editor.test.mjs) | 3 | el editor enseña el valor enlazado y lista los datos (empresa y sede por slug); la pantalla de ajustes guarda, avisa y desactiva el último tipo |
 
 **Todas se han visto fallar** (02-10-2026): tres tandas de mutantes, diez en
 total, cada uno pillado por su prueba.

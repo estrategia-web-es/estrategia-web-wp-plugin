@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: includes/admin/class-admin.php:33 includes/admin/class-admin.php:34
-#: includes/admin/class-admin.php:83 includes/class-bindings.php:45
+#: includes/admin/class-admin.php:83 includes/class-bindings.php:50
 #: includes/class-settings.php:84
 msgid "Company details"
 msgstr ""
@@ -87,83 +87,87 @@ msgstr ""
 msgid "Allow SVG uploads (administrators only; files are sanitized)"
 msgstr ""
 
-#: includes/class-company.php:77
+#: includes/class-company.php:85
 msgid "Company name"
 msgstr ""
 
-#: includes/class-company.php:78
+#: includes/class-company.php:86
 msgid "Legal name"
 msgstr ""
 
-#: includes/class-company.php:79
+#: includes/class-company.php:87
 msgid "Tax ID"
 msgstr ""
 
-#: includes/class-company.php:80 includes/class-content-types.php:133
+#: includes/class-company.php:88 includes/class-content-types.php:133
 msgid "Email"
 msgstr ""
 
-#: includes/class-company.php:81 includes/class-content-types.php:132
+#: includes/class-company.php:89 includes/class-content-types.php:132
 msgid "Phone"
 msgstr ""
 
-#: includes/class-company.php:82
+#: includes/class-company.php:90
 msgid "Secondary phone"
 msgstr ""
 
-#: includes/class-company.php:83
+#: includes/class-company.php:91
 msgid "WhatsApp"
 msgstr ""
 
-#: includes/class-company.php:84
+#: includes/class-company.php:92
 msgid "WhatsApp message"
 msgstr ""
 
-#: includes/class-company.php:85 includes/class-content-types.php:131
+#: includes/class-company.php:93 includes/class-content-types.php:131
 msgid "Address"
 msgstr ""
 
-#: includes/class-company.php:86 includes/class-content-types.php:134
+#: includes/class-company.php:94 includes/class-content-types.php:134
 msgid "Opening hours"
 msgstr ""
 
-#: includes/class-company.php:87
+#: includes/class-company.php:95
 msgid "Map link"
 msgstr ""
 
-#: includes/class-company.php:88
+#: includes/class-company.php:96
 msgid "Facebook"
 msgstr ""
 
-#: includes/class-company.php:89
+#: includes/class-company.php:97
 msgid "Instagram"
 msgstr ""
 
-#: includes/class-company.php:90
+#: includes/class-company.php:98
 msgid "LinkedIn"
 msgstr ""
 
-#: includes/class-company.php:91
+#: includes/class-company.php:99
 msgid "X (Twitter)"
 msgstr ""
 
-#: includes/class-company.php:92
+#: includes/class-company.php:100
 msgid "YouTube"
 msgstr ""
 
-#: includes/class-company.php:93
+#: includes/class-company.php:101
 msgid "TikTok"
 msgstr ""
 
-#: includes/class-company.php:94
+#: includes/class-company.php:102 includes/class-location.php:133
 msgid "Phone (link)"
 msgstr ""
 
-#: includes/class-company.php:95
+#: includes/class-company.php:103
+msgid "Secondary phone (link)"
+msgstr ""
+
+#: includes/class-company.php:104 includes/class-location.php:134
 msgid "Email (link)"
 msgstr ""
 
-#: includes/class-company.php:96
+#: includes/class-company.php:105
 msgid "WhatsApp (link)"
 msgstr ""
 
@@ -521,6 +525,14 @@ msgstr ""
 
 #: includes/class-content-types.php:193
 msgid "Portfolio category"
+msgstr ""
+
+#: includes/class-location.php:64
+msgid "Location details"
+msgstr ""
+
+#: includes/class-location.php:130
+msgid "Location name"
 msgstr ""
 
 #: includes/class-settings.php:85
