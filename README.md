@@ -10,7 +10,7 @@ compartido y versionado, como el plugin hermano
 El marco está en
 [armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md](E:/Repositories/armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md).
 
-- Slug y text domain: `armazon-site` · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · versión 0.1.0
+- Slug y text domain: `armazon-site` · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · versión 0.2.0
 - Sin dependencias, sin `node_modules`, sin paso de compilación.
 
 Por qué un plugin y no el tema padre: los datos y el contenido **no pueden
@@ -262,7 +262,9 @@ que crea [tests/wp/armazon-site-test.php](tests/wp/armazon-site-test.php)).
 | [tests/editor.test.mjs](tests/editor.test.mjs) | 3 | el editor enseña el valor enlazado y lista los datos (empresa y sede por slug); la pantalla de ajustes guarda, avisa y desactiva el último tipo |
 
 **Todas se han visto fallar** (02-10-2026): tres tandas de mutantes, diez en
-total, cada uno pillado por su prueba.
+total, cada uno pillado por su prueba. Las de 0.2.0 (marcadas «(0.2.0)» en su
+nombre) se vieron fallar ANTES de escribir el código, y la de `rewrite_slugs`
+en types, además, con un mutante de `maybe_flush`.
 
 ## Textos y traducciones (fila 11)
 

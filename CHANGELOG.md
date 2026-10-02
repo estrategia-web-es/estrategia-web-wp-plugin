@@ -4,7 +4,7 @@ Una entrada por versión, la más nueva arriba. Se escribe en el mismo commit
 que sube el número (README, «Versiones»). Si una versión obliga a tocar algo
 en las webs, la entrada lo dice primero, con qué cambiar.
 
-## 0.2.0 — sin publicar
+## 0.2.0 — 02-10-2026
 
 Menor: solo añade. Ninguna web tiene que tocar nada.
 

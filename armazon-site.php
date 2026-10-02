@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Armazón Site
  * Description:       Datos de la empresa (con Block Bindings), tipos de contenido habituales de una web corporativa (clientes, opiniones, sedes, proyectos, portfolio) activables, y subida de SVG saneada.
- * Version:           0.1.0
+ * Version:           0.2.0
  * Requires at least: 7.1
  * Requires PHP:      8.1
  * Author:            David Pérez
@@ -20,7 +20,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const ARMAZON_SITE_VERSION = '0.1.0';
+const ARMAZON_SITE_VERSION = '0.2.0';
 const ARMAZON_SITE_FILE    = __FILE__;
 define( 'ARMAZON_SITE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'ARMAZON_SITE_URL', plugin_dir_url( __FILE__ ) );
