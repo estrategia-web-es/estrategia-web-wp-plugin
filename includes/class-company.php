@@ -13,6 +13,8 @@
  *   enlace de un tipo nuevo) + README. assets/editor.js NO se toca: lee las
  *   claves de keys() y labels(). Es contrato: no se renombra. La última que
  *   entró, `phone_secondary_href` (0.2.0), es el ejemplo.
+ * - Una clave nueva sale SOLA también en el shortcode `[armazon_company]`
+ *   (0.4.0, includes/class-shortcode.php), que lee value().
  * - Los datos de UNA sede no van aquí: son de la fuente `armazon-site/location`
  *   (includes/class-location.php).
  * - Caso frontera: una clave que no existe («phone_mobile») devuelve '' y no
@@ -89,6 +91,7 @@ final class Company {
 			'company_name'     => __( 'Company name', 'armazon-site' ),
 			'legal_name'       => __( 'Legal name', 'armazon-site' ),
 			'tax_id'           => __( 'Tax ID', 'armazon-site' ),
+			'registry'         => __( 'Company registry', 'armazon-site' ),
 			'email'            => __( 'Email', 'armazon-site' ),
 			'phone'            => __( 'Phone', 'armazon-site' ),
 			'phone_secondary'  => __( 'Secondary phone', 'armazon-site' ),

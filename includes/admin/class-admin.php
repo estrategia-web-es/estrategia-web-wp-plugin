@@ -92,6 +92,7 @@ final class Admin {
 					$text( 'company_name' );
 					$text( 'legal_name' );
 					$text( 'tax_id' );
+					$text( 'registry', 'text', __( 'As it appears in the legal notice, without «Registered in». Example: Registro Mercantil de Mallorca, tomo 1234, folio 56, hoja PM-7890, inscripción 1.ª', 'armazon-site' ) );
 					$area( 'address' );
 					$area( 'schedule' );
 					$text( 'map_url', 'url' );

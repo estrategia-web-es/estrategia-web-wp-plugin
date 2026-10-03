@@ -154,6 +154,9 @@ final class Content_Types {
 					'location_schedule'  => array( 'type' => 'string', 'sanitize' => 'textarea', 'label' => __( 'Opening hours', 'armazon-site' ) ),
 					'location_map_url'   => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Google Maps link', 'armazon-site' ) ),
 					'location_map_embed' => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Map embed URL', 'armazon-site' ) ),
+					// 0.4.0. Para staticMapUrl / staticMapId de armazon/map (tema padre). Ver local_image_url().
+					'location_static_map'    => array( 'type' => 'string', 'sanitize' => 'local_image', 'label' => __( 'Static map image (theme path or URL of this site)', 'armazon-site' ) ),
+					'location_static_map_id' => array( 'type' => 'integer', 'sanitize' => 'image_id', 'label' => __( 'Static map image (media library ID)', 'armazon-site' ) ),
 				),
 			),
 			'project'     => array(
@@ -316,8 +319,54 @@ final class Content_Types {
 			'client'   => static fn( $v ) => ( (int) $v > 0 && 'client' === get_post_type( (int) $v ) ) ? (int) $v : 0,
 			// Solo dos valores; cualquier otro (o vacío) es el de por defecto.
 			'fit'      => static fn( $v ) => 'contain' === trim( (string) $v ) ? 'contain' : 'cover',
+			// 0.4.0, mapa estático de una sede.
+			'local_image' => static fn( $v ) => self::local_image_url( (string) $v ),
+			'image_id'    => static fn( $v ) => ( (int) $v > 0 && wp_attachment_is_image( (int) $v ) ) ? (int) $v : 0,
 			default    => static fn( $v ) => sanitize_text_field( (string) $v ),
 		};
+	}
+
+	/**
+	 * URL de una imagen servida por ESTE sitio, o '' (0.4.0, `location_static_map`).
+	 * Las mismas tres formas que acepta staticMapUrl de armazon/map en el tema
+	 * padre (armazon_map_static_url), que vuelve a comprobarlo al pintar:
+	 *
+	 *   assets/maps/sede.webp            ruta del TEMA (hijo, luego padre); se guarda sin «./»
+	 *   /wp-content/uploads/mapa.webp    ruta del sitio
+	 *   https://este-dominio/…/mapa.webp URL absoluta del MISMO host que home_url()
+	 *
+	 * Por qué tan estricto: un mapa de otro dominio es una petición a un tercero
+	 * sin consentimiento al cargar la página (con la IP del visitante); el
+	 * tema lo descartaría igual, pero aquí se nota al guardar y no en la web.
+	 * Caso frontera: «//otro.test/a.png» tiene host aunque no lleve esquema; se
+	 * trata como otro dominio. La trampa: esc_url_raw() a una ruta sin «/»
+	 * delante le pone «http://»; por eso las rutas se validan a mano.
+	 */
+	public static function local_image_url( string $value ): string {
+		$value = trim( $value );
+		if ( '' === $value ) {
+			return '';
+		}
+		$parts = wp_parse_url( $value );
+		if ( false === $parts || str_contains( $value, '..' ) ) {
+			return '';
+		}
+		$path = (string) ( $parts['path'] ?? '' );
+		if ( ! preg_match( '/\.(webp|png|jpe?g|gif|avif|svg)$/i', $path ) ) {
+			return '';
+		}
+		if ( isset( $parts['host'] ) || isset( $parts['scheme'] ) ) {
+			$site = wp_parse_url( home_url() );
+			$ok   = in_array( $parts['scheme'] ?? '', array( 'http', 'https' ), true )
+				&& isset( $parts['host'], $site['host'] )
+				&& strtolower( $parts['host'] ) === strtolower( $site['host'] );
+			return $ok ? esc_url_raw( $value, array( 'http', 'https' ) ) : '';
+		}
+		// Ruta: solo caracteres de URL que no hay que escapar (sin espacios, comillas ni «<»).
+		if ( ! preg_match( '#^[A-Za-z0-9._~/\-]+(\?[A-Za-z0-9._~=&%\-]*)?$#', $value ) ) {
+			return '';
+		}
+		return preg_replace( '#^\./#', '', $value );
 	}
 
 	/**

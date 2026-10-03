@@ -18,7 +18,7 @@ msgstr ""
 
 #: includes/admin/class-admin.php:33 includes/admin/class-admin.php:34
 #: includes/admin/class-admin.php:83 includes/class-bindings.php:50
-#: includes/class-settings.php:125
+#: includes/class-settings.php:135
 msgid "Company details"
 msgstr "Datos de la empresa"
 
@@ -34,11 +34,11 @@ msgstr "Opiniones"
 msgid "Locations"
 msgstr "Sedes"
 
-#: includes/admin/class-admin.php:48 includes/class-content-types.php:164
+#: includes/admin/class-admin.php:48 includes/class-content-types.php:167
 msgid "Projects"
 msgstr "Proyectos"
 
-#: includes/admin/class-admin.php:49 includes/class-content-types.php:196
+#: includes/admin/class-admin.php:49 includes/class-content-types.php:199
 msgid "Portfolio"
 msgstr "Portfolio"
 
@@ -56,27 +56,36 @@ msgstr ""
 msgid "Company"
 msgstr "Empresa"
 
-#: includes/admin/class-admin.php:101
+#: includes/admin/class-admin.php:95
+msgid ""
+"As it appears in the legal notice, without «Registered in». Example: "
+"Registro Mercantil de Mallorca, tomo 1234, folio 56, hoja PM-7890, "
+"inscripción 1.ª"
+msgstr ""
+"Tal como aparece en el aviso legal, sin «Inscrita en». Ejemplo: Registro "
+"Mercantil de Mallorca, tomo 1234, folio 56, hoja PM-7890, inscripción 1.ª"
+
+#: includes/admin/class-admin.php:102
 msgid "Contact"
 msgstr "Contacto"
 
-#: includes/admin/class-admin.php:107
+#: includes/admin/class-admin.php:108
 msgid "International format, digits only, without +. Example: 34600000000."
 msgstr "Formato internacional, solo dígitos, sin +. Ejemplo: 34600000000."
 
-#: includes/admin/class-admin.php:108
+#: includes/admin/class-admin.php:109
 msgid "Text that appears already written when the chat opens."
 msgstr "Texto que aparece ya escrito al abrir el chat."
 
-#: includes/admin/class-admin.php:112
+#: includes/admin/class-admin.php:113
 msgid "Social networks"
 msgstr "Redes sociales"
 
-#: includes/admin/class-admin.php:127
+#: includes/admin/class-admin.php:128
 msgid "Content types"
 msgstr "Tipos de contenido"
 
-#: includes/admin/class-admin.php:128
+#: includes/admin/class-admin.php:129
 msgid ""
 "Only the checked types appear in the menu and on the site. Unchecking a type "
 "does not delete its content: it comes back when it is checked again."
@@ -84,19 +93,19 @@ msgstr ""
 "Solo los tipos marcados aparecen en el menú y en la web. Desmarcar un tipo "
 "no borra su contenido: vuelve al marcarlo otra vez."
 
-#: includes/admin/class-admin.php:139
+#: includes/admin/class-admin.php:140
 msgid "Media"
 msgstr "Medios"
 
-#: includes/admin/class-admin.php:143
+#: includes/admin/class-admin.php:144
 msgid "Allow SVG uploads (administrators only; files are sanitized)"
 msgstr "Permitir subir SVG (solo administradores; los ficheros se sanean)"
 
-#: includes/admin/class-admin.php:147
+#: includes/admin/class-admin.php:148
 msgid "Statistics (Matomo)"
 msgstr "Estadísticas (Matomo)"
 
-#: includes/admin/class-admin.php:148
+#: includes/admin/class-admin.php:149
 msgid ""
 "Without the Matomo address or the site ID nothing is added to the site. "
 "Logged-in editors and administrators are not counted."
@@ -104,27 +113,27 @@ msgstr ""
 "Sin la dirección de Matomo o sin el ID del sitio no se añade nada a la web. "
 "Los editores y administradores con sesión iniciada no se cuentan."
 
-#: includes/admin/class-admin.php:151
+#: includes/admin/class-admin.php:152
 msgid "Matomo address"
 msgstr "Dirección de Matomo"
 
-#: includes/admin/class-admin.php:154
+#: includes/admin/class-admin.php:155
 msgid "Example: https://stats.example.com/"
 msgstr "Ejemplo: https://stats.ejemplo.com/"
 
-#: includes/admin/class-admin.php:158
+#: includes/admin/class-admin.php:159
 msgid "Site ID"
 msgstr "ID del sitio"
 
-#: includes/admin/class-admin.php:162
+#: includes/admin/class-admin.php:163
 msgid "Cookies"
 msgstr "Cookies"
 
-#: includes/admin/class-admin.php:167
+#: includes/admin/class-admin.php:168
 msgid "Without cookies (recommended): nothing to ask the visitor."
 msgstr "Sin cookies (recomendado): no hay nada que preguntar al visitante."
 
-#: includes/admin/class-admin.php:171
+#: includes/admin/class-admin.php:172
 msgid ""
 "Hybrid: without cookies until the visitor accepts «Statistics» in the cookie "
 "notice of the theme."
@@ -132,87 +141,91 @@ msgstr ""
 "Híbrido: sin cookies hasta que el visitante acepta «Estadísticas» en el "
 "aviso de cookies del tema."
 
-#: includes/class-company.php:89
+#: includes/class-company.php:91
 msgid "Company name"
 msgstr "Nombre comercial"
 
-#: includes/class-company.php:90
+#: includes/class-company.php:92
 msgid "Legal name"
 msgstr "Razón social"
 
-#: includes/class-company.php:91
+#: includes/class-company.php:93
 msgid "Tax ID"
 msgstr "NIF/CIF"
 
-#: includes/class-company.php:92 includes/class-content-types.php:153
+#: includes/class-company.php:94
+msgid "Company registry"
+msgstr "Inscripción registral"
+
+#: includes/class-company.php:95 includes/class-content-types.php:153
 msgid "Email"
 msgstr "Correo electrónico"
 
-#: includes/class-company.php:93 includes/class-content-types.php:152
+#: includes/class-company.php:96 includes/class-content-types.php:152
 msgid "Phone"
 msgstr "Teléfono"
 
-#: includes/class-company.php:94
+#: includes/class-company.php:97
 msgid "Secondary phone"
 msgstr "Teléfono secundario"
 
-#: includes/class-company.php:95
+#: includes/class-company.php:98
 msgid "WhatsApp"
 msgstr "WhatsApp"
 
-#: includes/class-company.php:96
+#: includes/class-company.php:99
 msgid "WhatsApp message"
 msgstr "Mensaje de WhatsApp"
 
-#: includes/class-company.php:97 includes/class-content-types.php:151
+#: includes/class-company.php:100 includes/class-content-types.php:151
 msgid "Address"
 msgstr "Dirección"
 
-#: includes/class-company.php:98 includes/class-content-types.php:154
+#: includes/class-company.php:101 includes/class-content-types.php:154
 msgid "Opening hours"
 msgstr "Horario"
 
-#: includes/class-company.php:99
+#: includes/class-company.php:102
 msgid "Map link"
 msgstr "Enlace al mapa"
 
-#: includes/class-company.php:100
+#: includes/class-company.php:103
 msgid "Facebook"
 msgstr "Facebook"
 
-#: includes/class-company.php:101
+#: includes/class-company.php:104
 msgid "Instagram"
 msgstr "Instagram"
 
-#: includes/class-company.php:102
+#: includes/class-company.php:105
 msgid "LinkedIn"
 msgstr "LinkedIn"
 
-#: includes/class-company.php:103
+#: includes/class-company.php:106
 msgid "X (Twitter)"
 msgstr "X (Twitter)"
 
-#: includes/class-company.php:104
+#: includes/class-company.php:107
 msgid "YouTube"
 msgstr "YouTube"
 
-#: includes/class-company.php:105
+#: includes/class-company.php:108
 msgid "TikTok"
 msgstr "TikTok"
 
-#: includes/class-company.php:106 includes/class-location.php:133
+#: includes/class-company.php:109 includes/class-location.php:133
 msgid "Phone (link)"
 msgstr "Teléfono (enlace)"
 
-#: includes/class-company.php:107
+#: includes/class-company.php:110
 msgid "Secondary phone (link)"
 msgstr "Teléfono secundario (enlace)"
 
-#: includes/class-company.php:108 includes/class-location.php:134
+#: includes/class-company.php:111 includes/class-location.php:134
 msgid "Email (link)"
 msgstr "Correo electrónico (enlace)"
 
-#: includes/class-company.php:109
+#: includes/class-company.php:112
 msgid "WhatsApp (link)"
 msgstr "WhatsApp (enlace)"
 
@@ -440,139 +453,147 @@ msgstr "Enlace a Google Maps"
 msgid "Map embed URL"
 msgstr "URL para incrustar el mapa"
 
-#: includes/class-content-types.php:161
+#: includes/class-content-types.php:158
+msgid "Static map image (theme path or URL of this site)"
+msgstr "Imagen del mapa estático (ruta del tema o URL de esta web)"
+
+#: includes/class-content-types.php:159
+msgid "Static map image (media library ID)"
+msgstr "Imagen del mapa estático (ID de la mediateca)"
+
+#: includes/class-content-types.php:164
 msgctxt "URL slug"
 msgid "projects"
 msgstr "proyectos"
 
-#: includes/class-content-types.php:165
+#: includes/class-content-types.php:168
 msgid "Project"
 msgstr "Proyecto"
 
-#: includes/class-content-types.php:166
+#: includes/class-content-types.php:169
 msgid "Add project"
 msgstr "Añadir proyecto"
 
-#: includes/class-content-types.php:167
+#: includes/class-content-types.php:170
 msgid "Edit project"
 msgstr "Editar proyecto"
 
-#: includes/class-content-types.php:168
+#: includes/class-content-types.php:171
 msgid "New project"
 msgstr "Nuevo proyecto"
 
-#: includes/class-content-types.php:169
+#: includes/class-content-types.php:172
 msgid "View project"
 msgstr "Ver proyecto"
 
-#: includes/class-content-types.php:170
+#: includes/class-content-types.php:173
 msgid "View projects"
 msgstr "Ver proyectos"
 
-#: includes/class-content-types.php:171
+#: includes/class-content-types.php:174
 msgid "Search projects"
 msgstr "Buscar proyectos"
 
-#: includes/class-content-types.php:172
+#: includes/class-content-types.php:175
 msgid "No projects found."
 msgstr "No hay proyectos."
 
-#: includes/class-content-types.php:173
+#: includes/class-content-types.php:176
 msgid "No projects found in Trash."
 msgstr "No hay proyectos en la papelera."
 
-#: includes/class-content-types.php:174
+#: includes/class-content-types.php:177
 msgid "All projects"
 msgstr "Todos los proyectos"
 
-#: includes/class-content-types.php:178
+#: includes/class-content-types.php:181
 msgctxt "URL slug"
 msgid "project-category"
 msgstr "categoria-proyecto"
 
-#: includes/class-content-types.php:180
+#: includes/class-content-types.php:183
 msgid "Project categories"
 msgstr "Categorías de proyecto"
 
-#: includes/class-content-types.php:181
+#: includes/class-content-types.php:184
 msgid "Project category"
 msgstr "Categoría de proyecto"
 
-#: includes/class-content-types.php:182 includes/class-content-types.php:214
+#: includes/class-content-types.php:185 includes/class-content-types.php:217
 msgid "Add category"
 msgstr "Añadir categoría"
 
-#: includes/class-content-types.php:183 includes/class-content-types.php:215
+#: includes/class-content-types.php:186 includes/class-content-types.php:218
 msgid "Edit category"
 msgstr "Editar categoría"
 
-#: includes/class-content-types.php:184 includes/class-content-types.php:216
+#: includes/class-content-types.php:187 includes/class-content-types.php:219
 msgid "Search categories"
 msgstr "Buscar categorías"
 
-#: includes/class-content-types.php:185 includes/class-content-types.php:217
+#: includes/class-content-types.php:188 includes/class-content-types.php:220
 msgid "All categories"
 msgstr "Todas las categorías"
 
-#: includes/class-content-types.php:186 includes/class-content-types.php:218
+#: includes/class-content-types.php:189 includes/class-content-types.php:221
 msgid "No categories found."
 msgstr "No hay categorías."
 
-#: includes/class-content-types.php:193
+#: includes/class-content-types.php:196
 msgctxt "URL slug"
 msgid "portfolio"
 msgstr "portfolio"
 
-#: includes/class-content-types.php:197
+#: includes/class-content-types.php:200
 msgid "Portfolio item"
 msgstr "Trabajo del portfolio"
 
-#: includes/class-content-types.php:198
+#: includes/class-content-types.php:201
 msgid "Add portfolio item"
 msgstr "Añadir trabajo"
 
-#: includes/class-content-types.php:199
+#: includes/class-content-types.php:202
 msgid "Edit portfolio item"
 msgstr "Editar trabajo"
 
-#: includes/class-content-types.php:200
+#: includes/class-content-types.php:203
 msgid "New portfolio item"
 msgstr "Nuevo trabajo"
 
-#: includes/class-content-types.php:201
+#: includes/class-content-types.php:204
 msgid "View portfolio item"
 msgstr "Ver trabajo"
 
-#: includes/class-content-types.php:202
+#: includes/class-content-types.php:205
 msgid "View portfolio"
 msgstr "Ver portfolio"
 
-#: includes/class-content-types.php:203
+#: includes/class-content-types.php:206
 msgid "Search portfolio"
 msgstr "Buscar en el portfolio"
 
-#: includes/class-content-types.php:204
+#: includes/class-content-types.php:207
 msgid "No portfolio items found."
 msgstr "No hay trabajos en el portfolio."
 
-#: includes/class-content-types.php:205
+#: includes/class-content-types.php:208
 msgid "No portfolio items found in Trash."
 msgstr "No hay trabajos en la papelera."
 
-#: includes/class-content-types.php:206
+#: includes/class-content-types.php:209
 msgid "All portfolio items"
 msgstr "Todos los trabajos"
 
-#: includes/class-content-types.php:210
+#: includes/class-content-types.php:213
 msgctxt "URL slug"
 msgid "portfolio-category"
 msgstr "categoria-portfolio"
 
-#: includes/class-content-types.php:212
+#: includes/class-content-types.php:215
 msgid "Portfolio categories"
 msgstr "Categorías del portfolio"
 
-#: includes/class-content-types.php:213
+#: includes/class-content-types.php:216
 msgid "Portfolio category"
 msgstr "Categoría del portfolio"
 
@@ -584,15 +605,15 @@ msgstr "Datos de la sede"
 msgid "Location name"
 msgstr "Nombre de la sede"
 
-#: includes/class-settings.php:126
+#: includes/class-settings.php:136
 msgid "Company details and site options of the Armazón Site plugin."
 msgstr "Datos de la empresa y opciones de la web del plugin Armazón Site."
 
-#: includes/class-settings.php:246
+#: includes/class-settings.php:257
 msgid "The email address is not valid. The previous one has been kept."
 msgstr "El correo electrónico no es válido. Se ha mantenido el anterior."
 
-#: includes/class-settings.php:259
+#: includes/class-settings.php:270
 msgid ""
 "The WhatsApp number is not valid (international format, digits only). The "
 "previous one has been kept."
@@ -601,7 +622,7 @@ msgstr ""
 "ha mantenido el anterior."
 
 #. translators: %s: the field name.
-#: includes/class-settings.php:333
+#: includes/class-settings.php:344
 #, php-format
 msgid ""
 "The address in «%s» is not a valid web address. The previous one has been "

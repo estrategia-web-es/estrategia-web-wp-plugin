@@ -4,6 +4,25 @@ Una entrada por versión, la más nueva arriba. Se escribe en el mismo commit
 que sube el número (README, «Versiones»). Si una versión obliga a tocar algo
 en las webs, la entrada lo dice primero, con qué cambiar.
 
+## 0.4.0 — 03-10-2026
+
+Menor: solo añade. Ninguna web tiene que tocar nada.
+
+- Datos legales: clave `registry` en la opción `armazon_site` (la
+  inscripción registral tal como la escribe el aviso legal, texto libre), en
+  la pantalla, en REST (fusionada y saneada), en la fuente
+  `armazon-site/company` y en `Company::value()`. Razón social, NIF y
+  domicilio ya estaban (`legal_name`, `tax_id`, `address`).
+- Shortcode `[armazon_company key="…"]`: un dato de la empresa dentro de una
+  frase (el aviso legal), escapado y en una línea (dirección y horario
+  unidos con «, »). Un binding sustituye el párrafo entero.
+- Sedes: campos `location_static_map` (URL de la imagen del mapa estático,
+  solo del propio sitio: ruta del tema, ruta del sitio o mismo dominio) y
+  `location_static_map_id` (adjunto de imagen), para `staticMapUrl` de
+  `armazon/map` del tema padre con core/post-meta en una Consulta. También
+  en la fuente `armazon-site/location`.
+- Pruebas: `tests/legal.test.mjs` y `tests/static-map.test.mjs` (nivel 2).
+
 ## 0.3.0 — 03-10-2026
 
 Menor: solo añade. Ninguna web tiene que tocar nada; sin configurar Matomo,

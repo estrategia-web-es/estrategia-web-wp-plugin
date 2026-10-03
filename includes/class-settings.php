@@ -36,6 +36,14 @@
  * - Caso frontera de `rewrite_slugs`: un nombre que no es del plugin
  *   («services») da 400 por REST (additionalProperties); por
  *   `wp option update` se ignora en silencio.
+ * - Datos legales (0.4.0): `legal_name` (razón social), `tax_id` (NIF/CIF),
+ *   `address` (domicilio) y `registry`. `registry` es UN texto libre y no
+ *   tomo/folio/hoja/inscripción por separado, a propósito: el aviso legal lo
+ *   escribe como una frase, y no toda empresa está en el Mercantil (un
+ *   autónomo no tiene; una cooperativa va a otro registro). Se escribe sin
+ *   «Inscrita en», que lo pone la frase. Caso frontera: el domicilio social
+ *   distinto de la dirección de la tienda. Hoy no tiene clave propia; si
+ *   varias webs lo piden, entra `legal_address` (versión menor).
  * - Matomo (0.3.0): `matomo_url` se guarda SIEMPRE acabada en «/» y sin el
  *   «matomo.php»/«matomo.js» que se pega a veces del código de seguimiento;
  *   `matomo_site_id` es entero (0 = sin configurar); `matomo_mode` es uno de
@@ -72,7 +80,7 @@ final class Settings {
 	public const REWRITE_NAMES = array( 'client', 'client_sector', 'testimonial', 'location', 'project', 'project_category', 'portfolio', 'portfolio_category' );
 
 	/** Campos de texto de una línea. */
-	private const TEXT = array( 'company_name', 'legal_name', 'tax_id', 'phone', 'phone_secondary', 'whatsapp_message' );
+	private const TEXT = array( 'company_name', 'legal_name', 'tax_id', 'registry', 'phone', 'phone_secondary', 'whatsapp_message' );
 
 	/** Campos de varias líneas (los saltos se conservan y se pintan como <br>). */
 	private const TEXTAREA = array( 'address', 'schedule' );
@@ -81,6 +89,8 @@ final class Settings {
 		'company_name'     => '',
 		'legal_name'       => '',
 		'tax_id'           => '',
+		// 0.4.0. La inscripción tal como se escribe en el aviso legal (ver «Datos legales»).
+		'registry'         => '',
 		'email'            => '',
 		'phone'            => '',
 		'phone_secondary'  => '',
@@ -149,6 +159,7 @@ final class Settings {
 				'company_name'     => $string,
 				'legal_name'       => $string,
 				'tax_id'           => $string,
+				'registry'         => $string,
 				'email'            => $string,
 				'phone'            => $string,
 				'phone_secondary'  => $string,

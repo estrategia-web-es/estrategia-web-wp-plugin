@@ -10,7 +10,7 @@ compartido y versionado, como el plugin hermano
 El marco está en
 [armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md](E:/Repositories/armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md).
 
-- Slug y text domain: `armazon-site` · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · versión 0.3.0
+- Slug y text domain: `armazon-site` · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · versión 0.4.0
 - Sin dependencias, sin `node_modules`, sin paso de compilación.
 
 Por qué un plugin y no el tema padre: los datos y el contenido **no pueden
@@ -35,6 +35,7 @@ su esquema: `GET/POST /wp/v2/settings` → clave `armazon_site`.
 | `company_name` | texto | sin HTML |
 | `legal_name` | texto | sin HTML |
 | `tax_id` | texto | sin HTML |
+| `registry` | texto (0.4.0): la inscripción registral **tal como la dice el aviso legal**, sin «Inscrita en» («Registro Mercantil de Mallorca, tomo 1234, folio 56, hoja PM-7890, inscripción 1.ª»). Una sola clave a propósito: el aviso la escribe como frase y no toda empresa está en el Mercantil | sin HTML |
 | `email` | texto | correo válido; si no, **se queda el anterior** |
 | `phone` | texto | tal como se escribe («971 12 34 56») |
 | `phone_secondary` | texto | ídem |
@@ -110,7 +111,29 @@ tiene prueba propia; el `url` sí):
 <!-- /wp:button -->
 ```
 
-### 2 bis. Fuente de Block Bindings `armazon-site/location` (0.2.0)
+### 2 bis. Un dato dentro de una frase: `[armazon_company key="…"]` (0.4.0)
+
+Un binding sustituye el párrafo **entero** (WP 7.1 no tiene bindings en
+línea), así que para el **aviso legal** (LSSI, art. 10) hay un shortcode.
+Mismas claves que la fuente (`Company::value()`: también `social.<red>` y las
+derivadas), texto escapado y **en una línea**: dirección y horario salen
+unidos con «, ». Una clave inexistente o vacía no pinta nada.
+
+```html
+<!-- wp:paragraph -->
+<p>Titular: [armazon_company key="legal_name"], con NIF [armazon_company key="tax_id"] y domicilio en [armazon_company key="address"]. Teléfono: [armazon_company key="phone"]. Correo: [armazon_company key="email"]. Inscrita en el [armazon_company key="registry"].</p>
+<!-- /wp:paragraph -->
+```
+
+- En el **editor se ve el shortcode** tal cual; el valor sale en la web. Un
+  dato solo en su párrafo, mejor con binding (que sí se ve en el editor).
+- Funciona en el contenido y en las plantillas de bloques; **no** en un
+  atributo de bloque ni en un `href` (para enlaces, el binding del botón).
+- `[[armazon_company …]]` con dos corchetes es el **escape** de WordPress:
+  sale literal. El porqué de shortcode y no bloque, en la cabecera de
+  [includes/class-shortcode.php](includes/class-shortcode.php).
+
+### 2 ter. Fuente de Block Bindings `armazon-site/location` (0.2.0)
 
 Los datos de **una sede** (tipo `location`, que tiene que estar activado).
 Dos formas de decir cuál, por los `args`:
@@ -126,7 +149,7 @@ Claves:
 |---|---|
 | `title` | el nombre de la sede |
 | `location_address`, `location_schedule` | varias líneas (salen con `<br>`) |
-| `location_phone`, `location_email`, `location_map_url`, `location_map_embed` | tal cual |
+| `location_phone`, `location_email`, `location_map_url`, `location_map_embed`, `location_static_map`, `location_static_map_id` (0.4.0) | tal cual |
 | `location_phone_href` | `tel:+34971112233`, de `location_phone` (mismo prefijo que la empresa) |
 | `location_email_href` | `mailto:…`, de `location_email` |
 
@@ -163,7 +186,7 @@ reactivarlo. Todos `public`, `show_in_rest` (ruta REST = nombre del tipo:
 |---|---|---|---|---|---|
 | `client` | Clientes | `/clientes/` | título = nombre, imagen destacada = logo/foto, extracto, orden manual | `client_url` (URL), `client_image_fit` (`cover` por defecto o `contain`; otro valor → `cover`; 0.2.0) | `client_sector` (jerárquica, slug `/sector/`) |
 | `testimonial` | Opiniones | `/opiniones/` | título (interno), contenido = la opinión, imagen = foto del autor, orden | `testimonial_author`, `testimonial_role` (texto), `testimonial_rating` (entero 0-5; **0 = sin valoración**), `testimonial_client` (id de un `client`, o 0) | — |
-| `location` | Sedes | `/sedes/` | título = sede, contenido, imagen = mapa estático, extracto, orden | `location_address`, `location_schedule` (varias líneas), `location_phone`, `location_email`, `location_map_url` (enlace a Google Maps), `location_map_embed` (URL de embed para el bloque `armazon/map` del padre) | — |
+| `location` | Sedes | `/sedes/` | título = sede, contenido, imagen = mapa estático, extracto, orden | `location_address`, `location_schedule` (varias líneas), `location_phone`, `location_email`, `location_map_url` (enlace a Google Maps), `location_map_embed` (URL de embed para el bloque `armazon/map` del padre), `location_static_map` (0.4.0: imagen del mapa estático servida por **este** sitio: ruta del tema `assets/maps/sede.webp`, ruta del sitio `/wp-content/…` o URL del mismo dominio, acabada en webp/png/jpg/gif/avif/svg; cualquier otra → `''`), `location_static_map_id` (0.4.0: entero, id de un adjunto de **imagen**; si no, 0) | — |
 | `project` | Proyectos | `/proyectos/` | título, contenido, imagen, extracto, orden, revisiones | — | `project_category` (`/categoria-proyecto/`) |
 | `portfolio` | Portfolio | `/portfolio/` | ídem | — | `portfolio_category` (`/categoria-portfolio/`) |
 
@@ -190,6 +213,19 @@ Un campo dentro de la Consulta (el autor de una opinión):
 <p></p>
 <!-- /wp:paragraph -->
 ```
+
+El mapa de cada sede con `armazon/map` del tema padre, dentro de una Consulta
+de `location` (0.4.0: el mapa estático, de `location_static_map`):
+
+```html
+<!-- wp:armazon/map {"metadata":{"bindings":{"address":{"source":"core/post-meta","args":{"key":"location_address"}},"embedUrl":{"source":"core/post-meta","args":{"key":"location_map_embed"}},"mapsUrl":{"source":"core/post-meta","args":{"key":"location_map_url"}},"staticMapUrl":{"source":"core/post-meta","args":{"key":"location_static_map"}}}}} /-->
+```
+
+`location_static_map_id` se guarda y valida, pero **hoy no se puede enlazar**
+a `staticMapId`: el padre solo declara enlazables sus atributos de texto
+(`inc/blocks.php`) y `staticMapId` es un número. Para la mediateca, la URL
+del adjunto en `location_static_map` (mismo dominio) sirve igual. El tema
+vuelve a comprobar la URL al pintar (`armazon_map_static_url`).
 
 **Slugs públicos por web: `rewrite_slugs`** en la opción (0.2.0). Las rutas
 son del plugin, no del tema: una web con una **página** `/clientes/` (que el
@@ -295,6 +331,8 @@ que crea [tests/wp/armazon-site-test.php](tests/wp/armazon-site-test.php)).
 | [tests/bindings.test.mjs](tests/bindings.test.mjs) | 2 | párrafo con el teléfono, botón con wa.me, tel: (también `phone_secondary_href`), mailto:, `<br>`, escapado, `social.<red>` |
 | [tests/location.test.mjs](tests/location.test.mjs) | 2 | fuente de sedes: por slug (botón texto+url, título, dirección, mailto, mapa), inexistente/borrador/fuera de contexto vacíos, por contexto en una Consulta |
 | [tests/types.test.mjs](tests/types.test.mjs) | 2 | tipo inexistente sin activar; activar/desactivar sin perder contenido; slug `/clientes/`; meta saneado; Consulta por `client_sector` con título e imagen; `client_image_fit` y la clase `has-image-fit-contain`; `rewrite_slugs` mueve el archivo a `/cliente/` y deja libre la página `/clientes/` |
+| [tests/legal.test.mjs](tests/legal.test.mjs) | 2 | datos legales (0.4.0): `registry` saneado y fusionado; frase legal con `[armazon_company]` (razón social, NIF, domicilio en una línea, teléfono, correo, registro, escapado); clave inexistente vacía; `registry` por binding |
+| [tests/static-map.test.mjs](tests/static-map.test.mjs) | 2 | mapa estático de una sede (0.4.0): `location_static_map` acepta ruta del tema, del sitio y URL del mismo dominio, y rechaza otro dominio, `//`, `javascript:`, `..`, no-imagen; `location_static_map_id` solo adjuntos de imagen; en una Consulta, core/post-meta da a cada sede el suyo (párrafo e imagen); también por la fuente de sedes |
 | [tests/svg.test.mjs](tests/svg.test.mjs) | 2 | SVG con `<script>` subido saneado (multipart y sideload), medidas, autor no puede, `allow_svg` apagado |
 | [tests/matomo.test.mjs](tests/matomo.test.mjs) | 2 | Matomo (0.3.0): sin URL o sin id no se imprime; por defecto `disableCookies`; híbrido con `requireCookieConsent` y la categoría «statistics» declarada; saneado (URL, id, 400 del modo); sus claves no son datos enlazables |
 | [tests/matomo-browser.test.mjs](tests/matomo-browser.test.mjs) | 3 | con el `matomo.js` real ([tests/fixtures/matomo.js](tests/fixtures/matomo.js), 5.4.0, BSD-3) servido por una ruta falsa: sin configuración no se pide; sin cookies mide y no deja cookies; híbrido sin cookies hasta aceptar, `mtm_cookie_consent` y `_pk_id` al aceptar, borradas al retirar; aviso ya resuelto al cargar; elección caducada olvida; a un administrador no se le mide |
@@ -306,7 +344,10 @@ nombre) se vieron fallar ANTES de escribir el código, y la de `rewrite_slugs`
 en types, además, con un mutante de `maybe_flush`. Las de Matomo (0.3.0,
 03-10-2026) con cinco mutantes: imprimir sin id, quitar `disableCookies`,
 cambiar `remember` por `forget`, no olvidar con la elección caducada y medir
-a los administradores; cada uno pillado.
+a los administradores; cada uno pillado. Las de 0.4.0 (03-10-2026) se vieron
+en rojo antes del código (shortcode y campos sin existir), y con dos
+mutantes: `registry` fuera de DEFAULTS y el saneado del mapa estático que lo
+deja pasar todo.
 
 ## Textos y traducciones (fila 11)
 
