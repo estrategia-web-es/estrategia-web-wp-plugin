@@ -25,6 +25,7 @@ final class Plugin {
 		add_action( 'update_option_' . Settings::OPTION, array( Content_Types::class, 'maybe_flush' ), 10, 2 );
 		add_action( 'add_option_' . Settings::OPTION, static fn( $name, $value ) => Content_Types::maybe_flush( array(), $value ), 10, 2 );
 		Svg::boot();
+		Matomo::boot();
 
 		if ( is_admin() ) {
 			Admin::boot();

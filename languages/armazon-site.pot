@@ -18,7 +18,7 @@ msgstr ""
 
 #: includes/admin/class-admin.php:33 includes/admin/class-admin.php:34
 #: includes/admin/class-admin.php:83 includes/class-bindings.php:50
-#: includes/class-settings.php:112
+#: includes/class-settings.php:125
 msgid "Company details"
 msgstr ""
 
@@ -87,87 +87,123 @@ msgstr ""
 msgid "Allow SVG uploads (administrators only; files are sanitized)"
 msgstr ""
 
-#: includes/class-company.php:85
+#: includes/admin/class-admin.php:147
+msgid "Statistics (Matomo)"
+msgstr ""
+
+#: includes/admin/class-admin.php:148
+msgid ""
+"Without the Matomo address or the site ID nothing is added to the site. "
+"Logged-in editors and administrators are not counted."
+msgstr ""
+
+#: includes/admin/class-admin.php:151
+msgid "Matomo address"
+msgstr ""
+
+#: includes/admin/class-admin.php:154
+msgid "Example: https://stats.example.com/"
+msgstr ""
+
+#: includes/admin/class-admin.php:158
+msgid "Site ID"
+msgstr ""
+
+#: includes/admin/class-admin.php:162
+msgid "Cookies"
+msgstr ""
+
+#: includes/admin/class-admin.php:167
+msgid "Without cookies (recommended): nothing to ask the visitor."
+msgstr ""
+
+#: includes/admin/class-admin.php:171
+msgid ""
+"Hybrid: without cookies until the visitor accepts «Statistics» in the cookie "
+"notice of the theme."
+msgstr ""
+
+#: includes/class-company.php:89
 msgid "Company name"
 msgstr ""
 
-#: includes/class-company.php:86
+#: includes/class-company.php:90
 msgid "Legal name"
 msgstr ""
 
-#: includes/class-company.php:87
+#: includes/class-company.php:91
 msgid "Tax ID"
 msgstr ""
 
-#: includes/class-company.php:88 includes/class-content-types.php:153
+#: includes/class-company.php:92 includes/class-content-types.php:153
 msgid "Email"
 msgstr ""
 
-#: includes/class-company.php:89 includes/class-content-types.php:152
+#: includes/class-company.php:93 includes/class-content-types.php:152
 msgid "Phone"
 msgstr ""
 
-#: includes/class-company.php:90
+#: includes/class-company.php:94
 msgid "Secondary phone"
 msgstr ""
 
-#: includes/class-company.php:91
+#: includes/class-company.php:95
 msgid "WhatsApp"
 msgstr ""
 
-#: includes/class-company.php:92
+#: includes/class-company.php:96
 msgid "WhatsApp message"
 msgstr ""
 
-#: includes/class-company.php:93 includes/class-content-types.php:151
+#: includes/class-company.php:97 includes/class-content-types.php:151
 msgid "Address"
 msgstr ""
 
-#: includes/class-company.php:94 includes/class-content-types.php:154
+#: includes/class-company.php:98 includes/class-content-types.php:154
 msgid "Opening hours"
 msgstr ""
 
-#: includes/class-company.php:95
+#: includes/class-company.php:99
 msgid "Map link"
 msgstr ""
 
-#: includes/class-company.php:96
+#: includes/class-company.php:100
 msgid "Facebook"
 msgstr ""
 
-#: includes/class-company.php:97
+#: includes/class-company.php:101
 msgid "Instagram"
 msgstr ""
 
-#: includes/class-company.php:98
+#: includes/class-company.php:102
 msgid "LinkedIn"
 msgstr ""
 
-#: includes/class-company.php:99
+#: includes/class-company.php:103
 msgid "X (Twitter)"
 msgstr ""
 
-#: includes/class-company.php:100
+#: includes/class-company.php:104
 msgid "YouTube"
 msgstr ""
 
-#: includes/class-company.php:101
+#: includes/class-company.php:105
 msgid "TikTok"
 msgstr ""
 
-#: includes/class-company.php:102 includes/class-location.php:133
+#: includes/class-company.php:106 includes/class-location.php:133
 msgid "Phone (link)"
 msgstr ""
 
-#: includes/class-company.php:103
+#: includes/class-company.php:107
 msgid "Secondary phone (link)"
 msgstr ""
 
-#: includes/class-company.php:104 includes/class-location.php:134
+#: includes/class-company.php:108 includes/class-location.php:134
 msgid "Email (link)"
 msgstr ""
 
-#: includes/class-company.php:105
+#: includes/class-company.php:109
 msgid "WhatsApp (link)"
 msgstr ""
 
@@ -539,22 +575,22 @@ msgstr ""
 msgid "Location name"
 msgstr ""
 
-#: includes/class-settings.php:113
+#: includes/class-settings.php:126
 msgid "Company details and site options of the Armazón Site plugin."
 msgstr ""
 
-#: includes/class-settings.php:224
+#: includes/class-settings.php:246
 msgid "The email address is not valid. The previous one has been kept."
 msgstr ""
 
-#: includes/class-settings.php:237
+#: includes/class-settings.php:259
 msgid ""
 "The WhatsApp number is not valid (international format, digits only). The "
 "previous one has been kept."
 msgstr ""
 
 #. translators: %s: the field name.
-#: includes/class-settings.php:291
+#: includes/class-settings.php:333
 #, php-format
 msgid ""
 "The address in «%s» is not a valid web address. The previous one has been "

@@ -4,6 +4,23 @@ Una entrada por versión, la más nueva arriba. Se escribe en el mismo commit
 que sube el número (README, «Versiones»). Si una versión obliga a tocar algo
 en las webs, la entrada lo dice primero, con qué cambiar.
 
+## 0.3.0 — 03-10-2026
+
+Menor: solo añade. Ninguna web tiene que tocar nada; sin configurar Matomo,
+no se imprime nada.
+
+- Matomo: claves `matomo_url`, `matomo_site_id` y `matomo_mode`
+  (`cookieless` por defecto, o `hybrid`) en la opción `armazon_site`, y su
+  sección «Estadísticas (Matomo)» en la pantalla. El código de seguimiento va
+  en el `<head>`; no se mide en el escritorio, vistas previas ni a quien
+  puede editar (filtro `armazon_site_matomo_track`).
+- Modo híbrido: sin cookies hasta que el visitante acepta «statistics» en el
+  aviso del tema padre (`rememberCookieConsentGiven`; al retirarla,
+  `forgetCookieConsentGiven`). Declara la categoría con
+  `armazon_consent_categories`. Su legalidad no está verificada (CNIL).
+- Pruebas: `tests/matomo.test.mjs` (nivel 2) y `tests/matomo-browser.test.mjs`
+  (nivel 3, con el matomo.js real en `tests/fixtures/`).
+
 ## 0.2.0 — 02-10-2026
 
 Menor: solo añade. Ninguna web tiene que tocar nada.

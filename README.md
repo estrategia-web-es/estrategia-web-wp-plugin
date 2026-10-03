@@ -10,7 +10,7 @@ compartido y versionado, como el plugin hermano
 El marco está en
 [armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md](E:/Repositories/armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md).
 
-- Slug y text domain: `armazon-site` · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · versión 0.2.0
+- Slug y text domain: `armazon-site` · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · versión 0.3.0
 - Sin dependencias, sin `node_modules`, sin paso de compilación.
 
 Por qué un plugin y no el tema padre: los datos y el contenido **no pueden
@@ -232,6 +232,43 @@ funciona con un SVG. **Sin dependencias**: el porqué, en la cabecera de esa
 clase. Un tema no debe añadir `svg` a `upload_mimes` por su cuenta (el tema
 hijo viejo de Lavandería lo hacía, sin sanear).
 
+### 5. Matomo (0.3.0)
+
+Tres claves más en la opción `armazon_site` (misma fusión, mismo REST), y
+una sección **Estadísticas (Matomo)** en la pantalla:
+
+| Clave | Tipo | Saneado |
+|---|---|---|
+| `matomo_url` | URL | http(s); se guarda **acabada en `/`** y sin el `matomo.php`/`matomo.js` que se pega a veces; inválida → se queda la anterior |
+| `matomo_site_id` | entero ≥ 0 | `0` = sin configurar; negativo → **400** |
+| `matomo_mode` | `cookieless` (por defecto) o `hybrid` | otro valor → **400** |
+
+```bash
+curl -u admin:APP_PASS -X POST https://web.test/wp-json/wp/v2/settings \
+  -H 'Content-Type: application/json' \
+  -d '{"armazon_site":{"matomo_url":"https://stats.ejemplo.com/","matomo_site_id":3}}'
+```
+
+- **Sin URL o sin id no se imprime nada.** Con las dos, el código de
+  seguimiento va en línea en el `<head>` (`<script id="armazon-site-matomo">`).
+- **No se mide** en el escritorio, el editor, las vistas previas ni a quien
+  tiene sesión y puede editar (`edit_posts`). Filtro
+  `armazon_site_matomo_track( $track )` para cambiarlo.
+- **`cookieless`** (el de la fila 16): `disableCookies`, nada que preguntar.
+- **`hybrid`**: mide sin cookies (`requireCookieConsent`) y, cuando el
+  visitante acepta **«statistics»** en el aviso del **tema padre**, llama a
+  `rememberCookieConsentGiven`; si la retira, a `forgetCookieConsentGiven`.
+  Escucha el evento `armazon:consent` y mira `window.armazonConsent.get()`
+  (el contrato de `armazon-wp-padre/inc/consent.php`), y **declara él mismo
+  la categoría** con el filtro `armazon_consent_categories` (prioridad 99): el
+  hijo no tiene que acordarse. Sin el tema padre, se queda sin cookies.
+  **La legalidad del híbrido no está verificada** (criterio de la CNIL): por
+  eso no es el de por defecto.
+- «Sin IP completa» se configura en el servidor de Matomo, no aquí.
+
+El porqué de cada decisión y sus trampas, en la cabecera de
+[includes/class-matomo.php](includes/class-matomo.php).
+
 ### Glosario (código en inglés, dominio en castellano)
 
 `client` cliente · `testimonial` opinión · `location` sede · `project`
@@ -259,12 +296,17 @@ que crea [tests/wp/armazon-site-test.php](tests/wp/armazon-site-test.php)).
 | [tests/location.test.mjs](tests/location.test.mjs) | 2 | fuente de sedes: por slug (botón texto+url, título, dirección, mailto, mapa), inexistente/borrador/fuera de contexto vacíos, por contexto en una Consulta |
 | [tests/types.test.mjs](tests/types.test.mjs) | 2 | tipo inexistente sin activar; activar/desactivar sin perder contenido; slug `/clientes/`; meta saneado; Consulta por `client_sector` con título e imagen; `client_image_fit` y la clase `has-image-fit-contain`; `rewrite_slugs` mueve el archivo a `/cliente/` y deja libre la página `/clientes/` |
 | [tests/svg.test.mjs](tests/svg.test.mjs) | 2 | SVG con `<script>` subido saneado (multipart y sideload), medidas, autor no puede, `allow_svg` apagado |
+| [tests/matomo.test.mjs](tests/matomo.test.mjs) | 2 | Matomo (0.3.0): sin URL o sin id no se imprime; por defecto `disableCookies`; híbrido con `requireCookieConsent` y la categoría «statistics» declarada; saneado (URL, id, 400 del modo); sus claves no son datos enlazables |
+| [tests/matomo-browser.test.mjs](tests/matomo-browser.test.mjs) | 3 | con el `matomo.js` real ([tests/fixtures/matomo.js](tests/fixtures/matomo.js), 5.4.0, BSD-3) servido por una ruta falsa: sin configuración no se pide; sin cookies mide y no deja cookies; híbrido sin cookies hasta aceptar, `mtm_cookie_consent` y `_pk_id` al aceptar, borradas al retirar; aviso ya resuelto al cargar; elección caducada olvida; a un administrador no se le mide |
 | [tests/editor.test.mjs](tests/editor.test.mjs) | 3 | el editor enseña el valor enlazado y lista los datos (empresa y sede por slug); la pantalla de ajustes guarda, avisa y desactiva el último tipo |
 
 **Todas se han visto fallar** (02-10-2026): tres tandas de mutantes, diez en
 total, cada uno pillado por su prueba. Las de 0.2.0 (marcadas «(0.2.0)» en su
 nombre) se vieron fallar ANTES de escribir el código, y la de `rewrite_slugs`
-en types, además, con un mutante de `maybe_flush`.
+en types, además, con un mutante de `maybe_flush`. Las de Matomo (0.3.0,
+03-10-2026) con cinco mutantes: imprimir sin id, quitar `disableCookies`,
+cambiar `remember` por `forget`, no olvidar con la elección caducada y medir
+a los administradores; cada uno pillado.
 
 ## Textos y traducciones (fila 11)
 

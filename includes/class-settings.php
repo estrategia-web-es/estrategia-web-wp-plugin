@@ -21,7 +21,8 @@
  * - Una clave nueva entra en DEFAULTS, en schema(), en sanitize(), en la
  *   pantalla (Admin), en la lista del editor (assets/editor.js) y en el
  *   README, en el mismo commit. Si una prueba la necesita, también en
- *   tests/lib.mjs.
+ *   tests/lib.mjs. Si es una OPCIÓN y no un dato que se enseña (como las de
+ *   Matomo), también en Company::NOT_DATA.
  * - Caso frontera: un dato que solo tiene UNA web (el número de registro
  *   sanitario de una clínica). No entra: va al tema hijo. Entra lo que tendría
  *   cualquier web corporativa.
@@ -35,11 +36,16 @@
  * - Caso frontera de `rewrite_slugs`: un nombre que no es del plugin
  *   («services») da 400 por REST (additionalProperties); por
  *   `wp option update` se ignora en silencio.
+ * - Matomo (0.3.0): `matomo_url` se guarda SIEMPRE acabada en «/» y sin el
+ *   «matomo.php»/«matomo.js» que se pega a veces del código de seguimiento;
+ *   `matomo_site_id` es entero (0 = sin configurar); `matomo_mode` es uno de
+ *   MATOMO_MODES (otro valor por REST → 400; por la pantalla, se queda el
+ *   anterior). Qué hace cada modo, en la cabecera de class-matomo.php.
  * - La trampa: el controlador REST de ajustes devuelve null para TODA la
  *   opción si lo guardado no cumple el esquema (un tipo distinto, una clave de
  *   enabled_types que ya no está en el enum). Por eso sanitize() deja siempre
- *   los tipos exactos del esquema, y quitar un valor del enum de
- *   enabled_types es versión mayor.
+ *   los tipos exactos del esquema (el id de Matomo, int; nunca "3"), y quitar
+ *   un valor del enum de enabled_types o de matomo_mode es versión mayor.
  */
 
 namespace Armazon\Site;
@@ -54,6 +60,9 @@ final class Settings {
 	public const TYPES = array( 'client', 'testimonial', 'location', 'project', 'portfolio' );
 
 	public const SOCIAL = array( 'facebook', 'instagram', 'linkedin', 'x', 'youtube', 'tiktok' );
+
+	/** Modos de Matomo (0.3.0). El primero es el de por defecto. Ver class-matomo.php. */
+	public const MATOMO_MODES = array( 'cookieless', 'hybrid' );
 
 	/**
 	 * Los nombres que admite `rewrite_slugs` (0.2.0): los tipos y las
@@ -101,6 +110,10 @@ final class Settings {
 			'portfolio'          => '',
 			'portfolio_category' => '',
 		),
+		// 0.3.0. Sin URL o sin id no se imprime nada (Matomo::config()).
+		'matomo_url'       => '',
+		'matomo_site_id'   => 0,
+		'matomo_mode'      => 'cookieless',
 	);
 
 	public static function register(): void {
@@ -163,6 +176,15 @@ final class Settings {
 					'additionalProperties' => false,
 					'properties'           => $slugs,
 				),
+				'matomo_url'       => $string,
+				'matomo_site_id'   => array(
+					'type'    => 'integer',
+					'minimum' => 0,
+				),
+				'matomo_mode'      => array(
+					'type' => 'string',
+					'enum' => self::MATOMO_MODES,
+				),
 			),
 		);
 	}
@@ -201,7 +223,7 @@ final class Settings {
 		$out     = array_merge( self::DEFAULTS, is_array( $current ) ? $current : array() );
 		$out['social'] = array_merge( self::DEFAULTS['social'], is_array( $out['social'] ) ? $out['social'] : array() );
 		$out['rewrite_slugs'] = array_merge( self::DEFAULTS['rewrite_slugs'], is_array( $out['rewrite_slugs'] ) ? $out['rewrite_slugs'] : array() );
-		$input   =is_array( $input ) ? $input : ( is_object( $input ) ? (array) $input : array() );
+		$input   = is_array( $input ) ? $input : ( is_object( $input ) ? (array) $input : array() );
 
 		foreach ( self::TEXT as $key ) {
 			if ( array_key_exists( $key, $input ) ) {
@@ -270,11 +292,31 @@ final class Settings {
 			}
 		}
 
+		if ( array_key_exists( 'matomo_url', $input ) ) {
+			// Se acepta lo que se pega del código de seguimiento («…/matomo.php»).
+			$raw = preg_replace( '#(matomo|piwik)\.(php|js)$#i', '', trim( (string) $input['matomo_url'] ) );
+			$url = self::url( (string) $raw, 'matomo_url' );
+			if ( null !== $url ) {
+				$out['matomo_url'] = '' === $url ? '' : trailingslashit( strtok( $url, '?#' ) );
+			}
+		}
+
+		if ( array_key_exists( 'matomo_site_id', $input ) ) {
+			$out['matomo_site_id'] = absint( $input['matomo_site_id'] );
+		}
+
+		if ( array_key_exists( 'matomo_mode', $input ) && in_array( $input['matomo_mode'], self::MATOMO_MODES, true ) ) {
+			$out['matomo_mode'] = $input['matomo_mode'];
+		}
+
 		// Solo las claves del contrato, con sus tipos exactos (ver «La trampa»).
 		$out                  = array_intersect_key( $out, self::DEFAULTS );
 		$out['social']        = array_map( 'strval', array_intersect_key( $out['social'], self::DEFAULTS['social'] ) );
 		$out['rewrite_slugs'] = array_map( 'strval', array_intersect_key( $out['rewrite_slugs'], self::DEFAULTS['rewrite_slugs'] ) );
-		$out['allow_svg'] = (bool) $out['allow_svg'];
+		$out['allow_svg']      = (bool) $out['allow_svg'];
+		$out['matomo_url']     = (string) $out['matomo_url'];
+		$out['matomo_site_id'] = absint( $out['matomo_site_id'] );
+		$out['matomo_mode']    = in_array( $out['matomo_mode'], self::MATOMO_MODES, true ) ? $out['matomo_mode'] : self::MATOMO_MODES[0];
 		return $out;
 	}
 

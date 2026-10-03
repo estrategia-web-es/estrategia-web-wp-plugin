@@ -14,7 +14,8 @@
  *   etiquetas se prueban en castellano, que es como salen en las webs.
  * - Contraseñas de aplicación sin HTTPS (Playground va por http): así las
  *   pruebas hablan con la API REST de verdad como admin y como autor.
- * - Rutas armazon-site-test/v1/*: ping, reset, users, page, raw-post.
+ * - Rutas armazon-site-test/v1/*: ping, reset, users, page, raw-post,
+ *   consent-categories (0.3.0, solo lee un filtro).
  *
  * Lo que NO hace: guardar ajustes ni crear contenido por la puerta de atrás.
  * Eso va por /wp/v2/* con usuario, que es lo que se prueba.
@@ -39,6 +40,11 @@ add_action(
 		};
 
 		$route( '/ping', 'GET', static fn() => array( 'ok' => true ) );
+
+		// 0.3.0. Lo que vería el aviso del tema padre (que aquí no está): las
+		// categorías tras el filtro armazon_consent_categories, partiendo de
+		// la de un hijo que declara solo «maps».
+		$route( '/consent-categories', 'GET', static fn() => array_values( (array) apply_filters( 'armazon_consent_categories', array( 'maps' ) ) ) );
 
 		// Deja la web como recién instalada para este plugin: sin datos, sin contenido de sus tipos.
 		$route(

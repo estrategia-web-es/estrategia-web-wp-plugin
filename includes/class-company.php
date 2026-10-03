@@ -31,8 +31,12 @@ final class Company {
 
 	public const DERIVED = array( 'phone_href', 'phone_secondary_href', 'email_href', 'whatsapp_href' );
 
-	/** Claves que son opciones del plugin, no datos que se enseñan. */
-	private const NOT_DATA = array( 'enabled_types', 'allow_svg', 'social', 'rewrite_slugs' );
+	/**
+	 * Claves que son opciones del plugin, no datos que se enseñan. Una opción
+	 * nueva en Settings::DEFAULTS entra aquí, o aparece como dato enlazable en
+	 * el editor (las de Matomo, 0.3.0, son el ejemplo).
+	 */
+	private const NOT_DATA = array( 'enabled_types', 'allow_svg', 'social', 'rewrite_slugs', 'matomo_url', 'matomo_site_id', 'matomo_mode' );
 
 	/** Prefijo de país para teléfonos escritos sin él. */
 	public static function country_code(): string {
