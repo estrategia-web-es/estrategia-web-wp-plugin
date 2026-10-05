@@ -10,7 +10,9 @@ compartido y versionado, como el plugin hermano
 El marco está en
 [armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md](E:/Repositories/armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md).
 
-- Slug y text domain: `armazon-site` · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · versión 0.4.0
+- Slug y text domain: `armazon-site` · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · versión 0.5.0
+- Desde 0.5.0 lleva también **el aviso de cookies** (vino del tema padre
+  0.6.0, que en su 0.7.0 ya no lo trae): ver «6. Aviso de cookies».
 - Sin dependencias, sin `node_modules`, sin paso de compilación.
 
 Por qué un plugin y no el tema padre: los datos y el contenido **no pueden
@@ -292,12 +294,13 @@ curl -u admin:APP_PASS -X POST https://web.test/wp-json/wp/v2/settings \
   `armazon_site_matomo_track( $track )` para cambiarlo.
 - **`cookieless`** (el de la fila 16): `disableCookies`, nada que preguntar.
 - **`hybrid`**: mide sin cookies (`requireCookieConsent`) y, cuando el
-  visitante acepta **«statistics»** en el aviso del **tema padre**, llama a
+  visitante acepta **«statistics»** en el **aviso de cookies** (el de este
+  plugin desde 0.5.0; ver la sección 6), llama a
   `rememberCookieConsentGiven`; si la retira, a `forgetCookieConsentGiven`.
   Escucha el evento `armazon:consent` y mira `window.armazonConsent.get()`
-  (el contrato de `armazon-wp-padre/inc/consent.php`), y **declara él mismo
-  la categoría** con el filtro `armazon_consent_categories` (prioridad 99): el
-  hijo no tiene que acordarse. Sin el tema padre, se queda sin cookies.
+  (el contrato del aviso), y **declara él mismo la categoría** con el filtro
+  `armazon_consent_categories` (prioridad 99): el tema no tiene que
+  acordarse. Desde 0.5.0 funciona con cualquier tema.
   **La legalidad del híbrido no está verificada** (criterio de la CNIL): por
   eso no es el de por defecto.
 - «Sin IP completa» se configura en el servidor de Matomo, no aquí.
@@ -305,11 +308,72 @@ curl -u admin:APP_PASS -X POST https://web.test/wp-json/wp/v2/settings \
 El porqué de cada decisión y sus trampas, en la cabecera de
 [includes/class-matomo.php](includes/class-matomo.php).
 
+### 6. Aviso de cookies (0.5.0)
+
+Vino del tema padre (`armazon-wp-padre` ≤ 0.6.0, `inc/consent.php`) **sin
+cambiar el contrato**: el consentimiento es funcionalidad, no presentación, y
+una web que cambie de tema no puede quedarse sin aviso. La documentación
+entera (decisiones, cómo se mantiene, trampas) está en la cabecera de
+[includes/class-consent.php](includes/class-consent.php).
+
+- **Sale solo si la web declara categorías** (`statistics`, `maps`,
+  `marketing`) con el filtro `armazon_consent_categories`; sin ninguna, no
+  hay aviso, que es lo normal. Matomo híbrido declara `statistics` él solo.
+
+      add_filter( 'armazon_consent_categories', fn( $c ) => array_merge( (array) $c, array( 'maps' ) ) );
+
+- **La cookie es la misma** (`armazon_consent`, `"<revisión>.<cat~cat>.<unix>"`,
+  la misma revisión): quien ya eligió con el aviso del padre no lo vuelve a ver.
+- **PHP:** `armazon_consent_has( 'maps' )`, `armazon_consent_categories()` y
+  las demás `armazon_consent_*` de siempre
+  ([includes/consent-functions.php](includes/consent-functions.php)), y
+  `\Armazon\Site\Consent`. Filtros: `armazon_consent_categories`,
+  `armazon_consent_revision`, `armazon_consent_max_age`, `armazon_consent_text`.
+- **JS:** `window.armazonConsent` (`categories`, `has()`, `get()`, `open()`,
+  `grant()`), el evento `armazon:consent` en `document` con
+  `detail.accepted`, **`armazon:consent-ready`** (nuevo en 0.5.0: una vez al
+  arrancar, también sin elección, con `accepted: null`; lo usa Matomo), el
+  store de Interactivity `armazon/consent`, y
+  `<script type="text/plain" data-armazon-consent="statistics">` para lo que
+  solo se ejecuta con consentimiento. WP Consent API si está, sin depender.
+- **Enlace «Configurar cookies»:** bloque **`armazon-site/consent`** (atributo
+  `label`), o `[armazon_consent_settings label="…"]`. El nombre viejo
+  **`armazon/consent` se sigue registrando como alias** oculto del
+  insertador, con el mismo HTML (clase `wp-block-armazon-consent`): el
+  contenido y las partes ya guardados con él siguen funcionando. Quitar el
+  alias es versión mayor.
+- **Estilos:** hoja base neutra en el plugin
+  ([blocks/consent/style.css](blocks/consent/style.css)) que lee los tokens de
+  `theme.json` (`base`, `contrast`, `border`, espaciado, tamaños) con valores
+  de reserva. El tema afina con sus tokens o con CSS sobre `.armazon-consent`.
+- **Convivencia:** con un tema padre viejo que aún trae su aviso, el plugin
+  se aparta (no hay dos avisos ni funciones redeclaradas). Con el padre 0.7.0
+  y este plugin ≤ 0.4.0 no hay aviso: se actualizan los dos a la vez.
+
+**«Powered by»**: al pie del aviso, en letra pequeña y alineado al final,
+**«Powered by Estrategia Web»** enlazando a `https://estrategiaweb.es/`, en
+pestaña nueva, `rel="noopener"` y **sin `nofollow`** (cuenta como enlace).
+Texto traducible (`Powered by %s`; en es_ES se deja en inglés). Se cambia o
+se quita con el **filtro** `armazon_site_consent_powered_by` (no con una
+opción: es la firma de quien hace la web, no un dato que el cliente toque, y
+una opción sería otra clave del contrato):
+
+    // Otro texto o URL (lo que no se pase, se queda):
+    add_filter( 'armazon_site_consent_powered_by', fn( $p ) => array_merge( $p, array( 'text' => 'Hecha por X', 'url' => 'https://x.es/' ) ) );
+    // Quitarlo:
+    add_filter( 'armazon_site_consent_powered_by', '__return_false' );
+
+`url` vacía (o que no sea http/https) pinta el texto sin enlace; `text`
+vacío no pinta la línea. Su color es el del texto del aviso, sin opacidad:
+contraste AA medido en las pruebas (11,05:1 en Lavandería). Un tema que la
+atenúe tiene que volver a medirlo.
+
 ### Glosario (código en inglés, dominio en castellano)
 
 `client` cliente · `testimonial` opinión · `location` sede · `project`
 proyecto · `portfolio` portfolio · `sector` sector del cliente · `company`
-empresa · `binding` enlace de un bloque a un dato.
+empresa · `binding` enlace de un bloque a un dato · `consent` aviso de
+cookies / consentimiento · `powered by` la firma al pie del aviso.
 
 ---
 
@@ -335,7 +399,9 @@ que crea [tests/wp/armazon-site-test.php](tests/wp/armazon-site-test.php)).
 | [tests/static-map.test.mjs](tests/static-map.test.mjs) | 2 | mapa estático de una sede (0.4.0): `location_static_map` acepta ruta del tema, del sitio y URL del mismo dominio, y rechaza otro dominio, `//`, `javascript:`, `..`, no-imagen; `location_static_map_id` solo adjuntos de imagen; en una Consulta, core/post-meta da a cada sede el suyo (párrafo e imagen); también por la fuente de sedes |
 | [tests/svg.test.mjs](tests/svg.test.mjs) | 2 | SVG con `<script>` subido saneado (multipart y sideload), medidas, autor no puede, `allow_svg` apagado |
 | [tests/matomo.test.mjs](tests/matomo.test.mjs) | 2 | Matomo (0.3.0): sin URL o sin id no se imprime; por defecto `disableCookies`; híbrido con `requireCookieConsent` y la categoría «statistics» declarada; saneado (URL, id, 400 del modo); sus claves no son datos enlazables |
-| [tests/matomo-browser.test.mjs](tests/matomo-browser.test.mjs) | 3 | con el `matomo.js` real ([tests/fixtures/matomo.js](tests/fixtures/matomo.js), 5.4.0, BSD-3) servido por una ruta falsa: sin configuración no se pide; sin cookies mide y no deja cookies; híbrido sin cookies hasta aceptar, `mtm_cookie_consent` y `_pk_id` al aceptar, borradas al retirar; aviso ya resuelto al cargar; elección caducada olvida; a un administrador no se le mide |
+| [tests/matomo-browser.test.mjs](tests/matomo-browser.test.mjs) | 3 | con el `matomo.js` real ([tests/fixtures/matomo.js](tests/fixtures/matomo.js), 5.4.0, BSD-3) servido por una ruta falsa y, desde 0.5.0, con el **aviso de cookies real** (sus botones y su cookie, no un evento simulado): sin configuración no se pide; sin cookies mide, no deja cookies y no hay aviso; híbrido sin cookies hasta «Aceptar todas» (solo «mapas» no vale), `mtm_cookie_consent` y `_pk_id` al aceptar, borradas al «Rechazar todas»; aviso ya contestado al cargar; elección caducada olvida; a un administrador no se le mide |
+| [tests/consent.test.mjs](tests/consent.test.mjs) | 2 | aviso de cookies (0.5.0): sin categorías no sale; con ellas, en orden estable y con los tres botones; revisión y cookie iguales a las del padre; Matomo híbrido lo hace salir; «Powered by» (texto, `href`, `_blank`, `rel="noopener"` sin `nofollow`, después de los botones); el filtro cambia texto y URL, una URL vacía o no http(s) deja el texto sin enlace, `false` lo quita; enlace por bloque nuevo, alias viejo y shortcode |
+| [tests/consent-browser.test.mjs](tests/consent-browser.test.mjs) | 3 | aviso de cookies (0.5.0): sale; aceptar y rechazar pesan igual; rechazar guarda la cookie y persiste; el enlace (nuevo y alias) lo reabre con el foco dentro y Escape lo cierra; contrato JS (evento, `has`, `get`, `categories`, `grant`, `open`) y scripts diferidos; una cookie del aviso del padre sigue valiendo; «Powered by» visible, más pequeño que los botones y con contraste AA medido |
 | [tests/editor.test.mjs](tests/editor.test.mjs) | 3 | el editor enseña el valor enlazado y lista los datos (empresa y sede por slug); la pantalla de ajustes guarda, avisa y desactiva el último tipo |
 
 **Todas se han visto fallar** (02-10-2026): tres tandas de mutantes, diez en
@@ -347,7 +413,12 @@ cambiar `remember` por `forget`, no olvidar con la elección caducada y medir
 a los administradores; cada uno pillado. Las de 0.4.0 (03-10-2026) se vieron
 en rojo antes del código (shortcode y campos sin existir), y con dos
 mutantes: `registry` fuera de DEFAULTS y el saneado del mapa estático que lo
-deja pasar todo.
+deja pasar todo. Las de 0.5.0 (05-10-2026), con siete mutantes, cada uno
+pillado: `rel` con `nofollow` (también por la prueba de Lavandería), otra
+revisión, el filtro del «Powered by» sin aplicar, el alias sin registrar,
+sin el evento `armazon:consent`, sin `armazon:consent-ready` y el «Powered
+by» en `#aaa`. Y al pasar Matomo al aviso real salió un fallo de verdad que
+la prueba simulada escondía (ver CHANGELOG, 0.5.0).
 
 ## Textos y traducciones (fila 11)
 

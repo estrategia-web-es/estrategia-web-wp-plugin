@@ -27,6 +27,7 @@ final class Plugin {
 		add_action( 'add_option_' . Settings::OPTION, static fn( $name, $value ) => Content_Types::maybe_flush( array(), $value ), 10, 2 );
 		Svg::boot();
 		Matomo::boot();
+		Consent::boot(); // El aviso de cookies (0.5.0). Arranca en after_setup_theme: ver su cabecera.
 
 		if ( is_admin() ) {
 			Admin::boot();

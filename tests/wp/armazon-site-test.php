@@ -15,7 +15,13 @@
  * - Contraseñas de aplicación sin HTTPS (Playground va por http): así las
  *   pruebas hablan con la API REST de verdad como admin y como autor.
  * - Rutas armazon-site-test/v1/*: ping, reset, users, page, raw-post,
- *   consent-categories (0.3.0, solo lee un filtro).
+ *   consent-categories (0.3.0, solo lee un filtro), consent-setup (0.5.0).
+ * - consent-setup (0.5.0) hace de TEMA para el aviso de cookies: guarda en la
+ *   opción armazon_site_test_consent qué categorías declara «la web», qué
+ *   devuelve el filtro del «Powered by» y si hay un
+ *   <script type="text/plain" data-armazon-consent="statistics"> en el pie.
+ *   Es lo que en una web pone el functions.php del tema; aquí no hay tema
+ *   propio (Playground usa el de por defecto). reset la borra.
  *
  * Lo que NO hace: guardar ajustes ni crear contenido por la puerta de atrás.
  * Eso va por /wp/v2/* con usuario, que es lo que se prueba.
@@ -30,6 +36,34 @@ if ( ! defined( 'ARMAZON_SITE_TESTING' ) || true !== ARMAZON_SITE_TESTING ) {
 // No vale WPLANG: sanitize_option() la rechaza si el idioma del núcleo no está descargado.
 add_filter( 'locale', static fn() => 'es_ES' );
 add_filter( 'wp_is_application_passwords_available', '__return_true' );
+
+// 0.5.0: lo que haría el tema con el aviso de cookies (ver la cabecera, consent-setup).
+add_filter(
+	'armazon_consent_categories',
+	static function ( $categories ) {
+		$setup = (array) get_option( 'armazon_site_test_consent', array() );
+		return array_values( array_unique( array_merge( (array) $categories, (array) ( $setup['categories'] ?? array() ) ) ) );
+	}
+);
+add_filter(
+	'armazon_site_consent_powered_by',
+	static function ( $powered ) {
+		$setup = (array) get_option( 'armazon_site_test_consent', array() );
+		if ( ! array_key_exists( 'powered_by', $setup ) ) {
+			return $powered;
+		}
+		return false === $setup['powered_by'] ? false : array_merge( (array) $powered, (array) $setup['powered_by'] );
+	}
+);
+add_action(
+	'wp_footer',
+	static function () {
+		$setup = (array) get_option( 'armazon_site_test_consent', array() );
+		if ( ! empty( $setup['script'] ) ) {
+			echo '<script type="text/plain" data-armazon-consent="statistics">window.armazonTestStatistics = true;</script>';
+		}
+	}
+);
 
 add_action(
 	'rest_api_init',
@@ -46,6 +80,21 @@ add_action(
 		// la de un hijo que declara solo «maps».
 		$route( '/consent-categories', 'GET', static fn() => array_values( (array) apply_filters( 'armazon_consent_categories', array( 'maps' ) ) ) );
 
+		// 0.5.0. Hace de tema para el aviso de cookies (ver la cabecera).
+		$route(
+			'/consent-setup',
+			'POST',
+			static function ( WP_REST_Request $r ) {
+				update_option( 'armazon_site_test_consent', (array) $r->get_json_params() );
+				return array(
+					'ok'         => true,
+					'active'     => \Armazon\Site\Consent::active(),
+					'categories' => \Armazon\Site\Consent::categories(),
+					'revision'   => \Armazon\Site\Consent::revision(),
+				);
+			}
+		);
+
 		// Deja la web como recién instalada para este plugin: sin datos, sin contenido de sus tipos.
 		$route(
 			'/reset',
@@ -53,6 +102,7 @@ add_action(
 			static function () {
 				global $wpdb;
 				delete_option( 'armazon_site' );
+				delete_option( 'armazon_site_test_consent' );
 				delete_option( 'rewrite_rules' );
 				$types = "'client','testimonial','location','project','portfolio'";
 				$ids   = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type IN ($types) OR (post_type = 'attachment' AND post_title LIKE 'prueba-%')" ); // phpcs:ignore

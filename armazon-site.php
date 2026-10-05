@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name:       Armazón Site
- * Description:       Datos de la empresa (con Block Bindings), tipos de contenido habituales de una web corporativa (clientes, opiniones, sedes, proyectos, portfolio) activables, subida de SVG saneada y el código de Matomo (sin cookies o híbrido).
- * Version:           0.4.0
+ * Description:       Datos de la empresa (con Block Bindings), tipos de contenido habituales de una web corporativa (clientes, opiniones, sedes, proyectos, portfolio) activables, subida de SVG saneada, el código de Matomo (sin cookies o híbrido) y el aviso de cookies.
+ * Version:           0.5.0
  * Requires at least: 7.1
  * Requires PHP:      8.1
  * Author:            David Pérez
@@ -20,7 +20,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const ARMAZON_SITE_VERSION = '0.4.0';
+const ARMAZON_SITE_VERSION = '0.5.0';
 const ARMAZON_SITE_FILE    = __FILE__;
 define( 'ARMAZON_SITE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'ARMAZON_SITE_URL', plugin_dir_url( __FILE__ ) );
@@ -35,6 +35,7 @@ require_once ARMAZON_SITE_DIR . 'includes/class-shortcode.php';
 require_once ARMAZON_SITE_DIR . 'includes/class-content-types.php';
 require_once ARMAZON_SITE_DIR . 'includes/class-svg.php';
 require_once ARMAZON_SITE_DIR . 'includes/class-matomo.php';
+require_once ARMAZON_SITE_DIR . 'includes/class-consent.php';
 require_once ARMAZON_SITE_DIR . 'includes/class-plugin.php';
 require_once ARMAZON_SITE_DIR . 'includes/admin/class-admin.php';
 

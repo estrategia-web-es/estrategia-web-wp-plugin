@@ -16,6 +16,33 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: blocks/consent/block.json
+msgctxt "block description"
+msgid ""
+"Reopens the cookie consent notice. Renders nothing when the site declares no "
+"optional cookie categories."
+msgstr ""
+
+#: blocks/consent/block.json
+msgctxt "block keyword"
+msgid "consent"
+msgstr ""
+
+#: blocks/consent/block.json
+msgctxt "block keyword"
+msgid "cookies"
+msgstr ""
+
+#: blocks/consent/block.json
+msgctxt "block keyword"
+msgid "gdpr"
+msgstr ""
+
+#: blocks/consent/block.json
+msgctxt "block keyword"
+msgid "privacy"
+msgstr ""
+
 #: includes/admin/class-admin.php:33 includes/admin/class-admin.php:34
 #: includes/admin/class-admin.php:83 includes/class-bindings.php:50
 #: includes/class-settings.php:135
@@ -116,7 +143,7 @@ msgstr ""
 msgid "Site ID"
 msgstr ""
 
-#: includes/admin/class-admin.php:163
+#: includes/admin/class-admin.php:163 includes/class-consent.php:367
 msgid "Cookies"
 msgstr ""
 
@@ -216,6 +243,102 @@ msgstr ""
 
 #: includes/class-company.php:112
 msgid "WhatsApp (link)"
+msgstr ""
+
+#: includes/class-consent.php:161
+msgid "Statistics"
+msgstr ""
+
+#: includes/class-consent.php:162
+msgid "Help us understand how the site is used."
+msgstr ""
+
+#: includes/class-consent.php:165
+msgid "Maps and third-party content"
+msgstr ""
+
+#: includes/class-consent.php:166
+msgid ""
+"Load embedded maps and other content served by third parties, which may set "
+"their own cookies."
+msgstr ""
+
+#: includes/class-consent.php:169
+msgid "Marketing"
+msgstr ""
+
+#: includes/class-consent.php:170
+msgid "Measure campaigns and show relevant advertising."
+msgstr ""
+
+#. translators: %s: name of the company that built the site (a brand, not translated).
+#: includes/class-consent.php:234
+#, php-format
+msgid "Powered by %s"
+msgstr ""
+
+#: includes/class-consent.php:264
+msgctxt "block title"
+msgid "Cookie settings link"
+msgstr ""
+
+#: includes/class-consent.php:291
+msgid "Link text (empty: “Cookie settings”)"
+msgstr ""
+
+#: includes/class-consent.php:348
+msgid ""
+"We use our own and third-party cookies for the purposes listed below. You "
+"can accept them, reject them or choose which ones to allow. Necessary "
+"cookies are always active."
+msgstr ""
+
+#: includes/class-consent.php:371
+msgid "Privacy and cookie policy"
+msgstr ""
+
+#: includes/class-consent.php:377
+msgid "Cookie categories"
+msgstr ""
+
+#: includes/class-consent.php:380
+msgid "Necessary"
+msgstr ""
+
+#: includes/class-consent.php:380
+msgid ""
+"Required for the site to work, including remembering this choice. Always "
+"active."
+msgstr ""
+
+#: includes/class-consent.php:396
+msgid "Save choices"
+msgstr ""
+
+#: includes/class-consent.php:400
+msgid "Accept all"
+msgstr ""
+
+#: includes/class-consent.php:401
+msgid "Reject all"
+msgstr ""
+
+#: includes/class-consent.php:402
+msgid "Configure"
+msgstr ""
+
+#: includes/class-consent.php:407
+msgid "(opens in a new tab)"
+msgstr ""
+
+#: includes/class-consent.php:433
+msgid ""
+"Cookie settings: this site declares no optional cookie categories, so there "
+"is no notice to reopen and this link is not shown."
+msgstr ""
+
+#: includes/class-consent.php:439
+msgid "Cookie settings"
 msgstr ""
 
 #: includes/class-content-types.php:69

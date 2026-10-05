@@ -6,11 +6,11 @@
  *
  * Los dos modos:
  * - `cookieless` (por defecto, el de la fila 16): `disableCookies`. Matomo no
- *   pone ninguna cookie y no hay nada que preguntar: el aviso de cookies del
- *   tema padre ni siquiera sale si no hay otra categoría.
+ *   pone ninguna cookie y no hay nada que preguntar: el aviso de cookies
+ *   (includes/class-consent.php) ni siquiera sale si no hay otra categoría.
  * - `hybrid`: el rastreo empieza SIN cookies (`requireCookieConsent`: Matomo
  *   manda las visitas pero no escribe cookies) y, cuando el visitante acepta
- *   «statistics» en el aviso del tema padre, se llama a
+ *   «statistics» en el aviso de cookies, se llama a
  *   `rememberCookieConsentGiven` (Matomo guarda su propia cookie
  *   mtm_cookie_consent y a partir de ahí usa _pk_id/_pk_ses); si la retira,
  *   `forgetCookieConsentGiven` (borra su consentimiento y sus cookies).
@@ -19,17 +19,21 @@
  *   está verificada; el criterio de la CNIL para la exención de consentimiento
  *   es más estrecho. Por eso no es el modo por defecto.
  *
- * Cómo se entera del consentimiento (contrato del tema padre, inc/consent.php
- * y blocks/consent/view.js de armazon-wp-padre): el evento «armazon:consent»
- * en document (detail.accepted = categorías aceptadas), que se lanza al
- * arrancar si ya había elección y en cada cambio, y window.armazonConsent.get()
- * (null = sin elegir). Se escuchan LAS DOS cosas, como pide el padre: su
- * módulo puede llegar antes o después que este script.
+ * Cómo se entera del consentimiento (contrato del aviso, que desde 0.5.0 es de
+ * este mismo plugin: includes/class-consent.php y blocks/consent/view.js; antes
+ * vivía en el tema padre): el evento «armazon:consent» en document
+ * (detail.accepted = categorías aceptadas), que se lanza al arrancar si ya
+ * había elección y en cada cambio, y window.armazonConsent.get() (null = sin
+ * elegir). Se escuchan LAS DOS cosas: el módulo del aviso puede llegar antes
+ * o después que este script. Se habla con él SOLO por ese contrato, no
+ * llamando a Consent: así sigue valiendo con un tema padre viejo que aún
+ * traiga su propio aviso (Consent::active() = false).
  * - En modo híbrido el plugin DECLARA la categoría «statistics» con el filtro
- *   del padre `armazon_consent_categories` (prioridad 99), para que el aviso
- *   salga sin que el hijo tenga que acordarse.
- * - Sin el tema padre (otro tema) nadie lanza el evento: el híbrido se queda
- *   en sin cookies para siempre. Es el lado seguro.
+ *   `armazon_consent_categories` (prioridad 99), para que el aviso salga sin
+ *   que el tema tenga que acordarse.
+ * - Desde 0.5.0 el aviso no depende del tema: con cualquier tema hay aviso y
+ *   evento. (Hasta 0.4.0, sin el tema padre el híbrido se quedaba sin cookies
+ *   para siempre.)
  *
  * Quién NO se mide: el escritorio, el editor, las vistas previas y los
  * usuarios con sesión que pueden editar (`edit_posts`: autores y arriba). Es
@@ -43,16 +47,21 @@
  *   con el matomo.js real de tests/fixtures/ servido por una ruta falsa).
  * - Un modo nuevo: Settings::MATOMO_MODES + script() + la pantalla + README.
  *   Quitar uno es versión mayor (ver la trampa de Settings).
- * - Caso frontera: la categoría del padre se retira en una página y el
- *   visitante sigue navegando. El padre solo RECARGA si había un
+ * - Caso frontera: la categoría se retira en el aviso en una página y el
+ *   visitante sigue navegando. El aviso solo RECARGA si había un
  *   <script type="text/plain" data-armazon-consent> ya ejecutado; este código
  *   no lo es, así que no hay recarga: se llama a forgetCookieConsentGiven al
  *   momento y basta.
- * - La trampa 1: mtm_cookie_consent dura 30 años y la elección del padre 12
- *   meses. Cuando la del padre caduca (o cambia su revisión), get() da null y
- *   NO llega evento: por eso, al cargar la página, si el padre está y dice
+ * - La trampa 1: mtm_cookie_consent dura 30 años y la elección del aviso 12
+ *   meses. Cuando la del aviso caduca (o cambia su revisión), get() da null y
+ *   NO llega evento: por eso, al cargar la página, si el aviso está y dice
  *   «sin elegir», se llama a forgetCookieConsentGiven. Sin eso Matomo
  *   seguiría con cookies con un consentimiento que ya no existe.
+ *   «Al cargar» NO es window.load: el aviso hidrata cuando puede, y a veces
+ *   DESPUÉS de load (medido el 05-10-2026 al probar con el aviso real: 1 de
+ *   cada 3 cargas; la prueba simulada de 0.3.0 no podía verlo). Por eso se
+ *   escucha también «armazon:consent-ready», que el aviso lanza una vez al
+ *   arrancar, con elección o sin ella (0.5.0).
  * - La trampa 2: un hijo que declara categorías con
  *   `fn() => array( 'maps' )` (sin mirar lo que recibe) PISA la de este
  *   plugin si corre después. Por eso este filtro va a prioridad 99. Si un
@@ -71,7 +80,7 @@ defined( 'ABSPATH' ) || exit;
 
 final class Matomo {
 
-	/** Categoría del aviso del tema padre que da el consentimiento en modo híbrido. */
+	/** Categoría del aviso de cookies que da el consentimiento en modo híbrido. */
 	public const CONSENT_CATEGORY = 'statistics';
 
 	public static function boot(): void {
@@ -110,7 +119,7 @@ final class Matomo {
 		return (bool) apply_filters( 'armazon_site_matomo_track', $track );
 	}
 
-	/** En modo híbrido, el aviso del padre tiene que preguntar por las estadísticas. */
+	/** En modo híbrido, el aviso tiene que preguntar por las estadísticas. */
 	public static function consent_categories( mixed $categories ): array {
 		$categories = (array) $categories;
 		$config     = self::config();
@@ -152,7 +161,7 @@ JS;
 		if ( ! $hybrid ) {
 			return $js;
 		}
-		// Híbrido: sigue al aviso del tema padre. Ver la cabecera (las dos vías y la trampa 1).
+		// Híbrido: sigue al aviso de cookies (por su contrato JS). Ver la cabecera (las dos vías y la trampa 1).
 		$js .= <<<JS
 
 (function () {
@@ -172,6 +181,7 @@ JS;
 	}
 	current();
 	window.addEventListener('load', current);
+	document.addEventListener('armazon:consent-ready', current);
 })();
 JS;
 		return $js;

@@ -4,6 +4,43 @@ Una entrada por versión, la más nueva arriba. Se escribe en el mismo commit
 que sube el número (README, «Versiones»). Si una versión obliga a tocar algo
 en las webs, la entrada lo dice primero, con qué cambiar.
 
+## 0.5.0 — 05-10-2026
+
+Menor para el plugin (solo añade), pero **va junto con el tema padre 0.7.0**,
+que deja de traer el aviso de cookies: en cada web se suben los dos a la vez.
+Con este plugin y el padre viejo, el plugin se aparta y sale el aviso del
+padre como hasta ahora.
+
+- **Aviso de cookies**, traído del tema padre con el mismo contrato: la misma
+  cookie `armazon_consent` y la misma revisión (quien ya eligió no vuelve a
+  ver el aviso), el filtro `armazon_consent_categories`, las funciones
+  `armazon_consent_*`, `window.armazonConsent` (`categories`, `has`, `get`,
+  `open`, `grant`), el evento `armazon:consent`, el store `armazon/consent`,
+  los `<script type="text/plain" data-armazon-consent>`, el shortcode
+  `[armazon_consent_settings]` y la WP Consent API. Por qué: es
+  funcionalidad, no presentación; una web que cambie de tema no puede
+  quedarse sin aviso, y Matomo ya dependía de él.
+- Bloque del enlace **`armazon-site/consent`**; el nombre viejo
+  `armazon/consent` se registra como alias oculto, así que lo ya guardado
+  sigue pintando el enlace.
+- Estilos base neutros en el plugin, que leen los tokens del tema.
+- **«Powered by Estrategia Web»** al pie del aviso: enlace a
+  https://estrategiaweb.es/ en pestaña nueva, `rel="noopener"`, sin
+  `nofollow`. Se cambia o se quita con el filtro
+  `armazon_site_consent_powered_by`.
+- Matomo híbrido: su cabecera ya no habla del «aviso del tema padre». Con
+  cualquier tema hay aviso y, por tanto, consentimiento.
+- **Arreglo** (salió al probar Matomo con el aviso real): si el aviso
+  hidrataba después de `window.load`, Matomo no se enteraba de una elección
+  caducada y seguía con sus cookies (1 de cada 3 cargas). El aviso lanza
+  ahora `armazon:consent-ready` una vez al arrancar (con `accepted: null` si
+  no hay elección) y Matomo lo escucha.
+- `tools/i18n.mjs` extrae también `blocks/` (PHP y `block.json`).
+- Pruebas: `tests/consent.test.mjs` (nivel 2) y
+  `tests/consent-browser.test.mjs` (nivel 3); `tests/matomo-browser.test.mjs`
+  usa el aviso REAL en vez de simular el evento. La ruta de pruebas
+  `consent-setup` hace de tema (categorías, «Powered by», script diferido).
+
 ## 0.4.0 — 03-10-2026
 
 Menor: solo añade. Ninguna web tiene que tocar nada.

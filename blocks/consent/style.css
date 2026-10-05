@@ -1,0 +1,132 @@
+/*
+ * Aviso de cookies y botón para reabrirlo — ESTILOS BASE NEUTROS.
+ *
+ * Por qué están en el plugin y no en el tema (0.5.0): el aviso tiene que
+ * verse bien aunque la web cambie de tema. No llevan ningún color propio: leen
+ * los tokens de theme.json del tema activo (base, contrast, border, spacing,
+ * font-size) y, si el tema no los tiene, caen a blanco/negro. El tema AFINA
+ * con sus tokens o con CSS sobre .armazon-consent (más específico o cargado
+ * después); no se copia esta hoja en el tema.
+ *
+ * Los tres botones del aviso comparten clase y estilo A PROPÓSITO: la AEPD
+ * pide que aceptar y rechazar tengan el mismo peso visual. Un tema puede
+ * cambiar el aspecto de los tres, no de uno solo.
+ *
+ * La línea «Powered by» es pequeña y va al final, alineada al final: no
+ * compite con los botones. Su color es el del texto del aviso (sin opacidad),
+ * para que el contraste sea el mismo que el del texto (AA medido en
+ * tests/consent-browser.test.mjs). Un tema que la atenúe tiene que volver a
+ * medirlo.
+ */
+.armazon-consent {
+	position: fixed;
+	inset-inline: var(--wp--preset--spacing--16, 1rem);
+	inset-block-end: var(--wp--preset--spacing--16, 1rem);
+	z-index: 100000;
+	max-inline-size: 40rem;
+	max-block-size: calc(100vh - 2rem);
+	overflow-y: auto;
+	margin-inline: auto;
+	padding: var(--wp--preset--spacing--24, 1.5rem);
+	background: var(--wp--preset--color--base, #fff);
+	color: var(--wp--preset--color--contrast, #000);
+	border: 1px solid var(--wp--preset--color--border, currentColor);
+	border-radius: 8px;
+	box-shadow: 0 0.5rem 2rem rgb(0 0 0 / 0.2);
+}
+
+.armazon-consent[hidden],
+.armazon-consent__settings[hidden] {
+	display: none;
+}
+
+.armazon-consent__title {
+	margin: 0 0 var(--wp--preset--spacing--8, 0.5rem);
+	font-size: var(--wp--preset--font-size--large, 1.25rem);
+}
+
+.armazon-consent__text {
+	margin: 0 0 var(--wp--preset--spacing--16, 1rem);
+	font-size: var(--wp--preset--font-size--small, 0.875rem);
+}
+
+.armazon-consent__settings fieldset {
+	margin: 0 0 var(--wp--preset--spacing--16, 1rem);
+	padding: 0;
+	border: 0;
+}
+
+.armazon-consent__settings legend {
+	font-weight: 600;
+	margin-block-end: var(--wp--preset--spacing--8, 0.5rem);
+}
+
+.armazon-consent__category {
+	display: flex;
+	gap: var(--wp--preset--spacing--8, 0.5rem);
+	align-items: flex-start;
+	margin-block-end: var(--wp--preset--spacing--8, 0.5rem);
+	font-size: var(--wp--preset--font-size--small, 0.875rem);
+}
+
+.armazon-consent__category input {
+	margin-block-start: 0.2em;
+	inline-size: 1.125rem;
+	block-size: 1.125rem;
+}
+
+.armazon-consent__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--wp--preset--spacing--8, 0.5rem);
+}
+
+.armazon-consent__button {
+	flex: 1 1 8rem;
+	cursor: pointer;
+}
+
+.armazon-consent__settings .armazon-consent__button {
+	margin-block-end: var(--wp--preset--spacing--16, 1rem);
+}
+
+.armazon-consent__powered {
+	margin: var(--wp--preset--spacing--8, 0.5rem) 0 0;
+	font-size: 0.75rem;
+	line-height: 1.4;
+	text-align: end;
+}
+
+.armazon-consent__powered a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.armazon-consent__powered a:hover,
+.armazon-consent__powered a:focus-visible {
+	text-decoration: underline;
+}
+
+/* Solo para lectores de pantalla. Propia: no se cuenta con el
+   .screen-reader-text del tema, que otro tema puede no tener. */
+.armazon-consent__sr {
+	position: absolute;
+	inline-size: 1px;
+	block-size: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
+}
+
+.armazon-consent-link__button {
+	padding: 0;
+	border: 0;
+	background: none;
+	color: inherit;
+	font: inherit;
+	text-decoration: underline;
+	cursor: pointer;
+}

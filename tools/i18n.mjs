@@ -10,8 +10,11 @@
 //
 // Copiado de armazon-wp-formularios y recortado: aquí NO hay JSON del editor
 // porque assets/editor.js no lleva textos (los nombres le llegan de PHP ya
-// traducidos) y no hay block.json. Si un día el editor necesita un texto
-// propio, se recupera la parte de JS de aquel script, no se inventa otra.
+// traducidos). Si un día el editor necesita un texto propio, se recupera la
+// parte de JS de aquel script, no se inventa otra.
+// Desde 0.5.0 hay UN block.json (blocks/consent/, el enlace del aviso de
+// cookies): se extraen su título, descripción y palabras clave con sus
+// contextos, y el PHP de blocks/. Su view.js no lleva textos (los pinta PHP).
 //
 // Necesita xgettext, msgmerge y msgcat (GNU gettext; vienen con Git para
 // Windows). No hay .mo: WordPress 6.5+ prefiere el .l10n.php y el plugin pide
@@ -61,10 +64,24 @@ function extract() {
   fs.mkdirSync(LANG, { recursive: true });
   const tmp = fs.mkdtempSync(path.join(LANG, ".tmp-"));
   const common = ["--from-code=UTF-8", "--add-comments=translators:", "--sort-by-file", "--package-name=" + DOMAIN, "--msgid-bugs-address="];
-  const php = ["armazon-site.php", ...walk("includes", ".php")];
+  const php = ["armazon-site.php", ...walk("includes", ".php"), ...walk("blocks", ".php")];
   run("xgettext", [...common, "--language=PHP", "--keyword=__", "--keyword=_e", "--keyword=esc_html__", "--keyword=esc_html_e", "--keyword=esc_attr__", "--keyword=esc_attr_e", "--keyword=_x:1,2c", "--keyword=_n:1,2", "-o", path.join(tmp, "php.pot"), ...php]);
 
-  run("msgcat", ["--use-first", "--sort-by-file", "-o", POT, path.join(tmp, "php.pot")]);
+  // block.json (0.5.0, el bloque del aviso de cookies): título, descripción y
+  // palabras clave, con los contextos que usa WordPress al traducirlos
+  // (block-i18n.json del núcleo). xgettext no lee JSON: se escribe a mano.
+  const q = (s) => '"' + s.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"';
+  let blockPot = 'msgid ""\nmsgstr ""\n"Content-Type: text/plain; charset=UTF-8\\n"\n\n';
+  for (const file of walk("blocks", "block.json")) {
+    const data = JSON.parse(fs.readFileSync(path.join(ROOT, file), "utf8"));
+    const add = (msgid, ctx) => msgid && (blockPot += `#: ${file}\nmsgctxt ${q(ctx)}\nmsgid ${q(msgid)}\nmsgstr ""\n\n`);
+    add(data.title, "block title");
+    add(data.description, "block description");
+    (data.keywords || []).forEach((k) => add(k, "block keyword"));
+  }
+  fs.writeFileSync(path.join(tmp, "blocks.pot"), blockPot);
+
+  run("msgcat", ["--use-first", "--sort-by-file", "-o", POT, path.join(tmp, "php.pot"), path.join(tmp, "blocks.pot")]);
   fs.rmSync(tmp, { recursive: true, force: true });
 
   // Cabecera estable: sin fecha de creación, para que el .pot no cambie si nada cambió.
