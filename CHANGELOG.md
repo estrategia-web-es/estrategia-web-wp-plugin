@@ -4,6 +4,25 @@ Una entrada por versión, la más nueva arriba. Se escribe en el mismo commit
 que sube el número (README, «Versiones»). Si una versión obliga a tocar algo
 en las webs, la entrada lo dice primero, con qué cambiar.
 
+## 0.5.4 — 06-10-2026
+
+Parche: no obliga a tocar ninguna web. Cambia el peso de los WebP que se
+generen desde que esté activo.
+
+- **WebP a calidad 75** (`includes/class-webp.php`, `Webp::quality`): filtro
+  `wp_editor_set_quality` de WordPress, solo cuando el formato que se guarda
+  es `image/webp` (JPEG y PNG que sigan siéndolo, intactos). WordPress usa 82
+  para todo. Por qué: el PageSpeed de Lavandería (móvil, 06-10-2026) daba
+  ~371 KB en «mejorar la entrega de imágenes», parte por compresión. Ajuste:
+  `armazon_site_webp_quality` (0 o menos, la de WordPress; tope 100).
+- **La trampa:** lo ya subido sigue a 82 hasta regenerarlo, y regenerar a
+  secas tiene la trampa de 0.5.1. En Lavandería lo hace el paso «webp» de
+  `despliegue/desplegar.mjs` (marca `_lm_webp_calidad` por adjunto).
+- Prueba: `tests/pure.test.mjs` (nivel 1), con `apply_filters` de mentira en
+  `tests/php/pure.php`. No hay prueba de nivel 2 que mire el peso real: la
+  calidad que llega al editor es la que dice el filtro de WordPress, y eso es
+  lo que se prueba.
+
 ## 0.5.3 — 06-10-2026
 
 Parche: no obliga a tocar ninguna web. Solo actúa con WPML.

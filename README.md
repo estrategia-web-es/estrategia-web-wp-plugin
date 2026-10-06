@@ -10,7 +10,7 @@ compartido y versionado, como el plugin hermano
 El marco está en
 [armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md](E:/Repositories/armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md).
 
-- Slug y text domain: `armazon-site` · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · versión 0.5.2
+- Slug y text domain: `armazon-site` · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · versión 0.5.4
 - Desde 0.5.0 lleva también **el aviso de cookies** (vino del tema padre
   0.6.0, que en su 0.7.0 ya no lo trae): ver «6. Aviso de cookies».
 - Sin dependencias, sin `node_modules`, sin paso de compilación.
@@ -398,6 +398,17 @@ de regenerar hay que volver a escribir en el contenido la URL actual de la
 mediateca. El detalle, en la cabecera de
 [includes/class-webp.php](includes/class-webp.php).
 
+**Calidad (0.5.4): 75**, no el 82 que WordPress pone a todo
+(`wp_editor_set_quality`, solo cuando lo que se guarda es `image/webp`: un
+JPEG que siga siendo JPEG no cambia). Es la de `cwebp` por defecto; en fotos
+pesa ~20 % menos y no se distingue. Cambiarla, en el tema:
+
+    add_filter( 'armazon_site_webp_quality', fn() => 82 );   // 0: la de WordPress
+
+**Igual que el formato, solo vale para lo que se genere desde entonces.** Lo
+ya subido sigue a 82 hasta regenerarlo (en Lavandería, el paso «webp» de su
+desplegador, que lo rehace sin tocar el contenido y vacía la caché).
+
 ### 8. Enlaces externos en pestaña nueva (0.5.2)
 
 Todo `<a href>` del **frontal** cuyo host no es el de `home_url()` sale con
@@ -460,7 +471,7 @@ que crea [tests/wp/armazon-site-test.php](tests/wp/armazon-site-test.php)).
 
 | Fichero | Nivel | Qué prueba |
 |---|---|---|
-| [tests/pure.test.mjs](tests/pure.test.mjs) | 1 | tel:/mailto:/wa.me; SVG hostil saneado, SVG inaceptables, medidas; (0.5.2) qué enlace es externo (otro host, www, subdominio, `//`, relativos, anclas, otros esquemas) y `rel` con `noopener` sin perder lo que traía |
+| [tests/pure.test.mjs](tests/pure.test.mjs) | 1 | tel:/mailto:/wa.me; SVG hostil saneado, SVG inaceptables, medidas; (0.5.2) qué enlace es externo (otro host, www, subdominio, `//`, relativos, anclas, otros esquemas) y `rel` con `noopener` sin perder lo que traía; (0.5.4) la calidad del WebP: 75 solo para `image/webp`, el filtro, 0 y el tope |
 | [tests/external-links.test.mjs](tests/external-links.test.mjs) | 2 | enlaces externos (0.5.2) en la página servida: el botón de wa.me con `_blank`, `noopener` y `aria-label`; internos, www, relativo, ancla, tel, mailto intactos; con `target` intacto; con `rel` y con `aria-label`, añadidos; enlace-imagen con su alt; «Powered by» sin duplicar; REST sin tocar; el filtro lo apaga. Vista en rojo sin el `boot()` |
 | [tests/settings.test.mjs](tests/settings.test.mjs) | 2 | guardar y leer por REST, fusión, saneado (correo/URL/WhatsApp inválidos no se guardan), esquema, `rewrite_slugs` (saneado, fusión por clave, 400), autor sin permiso |
 | [tests/bindings.test.mjs](tests/bindings.test.mjs) | 2 | párrafo con el teléfono, botón con wa.me, tel: (también `phone_secondary_href`), mailto:, `<br>`, escapado, `social.<red>` |

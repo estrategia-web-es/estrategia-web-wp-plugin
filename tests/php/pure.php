@@ -11,6 +11,27 @@ require __DIR__ . '/../../includes/class-links.php';
 require __DIR__ . '/../../includes/class-svg-sanitizer.php';
 require __DIR__ . '/../../includes/class-external-links.php';
 
+// class-webp.php (0.5.4) lleva la guarda de ABSPATH y usa apply_filters: lo mínimo para cargarla sin WordPress.
+define( 'ABSPATH', __DIR__ . '/' );
+$GLOBALS['pure_filters'] = array();
+function apply_filters( string $hook, $value ) {
+	return array_key_exists( $hook, $GLOBALS['pure_filters'] ) ? $GLOBALS['pure_filters'][ $hook ] : $value;
+}
+require __DIR__ . '/../../includes/class-webp.php';
+use Armazon\Site\Webp;
+$webp_quality = array(
+	'webp'  => Webp::quality( 82, 'image/webp' ),
+	'jpeg'  => Webp::quality( 82, 'image/jpeg' ),
+	'png'   => Webp::quality( 90, 'image/png' ),
+);
+$GLOBALS['pure_filters']['armazon_site_webp_quality'] = 60;
+$webp_quality['filtro'] = Webp::quality( 82, 'image/webp' );
+$GLOBALS['pure_filters']['armazon_site_webp_quality'] = 0;
+$webp_quality['cero'] = Webp::quality( 82, 'image/webp' );
+$GLOBALS['pure_filters']['armazon_site_webp_quality'] = 140;
+$webp_quality['tope'] = Webp::quality( 82, 'image/webp' );
+$GLOBALS['pure_filters'] = array();
+
 use Armazon\Site\External_Links;
 use Armazon\Site\Links;
 use Armazon\Site\Svg_Sanitizer;
@@ -92,6 +113,7 @@ echo json_encode(
 		'rel_empty'          => External_Links::add_rel( '', 'noopener' ),
 		'rel_keep'           => External_Links::add_rel( ' nofollow  sponsored ', 'noopener' ),
 		'rel_dup'            => External_Links::add_rel( 'NoOpener nofollow', 'noopener' ),
+		'webp_quality'       => $webp_quality,
 	),
 	JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
 );

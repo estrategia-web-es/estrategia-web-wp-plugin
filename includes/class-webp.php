@@ -67,8 +67,46 @@ final class Webp {
 
 	private static ?bool $supported = null;
 
+	/** Calidad del WebP por defecto (0.5.4). WordPress usa 82 para todos los formatos. */
+	public const QUALITY = 75;
+
 	public static function boot(): void {
 		add_filter( 'image_editor_output_format', array( self::class, 'output_format' ), 10, 3 );
+		add_filter( 'wp_editor_set_quality', array( self::class, 'quality' ), 10, 2 );
+	}
+
+	/**
+	 * Calidad de los WebP que genera el editor de imágenes (0.5.4). Solo
+	 * image/webp: un JPEG o un PNG que se siga guardando como tal no cambia.
+	 *
+	 * Por qué 75: PageSpeed de Lavandería (06-10-2026), «mejorar la entrega de
+	 * imágenes», contaba compresión de más en las fotos de portada aun con el
+	 * tamaño bien elegido. 75 es lo que usa Google (cwebp) por defecto; a la
+	 * vista, en fotos, no se distingue de 82 y pesa en torno a un 20 % menos.
+	 *
+	 * Ajuste (como el WebP mismo, un filtro y no una opción: es de quien hace
+	 * la web), en el functions.php del tema:
+	 *     add_filter( 'armazon_site_webp_quality', fn() => 82 );
+	 * Devolver 0 o menos deja la de WordPress.
+	 *
+	 * LA TRAMPA: solo vale para lo que se genere DESDE que esté activo. Lo ya
+	 * subido no cambia hasta regenerarlo (en Lavandería, el paso «webp» de
+	 * despliegue/desplegar.mjs, que lo hace sin romper el contenido).
+	 *
+	 * @param int|mixed $quality   Calidad que trae WordPress (82) o otro filtro.
+	 * @param string    $mime_type Formato que se va a guardar.
+	 */
+	public static function quality( $quality, $mime_type = '' ): int {
+		if ( 'image/webp' !== $mime_type ) {
+			return (int) $quality;
+		}
+		/**
+		 * Calidad (1-100) de los WebP que genera el editor de imágenes. 0: la de WordPress.
+		 *
+		 * @param int $quality
+		 */
+		$ours = (int) apply_filters( 'armazon_site_webp_quality', self::QUALITY );
+		return $ours > 0 ? min( 100, $ours ) : (int) $quality;
 	}
 
 	/**

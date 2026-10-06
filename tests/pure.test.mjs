@@ -77,3 +77,7 @@ test("medidas: width/height, viewBox, un solo lado con proporción, porcentajes,
   assert.deepEqual(out.dims_percent, [40, 20]);
   assert.deepEqual(out.dims_none, [0, 0]);
 });
+
+test("calidad del WebP (0.5.4): 75 solo para image/webp; el filtro la cambia, 0 deja la de WordPress, tope 100", () => {
+  assert.deepEqual(out.webp_quality, { webp: 75, jpeg: 82, png: 90, filtro: 60, cero: 82, tope: 100 });
+});
