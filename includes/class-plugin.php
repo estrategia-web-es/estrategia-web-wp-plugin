@@ -30,6 +30,7 @@ final class Plugin {
 		Consent::boot(); // El aviso de cookies (0.5.0). Arranca en after_setup_theme: ver su cabecera.
 		Webp::boot(); // Tamaños de imagen en WebP (0.5.1).
 		External_Links::boot(); // Enlaces a otro dominio en pestaña nueva (0.5.2).
+		Wpml_Front_Page::boot(); // La portada traducida en /en/ con WPML (0.5.3).
 
 		if ( is_admin() ) {
 			Admin::boot();

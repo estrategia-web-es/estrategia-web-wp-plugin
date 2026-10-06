@@ -4,6 +4,18 @@ Una entrada por versión, la más nueva arriba. Se escribe en el mismo commit
 que sube el número (README, «Versiones»). Si una versión obliga a tocar algo
 en las webs, la entrada lo dice primero, con qué cambiar.
 
+## 0.5.3 — 06-10-2026
+
+Parche: no obliga a tocar ninguna web. Solo actúa con WPML.
+
+- **La portada traducida** (`includes/class-wpml-front-page.php`): en la parte
+  pública, `page_on_front` y `page_for_posts` se traducen al idioma de la
+  petición con `wpml_object_id`. En Lavandería, con WPML 5.0.2 en el servidor,
+  /en/ redirigía a /en/home/ porque WordPress seguía viendo la portada
+  castellana; en local WPML sí lo hacía. Se apaga con
+  `armazon_site_wpml_front_page`. La trampa: por WP-CLI no se puede comprobar
+  (WPML no carga su parte pública); hay que pedir /en/.
+
 ## 0.5.2 — 06-10-2026
 
 Parche: no obliga a tocar ninguna web. Cambia cómo se abren los enlaces a
