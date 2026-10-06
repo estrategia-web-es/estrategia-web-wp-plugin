@@ -9,7 +9,9 @@
 
 require __DIR__ . '/../../includes/class-links.php';
 require __DIR__ . '/../../includes/class-svg-sanitizer.php';
+require __DIR__ . '/../../includes/class-external-links.php';
 
+use Armazon\Site\External_Links;
 use Armazon\Site\Links;
 use Armazon\Site\Svg_Sanitizer;
 
@@ -59,6 +61,37 @@ echo json_encode(
 		'dims_one_side'      => Svg_Sanitizer::dimensions( '<svg xmlns="http://www.w3.org/2000/svg" width="200" viewBox="0 0 100 50"/>' ),
 		'dims_percent'       => Svg_Sanitizer::dimensions( '<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 40 20"/>' ),
 		'dims_none'          => Svg_Sanitizer::dimensions( '<svg xmlns="http://www.w3.org/2000/svg"/>' ),
+		// 0.5.2. Enlaces externos: href => ¿externo?, con la web en www.web.test.
+		'external'           => array_combine(
+			$hrefs = array(
+				'https://wa.me/34600111222',
+				'https://api.whatsapp.com/send?phone=34600111222',
+				'http://maps.google.com/?q=x',
+				'//facebook.com/x',
+				'HTTPS://WEB-VIEJA.TEST/',
+				'https://otroweb.test/',
+				'https://web.test.evil.test/',
+				'https://www.web.test/contacto/',
+				'https://web.test/contacto/',
+				'https://WWW.Web.Test./x',
+				'https://tienda.web.test/',
+				'//web.test/x',
+				'/contacto/',
+				'contacto/',
+				'#arriba',
+				'?p=1',
+				'',
+				'mailto:hola@web.test',
+				'tel:+34971123456',
+				'sms:+34600111222',
+				'javascript:alert(1)',
+				'whatsapp://send?phone=34600',
+			),
+			array_map( static fn( $h ) => External_Links::is_external( $h, 'www.web.test' ), $hrefs )
+		),
+		'rel_empty'          => External_Links::add_rel( '', 'noopener' ),
+		'rel_keep'           => External_Links::add_rel( ' nofollow  sponsored ', 'noopener' ),
+		'rel_dup'            => External_Links::add_rel( 'NoOpener nofollow', 'noopener' ),
 	),
 	JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
 );

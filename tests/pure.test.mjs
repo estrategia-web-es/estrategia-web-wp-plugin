@@ -1,4 +1,4 @@
-// NIVEL: 1 — sin navegador ni emulador. Las clases puras (enlaces tel/mailto/wa.me y el saneado de SVG) con el PHP de la máquina.
+// NIVEL: 1 — sin navegador ni emulador. Las clases puras (enlaces tel/mailto/wa.me, el saneado de SVG y qué enlace es externo) con el PHP de la máquina.
 //
 // Si no hay `php` en el PATH, la prueba FALLA (no se salta): una prueba que
 // se salta en silencio parece que cubre algo. En esta máquina está en
@@ -49,6 +49,25 @@ test("SVG que no se acepta: entidades (XXE), raíz que no es svg, XML roto", () 
   assert.equal(out.xxe, null);
   assert.equal(out.not_svg, null);
   assert.equal(out.not_xml, null);
+});
+
+test("enlaces externos (0.5.2): otro host sí; el mismo, www, subdominios, relativos, anclas y otros esquemas no", () => {
+  const ext = Object.entries(out.external).filter(([, v]) => v).map(([k]) => k);
+  assert.deepEqual(ext, [
+    "https://wa.me/34600111222",
+    "https://api.whatsapp.com/send?phone=34600111222",
+    "http://maps.google.com/?q=x",
+    "//facebook.com/x",
+    "HTTPS://WEB-VIEJA.TEST/",
+    "https://otroweb.test/",
+    "https://web.test.evil.test/",
+  ]);
+});
+
+test("rel (0.5.2): se añade noopener sin quitar lo que había ni repetirlo", () => {
+  assert.equal(out.rel_empty, "noopener");
+  assert.equal(out.rel_keep, "nofollow sponsored noopener");
+  assert.equal(out.rel_dup, "NoOpener nofollow");
 });
 
 test("medidas: width/height, viewBox, un solo lado con proporción, porcentajes, nada", () => {

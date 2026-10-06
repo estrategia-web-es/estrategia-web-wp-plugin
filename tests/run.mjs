@@ -2,6 +2,7 @@
 //
 //   node tests/run.mjs             1 → 2 → 3, para en el primer nivel rojo
 //   node tests/run.mjs --nivel 1   solo el 1 (lo de cada commit: ~0,2 s)
+//   node tests/run.mjs webp        el 1 y, de los demás, solo webp.test.mjs (al desarrollar)
 //
 // Descubre las pruebas (tests/*.test.mjs) y lee el nivel de su PRIMERA
 // línea; una prueba sin nivel declarado para la tanda entera. No hay lista.
@@ -27,7 +28,13 @@ const PORT = 9404;
 const BASE = `http://127.0.0.1:${PORT}`;
 const only = process.argv.includes("--nivel") ? process.argv[process.argv.indexOf("--nivel") + 1] : null;
 
-const files = fs.readdirSync(path.join(ROOT, "tests")).filter((f) => f.endsWith(".test.mjs")).sort();
+// Pruebas sueltas por nombre (0.5.2): `node tests/run.mjs external-links`
+// corre el nivel 1 entero y, de los demás, solo las que casen. Es la regla de
+// la fila 7 («Cuándo corre la batería»): al desarrollar, el 1 siempre y la
+// prueba nueva; la tanda entera, bajo demanda o antes de publicar.
+const picked = process.argv.slice(2).filter((a, i, all) => !a.startsWith("--") && all[i - 1] !== "--nivel");
+const files = fs.readdirSync(path.join(ROOT, "tests")).filter((f) => f.endsWith(".test.mjs")).sort()
+  .filter((f) => !picked.length || picked.some((p) => f.startsWith(p.replace(/\.test\.mjs$/, ""))) || fs.readFileSync(path.join(ROOT, "tests", f), "utf8").startsWith("// NIVEL: 1"));
 const byLevel = {};
 for (const f of files) {
   const first = fs.readFileSync(path.join(ROOT, "tests", f), "utf8").split("\n")[0];

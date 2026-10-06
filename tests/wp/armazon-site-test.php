@@ -25,6 +25,8 @@
  * - WebP (0.5.1): webp-support, jpeg (un JPEG hecho con GD), webp-setup (hace
  *   de tema con el filtro armazon_site_webp; reset lo borra) y regenerate,
  *   que imita `wp media regenerate` (WP-CLI no está en Playground).
+ * - Enlaces externos (0.5.2): external-links-setup hace de tema con el filtro
+ *   armazon_site_external_links (reset lo borra).
  *
  * Lo que NO hace: guardar ajustes ni crear contenido por la puerta de atrás.
  * Eso va por /wp/v2/* con usuario, que es lo que se prueba.
@@ -79,6 +81,15 @@ add_filter(
 		return null === $setup ? $enabled : (bool) $setup;
 	}
 );
+// 0.5.2: lo que haría un tema que apaga los enlaces externos en pestaña nueva
+// (opción que pone /external-links-setup; reset la borra).
+add_filter(
+	'armazon_site_external_links',
+	static function ( $enabled ) {
+		$setup = get_option( 'armazon_site_test_external_links', null );
+		return null === $setup ? $enabled : (bool) $setup;
+	}
+);
 add_action(
 	'wp_footer',
 	static function () {
@@ -125,6 +136,16 @@ add_action(
 			static function ( WP_REST_Request $r ) {
 				$enabled = $r->get_json_params()['enabled'] ?? null;
 				null === $enabled ? delete_option( 'armazon_site_test_webp' ) : update_option( 'armazon_site_test_webp', $enabled ? 1 : 0 );
+				return array( 'ok' => true );
+			}
+		);
+		// 0.5.2. Hace de tema para los enlaces externos: {"enabled": false} los apaga, null deja el por defecto.
+		$route(
+			'/external-links-setup',
+			'POST',
+			static function ( WP_REST_Request $r ) {
+				$enabled = $r->get_json_params()['enabled'] ?? null;
+				null === $enabled ? delete_option( 'armazon_site_test_external_links' ) : update_option( 'armazon_site_test_external_links', $enabled ? 1 : 0 );
 				return array( 'ok' => true );
 			}
 		);
@@ -182,6 +203,7 @@ add_action(
 				delete_option( 'armazon_site' );
 				delete_option( 'armazon_site_test_consent' );
 				delete_option( 'armazon_site_test_webp' );
+				delete_option( 'armazon_site_test_external_links' );
 				delete_option( 'rewrite_rules' );
 				$types = "'client','testimonial','location','project','portfolio'";
 				$ids   = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type IN ($types) OR (post_type = 'attachment' AND post_title LIKE 'prueba-%')" ); // phpcs:ignore

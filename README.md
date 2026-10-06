@@ -10,7 +10,7 @@ compartido y versionado, como el plugin hermano
 El marco está en
 [armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md](E:/Repositories/armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md).
 
-- Slug y text domain: `armazon-site` · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · versión 0.5.0
+- Slug y text domain: `armazon-site` · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · versión 0.5.2
 - Desde 0.5.0 lleva también **el aviso de cookies** (vino del tema padre
   0.6.0, que en su 0.7.0 ya no lo trae): ver «6. Aviso de cookies».
 - Sin dependencias, sin `node_modules`, sin paso de compilación.
@@ -398,12 +398,47 @@ de regenerar hay que volver a escribir en el contenido la URL actual de la
 mediateca. El detalle, en la cabecera de
 [includes/class-webp.php](includes/class-webp.php).
 
+### 8. Enlaces externos en pestaña nueva (0.5.2)
+
+Todo `<a href>` del **frontal** cuyo host no es el de `home_url()` sale con
+`target="_blank"`, `noopener` añadido a `rel` (sin quitar `nofollow`,
+`sponsored`…) y un `aria-label` con su texto y **«(se abre en una pestaña
+nueva)»** (el mismo texto traducible que el «Powered by»; si ya tenía
+`aria-label`, el aviso va al final). Caso real: «Hablar con un asesor»
+(wa.me) en /hosteleria/ de Lavandería; también Google Maps, redes y
+cualquier enlace del contenido a otro dominio.
+
+- **Un filtro sobre la página entera**, `wp_template_enhancement_output_buffer`
+  del núcleo (6.9+), con `WP_HTML_Tag_Processor`: pilla bloques, plantillas,
+  shortcodes y el aviso de cookies. El escritorio, el editor, REST y los
+  feeds no pasan por ahí.
+- **Internos:** el mismo host, con o sin `www.`, y sus subdominios
+  (`tienda.x.es` desde `x.es`).
+- **No se tocan:** relativos, anclas, `mailto:`, `tel:`, `sms:`,
+  `javascript:` (todo lo que no sea http/https) y **los que ya traen
+  `target`**, también `_self`: es la forma de dejar uno en la misma pestaña.
+  Por eso el «Powered by» no se duplica.
+- **Apagar** (encendido por defecto), en el tema:
+
+      add_filter( 'armazon_site_external_links', '__return_false' );
+
+- **Caso frontera:** el enlace a la **web vieja del cliente en otro dominio
+  cuenta como externo**: decide el host de `home_url()`, no de quién es la
+  web. En el servidor de pruebas (`*.sg-host.com`) también los enlaces al
+  dominio definitivo. Si una web tiene de verdad dos dominios propios,
+  `target="_self"` en esos enlaces.
+
+Decisiones, trampa (corre dentro del búfer de salida: un fallo no rompe la
+página pero deja los enlaces sin tocar, en silencio) y cómo se mantiene, en
+la cabecera de [includes/class-external-links.php](includes/class-external-links.php).
+
 ### Glosario (código en inglés, dominio en castellano)
 
 `client` cliente · `testimonial` opinión · `location` sede · `project`
 proyecto · `portfolio` portfolio · `sector` sector del cliente · `company`
 empresa · `binding` enlace de un bloque a un dato · `consent` aviso de
-cookies / consentimiento · `powered by` la firma al pie del aviso.
+cookies / consentimiento · `powered by` la firma al pie del aviso ·
+`external link` enlace a otro dominio.
 
 ---
 
@@ -411,6 +446,11 @@ cookies / consentimiento · `powered by` la firma al pie del aviso.
 
     node tests/run.mjs             1 → 2 → 3, para en el primer rojo (~2 min)
     node tests/run.mjs --nivel 1   solo el 1 (cada commit, ~0,2 s)
+    node tests/run.mjs webp        el 1 y, de los demás, solo webp.test.mjs
+
+Al desarrollar, **el nivel 1 siempre y, de los niveles 2 y 3, solo la prueba
+nueva** (fila 7, «Cuándo corre la batería»). La tanda entera, cuando la pida
+David o antes de llevar el plugin a una web en producción.
 
 El corredor arranca **Playground** (WP 7.1, PHP 8.3) en el **puerto 9404** si
 no hay uno, con el plugin montado y [tests/blueprint.json](tests/blueprint.json),
@@ -420,7 +460,8 @@ que crea [tests/wp/armazon-site-test.php](tests/wp/armazon-site-test.php)).
 
 | Fichero | Nivel | Qué prueba |
 |---|---|---|
-| [tests/pure.test.mjs](tests/pure.test.mjs) | 1 | tel:/mailto:/wa.me; SVG hostil saneado, SVG inaceptables, medidas |
+| [tests/pure.test.mjs](tests/pure.test.mjs) | 1 | tel:/mailto:/wa.me; SVG hostil saneado, SVG inaceptables, medidas; (0.5.2) qué enlace es externo (otro host, www, subdominio, `//`, relativos, anclas, otros esquemas) y `rel` con `noopener` sin perder lo que traía |
+| [tests/external-links.test.mjs](tests/external-links.test.mjs) | 2 | enlaces externos (0.5.2) en la página servida: el botón de wa.me con `_blank`, `noopener` y `aria-label`; internos, www, relativo, ancla, tel, mailto intactos; con `target` intacto; con `rel` y con `aria-label`, añadidos; enlace-imagen con su alt; «Powered by» sin duplicar; REST sin tocar; el filtro lo apaga. Vista en rojo sin el `boot()` |
 | [tests/settings.test.mjs](tests/settings.test.mjs) | 2 | guardar y leer por REST, fusión, saneado (correo/URL/WhatsApp inválidos no se guardan), esquema, `rewrite_slugs` (saneado, fusión por clave, 400), autor sin permiso |
 | [tests/bindings.test.mjs](tests/bindings.test.mjs) | 2 | párrafo con el teléfono, botón con wa.me, tel: (también `phone_secondary_href`), mailto:, `<br>`, escapado, `social.<red>` |
 | [tests/location.test.mjs](tests/location.test.mjs) | 2 | fuente de sedes: por slug (botón texto+url, título, dirección, mailto, mapa), inexistente/borrador/fuera de contexto vacíos, por contexto en una Consulta |

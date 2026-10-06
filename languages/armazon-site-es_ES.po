@@ -21,7 +21,9 @@ msgctxt "block description"
 msgid ""
 "Reopens the cookie consent notice. Renders nothing when the site declares no "
 "optional cookie categories."
-msgstr "Vuelve a abrir el aviso de cookies. No muestra nada si el sitio no declara categorías de cookies opcionales."
+msgstr ""
+"Vuelve a abrir el aviso de cookies. No muestra nada si el sitio no declara "
+"categorías de cookies opcionales."
 
 #: blocks/consent/block.json
 msgctxt "block keyword"
@@ -152,7 +154,7 @@ msgstr "Ejemplo: https://stats.ejemplo.com/"
 msgid "Site ID"
 msgstr "ID del sitio"
 
-#: includes/admin/class-admin.php:163 includes/class-consent.php:367
+#: includes/admin/class-admin.php:163 includes/class-consent.php:397
 msgid "Cookies"
 msgstr "Cookies"
 
@@ -256,99 +258,108 @@ msgstr "Correo electrónico (enlace)"
 msgid "WhatsApp (link)"
 msgstr "WhatsApp (enlace)"
 
-#: includes/class-consent.php:161
+#: includes/class-consent.php:189
 msgid "Statistics"
 msgstr "Estadísticas"
 
-#: includes/class-consent.php:162
+#: includes/class-consent.php:190
 msgid "Help us understand how the site is used."
 msgstr "Nos ayudan a entender cómo se usa el sitio."
 
-#: includes/class-consent.php:165
+#: includes/class-consent.php:193
 msgid "Maps and third-party content"
 msgstr "Mapas y contenido de terceros"
 
-#: includes/class-consent.php:166
+#: includes/class-consent.php:194
 msgid ""
 "Load embedded maps and other content served by third parties, which may set "
 "their own cookies."
-msgstr "Cargan mapas y otro contenido servido por terceros, que pueden instalar sus propias cookies."
+msgstr ""
+"Cargan mapas y otro contenido servido por terceros, que pueden instalar sus "
+"propias cookies."
 
-#: includes/class-consent.php:169
+#: includes/class-consent.php:197
 msgid "Marketing"
 msgstr "Marketing"
 
-#: includes/class-consent.php:170
+#: includes/class-consent.php:198
 msgid "Measure campaigns and show relevant advertising."
 msgstr "Miden campañas y muestran publicidad relevante."
 
 #. translators: %s: name of the company that built the site (a brand, not translated).
-#: includes/class-consent.php:234
+#: includes/class-consent.php:262
 #, php-format
 msgid "Powered by %s"
 msgstr "Powered by %s"
 
-#: includes/class-consent.php:264
+#: includes/class-consent.php:292
 msgctxt "block title"
 msgid "Cookie settings link"
 msgstr "Enlace de configuración de cookies"
 
-#: includes/class-consent.php:291
+#: includes/class-consent.php:319
 msgid "Link text (empty: “Cookie settings”)"
 msgstr "Texto del enlace (vacío: «Configurar cookies»)"
 
-#: includes/class-consent.php:348
+#: includes/class-consent.php:378
 msgid ""
 "We use our own and third-party cookies for the purposes listed below. You "
 "can accept them, reject them or choose which ones to allow. Necessary "
 "cookies are always active."
-msgstr "Usamos cookies propias y de terceros para los fines que se indican. Puedes aceptarlas, rechazarlas o elegir cuáles permites. Las cookies necesarias están siempre activas."
+msgstr ""
+"Usamos cookies propias y de terceros para los fines que se indican. Puedes "
+"aceptarlas, rechazarlas o elegir cuáles permites. Las cookies necesarias "
+"están siempre activas."
 
-#: includes/class-consent.php:371
+#: includes/class-consent.php:401
 msgid "Privacy and cookie policy"
 msgstr "Política de privacidad y cookies"
 
-#: includes/class-consent.php:377
+#: includes/class-consent.php:407
 msgid "Cookie categories"
 msgstr "Categorías de cookies"
 
-#: includes/class-consent.php:380
+#: includes/class-consent.php:410
 msgid "Necessary"
 msgstr "Necesarias"
 
-#: includes/class-consent.php:380
+#: includes/class-consent.php:410
 msgid ""
 "Required for the site to work, including remembering this choice. Always "
 "active."
-msgstr "Imprescindibles para que el sitio funcione, también para recordar esta elección. Siempre activas."
+msgstr ""
+"Imprescindibles para que el sitio funcione, también para recordar esta "
+"elección. Siempre activas."
 
-#: includes/class-consent.php:396
+#: includes/class-consent.php:426
 msgid "Save choices"
 msgstr "Guardar la selección"
 
-#: includes/class-consent.php:400
+#: includes/class-consent.php:430
 msgid "Accept all"
 msgstr "Aceptar todas"
 
-#: includes/class-consent.php:401
+#: includes/class-consent.php:431
 msgid "Reject all"
 msgstr "Rechazar todas"
 
-#: includes/class-consent.php:402
+#: includes/class-consent.php:432
 msgid "Configure"
 msgstr "Configurar"
 
-#: includes/class-consent.php:407
+#: includes/class-consent.php:437 includes/class-external-links.php:101
 msgid "(opens in a new tab)"
 msgstr "(se abre en una pestaña nueva)"
 
-#: includes/class-consent.php:433
+#: includes/class-consent.php:463
 msgid ""
 "Cookie settings: this site declares no optional cookie categories, so there "
 "is no notice to reopen and this link is not shown."
-msgstr "Configurar cookies: este sitio no declara categorías de cookies opcionales, así que no hay aviso que reabrir y el enlace no se muestra."
+msgstr ""
+"Configurar cookies: este sitio no declara categorías de cookies opcionales, "
+"así que no hay aviso que reabrir y el enlace no se muestra."
 
-#: includes/class-consent.php:439
+#: includes/class-consent.php:469
 msgid "Cookie settings"
 msgstr "Configurar cookies"
 

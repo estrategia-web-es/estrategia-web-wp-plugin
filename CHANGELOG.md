@@ -4,6 +4,27 @@ Una entrada por versión, la más nueva arriba. Se escribe en el mismo commit
 que sube el número (README, «Versiones»). Si una versión obliga a tocar algo
 en las webs, la entrada lo dice primero, con qué cambiar.
 
+## 0.5.2 — 06-10-2026
+
+Parche: no obliga a tocar ninguna web. Cambia cómo se abren los enlaces a
+otro dominio en todas las que lo actualicen.
+
+- **Enlaces externos en pestaña nueva** (`includes/class-external-links.php`):
+  todo `<a href>` del frontal a otro host sale con `target="_blank"`,
+  `noopener` añadido a `rel` (sin quitar lo que traía) y `aria-label` con
+  «(se abre en una pestaña nueva)» al final. Un solo filtro sobre la página
+  entera (`wp_template_enhancement_output_buffer`, WP 6.9+) con
+  `WP_HTML_Tag_Processor`. Internos: el mismo host, con o sin `www.`, y sus
+  subdominios. No se tocan relativos, anclas, `mailto:`, `tel:`, `sms:`,
+  `javascript:` ni los que ya traen `target` (el «Powered by» no se
+  duplica). Se apaga con `add_filter( 'armazon_site_external_links',
+  '__return_false' )`. Lo pidió David por «Hablar con un asesor» (wa.me) en
+  /hosteleria/ de Lavandería.
+  **Caso frontera:** la web vieja del cliente en otro dominio cuenta como
+  externa.
+- **Pruebas:** `node tests/run.mjs <nombre>` corre el nivel 1 y, de los
+  demás, solo esa prueba (fila 7, «Cuándo corre la batería»).
+
 ## 0.5.1 — 06-10-2026
 
 Parche: no obliga a tocar ninguna web. **Pero el WebP pide un paso aparte

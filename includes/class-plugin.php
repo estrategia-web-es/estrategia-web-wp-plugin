@@ -29,6 +29,7 @@ final class Plugin {
 		Matomo::boot();
 		Consent::boot(); // El aviso de cookies (0.5.0). Arranca en after_setup_theme: ver su cabecera.
 		Webp::boot(); // Tamaños de imagen en WebP (0.5.1).
+		External_Links::boot(); // Enlaces a otro dominio en pestaña nueva (0.5.2).
 
 		if ( is_admin() ) {
 			Admin::boot();
