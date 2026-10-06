@@ -368,6 +368,36 @@ vacío no pinta la línea. Su color es el del texto del aviso, sin opacidad:
 contraste AA medido en las pruebas (11,05:1 en Lavandería). Un tema que la
 atenúe tiene que volver a medirlo.
 
+**Orden de foco (0.5.1):** el aviso se pinta al **principio del `body`**
+(`wp_body_open`; en `wp_footer` si el tema no lo llama), así que mientras
+está abierto el primer Tab cae en él. No roba el foco al cargar, no lo
+atrapa (Tab sale, Mayús+Tab vuelve; `aria-modal="false"`) y **Escape no lo
+cierra la primera vez**: hay que elegir. Reabierto, Escape sí. El hueco
+entre el texto y los botones es de 24 px y resiste el
+`:root :where(p) { margin: 0 }` de un `theme.json`. En las transiciones
+entre páginas del tema padre (0.7.5) se queda quieto
+(`view-transition-name: armazon-consent`).
+
+### 7. WebP (0.5.1)
+
+Los JPEG y PNG que se suben se guardan **en WebP**: el filtro
+`image_editor_output_format` de WordPress, solo si el editor de imágenes del
+servidor sabe escribirlo (`wp_image_editor_supports`). Medido: WordPress
+convierte **también el fichero principal** (`foto.jpg` → la mediateca sirve
+`foto.webp`; el `.jpg` queda como `original_image`). Apagar, en el tema:
+
+    add_filter( 'armazon_site_webp', '__return_false' );
+
+**Lo ya subido no cambia solo**, y **regenerar sin tocar el contenido lo
+empeora**: `wp media regenerate` pasa el meta a `.webp`, pero las URL
+guardadas en las páginas no cambian. La del fichero principal (`foto.jpg`,
+la que pone la carga de contenido de Lavandería en todas) sigue sirviendo,
+**pero se queda sin `srcset`**: el JPEG entero a cualquier ancho. La de un
+tamaño intermedio (`foto-1024x683.jpg`) apunta a un fichero borrado. Después
+de regenerar hay que volver a escribir en el contenido la URL actual de la
+mediateca. El detalle, en la cabecera de
+[includes/class-webp.php](includes/class-webp.php).
+
 ### Glosario (código en inglés, dominio en castellano)
 
 `client` cliente · `testimonial` opinión · `location` sede · `project`
@@ -401,7 +431,8 @@ que crea [tests/wp/armazon-site-test.php](tests/wp/armazon-site-test.php)).
 | [tests/matomo.test.mjs](tests/matomo.test.mjs) | 2 | Matomo (0.3.0): sin URL o sin id no se imprime; por defecto `disableCookies`; híbrido con `requireCookieConsent` y la categoría «statistics» declarada; saneado (URL, id, 400 del modo); sus claves no son datos enlazables |
 | [tests/matomo-browser.test.mjs](tests/matomo-browser.test.mjs) | 3 | con el `matomo.js` real ([tests/fixtures/matomo.js](tests/fixtures/matomo.js), 5.4.0, BSD-3) servido por una ruta falsa y, desde 0.5.0, con el **aviso de cookies real** (sus botones y su cookie, no un evento simulado): sin configuración no se pide; sin cookies mide, no deja cookies y no hay aviso; híbrido sin cookies hasta «Aceptar todas» (solo «mapas» no vale), `mtm_cookie_consent` y `_pk_id` al aceptar, borradas al «Rechazar todas»; aviso ya contestado al cargar; elección caducada olvida; a un administrador no se le mide |
 | [tests/consent.test.mjs](tests/consent.test.mjs) | 2 | aviso de cookies (0.5.0): sin categorías no sale; con ellas, en orden estable y con los tres botones; revisión y cookie iguales a las del padre; Matomo híbrido lo hace salir; «Powered by» (texto, `href`, `_blank`, `rel="noopener"` sin `nofollow`, después de los botones); el filtro cambia texto y URL, una URL vacía o no http(s) deja el texto sin enlace, `false` lo quita; enlace por bloque nuevo, alias viejo y shortcode |
-| [tests/consent-browser.test.mjs](tests/consent-browser.test.mjs) | 3 | aviso de cookies (0.5.0): sale; aceptar y rechazar pesan igual; rechazar guarda la cookie y persiste; el enlace (nuevo y alias) lo reabre con el foco dentro y Escape lo cierra; contrato JS (evento, `has`, `get`, `categories`, `grant`, `open`) y scripts diferidos; una cookie del aviso del padre sigue valiendo; «Powered by» visible, más pequeño que los botones y con contraste AA medido |
+| [tests/consent-browser.test.mjs](tests/consent-browser.test.mjs) | 3 | aviso de cookies (0.5.0): sale; aceptar y rechazar pesan igual; rechazar guarda la cookie y persiste; el enlace (nuevo y alias) lo reabre con el foco dentro y Escape lo cierra; contrato JS (evento, `has`, `get`, `categories`, `grant`, `open`) y scripts diferidos; una cookie del aviso del padre sigue valiendo; «Powered by» visible, más pequeño que los botones y con contraste AA medido; (0.5.1) abierto es lo primero al tabular, sin trampa y Escape no lo cierra sin elegir; ≥ 16 px entre el texto y los botones a 402 y 1512 con el `:root :where(p)` de Lavandería |
+| [tests/webp.test.mjs](tests/webp.test.mjs) | 2 | WebP (0.5.1): el editor escribe WebP; JPEG y PNG subidos generan sus tamaños (y el principal) en WebP; el filtro a `false` lo apaga; la trampa de regenerar lo ya subido (la `.jpg` del contenido sin `srcset`, la intermedia rota) y su arreglo |
 | [tests/editor.test.mjs](tests/editor.test.mjs) | 3 | el editor enseña el valor enlazado y lista los datos (empresa y sede por slug); la pantalla de ajustes guarda, avisa y desactiva el último tipo |
 
 **Todas se han visto fallar** (02-10-2026): tres tandas de mutantes, diez en

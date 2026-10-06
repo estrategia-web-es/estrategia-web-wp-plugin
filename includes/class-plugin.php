@@ -28,6 +28,7 @@ final class Plugin {
 		Svg::boot();
 		Matomo::boot();
 		Consent::boot(); // El aviso de cookies (0.5.0). Arranca en after_setup_theme: ver su cabecera.
+		Webp::boot(); // Tamaños de imagen en WebP (0.5.1).
 
 		if ( is_admin() ) {
 			Admin::boot();

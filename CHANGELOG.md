@@ -4,6 +4,37 @@ Una entrada por versión, la más nueva arriba. Se escribe en el mismo commit
 que sube el número (README, «Versiones»). Si una versión obliga a tocar algo
 en las webs, la entrada lo dice primero, con qué cambiar.
 
+## 0.5.1 — 06-10-2026
+
+Parche: no obliga a tocar ninguna web. **Pero el WebP pide un paso aparte
+para lo ya subido** (abajo, la trampa).
+
+- **WebP** (`includes/class-webp.php`): los JPEG y PNG subidos se guardan en
+  WebP, también el fichero principal (el `.jpg` queda como
+  `original_image`). Solo si el servidor sabe escribir WebP. Se apaga con
+  `add_filter( 'armazon_site_webp', '__return_false' )`.
+  **La trampa:** lo ya subido no cambia solo, y al regenerar
+  (`wp media regenerate`) las URL guardadas en el contenido no cambian: la
+  `.jpg` principal sigue sirviendo pero **sin `srcset`** (peor que antes) y
+  la de un tamaño intermedio se rompe. Después de regenerar, volver a
+  escribir en el contenido la URL actual de la mediateca.
+- **Aviso de cookies, orden de foco:** se pinta al principio del `body`
+  (`wp_body_open`), así que abierto es lo primero al tabular (WCAG 2.4.3;
+  antes, unos 30-35 tabuladores). Sin trampa de foco; Escape sigue sin
+  cerrarlo la primera vez.
+- **Aviso de cookies, el texto ya no queda pegado a los botones:** los
+  márgenes del título, el texto y el «Powered by» van con dos clases. Con
+  una empataban con `:root :where(p) { margin: 0 }` del `theme.json` del
+  tema, que se carga después y ganaba (0,6 px en Lavandería). Hueco texto →
+  botones de 24 px.
+- Aviso: el enlace del texto, subrayado (WCAG 1.4.1); el «Powered by» con
+  24 px de diana (2.5.8); y `view-transition-name: armazon-consent` sin
+  animación, para que no salte en las transiciones del tema padre 0.7.5.
+- Pruebas: `tests/webp.test.mjs` (nivel 2, nueva) y dos más en
+  `tests/consent-browser.test.mjs` (nivel 3). Vistas fallar antes del
+  arreglo: los tamaños salían en `.jpg`, el primer Tab iba a «Saltar al
+  contenido» y el hueco era de 0,6 px.
+
 ## 0.5.0 — 05-10-2026
 
 Menor para el plugin (solo añade), pero **va junto con el tema padre 0.7.0**,

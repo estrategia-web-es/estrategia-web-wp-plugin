@@ -35,7 +35,8 @@ let pageUrl;
 before(async () => {
   browser = await playwright().chromium.launch();
   await reset();
-  await setup({ categories: ["statistics", "maps"], script: true });
+  // theme_css: lo que emite el theme.json de Lavandería (ver la prueba del hueco).
+  await setup({ categories: ["statistics", "maps"], script: true, theme_css: ":root :where(p){margin-top:0;margin-bottom:0}" });
   ({ url: pageUrl } = await seedPage('<!-- wp:paragraph --><p>Pie</p><!-- /wp:paragraph --><!-- wp:armazon-site/consent /--><!-- wp:armazon/consent {"label":"Alias viejo"} /-->', "prueba-aviso"));
 });
 after(() => browser?.close());
@@ -158,6 +159,51 @@ test("consent (0.5.0): «armazon:consent-ready» se lanza UNA vez al arrancar, t
   await page.waitForFunction(() => window.ready.length > 0);
   assert.deepEqual(await page.evaluate(() => window.ready), [[[], "function"]]);
   await ctx.close();
+});
+
+test("consent (0.5.1): abierto, es lo PRIMERO al tabular; se sale con Tab (sin trampa) y Escape no lo cierra sin elegir", async () => {
+  const { ctx, page } = await open();
+  await notice(page).waitFor({ state: "visible" });
+  await page.keyboard.press("Tab");
+  const inside = () => page.evaluate(() => !!document.activeElement?.closest("#armazon-consent"));
+  assert.ok(await inside(), `el primer Tab va a ${await page.evaluate(() => document.activeElement?.outerHTML.slice(0, 80))}, no al aviso`);
+  // Sin trampa: se sale con Tab en, como mucho, tantos pasos como enfocables tiene.
+  const stops = await page.evaluate(() => document.querySelectorAll("#armazon-consent a[href], #armazon-consent button:not([disabled])").length);
+  let left = false;
+  for (let i = 0; i <= stops && !left; i++) {
+    await page.keyboard.press("Tab");
+    left = !(await inside());
+  }
+  assert.ok(left, `tras ${stops + 1} tabuladores el foco sigue dentro del aviso: trampa de foco`);
+  assert.ok(await notice(page).isVisible(), "salir con Tab no debe cerrar el aviso");
+  await page.keyboard.press("Shift+Tab");
+  assert.ok(await inside(), "Mayús+Tab no vuelve al aviso");
+  await page.keyboard.press("Escape");
+  assert.ok(await notice(page).isVisible(), "la primera vez, Escape no lo cierra: hay que elegir");
+  assert.deepEqual(page.errors, []);
+  await ctx.close();
+});
+
+test("consent (0.5.1): entre el texto y los botones hay al menos 16 px, a 402 y a 1512", async () => {
+  for (const width of [402, 1512]) {
+    const ctx = await browser.newContext({ viewport: { width, height: 900 } });
+    const page = await ctx.newPage();
+    await page.goto(pageUrl, { waitUntil: "networkidle" });
+    await notice(page).waitFor({ state: "visible" });
+    const m = await page.evaluate(() => {
+      const text = document.querySelector(".armazon-consent__text");
+      const title = document.querySelector(".armazon-consent__title");
+      const range = document.createRange();
+      range.selectNodeContents(text);
+      const lastLine = Math.max(...[...range.getClientRects()].map((r) => r.bottom));
+      const button = document.querySelector(".armazon-consent__actions").getBoundingClientRect().top;
+      return { gap: button - lastLine, titleGap: text.getBoundingClientRect().top - title.getBoundingClientRect().bottom };
+    });
+    assert.ok(m.gap >= 16, `${width}: entre la última línea del texto y los botones hay ${m.gap.toFixed(1)} px`);
+    assert.ok(m.titleGap >= 4, `${width}: título y texto pegados (${m.titleGap.toFixed(1)} px)`);
+    console.log(`# ${width}: texto → botones ${m.gap.toFixed(1)} px; título → texto ${m.titleGap.toFixed(1)} px`);
+    await ctx.close();
+  }
 });
 
 /** Contraste WCAG entre dos colores rgb()/rgba() (el de delante sin alfa). */

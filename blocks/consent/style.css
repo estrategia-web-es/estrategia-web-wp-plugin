@@ -40,13 +40,24 @@
 	display: none;
 }
 
-.armazon-consent__title {
+/*
+ * Los márgenes del título, el texto y el «Powered by» van con DOS clases a
+ * propósito (0.5.1). Con una sola empataban en especificidad con lo que
+ * emite el theme.json de un tema de bloques, «:root :where(p) { margin: 0 }»
+ * (:root cuenta como clase), y esa hoja se carga DESPUÉS: en Lavandería el
+ * texto quedaba pegado a los botones (0,6 px; medido el 06-10-2026).
+ * El hueco texto → botones es de 24 (1,5rem) y no de 16: el botón de un tema
+ * puede llevar sombra desplazada hacia arriba (Lavandería, 3 px) y con 16
+ * casi tocaba el enlace de la política. tests/consent-browser.test.mjs pide
+ * al menos 16 px, con la regla de Lavandería puesta.
+ */
+.armazon-consent .armazon-consent__title {
 	margin: 0 0 var(--wp--preset--spacing--8, 0.5rem);
 	font-size: var(--wp--preset--font-size--large, 1.25rem);
 }
 
-.armazon-consent__text {
-	margin: 0 0 var(--wp--preset--spacing--16, 1rem);
+.armazon-consent .armazon-consent__text {
+	margin: 0 0 var(--wp--preset--spacing--24, 1.5rem);
 	font-size: var(--wp--preset--font-size--small, 0.875rem);
 }
 
@@ -90,7 +101,7 @@
 	margin-block-end: var(--wp--preset--spacing--16, 1rem);
 }
 
-.armazon-consent__powered {
+.armazon-consent .armazon-consent__powered {
 	margin: var(--wp--preset--spacing--8, 0.5rem) 0 0;
 	font-size: 0.75rem;
 	line-height: 1.4;
@@ -98,8 +109,18 @@
 }
 
 .armazon-consent__powered a {
+	/* 0.5.1: diana táctil de 24 px de alto como mínimo (WCAG 2.5.8; Lighthouse
+	   target-size la daba pequeña en la auditoría de Lavandería). */
+	display: inline-block;
+	padding-block: 0.25rem;
 	color: inherit;
 	text-decoration: none;
+}
+
+/* 0.5.1: el enlace dentro del texto, subrayado. Solo con el color no se
+   distingue del párrafo (WCAG 1.4.1; auditoría de Lavandería). */
+.armazon-consent .armazon-consent__text a {
+	text-decoration: underline;
 }
 
 .armazon-consent__powered a:hover,
@@ -129,4 +150,24 @@
 	font: inherit;
 	text-decoration: underline;
 	cursor: pointer;
+}
+
+/*
+ * Transiciones entre páginas (0.5.1; las pone el tema padre Armazón desde la
+ * 0.7.5). El aviso tiene nombre propio y ninguna animación: mientras dure el
+ * fundido de la página se queda QUIETO donde estaba, en vez de fundirse con
+ * ella y volver a salir de golpe cuando view.js lo enseña en la página nueva
+ * (en la nueva sale oculto hasta que corre el módulo). Sin transiciones, esto
+ * no hace nada. Escondido (ya elegido) no participa: display none.
+ * Cómo se mantiene: el nombre «armazon-consent» no lo puede usar nadie más en
+ * la página (un nombre repetido aborta la transición entera).
+ */
+.armazon-consent {
+	view-transition-name: armazon-consent;
+}
+
+::view-transition-group(armazon-consent),
+::view-transition-old(armazon-consent),
+::view-transition-new(armazon-consent) {
+	animation: none;
 }

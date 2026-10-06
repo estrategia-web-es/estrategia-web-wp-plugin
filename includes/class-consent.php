@@ -14,7 +14,31 @@
  *           «armazon/consent» (blocks/consent/view.js);
  * - y activa solo los <script type="text/plain" data-armazon-consent="X">
  *   de las categorías aceptadas.
- * El aviso se pinta en wp_footer (no depende de que el tema ponga un bloque).
+ * El aviso se pinta en wp_body_open, al PRINCIPIO del body (no depende de que
+ * el tema ponga un bloque); si el tema no llama a wp_body_open(), en
+ * wp_footer, como antes de la 0.5.1.
+ *
+ * ORDEN DE FOCO (0.5.1, WCAG 2.4.3). En el pie quedaba el último de la
+ * página: con teclado había que pasar 30-35 tabuladores para llegar a
+ * Aceptar / Rechazar (auditoría de Lavandería, 06-10-2026). Ahora va el
+ * primero en el DOM y el primer Tab cae en él, aunque se vea abajo (es
+ * position: fixed). Decisiones:
+ * - Primero en el DOM y NO mover el foco al abrirse: robar el foco al cargar
+ *   la página desorienta al lector de pantalla y salta por encima del
+ *   «Saltar al contenido». Así el primer Tab lo encuentra, y quien no quiera
+ *   contestar sigue tabulando hacia la página.
+ * - Sin trampa de foco: es role="dialog" con aria-modal="false" y la página
+ *   sigue usable; Tab sale de él y Mayús+Tab vuelve. La AEPD (Guía sobre el
+ *   uso de las cookies, 2023) pide que la primera capa se vea y que aceptar
+ *   y rechazar estén al mismo nivel, no que bloquee la web.
+ * - Escape NO lo cierra la primera vez: cerrar sin elegir dejaría al
+ *   visitante sin aviso y sin decisión, y volvería a salir en la página
+ *   siguiente. Reabierto desde «Configurar cookies» (ya hay elección), sí.
+ * - La trampa: el «Saltar al contenido» del núcleo lo mete un script DENTRO
+ *   de .wp-site-blocks, después del aviso; mientras el aviso está abierto es
+ *   el segundo destino del tabulador, no el primero. Elegido o no, al
+ *   cerrarse vuelve a ser el primero.
+ * Prueba: tests/consent-browser.test.mjs («lo PRIMERO al tabular»).
  * El bloque armazon-site/consent es el ENLACE para reabrirlo, pensado para el
  * pie; también hay shortcode [armazon_consent_settings].
  *
@@ -144,6 +168,9 @@ final class Consent {
 		add_action( 'init', array( self::class, 'register_blocks' ) );
 		add_filter( 'block_type_metadata', array( self::class, 'block_labels' ) );
 		add_action( 'wp_enqueue_scripts', array( self::class, 'enqueue' ) );
+		// 0.5.1: al PRINCIPIO del body (orden de foco, ver la cabecera); en el
+		// pie solo si el tema no llama a wp_body_open().
+		add_action( 'wp_body_open', array( self::class, 'print_notice' ), 5 );
 		add_action( 'wp_footer', array( self::class, 'print_notice' ), 5 );
 		add_shortcode( 'armazon_consent_settings', array( self::class, 'shortcode' ) );
 		if ( function_exists( 'wp_has_consent' ) ) {
@@ -337,10 +364,12 @@ final class Consent {
 	 * (los scripts son text/plain), así que no se pierde nada.
 	 */
 	public static function print_notice(): void {
+		static $printed = false;
 		$categories = self::categories();
-		if ( ! $categories ) {
+		if ( ! $categories || $printed ) {
 			return;
 		}
+		$printed = true;
 		$known   = self::known_categories();
 		$policy  = get_privacy_policy_url();
 		$powered = self::powered_by();

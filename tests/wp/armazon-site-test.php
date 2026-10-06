@@ -22,6 +22,9 @@
  *   <script type="text/plain" data-armazon-consent="statistics"> en el pie.
  *   Es lo que en una web pone el functions.php del tema; aquí no hay tema
  *   propio (Playground usa el de por defecto). reset la borra.
+ * - WebP (0.5.1): webp-support, jpeg (un JPEG hecho con GD), webp-setup (hace
+ *   de tema con el filtro armazon_site_webp; reset lo borra) y regenerate,
+ *   que imita `wp media regenerate` (WP-CLI no está en Playground).
  *
  * Lo que NO hace: guardar ajustes ni crear contenido por la puerta de atrás.
  * Eso va por /wp/v2/* con usuario, que es lo que se prueba.
@@ -55,6 +58,27 @@ add_filter(
 		return false === $setup['powered_by'] ? false : array_merge( (array) $powered, (array) $setup['powered_by'] );
 	}
 );
+// 0.5.1: CSS que pondría el tema (consent-setup «theme_css»). Para el hueco
+// del aviso: Lavandería emite desde su theme.json «:root :where(p) { margin: 0 }»,
+// que empata en especificidad con .armazon-consent__text y, cargado después, gana.
+add_action(
+	'wp_head',
+	static function () {
+		$setup = (array) get_option( 'armazon_site_test_consent', array() );
+		if ( ! empty( $setup['theme_css'] ) ) {
+			echo '<style id="armazon-test-theme-css">' . wp_strip_all_tags( (string) $setup['theme_css'] ) . '</style>';
+		}
+	},
+	100
+);
+// 0.5.1: lo que haría un tema que apaga el WebP (opción que pone /webp-setup).
+add_filter(
+	'armazon_site_webp',
+	static function ( $enabled ) {
+		$setup = get_option( 'armazon_site_test_webp', null );
+		return null === $setup ? $enabled : (bool) $setup;
+	}
+);
 add_action(
 	'wp_footer',
 	static function () {
@@ -74,6 +98,60 @@ add_action(
 		};
 
 		$route( '/ping', 'GET', static fn() => array( 'ok' => true ) );
+
+		// 0.5.1. WebP: si el editor de imágenes de este PHP sabe escribir WebP
+		// (si no, la prueba no probaría nada), y un JPEG de verdad hecho con GD
+		// (sin ficheros binarios en el repo), en base64.
+		$route( '/webp-support', 'GET', static fn() => array( 'webp' => (bool) wp_image_editor_supports( array( 'mime_type' => 'image/webp' ) ) ) );
+		$route(
+			'/jpeg',
+			'GET',
+			static function ( WP_REST_Request $r ) {
+				$w     = max( 16, (int) ( $r['w'] ?? 1600 ) );
+				$h     = max( 16, (int) ( $r['h'] ?? 1000 ) );
+				$image = imagecreatetruecolor( $w, $h );
+				for ( $x = 0; $x < $w; $x += 20 ) {
+					imagefilledrectangle( $image, $x, 0, $x + 19, $h - 1, imagecolorallocate( $image, ( $x / 7 ) % 256, 120, 200 ) );
+				}
+				ob_start();
+				imagejpeg( $image, null, 80 );
+				return array( 'base64' => base64_encode( (string) ob_get_clean() ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions
+			}
+		);
+		// 0.5.1. Hace de tema para el WebP: {"enabled": false} lo apaga con el filtro, null lo deja por defecto.
+		$route(
+			'/webp-setup',
+			'POST',
+			static function ( WP_REST_Request $r ) {
+				$enabled = $r->get_json_params()['enabled'] ?? null;
+				null === $enabled ? delete_option( 'armazon_site_test_webp' ) : update_option( 'armazon_site_test_webp', $enabled ? 1 : 0 );
+				return array( 'ok' => true );
+			}
+		);
+		// 0.5.1. Lo que hace `wp media regenerate` (WP-CLI, Media_Command):
+		// borra los tamaños intermedios que dice el meta y vuelve a generar el
+		// meta desde el ORIGINAL. WP-CLI no está en Playground: esto lo imita
+		// para ver qué pasa con las URL que el contenido ya tiene guardadas.
+		// Con skip_delete: true, como --skip-delete (no borra los viejos).
+		$route(
+			'/regenerate/(?P<id>\d+)',
+			'POST',
+			static function ( WP_REST_Request $r ) {
+				require_once ABSPATH . 'wp-admin/includes/image.php';
+				$id   = (int) $r['id'];
+				$meta = wp_get_attachment_metadata( $id );
+				$file = wp_get_original_image_path( $id );
+				if ( empty( $r->get_json_params()['skip_delete'] ) ) {
+					$dir = dirname( (string) get_attached_file( $id ) );
+					foreach ( (array) ( $meta['sizes'] ?? array() ) as $size ) {
+						wp_delete_file( $dir . '/' . $size['file'] );
+					}
+				}
+				$new = wp_generate_attachment_metadata( $id, $file );
+				wp_update_attachment_metadata( $id, $new );
+				return array( 'sizes' => wp_list_pluck( (array) ( $new['sizes'] ?? array() ), 'file' ), 'file' => $new['file'] ?? '' );
+			}
+		);
 
 		// 0.3.0. Lo que vería el aviso del tema padre (que aquí no está): las
 		// categorías tras el filtro armazon_consent_categories, partiendo de
@@ -103,6 +181,7 @@ add_action(
 				global $wpdb;
 				delete_option( 'armazon_site' );
 				delete_option( 'armazon_site_test_consent' );
+				delete_option( 'armazon_site_test_webp' );
 				delete_option( 'rewrite_rules' );
 				$types = "'client','testimonial','location','project','portfolio'";
 				$ids   = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type IN ($types) OR (post_type = 'attachment' AND post_title LIKE 'prueba-%')" ); // phpcs:ignore
