@@ -1,15 +1,15 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
-	"__comment": "armazon-site/consent — botón «Configurar cookies» que reabre el aviso. El aviso y toda la lógica del consentimiento viven en includes/class-consent.php (su cabecera es la documentación). Sin editor propio: supports.autoRegister (WP 7.0). El nombre viejo, armazon/consent (tema padre ≤ 0.6.0), lo registra Consent::register_blocks() como alias oculto.",
+	"__comment": "estrategia-web-site/consent — botón «Configurar cookies» que reabre el aviso. El aviso y toda la lógica del consentimiento viven en includes/class-consent.php (su cabecera es la documentación). Sin editor propio: supports.autoRegister (WP 7.0). El nombre viejo, estrategia-web/consent (tema padre ≤ 0.6.0), lo registra Consent::register_blocks() como alias oculto.",
 	"apiVersion": 3,
-	"name": "armazon-site/consent",
+	"name": "estrategia-web-site/consent",
 	"version": "0.5.0",
 	"title": "Cookie settings link",
 	"category": "widgets",
 	"icon": "shield",
 	"description": "Reopens the cookie consent notice. Renders nothing when the site declares no optional cookie categories.",
 	"keywords": [ "cookies", "consent", "privacy", "gdpr" ],
-	"textdomain": "armazon-site",
+	"textdomain": "estrategia-web-site",
 	"attributes": {
 		"label": { "type": "string", "default": "" }
 	},

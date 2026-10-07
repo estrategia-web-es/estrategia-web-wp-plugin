@@ -1,6 +1,6 @@
 <?php
 /**
- * Los datos de la empresa: UNA opción, `armazon_site` (array), registrada con
+ * Los datos de la empresa: UNA opción, `estrategia_web_site` (array), registrada con
  * la Settings API y expuesta en REST (/wp/v2/settings) con su esquema.
  *
  * Es CONTRATO: el tema padre, los temas hijos y la carga de contenido leen y
@@ -56,13 +56,13 @@
  *   un valor del enum de enabled_types o de matomo_mode es versión mayor.
  */
 
-namespace Armazon\Site;
+namespace EstrategiaWeb\Site;
 
 defined( 'ABSPATH' ) || exit;
 
 final class Settings {
 
-	public const OPTION = 'armazon_site';
+	public const OPTION = 'estrategia_web_site';
 
 	/** Los tipos de contenido que se pueden activar. Orden = orden del menú. */
 	public const TYPES = array( 'client', 'testimonial', 'location', 'project', 'portfolio' );
@@ -128,12 +128,12 @@ final class Settings {
 
 	public static function register(): void {
 		register_setting(
-			'armazon_site',
+			'estrategia_web_site',
 			self::OPTION,
 			array(
 				'type'              => 'object',
-				'label'             => __( 'Company details', 'armazon-site' ),
-				'description'       => __( 'Company details and site options of the Armazón Site plugin.', 'armazon-site' ),
+				'label'             => __( 'Company details', 'estrategia-web-site' ),
+				'description'       => __( 'Company details and site options of the Estrategia Web Site plugin.', 'estrategia-web-site' ),
 				'default'           => self::DEFAULTS,
 				'sanitize_callback' => array( self::class, 'sanitize' ),
 				'show_in_rest'      => array( 'schema' => self::schema() ),
@@ -213,7 +213,7 @@ final class Settings {
 		 *
 		 * @param array $all Datos ya mezclados con los valores por defecto.
 		 */
-		return (array) apply_filters( 'armazon_site_settings', $all );
+		return (array) apply_filters( 'estrategia_web_site_settings', $all );
 	}
 
 	public static function get( string $key ): mixed {
@@ -254,7 +254,7 @@ final class Settings {
 			} elseif ( is_email( $email ) && $email === trim( (string) $input['email'] ) ) {
 				$out['email'] = $email;
 			} else {
-				self::error( 'email', __( 'The email address is not valid. The previous one has been kept.', 'armazon-site' ) );
+				self::error( 'email', __( 'The email address is not valid. The previous one has been kept.', 'estrategia-web-site' ) );
 			}
 		}
 
@@ -267,7 +267,7 @@ final class Settings {
 				if ( strlen( $digits ) >= 8 && strlen( $digits ) <= 15 ) {
 					$out['whatsapp'] = $digits;
 				} else {
-					self::error( 'whatsapp', __( 'The WhatsApp number is not valid (international format, digits only). The previous one has been kept.', 'armazon-site' ) );
+					self::error( 'whatsapp', __( 'The WhatsApp number is not valid (international format, digits only). The previous one has been kept.', 'estrategia-web-site' ) );
 				}
 			}
 		}
@@ -341,7 +341,7 @@ final class Settings {
 		// filter_var y no wp_http_validate_url(): esa resuelve el DNS del dominio.
 		if ( '' === $url || ! filter_var( $url, FILTER_VALIDATE_URL ) || ! preg_match( '#^https?://[^/]+\.[^/]+#i', $url ) ) {
 			/* translators: %s: the field name. */
-			self::error( $field, sprintf( __( 'The address in «%s» is not a valid web address. The previous one has been kept.', 'armazon-site' ), $field ) );
+			self::error( $field, sprintf( __( 'The address in «%s» is not a valid web address. The previous one has been kept.', 'estrategia-web-site' ), $field ) );
 			return null;
 		}
 		return $url;
@@ -349,7 +349,7 @@ final class Settings {
 
 	private static function error( string $code, string $message ): void {
 		if ( function_exists( 'add_settings_error' ) ) {
-			add_settings_error( self::OPTION, 'armazon_site_' . $code, $message );
+			add_settings_error( self::OPTION, 'estrategia_web_site_' . $code, $message );
 		}
 	}
 }

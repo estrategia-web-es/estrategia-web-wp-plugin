@@ -4,15 +4,15 @@
  *
  * Qué es: un aviso con Aceptar / Rechazar / Configurar (los tres con el mismo
  * peso visual, como pide la AEPD), categorías declarables, la elección en una
- * cookie propia y técnica (armazon_consent), y la elección expuesta:
- * - a PHP:  armazon_consent_has( 'maps' ), armazon_consent_categories()
+ * cookie propia y técnica (estrategia_web_consent), y la elección expuesta:
+ * - a PHP:  estrategia_web_consent_has( 'maps' ), estrategia_web_consent_categories()
  *           (includes/consent-functions.php; por dentro, esta clase);
- * - a JS:   window.armazonConsent.has( 'maps' ) / .get() / .open() /
- *           .grant( 'maps' ) / .categories, el evento «armazon:consent» en
- *           document (detail.accepted), «armazon:consent-ready» (0.5.0, una
+ * - a JS:   window.estrategiaWebConsent.has( 'maps' ) / .get() / .open() /
+ *           .grant( 'maps' ) / .categories, el evento «estrategia-web:consent» en
+ *           document (detail.accepted), «estrategia-web:consent-ready» (0.5.0, una
  *           vez al arrancar, también sin elección) y el store de Interactivity
- *           «armazon/consent» (blocks/consent/view.js);
- * - y activa solo los <script type="text/plain" data-armazon-consent="X">
+ *           «estrategia-web/consent» (blocks/consent/view.js);
+ * - y activa solo los <script type="text/plain" data-estrategia-web-consent="X">
  *   de las categorías aceptadas.
  * El aviso se pinta en wp_body_open, al PRINCIPIO del body (no depende de que
  * el tema ponga un bloque); si el tema no llama a wp_body_open(), en
@@ -39,8 +39,8 @@
  *   el segundo destino del tabulador, no el primero. Elegido o no, al
  *   cerrarse vuelve a ser el primero.
  * Prueba: tests/consent-browser.test.mjs («lo PRIMERO al tabular»).
- * El bloque armazon-site/consent es el ENLACE para reabrirlo, pensado para el
- * pie; también hay shortcode [armazon_consent_settings].
+ * El bloque estrategia-web-site/consent es el ENLACE para reabrirlo, pensado para el
+ * pie; también hay shortcode [estrategia_web_consent_settings].
  *
  * POR QUÉ ESTÁ AQUÍ Y NO EN EL TEMA PADRE (vino de armazon-wp-padre 0.6.0,
  * inc/consent.php): el consentimiento es funcionalidad, no presentación. Si
@@ -49,49 +49,57 @@
  * 2026-10-01): cómo se ve, del tema; lo que funciona y se guarda, de aquí.
  * Se movió SIN cambiar el contrato: la misma cookie con el mismo formato y
  * la misma revisión (un visitante que ya eligió no vuelve a ver el aviso), el
- * mismo filtro armazon_consent_categories, las mismas funciones PHP, la misma
+ * mismo filtro estrategia_web_consent_categories, las mismas funciones PHP, la misma
  * API JS, el mismo evento y el mismo store.
  *
- * El nombre del bloque: armazon-site/consent (el espacio de nombres es de
- * quien lo registra). El viejo, armazon/consent, se sigue registrando como
- * ALIAS oculto del insertador, con el mismo HTML, para que el contenido y las
- * plantillas ya guardadas con él (bases de datos de webs publicadas, partes
- * personalizadas en el Site Editor) sigan pintando el enlace. Lo nuevo se
- * escribe con el nombre nuevo. Quitar el alias es versión MAYOR.
+ * 1.0.0, EL CAMBIO DE NOMBRE (Armazón Sitio → Estrategia Web Site): la cookie
+ * pasa de armazon_consent a estrategia_web_consent con el MISMO formato y la
+ * misma revisión. Se lee la vieja si falta la nueva (choice() y view.js) y el
+ * navegador la reescribe con el nombre nuevo y borra la vieja: quien ya
+ * eligió NO vuelve a ver el aviso. Filtros, funciones, API JS, evento y store
+ * cambian de prefijo (estrategia_web_…, window.estrategiaWebConsent,
+ * «estrategia-web:consent»); padre y plugin se actualizan juntos.
+ *
+ * El nombre del bloque: estrategia-web-site/consent. Los viejos,
+ * armazon-site/consent y armazon/consent (tema padre ≤ 0.6.0), son ALIAS
+ * ocultos del insertador (includes/class-legacy-names.php) que pintan lo
+ * mismo, para el marcado que quede sin migrar. Se quitan en 2.0.0.
  *
  * Convivencia con un tema padre viejo (≤ 0.6.0, que aún trae el aviso): si al
- * llegar after_setup_theme ya existe armazon_consent_categories(), es que el
+ * llegar after_setup_theme ya existe estrategia_web_consent_categories(), es que el
  * tema la definió; este plugin NO arranca su aviso (habría dos, y PHP
  * revienta al redeclarar las funciones). Por eso las funciones globales se
  * cargan tarde, en after_setup_theme, y no al cargar el plugin: los plugins
  * se cargan ANTES que el functions.php del tema.
- * Y al revés, padre 0.7.0 con un armazon-site viejo (≤ 0.4.0): no hay aviso.
+ * Y al revés, padre 0.7.0 con un estrategia-web-site viejo (≤ 0.4.0): no hay aviso.
  * Nada opcional se carga (los mapas piden clic; Matomo híbrido se queda sin
  * cookies), así que falla del lado seguro, pero la web pierde el aviso:
  * se actualizan los dos a la vez.
  *
  * Cómo declara categorías un tema o un plugin:
  *
- *     add_filter( 'armazon_consent_categories', fn( $c ) => array_merge( (array) $c, array( 'maps' ) ) );
+ *     add_filter( 'estrategia_web_consent_categories', fn( $c ) => array_merge( (array) $c, array( 'maps' ) ) );
  *
  * Categorías conocidas: statistics, maps, marketing. «necessary» siempre está
  * y no se pregunta. SI NO SE DECLARA NINGUNA, EL AVISO NO SALE, y es lo
  * normal: con Matomo sin cookies (fila 16 del Armazón) y los mapas en dos
- * clics (armazon/map del padre), la mayoría de webs no tienen nada que
+ * clics (estrategia-web/map del padre), la mayoría de webs no tienen nada que
  * preguntar. Matomo en modo híbrido declara «statistics» él solo
  * (includes/class-matomo.php).
  *
  * «Powered by» (0.5.0): al pie del aviso, «Powered by Estrategia Web» con
  * enlace a https://estrategiaweb.es/, en pestaña nueva, rel="noopener" y SIN
- * nofollow (lo quiere Juan: cuenta como enlace). Se cambia con el FILTRO
- * armazon_site_consent_powered_by, no con una opción: es la firma de quien
- * hace la web, no un dato que el cliente toque en su escritorio, y una
- * opción sería una clave más del contrato de armazon_site.
+ * nofollow (lo quiere Juan: cuenta como enlace). DESDE 1.0.0 VIENE APAGADA:
+ * la guideline 10 de WordPress.org prohíbe enlazar al autor en la web
+ * pública sin que lo active quien usa el plugin. Se enciende con el FILTRO
+ * estrategia_web_site_consent_powered_by (no con una opción: es la firma de
+ * quien hace la web, no un dato que el cliente toque en su escritorio).
+ * Lavandería la enciende en su tema hijo.
  *
- *     // Otro texto o URL (lo que no se pase, se queda):
- *     add_filter( 'armazon_site_consent_powered_by', fn( $p ) => array_merge( $p, array( 'text' => 'Hecha por X', 'url' => 'https://x.es/' ) ) );
- *     // Quitarla:
- *     add_filter( 'armazon_site_consent_powered_by', '__return_false' );
+ *     // Encenderla:
+ *     add_filter( 'estrategia_web_site_consent_powered_by', '__return_true' );
+ *     // Encendida con otro texto o URL (lo que no se pase, se queda):
+ *     add_filter( 'estrategia_web_site_consent_powered_by', fn( $p ) => array_merge( $p, array( 'show' => true, 'text' => 'Hecha por X', 'url' => 'https://x.es/' ) ) );
  *
  * Caso frontera: 'url' vacía pinta el texto sin enlace; 'text' vacío no
  * pinta la línea. El nombre «Estrategia Web» no se traduce (es una marca);
@@ -110,41 +118,47 @@
  * - Al cambiar las categorías declaradas cambia la «revisión» (hash de la
  *   lista) y el aviso vuelve a salir a todo el mundo: es lo correcto, se les
  *   pregunta por algo nuevo. Si hay que forzarlo sin cambiar categorías (otra
- *   política), el filtro armazon_consent_revision.
+ *   política), el filtro estrategia_web_consent_revision.
  * - Caso frontera: una web necesita una categoría que no se conoce (p. ej.
  *   «chat»). Es un AJUSTE si basta con etiqueta y descripción: se añade aquí
  *   en una versión menor. Si necesita otra lógica, es de esa web.
- * - La trampa 1: armazon_consent_has() lee la cookie en el SERVIDOR. Con
+ * - La trampa 1: estrategia_web_consent_has() lee la cookie en el SERVIDOR. Con
  *   caché de página (SiteGround, etc.) la página cacheada de un visitante se
  *   sirve a otro. Para decidir si se carga algo, mejor en el navegador
- *   (text/plain + data-armazon-consent, o el evento).
+ *   (text/plain + data-estrategia-web-consent, o el evento).
  * - La trampa 2: la revisión es md5 de la lista + el filtro de revisión, y
  *   tiene que dar EXACTAMENTE lo mismo que daba el padre (lo comprueba
  *   tests/consent.test.mjs con el valor calculado a mano). Si se toca el
  *   orden de las categorías conocidas, la revisión cambia y TODOS los
  *   visitantes vuelven a ver el aviso.
- * - La trampa 3: los filtros de los textos (armazon_consent_text, …) se
- *   llaman igual que en el padre a propósito; no se renombran.
+ * - La trampa 3: los filtros de los textos (estrategia_web_consent_text, …)
+ *   cambiaron de prefijo en 1.0.0 con todo lo demás: un tema o plugin que
+ *   enganchaba armazon_consent_… deja de afinar el aviso hasta que se renombre.
  */
 
-namespace Armazon\Site;
+namespace EstrategiaWeb\Site;
 
 defined( 'ABSPATH' ) || exit;
 
 final class Consent {
 
-	/** Cookie técnica con la elección. El mismo nombre que usaba el tema padre. */
-	public const COOKIE = 'armazon_consent';
+	/** Cookie técnica con la elección (1.0.0; antes armazon_consent). */
+	public const COOKIE = 'estrategia_web_consent';
 
-	/** Nombre del bloque del enlace. */
-	public const BLOCK = 'armazon-site/consent';
+	/**
+	 * La cookie con el nombre de antes de 1.0.0. Se LEE si falta la nueva, y
+	 * el navegador la pasa a la nueva y la borra (blocks/consent/view.js):
+	 * quien ya eligió no vuelve a ver el aviso por el cambio de nombre. Se
+	 * quita en 2.0.0, con los alias de Legacy_Names.
+	 */
+	public const LEGACY_COOKIE = 'armazon_consent';
 
-	/** Nombre viejo (tema padre ≤ 0.6.0), registrado como alias. */
-	public const LEGACY_BLOCK = 'armazon/consent';
+	/** Nombre del bloque del enlace. Los viejos (armazon/consent, armazon-site/consent) son alias: Legacy_Names. */
+	public const BLOCK = 'estrategia-web-site/consent';
 
 	/** Handles que WordPress deriva de blocks/consent/block.json. */
-	public const SCRIPT_MODULE = 'armazon-site-consent-view-script-module';
-	public const STYLE         = 'armazon-site-consent-style';
+	public const SCRIPT_MODULE = 'estrategia-web-site-consent-view-script-module';
+	public const STYLE         = 'estrategia-web-site-consent-style';
 
 	private static bool $active = false;
 
@@ -159,11 +173,11 @@ final class Consent {
 
 	/** Arranca el aviso salvo que el tema ya lo defina (ver la cabecera, «Convivencia»). */
 	public static function take_over(): void {
-		if ( function_exists( 'armazon_consent_categories' ) ) {
+		if ( function_exists( 'estrategia_web_consent_categories' ) ) {
 			return;
 		}
 		self::$active = true;
-		require_once ARMAZON_SITE_DIR . 'includes/consent-functions.php';
+		require_once ESTRATEGIA_WEB_SITE_DIR . 'includes/consent-functions.php';
 
 		add_action( 'init', array( self::class, 'register_blocks' ) );
 		add_filter( 'block_type_metadata', array( self::class, 'block_labels' ) );
@@ -172,7 +186,7 @@ final class Consent {
 		// pie solo si el tema no llama a wp_body_open().
 		add_action( 'wp_body_open', array( self::class, 'print_notice' ), 5 );
 		add_action( 'wp_footer', array( self::class, 'print_notice' ), 5 );
-		add_shortcode( 'armazon_consent_settings', array( self::class, 'shortcode' ) );
+		add_shortcode( 'estrategia_web_consent_settings', array( self::class, 'shortcode' ) );
 		if ( function_exists( 'wp_has_consent' ) ) {
 			add_filter( 'wp_get_consent_type', static fn( $type ) => self::categories() ? 'optin' : $type );
 		}
@@ -186,16 +200,16 @@ final class Consent {
 	public static function known_categories(): array {
 		return array(
 			'statistics' => array(
-				'label'       => __( 'Statistics', 'armazon-site' ),
-				'description' => __( 'Help us understand how the site is used.', 'armazon-site' ),
+				'label'       => __( 'Statistics', 'estrategia-web-site' ),
+				'description' => __( 'Help us understand how the site is used.', 'estrategia-web-site' ),
 			),
 			'maps'       => array(
-				'label'       => __( 'Maps and third-party content', 'armazon-site' ),
-				'description' => __( 'Load embedded maps and other content served by third parties, which may set their own cookies.', 'armazon-site' ),
+				'label'       => __( 'Maps and third-party content', 'estrategia-web-site' ),
+				'description' => __( 'Load embedded maps and other content served by third parties, which may set their own cookies.', 'estrategia-web-site' ),
 			),
 			'marketing'  => array(
-				'label'       => __( 'Marketing', 'armazon-site' ),
-				'description' => __( 'Measure campaigns and show relevant advertising.', 'armazon-site' ),
+				'label'       => __( 'Marketing', 'estrategia-web-site' ),
+				'description' => __( 'Measure campaigns and show relevant advertising.', 'estrategia-web-site' ),
 			),
 		);
 	}
@@ -206,20 +220,20 @@ final class Consent {
 	 * @return string[]
 	 */
 	public static function categories(): array {
-		$declared = (array) apply_filters( 'armazon_consent_categories', array() );
+		$declared = (array) apply_filters( 'estrategia_web_consent_categories', array() );
 		$known    = array_keys( self::known_categories() );
 		return array_values( array_intersect( $known, $declared ) );
 	}
 
 	/** Revisión: una elección guardada con otra revisión no vale y el aviso vuelve a salir. */
 	public static function revision(): string {
-		$seed = implode( ',', self::categories() ) . '|' . apply_filters( 'armazon_consent_revision', '1' );
+		$seed = implode( ',', self::categories() ) . '|' . apply_filters( 'estrategia_web_consent_revision', '1' );
 		return substr( md5( $seed ), 0, 8 );
 	}
 
 	/** Vida de la elección, en segundos. 12 meses (la AEPD recomienda no pasar de 24). */
 	public static function max_age(): int {
-		return (int) apply_filters( 'armazon_consent_max_age', YEAR_IN_SECONDS );
+		return (int) apply_filters( 'estrategia_web_consent_max_age', YEAR_IN_SECONDS );
 	}
 
 	/**
@@ -229,10 +243,11 @@ final class Consent {
 	 * @return string[]|null Categorías opcionales aceptadas.
 	 */
 	public static function choice(): ?array {
-		if ( empty( $_COOKIE[ self::COOKIE ] ) ) {
+		$name = empty( $_COOKIE[ self::COOKIE ] ) ? self::LEGACY_COOKIE : self::COOKIE;
+		if ( empty( $_COOKIE[ $name ] ) ) {
 			return null;
 		}
-		$raw   = sanitize_text_field( wp_unslash( $_COOKIE[ self::COOKIE ] ) );
+		$raw   = sanitize_text_field( wp_unslash( $_COOKIE[ $name ] ) );
 		$parts = explode( '.', $raw );
 		if ( 3 !== count( $parts ) || self::revision() !== $parts[0] ) {
 			return null;
@@ -257,9 +272,11 @@ final class Consent {
 	 */
 	public static function powered_by(): array {
 		$defaults = array(
-			'show' => true,
+			// APAGADA por defecto (1.0.0): WordPress.org (guideline 10) no deja
+			// enlazar al autor en la web pública sin que lo active quien la usa.
+			'show' => false,
 			/* translators: %s: name of the company that built the site (a brand, not translated). */
-			'text' => sprintf( __( 'Powered by %s', 'armazon-site' ), 'Estrategia Web' ),
+			'text' => sprintf( __( 'Powered by %s', 'estrategia-web-site' ), 'Estrategia Web' ),
 			'url'  => 'https://estrategiaweb.es/',
 		);
 		/**
@@ -267,9 +284,9 @@ final class Consent {
 		 *
 		 * @param array{show: bool, text: string, url: string}|false $powered false la quita.
 		 */
-		$value = apply_filters( 'armazon_site_consent_powered_by', $defaults );
+		$value = apply_filters( 'estrategia_web_site_consent_powered_by', $defaults );
 		if ( ! is_array( $value ) ) {
-			return array_merge( $defaults, array( 'show' => (bool) $value ) );
+			$value = array( 'show' => (bool) $value );
 		}
 		$value = array_merge( $defaults, $value );
 		return array(
@@ -279,44 +296,14 @@ final class Consent {
 		);
 	}
 
-	/** Registra el bloque del enlace y su alias con el nombre viejo. */
+	/** Registra el bloque del enlace. Sus nombres viejos son alias de Legacy_Names. */
 	public static function register_blocks(): void {
-		register_block_type( ARMAZON_SITE_DIR . 'blocks/consent' );
-		if ( \WP_Block_Type_Registry::get_instance()->is_registered( self::LEGACY_BLOCK ) ) {
-			return;
-		}
-		register_block_type(
-			self::LEGACY_BLOCK,
-			array(
-				'api_version'            => 3,
-				'title'                  => _x( 'Cookie settings link', 'block title', 'armazon-site' ),
-				'category'               => 'widgets',
-				'icon'                   => 'shield',
-				'attributes'             => array(
-					'label' => array(
-						'type'    => 'string',
-						'default' => '',
-						'label'   => self::label_text(),
-					),
-				),
-				'supports'               => array(
-					'inserter'      => false,
-					'autoRegister'  => true,
-					'html'          => false,
-					'interactivity' => true,
-					'typography'    => array( 'fontSize' => true ),
-					'color'         => array( 'text' => true ),
-				),
-				'render_callback'        => static fn( $attributes ) => self::render_link( (array) $attributes ),
-				'style_handles'          => array( self::STYLE ),
-				'view_script_module_ids' => array( self::SCRIPT_MODULE ),
-			)
-		);
+		register_block_type( ESTRATEGIA_WEB_SITE_DIR . 'blocks/consent' );
 	}
 
 	/** Etiqueta del control de autoRegister (block.json no traduce la clave «label»). */
 	private static function label_text(): string {
-		return __( 'Link text (empty: “Cookie settings”)', 'armazon-site' );
+		return __( 'Link text (empty: “Cookie settings”)', 'estrategia-web-site' );
 	}
 
 	/**
@@ -335,12 +322,13 @@ final class Consent {
 	public static function state(): void {
 		$known = self::known_categories();
 		wp_interactivity_state(
-			'armazon/consent',
+			'estrategia-web/consent',
 			array(
 				'categories'   => self::categories(),
 				'labels'       => array_map( static fn( $c ) => $c['label'], array_intersect_key( $known, array_flip( self::categories() ) ) ),
 				'revision'     => self::revision(),
 				'cookieName'   => self::COOKIE,
+				'legacyCookie' => self::LEGACY_COOKIE,
 				'maxAge'       => self::max_age(),
 				'isOpen'       => false,
 				'showSettings' => false,
@@ -374,46 +362,46 @@ final class Consent {
 		$policy  = get_privacy_policy_url();
 		$powered = self::powered_by();
 		$text    = apply_filters(
-			'armazon_consent_text',
-			__( 'We use our own and third-party cookies for the purposes listed below. You can accept them, reject them or choose which ones to allow. Necessary cookies are always active.', 'armazon-site' )
+			'estrategia_web_consent_text',
+			__( 'We use our own and third-party cookies for the purposes listed below. You can accept them, reject them or choose which ones to allow. Necessary cookies are always active.', 'estrategia-web-site' )
 		);
 
 		ob_start();
 		?>
 		<section
-			id="armazon-consent"
-			class="armazon-consent"
+			id="estrategia-web-consent"
+			class="estrategia-web-consent"
 			hidden
 			role="dialog"
 			aria-modal="false"
-			aria-labelledby="armazon-consent-title"
-			aria-describedby="armazon-consent-text"
-			data-wp-interactive="armazon/consent"
+			aria-labelledby="estrategia-web-consent-title"
+			aria-describedby="estrategia-web-consent-text"
+			data-wp-interactive="estrategia-web/consent"
 			data-wp-init="callbacks.init"
 			data-wp-watch="callbacks.focusOnOpen"
 			data-wp-bind--hidden="!state.isOpen"
 			data-wp-on--keydown="actions.onKeydown"
 		>
-			<h2 id="armazon-consent-title" class="armazon-consent__title" tabindex="-1"><?php esc_html_e( 'Cookies', 'armazon-site' ); ?></h2>
-			<p id="armazon-consent-text" class="armazon-consent__text">
+			<h2 id="estrategia-web-consent-title" class="estrategia-web-consent__title" tabindex="-1"><?php esc_html_e( 'Cookies', 'estrategia-web-site' ); ?></h2>
+			<p id="estrategia-web-consent-text" class="estrategia-web-consent__text">
 				<?php echo esc_html( $text ); ?>
 				<?php if ( $policy ) : ?>
-					<a href="<?php echo esc_url( $policy ); ?>"><?php esc_html_e( 'Privacy and cookie policy', 'armazon-site' ); ?></a>
+					<a href="<?php echo esc_url( $policy ); ?>"><?php esc_html_e( 'Privacy and cookie policy', 'estrategia-web-site' ); ?></a>
 				<?php endif; ?>
 			</p>
 
-			<form class="armazon-consent__settings" id="armazon-consent-settings" hidden data-wp-bind--hidden="!state.showSettings" data-wp-on--submit="actions.saveSettings">
+			<form class="estrategia-web-consent__settings" id="estrategia-web-consent-settings" hidden data-wp-bind--hidden="!state.showSettings" data-wp-on--submit="actions.saveSettings">
 				<fieldset>
-					<legend><?php esc_html_e( 'Cookie categories', 'armazon-site' ); ?></legend>
-					<label class="armazon-consent__category">
+					<legend><?php esc_html_e( 'Cookie categories', 'estrategia-web-site' ); ?></legend>
+					<label class="estrategia-web-consent__category">
 						<input type="checkbox" checked disabled>
-						<span><strong><?php esc_html_e( 'Necessary', 'armazon-site' ); ?></strong> — <?php esc_html_e( 'Required for the site to work, including remembering this choice. Always active.', 'armazon-site' ); ?></span>
+						<span><strong><?php esc_html_e( 'Necessary', 'estrategia-web-site' ); ?></strong> — <?php esc_html_e( 'Required for the site to work, including remembering this choice. Always active.', 'estrategia-web-site' ); ?></span>
 					</label>
 					<?php foreach ( $categories as $slug ) : ?>
-					<label class="armazon-consent__category">
+					<label class="estrategia-web-consent__category">
 						<input
 							type="checkbox"
-							name="armazon-consent-category"
+							name="estrategia-web-consent-category"
 							value="<?php echo esc_attr( $slug ); ?>"
 							<?php echo wp_interactivity_data_wp_context( array( 'category' => $slug ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 							data-wp-bind--checked="state.isChecked"
@@ -423,18 +411,18 @@ final class Consent {
 					</label>
 					<?php endforeach; ?>
 				</fieldset>
-				<button type="submit" class="wp-element-button armazon-consent__button"><?php esc_html_e( 'Save choices', 'armazon-site' ); ?></button>
+				<button type="submit" class="wp-element-button estrategia-web-consent__button"><?php esc_html_e( 'Save choices', 'estrategia-web-site' ); ?></button>
 			</form>
 
-			<div class="armazon-consent__actions">
-				<button type="button" class="wp-element-button armazon-consent__button" data-armazon-consent-action="accept" data-wp-on--click="actions.acceptAll"><?php esc_html_e( 'Accept all', 'armazon-site' ); ?></button>
-				<button type="button" class="wp-element-button armazon-consent__button" data-armazon-consent-action="reject" data-wp-on--click="actions.rejectAll"><?php esc_html_e( 'Reject all', 'armazon-site' ); ?></button>
-				<button type="button" class="wp-element-button armazon-consent__button" data-armazon-consent-action="configure" aria-controls="armazon-consent-settings" data-wp-bind--aria-expanded="state.showSettings" data-wp-on--click="actions.toggleSettings"><?php esc_html_e( 'Configure', 'armazon-site' ); ?></button>
+			<div class="estrategia-web-consent__actions">
+				<button type="button" class="wp-element-button estrategia-web-consent__button" data-estrategia-web-consent-action="accept" data-wp-on--click="actions.acceptAll"><?php esc_html_e( 'Accept all', 'estrategia-web-site' ); ?></button>
+				<button type="button" class="wp-element-button estrategia-web-consent__button" data-estrategia-web-consent-action="reject" data-wp-on--click="actions.rejectAll"><?php esc_html_e( 'Reject all', 'estrategia-web-site' ); ?></button>
+				<button type="button" class="wp-element-button estrategia-web-consent__button" data-estrategia-web-consent-action="configure" aria-controls="estrategia-web-consent-settings" data-wp-bind--aria-expanded="state.showSettings" data-wp-on--click="actions.toggleSettings"><?php esc_html_e( 'Configure', 'estrategia-web-site' ); ?></button>
 			</div>
 			<?php if ( $powered['show'] ) : ?>
-			<p class="armazon-consent__powered">
+			<p class="estrategia-web-consent__powered">
 				<?php if ( '' !== $powered['url'] ) : ?>
-				<a href="<?php echo esc_url( $powered['url'] ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $powered['text'] ); ?><span class="armazon-consent__sr"> <?php esc_html_e( '(opens in a new tab)', 'armazon-site' ); ?></span></a>
+				<a href="<?php echo esc_url( $powered['url'] ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $powered['text'] ); ?><span class="estrategia-web-consent__sr"> <?php esc_html_e( '(opens in a new tab)', 'estrategia-web-site' ); ?></span></a>
 				<?php else : ?>
 				<?php echo esc_html( $powered['text'] ); ?>
 				<?php endif; ?>
@@ -460,27 +448,27 @@ final class Consent {
 				return sprintf(
 					'<p %s>%s</p>',
 					get_block_wrapper_attributes(),
-					esc_html__( 'Cookie settings: this site declares no optional cookie categories, so there is no notice to reopen and this link is not shown.', 'armazon-site' )
+					esc_html__( 'Cookie settings: this site declares no optional cookie categories, so there is no notice to reopen and this link is not shown.', 'estrategia-web-site' )
 				);
 			}
 			return '';
 		}
 		$label = trim( (string) ( $attributes['label'] ?? '' ) );
-		$label = '' !== $label ? $label : __( 'Cookie settings', 'armazon-site' );
+		$label = '' !== $label ? $label : __( 'Cookie settings', 'estrategia-web-site' );
 		return sprintf(
-			'<p %s><button type="button" class="armazon-consent-link__button" aria-controls="armazon-consent" data-wp-interactive="armazon/consent" data-wp-on--click="actions.open">%s</button></p>',
-			get_block_wrapper_attributes( array( 'class' => 'armazon-consent-link' ) ),
+			'<p %s><button type="button" class="estrategia-web-consent-link__button" aria-controls="estrategia-web-consent" data-wp-interactive="estrategia-web/consent" data-wp-on--click="actions.open">%s</button></p>',
+			get_block_wrapper_attributes( array( 'class' => 'estrategia-web-consent-link' ) ),
 			esc_html( $label )
 		);
 	}
 
 	/**
-	 * [armazon_consent_settings label="…"]: lo mismo que el bloque.
+	 * [estrategia_web_consent_settings label="…"]: lo mismo que el bloque.
 	 *
 	 * @param array|string $atts Atributos del shortcode.
 	 */
 	public static function shortcode( $atts ): string {
-		$atts = shortcode_atts( array( 'label' => '' ), $atts, 'armazon_consent_settings' );
+		$atts = shortcode_atts( array( 'label' => '' ), $atts, 'estrategia_web_consent_settings' );
 		return render_block(
 			array(
 				'blockName'    => self::BLOCK,

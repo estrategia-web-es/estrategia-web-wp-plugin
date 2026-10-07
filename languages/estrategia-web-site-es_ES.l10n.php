@@ -1,7 +1,7 @@
 <?php
-// Generado por tools/i18n.mjs desde armazon-site-es_ES.po. No se edita a mano: se edita el .po y se recompila.
+// Generado por tools/i18n.mjs desde estrategia-web-site-es_ES.po. No se edita a mano: se edita el .po y se recompila.
 return array(
-	'domain' => 'armazon-site',
+	'domain' => 'estrategia-web-site',
 	'language' => 'es_ES',
 	'plural-forms' => 'nplurals=2; plural=(n != 1);',
 	'messages' => array(
@@ -170,7 +170,7 @@ return array(
 		'Portfolio category' => 'Categoría del portfolio',
 		'Location details' => 'Datos de la sede',
 		'Location name' => 'Nombre de la sede',
-		'Company details and site options of the Armazón Site plugin.' => 'Datos de la empresa y opciones de la web del plugin Armazón Site.',
+		'Company details and site options of the Estrategia Web Site plugin.' => 'Datos de la empresa y opciones de la web del plugin Estrategia Web Site.',
 		'The email address is not valid. The previous one has been kept.' => 'El correo electrónico no es válido. Se ha mantenido el anterior.',
 		'The WhatsApp number is not valid (international format, digits only). The previous one has been kept.' => 'El número de WhatsApp no es válido (formato internacional, solo dígitos). Se ha mantenido el anterior.',
 		'The address in «%s» is not a valid web address. The previous one has been kept.' => 'La dirección de «%s» no es una dirección web válida. Se ha mantenido la anterior.',

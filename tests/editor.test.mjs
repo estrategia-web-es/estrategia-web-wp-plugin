@@ -26,12 +26,12 @@ before(async () => {
 });
 after(() => browser?.close());
 
-test("editor: un párrafo enlazado a armazon-site/company:phone ENSEÑA el teléfono, y la fuente ofrece la lista de datos", async () => {
+test("editor: un párrafo enlazado a estrategia-web-site/company:phone ENSEÑA el teléfono, y la fuente ofrece la lista de datos", async () => {
   const page = await seedPage(
-    `<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"armazon-site/company","args":{"key":"phone"}}}}} -->
+    `<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"estrategia-web-site/company","args":{"key":"phone"}}}}} -->
 <p>Texto de relleno</p>
 <!-- /wp:paragraph -->
-<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"armazon-site/company","args":{"key":"tax_id"}}}}} -->
+<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"estrategia-web-site/company","args":{"key":"tax_id"}}}}} -->
 <p>x</p>
 <!-- /wp:paragraph -->`,
     "editor-bindings"
@@ -48,7 +48,7 @@ test("editor: un párrafo enlazado a armazon-site/company:phone ENSEÑA el telé
   assert.match(await canvas.locator("p.wp-block-paragraph").nth(1).textContent(), /\[(NIF\/CIF|Tax ID)\]/, "un dato vacío enseña su nombre entre corchetes");
 
   const source = await p.evaluate(() => {
-    const s = wp.blocks.getBlockBindingsSource("armazon-site/company");
+    const s = wp.blocks.getBlockBindingsSource("estrategia-web-site/company");
     // Sin setValues el núcleo ni guarda canUserEditValue: ausente = no editable.
     return s && { label: s.label, fields: s.getFieldsList?.({}).map((f) => f.args.key), editable: Boolean(s.setValues || s.canUserEditValue?.({})) };
   });
@@ -60,32 +60,32 @@ test("editor: un párrafo enlazado a armazon-site/company:phone ENSEÑA el telé
 });
 
 test("pantalla «Datos de la empresa»: guarda, avisa del correo mal escrito y desmarcar el último tipo lo desactiva", async () => {
-  await p.goto(`${BASE}/wp-admin/admin.php?page=armazon-site`);
+  await p.goto(`${BASE}/wp-admin/admin.php?page=estrategia-web-site`);
   assert.equal(await p.locator("h1").first().textContent(), "Datos de la empresa");
-  await p.fill("#armazon-site-company_name", "Empresa desde la pantalla");
-  await p.fill("#armazon-site-email", "esto-no-es-correo");
+  await p.fill("#estrategia-web-site-company_name", "Empresa desde la pantalla");
+  await p.fill("#estrategia-web-site-email", "esto-no-es-correo");
   // type=email: el navegador frenaría el envío; se quita para probar el servidor.
-  await p.evaluate(() => (document.getElementById("armazon-site-email").type = "text"));
-  await p.uncheck('input[name="armazon_site[enabled_types][]"][value="client"]');
+  await p.evaluate(() => (document.getElementById("estrategia-web-site-email").type = "text"));
+  await p.uncheck('input[name="estrategia_web_site[enabled_types][]"][value="client"]');
   await Promise.all([p.waitForURL(/settings-updated/), p.click("#submit")]);
 
   assert.match(await p.locator(".notice, .error, .updated").allTextContents().then((t) => t.join(" ")), /correo electrónico no es válido/);
-  const saved = (await wp("/settings")).json.armazon_site;
+  const saved = (await wp("/settings")).json.estrategia_web_site;
   assert.equal(saved.company_name, "Empresa desde la pantalla");
   assert.equal(saved.email, "hola@ejemplo.test", "se quedó el correo bueno");
   assert.deepEqual(saved.enabled_types, [], "el oculto hace que «ninguno» llegue");
   assert.equal(saved.phone, "971 12 34 56", "lo que no se tocó sigue igual");
 });
 
-test("editor (0.2.0): un párrafo enlazado a armazon-site/location con slug ENSEÑA el dato de esa sede, y la fuente lista sus claves", async () => {
+test("editor (0.2.0): un párrafo enlazado a estrategia-web-site/location con slug ENSEÑA el dato de esa sede, y la fuente lista sus claves", async () => {
   await saveCompany({ enabled_types: ["location"] });
-  const sede = await wp("/location", { method: "POST", body: { title: "Maioris", slug: "maioris", status: "publish", meta: { location_phone: "971 11 22 33" } } });
+  const sede = await wp("/location", { method: "POST", body: { title: "Maioris", slug: "maioris", status: "publish", meta: { estrategia_web_location_phone: "971 11 22 33" } } });
   assert.equal(sede.status, 201, sede.text);
   const page = await seedPage(
-    `<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"armazon-site/location","args":{"slug":"maioris","key":"location_phone"}}}}} -->
+    `<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"estrategia-web-site/location","args":{"slug":"maioris","key":"estrategia_web_location_phone"}}}}} -->
 <p>Texto de relleno</p>
 <!-- /wp:paragraph -->
-<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"armazon-site/location","args":{"slug":"maioris","key":"location_email"}}}}} -->
+<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"estrategia-web-site/location","args":{"slug":"maioris","key":"estrategia_web_location_email"}}}}} -->
 <p>x</p>
 <!-- /wp:paragraph -->`,
     "editor-sede"
@@ -97,12 +97,12 @@ test("editor (0.2.0): un párrafo enlazado a armazon-site/location con slug ENSE
   assert.match(await canvas.locator("p.wp-block-paragraph").nth(1).textContent(), /\[(Correo electrónico|Email)\]/, "un dato vacío enseña su nombre");
 
   const source = await p.evaluate(() => {
-    const s = wp.blocks.getBlockBindingsSource("armazon-site/location");
+    const s = wp.blocks.getBlockBindingsSource("estrategia-web-site/location");
     return s && { label: s.label, fields: s.getFieldsList?.({}).map((f) => f.args.key), context: s.usesContext };
   });
   assert.ok(source, "la fuente de sedes está registrada en el editor");
   assert.equal(source.label, "Datos de la sede");
-  assert.ok(source.fields.includes("title") && source.fields.includes("location_address") && source.fields.includes("location_phone_href"));
+  assert.ok(source.fields.includes("title") && source.fields.includes("estrategia_web_location_address") && source.fields.includes("estrategia_web_location_phone_href"));
   assert.ok(source.context.includes("postId"), "usa el contexto de la Consulta");
   assert.deepEqual(errors, [], "sin errores de JavaScript en el editor");
 });

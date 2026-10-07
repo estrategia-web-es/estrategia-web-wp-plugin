@@ -2,7 +2,7 @@
 //
 // Habla con el WordPress de Playground que arranca tests/run.mjs (puerto
 // 9404): con la API REST de verdad (/wp/v2/*) como administrador o como autor
-// (contraseñas de aplicación que crea tests/wp/armazon-site-test.php), y con
+// (contraseñas de aplicación que crea tests/wp/estrategia-web-site-test.php), y con
 // las rutas de prueba solo para lo que no es lo probado (resetear, sembrar
 // una página, mirar la fila cruda de la base de datos).
 import { createRequire } from "node:module";
@@ -14,7 +14,7 @@ export const BASE = process.env.AS_BASE || "http://127.0.0.1:9404";
 export const playwright = () => createRequire("E:/Repositories/portal-hs/package.json")("playwright");
 
 export async function testApi(path, { method = "GET", body } = {}) {
-  const res = await fetch(BASE + "/wp-json/armazon-site-test/v1" + path, {
+  const res = await fetch(BASE + "/wp-json/estrategia-web-site-test/v1" + path, {
     method,
     headers: body ? { "Content-Type": "application/json" } : {},
     body: body ? JSON.stringify(body) : undefined,
@@ -56,9 +56,9 @@ export async function wp(path, { as = "administrator", method = "GET", body, raw
 
 /** Guarda datos de la empresa por REST (fusiona con lo que haya) y devuelve lo que quedó. */
 export async function saveCompany(data) {
-  const r = await wp("/settings", { method: "POST", body: { armazon_site: data } });
+  const r = await wp("/settings", { method: "POST", body: { estrategia_web_site: data } });
   if (r.status !== 200) throw new Error("guardar ajustes -> " + r.status + " " + r.text);
-  return r.json.armazon_site;
+  return r.json.estrategia_web_site;
 }
 
 /** Sube un fichero a la mediateca como multipart (el camino del editor). */

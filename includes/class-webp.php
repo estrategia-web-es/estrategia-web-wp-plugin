@@ -22,7 +22,7 @@
  *   (wp_image_editor_supports). Si no sabe, no hace nada: los tamaños siguen
  *   en JPEG/PNG y no se rompe ninguna subida.
  * - Apagar (por defecto, encendido), en el functions.php del tema:
- *       add_filter( 'armazon_site_webp', '__return_false' );
+ *       add_filter( 'estrategia_web_site_webp', '__return_false' );
  *   Filtro y no opción, como el «Powered by»: es una decisión de quien hace
  *   la web, no un dato que el cliente toque.
  * - PNG con transparencia: WebP la conserva. GIF no se toca (animaciones).
@@ -56,7 +56,7 @@
  *   WordPress en su functions.php, con prioridad mayor que 10; no se toca esto.
  */
 
-namespace Armazon\Site;
+namespace EstrategiaWeb\Site;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -86,7 +86,7 @@ final class Webp {
 	 *
 	 * Ajuste (como el WebP mismo, un filtro y no una opción: es de quien hace
 	 * la web), en el functions.php del tema:
-	 *     add_filter( 'armazon_site_webp_quality', fn() => 82 );
+	 *     add_filter( 'estrategia_web_site_webp_quality', fn() => 82 );
 	 * Devolver 0 o menos deja la de WordPress.
 	 *
 	 * LA TRAMPA: solo vale para lo que se genere DESDE que esté activo. Lo ya
@@ -105,7 +105,7 @@ final class Webp {
 		 *
 		 * @param int $quality
 		 */
-		$ours = (int) apply_filters( 'armazon_site_webp_quality', self::QUALITY );
+		$ours = (int) apply_filters( 'estrategia_web_site_webp_quality', self::QUALITY );
 		return $ours > 0 ? min( 100, $ours ) : (int) $quality;
 	}
 
@@ -131,7 +131,7 @@ final class Webp {
 		 *
 		 * @param bool $enabled
 		 */
-		if ( ! apply_filters( 'armazon_site_webp', true ) || ! self::supported() ) {
+		if ( ! apply_filters( 'estrategia_web_site_webp', true ) || ! self::supported() ) {
 			return $formats;
 		}
 		foreach ( self::FROM as $from ) {

@@ -49,21 +49,21 @@ test("el slug público es el castellano (/clientes/) y la ficha responde tras ac
 
 test("campos (meta) por REST: tipo y saneado (valoración 1-5, correo, URL)", async () => {
   await saveCompany({ enabled_types: ["client", "testimonial", "location"] });
-  const t = await wp("/testimonial", { method: "POST", body: { title: "Opinión", content: "Muy bien", status: "publish", meta: { testimonial_author: "Ana <b>", testimonial_rating: 9, testimonial_client: before_id } } });
+  const t = await wp("/testimonial", { method: "POST", body: { title: "Opinión", content: "Muy bien", status: "publish", meta: { estrategia_web_testimonial_author: "Ana <b>", estrategia_web_testimonial_rating: 9, testimonial_client: before_id } } });
   assert.equal(t.status, 201, t.text);
-  assert.equal(t.json.meta.testimonial_author, "Ana");
-  assert.equal(t.json.meta.testimonial_rating, 5, "fuera de rango se lleva a 5");
+  assert.equal(t.json.meta.estrategia_web_testimonial_author, "Ana");
+  assert.equal(t.json.meta.estrategia_web_testimonial_rating, 5, "fuera de rango se lleva a 5");
   assert.equal(t.json.meta.testimonial_client, before_id);
 
   const t2 = await wp("/testimonial", { method: "POST", body: { title: "Otra", status: "publish", meta: { testimonial_client: t.json.id } } });
   assert.equal(t2.json.meta.testimonial_client, 0, "un id que no es un cliente no se guarda");
 
-  const l = await wp("/location", { method: "POST", body: { title: "Sede Palma", status: "publish", meta: { location_email: "mal", location_map_url: "javascript:alert(1)", location_map_embed: "https://www.google.com/maps/embed?pb=x", location_address: "Calle 1\nPalma" } } });
+  const l = await wp("/location", { method: "POST", body: { title: "Sede Palma", status: "publish", meta: { estrategia_web_location_email: "mal", estrategia_web_location_map_url: "javascript:alert(1)", estrategia_web_location_map_embed: "https://www.google.com/maps/embed?pb=x", estrategia_web_location_address: "Calle 1\nPalma" } } });
   assert.equal(l.status, 201, l.text);
-  assert.equal(l.json.meta.location_email, "");
-  assert.equal(l.json.meta.location_map_url, "");
-  assert.equal(l.json.meta.location_map_embed, "https://www.google.com/maps/embed?pb=x");
-  assert.equal(l.json.meta.location_address, "Calle 1\nPalma");
+  assert.equal(l.json.meta.estrategia_web_location_email, "");
+  assert.equal(l.json.meta.estrategia_web_location_map_url, "");
+  assert.equal(l.json.meta.estrategia_web_location_map_embed, "https://www.google.com/maps/embed?pb=x");
+  assert.equal(l.json.meta.estrategia_web_location_address, "Calle 1\nPalma");
 });
 
 test("una Consulta (core/query) de `client` filtrada por client_sector pinta los de ese sector con título e imagen", async () => {
@@ -126,19 +126,19 @@ test("rewrite_slugs (0.2.0): mueve el archivo de client a /cliente/ sin filtro, 
   assert.equal((await html(back.json.link)).status, 200);
 });
 
-test("client_image_fit (0.2.0): 'cover' por defecto, saneado a cover|contain, y 'contain' pone has-image-fit-contain en el <li> de la Consulta", async () => {
+test("estrategia_web_client_image_fit (0.2.0): 'cover' por defecto, saneado a cover|contain, y 'contain' pone has-image-fit-contain en el <li> de la Consulta", async () => {
   await saveCompany({ enabled_types: ["client"] });
   const make = async (title, meta) => {
     const c = await wp("/client", { method: "POST", body: { title, status: "publish", meta } });
     assert.equal(c.status, 201, c.text);
     return c.json;
   };
-  const logo = await make("Fit Logo", { client_image_fit: "contain" });
+  const logo = await make("Fit Logo", { estrategia_web_client_image_fit: "contain" });
   const foto = await make("Fit Foto", {});
-  const raro = await make("Fit Raro", { client_image_fit: "stretch" });
-  assert.equal(logo.meta.client_image_fit, "contain");
-  assert.equal(foto.meta.client_image_fit, "cover", "por defecto");
-  assert.equal(raro.meta.client_image_fit, "cover", "otro valor se sanea a cover");
+  const raro = await make("Fit Raro", { estrategia_web_client_image_fit: "stretch" });
+  assert.equal(logo.meta.estrategia_web_client_image_fit, "contain");
+  assert.equal(foto.meta.estrategia_web_client_image_fit, "cover", "por defecto");
+  assert.equal(raro.meta.estrategia_web_client_image_fit, "cover", "otro valor se sanea a cover");
 
   const query = JSON.stringify({ queryId: 8, query: { perPage: 10, pages: 0, offset: 0, postType: "client", order: "asc", orderBy: "title", inherit: false, search: "Fit " } });
   const page = await seedPage(`<!-- wp:query ${query} -->

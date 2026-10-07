@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import { BASE, html, reset, saveCompany, seedPage, testApi, wp } from "./lib.mjs";
 
 const MATOMO = "https://stats.ejemplo.test/";
-const TAG = 'id="armazon-site-matomo"';
+const TAG = 'id="estrategia-web-site-matomo"';
 
 before(reset);
 
@@ -48,7 +48,7 @@ test("matomo (0.3.0): híbrido = requireCookieConsent + escucha del aviso, y dec
   const page = await front();
   assert.ok(page.includes("'requireCookieConsent'"));
   assert.ok(!page.includes("'disableCookies'"));
-  assert.ok(page.includes("armazon:consent") && page.includes("rememberCookieConsentGiven") && page.includes("forgetCookieConsentGiven"));
+  assert.ok(page.includes("estrategia-web:consent") && page.includes("rememberCookieConsentGiven") && page.includes("forgetCookieConsentGiven"));
   assert.deepEqual(await testApi("/consent-categories"), ["maps", "statistics"], "se añade sin pisar la del hijo");
 });
 
@@ -64,20 +64,20 @@ test("matomo (0.3.0): saneado — URL pegada con matomo.php, URL inválida, id e
   saved = await saveCompany({ matomo_url: "javascript:alert(1)" });
   assert.equal(saved.matomo_url, "https://stats.ejemplo.test/sub/", "una URL inválida no borra la buena");
 
-  const badMode = await wp("/settings", { method: "POST", body: { armazon_site: { matomo_mode: "always" } } });
+  const badMode = await wp("/settings", { method: "POST", body: { estrategia_web_site: { matomo_mode: "always" } } });
   assert.equal(badMode.status, 400, "modo fuera del enum → 400");
-  const badId = await wp("/settings", { method: "POST", body: { armazon_site: { matomo_site_id: -1 } } });
+  const badId = await wp("/settings", { method: "POST", body: { estrategia_web_site: { matomo_site_id: -1 } } });
   assert.equal(badId.status, 400, "id negativo → 400");
 
   const read = await wp("/settings");
-  assert.equal(read.json.armazon_site.matomo_mode, "cookieless");
-  assert.equal(read.json.armazon_site.matomo_site_id, 7);
+  assert.equal(read.json.estrategia_web_site.matomo_mode, "cookieless");
+  assert.equal(read.json.estrategia_web_site.matomo_site_id, 7);
 });
 
 test("matomo (0.3.0): las claves de Matomo NO son datos enlazables del editor", async () => {
   await reset();
   await saveCompany({ matomo_url: MATOMO, matomo_site_id: 3 });
-  const p = '<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"armazon-site/company","args":{"key":"matomo_url"}}}}} --><p>x</p><!-- /wp:paragraph -->';
+  const p = '<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"estrategia-web-site/company","args":{"key":"matomo_url"}}}}} --><p>x</p><!-- /wp:paragraph -->';
   const { url } = await seedPage(p, "matomo-binding");
   const page = await html(url);
   assert.equal(page.status, 200);

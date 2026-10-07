@@ -23,7 +23,7 @@
  *   Quitar o renombrar uno es MAYOR. Él y su taxonomía, también en
  *   Settings::REWRITE_NAMES y DEFAULTS['rewrite_slugs'].
  * - Slugs públicos (0.2.0, slug()): traducido ← `rewrite_slugs` de la opción
- *   ← filtro `armazon_site_rewrite_slug`. Las rutas son del PLUGIN: una web
+ *   ← filtro `estrategia_web_site_rewrite_slug`. Las rutas son del PLUGIN: una web
  *   las fija en la opción (por REST o en la carga de contenido), no en su
  *   tema. El filtro se queda para lo que no cabe ahí. Caso frontera: una web
  *   con una PÁGINA /clientes/ y el tipo `client` activado; el archivo del tipo
@@ -31,10 +31,10 @@
  * - Un campo nuevo: en META de su tipo, con tipo y saneado. Si no empieza por
  *   el nombre del tipo (`client_…`), no entra: así no choca con el meta de
  *   otro plugin. Un campo nuevo de `location` entra SOLO en la fuente
- *   `armazon-site/location` (Location lee meta_fields()): añade su fila en la
+ *   `estrategia-web-site/location` (Location lee meta_fields()): añade su fila en la
  *   tabla de esa fuente en el README.
  * - Un campo con valor por defecto distinto de ''/0 lleva 'default' en META
- *   (el primero, `client_image_fit` = 'cover', 0.2.0).
+ *   (el primero, `estrategia_web_client_image_fit` = 'cover', 0.2.0).
  * - Clases de entrada (post_class): el plugin añade clases que DESCRIBEN el
  *   dato (`has-image-fit-contain` en un cliente que es un logo) y nunca CSS.
  *   Son contrato con los temas (README, tabla de clases). Caso frontera: un
@@ -55,7 +55,7 @@
  *   enlaces permanentes.
  */
 
-namespace Armazon\Site;
+namespace EstrategiaWeb\Site;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -66,159 +66,159 @@ final class Content_Types {
 		return array(
 			'client'      => array(
 				'icon'     => 'dashicons-groups',
-				'slug'     => _x( 'clients', 'URL slug', 'armazon-site' ),
+				'slug'     => _x( 'clients', 'URL slug', 'estrategia-web-site' ),
 				'supports' => array( 'title', 'thumbnail', 'excerpt', 'page-attributes', 'custom-fields' ),
 				'labels'   => array(
-					'name'               => __( 'Clients', 'armazon-site' ),
-					'singular_name'      => __( 'Client', 'armazon-site' ),
-					'add_new_item'       => __( 'Add client', 'armazon-site' ),
-					'edit_item'          => __( 'Edit client', 'armazon-site' ),
-					'new_item'           => __( 'New client', 'armazon-site' ),
-					'view_item'          => __( 'View client', 'armazon-site' ),
-					'view_items'         => __( 'View clients', 'armazon-site' ),
-					'search_items'       => __( 'Search clients', 'armazon-site' ),
-					'not_found'          => __( 'No clients found.', 'armazon-site' ),
-					'not_found_in_trash' => __( 'No clients found in Trash.', 'armazon-site' ),
-					'all_items'          => __( 'All clients', 'armazon-site' ),
-					'featured_image'     => __( 'Logo or photo', 'armazon-site' ),
-					'set_featured_image' => __( 'Set logo or photo', 'armazon-site' ),
+					'name'               => __( 'Clients', 'estrategia-web-site' ),
+					'singular_name'      => __( 'Client', 'estrategia-web-site' ),
+					'add_new_item'       => __( 'Add client', 'estrategia-web-site' ),
+					'edit_item'          => __( 'Edit client', 'estrategia-web-site' ),
+					'new_item'           => __( 'New client', 'estrategia-web-site' ),
+					'view_item'          => __( 'View client', 'estrategia-web-site' ),
+					'view_items'         => __( 'View clients', 'estrategia-web-site' ),
+					'search_items'       => __( 'Search clients', 'estrategia-web-site' ),
+					'not_found'          => __( 'No clients found.', 'estrategia-web-site' ),
+					'not_found_in_trash' => __( 'No clients found in Trash.', 'estrategia-web-site' ),
+					'all_items'          => __( 'All clients', 'estrategia-web-site' ),
+					'featured_image'     => __( 'Logo or photo', 'estrategia-web-site' ),
+					'set_featured_image' => __( 'Set logo or photo', 'estrategia-web-site' ),
 				),
 				'taxonomy' => array(
 					'name'   => 'client_sector',
-					'slug'   => _x( 'client-sector', 'URL slug', 'armazon-site' ),
+					'slug'   => _x( 'client-sector', 'URL slug', 'estrategia-web-site' ),
 					'labels' => array(
-						'name'          => __( 'Sectors', 'armazon-site' ),
-						'singular_name' => __( 'Sector', 'armazon-site' ),
-						'add_new_item'  => __( 'Add sector', 'armazon-site' ),
-						'edit_item'     => __( 'Edit sector', 'armazon-site' ),
-						'search_items'  => __( 'Search sectors', 'armazon-site' ),
-						'all_items'     => __( 'All sectors', 'armazon-site' ),
-						'not_found'     => __( 'No sectors found.', 'armazon-site' ),
+						'name'          => __( 'Sectors', 'estrategia-web-site' ),
+						'singular_name' => __( 'Sector', 'estrategia-web-site' ),
+						'add_new_item'  => __( 'Add sector', 'estrategia-web-site' ),
+						'edit_item'     => __( 'Edit sector', 'estrategia-web-site' ),
+						'search_items'  => __( 'Search sectors', 'estrategia-web-site' ),
+						'all_items'     => __( 'All sectors', 'estrategia-web-site' ),
+						'not_found'     => __( 'No sectors found.', 'estrategia-web-site' ),
 					),
 				),
 				'meta'     => array(
-					'client_url'       => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Client website', 'armazon-site' ) ),
+					'client_url'       => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Client website', 'estrategia-web-site' ) ),
 					// 0.2.0. 'contain' = la imagen es un LOGO (no se recorta); ver post_class().
-					'client_image_fit' => array( 'type' => 'string', 'sanitize' => 'fit', 'default' => 'cover', 'label' => __( 'Image fit (cover for a photo, contain for a logo)', 'armazon-site' ) ),
+					'estrategia_web_client_image_fit' => array( 'type' => 'string', 'sanitize' => 'fit', 'default' => 'cover', 'label' => __( 'Image fit (cover for a photo, contain for a logo)', 'estrategia-web-site' ) ),
 				),
 			),
 			'testimonial' => array(
 				'icon'     => 'dashicons-format-quote',
-				'slug'     => _x( 'testimonials', 'URL slug', 'armazon-site' ),
+				'slug'     => _x( 'testimonials', 'URL slug', 'estrategia-web-site' ),
 				'supports' => array( 'title', 'editor', 'thumbnail', 'page-attributes', 'custom-fields' ),
 				'labels'   => array(
-					'name'               => __( 'Testimonials', 'armazon-site' ),
-					'singular_name'      => __( 'Testimonial', 'armazon-site' ),
-					'add_new_item'       => __( 'Add testimonial', 'armazon-site' ),
-					'edit_item'          => __( 'Edit testimonial', 'armazon-site' ),
-					'new_item'           => __( 'New testimonial', 'armazon-site' ),
-					'view_item'          => __( 'View testimonial', 'armazon-site' ),
-					'view_items'         => __( 'View testimonials', 'armazon-site' ),
-					'search_items'       => __( 'Search testimonials', 'armazon-site' ),
-					'not_found'          => __( 'No testimonials found.', 'armazon-site' ),
-					'not_found_in_trash' => __( 'No testimonials found in Trash.', 'armazon-site' ),
-					'all_items'          => __( 'All testimonials', 'armazon-site' ),
-					'featured_image'     => __( 'Author photo', 'armazon-site' ),
-					'set_featured_image' => __( 'Set author photo', 'armazon-site' ),
+					'name'               => __( 'Testimonials', 'estrategia-web-site' ),
+					'singular_name'      => __( 'Testimonial', 'estrategia-web-site' ),
+					'add_new_item'       => __( 'Add testimonial', 'estrategia-web-site' ),
+					'edit_item'          => __( 'Edit testimonial', 'estrategia-web-site' ),
+					'new_item'           => __( 'New testimonial', 'estrategia-web-site' ),
+					'view_item'          => __( 'View testimonial', 'estrategia-web-site' ),
+					'view_items'         => __( 'View testimonials', 'estrategia-web-site' ),
+					'search_items'       => __( 'Search testimonials', 'estrategia-web-site' ),
+					'not_found'          => __( 'No testimonials found.', 'estrategia-web-site' ),
+					'not_found_in_trash' => __( 'No testimonials found in Trash.', 'estrategia-web-site' ),
+					'all_items'          => __( 'All testimonials', 'estrategia-web-site' ),
+					'featured_image'     => __( 'Author photo', 'estrategia-web-site' ),
+					'set_featured_image' => __( 'Set author photo', 'estrategia-web-site' ),
 				),
 				'meta'     => array(
-					'testimonial_author' => array( 'type' => 'string', 'sanitize' => 'text', 'label' => __( 'Author', 'armazon-site' ) ),
-					'testimonial_role'   => array( 'type' => 'string', 'sanitize' => 'text', 'label' => __( 'Author role or company', 'armazon-site' ) ),
-					'testimonial_rating' => array( 'type' => 'integer', 'sanitize' => 'rating', 'label' => __( 'Rating (1 to 5)', 'armazon-site' ) ),
-					'testimonial_client' => array( 'type' => 'integer', 'sanitize' => 'client', 'label' => __( 'Related client', 'armazon-site' ) ),
+					'estrategia_web_testimonial_author' => array( 'type' => 'string', 'sanitize' => 'text', 'label' => __( 'Author', 'estrategia-web-site' ) ),
+					'testimonial_role'   => array( 'type' => 'string', 'sanitize' => 'text', 'label' => __( 'Author role or company', 'estrategia-web-site' ) ),
+					'estrategia_web_testimonial_rating' => array( 'type' => 'integer', 'sanitize' => 'rating', 'label' => __( 'Rating (1 to 5)', 'estrategia-web-site' ) ),
+					'testimonial_client' => array( 'type' => 'integer', 'sanitize' => 'client', 'label' => __( 'Related client', 'estrategia-web-site' ) ),
 				),
 			),
 			'location'    => array(
 				'icon'     => 'dashicons-location',
-				'slug'     => _x( 'locations', 'URL slug', 'armazon-site' ),
+				'slug'     => _x( 'locations', 'URL slug', 'estrategia-web-site' ),
 				'supports' => array( 'title', 'editor', 'thumbnail', 'excerpt', 'page-attributes', 'custom-fields' ),
 				'labels'   => array(
-					'name'               => __( 'Locations', 'armazon-site' ),
-					'singular_name'      => __( 'Location', 'armazon-site' ),
-					'add_new_item'       => __( 'Add location', 'armazon-site' ),
-					'edit_item'          => __( 'Edit location', 'armazon-site' ),
-					'new_item'           => __( 'New location', 'armazon-site' ),
-					'view_item'          => __( 'View location', 'armazon-site' ),
-					'view_items'         => __( 'View locations', 'armazon-site' ),
-					'search_items'       => __( 'Search locations', 'armazon-site' ),
-					'not_found'          => __( 'No locations found.', 'armazon-site' ),
-					'not_found_in_trash' => __( 'No locations found in Trash.', 'armazon-site' ),
-					'all_items'          => __( 'All locations', 'armazon-site' ),
-					'featured_image'     => __( 'Static map image', 'armazon-site' ),
-					'set_featured_image' => __( 'Set static map image', 'armazon-site' ),
+					'name'               => __( 'Locations', 'estrategia-web-site' ),
+					'singular_name'      => __( 'Location', 'estrategia-web-site' ),
+					'add_new_item'       => __( 'Add location', 'estrategia-web-site' ),
+					'edit_item'          => __( 'Edit location', 'estrategia-web-site' ),
+					'new_item'           => __( 'New location', 'estrategia-web-site' ),
+					'view_item'          => __( 'View location', 'estrategia-web-site' ),
+					'view_items'         => __( 'View locations', 'estrategia-web-site' ),
+					'search_items'       => __( 'Search locations', 'estrategia-web-site' ),
+					'not_found'          => __( 'No locations found.', 'estrategia-web-site' ),
+					'not_found_in_trash' => __( 'No locations found in Trash.', 'estrategia-web-site' ),
+					'all_items'          => __( 'All locations', 'estrategia-web-site' ),
+					'featured_image'     => __( 'Static map image', 'estrategia-web-site' ),
+					'set_featured_image' => __( 'Set static map image', 'estrategia-web-site' ),
 				),
 				'meta'     => array(
-					'location_address'   => array( 'type' => 'string', 'sanitize' => 'textarea', 'label' => __( 'Address', 'armazon-site' ) ),
-					'location_phone'     => array( 'type' => 'string', 'sanitize' => 'text', 'label' => __( 'Phone', 'armazon-site' ) ),
-					'location_email'     => array( 'type' => 'string', 'sanitize' => 'email', 'label' => __( 'Email', 'armazon-site' ) ),
-					'location_schedule'  => array( 'type' => 'string', 'sanitize' => 'textarea', 'label' => __( 'Opening hours', 'armazon-site' ) ),
-					'location_map_url'   => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Google Maps link', 'armazon-site' ) ),
-					'location_map_embed' => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Map embed URL', 'armazon-site' ) ),
-					// 0.4.0. Para staticMapUrl / staticMapId de armazon/map (tema padre). Ver local_image_url().
-					'location_static_map'    => array( 'type' => 'string', 'sanitize' => 'local_image', 'label' => __( 'Static map image (theme path or URL of this site)', 'armazon-site' ) ),
-					'location_static_map_id' => array( 'type' => 'integer', 'sanitize' => 'image_id', 'label' => __( 'Static map image (media library ID)', 'armazon-site' ) ),
+					'estrategia_web_location_address'   => array( 'type' => 'string', 'sanitize' => 'textarea', 'label' => __( 'Address', 'estrategia-web-site' ) ),
+					'estrategia_web_location_phone'     => array( 'type' => 'string', 'sanitize' => 'text', 'label' => __( 'Phone', 'estrategia-web-site' ) ),
+					'estrategia_web_location_email'     => array( 'type' => 'string', 'sanitize' => 'email', 'label' => __( 'Email', 'estrategia-web-site' ) ),
+					'estrategia_web_location_schedule'  => array( 'type' => 'string', 'sanitize' => 'textarea', 'label' => __( 'Opening hours', 'estrategia-web-site' ) ),
+					'estrategia_web_location_map_url'   => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Google Maps link', 'estrategia-web-site' ) ),
+					'estrategia_web_location_map_embed' => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Map embed URL', 'estrategia-web-site' ) ),
+					// 0.4.0. Para staticMapUrl / staticMapId de estrategia-web/map (tema padre). Ver local_image_url().
+					'estrategia_web_location_static_map'    => array( 'type' => 'string', 'sanitize' => 'local_image', 'label' => __( 'Static map image (theme path or URL of this site)', 'estrategia-web-site' ) ),
+					'estrategia_web_location_static_map_id' => array( 'type' => 'integer', 'sanitize' => 'image_id', 'label' => __( 'Static map image (media library ID)', 'estrategia-web-site' ) ),
 				),
 			),
 			'project'     => array(
 				'icon'     => 'dashicons-portfolio',
-				'slug'     => _x( 'projects', 'URL slug', 'armazon-site' ),
+				'slug'     => _x( 'projects', 'URL slug', 'estrategia-web-site' ),
 				'supports' => array( 'title', 'editor', 'thumbnail', 'excerpt', 'page-attributes', 'custom-fields', 'revisions' ),
 				'labels'   => array(
-					'name'               => __( 'Projects', 'armazon-site' ),
-					'singular_name'      => __( 'Project', 'armazon-site' ),
-					'add_new_item'       => __( 'Add project', 'armazon-site' ),
-					'edit_item'          => __( 'Edit project', 'armazon-site' ),
-					'new_item'           => __( 'New project', 'armazon-site' ),
-					'view_item'          => __( 'View project', 'armazon-site' ),
-					'view_items'         => __( 'View projects', 'armazon-site' ),
-					'search_items'       => __( 'Search projects', 'armazon-site' ),
-					'not_found'          => __( 'No projects found.', 'armazon-site' ),
-					'not_found_in_trash' => __( 'No projects found in Trash.', 'armazon-site' ),
-					'all_items'          => __( 'All projects', 'armazon-site' ),
+					'name'               => __( 'Projects', 'estrategia-web-site' ),
+					'singular_name'      => __( 'Project', 'estrategia-web-site' ),
+					'add_new_item'       => __( 'Add project', 'estrategia-web-site' ),
+					'edit_item'          => __( 'Edit project', 'estrategia-web-site' ),
+					'new_item'           => __( 'New project', 'estrategia-web-site' ),
+					'view_item'          => __( 'View project', 'estrategia-web-site' ),
+					'view_items'         => __( 'View projects', 'estrategia-web-site' ),
+					'search_items'       => __( 'Search projects', 'estrategia-web-site' ),
+					'not_found'          => __( 'No projects found.', 'estrategia-web-site' ),
+					'not_found_in_trash' => __( 'No projects found in Trash.', 'estrategia-web-site' ),
+					'all_items'          => __( 'All projects', 'estrategia-web-site' ),
 				),
 				'taxonomy' => array(
 					'name'   => 'project_category',
-					'slug'   => _x( 'project-category', 'URL slug', 'armazon-site' ),
+					'slug'   => _x( 'project-category', 'URL slug', 'estrategia-web-site' ),
 					'labels' => array(
-						'name'          => __( 'Project categories', 'armazon-site' ),
-						'singular_name' => __( 'Project category', 'armazon-site' ),
-						'add_new_item'  => __( 'Add category', 'armazon-site' ),
-						'edit_item'     => __( 'Edit category', 'armazon-site' ),
-						'search_items'  => __( 'Search categories', 'armazon-site' ),
-						'all_items'     => __( 'All categories', 'armazon-site' ),
-						'not_found'     => __( 'No categories found.', 'armazon-site' ),
+						'name'          => __( 'Project categories', 'estrategia-web-site' ),
+						'singular_name' => __( 'Project category', 'estrategia-web-site' ),
+						'add_new_item'  => __( 'Add category', 'estrategia-web-site' ),
+						'edit_item'     => __( 'Edit category', 'estrategia-web-site' ),
+						'search_items'  => __( 'Search categories', 'estrategia-web-site' ),
+						'all_items'     => __( 'All categories', 'estrategia-web-site' ),
+						'not_found'     => __( 'No categories found.', 'estrategia-web-site' ),
 					),
 				),
 				'meta'     => array(),
 			),
 			'portfolio'   => array(
 				'icon'     => 'dashicons-images-alt2',
-				'slug'     => _x( 'portfolio', 'URL slug', 'armazon-site' ),
+				'slug'     => _x( 'portfolio', 'URL slug', 'estrategia-web-site' ),
 				'supports' => array( 'title', 'editor', 'thumbnail', 'excerpt', 'page-attributes', 'custom-fields', 'revisions' ),
 				'labels'   => array(
-					'name'               => __( 'Portfolio', 'armazon-site' ),
-					'singular_name'      => __( 'Portfolio item', 'armazon-site' ),
-					'add_new_item'       => __( 'Add portfolio item', 'armazon-site' ),
-					'edit_item'          => __( 'Edit portfolio item', 'armazon-site' ),
-					'new_item'           => __( 'New portfolio item', 'armazon-site' ),
-					'view_item'          => __( 'View portfolio item', 'armazon-site' ),
-					'view_items'         => __( 'View portfolio', 'armazon-site' ),
-					'search_items'       => __( 'Search portfolio', 'armazon-site' ),
-					'not_found'          => __( 'No portfolio items found.', 'armazon-site' ),
-					'not_found_in_trash' => __( 'No portfolio items found in Trash.', 'armazon-site' ),
-					'all_items'          => __( 'All portfolio items', 'armazon-site' ),
+					'name'               => __( 'Portfolio', 'estrategia-web-site' ),
+					'singular_name'      => __( 'Portfolio item', 'estrategia-web-site' ),
+					'add_new_item'       => __( 'Add portfolio item', 'estrategia-web-site' ),
+					'edit_item'          => __( 'Edit portfolio item', 'estrategia-web-site' ),
+					'new_item'           => __( 'New portfolio item', 'estrategia-web-site' ),
+					'view_item'          => __( 'View portfolio item', 'estrategia-web-site' ),
+					'view_items'         => __( 'View portfolio', 'estrategia-web-site' ),
+					'search_items'       => __( 'Search portfolio', 'estrategia-web-site' ),
+					'not_found'          => __( 'No portfolio items found.', 'estrategia-web-site' ),
+					'not_found_in_trash' => __( 'No portfolio items found in Trash.', 'estrategia-web-site' ),
+					'all_items'          => __( 'All portfolio items', 'estrategia-web-site' ),
 				),
 				'taxonomy' => array(
 					'name'   => 'portfolio_category',
-					'slug'   => _x( 'portfolio-category', 'URL slug', 'armazon-site' ),
+					'slug'   => _x( 'portfolio-category', 'URL slug', 'estrategia-web-site' ),
 					'labels' => array(
-						'name'          => __( 'Portfolio categories', 'armazon-site' ),
-						'singular_name' => __( 'Portfolio category', 'armazon-site' ),
-						'add_new_item'  => __( 'Add category', 'armazon-site' ),
-						'edit_item'     => __( 'Edit category', 'armazon-site' ),
-						'search_items'  => __( 'Search categories', 'armazon-site' ),
-						'all_items'     => __( 'All categories', 'armazon-site' ),
-						'not_found'     => __( 'No categories found.', 'armazon-site' ),
+						'name'          => __( 'Portfolio categories', 'estrategia-web-site' ),
+						'singular_name' => __( 'Portfolio category', 'estrategia-web-site' ),
+						'add_new_item'  => __( 'Add category', 'estrategia-web-site' ),
+						'edit_item'     => __( 'Edit category', 'estrategia-web-site' ),
+						'search_items'  => __( 'Search categories', 'estrategia-web-site' ),
+						'all_items'     => __( 'All categories', 'estrategia-web-site' ),
+						'not_found'     => __( 'No categories found.', 'estrategia-web-site' ),
 					),
 				),
 				'meta'     => array(),
@@ -295,7 +295,7 @@ final class Content_Types {
 		 * @param string $slug El slug de `rewrite_slugs` si lo hay; si no, el traducido («clientes»).
 		 * @param string $name El tipo o la taxonomía («client», «client_sector»).
 		 */
-		return (string) apply_filters( 'armazon_site_rewrite_slug', '' !== $fixed ? $fixed : $translated, $name );
+		return (string) apply_filters( 'estrategia_web_site_rewrite_slug', '' !== $fixed ? $fixed : $translated, $name );
 	}
 
 	/** @return string[] Las claves de meta de un tipo (para la prueba y el README). */
@@ -327,9 +327,9 @@ final class Content_Types {
 	}
 
 	/**
-	 * URL de una imagen servida por ESTE sitio, o '' (0.4.0, `location_static_map`).
-	 * Las mismas tres formas que acepta staticMapUrl de armazon/map en el tema
-	 * padre (armazon_map_static_url), que vuelve a comprobarlo al pintar:
+	 * URL de una imagen servida por ESTE sitio, o '' (0.4.0, `estrategia_web_location_static_map`).
+	 * Las mismas tres formas que acepta staticMapUrl de estrategia-web/map en el tema
+	 * padre (estrategia_web_map_static_url), que vuelve a comprobarlo al pintar:
 	 *
 	 *   assets/maps/sede.webp            ruta del TEMA (hijo, luego padre); se guarda sin «./»
 	 *   /wp-content/uploads/mapa.webp    ruta del sitio
@@ -370,7 +370,7 @@ final class Content_Types {
 	}
 
 	/**
-	 * Filtro post_class: un cliente con client_image_fit = 'contain' lleva la
+	 * Filtro post_class: un cliente con estrategia_web_client_image_fit = 'contain' lleva la
 	 * clase `has-image-fit-contain` (en su <li> de una Consulta, en su ficha).
 	 * El plugin NO pone CSS: cómo se pinta un logo es del tema (README).
 	 *
@@ -383,7 +383,7 @@ final class Content_Types {
 	public static function post_class( $classes, $css_class = '', $post_id = 0 ): array {
 		$classes = (array) $classes;
 		$post_id = (int) $post_id;
-		if ( $post_id > 0 && 'client' === get_post_type( $post_id ) && 'contain' === get_post_meta( $post_id, 'client_image_fit', true ) ) {
+		if ( $post_id > 0 && 'client' === get_post_type( $post_id ) && 'contain' === get_post_meta( $post_id, 'estrategia_web_client_image_fit', true ) ) {
 			$classes[] = 'has-image-fit-contain';
 		}
 		return $classes;

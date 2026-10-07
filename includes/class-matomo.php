@@ -1,7 +1,7 @@
 <?php
 /**
  * Matomo (Armazón, fila 16): el código de seguimiento en el <head> de la web,
- * con la URL, el id del sitio y el modo de la opción `armazon_site`
+ * con la URL, el id del sitio y el modo de la opción `estrategia_web_site`
  * (`matomo_url`, `matomo_site_id`, `matomo_mode`; ver Settings).
  *
  * Los dos modos:
@@ -21,15 +21,15 @@
  *
  * Cómo se entera del consentimiento (contrato del aviso, que desde 0.5.0 es de
  * este mismo plugin: includes/class-consent.php y blocks/consent/view.js; antes
- * vivía en el tema padre): el evento «armazon:consent» en document
+ * vivía en el tema padre): el evento «estrategia-web:consent» en document
  * (detail.accepted = categorías aceptadas), que se lanza al arrancar si ya
- * había elección y en cada cambio, y window.armazonConsent.get() (null = sin
+ * había elección y en cada cambio, y window.estrategiaWebConsent.get() (null = sin
  * elegir). Se escuchan LAS DOS cosas: el módulo del aviso puede llegar antes
  * o después que este script. Se habla con él SOLO por ese contrato, no
  * llamando a Consent: así sigue valiendo con un tema padre viejo que aún
  * traiga su propio aviso (Consent::active() = false).
  * - En modo híbrido el plugin DECLARA la categoría «statistics» con el filtro
- *   `armazon_consent_categories` (prioridad 99), para que el aviso salga sin
+ *   `estrategia_web_consent_categories` (prioridad 99), para que el aviso salga sin
  *   que el tema tenga que acordarse.
  * - Desde 0.5.0 el aviso no depende del tema: con cualquier tema hay aviso y
  *   evento. (Hasta 0.4.0, sin el tema padre el híbrido se quedaba sin cookies
@@ -39,7 +39,7 @@
  * usuarios con sesión que pueden editar (`edit_posts`: autores y arriba). Es
  * lo habitual (el plugin oficial de Matomo para WordPress tampoco mide a los
  * administradores por defecto) y evita que la gente de la web infle las
- * cifras. Una web que quiera otra cosa: filtro `armazon_site_matomo_track`.
+ * cifras. Una web que quiera otra cosa: filtro `estrategia_web_site_matomo_track`.
  *
  * Cómo se mantiene:
  * - Quién y cuándo: quien toque el plugin; la prueba es
@@ -49,7 +49,7 @@
  *   Quitar uno es versión mayor (ver la trampa de Settings).
  * - Caso frontera: la categoría se retira en el aviso en una página y el
  *   visitante sigue navegando. El aviso solo RECARGA si había un
- *   <script type="text/plain" data-armazon-consent> ya ejecutado; este código
+ *   <script type="text/plain" data-estrategia-web-consent> ya ejecutado; este código
  *   no lo es, así que no hay recarga: se llama a forgetCookieConsentGiven al
  *   momento y basta.
  * - La trampa 1: mtm_cookie_consent dura 30 años y la elección del aviso 12
@@ -60,7 +60,7 @@
  *   «Al cargar» NO es window.load: el aviso hidrata cuando puede, y a veces
  *   DESPUÉS de load (medido el 05-10-2026 al probar con el aviso real: 1 de
  *   cada 3 cargas; la prueba simulada de 0.3.0 no podía verlo). Por eso se
- *   escucha también «armazon:consent-ready», que el aviso lanza una vez al
+ *   escucha también «estrategia-web:consent-ready», que el aviso lanza una vez al
  *   arrancar, con elección o sin ella (0.5.0).
  * - La trampa 2: un hijo que declara categorías con
  *   `fn() => array( 'maps' )` (sin mirar lo que recibe) PISA la de este
@@ -74,7 +74,7 @@
  *   Matomo (Anonimizar IP), no en el código de seguimiento.
  */
 
-namespace Armazon\Site;
+namespace EstrategiaWeb\Site;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -85,7 +85,7 @@ final class Matomo {
 
 	public static function boot(): void {
 		add_action( 'wp_head', array( self::class, 'print' ), 20 );
-		add_filter( 'armazon_consent_categories', array( self::class, 'consent_categories' ), 99 );
+		add_filter( 'estrategia_web_consent_categories', array( self::class, 'consent_categories' ), 99 );
 	}
 
 	/**
@@ -116,7 +116,7 @@ final class Matomo {
 		 *
 		 * @param bool $track Lo decidido por el plugin.
 		 */
-		return (bool) apply_filters( 'armazon_site_matomo_track', $track );
+		return (bool) apply_filters( 'estrategia_web_site_matomo_track', $track );
 	}
 
 	/** En modo híbrido, el aviso tiene que preguntar por las estadísticas. */
@@ -134,7 +134,7 @@ final class Matomo {
 		if ( ! $config || ! self::should_track() ) {
 			return;
 		}
-		wp_print_inline_script_tag( self::script( $config ), array( 'id' => 'armazon-site-matomo' ) );
+		wp_print_inline_script_tag( self::script( $config ), array( 'id' => 'estrategia-web-site-matomo' ) );
 	}
 
 	/** El JS de seguimiento. Sin textos de pantalla: nada que traducir. */
@@ -172,16 +172,16 @@ JS;
 		given = yes;
 		window._paq.push([yes ? 'rememberCookieConsentGiven' : 'forgetCookieConsentGiven']);
 	}
-	document.addEventListener('armazon:consent', function (e) { sync(e.detail && e.detail.accepted); });
+	document.addEventListener('estrategia-web:consent', function (e) { sync(e.detail && e.detail.accepted); });
 	function current() {
-		if (given === null && window.armazonConsent && typeof window.armazonConsent.get === 'function') {
-			var choice = window.armazonConsent.get();
+		if (given === null && window.estrategiaWebConsent && typeof window.estrategiaWebConsent.get === 'function') {
+			var choice = window.estrategiaWebConsent.get();
 			sync(choice || []);
 		}
 	}
 	current();
 	window.addEventListener('load', current);
-	document.addEventListener('armazon:consent-ready', current);
+	document.addEventListener('estrategia-web:consent-ready', current);
 })();
 JS;
 		return $js;

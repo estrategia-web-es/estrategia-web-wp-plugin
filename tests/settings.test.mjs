@@ -1,4 +1,4 @@
-// NIVEL: 2 — WordPress de Playground, porque ESCRIBE: guarda la opción armazon_site por la API REST de verdad, con usuario y permisos.
+// NIVEL: 2 — WordPress de Playground, porque ESCRIBE: guarda la opción estrategia_web_site por la API REST de verdad, con usuario y permisos.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { reset, wp, saveCompany } from "./lib.mjs";
@@ -34,7 +34,7 @@ test("guardar por REST y leerlo: todas las claves, WhatsApp solo dígitos, salto
 
   const read = await wp("/settings");
   assert.equal(read.status, 200);
-  assert.deepEqual(read.json.armazon_site, saved, "lo leído es lo guardado");
+  assert.deepEqual(read.json.estrategia_web_site, saved, "lo leído es lo guardado");
 });
 
 test("guardar por partes: un PUT con una clave no borra las demás", async () => {
@@ -53,7 +53,7 @@ test("saneado: un correo, una URL y un WhatsApp inválidos NO se guardan y se qu
 });
 
 test("esquema: un tipo de contenido que no existe se rechaza entero (400)", async () => {
-  const r = await wp("/settings", { method: "POST", body: { armazon_site: { enabled_types: ["client", "services"] } } });
+  const r = await wp("/settings", { method: "POST", body: { estrategia_web_site: { enabled_types: ["client", "services"] } } });
   assert.equal(r.status, 400);
 });
 
@@ -70,17 +70,17 @@ test("rewrite_slugs (0.2.0): sanitize_title, vacío por defecto, fusión por cla
   const c = await saveCompany({ phone: "971 55 55 55" });
   assert.deepEqual(c.rewrite_slugs, b.rewrite_slugs, "guardar otra clave no las toca");
 
-  const bad = await wp("/settings", { method: "POST", body: { armazon_site: { rewrite_slugs: { services: "servicios" } } } });
+  const bad = await wp("/settings", { method: "POST", body: { estrategia_web_site: { rewrite_slugs: { services: "servicios" } } } });
   assert.equal(bad.status, 400, "solo tipos y taxonomías del plugin");
 
   const read = await wp("/settings");
-  assert.deepEqual(read.json.armazon_site.rewrite_slugs, b.rewrite_slugs);
+  assert.deepEqual(read.json.estrategia_web_site.rewrite_slugs, b.rewrite_slugs);
   await saveCompany({ rewrite_slugs: { client: "", client_sector: "" } });
 });
 
 test("permisos: un autor no puede leer ni cambiar los datos por /wp/v2/settings", async () => {
-  const r = await wp("/settings", { as: "author", method: "POST", body: { armazon_site: { phone: "000" } } });
+  const r = await wp("/settings", { as: "author", method: "POST", body: { estrategia_web_site: { phone: "000" } } });
   assert.equal(r.status, 403);
   const read = await wp("/settings");
-  assert.notEqual(read.json.armazon_site.phone, "000");
+  assert.notEqual(read.json.estrategia_web_site.phone, "000");
 });

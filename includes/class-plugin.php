@@ -8,7 +8,7 @@
  * (prioridad 1) porque las etiquetas y los slugs salen de gettext.
  */
 
-namespace Armazon\Site;
+namespace EstrategiaWeb\Site;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,6 +21,7 @@ final class Plugin {
 		add_action( 'init', array( Bindings::class, 'register' ) );
 		add_action( 'init', array( Location::class, 'register' ) );
 		add_action( 'init', array( Shortcode::class, 'register' ) );
+		Legacy_Names::boot(); // los nombres de antes de 1.0.0, como alias (hasta 2.0.0)
 		add_action( 'enqueue_block_editor_assets', array( Bindings::class, 'enqueue_editor' ) );
 		add_filter( 'post_class', array( Content_Types::class, 'post_class' ), 10, 3 );
 		add_action( 'update_option_' . Settings::OPTION, array( Content_Types::class, 'maybe_flush' ), 10, 2 );
@@ -43,7 +44,7 @@ final class Plugin {
 	 * .l10n.php si existe.
 	 */
 	public static function load_textdomain(): void {
-		load_plugin_textdomain( 'armazon-site', false, dirname( plugin_basename( ARMAZON_SITE_FILE ) ) . '/languages' );
+		load_plugin_textdomain( 'estrategia-web-site', false, dirname( plugin_basename( ESTRATEGIA_WEB_SITE_FILE ) ) . '/languages' );
 	}
 
 	public static function activate(): void {

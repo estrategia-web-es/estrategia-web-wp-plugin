@@ -48,7 +48,7 @@
  *   pone aria-label: taparía el nombre o diría solo «se abre en…».
  *
  * Apagar (por defecto, encendido), en el functions.php del tema:
- *     add_filter( 'armazon_site_external_links', '__return_false' );
+ *     add_filter( 'estrategia_web_site_external_links', '__return_false' );
  * Filtro y no opción, como el WebP y el «Powered by»: decisión de quien hace
  * la web, no un dato del cliente. Un enlace suelto que deba abrirse en la
  * misma pestaña: ponerle target="_self" en el bloque (se respeta).
@@ -72,7 +72,7 @@
  *   PHP antes que el código.
  */
 
-namespace Armazon\Site;
+namespace EstrategiaWeb\Site;
 
 final class External_Links {
 
@@ -86,7 +86,7 @@ final class External_Links {
 		 *
 		 * @param bool $enabled
 		 */
-		if ( apply_filters( 'armazon_site_external_links', true ) ) {
+		if ( apply_filters( 'estrategia_web_site_external_links', true ) ) {
 			add_filter( 'wp_template_enhancement_output_buffer', array( self::class, 'filter_output' ) );
 		}
 	}
@@ -98,7 +98,7 @@ final class External_Links {
 		if ( '' === $html || '' === $home ) {
 			return $html;
 		}
-		return self::rewrite( $html, $home, __( '(opens in a new tab)', 'armazon-site' ) );
+		return self::rewrite( $html, $home, __( '(opens in a new tab)', 'estrategia-web-site' ) );
 	}
 
 	/**

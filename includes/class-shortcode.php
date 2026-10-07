@@ -1,12 +1,12 @@
 <?php
 /**
- * Shortcode `[armazon_company key="…"]` (0.4.0): un dato de la empresa DENTRO
+ * Shortcode `[estrategia_web_company key="…"]` (0.4.0): un dato de la empresa DENTRO
  * de una frase. Es lo que necesita el aviso legal (LSSI, art. 10):
  *
  *   <!-- wp:paragraph -->
- *   <p>Titular: [armazon_company key="legal_name"], NIF [armazon_company key="tax_id"],
- *   con domicilio en [armazon_company key="address"]. Teléfono [armazon_company key="phone"],
- *   correo [armazon_company key="email"]. Inscrita en el [armazon_company key="registry"].</p>
+ *   <p>Titular: [estrategia_web_company key="legal_name"], NIF [estrategia_web_company key="tax_id"],
+ *   con domicilio en [estrategia_web_company key="address"]. Teléfono [estrategia_web_company key="phone"],
+ *   correo [estrategia_web_company key="email"]. Inscrita en el [estrategia_web_company key="registry"].</p>
  *   <!-- /wp:paragraph -->
  *
  * Por qué un shortcode y no un binding ni un bloque: un binding de WP 7.1
@@ -34,13 +34,13 @@
  *   atributo; para `href`, el binding de botón o enlace.
  */
 
-namespace Armazon\Site;
+namespace EstrategiaWeb\Site;
 
 defined( 'ABSPATH' ) || exit;
 
 final class Shortcode {
 
-	public const TAG = 'armazon_company';
+	public const TAG = 'estrategia_web_company';
 
 	public static function register(): void {
 		add_shortcode( self::TAG, array( self::class, 'render' ) );

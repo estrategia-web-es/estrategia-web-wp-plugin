@@ -1,7 +1,7 @@
 <?php
 /**
  * Leer un dato de la empresa por su CLAVE de contrato: la que usan la fuente
- * de Block Bindings `armazon-site/company`, el editor y cualquier tema.
+ * de Block Bindings `estrategia-web-site/company`, el editor y cualquier tema.
  *
  * Claves: las de Settings::DEFAULTS (menos enabled_types, allow_svg y
  * rewrite_slugs, que son opciones y no datos: NOT_DATA), `social.<red>` con punto, y las DERIVADAS de abajo.
@@ -13,19 +13,19 @@
  *   enlace de un tipo nuevo) + README. assets/editor.js NO se toca: lee las
  *   claves de keys() y labels(). Es contrato: no se renombra. La última que
  *   entró, `phone_secondary_href` (0.2.0), es el ejemplo.
- * - Una clave nueva sale SOLA también en el shortcode `[armazon_company]`
+ * - Una clave nueva sale SOLA también en el shortcode `[estrategia_web_company]`
  *   (0.4.0, includes/class-shortcode.php), que lee value().
- * - Los datos de UNA sede no van aquí: son de la fuente `armazon-site/location`
+ * - Los datos de UNA sede no van aquí: son de la fuente `estrategia-web-site/location`
  *   (includes/class-location.php).
  * - Caso frontera: una clave que no existe («phone_mobile») devuelve '' y no
  *   un error: un bloque mal enlazado se ve vacío en la web y en el editor
  *   enseña el nombre de la clave, que es donde se nota.
  * - La trampa: para un tema, `Company::value()` es la API pública en PHP;
- *   leer `get_option('armazon_site')` directamente se salta el filtro
- *   `armazon_site_settings` y las derivadas.
+ *   leer `get_option('estrategia_web_site')` directamente se salta el filtro
+ *   `estrategia_web_site_settings` y las derivadas.
  */
 
-namespace Armazon\Site;
+namespace EstrategiaWeb\Site;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -42,7 +42,7 @@ final class Company {
 
 	/** Prefijo de país para teléfonos escritos sin él. */
 	public static function country_code(): string {
-		return (string) apply_filters( 'armazon_site_default_country_code', '34' );
+		return (string) apply_filters( 'estrategia_web_site_default_country_code', '34' );
 	}
 
 	/** @return string[] Todas las claves válidas, en orden de pantalla. */
@@ -88,28 +88,28 @@ final class Company {
 	 */
 	public static function labels(): array {
 		return array(
-			'company_name'     => __( 'Company name', 'armazon-site' ),
-			'legal_name'       => __( 'Legal name', 'armazon-site' ),
-			'tax_id'           => __( 'Tax ID', 'armazon-site' ),
-			'registry'         => __( 'Company registry', 'armazon-site' ),
-			'email'            => __( 'Email', 'armazon-site' ),
-			'phone'            => __( 'Phone', 'armazon-site' ),
-			'phone_secondary'  => __( 'Secondary phone', 'armazon-site' ),
-			'whatsapp'         => __( 'WhatsApp', 'armazon-site' ),
-			'whatsapp_message' => __( 'WhatsApp message', 'armazon-site' ),
-			'address'          => __( 'Address', 'armazon-site' ),
-			'schedule'         => __( 'Opening hours', 'armazon-site' ),
-			'map_url'          => __( 'Map link', 'armazon-site' ),
-			'social.facebook'  => __( 'Facebook', 'armazon-site' ),
-			'social.instagram' => __( 'Instagram', 'armazon-site' ),
-			'social.linkedin'  => __( 'LinkedIn', 'armazon-site' ),
-			'social.x'         => __( 'X (Twitter)', 'armazon-site' ),
-			'social.youtube'   => __( 'YouTube', 'armazon-site' ),
-			'social.tiktok'    => __( 'TikTok', 'armazon-site' ),
-			'phone_href'       => __( 'Phone (link)', 'armazon-site' ),
-			'phone_secondary_href' => __( 'Secondary phone (link)', 'armazon-site' ),
-			'email_href'      => __( 'Email (link)', 'armazon-site' ),
-			'whatsapp_href'    => __( 'WhatsApp (link)', 'armazon-site' ),
+			'company_name'     => __( 'Company name', 'estrategia-web-site' ),
+			'legal_name'       => __( 'Legal name', 'estrategia-web-site' ),
+			'tax_id'           => __( 'Tax ID', 'estrategia-web-site' ),
+			'registry'         => __( 'Company registry', 'estrategia-web-site' ),
+			'email'            => __( 'Email', 'estrategia-web-site' ),
+			'phone'            => __( 'Phone', 'estrategia-web-site' ),
+			'phone_secondary'  => __( 'Secondary phone', 'estrategia-web-site' ),
+			'whatsapp'         => __( 'WhatsApp', 'estrategia-web-site' ),
+			'whatsapp_message' => __( 'WhatsApp message', 'estrategia-web-site' ),
+			'address'          => __( 'Address', 'estrategia-web-site' ),
+			'schedule'         => __( 'Opening hours', 'estrategia-web-site' ),
+			'map_url'          => __( 'Map link', 'estrategia-web-site' ),
+			'social.facebook'  => __( 'Facebook', 'estrategia-web-site' ),
+			'social.instagram' => __( 'Instagram', 'estrategia-web-site' ),
+			'social.linkedin'  => __( 'LinkedIn', 'estrategia-web-site' ),
+			'social.x'         => __( 'X (Twitter)', 'estrategia-web-site' ),
+			'social.youtube'   => __( 'YouTube', 'estrategia-web-site' ),
+			'social.tiktok'    => __( 'TikTok', 'estrategia-web-site' ),
+			'phone_href'       => __( 'Phone (link)', 'estrategia-web-site' ),
+			'phone_secondary_href' => __( 'Secondary phone (link)', 'estrategia-web-site' ),
+			'email_href'      => __( 'Email (link)', 'estrategia-web-site' ),
+			'whatsapp_href'    => __( 'WhatsApp (link)', 'estrategia-web-site' ),
 		);
 	}
 

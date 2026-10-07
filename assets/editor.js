@@ -2,13 +2,13 @@
  * La mitad de EDITOR de las dos fuentes de Block Bindings del plugin (la
  * mitad de la web está en PHP):
  *
- *   armazon-site/company   datos de la empresa   includes/class-bindings.php
- *   armazon-site/location  datos de UNA sede     includes/class-location.php  (0.2.0)
+ *   estrategia-web-site/company   datos de la empresa   includes/class-bindings.php
+ *   estrategia-web-site/location  datos de UNA sede     includes/class-location.php  (0.2.0)
  *
  * Qué hace: que un bloque enlazado ENSEÑE el valor en el editor (getValues)
  * y que la fuente aparezca en el panel «Atributos» del bloque con la lista
  * de datos (getFieldsList). Los valores y sus nombres los pone PHP en
- * window.armazonSiteCompany y window.armazonSiteLocation antes de este script.
+ * window.estrategiaWebSiteCompany y window.estrategiaWebSiteLocation antes de este script.
  *
  * SIN PASO DE COMPILACIÓN, como el plugin de formularios: script clásico que
  * lee los globales wp.* del editor. No lleva textos propios (el nombre de la
@@ -23,7 +23,7 @@
  * - Caso frontera: el dato está vacío, o la sede no existe o está en
  *   borrador. Se enseña «[Nombre del dato]» en el editor para que se vea qué
  *   está enlazado; en la web sale vacío. Una sede creada DESPUÉS de abrir el
- *   editor no está en window.armazonSiteLocation hasta recargar: sale entre
+ *   editor no está en window.estrategiaWebSiteLocation hasta recargar: sale entre
  *   corchetes y en la web sí se ve.
  * - La trampa: no hay setValues y canUserEditValue es false a propósito. Si
  *   fuera editable, el editor dejaría escribir en el párrafo enlazado y lo
@@ -105,4 +105,4 @@
 			},
 		} );
 	}
-} )( window.wp, window.armazonSiteCompany, window.armazonSiteLocation );
+} )( window.wp, window.estrategiaWebSiteCompany, window.estrategiaWebSiteLocation );

@@ -4,7 +4,7 @@
 // - el editor de este PHP escribe WebP (si no, lo demás no probaría nada);
 // - un JPEG y un PNG subidos generan sus tamaños en WebP, y también el
 //   fichero principal («full»): el subido queda como original_image;
-// - con el filtro armazon_site_webp a false, los tamaños salen en JPEG;
+// - con el filtro estrategia_web_site_webp a false, los tamaños salen en JPEG;
 // - LA TRAMPA, con lo ya subido: al regenerar (lo que hace `wp media
 //   regenerate`, imitado por la ruta de pruebas) las URL guardadas en el
 //   contenido NO cambian, pero el meta sí (el principal pasa a .webp). La
@@ -66,7 +66,7 @@ test("webp (0.5.1): un PNG subido también", async () => {
   }
 });
 
-test("webp (0.5.1): con el filtro armazon_site_webp a false, los tamaños salen en JPEG", async () => {
+test("webp (0.5.1): con el filtro estrategia_web_site_webp a false, los tamaños salen en JPEG", async () => {
   await webpSetup(false);
   try {
     const r = await upload(`webp-${RUN}-3.jpg`, "image/jpeg", await jpeg());

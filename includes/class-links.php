@@ -9,18 +9,18 @@
  * - Un enlace derivado nuevo entra en Company::DERIVED, value() y labels(), y
  *   en la tabla del README, en el mismo commit: es parte del contrato. Aquí
  *   solo si es un enlace de una CLASE nueva; `phone_secondary_href` (0.2.0) y
- *   `location_phone_href` reutilizan tel(). El editor (assets/editor.js) no
+ *   `estrategia_web_location_phone_href` reutilizan tel(). El editor (assets/editor.js) no
  *   tiene lista propia: lee Company::keys() y labels().
  * - Caso frontera: un teléfono escrito SIN prefijo («971 12 34 56»). Se le
  *   pone el prefijo por defecto (34, filtrable con
- *   `armazon_site_default_country_code`). Uno con «00» delante se trata como
+ *   `estrategia_web_site_default_country_code`). Uno con «00» delante se trata como
  *   internacional («0044…» → «+44…»).
  * - La trampa: WhatsApp NO acepta «+», ni espacios, ni el «00» en wa.me: solo
  *   dígitos con el prefijo del país. Por eso el ajuste `whatsapp` se guarda ya
  *   así, y aquí se vuelve a limpiar por si llega de otro sitio.
  */
 
-namespace Armazon\Site;
+namespace EstrategiaWeb\Site;
 
 final class Links {
 

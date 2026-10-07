@@ -3,7 +3,7 @@ import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { reset, wp, saveCompany, seedPage, html } from "./lib.mjs";
 
-const SRC = "armazon-site/location";
+const SRC = "estrategia-web-site/location";
 const meta = (args) => ({ metadata: { bindings: { content: { source: SRC, args } } } });
 const attrs = (cls, bindings) => JSON.stringify({ className: cls, metadata: { bindings } });
 
@@ -17,14 +17,14 @@ before(async () => {
     return r.json;
   };
   maioris = await make("Maioris & Llucmajor", "maioris", "publish", {
-    location_address: "Carrer de Maioris 3\n07620 Llucmajor",
-    location_phone: "971 11 22 33",
-    location_email: "maioris@ejemplo.test",
-    location_schedule: "L-V 8-20",
-    location_map_url: "https://maps.google.com/?q=Maioris",
+    estrategia_web_location_address: "Carrer de Maioris 3\n07620 Llucmajor",
+    estrategia_web_location_phone: "971 11 22 33",
+    estrategia_web_location_email: "maioris@ejemplo.test",
+    estrategia_web_location_schedule: "L-V 8-20",
+    estrategia_web_location_map_url: "https://maps.google.com/?q=Maioris",
   });
-  await make("Sede Palma", "palma", "publish", { location_address: "Carrer de Palma 1\n07001 Palma", location_phone: "971 44 55 66" });
-  await make("Sede en borrador", "borrador", "draft", { location_phone: "971 99 99 99", location_address: "No debe salir" });
+  await make("Sede Palma", "palma", "publish", { estrategia_web_location_address: "Carrer de Palma 1\n07001 Palma", estrategia_web_location_phone: "971 44 55 66" });
+  await make("Sede en borrador", "borrador", "draft", { estrategia_web_location_phone: "971 99 99 99", estrategia_web_location_address: "No debe salir" });
 });
 
 const between = (text, cls, tag) => text.match(new RegExp(`<${tag}[^>]*${cls}[^>]*>([\\s\\S]*?)</${tag}>`))?.[1];
@@ -33,20 +33,20 @@ const href = (text, cls) => text.match(new RegExp(`${cls}[^"]*"><a[^>]*href="([^
 test("por slug, desde cualquier página: botón con texto y url al teléfono de la sede «maioris»; título, dirección con <br>, correo y mapa", async () => {
   const page = await seedPage(
     `<!-- wp:buttons -->
-<div class="wp-block-buttons"><!-- wp:button ${attrs("t-tel", { text: { source: SRC, args: { slug: "maioris", key: "location_phone" } }, url: { source: SRC, args: { slug: "maioris", key: "location_phone_href" } } })} -->
+<div class="wp-block-buttons"><!-- wp:button ${attrs("t-tel", { text: { source: SRC, args: { slug: "maioris", key: "estrategia_web_location_phone" } }, url: { source: SRC, args: { slug: "maioris", key: "estrategia_web_location_phone_href" } } })} -->
 <div class="wp-block-button t-tel"><a class="wp-block-button__link wp-element-button" href="#">relleno</a></div>
 <!-- /wp:button -->
-<!-- wp:button ${attrs("t-mail", { url: { source: SRC, args: { slug: "maioris", key: "location_email_href" } } })} -->
+<!-- wp:button ${attrs("t-mail", { url: { source: SRC, args: { slug: "maioris", key: "estrategia_web_location_email_href" } } })} -->
 <div class="wp-block-button t-mail"><a class="wp-block-button__link wp-element-button" href="#">Correo</a></div>
 <!-- /wp:button -->
-<!-- wp:button ${attrs("t-map", { url: { source: SRC, args: { slug: "maioris", key: "location_map_url" } } })} -->
+<!-- wp:button ${attrs("t-map", { url: { source: SRC, args: { slug: "maioris", key: "estrategia_web_location_map_url" } } })} -->
 <div class="wp-block-button t-map"><a class="wp-block-button__link wp-element-button" href="#">Mapa</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons -->
 <!-- wp:heading ${JSON.stringify({ className: "t-title", ...meta({ slug: "maioris", key: "title" }) })} -->
 <h2 class="wp-block-heading t-title">x</h2>
 <!-- /wp:heading -->
-<!-- wp:paragraph ${JSON.stringify({ className: "t-address", ...meta({ slug: "maioris", key: "location_address" }) })} -->
+<!-- wp:paragraph ${JSON.stringify({ className: "t-address", ...meta({ slug: "maioris", key: "estrategia_web_location_address" }) })} -->
 <p class="t-address">x</p>
 <!-- /wp:paragraph -->`,
     "autoservicio"
@@ -63,16 +63,16 @@ test("por slug, desde cualquier página: botón con texto y url al teléfono de 
 
 test("una sede inexistente, en borrador o sin clave sale vacía; fuera de una sede, una clave sin slug también", async () => {
   const page = await seedPage(
-    `<!-- wp:paragraph ${JSON.stringify({ className: "t-none", ...meta({ slug: "no-existe", key: "location_phone" }) })} -->
+    `<!-- wp:paragraph ${JSON.stringify({ className: "t-none", ...meta({ slug: "no-existe", key: "estrategia_web_location_phone" }) })} -->
 <p class="t-none">relleno-none</p>
 <!-- /wp:paragraph -->
-<!-- wp:paragraph ${JSON.stringify({ className: "t-draft", ...meta({ slug: "borrador", key: "location_phone" }) })} -->
+<!-- wp:paragraph ${JSON.stringify({ className: "t-draft", ...meta({ slug: "borrador", key: "estrategia_web_location_phone" }) })} -->
 <p class="t-draft">relleno-draft</p>
 <!-- /wp:paragraph -->
 <!-- wp:paragraph ${JSON.stringify({ className: "t-nokey", ...meta({ slug: "maioris", key: "phone" }) })} -->
 <p class="t-nokey">relleno-nokey</p>
 <!-- /wp:paragraph -->
-<!-- wp:paragraph ${JSON.stringify({ className: "t-ctx", ...meta({ key: "location_phone" }) })} -->
+<!-- wp:paragraph ${JSON.stringify({ className: "t-ctx", ...meta({ key: "estrategia_web_location_phone" }) })} -->
 <p class="t-ctx">relleno-ctx</p>
 <!-- /wp:paragraph -->`,
     "sedes-vacias"
@@ -90,10 +90,10 @@ test("sin slug, dentro de una Consulta de sedes: cada <li> enseña la dirección
     `<!-- wp:query ${query} -->
 <div class="wp-block-query"><!-- wp:post-template -->
 <!-- wp:post-title /-->
-<!-- wp:paragraph ${JSON.stringify({ className: "t-addr", ...meta({ key: "location_address" }) })} -->
+<!-- wp:paragraph ${JSON.stringify({ className: "t-addr", ...meta({ key: "estrategia_web_location_address" }) })} -->
 <p class="t-addr">x</p>
 <!-- /wp:paragraph -->
-<!-- wp:paragraph ${JSON.stringify({ className: "t-phone", ...meta({ key: "location_phone_href" }) })} -->
+<!-- wp:paragraph ${JSON.stringify({ className: "t-phone", ...meta({ key: "estrategia_web_location_phone_href" }) })} -->
 <p class="t-phone">x</p>
 <!-- /wp:paragraph -->
 <!-- /wp:post-template --></div>

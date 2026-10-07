@@ -63,7 +63,7 @@ async function startPlayground() {
   server = spawn(
     "npx",
     ["-y", "@wp-playground/cli@latest", "server", "--wp=7.1", "--php=8.3", `--port=${PORT}`,
-      "--mount-dir", ROOT, "/wordpress/wp-content/plugins/armazon-site",
+      "--mount-dir", ROOT, "/wordpress/wp-content/plugins/estrategia-web-site",
       "--blueprint=" + path.join(ROOT, "tests", "blueprint.json"), "--login"],
     { cwd: ROOT, shell: true, stdio: ["ignore", "pipe", "pipe"] }
   );
@@ -83,7 +83,7 @@ async function startPlayground() {
   // las rutas del mu-plugin de pruebas respondan.
   for (let i = 0; i < 120; i++) {
     try {
-      if ((await fetch(BASE + "/wp-json/armazon-site-test/v1/ping")).ok) return;
+      if ((await fetch(BASE + "/wp-json/estrategia-web-site-test/v1/ping")).ok) return;
     } catch {}
     await new Promise((r) => setTimeout(r, 500));
   }

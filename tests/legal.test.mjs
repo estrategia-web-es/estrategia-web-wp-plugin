@@ -1,6 +1,6 @@
 // NIVEL: 2 — WordPress de Playground, porque ESCRIBE los datos legales y una página; lo que se mira es el HTML que pinta el servidor, sin navegador.
 //
-// Datos legales (0.4.0): la clave `registry` y el shortcode [armazon_company],
+// Datos legales (0.4.0): la clave `registry` y el shortcode [estrategia_web_company],
 // que es lo que pone un dato DENTRO de una frase del aviso legal (un binding
 // de WP 7.1 sustituye el párrafo entero: ver includes/class-shortcode.php).
 import { test, before } from "node:test";
@@ -9,14 +9,14 @@ import { reset, saveCompany, seedPage, html } from "./lib.mjs";
 
 const REGISTRY = "Registro Mercantil de Mallorca, tomo 1234, folio 56, hoja PM-7890, inscripción 1.ª";
 
-const sc = (key) => `[armazon_company key="${key}"]`;
+const sc = (key) => `[estrategia_web_company key="${key}"]`;
 const PAGE = `<!-- wp:paragraph {"className":"t-legal"} -->
 <p class="t-legal">Titular: ${sc("legal_name")}, NIF ${sc("tax_id")}, domicilio en ${sc("address")}. Teléfono ${sc("phone")}, correo ${sc("email")}. Inscrita en el ${sc("registry")}.</p>
 <!-- /wp:paragraph -->
 <!-- wp:paragraph {"className":"t-unknown"} -->
 <p class="t-unknown">(${sc("phone_mobile")})</p>
 <!-- /wp:paragraph -->
-<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"armazon-site/company","args":{"key":"registry"}}}}} -->
+<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"estrategia-web-site/company","args":{"key":"registry"}}}}} -->
 <p class="t-bound">x</p>
 <!-- /wp:paragraph -->`;
 
@@ -44,7 +44,7 @@ test("registry (0.4.0): se guarda por REST sin HTML y la fusión no la borra", a
   await saveCompany({ registry: REGISTRY });
 });
 
-test("frase legal con [armazon_company]: razón social, NIF, domicilio en una línea, teléfono, correo y registro", async () => {
+test("frase legal con [estrategia_web_company]: razón social, NIF, domicilio en una línea, teléfono, correo y registro", async () => {
   const { status, text } = await html(page.url);
   assert.equal(status, 200);
   assert.equal(
@@ -52,12 +52,12 @@ test("frase legal con [armazon_company]: razón social, NIF, domicilio en una l�
     "Titular: Lavandería Tom &amp; Cía SL, NIF B07000000, domicilio en Calle Mayor 1, 07001 Palma. " +
       "Teléfono 971 12 34 56, correo hola@ejemplo.test. Inscrita en el " + REGISTRY + "."
   );
-  assert.ok(!text.includes("[armazon_company"), "ningún shortcode sin pintar");
+  assert.ok(!text.includes("[estrategia_web_company"), "ningún shortcode sin pintar");
 });
 
 test("una clave que no existe sale vacía, no el shortcode ni un error", async () => {
   const { text } = await html(page.url);
-  // Entre paréntesis y no corchetes: «[[armazon_company …]]» es como se ESCAPA
+  // Entre paréntesis y no corchetes: «[[estrategia_web_company …]]» es como se ESCAPA
   // un shortcode en WordPress (sale literal), no un shortcode entre corchetes.
   assert.equal(between(text, "t-unknown"), "()");
 });

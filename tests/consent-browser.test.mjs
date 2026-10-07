@@ -5,10 +5,10 @@
 // - sale; Aceptar y Rechazar pesan igual (AEPD); rechazar guarda la cookie
 //   con el formato del padre y persiste; no ejecuta lo rechazado;
 // - el enlace «Configurar cookies» (nombre nuevo y alias viejo) lo reabre;
-// - contrato JS: window.armazonConsent (categories, has, get, open, grant) y
-//   el evento «armazon:consent» con detail.accepted; aceptar activa los
-//   <script type="text/plain" data-armazon-consent>;
-// - «armazon:consent-ready» (0.5.0) sale una vez al arrancar, también sin
+// - contrato JS: window.estrategiaWebConsent (categories, has, get, open, grant) y
+//   el evento «estrategia-web:consent» con detail.accepted; aceptar activa los
+//   <script type="text/plain" data-estrategia-web-consent>;
+// - «estrategia-web:consent-ready» (0.5.0) sale una vez al arrancar, también sin
 //   elección: Matomo lo necesita (ver la trampa 1 de class-matomo.php);
 // - una cookie guardada por el aviso del PADRE (mismo formato y revisión)
 //   vale: el aviso no vuelve a salir;
@@ -20,7 +20,7 @@
 //
 // Vista fallar el 05-10-2026 con seis mutantes, cada uno pillado: rel con
 // nofollow, revisión distinta (la cookie del padre deja de valer), alias sin
-// registrar, sin el evento armazon:consent, sin armazon:consent-ready y el
+// registrar, sin el evento estrategia-web:consent, sin estrategia-web:consent-ready y el
 // «Powered by» en #aaa (contraste 2,3:1).
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
@@ -36,8 +36,8 @@ before(async () => {
   browser = await playwright().chromium.launch();
   await reset();
   // theme_css: lo que emite el theme.json de Lavandería (ver la prueba del hueco).
-  await setup({ categories: ["statistics", "maps"], script: true, theme_css: ":root :where(p){margin-top:0;margin-bottom:0}" });
-  ({ url: pageUrl } = await seedPage('<!-- wp:paragraph --><p>Pie</p><!-- /wp:paragraph --><!-- wp:armazon-site/consent /--><!-- wp:armazon/consent {"label":"Alias viejo"} /-->', "prueba-aviso"));
+  await setup({ categories: ["statistics", "maps"], script: true, powered_by: { show: true }, theme_css: ":root :where(p){margin-top:0;margin-bottom:0}" });
+  ({ url: pageUrl } = await seedPage('<!-- wp:paragraph --><p>Pie</p><!-- /wp:paragraph --><!-- wp:estrategia-web-site/consent /--><!-- wp:armazon/consent {"label":"Alias viejo"} /-->', "prueba-aviso"));
 });
 after(() => browser?.close());
 
@@ -51,7 +51,7 @@ async function open(cookies = []) {
   return { ctx, page };
 }
 
-const notice = (page) => page.locator("#armazon-consent");
+const notice = (page) => page.locator("#estrategia-web-consent");
 
 test("consent (0.5.0): sale, aceptar y rechazar pesan igual, rechazar guarda la cookie del padre y persiste", async () => {
   const { ctx, page } = await open();
@@ -65,14 +65,14 @@ test("consent (0.5.0): sale, aceptar y rechazar pesan igual, rechazar guarda la 
 
   await page.getByRole("button", { name: "Rechazar todas" }).click();
   await notice(page).waitFor({ state: "hidden" });
-  const cookie = (await ctx.cookies()).find((c) => c.name === "armazon_consent");
-  assert.ok(cookie, "no se guardó la cookie armazon_consent");
+  const cookie = (await ctx.cookies()).find((c) => c.name === "estrategia_web_consent");
+  assert.ok(cookie, "no se guardó la cookie estrategia_web_consent");
   assert.match(decodeURIComponent(cookie.value), /^[0-9a-f]{8}\.\.\d+$/, `formato de cookie inesperado: ${cookie.value}`);
   await page.reload({ waitUntil: "networkidle" });
-  await page.waitForFunction(() => window.armazonConsent);
+  await page.waitForFunction(() => window.estrategiaWebConsent);
   assert.ok(await notice(page).isHidden(), "el aviso vuelve a salir tras rechazar");
-  assert.deepEqual(await page.evaluate(() => window.armazonConsent.get()), []);
-  assert.equal(await page.evaluate(() => window.armazonTestStatistics), undefined, "se ejecutó un script de estadísticas rechazado");
+  assert.deepEqual(await page.evaluate(() => window.estrategiaWebConsent.get()), []);
+  assert.equal(await page.evaluate(() => window.estrategiaWebTestStatistics), undefined, "se ejecutó un script de estadísticas rechazado");
   assert.deepEqual(page.errors, []);
   await ctx.close();
 });
@@ -84,50 +84,50 @@ test("consent (0.5.0): el enlace del pie lo reabre (nombre nuevo y alias armazon
   for (const name of ["Configurar cookies", "Alias viejo"]) {
     await page.getByRole("button", { name, exact: true }).click();
     await notice(page).waitFor({ state: "visible" });
-    await page.waitForFunction(() => document.activeElement?.id === "armazon-consent-title");
+    await page.waitForFunction(() => document.activeElement?.id === "estrategia-web-consent-title");
     await page.keyboard.press("Escape");
     await notice(page).waitFor({ state: "hidden" });
   }
   await ctx.close();
 });
 
-test("consent (0.5.0): contrato JS — evento armazon:consent con detail.accepted, has/get/categories, scripts diferidos, grant y open", async () => {
+test("consent (0.5.0): contrato JS — evento estrategia-web:consent con detail.accepted, has/get/categories, scripts diferidos, grant y open", async () => {
   const { ctx, page } = await open();
   await notice(page).waitFor({ state: "visible" });
-  assert.deepEqual(await page.evaluate(() => window.armazonConsent.categories), ["statistics", "maps"]);
-  assert.equal(await page.evaluate(() => window.armazonConsent.get()), null, "sin elegir, get() es null");
-  assert.equal(await page.evaluate(() => window.armazonConsent.has("necessary")), true);
+  assert.deepEqual(await page.evaluate(() => window.estrategiaWebConsent.categories), ["statistics", "maps"]);
+  assert.equal(await page.evaluate(() => window.estrategiaWebConsent.get()), null, "sin elegir, get() es null");
+  assert.equal(await page.evaluate(() => window.estrategiaWebConsent.has("necessary")), true);
 
   // grant: añade UNA categoría, guarda y lanza el evento; el aviso sigue abierto.
   await page.evaluate(() => {
     window.seen = [];
-    document.addEventListener("armazon:consent", (e) => window.seen.push(e.detail.accepted));
+    document.addEventListener("estrategia-web:consent", (e) => window.seen.push(e.detail.accepted));
   });
-  await page.evaluate(() => window.armazonConsent.grant("maps"));
+  await page.evaluate(() => window.estrategiaWebConsent.grant("maps"));
   assert.deepEqual(await page.evaluate(() => window.seen), [["maps"]]);
-  assert.deepEqual(await page.evaluate(() => window.armazonConsent.get()), ["maps"]);
+  assert.deepEqual(await page.evaluate(() => window.estrategiaWebConsent.get()), ["maps"]);
   assert.ok(await notice(page).isVisible(), "grant no cierra el aviso");
-  await page.evaluate(() => window.armazonConsent.grant("chat"));
-  assert.deepEqual(await page.evaluate(() => window.armazonConsent.get()), ["maps"], "una categoría no declarada no se concede");
+  await page.evaluate(() => window.estrategiaWebConsent.grant("chat"));
+  assert.deepEqual(await page.evaluate(() => window.estrategiaWebConsent.get()), ["maps"], "una categoría no declarada no se concede");
 
   // Aceptar todas: evento con las dos, script diferido activado.
   await page.getByRole("button", { name: "Aceptar todas" }).click();
-  await page.waitForFunction(() => window.armazonTestStatistics === true);
+  await page.waitForFunction(() => window.estrategiaWebTestStatistics === true);
   assert.deepEqual(await page.evaluate(() => window.seen.at(-1)), ["statistics", "maps"]);
-  assert.equal(await page.evaluate(() => window.armazonConsent.has("statistics")), true);
+  assert.equal(await page.evaluate(() => window.estrategiaWebConsent.has("statistics")), true);
 
   // Al recargar: sin aviso, evento al arrancar con la elección guardada.
   await page.addInitScript(() => {
     window.seen = [];
-    document.addEventListener("armazon:consent", (e) => window.seen.push(e.detail.accepted));
+    document.addEventListener("estrategia-web:consent", (e) => window.seen.push(e.detail.accepted));
   });
   await page.reload({ waitUntil: "networkidle" });
-  await page.waitForFunction(() => window.armazonTestStatistics === true);
+  await page.waitForFunction(() => window.estrategiaWebTestStatistics === true);
   assert.ok(await notice(page).isHidden(), "el aviso vuelve a salir tras aceptar");
   assert.deepEqual(await page.evaluate(() => window.seen), [["statistics", "maps"]], "el evento se lanza al arrancar si ya había elección");
 
   // open() lo reabre con lo elegido marcado.
-  await page.evaluate(() => window.armazonConsent.open());
+  await page.evaluate(() => window.estrategiaWebConsent.open());
   await notice(page).waitFor({ state: "visible" });
   assert.equal(await page.getByRole("checkbox", { name: /Estadísticas/ }).isChecked(), true);
   assert.deepEqual(page.errors, []);
@@ -137,18 +137,18 @@ test("consent (0.5.0): contrato JS — evento armazon:consent con detail.accepte
 test("consent (0.5.0): una elección guardada por el aviso del PADRE (≤ 0.6.0) sigue valiendo: no vuelve a salir", async () => {
   // La cookie tal como la escribía armazon-wp-padre/blocks/consent/view.js.
   const value = `${md5("statistics,maps|1")}.maps.${Math.floor(Date.now() / 1000)}`;
-  const { ctx, page } = await open([{ name: "armazon_consent", value: encodeURIComponent(value), url: BASE + "/" }]);
-  await page.waitForFunction(() => window.armazonConsent);
+  const { ctx, page } = await open([{ name: "estrategia_web_consent", value: encodeURIComponent(value), url: BASE + "/" }]);
+  await page.waitForFunction(() => window.estrategiaWebConsent);
   assert.ok(await notice(page).isHidden(), "el aviso vuelve a salir a quien ya eligió con el padre");
-  assert.deepEqual(await page.evaluate(() => window.armazonConsent.get()), ["maps"]);
+  assert.deepEqual(await page.evaluate(() => window.estrategiaWebConsent.get()), ["maps"]);
   await ctx.close();
 });
 
-test("consent (0.5.0): «armazon:consent-ready» se lanza UNA vez al arrancar, también sin elección (null), con la API ya puesta", async () => {
+test("consent (0.5.0): «estrategia-web:consent-ready» se lanza UNA vez al arrancar, también sin elección (null), con la API ya puesta", async () => {
   const ctx = await browser.newContext();
   await ctx.addInitScript(() => {
     window.ready = [];
-    document.addEventListener("armazon:consent-ready", (e) => window.ready.push([e.detail.accepted, typeof window.armazonConsent?.get]));
+    document.addEventListener("estrategia-web:consent-ready", (e) => window.ready.push([e.detail.accepted, typeof window.estrategiaWebConsent?.get]));
   });
   const page = await ctx.newPage();
   await page.goto(pageUrl, { waitUntil: "networkidle" });
@@ -165,10 +165,10 @@ test("consent (0.5.1): abierto, es lo PRIMERO al tabular; se sale con Tab (sin t
   const { ctx, page } = await open();
   await notice(page).waitFor({ state: "visible" });
   await page.keyboard.press("Tab");
-  const inside = () => page.evaluate(() => !!document.activeElement?.closest("#armazon-consent"));
+  const inside = () => page.evaluate(() => !!document.activeElement?.closest("#estrategia-web-consent"));
   assert.ok(await inside(), `el primer Tab va a ${await page.evaluate(() => document.activeElement?.outerHTML.slice(0, 80))}, no al aviso`);
   // Sin trampa: se sale con Tab en, como mucho, tantos pasos como enfocables tiene.
-  const stops = await page.evaluate(() => document.querySelectorAll("#armazon-consent a[href], #armazon-consent button:not([disabled])").length);
+  const stops = await page.evaluate(() => document.querySelectorAll("#estrategia-web-consent a[href], #estrategia-web-consent button:not([disabled])").length);
   let left = false;
   for (let i = 0; i <= stops && !left; i++) {
     await page.keyboard.press("Tab");
@@ -191,12 +191,12 @@ test("consent (0.5.1): entre el texto y los botones hay al menos 16 px, a 402 y 
     await page.goto(pageUrl, { waitUntil: "networkidle" });
     await notice(page).waitFor({ state: "visible" });
     const m = await page.evaluate(() => {
-      const text = document.querySelector(".armazon-consent__text");
-      const title = document.querySelector(".armazon-consent__title");
+      const text = document.querySelector(".estrategia-web-consent__text");
+      const title = document.querySelector(".estrategia-web-consent__title");
       const range = document.createRange();
       range.selectNodeContents(text);
       const lastLine = Math.max(...[...range.getClientRects()].map((r) => r.bottom));
-      const button = document.querySelector(".armazon-consent__actions").getBoundingClientRect().top;
+      const button = document.querySelector(".estrategia-web-consent__actions").getBoundingClientRect().top;
       return { gap: button - lastLine, titleGap: text.getBoundingClientRect().top - title.getBoundingClientRect().bottom };
     });
     assert.ok(m.gap >= 16, `${width}: entre la última línea del texto y los botones hay ${m.gap.toFixed(1)} px`);
@@ -237,7 +237,7 @@ test("consent (0.5.0): «Powered by» visible, pequeño (no compite con los boto
       }
     }
     const s = getComputedStyle(el);
-    const button = getComputedStyle(document.querySelector(".armazon-consent__button"));
+    const button = getComputedStyle(document.querySelector(".estrategia-web-consent__button"));
     return { color: s.color, bg, opacity: s.opacity, size: parseFloat(s.fontSize), buttonSize: parseFloat(button.fontSize) };
   });
   assert.equal(m.opacity, "1", "la línea no debe ir con opacidad (el contraste medido dejaría de valer)");

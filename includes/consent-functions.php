@@ -10,18 +10,18 @@
  * redeclararlas. Ver la cabecera de includes/class-consent.php.
  *
  * Cómo se mantiene: una función pública nueva de Consent que tenga sentido
- * llamar desde un tema lleva aquí su envoltorio armazon_consent_*. Quitar
+ * llamar desde un tema lleva aquí su envoltorio estrategia_web_consent_*. Quitar
  * una es versión MAYOR.
  *
- * @package armazon-site
+ * @package estrategia-web-site
  */
 
-use Armazon\Site\Consent;
+use EstrategiaWeb\Site\Consent;
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ARMAZON_CONSENT_COOKIE' ) ) {
-	define( 'ARMAZON_CONSENT_COOKIE', Consent::COOKIE );
+if ( ! defined( 'ESTRATEGIA_WEB_CONSENT_COOKIE' ) ) {
+	define( 'ESTRATEGIA_WEB_CONSENT_COOKIE', Consent::COOKIE );
 }
 
 /**
@@ -29,7 +29,7 @@ if ( ! defined( 'ARMAZON_CONSENT_COOKIE' ) ) {
  *
  * @return array<string, array{label: string, description: string}>
  */
-function armazon_consent_known_categories(): array {
+function estrategia_web_consent_known_categories(): array {
 	return Consent::known_categories();
 }
 
@@ -38,17 +38,17 @@ function armazon_consent_known_categories(): array {
  *
  * @return string[]
  */
-function armazon_consent_categories(): array {
+function estrategia_web_consent_categories(): array {
 	return Consent::categories();
 }
 
 /** Revisión de las categorías declaradas. */
-function armazon_consent_revision(): string {
+function estrategia_web_consent_revision(): string {
 	return Consent::revision();
 }
 
 /** Vida de la elección, en segundos. */
-function armazon_consent_max_age(): int {
+function estrategia_web_consent_max_age(): int {
 	return Consent::max_age();
 }
 
@@ -57,7 +57,7 @@ function armazon_consent_max_age(): int {
  *
  * @return string[]|null
  */
-function armazon_consent_choice(): ?array {
+function estrategia_web_consent_choice(): ?array {
 	return Consent::choice();
 }
 
@@ -67,6 +67,6 @@ function armazon_consent_choice(): ?array {
  *
  * @param string $category Slug de la categoría.
  */
-function armazon_consent_has( string $category ): bool {
+function estrategia_web_consent_has( string $category ): bool {
 	return Consent::has( $category );
 }

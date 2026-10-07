@@ -5,7 +5,7 @@
  * verse bien aunque la web cambie de tema. No llevan ningún color propio: leen
  * los tokens de theme.json del tema activo (base, contrast, border, spacing,
  * font-size) y, si el tema no los tiene, caen a blanco/negro. El tema AFINA
- * con sus tokens o con CSS sobre .armazon-consent (más específico o cargado
+ * con sus tokens o con CSS sobre .estrategia-web-consent (más específico o cargado
  * después); no se copia esta hoja en el tema.
  *
  * Los tres botones del aviso comparten clase y estilo A PROPÓSITO: la AEPD
@@ -18,7 +18,7 @@
  * tests/consent-browser.test.mjs). Un tema que la atenúe tiene que volver a
  * medirlo.
  */
-.armazon-consent {
+.estrategia-web-consent {
 	position: fixed;
 	inset-inline: var(--wp--preset--spacing--16, 1rem);
 	inset-block-end: var(--wp--preset--spacing--16, 1rem);
@@ -35,8 +35,8 @@
 	box-shadow: 0 0.5rem 2rem rgb(0 0 0 / 0.2);
 }
 
-.armazon-consent[hidden],
-.armazon-consent__settings[hidden] {
+.estrategia-web-consent[hidden],
+.estrategia-web-consent__settings[hidden] {
 	display: none;
 }
 
@@ -51,28 +51,28 @@
  * casi tocaba el enlace de la política. tests/consent-browser.test.mjs pide
  * al menos 16 px, con la regla de Lavandería puesta.
  */
-.armazon-consent .armazon-consent__title {
+.estrategia-web-consent .estrategia-web-consent__title {
 	margin: 0 0 var(--wp--preset--spacing--8, 0.5rem);
 	font-size: var(--wp--preset--font-size--large, 1.25rem);
 }
 
-.armazon-consent .armazon-consent__text {
+.estrategia-web-consent .estrategia-web-consent__text {
 	margin: 0 0 var(--wp--preset--spacing--24, 1.5rem);
 	font-size: var(--wp--preset--font-size--small, 0.875rem);
 }
 
-.armazon-consent__settings fieldset {
+.estrategia-web-consent__settings fieldset {
 	margin: 0 0 var(--wp--preset--spacing--16, 1rem);
 	padding: 0;
 	border: 0;
 }
 
-.armazon-consent__settings legend {
+.estrategia-web-consent__settings legend {
 	font-weight: 600;
 	margin-block-end: var(--wp--preset--spacing--8, 0.5rem);
 }
 
-.armazon-consent__category {
+.estrategia-web-consent__category {
 	display: flex;
 	gap: var(--wp--preset--spacing--8, 0.5rem);
 	align-items: flex-start;
@@ -80,35 +80,35 @@
 	font-size: var(--wp--preset--font-size--small, 0.875rem);
 }
 
-.armazon-consent__category input {
+.estrategia-web-consent__category input {
 	margin-block-start: 0.2em;
 	inline-size: 1.125rem;
 	block-size: 1.125rem;
 }
 
-.armazon-consent__actions {
+.estrategia-web-consent__actions {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--wp--preset--spacing--8, 0.5rem);
 }
 
-.armazon-consent__button {
+.estrategia-web-consent__button {
 	flex: 1 1 8rem;
 	cursor: pointer;
 }
 
-.armazon-consent__settings .armazon-consent__button {
+.estrategia-web-consent__settings .estrategia-web-consent__button {
 	margin-block-end: var(--wp--preset--spacing--16, 1rem);
 }
 
-.armazon-consent .armazon-consent__powered {
+.estrategia-web-consent .estrategia-web-consent__powered {
 	margin: var(--wp--preset--spacing--8, 0.5rem) 0 0;
 	font-size: 0.75rem;
 	line-height: 1.4;
 	text-align: end;
 }
 
-.armazon-consent__powered a {
+.estrategia-web-consent__powered a {
 	/* 0.5.1: diana táctil de 24 px de alto como mínimo (WCAG 2.5.8; Lighthouse
 	   target-size la daba pequeña en la auditoría de Lavandería). */
 	display: inline-block;
@@ -119,18 +119,18 @@
 
 /* 0.5.1: el enlace dentro del texto, subrayado. Solo con el color no se
    distingue del párrafo (WCAG 1.4.1; auditoría de Lavandería). */
-.armazon-consent .armazon-consent__text a {
+.estrategia-web-consent .estrategia-web-consent__text a {
 	text-decoration: underline;
 }
 
-.armazon-consent__powered a:hover,
-.armazon-consent__powered a:focus-visible {
+.estrategia-web-consent__powered a:hover,
+.estrategia-web-consent__powered a:focus-visible {
 	text-decoration: underline;
 }
 
 /* Solo para lectores de pantalla. Propia: no se cuenta con el
    .screen-reader-text del tema, que otro tema puede no tener. */
-.armazon-consent__sr {
+.estrategia-web-consent__sr {
 	position: absolute;
 	inline-size: 1px;
 	block-size: 1px;
@@ -142,7 +142,7 @@
 	border: 0;
 }
 
-.armazon-consent-link__button {
+.estrategia-web-consent-link__button {
 	padding: 0;
 	border: 0;
 	background: none;
@@ -153,21 +153,21 @@
 }
 
 /*
- * Transiciones entre páginas (0.5.1; las pone el tema padre Armazón desde la
+ * Transiciones entre páginas (0.5.1; las pone el tema padre Estrategia Web desde la
  * 0.7.5). El aviso tiene nombre propio y ninguna animación: mientras dure el
  * fundido de la página se queda QUIETO donde estaba, en vez de fundirse con
  * ella y volver a salir de golpe cuando view.js lo enseña en la página nueva
  * (en la nueva sale oculto hasta que corre el módulo). Sin transiciones, esto
  * no hace nada. Escondido (ya elegido) no participa: display none.
- * Cómo se mantiene: el nombre «armazon-consent» no lo puede usar nadie más en
+ * Cómo se mantiene: el nombre «estrategia-web-consent» no lo puede usar nadie más en
  * la página (un nombre repetido aborta la transición entera).
  */
-.armazon-consent {
-	view-transition-name: armazon-consent;
+.estrategia-web-consent {
+	view-transition-name: estrategia-web-consent;
 }
 
-::view-transition-group(armazon-consent),
-::view-transition-old(armazon-consent),
-::view-transition-new(armazon-consent) {
+::view-transition-group(estrategia-web-consent),
+::view-transition-old(estrategia-web-consent),
+::view-transition-new(estrategia-web-consent) {
 	animation: none;
 }

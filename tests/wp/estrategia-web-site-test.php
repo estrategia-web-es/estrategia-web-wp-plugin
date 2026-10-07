@@ -3,7 +3,7 @@
  * SOLO PRUEBAS. Lo carga un mu-plugin que escribe tests/blueprint.json en el
  * WordPress de Playground; en una web real no lo carga nadie.
  *
- * Y aun así no hace nada si no está definida ARMAZON_SITE_TESTING, que solo
+ * Y aun así no hace nada si no está definida ESTRATEGIA_WEB_SITE_TESTING, que solo
  * define ese cargador. Doble llave a propósito: estas rutas REST abren la
  * base de datos a cualquiera (permission_callback __return_true) y crean
  * usuarios con contraseña de aplicación. Al desplegar en una web, la carpeta
@@ -14,19 +14,19 @@
  *   etiquetas se prueban en castellano, que es como salen en las webs.
  * - Contraseñas de aplicación sin HTTPS (Playground va por http): así las
  *   pruebas hablan con la API REST de verdad como admin y como autor.
- * - Rutas armazon-site-test/v1/*: ping, reset, users, page, raw-post,
+ * - Rutas estrategia-web-site-test/v1/*: ping, reset, users, page, raw-post,
  *   consent-categories (0.3.0, solo lee un filtro), consent-setup (0.5.0).
  * - consent-setup (0.5.0) hace de TEMA para el aviso de cookies: guarda en la
- *   opción armazon_site_test_consent qué categorías declara «la web», qué
+ *   opción estrategia_web_site_test_consent qué categorías declara «la web», qué
  *   devuelve el filtro del «Powered by» y si hay un
- *   <script type="text/plain" data-armazon-consent="statistics"> en el pie.
+ *   <script type="text/plain" data-estrategia-web-consent="statistics"> en el pie.
  *   Es lo que en una web pone el functions.php del tema; aquí no hay tema
  *   propio (Playground usa el de por defecto). reset la borra.
  * - WebP (0.5.1): webp-support, jpeg (un JPEG hecho con GD), webp-setup (hace
- *   de tema con el filtro armazon_site_webp; reset lo borra) y regenerate,
+ *   de tema con el filtro estrategia_web_site_webp; reset lo borra) y regenerate,
  *   que imita `wp media regenerate` (WP-CLI no está en Playground).
  * - Enlaces externos (0.5.2): external-links-setup hace de tema con el filtro
- *   armazon_site_external_links (reset lo borra).
+ *   estrategia_web_site_external_links (reset lo borra).
  *
  * Lo que NO hace: guardar ajustes ni crear contenido por la puerta de atrás.
  * Eso va por /wp/v2/* con usuario, que es lo que se prueba.
@@ -34,7 +34,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'ARMAZON_SITE_TESTING' ) || true !== ARMAZON_SITE_TESTING ) {
+if ( ! defined( 'ESTRATEGIA_WEB_SITE_TESTING' ) || true !== ESTRATEGIA_WEB_SITE_TESTING ) {
 	return;
 }
 
@@ -44,16 +44,16 @@ add_filter( 'wp_is_application_passwords_available', '__return_true' );
 
 // 0.5.0: lo que haría el tema con el aviso de cookies (ver la cabecera, consent-setup).
 add_filter(
-	'armazon_consent_categories',
+	'estrategia_web_consent_categories',
 	static function ( $categories ) {
-		$setup = (array) get_option( 'armazon_site_test_consent', array() );
+		$setup = (array) get_option( 'estrategia_web_site_test_consent', array() );
 		return array_values( array_unique( array_merge( (array) $categories, (array) ( $setup['categories'] ?? array() ) ) ) );
 	}
 );
 add_filter(
-	'armazon_site_consent_powered_by',
+	'estrategia_web_site_consent_powered_by',
 	static function ( $powered ) {
-		$setup = (array) get_option( 'armazon_site_test_consent', array() );
+		$setup = (array) get_option( 'estrategia_web_site_test_consent', array() );
 		if ( ! array_key_exists( 'powered_by', $setup ) ) {
 			return $powered;
 		}
@@ -62,40 +62,40 @@ add_filter(
 );
 // 0.5.1: CSS que pondría el tema (consent-setup «theme_css»). Para el hueco
 // del aviso: Lavandería emite desde su theme.json «:root :where(p) { margin: 0 }»,
-// que empata en especificidad con .armazon-consent__text y, cargado después, gana.
+// que empata en especificidad con .estrategia-web-consent__text y, cargado después, gana.
 add_action(
 	'wp_head',
 	static function () {
-		$setup = (array) get_option( 'armazon_site_test_consent', array() );
+		$setup = (array) get_option( 'estrategia_web_site_test_consent', array() );
 		if ( ! empty( $setup['theme_css'] ) ) {
-			echo '<style id="armazon-test-theme-css">' . wp_strip_all_tags( (string) $setup['theme_css'] ) . '</style>';
+			echo '<style id="estrategia-web-test-theme-css">' . wp_strip_all_tags( (string) $setup['theme_css'] ) . '</style>';
 		}
 	},
 	100
 );
 // 0.5.1: lo que haría un tema que apaga el WebP (opción que pone /webp-setup).
 add_filter(
-	'armazon_site_webp',
+	'estrategia_web_site_webp',
 	static function ( $enabled ) {
-		$setup = get_option( 'armazon_site_test_webp', null );
+		$setup = get_option( 'estrategia_web_site_test_webp', null );
 		return null === $setup ? $enabled : (bool) $setup;
 	}
 );
 // 0.5.2: lo que haría un tema que apaga los enlaces externos en pestaña nueva
 // (opción que pone /external-links-setup; reset la borra).
 add_filter(
-	'armazon_site_external_links',
+	'estrategia_web_site_external_links',
 	static function ( $enabled ) {
-		$setup = get_option( 'armazon_site_test_external_links', null );
+		$setup = get_option( 'estrategia_web_site_test_external_links', null );
 		return null === $setup ? $enabled : (bool) $setup;
 	}
 );
 add_action(
 	'wp_footer',
 	static function () {
-		$setup = (array) get_option( 'armazon_site_test_consent', array() );
+		$setup = (array) get_option( 'estrategia_web_site_test_consent', array() );
 		if ( ! empty( $setup['script'] ) ) {
-			echo '<script type="text/plain" data-armazon-consent="statistics">window.armazonTestStatistics = true;</script>';
+			echo '<script type="text/plain" data-estrategia-web-consent="statistics">window.estrategiaWebTestStatistics = true;</script>';
 		}
 	}
 );
@@ -103,7 +103,7 @@ add_action(
 add_action(
 	'rest_api_init',
 	static function () {
-		$ns    = 'armazon-site-test/v1';
+		$ns    = 'estrategia-web-site-test/v1';
 		$route = static function ( string $path, string $methods, callable $cb ) use ( $ns ) {
 			register_rest_route( $ns, $path, array( 'methods' => $methods, 'callback' => $cb, 'permission_callback' => '__return_true' ) );
 		};
@@ -135,7 +135,7 @@ add_action(
 			'POST',
 			static function ( WP_REST_Request $r ) {
 				$enabled = $r->get_json_params()['enabled'] ?? null;
-				null === $enabled ? delete_option( 'armazon_site_test_webp' ) : update_option( 'armazon_site_test_webp', $enabled ? 1 : 0 );
+				null === $enabled ? delete_option( 'estrategia_web_site_test_webp' ) : update_option( 'estrategia_web_site_test_webp', $enabled ? 1 : 0 );
 				return array( 'ok' => true );
 			}
 		);
@@ -145,7 +145,7 @@ add_action(
 			'POST',
 			static function ( WP_REST_Request $r ) {
 				$enabled = $r->get_json_params()['enabled'] ?? null;
-				null === $enabled ? delete_option( 'armazon_site_test_external_links' ) : update_option( 'armazon_site_test_external_links', $enabled ? 1 : 0 );
+				null === $enabled ? delete_option( 'estrategia_web_site_test_external_links' ) : update_option( 'estrategia_web_site_test_external_links', $enabled ? 1 : 0 );
 				return array( 'ok' => true );
 			}
 		);
@@ -175,21 +175,21 @@ add_action(
 		);
 
 		// 0.3.0. Lo que vería el aviso del tema padre (que aquí no está): las
-		// categorías tras el filtro armazon_consent_categories, partiendo de
+		// categorías tras el filtro estrategia_web_consent_categories, partiendo de
 		// la de un hijo que declara solo «maps».
-		$route( '/consent-categories', 'GET', static fn() => array_values( (array) apply_filters( 'armazon_consent_categories', array( 'maps' ) ) ) );
+		$route( '/consent-categories', 'GET', static fn() => array_values( (array) apply_filters( 'estrategia_web_consent_categories', array( 'maps' ) ) ) );
 
 		// 0.5.0. Hace de tema para el aviso de cookies (ver la cabecera).
 		$route(
 			'/consent-setup',
 			'POST',
 			static function ( WP_REST_Request $r ) {
-				update_option( 'armazon_site_test_consent', (array) $r->get_json_params() );
+				update_option( 'estrategia_web_site_test_consent', (array) $r->get_json_params() );
 				return array(
 					'ok'         => true,
-					'active'     => \Armazon\Site\Consent::active(),
-					'categories' => \Armazon\Site\Consent::categories(),
-					'revision'   => \Armazon\Site\Consent::revision(),
+					'active'     => \EstrategiaWeb\Site\Consent::active(),
+					'categories' => \EstrategiaWeb\Site\Consent::categories(),
+					'revision'   => \EstrategiaWeb\Site\Consent::revision(),
 				);
 			}
 		);
@@ -200,10 +200,10 @@ add_action(
 			'POST',
 			static function () {
 				global $wpdb;
-				delete_option( 'armazon_site' );
-				delete_option( 'armazon_site_test_consent' );
-				delete_option( 'armazon_site_test_webp' );
-				delete_option( 'armazon_site_test_external_links' );
+				delete_option( 'estrategia_web_site' );
+				delete_option( 'estrategia_web_site_test_consent' );
+				delete_option( 'estrategia_web_site_test_webp' );
+				delete_option( 'estrategia_web_site_test_external_links' );
 				delete_option( 'rewrite_rules' );
 				$types = "'client','testimonial','location','project','portfolio'";
 				$ids   = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type IN ($types) OR (post_type = 'attachment' AND post_title LIKE 'prueba-%')" ); // phpcs:ignore

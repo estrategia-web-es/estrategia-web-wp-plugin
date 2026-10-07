@@ -33,7 +33,7 @@
  *   degradado salga negro, sin error.
  */
 
-namespace Armazon\Site;
+namespace EstrategiaWeb\Site;
 
 final class Svg_Sanitizer {
 

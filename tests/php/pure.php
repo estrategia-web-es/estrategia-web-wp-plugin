@@ -18,23 +18,23 @@ function apply_filters( string $hook, $value ) {
 	return array_key_exists( $hook, $GLOBALS['pure_filters'] ) ? $GLOBALS['pure_filters'][ $hook ] : $value;
 }
 require __DIR__ . '/../../includes/class-webp.php';
-use Armazon\Site\Webp;
+use EstrategiaWeb\Site\Webp;
 $webp_quality = array(
 	'webp'  => Webp::quality( 82, 'image/webp' ),
 	'jpeg'  => Webp::quality( 82, 'image/jpeg' ),
 	'png'   => Webp::quality( 90, 'image/png' ),
 );
-$GLOBALS['pure_filters']['armazon_site_webp_quality'] = 60;
+$GLOBALS['pure_filters']['estrategia_web_site_webp_quality'] = 60;
 $webp_quality['filtro'] = Webp::quality( 82, 'image/webp' );
-$GLOBALS['pure_filters']['armazon_site_webp_quality'] = 0;
+$GLOBALS['pure_filters']['estrategia_web_site_webp_quality'] = 0;
 $webp_quality['cero'] = Webp::quality( 82, 'image/webp' );
-$GLOBALS['pure_filters']['armazon_site_webp_quality'] = 140;
+$GLOBALS['pure_filters']['estrategia_web_site_webp_quality'] = 140;
 $webp_quality['tope'] = Webp::quality( 82, 'image/webp' );
 $GLOBALS['pure_filters'] = array();
 
-use Armazon\Site\External_Links;
-use Armazon\Site\Links;
-use Armazon\Site\Svg_Sanitizer;
+use EstrategiaWeb\Site\External_Links;
+use EstrategiaWeb\Site\Links;
+use EstrategiaWeb\Site\Svg_Sanitizer;
 
 $hostile = <<<'SVG'
 <?xml version="1.0"?>

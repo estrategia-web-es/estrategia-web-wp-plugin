@@ -36,7 +36,7 @@
  *   negándoselo a un autor.
  */
 
-namespace Armazon\Site;
+namespace EstrategiaWeb\Site;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -87,14 +87,14 @@ final class Svg {
 			return $file;
 		}
 		if ( 'svgz' === $ext || ! self::enabled() || ! self::user_can() ) {
-			$file['error'] = __( 'You are not allowed to upload SVG files.', 'armazon-site' );
+			$file['error'] = __( 'You are not allowed to upload SVG files.', 'estrategia-web-site' );
 			return $file;
 		}
 		$tmp = (string) ( $file['tmp_name'] ?? '' );
 		$raw = '' !== $tmp && is_readable( $tmp ) ? (string) file_get_contents( $tmp ) : ''; // phpcs:ignore WordPress.WP.AlternativeFunctions
 		$clean = '' === $raw ? null : Svg_Sanitizer::sanitize( $raw );
 		if ( null === $clean ) {
-			$file['error'] = __( 'This SVG file could not be read or is not safe, so it has not been uploaded.', 'armazon-site' );
+			$file['error'] = __( 'This SVG file could not be read or is not safe, so it has not been uploaded.', 'estrategia-web-site' );
 			return $file;
 		}
 		file_put_contents( $tmp, '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $clean ); // phpcs:ignore WordPress.WP.AlternativeFunctions

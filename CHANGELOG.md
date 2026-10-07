@@ -4,6 +4,35 @@ Una entrada por versión, la más nueva arriba. Se escribe en el mismo commit
 que sube el número (README, «Versiones»). Si una versión obliga a tocar algo
 en las webs, la entrada lo dice primero, con qué cambiar.
 
+## 1.0.0 — 07-10-2026
+
+**MAYOR: cambio de nombre. Obliga a tocar las webs:** pasar el migrador
+(abajo) y actualizar a la vez el tema padre a Estrategia Web 1.0.0.
+
+- **«Armazón Site» pasa a «Estrategia Web Site»**: carpeta y fichero
+  `estrategia-web-site/estrategia-web-site.php`, text domain, namespace
+  `EstrategiaWeb\Site`, funciones, constantes, filtros, opción, metas, fuentes
+  de bindings, bloque, cookie, API JS, evento, shortcodes, handles y clases
+  (tabla en el README, «Nombres»). Autor, Plugin URI y Author URI: Estrategia
+  Web, https://estrategiaweb.es/.
+- **Metas con prefijo**: las de los tipos (`location_…`, `client_image_fit`,
+  `testimonial_…`) pasan a `estrategia_web_…`, también como claves de los
+  bindings `core/post-meta` y de la fuente `…/location`.
+- **«Powered by Estrategia Web» APAGADO por defecto** (guideline 10 de
+  WordPress.org); se enciende con `add_filter(
+  'estrategia_web_site_consent_powered_by', '__return_true' )`.
+- **Cookie del consentimiento**: `estrategia_web_consent`, mismo formato y
+  revisión. La vieja se lee si falta la nueva y el navegador la pasa a la
+  nueva: nadie vuelve a ver el aviso por el cambio.
+- **Alias** de los nombres viejos hasta la 2.0.0
+  (`includes/class-legacy-names.php`); sustituye al alias `armazon/consent`
+  que había desde la 0.5.0.
+- **El migrador** (`includes/class-armazon-migration.php`, comando WP-CLI
+  `estrategia-web-site migrate-armazon [--dry-run]`): contenido, metas,
+  opciones, tablas de formularios, cadenas de WPML, tema y plugins activos.
+  Probado en local sobre una web cargada con los nombres viejos.
+- README: «Si cambias de proveedor».
+
 ## 0.5.4 — 06-10-2026
 
 Parche: no obliga a tocar ninguna web. Cambia el peso de los WebP que se

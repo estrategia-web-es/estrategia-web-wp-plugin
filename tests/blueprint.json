@@ -4,10 +4,10 @@
 	"steps": [
 		{
 			"step": "writeFile",
-			"path": "/wordpress/wp-content/mu-plugins/armazon-site-test-loader.php",
-			"data": "<?php\n// Solo existe en el WordPress de pruebas (tests/blueprint.json).\nconst ARMAZON_SITE_TESTING = true;\nrequire WP_CONTENT_DIR . '/plugins/armazon-site/tests/wp/armazon-site-test.php';\n"
+			"path": "/wordpress/wp-content/mu-plugins/estrategia-web-site-test-loader.php",
+			"data": "<?php\n// Solo existe en el WordPress de pruebas (tests/blueprint.json).\nconst ESTRATEGIA_WEB_SITE_TESTING = true;\nrequire WP_CONTENT_DIR . '/plugins/estrategia-web-site/tests/wp/estrategia-web-site-test.php';\n"
 		},
-		{ "step": "activatePlugin", "pluginPath": "armazon-site/armazon-site.php" },
+		{ "step": "activatePlugin", "pluginPath": "estrategia-web-site/estrategia-web-site.php" },
 		{
 			"step": "setSiteOptions",
 			"options": { "permalink_structure": "/%postname%/", "blogname": "Sitio de pruebas", "admin_email": "admin@ejemplo.test" }

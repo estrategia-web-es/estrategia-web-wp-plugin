@@ -1,9 +1,9 @@
 <?php
 /**
- * Fuente de Block Bindings `armazon-site/company`: un párrafo, un encabezado,
+ * Fuente de Block Bindings `estrategia-web-site/company`: un párrafo, un encabezado,
  * un botón o una imagen enlazados a un dato de la empresa.
  *
- *   <!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"armazon-site/company","args":{"key":"phone"}}}}} -->
+ *   <!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"estrategia-web-site/company","args":{"key":"phone"}}}}} -->
  *   <p></p>
  *   <!-- /wp:paragraph -->
  *
@@ -19,9 +19,9 @@
  *
  * Cómo se mantiene:
  * - Una clave nueva se añade en Company (no aquí): esta clase no tiene lista.
- * - Desde 0.2.0 hay una segunda fuente, `armazon-site/location` (los datos de
+ * - Desde 0.2.0 hay una segunda fuente, `estrategia-web-site/location` (los datos de
  *   UNA sede), en includes/class-location.php. Comparte format() con esta y
- *   el mismo script de editor; sus datos le llegan en window.armazonSiteLocation.
+ *   el mismo script de editor; sus datos le llegan en window.estrategiaWebSiteLocation.
  *   Si cambias cómo se pinta un texto o una URL, cambia en las dos: es lo que
  *   se quiere.
  * - Caso frontera: dirección y horario tienen varias líneas. En atributos de
@@ -32,13 +32,13 @@
  *   aquí no se escapara, un «<» en el nombre de la empresa sería HTML.
  */
 
-namespace Armazon\Site;
+namespace EstrategiaWeb\Site;
 
 defined( 'ABSPATH' ) || exit;
 
 final class Bindings {
 
-	public const SOURCE = 'armazon-site/company';
+	public const SOURCE = 'estrategia-web-site/company';
 
 	/** Atributos de bloque que llevan una URL (el resto se trata como texto). */
 	private const URL_ATTRIBUTES = array( 'url', 'href' );
@@ -47,7 +47,7 @@ final class Bindings {
 		register_block_bindings_source(
 			self::SOURCE,
 			array(
-				'label'              => __( 'Company details', 'armazon-site' ),
+				'label'              => __( 'Company details', 'estrategia-web-site' ),
 				'get_value_callback' => array( self::class, 'get_value' ),
 			)
 		);
@@ -68,7 +68,7 @@ final class Bindings {
 
 	/**
 	 * Un valor en texto plano, listo para el atributo enlazado. Lo comparten
-	 * esta fuente y `armazon-site/location` (Location): el mismo tratamiento
+	 * esta fuente y `estrategia-web-site/location` (Location): el mismo tratamiento
 	 * en las dos, a propósito.
 	 */
 	public static function format( string $value, string $attribute_name ): string {
@@ -81,10 +81,10 @@ final class Bindings {
 	/** Valores y nombres para el editor (assets/editor.js). */
 	public static function enqueue_editor(): void {
 		wp_enqueue_script(
-			'armazon-site-editor',
-			ARMAZON_SITE_URL . 'assets/editor.js',
+			'estrategia-web-site-editor',
+			ESTRATEGIA_WEB_SITE_URL . 'assets/editor.js',
 			array( 'wp-blocks', 'wp-data', 'wp-block-editor' ),
-			ARMAZON_SITE_VERSION,
+			ESTRATEGIA_WEB_SITE_VERSION,
 			false
 		);
 		$data = array(
@@ -92,7 +92,7 @@ final class Bindings {
 			'values' => Company::values(),
 			'labels' => Company::labels(),
 		);
-		wp_add_inline_script( 'armazon-site-editor', 'window.armazonSiteCompany = ' . wp_json_encode( $data ) . ';', 'before' );
-		wp_add_inline_script( 'armazon-site-editor', 'window.armazonSiteLocation = ' . wp_json_encode( Location::editor_data() ) . ';', 'before' );
+		wp_add_inline_script( 'estrategia-web-site-editor', 'window.estrategiaWebSiteCompany = ' . wp_json_encode( $data ) . ';', 'before' );
+		wp_add_inline_script( 'estrategia-web-site-editor', 'window.estrategiaWebSiteLocation = ' . wp_json_encode( Location::editor_data() ) . ';', 'before' );
 	}
 }

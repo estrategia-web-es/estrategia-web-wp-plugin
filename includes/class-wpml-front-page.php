@@ -27,7 +27,7 @@
  *   pública allí; hay que pedir la página (curl a /en/ debe dar 200, no 301).
  */
 
-namespace Armazon\Site;
+namespace EstrategiaWeb\Site;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -37,7 +37,7 @@ final class Wpml_Front_Page {
 		if ( is_admin() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
 			return;
 		}
-		if ( ! apply_filters( 'armazon_site_wpml_front_page', true ) ) {
+		if ( ! apply_filters( 'estrategia_web_site_wpml_front_page', true ) ) {
 			return;
 		}
 		add_filter( 'option_page_on_front', array( self::class, 'translate' ), 20 );

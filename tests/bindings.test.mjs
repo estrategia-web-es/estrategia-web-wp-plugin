@@ -3,7 +3,7 @@ import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { reset, saveCompany, seedPage, html } from "./lib.mjs";
 
-const bind = (attr, key) => JSON.stringify({ metadata: { bindings: { [attr]: { source: "armazon-site/company", args: { key } } } } });
+const bind = (attr, key) => JSON.stringify({ metadata: { bindings: { [attr]: { source: "estrategia-web-site/company", args: { key } } } } });
 
 const PAGE = `<!-- wp:paragraph ${bind("content", "phone")} -->
 <p class="t-phone">Teléfono de relleno</p>
@@ -50,7 +50,7 @@ before(async () => {
 
 const between = (text, cls, tag) => text.match(new RegExp(`<${tag}[^>]*${cls}[^>]*>([\\s\\S]*?)</${tag}>`))?.[1];
 
-test("un párrafo enlazado a armazon-site/company:phone muestra el teléfono, no el texto de relleno", async () => {
+test("un párrafo enlazado a estrategia-web-site/company:phone muestra el teléfono, no el texto de relleno", async () => {
   const { status, text } = await html(page.url);
   assert.equal(status, 200);
   assert.equal(between(text, "t-phone", "p"), "971 12 34 56");

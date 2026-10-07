@@ -9,7 +9,7 @@
 //   final; un enlace-imagen toma el alt;
 // - el «Powered by» del aviso de cookies no se duplica;
 // - el contenido por REST (lo que lee el editor) no se toca;
-// - con el filtro armazon_site_external_links a false, nada.
+// - con el filtro estrategia_web_site_external_links a false, nada.
 // Qué es externo caso por caso (otro dominio, subdominios, esquemas) está en
 // el nivel 1 (tests/pure.test.mjs); aquí, lo que solo se ve pintando.
 //
@@ -56,7 +56,7 @@ let url;
 before(async () => {
   await reset();
   // Con una categoría declarada sale el aviso de cookies, y con él el «Powered by».
-  await testApi("/consent-setup", { method: "POST", body: { categories: ["maps"] } });
+  await testApi("/consent-setup", { method: "POST", body: { categories: ["maps"], powered_by: { show: true } } });
   ({ url } = await seedPage(CONTENT, "enlaces-externos"));
 });
 after(() => reset());
@@ -105,7 +105,7 @@ test("solo el frontal: el contenido por REST (lo que lee el editor) no se toca",
   assert.doesNotMatch(page.content.rendered, /target="_blank"/);
 });
 
-test("apagado con el filtro armazon_site_external_links: nada", async () => {
+test("apagado con el filtro estrategia_web_site_external_links: nada", async () => {
   await setup(false);
   try {
     const a = anchor((await html(url)).text, "x-ext");

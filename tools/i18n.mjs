@@ -4,9 +4,9 @@
 //   node tools/i18n.mjs compile  solo compilar los .po (tras traducir)
 //
 // Qué produce en languages/:
-//   armazon-site.pot                         plantilla (solo PHP)
-//   armazon-site-<locale>.po                 lo que se traduce (Poedit o a mano)
-//   armazon-site-<locale>.l10n.php           lo que lee WordPress 6.5+ (PHP)
+//   estrategia-web-site.pot                         plantilla (solo PHP)
+//   estrategia-web-site-<locale>.po                 lo que se traduce (Poedit o a mano)
+//   estrategia-web-site-<locale>.l10n.php           lo que lee WordPress 6.5+ (PHP)
 //
 // Copiado de armazon-wp-formularios y recortado: aquí NO hay JSON del editor
 // porque assets/editor.js no lleva textos (los nombres le llegan de PHP ya
@@ -24,7 +24,7 @@
 // - Quién y cuándo: quien añada o cambie un texto, en el mismo commit. Se
 //   corre esto, se traduce lo nuevo en el .po (lo que msgmerge deja «fuzzy» o
 //   vacío) y se vuelve a correr `compile`.
-// - Un idioma nuevo: copiar el .pot a armazon-site-<locale>.po, poner la
+// - Un idioma nuevo: copiar el .pot a estrategia-web-site-<locale>.po, poner la
 //   cabecera Language y traducir. Solo idiomas que vaya a leer alguien.
 // - Caso frontera: los slugs de URL (_x( 'clients', 'URL slug' )). Se
 //   traducen como un texto más, pero traducirlos CAMBIA las URL de las webs
@@ -39,7 +39,7 @@ import path from "node:path";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const LANG = path.join(ROOT, "languages");
-const DOMAIN = "armazon-site";
+const DOMAIN = "estrategia-web-site";
 const POT = path.join(LANG, `${DOMAIN}.pot`);
 
 function run(cmd, args) {
@@ -64,7 +64,7 @@ function extract() {
   fs.mkdirSync(LANG, { recursive: true });
   const tmp = fs.mkdtempSync(path.join(LANG, ".tmp-"));
   const common = ["--from-code=UTF-8", "--add-comments=translators:", "--sort-by-file", "--package-name=" + DOMAIN, "--msgid-bugs-address="];
-  const php = ["armazon-site.php", ...walk("includes", ".php"), ...walk("blocks", ".php")];
+  const php = ["estrategia-web-site.php", ...walk("includes", ".php"), ...walk("blocks", ".php")];
   run("xgettext", [...common, "--language=PHP", "--keyword=__", "--keyword=_e", "--keyword=esc_html__", "--keyword=esc_html_e", "--keyword=esc_attr__", "--keyword=esc_attr_e", "--keyword=_x:1,2c", "--keyword=_n:1,2", "-o", path.join(tmp, "php.pot"), ...php]);
 
   // block.json (0.5.0, el bloque del aviso de cookies): título, descripción y
@@ -93,7 +93,7 @@ function extract() {
 }
 
 function poFiles() {
-  return fs.readdirSync(LANG).filter((f) => /^armazon-site-[a-z]{2,3}(_[A-Z]{2})?\.po$/.test(f));
+  return fs.readdirSync(LANG).filter((f) => /^estrategia-web-site-[a-z]{2,3}(_[A-Z]{2})?\.po$/.test(f));
 }
 
 // Lector de .po mínimo: lo justo para lo que escribe msgmerge.
@@ -148,7 +148,7 @@ function compile() {
     const key = (e) => (e.msgctxt !== undefined ? e.msgctxt + "\x04" : "") + e.msgid;
 
     let php = "<?php\n// Generado por tools/i18n.mjs desde " + po + ". No se edita a mano: se edita el .po y se recompila.\nreturn array(\n";
-    php += `\t'domain' => 'armazon-site',\n\t'language' => ${phpString(locale)},\n\t'plural-forms' => ${phpString(plural)},\n\t'messages' => array(\n`;
+    php += `\t'domain' => 'estrategia-web-site',\n\t'language' => ${phpString(locale)},\n\t'plural-forms' => ${phpString(plural)},\n\t'messages' => array(\n`;
     for (const e of usable) php += `\t\t${phpString(key(e))} => ${phpString(e.msgstr.join("\0"))},\n`;
     php += "\t),\n);\n";
     fs.writeFileSync(path.join(LANG, `${DOMAIN}-${locale}.l10n.php`), php);

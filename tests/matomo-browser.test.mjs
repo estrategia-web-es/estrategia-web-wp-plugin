@@ -13,9 +13,9 @@
 // entendían de verdad (orden de carga de los dos scripts incluido).
 // Y no lo veía: al pasarla al aviso real, «elección caducada» falló 1 de cada
 // 3 veces. El aviso hidrataba DESPUÉS de window.load y Matomo nunca se
-// enteraba de «sin elegir». Arreglado con armazon:consent-ready (trampa 1 de
+// enteraba de «sin elegir». Arreglado con estrategia-web:consent-ready (trampa 1 de
 // includes/class-matomo.php); verde 5 de 5 después. También vista fallar
-// quitando el evento armazon:consent del aviso.
+// quitando el evento estrategia-web:consent del aviso.
 //
 // Cómo se mantiene: al actualizar el fixture, que la cabecera diga la
 // versión; y la prueba de control («híbrido con consentimiento SÍ pone
@@ -55,7 +55,7 @@ async function open({ cookies = [] } = {}) {
 }
 
 const matomoCookies = async (ctx) => (await ctx.cookies()).filter((c) => /^(_pk_|mtm_)/.test(c.name)).map((c) => c.name).sort();
-const consentCookie = (revision, accepted) => ({ name: "armazon_consent", value: encodeURIComponent(`${revision}.${accepted.join("~")}.${Math.floor(Date.now() / 1000)}`), url: BASE + "/" });
+const consentCookie = (revision, accepted) => ({ name: "estrategia_web_consent", value: encodeURIComponent(`${revision}.${accepted.join("~")}.${Math.floor(Date.now() / 1000)}`), url: BASE + "/" });
 
 async function until(fn, what, ms = 8000) {
   const end = Date.now() + ms;
@@ -73,7 +73,7 @@ test("matomo (0.3.0): sin configuración no se pide matomo.js", async () => {
   page.on("request", (r) => (asked ||= r.url().startsWith(MATOMO)));
   await page.goto(BASE + "/");
   await page.waitForLoadState("load");
-  assert.equal(await page.locator("#armazon-site-matomo").count(), 0);
+  assert.equal(await page.locator("#estrategia-web-site-matomo").count(), 0);
   assert.equal(asked, false, "ninguna petición a Matomo");
   assert.equal(hits.length, 0);
   await ctx.close();
@@ -88,7 +88,7 @@ test("matomo (0.3.0): modo SIN cookies mide (llega matomo.php), no deja ninguna 
   await page.evaluate(() => window._paq.push(["trackEvent", "prueba", "clic"]));
   await until(() => hits.length >= 2, "el segundo envío");
   assert.deepEqual(await matomoCookies(ctx), [], "sin cookies de Matomo");
-  assert.equal(await page.locator("#armazon-consent").count(), 0, "sin cookies no hay nada que preguntar: no hay aviso");
+  assert.equal(await page.locator("#estrategia-web-consent").count(), 0, "sin cookies no hay nada que preguntar: no hay aviso");
   assert.deepEqual(errors, []);
   await ctx.close();
 });
@@ -100,7 +100,7 @@ test("matomo (0.5.0): HÍBRIDO con el aviso REAL — sin cookies hasta «Aceptar
   const { ctx, page, hits, errors } = await open();
   await page.goto(BASE + "/");
   await until(() => hits.some((u) => u.includes("matomo.php")), "la visita sin cookies");
-  const notice = page.locator("#armazon-consent");
+  const notice = page.locator("#estrategia-web-consent");
   await notice.waitFor({ state: "visible" });
   assert.deepEqual(await matomoCookies(ctx), [], "antes de contestar, ninguna cookie");
 
@@ -114,7 +114,7 @@ test("matomo (0.5.0): HÍBRIDO con el aviso REAL — sin cookies hasta «Aceptar
   assert.deepEqual(await matomoCookies(ctx), [], "aceptar otra categoría no da consentimiento a Matomo");
 
   // Aceptar todas.
-  await page.evaluate(() => window.armazonConsent.open());
+  await page.evaluate(() => window.estrategiaWebConsent.open());
   await notice.waitFor({ state: "visible" });
   await page.getByRole("button", { name: "Aceptar todas" }).click();
   await until(async () => (await matomoCookies(ctx)).includes("mtm_cookie_consent"), "mtm_cookie_consent tras aceptar");
@@ -123,7 +123,7 @@ test("matomo (0.5.0): HÍBRIDO con el aviso REAL — sin cookies hasta «Aceptar
   await until(async () => (await matomoCookies(ctx)).some((n) => n.startsWith("_pk_id")), "_pk_id tras aceptar");
 
   // Rechazar todas.
-  await page.evaluate(() => window.armazonConsent.open());
+  await page.evaluate(() => window.estrategiaWebConsent.open());
   await notice.waitFor({ state: "visible" });
   await page.getByRole("button", { name: "Rechazar todas" }).click();
   await until(async () => (await matomoCookies(ctx)).length === 0, "que se borren al retirar el consentimiento");
@@ -137,7 +137,7 @@ test("matomo (0.5.0): híbrido con el aviso ya contestado (su cookie) al cargar:
   const { ctx, page } = await open({ cookies: [consentCookie(md5("statistics|1"), ["statistics"])] });
   await page.goto(BASE + "/");
   await until(async () => (await matomoCookies(ctx)).includes("mtm_cookie_consent"), "mtm_cookie_consent al cargar");
-  assert.ok(await page.locator("#armazon-consent").isHidden(), "el aviso no sale con la elección guardada");
+  assert.ok(await page.locator("#estrategia-web-consent").isHidden(), "el aviso no sale con la elección guardada");
   await ctx.close();
 });
 
@@ -148,7 +148,7 @@ test("matomo (0.5.0): híbrido con la elección del aviso caducada (otra revisi�
     cookies: [consentCookie("deadbeef", ["statistics"]), { name: "mtm_cookie_consent", value: String(Date.now()), url: BASE + "/" }],
   });
   await page.goto(BASE + "/");
-  await page.locator("#armazon-consent").waitFor({ state: "visible" });
+  await page.locator("#estrategia-web-consent").waitFor({ state: "visible" });
   await until(async () => !(await matomoCookies(ctx)).includes("mtm_cookie_consent"), "que se borre mtm_cookie_consent");
   await ctx.close();
 });
@@ -164,11 +164,11 @@ test("matomo (0.3.0): a un administrador con sesión no se le mide", async () =>
     await Promise.all([page.waitForURL(/wp-admin/), page.click("#wp-submit")]);
   }
   await page.goto(BASE + "/");
-  assert.equal(await page.locator("#armazon-site-matomo").count(), 0, "sin código para quien edita");
+  assert.equal(await page.locator("#estrategia-web-site-matomo").count(), 0, "sin código para quien edita");
   await ctx.close();
 
   const anon = await open();
   await anon.page.goto(BASE + "/");
-  assert.equal(await anon.page.locator("#armazon-site-matomo").count(), 1, "control: a un visitante sí");
+  assert.equal(await anon.page.locator("#estrategia-web-site-matomo").count(), 1, "control: a un visitante sí");
   await anon.ctx.close();
 });

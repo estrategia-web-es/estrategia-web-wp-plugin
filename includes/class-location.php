@@ -1,20 +1,20 @@
 <?php
 /**
- * Fuente de Block Bindings `armazon-site/location`: un bloque enlazado a un
+ * Fuente de Block Bindings `estrategia-web-site/location`: un bloque enlazado a un
  * dato de UNA sede (tipo `location`). Entró en 0.2.0.
  *
  * Dos formas de decir qué sede, por los args del enlace:
  *
- *   {"slug": "maioris", "key": "location_phone"}   esa sede, desde cualquier página
- *   {"key": "location_address"}                    la sede del CONTEXTO: dentro de
+ *   {"slug": "maioris", "key": "estrategia_web_location_phone"}   esa sede, desde cualquier página
+ *   {"key": "estrategia_web_location_address"}                    la sede del CONTEXTO: dentro de
  *                                                  una Consulta de sedes, la de cada fila
  *
- *   <!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"armazon-site/location","args":{"slug":"maioris","key":"location_address"}}}}} -->
+ *   <!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"estrategia-web-site/location","args":{"slug":"maioris","key":"estrategia_web_location_address"}}}}} -->
  *   <p></p>
  *   <!-- /wp:paragraph -->
  *
  * Claves: `title`, los campos location_* del tipo (Content_Types) y las
- * derivadas `location_phone_href` (tel:) y `location_email_href` (mailto:).
+ * derivadas `estrategia_web_location_phone_href` (tel:) y `estrategia_web_location_email_href` (mailto:).
  * El texto y las URL se pintan igual que en la fuente de la empresa
  * (Bindings::format): saltos a <br> en texto, esc_url_raw con tel/mailto/http(s)
  * en url/href.
@@ -45,23 +45,23 @@
  *   deja en [null] al fusionar y en el editor no llega el contexto.
  */
 
-namespace Armazon\Site;
+namespace EstrategiaWeb\Site;
 
 defined( 'ABSPATH' ) || exit;
 
 final class Location {
 
-	public const SOURCE = 'armazon-site/location';
+	public const SOURCE = 'estrategia-web-site/location';
 
 	public const TYPE = 'location';
 
-	public const DERIVED = array( 'location_phone_href', 'location_email_href' );
+	public const DERIVED = array( 'estrategia_web_location_phone_href', 'estrategia_web_location_email_href' );
 
 	public static function register(): void {
 		register_block_bindings_source(
 			self::SOURCE,
 			array(
-				'label'              => __( 'Location details', 'armazon-site' ),
+				'label'              => __( 'Location details', 'estrategia-web-site' ),
 				'get_value_callback' => array( self::class, 'get_value' ),
 				'uses_context'       => array( 'postId', 'postType' ),
 			)
@@ -117,21 +117,21 @@ final class Location {
 		switch ( $key ) {
 			case 'title':
 				return (string) $post->post_title;
-			case 'location_phone_href':
-				return Links::tel( $meta( 'location_phone' ), Company::country_code() );
-			case 'location_email_href':
-				return Links::mailto( $meta( 'location_email' ) );
+			case 'estrategia_web_location_phone_href':
+				return Links::tel( $meta( 'estrategia_web_location_phone' ), Company::country_code() );
+			case 'estrategia_web_location_email_href':
+				return Links::mailto( $meta( 'estrategia_web_location_email' ) );
 		}
 		return in_array( $key, Content_Types::meta_keys( self::TYPE ), true ) ? $meta( $key ) : '';
 	}
 
 	/** @return array<string,string> Nombre legible de cada clave, en orden: el editor hace la lista con esto. */
 	public static function labels(): array {
-		return array( 'title' => __( 'Location name', 'armazon-site' ) )
+		return array( 'title' => __( 'Location name', 'estrategia-web-site' ) )
 			+ Content_Types::meta_fields( self::TYPE )
 			+ array(
-				'location_phone_href' => __( 'Phone (link)', 'armazon-site' ),
-				'location_email_href' => __( 'Email (link)', 'armazon-site' ),
+				'estrategia_web_location_phone_href' => __( 'Phone (link)', 'estrategia-web-site' ),
+				'estrategia_web_location_email_href' => __( 'Email (link)', 'estrategia-web-site' ),
 			);
 	}
 

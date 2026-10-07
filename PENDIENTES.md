@@ -5,6 +5,30 @@ de git, con el commit que lo cierra.
 
 ---
 
+## Recuadro «Datos de la sede» en la pantalla de edición de la sede
+**Fecha:** 07-10-2026 · **Vence:** después de la fase 1 (el cambio de nombre)
+
+David quiso cambiar el teléfono de la sede Maioris y no encontró dónde: el
+editor de bloques esconde las metas de la sede (teléfono, dirección,
+horario, enlace y embed del mapa, mapa estático), y el panel «Campos
+personalizados» no sale con los tipos del plugin. Se cambió por WP-CLI.
+Hace falta un recuadro «Datos de la sede» en la pantalla de edición de la
+sede (barra lateral del documento o meta box) con esos campos, que guarde
+en las metas registradas (`estrategia_web_location_…`). Lo mismo, si se
+quiere, para cliente (ajuste de imagen) y opinión (autor, valoración).
+
+## Tipos y taxonomías sin prefijo, antes de WordPress.org
+**Fecha:** 07-10-2026 · **Vence:** antes de mandarlo a WordPress.org
+
+En la 1.0.0 todo ganó el prefijo `estrategia_web_` / `estrategia-web-`
+menos los tipos (`client`, `testimonial`, `location`, `project`,
+`portfolio`) y sus taxonomías (`client_sector`…). Son nombres genéricos que
+otro plugin puede usar, y la revisión de WordPress.org suele pedir prefijo.
+No se cambiaron porque cambiar un tipo cambia su ruta REST, las Consultas
+guardadas en las páginas (`"postType":"client"`) y sus filas en
+`wp_posts`: necesita su propio paso en el migrador y una versión mayor
+(2.0.0). Lo decide David.
+
 ## Remoto del repo (fila 24)
 **Fecha:** 02-10-2026 · **Vence:** antes de instalarlo en la primera web
 
