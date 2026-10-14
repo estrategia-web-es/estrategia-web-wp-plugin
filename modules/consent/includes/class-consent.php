@@ -18,6 +18,40 @@
  * el tema ponga un bloque); si el tema no llama a wp_body_open(), en
  * wp_footer, como antes de la 0.5.1.
  *
+ * 1.1.0 — CATEGORÍAS, DETECTOR Y TABLA DE LA POLÍTICA
+ *
+ * Las categorías son las de la AEPD: necesarias (siempre, no se preguntan),
+ * preferencias, analítica y publicidad, más «mapas y contenido de terceros»,
+ * que ya existía. Los SLUGS no cambian, porque la revisión del aviso es un
+ * hash de los slugs y cambiarlos haría que TODOS los visitantes que ya
+ * eligieron vieran el aviso otra vez (trampa 2):
+ *     necessary    Necesarias               (no se guarda: siempre)
+ *     preferences  Preferencias             (nueva en 1.1.0)
+ *     statistics   Analítica                (antes se rotulaba «Estadísticas»)
+ *     marketing    Publicidad               (antes se rotulaba «Marketing»)
+ *     maps         Mapas y contenido de terceros
+ * Se admiten como ALIAS (al declarar y al preguntar, en PHP y en JS):
+ * analytics → statistics, advertising y ads → marketing. Así un módulo nuevo
+ * puede escribir has( 'analytics' ) sin saber la historia.
+ * - «preferences» se añadió al FINAL de known_categories() a propósito: el
+ *   orden de esa lista entra en la revisión. Al pintar, el aviso las ordena
+ *   con display_order() (preferencias, analítica, publicidad, mapas), que no
+ *   toca la revisión.
+ * - Quién declara categorías: el CÓDIGO con el filtro de siempre (el tema,
+ *   Matomo híbrido, google-tags) y, desde 1.1.0, el ADMINISTRADOR en
+ *   «Estrategia Web → Cookies» (opción estrategia_web_cookies_settings, clave
+ *   ask). Se unen; el administrador no puede quitar lo que declara el código.
+ *   code_categories() da solo las del código.
+ * - REABRIR EL PANEL (para el pie): el bloque «Configurar cookies», el
+ *   shortcode [estrategia_web_consent_settings], window.estrategiaWebConsent.open()
+ *   y, desde 1.1.0, CUALQUIER enlace a «#estrategia-web-consent» o elemento con
+ *   la clase «estrategia-web-consent-open» (o el atributo
+ *   data-estrategia-web-consent-open): sirve para un enlace del menú de
+ *   navegación o un botón del editor con «Clase CSS adicional».
+ * - El DETECTOR, el REGISTRO de cookies y la TABLA de la política tienen su
+ *   cabecera propia: includes/class-cookie-registry.php, class-cookie-rest.php
+ *   y class-cookie-table.php; la pantalla, admin/class-cookies-page.php.
+ *
  * ORDEN DE FOCO (0.5.1, WCAG 2.4.3). En el pie quedaba el último de la
  * página: con teclado había que pasar 30-35 tabuladores para llegar a
  * Aceptar / Rechazar (auditoría de Lavandería, 06-10-2026). Ahora va el
@@ -80,12 +114,12 @@
  *
  *     add_filter( 'estrategia_web_consent_categories', fn( $c ) => array_merge( (array) $c, array( 'maps' ) ) );
  *
- * Categorías conocidas: statistics, maps, marketing. «necessary» siempre está
+ * Categorías conocidas: ver arriba (1.1.0). «necessary» siempre está
  * y no se pregunta. SI NO SE DECLARA NINGUNA, EL AVISO NO SALE, y es lo
  * normal: con Matomo sin cookies (fila 16 del Armazón) y los mapas en dos
  * clics (estrategia-web/map del padre), la mayoría de webs no tienen nada que
  * preguntar. Matomo en modo híbrido declara «statistics» él solo
- * (includes/class-matomo.php).
+ * (modules/matomo), y google-tags lo que necesite cada etiqueta.
  *
  * «Powered by» (0.5.0): al pie del aviso, «Powered by Estrategia Web» con
  * enlace a https://estrategiaweb.es/, en pestaña nueva, rel="noopener" y SIN
@@ -107,21 +141,24 @@
  *
  * WP Consent API (plugin): si está activo, se declara el tipo «optin» y el JS
  * llama a wp_set_consent() al guardar: statistics → statistics y
- * statistics-anonymous, marketing → marketing. «maps» no tiene equivalente en
- * esa API y no se comunica. No se depende de ella: sin el plugin, todo igual.
+ * statistics-anonymous, marketing → marketing, preferences → preferences
+ * (1.1.0). «maps» no tiene equivalente en esa API y no se comunica. No se
+ * depende de ella: sin el plugin, todo igual.
  *
  * Cómo se mantiene:
  * - Quién: quien toque el plugin. Cuándo: al añadir una categoría, cambiar el
  *   texto legal por defecto o tocar el formato de la cookie. Las pruebas son
  *   tests/consent.test.mjs (nivel 2) y tests/consent-browser.test.mjs
- *   (nivel 3, con Matomo híbrido contra este aviso real).
+ *   (nivel 3, con Matomo híbrido contra este aviso real); las del registro,
+ *   tests/cookies.test.mjs y cookies-browser.test.mjs.
  * - Al cambiar las categorías declaradas cambia la «revisión» (hash de la
  *   lista) y el aviso vuelve a salir a todo el mundo: es lo correcto, se les
  *   pregunta por algo nuevo. Si hay que forzarlo sin cambiar categorías (otra
  *   política), el filtro estrategia_web_consent_revision.
  * - Caso frontera: una web necesita una categoría que no se conoce (p. ej.
  *   «chat»). Es un AJUSTE si basta con etiqueta y descripción: se añade aquí
- *   en una versión menor. Si necesita otra lógica, es de esa web.
+ *   en una versión menor, AL FINAL de known_categories() (como preferences
+ *   en 1.1.0) y en DISPLAY_ORDER. Si necesita otra lógica, es de esa web.
  * - La trampa 1: estrategia_web_consent_has() lee la cookie en el SERVIDOR. Con
  *   caché de página (SiteGround, etc.) la página cacheada de un visitante se
  *   sirve a otro. Para decidir si se carga algo, mejor en el navegador
@@ -160,6 +197,16 @@ final class Consent {
 	public const SCRIPT_MODULE = 'estrategia-web-site-consent-view-script-module';
 	public const STYLE         = 'estrategia-web-site-consent-style';
 
+	/** 1.1.0: otros nombres que se aceptan para una categoría (ver la cabecera). */
+	public const ALIASES = array(
+		'analytics'   => 'statistics',
+		'advertising' => 'marketing',
+		'ads'         => 'marketing',
+	);
+
+	/** 1.1.0: orden en que el aviso y la pantalla las enseñan (no toca la revisión). */
+	public const DISPLAY_ORDER = array( 'preferences', 'statistics', 'marketing', 'maps' );
+
 	private static bool $active = false;
 
 	public static function boot(): void {
@@ -180,6 +227,7 @@ final class Consent {
 		require_once ESTRATEGIA_WEB_CONSENT_DIR . 'includes/consent-functions.php';
 
 		add_action( 'init', array( self::class, 'register_blocks' ) );
+		add_action( 'init', array( self::class, 'register_settings' ) );
 		add_filter( 'block_type_metadata', array( self::class, 'block_labels' ) );
 		add_action( 'wp_enqueue_scripts', array( self::class, 'enqueue' ) );
 		// 0.5.1: al PRINCIPIO del body (orden de foco, ver la cabecera); en el
@@ -187,42 +235,82 @@ final class Consent {
 		add_action( 'wp_body_open', array( self::class, 'print_notice' ), 5 );
 		add_action( 'wp_footer', array( self::class, 'print_notice' ), 5 );
 		add_shortcode( 'estrategia_web_consent_settings', array( self::class, 'shortcode' ) );
+		// 1.1.0: registro de cookies, detector y tabla de la política.
+		add_shortcode( Cookie_Table::SHORTCODE, array( Cookie_Table::class, 'shortcode' ) );
+		add_action( 'rest_api_init', array( Cookie_Rest::class, 'register' ) );
+		if ( is_admin() ) {
+			require_once ESTRATEGIA_WEB_CONSENT_DIR . 'includes/admin/class-cookies-page.php';
+			Cookies_Page::boot();
+		}
 		if ( function_exists( 'wp_has_consent' ) ) {
 			add_filter( 'wp_get_consent_type', static fn( $type ) => self::categories() ? 'optin' : $type );
 		}
 	}
 
 	/**
-	 * Categorías opcionales que se saben describir.
+	 * Categorías opcionales que se saben describir. EL ORDEN ENTRA EN LA
+	 * REVISIÓN: una nueva va al final (trampa 2).
 	 *
 	 * @return array<string, array{label: string, description: string}>
 	 */
 	public static function known_categories(): array {
 		return array(
-			'statistics' => array(
-				'label'       => __( 'Statistics', 'estrategia-web' ),
+			'statistics'  => array(
+				'label'       => __( 'Analytics', 'estrategia-web' ),
 				'description' => __( 'Help us understand how the site is used.', 'estrategia-web' ),
 			),
-			'maps'       => array(
+			'maps'        => array(
 				'label'       => __( 'Maps and third-party content', 'estrategia-web' ),
 				'description' => __( 'Load embedded maps and other content served by third parties, which may set their own cookies.', 'estrategia-web' ),
 			),
-			'marketing'  => array(
-				'label'       => __( 'Marketing', 'estrategia-web' ),
+			'marketing'   => array(
+				'label'       => __( 'Advertising', 'estrategia-web' ),
 				'description' => __( 'Measure campaigns and show relevant advertising.', 'estrategia-web' ),
+			),
+			'preferences' => array(
+				'label'       => __( 'Preferences', 'estrategia-web' ),
+				'description' => __( 'Remember choices that change how the site behaves or looks, such as the region or recently viewed items.', 'estrategia-web' ),
 			),
 		);
 	}
 
+	/** Un slug de categoría con los alias resueltos («analytics» → «statistics»). */
+	public static function normalize( string $category ): string {
+		$category = strtolower( trim( $category ) );
+		return self::ALIASES[ $category ] ?? $category;
+	}
+
 	/**
-	 * Categorías opcionales declaradas por la web, en un orden estable.
+	 * Las categorías en el orden de enseñarlas (DISPLAY_ORDER).
+	 *
+	 * @param string[] $categories
+	 * @return string[]
+	 */
+	public static function display_order( array $categories ): array {
+		$order = array_flip( self::DISPLAY_ORDER );
+		usort( $categories, static fn( $a, $b ) => ( $order[ $a ] ?? 99 ) <=> ( $order[ $b ] ?? 99 ) );
+		return $categories;
+	}
+
+	/**
+	 * Las que declara el CÓDIGO (el filtro), en el orden estable de known_categories().
+	 *
+	 * @return string[]
+	 */
+	public static function code_categories(): array {
+		$declared = array_map( static fn( $c ) => self::normalize( (string) $c ), (array) apply_filters( 'estrategia_web_consent_categories', array() ) );
+		return array_values( array_intersect( array_keys( self::known_categories() ), $declared ) );
+	}
+
+	/**
+	 * Categorías opcionales que pregunta el aviso: las del código y las que
+	 * añade el administrador (1.1.0), en un orden estable.
 	 *
 	 * @return string[]
 	 */
 	public static function categories(): array {
-		$declared = (array) apply_filters( 'estrategia_web_consent_categories', array() );
-		$known    = array_keys( self::known_categories() );
-		return array_values( array_intersect( $known, $declared ) );
+		$declared = array_merge( self::code_categories(), Cookie_Registry::settings()['ask'] );
+		return array_values( array_intersect( array_keys( self::known_categories() ), $declared ) );
 	}
 
 	/** Revisión: una elección guardada con otra revisión no vale y el aviso vuelve a salir. */
@@ -256,8 +344,9 @@ final class Consent {
 		return array_values( array_intersect( self::categories(), $accepted ) );
 	}
 
-	/** Si una categoría está aceptada. «necessary» siempre. */
+	/** Si una categoría está aceptada. «necessary» siempre. Admite los alias. */
 	public static function has( string $category ): bool {
+		$category = self::normalize( $category );
 		if ( 'necessary' === $category ) {
 			return true;
 		}
@@ -296,9 +385,42 @@ final class Consent {
 		);
 	}
 
-	/** Registra el bloque del enlace. Sus nombres viejos son alias de Legacy_Names. */
+	/** Registra el bloque del enlace y el de la tabla (1.1.0). Los nombres viejos del enlace son alias de Legacy_Names. */
 	public static function register_blocks(): void {
 		register_block_type( ESTRATEGIA_WEB_CONSENT_DIR . 'blocks/consent' );
+		register_block_type( ESTRATEGIA_WEB_CONSENT_DIR . 'blocks/cookie-table' );
+	}
+
+	/** 1.1.0: los ajustes del registro, también por /wp/v2/settings (para scripts y pruebas). */
+	public static function register_settings(): void {
+		register_setting(
+			'estrategia_web_cookies',
+			Cookie_Registry::SETTINGS,
+			array(
+				'type'              => 'object',
+				'description'       => __( 'Cookie notice: detector on or off, and categories added by the administrator.', 'estrategia-web' ),
+				'sanitize_callback' => array( Cookie_Registry::class, 'sanitize_settings' ),
+				'default'           => array(
+					'detector' => true,
+					'ask'      => array(),
+				),
+				'show_in_rest'      => array(
+					'schema' => array(
+						'type'       => 'object',
+						'properties' => array(
+							'detector' => array( 'type' => 'boolean' ),
+							'ask'      => array(
+								'type'  => 'array',
+								'items' => array(
+									'type' => 'string',
+									'enum' => array_keys( self::known_categories() ),
+								),
+							),
+						),
+					),
+				),
+			)
+		);
 	}
 
 	/** Etiqueta del control de autoRegister (block.json no traduce la clave «label»). */
@@ -320,18 +442,31 @@ final class Consent {
 
 	/** Estado de Interactivity que comparten el aviso y el enlace. */
 	public static function state(): void {
-		$known = self::known_categories();
+		$known    = self::known_categories();
+		$settings = Cookie_Registry::settings();
 		wp_interactivity_state(
 			'estrategia-web/consent',
 			array(
 				'categories'   => self::categories(),
 				'labels'       => array_map( static fn( $c ) => $c['label'], array_intersect_key( $known, array_flip( self::categories() ) ) ),
+				'aliases'      => self::ALIASES,
 				'revision'     => self::revision(),
 				'cookieName'   => self::COOKIE,
 				'legacyCookie' => self::LEGACY_COOKIE,
 				'maxAge'       => self::max_age(),
 				'isOpen'       => false,
 				'showSettings' => false,
+				// 1.1.0: el detector (blocks/consent/view.js, class-cookie-rest.php).
+				// Sin «versión de la lista del servidor» a propósito: la cambia el
+				// propio informe (entra una fila) y, con caché de página, cada
+				// visitante vería una versión vieja y volvería a mandar en cada
+				// página. La «versión» que cuenta es la lista de NOMBRES del
+				// visitante: se manda si cambia o si pasan «days» días.
+				'detector'     => $settings['detector'] ? array(
+					'url'   => rest_url( Cookie_Rest::NAMESPACE . '/cookies/seen' ),
+					'days'  => (int) apply_filters( 'estrategia_web_cookies_report_days', 7 ),
+					'delay' => 4000,
+				) : null,
 			)
 		);
 	}
@@ -397,7 +532,7 @@ final class Consent {
 						<input type="checkbox" checked disabled>
 						<span><strong><?php esc_html_e( 'Necessary', 'estrategia-web' ); ?></strong> — <?php esc_html_e( 'Required for the site to work, including remembering this choice. Always active.', 'estrategia-web' ); ?></span>
 					</label>
-					<?php foreach ( $categories as $slug ) : ?>
+					<?php foreach ( self::display_order( $categories ) as $slug ) : ?>
 					<label class="estrategia-web-consent__category">
 						<input
 							type="checkbox"

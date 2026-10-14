@@ -27,8 +27,10 @@ guarda y lo que hace, de aquí.
 
 | Módulo (carpeta) | Qué hace | Por defecto |
 |---|---|---|
-| `site` | datos de la empresa (Block Bindings, `[estrategia_web_company]`), tipos de contenido (clientes, opiniones, sedes, proyectos, portfolio), SVG saneado y Matomo: secciones 1 a 5 de abajo | encendido |
-| `consent` | el aviso de cookies y su API: sección 6 | encendido |
+| `site` | datos de la empresa (Block Bindings, `[estrategia_web_company]`), tipos de contenido (clientes, opiniones, sedes, proyectos, portfolio) y SVG saneado: secciones 1 a 4 de abajo | encendido |
+| `matomo` | código de Matomo, sin cookies o híbrido (sin publicar: antes dentro de `site`; necesita `site`, guarda en su opción): sección 5 | encendido |
+| `consent` | el aviso de cookies y su API; (sin publicar) registro de cookies con detector y tabla para la política: secciones 6 y 6 bis | encendido |
+| `google-tags` | (sin publicar) GA4, Google Ads y Tag Manager con Consent Mode v2; necesita `consent`: sección 6 ter | **apagado** |
 | `webp` | tamaños de imagen en WebP: sección 7 | encendido |
 | `external-links` | enlaces a otro dominio en pestaña nueva: sección 8 | encendido |
 | `wpml-front-page` | con WPML, `/en/` enseña la portada traducida | encendido |
@@ -40,9 +42,10 @@ guarda y lo que hace, de aquí.
 | `social` | lista libre de redes (**Estrategia Web → Redes sociales**, opción `estrategia_web_social_links`) y bloque `estrategia-web/social-links`; necesita `site`. Todo en la cabecera de [modules/social/module.php](modules/social/module.php) | encendido (sin publicar) |
 | `redirects` | redirecciones 301/302/410 editables en **Estrategia Web → Redirecciones**, importar/exportar CSV, registro de 404 opcional, `wp estrategia-web redirects import\|list\|export`: [modules/redirects/module.php](modules/redirects/module.php) | **apagado** |
 
-**Encendidos por defecto los que ya usaba Lavandería**: una web que
-actualiza no cambia. `redirects` nace apagado porque cambia lo que ve el
-visitante y en Lavandería las redirecciones las lleva Rank Math. Un módulo apagado **no carga nada** (ni su PHP,
+**Encendidos por defecto los que ya usaba Lavandería** (también `matomo`, que
+salió de `site`): una web que actualiza no cambia. Lo nuevo que cambia lo que
+ve el visitante o lo que pide la web (`redirects`, `google-tags`) nace
+apagado; en Lavandería las redirecciones las lleva Rank Math. Un módulo apagado **no carga nada** (ni su PHP,
 ni sus bloques, ni sus assets) y **no borra nada** de lo que guardó.
 
 **Cómo se añade un módulo:** una carpeta `modules/<slug>/` con su
@@ -65,6 +68,7 @@ es [modules/webp/module.php](modules/webp/module.php); el completo,
     languages/                  estrategia-web.pot · estrategia-web-es_ES.po · .l10n.php (uno para todo)
     tests/                      corredor, lib.mjs, blueprint y las pruebas del núcleo
     tools/i18n.mjs              extrae (también las cabeceras de módulo), fusiona y compila
+    tools/open-cookie-database.mjs  regenera el extracto de la Open Cookie Database (módulo consent)
     wpml-config.xml             WPML solo lee el de la raíz: aquí van los de todos los módulos
     uninstall.php               llama al uninstall.php de cada módulo
 
@@ -366,7 +370,10 @@ curl -u admin:APP_PASS -X POST https://web.test/wp-json/wp/v2/settings \
 - «Sin IP completa» se configura en el servidor de Matomo, no aquí.
 
 El porqué de cada decisión y sus trampas, en la cabecera de
-[modules/site/includes/class-matomo.php](modules/site/includes/class-matomo.php).
+[modules/matomo/includes/class-matomo.php](modules/matomo/includes/class-matomo.php).
+Desde la 1.1.0 Matomo es su propio módulo (`matomo`, encendido por defecto,
+necesita `site`); la opción y su saneado siguen en `estrategia_web_site`, sin
+migración.
 
 ### 6. Aviso de cookies (0.5.0)
 
@@ -437,6 +444,62 @@ entre el texto y los botones es de 24 px y resiste el
 `:root :where(p) { margin: 0 }` de un `theme.json`. En las transiciones
 entre páginas del tema padre (0.7.5) se queda quieto
 (`view-transition-name: estrategia-web-consent`).
+
+**Categorías (sin publicar, rama `modulo/cookies`)**: necesarias, preferencias
+(`preferences`, nueva), analítica (`statistics`) y publicidad (`marketing`),
+más mapas (`maps`). Los slugs no cambian (la revisión del aviso es su hash);
+se aceptan los alias `analytics`, `advertising` y `ads`. Las declara el código
+con el filtro y, además, el administrador en **Estrategia Web → Cookies**
+(opción `estrategia_web_cookies_settings`, clave `ask`). El panel se reabre
+también desde cualquier enlace a `#estrategia-web-consent` o un elemento con
+la clase `estrategia-web-consent-open` (útil en el menú del pie).
+
+### 6 bis. Registro de cookies, detector y tabla de la política (sin publicar)
+
+Todo en el módulo `consent`; cada pieza documenta lo suyo en su cabecera:
+[class-cookie-registry.php](modules/consent/includes/class-cookie-registry.php)
+(qué se guarda y de dónde salen las propuestas),
+[class-cookie-rest.php](modules/consent/includes/class-cookie-rest.php)
+(el detector y sus límites),
+[class-cookie-table.php](modules/consent/includes/class-cookie-table.php)
+(la tabla y su traducción) y
+[admin/class-cookies-page.php](modules/consent/includes/admin/class-cookies-page.php).
+
+- **Detector**: al ACEPTAR alguna categoría, el navegador manda los NOMBRES de
+  sus cookies (nunca valores) a `POST /wp-json/estrategia-web/v1/cookies/seen`,
+  solo si su lista cambió o cada 7 días. Sin nonce (la caché de página lo
+  caducaría) y con límites: 1 informe / 10 min por IP (hash con sal del día,
+  no se guarda), 100 / hora para toda la web, 60 nombres, 300 filas.
+- **Propuestas**: primero nuestra lista (la cookie del aviso, WordPress, WPML
+  —`wp-wpml_current_language` necesaria, 1 día—, Polylang, Matomo) y luego el
+  extracto de la [Open Cookie Database](https://github.com/jkwakman/Open-Cookie-Database)
+  (Apache 2.0) en [modules/consent/data/](modules/consent/data/NOTICE),
+  regenerable con `node tools/open-cookie-database.mjs` (`--seco`, `--csv`).
+  Comodines: `_ga_*` recoge `_ga_ABC123`.
+- **Pantalla Estrategia Web → Cookies**: pendientes / confirmadas /
+  ignoradas, categoría, proveedor, finalidad y duración editables, añadir a
+  mano las de terceros, y aviso si hay cookies confirmadas en una categoría que
+  el aviso no pregunta. Administración también por REST
+  (`GET/POST/DELETE /wp-json/estrategia-web/v1/cookies`, `manage_options`).
+- **Tabla para la política**: bloque **`estrategia-web/cookie-table`**
+  (atributos `category` y `headingLevel`) o
+  `[estrategia_web_cookie_table category="" heading_level="3"]`. Solo lo
+  confirmado. Duraciones como «2 years» se traducen solas; proveedor,
+  finalidad y duración libre, por WPML String Translation (contexto
+  `estrategia-web-cookies`).
+
+### 6 ter. Etiquetas de Google — módulo `google-tags` (sin publicar)
+
+Apagado por defecto. GA4 (`G-…`), Google Ads (`AW-…`, con conversión opcional
+de envío de formulario) y Tag Manager (`GTM-…`) en **Estrategia Web → Google**
+(opción `estrategia_web_google_tags`, también por `/wp/v2/settings`). Campo
+vacío = no se carga nada. Consent Mode v2: `default` todo denied antes de
+cualquier etiqueta y `update` al elegir (Analítica → `analytics_storage`;
+Publicidad → `ad_storage`, `ad_user_data`, `ad_personalization`). **Modo
+básico** (por defecto): nada de Google hasta aceptar Analítica o Publicidad;
+**modo avanzado**: Google se carga ya, denegado (pings sin cookies antes de
+consentir: decisión del cliente). Todo, en la cabecera de
+[class-google-tags.php](modules/google-tags/includes/class-google-tags.php).
 
 ### 7. WebP (0.5.1)
 
@@ -557,10 +620,15 @@ formularios esperan inglés; su `reset()` lo marca y vuelve a `en_US` (ver
 | [site/legal](modules/site/tests/legal.test.mjs) | 2 | datos legales (0.4.0): `registry` saneado y fusionado; frase legal con `[estrategia_web_company]` (razón social, NIF, domicilio en una línea, teléfono, correo, registro, escapado); clave inexistente vacía; `registry` por binding |
 | [site/static-map](modules/site/tests/static-map.test.mjs) | 2 | mapa estático de una sede (0.4.0): `estrategia_web_location_static_map` acepta ruta del tema, del sitio y URL del mismo dominio, y rechaza otro dominio, `//`, `javascript:`, `..`, no-imagen; `estrategia_web_location_static_map_id` solo adjuntos de imagen; en una Consulta, core/post-meta da a cada sede el suyo (párrafo e imagen); también por la fuente de sedes |
 | [site/svg](modules/site/tests/svg.test.mjs) | 2 | SVG con `<script>` subido saneado (multipart y sideload), medidas, autor no puede, `allow_svg` apagado |
-| [site/matomo](modules/site/tests/matomo.test.mjs) | 2 | Matomo (0.3.0): sin URL o sin id no se imprime; por defecto `disableCookies`; híbrido con `requireCookieConsent` y la categoría «statistics» declarada; saneado (URL, id, 400 del modo); sus claves no son datos enlazables |
-| [site/matomo-browser](modules/site/tests/matomo-browser.test.mjs) | 3 | con el `matomo.js` real ([modules/site/tests/fixtures/matomo.js](modules/site/tests/fixtures/matomo.js), 5.4.0, BSD-3) servido por una ruta falsa y, desde 0.5.0, con el **aviso de cookies real** (sus botones y su cookie, no un evento simulado): sin configuración no se pide; sin cookies mide, no deja cookies y no hay aviso; híbrido sin cookies hasta «Aceptar todas» (solo «mapas» no vale), `mtm_cookie_consent` y `_pk_id` al aceptar, borradas al «Rechazar todas»; aviso ya contestado al cargar; elección caducada olvida; a un administrador no se le mide |
+| [matomo/matomo](modules/matomo/tests/matomo.test.mjs) | 2 | Matomo (0.3.0): sin URL o sin id no se imprime; por defecto `disableCookies`; híbrido con `requireCookieConsent` y la categoría «statistics» declarada; saneado (URL, id, 400 del modo); sus claves no son datos enlazables |
+| [matomo/matomo-browser](modules/matomo/tests/matomo-browser.test.mjs) | 3 | con el `matomo.js` real ([modules/matomo/tests/fixtures/matomo.js](modules/matomo/tests/fixtures/matomo.js), 5.4.0, BSD-3) servido por una ruta falsa y, desde 0.5.0, con el **aviso de cookies real** (sus botones y su cookie, no un evento simulado): sin configuración no se pide; sin cookies mide, no deja cookies y no hay aviso; híbrido sin cookies hasta «Aceptar todas» (solo «mapas» no vale), `mtm_cookie_consent` y `_pk_id` al aceptar, borradas al «Rechazar todas»; aviso ya contestado al cargar; elección caducada olvida; a un administrador no se le mide |
 | [consent/consent](modules/consent/tests/consent.test.mjs) | 2 | aviso de cookies (0.5.0): sin categorías no sale; con ellas, en orden estable y con los tres botones; revisión y cookie iguales a las del padre; Matomo híbrido lo hace salir; «Powered by» (texto, `href`, `_blank`, `rel="noopener"` sin `nofollow`, después de los botones); el filtro cambia texto y URL, una URL vacía o no http(s) deja el texto sin enlace, `false` lo quita; enlace por bloque nuevo, alias viejo y shortcode |
 | [consent/consent-browser](modules/consent/tests/consent-browser.test.mjs) | 3 | aviso de cookies (0.5.0): sale; aceptar y rechazar pesan igual; rechazar guarda la cookie y persiste; el enlace (nuevo y alias) lo reabre con el foco dentro y Escape lo cierra; contrato JS (evento, `has`, `get`, `categories`, `grant`, `open`) y scripts diferidos; una cookie del aviso del padre sigue valiendo; «Powered by» visible, más pequeño que los botones y con contraste AA medido; (0.5.1) abierto es lo primero al tabular, sin trampa y Escape no lo cierra sin elegir; ≥ 16 px entre el texto y los botones a 402 y 1512 con el `:root :where(p)` de Lavandería |
+| [consent/cookies-pure](modules/consent/tests/cookies-pure.test.mjs) | 1 | registro de cookies sin WordPress: exacto antes que patrón y prefijo más largo; `wp-wpml_current_language` necesaria; GA con `_ga_*`; `_pk_id.*` de Matomo y no de Piwik; nombres sin valores ni HTML; tope de filas; alias y orden de las categorías; atribución del extracto |
+| [consent/cookies](modules/consent/tests/cookies.test.mjs) | 2 | detector: solo nombres, 202, 429 por cliente y por hora, 400 con más de 60, 403 con otro origen o apagado; ruta de administración por permisos; tabla de la política (solo confirmadas, por categoría, en castellano, bloque y shortcode, vacía no pinta); «Preferencias» añadida por el administrador y alias al declarar sin cambiar la revisión de siempre |
+| [consent/cookies-browser](modules/consent/tests/cookies-browser.test.mjs) | 3 | al aceptar el navegador manda solo nombres (mira el cuerpo de la petición) y no repite; rechazando no manda; reabrir desde un enlace y una clase; la pantalla Cookies confirma y la tabla lo enseña |
+| [google-tags/google-tags](modules/google-tags/tests/google-tags.test.mjs) | 2 | apagado por defecto; vacío no imprime; `default` denied primero y sin `<script src>` de Google; categorías por etiqueta; conversión solo con su cuenta; ids inválidos 400; sin `consent` no carga |
+| [google-tags/google-tags-browser](modules/google-tags/tests/google-tags-browser.test.mjs) | 3 | básico: nada a Google sin aceptar, rechazando o con solo mapas; al aceptar gtag.js y solo `analytics_storage`; retirar borra `_ga*`; Ads y conversión de formulario; avanzado carga antes |
 | [webp/webp](modules/webp/tests/webp.test.mjs) | 2 | WebP (0.5.1): el editor escribe WebP; JPEG y PNG subidos generan sus tamaños (y el principal) en WebP; el filtro a `false` lo apaga; la trampa de regenerar lo ya subido (la `.jpg` del contenido sin `srcset`, la intermedia rota) y su arreglo |
 | [site/editor](modules/site/tests/editor.test.mjs) | 3 | el editor enseña el valor enlazado y lista los datos (empresa y sede por slug); la pantalla de ajustes guarda, avisa y desactiva el último tipo |
 | [site/meta-panel](modules/site/tests/meta-panel.test.mjs) | 1 | (sin publicar) toda meta de sede, cliente y opinión está decidida para WPML (copy/translate) y `wpml-config.xml` dice lo mismo que `Meta_Panel`. Vista en rojo con el teléfono pasado a «translate» en el XML |

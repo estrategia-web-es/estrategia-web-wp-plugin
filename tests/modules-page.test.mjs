@@ -8,12 +8,14 @@ import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, reset, seedPage, testApi, html, wp } from "./lib.mjs";
 
-const ALL = ["carousel", "consent", "external-links", "forms", "language-switcher", "map", "site", "webp", "whatsapp", "wpml-front-page"];
+// Los de Default: on (los que carga una web nueva) y los que existen. Un módulo
+// nuevo entra en la lista que le toque (1.1.0: matomo on, google-tags off).
+const ALL = ["carousel", "consent", "external-links", "forms", "language-switcher", "map", "matomo", "site", "social", "webp", "whatsapp", "wpml-front-page"];
 
 before(reset);
 after(() => testApi("/modules", { method: "POST", body: { active: null } }));
 
-test("sin opción guardada se cargan los módulos Default: on, y solo esos", async () => {
+test("sin opción guardada se cargan los módulos con Default: on, y solo esos", async () => {
   const m = await testApi("/modules");
   assert.equal(m.saved, null);
   assert.deepEqual([...m.loaded].sort(), ALL);

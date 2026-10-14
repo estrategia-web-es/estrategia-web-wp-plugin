@@ -46,6 +46,7 @@ msgid "Module"
 msgstr "Módulo"
 
 #: includes/admin/class-modules-page.php:101
+#: modules/consent/includes/admin/class-cookies-page.php:226
 msgid "Status"
 msgstr "Estado"
 
@@ -221,33 +222,314 @@ msgid "consent"
 msgstr "consentimiento"
 
 #: modules/consent/blocks/consent/block.json
+#: modules/consent/blocks/cookie-table/block.json
 msgctxt "block keyword"
 msgid "cookies"
 msgstr "cookies"
 
 #: modules/consent/blocks/consent/block.json
+#: modules/consent/blocks/cookie-table/block.json
 msgctxt "block keyword"
 msgid "gdpr"
 msgstr "rgpd"
 
 #: modules/consent/blocks/consent/block.json
+#: modules/consent/blocks/cookie-table/block.json
 msgctxt "block keyword"
 msgid "privacy"
 msgstr "privacidad"
 
-#: modules/consent/includes/class-consent.php:203
-msgid "Statistics"
-msgstr "Estadísticas"
+#
+#: modules/consent/blocks/cookie-table/block.json
+msgctxt "block title"
+msgid "Cookie table"
+msgstr "Tabla de cookies"
 
-#: modules/consent/includes/class-consent.php:204
+#: modules/consent/blocks/cookie-table/block.json
+msgctxt "block description"
+msgid ""
+"Table of the site's cookies grouped by category (name, provider, purpose and "
+"duration), from the list confirmed in Estrategia Web → Cookies. For the "
+"cookie policy page."
+msgstr ""
+"Tabla de las cookies de la web por categoría (nombre, proveedor, finalidad y "
+"duración), sacada de la lista confirmada en Estrategia Web → Cookies. Para "
+"la página de Política de cookies."
+
+#: modules/consent/blocks/cookie-table/block.json
+msgctxt "block keyword"
+msgid "policy"
+msgstr "política"
+
+#: modules/consent/blocks/cookie-table/labels.php:8
+msgid "Category (empty: all)"
+msgstr "Categoría (vacío: todas)"
+
+#: modules/consent/blocks/cookie-table/labels.php:9
+msgid "Heading level of each category"
+msgstr "Nivel del título de cada categoría"
+
+#: modules/consent/includes/admin/class-cookies-page.php:53
+#: modules/consent/includes/admin/class-cookies-page.php:148
+#: modules/consent/includes/class-consent.php:520
+#: modules/matomo/includes/class-admin-fields.php:41
+msgid "Cookies"
+msgstr "Cookies"
+
+#
+#: modules/consent/includes/admin/class-cookies-page.php:63
+msgid "Sorry, you are not allowed to do that."
+msgstr "No tienes permiso para hacer esto."
+
+#: modules/consent/includes/admin/class-cookies-page.php:123
+#: modules/forms/includes/admin/class-submissions-table.php:115
+msgid "Pending"
+msgstr "Pendiente"
+
+#
+#: modules/consent/includes/admin/class-cookies-page.php:124
+msgid "Confirmed"
+msgstr "Confirmada"
+
+#: modules/consent/includes/admin/class-cookies-page.php:125
+msgid "Ignored"
+msgstr "Ignorada"
+
+#: modules/consent/includes/admin/class-cookies-page.php:150
+msgid "Changes saved."
+msgstr "Cambios guardados."
+
+#
+#: modules/consent/includes/admin/class-cookies-page.php:150
+msgid "Cookie deleted."
+msgstr "Cookie borrada."
+
+#: modules/consent/includes/admin/class-cookies-page.php:152
+msgid ""
+"Not saved: check the cookie name (exact name, or a prefix ending in *) and "
+"that the list is not full."
+msgstr ""
+"No se ha guardado: revisa el nombre de la cookie (nombre exacto, o un "
+"prefijo acabado en *) y que la lista no esté llena."
+
+#: modules/consent/includes/admin/class-cookies-page.php:155
+msgid ""
+"The active theme brings its own cookie notice: these settings do not apply "
+"to it."
+msgstr ""
+"El tema activo trae su propio aviso de cookies: estos ajustes no se le "
+"aplican."
+
+#
+#: modules/consent/includes/admin/class-cookies-page.php:158
+msgid "Cookie notice"
+msgstr "Aviso de cookies"
+
+#: modules/consent/includes/admin/class-cookies-page.php:163
+msgid "Categories the notice asks about"
+msgstr "Categorías que pregunta el aviso"
+
+#: modules/consent/includes/admin/class-cookies-page.php:172
+msgid "declared by the code (theme or a module)"
+msgstr "la declara el código (el tema o un módulo)"
+
+#: modules/consent/includes/admin/class-cookies-page.php:177
+msgid ""
+"Changing the categories shows the notice again to every visitor: they are "
+"being asked about something new. Without any category, the notice does not "
+"appear."
+msgstr ""
+"Cambiar las categorías vuelve a enseñar el aviso a todos los visitantes: se "
+"les pregunta por algo nuevo. Sin ninguna categoría, el aviso no sale."
+
+#
+#: modules/consent/includes/admin/class-cookies-page.php:181
+msgid "Cookie detector"
+msgstr "Detector de cookies"
+
+#: modules/consent/includes/admin/class-cookies-page.php:185
+msgid ""
+"When a visitor accepts cookies, their browser sends the NAMES (never the "
+"values) of the cookies it sees on this site, at most once a week or when the "
+"list changes. New names appear below as pending."
+msgstr ""
+"Cuando un visitante acepta cookies, su navegador manda los NOMBRES (nunca "
+"los valores) de las cookies que ve en esta web, como mucho una vez por "
+"semana o cuando cambia la lista. Los nombres nuevos salen abajo como "
+"pendientes."
+
+#
+#: modules/consent/includes/admin/class-cookies-page.php:190
+msgid "Save notice settings"
+msgstr "Guardar los ajustes del aviso"
+
+#. translators: 1: category name, 2: list of cookie names.
+#: modules/consent/includes/admin/class-cookies-page.php:206
+#, php-format
+msgid ""
+"The notice does not ask about «%1$s», but these confirmed cookies belong to "
+"it: %2$s. Either the notice should ask about it (above), or the cookies "
+"should not be set."
+msgstr ""
+"El aviso no pregunta por «%1$s», pero estas cookies confirmadas son de esa "
+"categoría: %2$s. O el aviso pregunta por ella (arriba), o esas cookies no se "
+"deberían poner."
+
+#
+#: modules/consent/includes/admin/class-cookies-page.php:214
+msgid "Cookies of this site"
+msgstr "Cookies de esta web"
+
+#: modules/consent/includes/admin/class-cookies-page.php:215
+msgid ""
+"Only confirmed cookies appear in the cookie table of the policy (block "
+"«Cookie table» or shortcode [estrategia_web_cookie_table]). Proposals come "
+"from our own list and from the Open Cookie Database: check them. A name "
+"ending in * covers every cookie that starts like that."
+msgstr ""
+"Solo las cookies confirmadas salen en la tabla de cookies de la política "
+"(bloque «Tabla de cookies» o shortcode [estrategia_web_cookie_table]). Las "
+"propuestas salen de nuestra lista y de la Open Cookie Database: revísalas. "
+"Un nombre acabado en * cubre todas las cookies que empiezan así."
+
+#: modules/consent/includes/admin/class-cookies-page.php:219
+msgid "Confirm all pending proposals"
+msgstr "Confirmar todas las propuestas pendientes"
+
+#
+#: modules/consent/includes/admin/class-cookies-page.php:225
+#: modules/consent/includes/class-cookie-table.php:163
+msgid "Cookie"
+msgstr "Cookie"
+
+#
+#: modules/consent/includes/admin/class-cookies-page.php:227
+#: modules/consent/includes/admin/class-cookies-page.php:291
+msgid "Category"
+msgstr "Categoría"
+
+#: modules/consent/includes/admin/class-cookies-page.php:228
+#: modules/consent/includes/admin/class-cookies-page.php:292
+#: modules/consent/includes/class-cookie-table.php:164
+msgid "Provider"
+msgstr "Proveedor"
+
+#: modules/consent/includes/admin/class-cookies-page.php:229
+#: modules/consent/includes/admin/class-cookies-page.php:293
+#: modules/consent/includes/class-cookie-table.php:165
+msgid "Purpose"
+msgstr "Finalidad"
+
+#
+#: modules/consent/includes/admin/class-cookies-page.php:230
+#: modules/consent/includes/admin/class-cookies-page.php:294
+#: modules/consent/includes/class-cookie-table.php:166
+msgid "Duration"
+msgstr "Duración"
+
+#: modules/consent/includes/admin/class-cookies-page.php:231
+msgid "Seen"
+msgstr "Vista"
+
+#
+#: modules/consent/includes/admin/class-cookies-page.php:232
+msgid "Actions"
+msgstr "Acciones"
+
+#: modules/consent/includes/admin/class-cookies-page.php:237
+msgid ""
+"No cookies yet. They appear when a visitor accepts the notice, or add them "
+"below."
+msgstr ""
+"Todavía no hay cookies. Salen cuando un visitante acepta el aviso, o "
+"añádelas abajo."
+
+#. translators: %s: a concrete cookie name.
+#: modules/consent/includes/admin/class-cookies-page.php:248
+#, php-format
+msgid "e.g. %s"
+msgstr "p. ej. %s"
+
+#: modules/consent/includes/admin/class-cookies-page.php:264
+msgid "Added by hand"
+msgstr "Añadida a mano"
+
+#: modules/consent/includes/admin/class-cookies-page.php:266
+msgid "Proposal: Open Cookie Database"
+msgstr "Propuesta: Open Cookie Database"
+
+#
+#: modules/consent/includes/admin/class-cookies-page.php:268
+msgid "Proposal: Estrategia Web"
+msgstr "Propuesta: Estrategia Web"
+
+#: modules/consent/includes/admin/class-cookies-page.php:276
+msgid "Save"
+msgstr "Guardar"
+
+#: modules/consent/includes/admin/class-cookies-page.php:277
+#: modules/forms/includes/admin/class-submissions-table.php:39
+#: modules/forms/includes/admin/class-submissions-table.php:86
+#: modules/redirects/includes/admin/class-tables.php:56
+#: modules/redirects/includes/admin/class-tables.php:90
+#: modules/redirects/includes/admin/class-tables.php:149
+msgid "Delete"
+msgstr "Borrar"
+
+#: modules/consent/includes/admin/class-cookies-page.php:285
+msgid "Add a cookie by hand"
+msgstr "Añadir una cookie a mano"
+
+#: modules/consent/includes/admin/class-cookies-page.php:286
+msgid ""
+"For third-party cookies the detector cannot see (for example, the ones "
+"Google sets on its own domain when a map loads). Empty fields are filled "
+"with the proposal, if there is one."
+msgstr ""
+"Para las cookies de terceros que el detector no puede ver (por ejemplo, las "
+"que pone Google en su propio dominio al cargar un mapa). Los campos vacíos "
+"se rellenan con la propuesta, si la hay."
+
+#: modules/consent/includes/admin/class-cookies-page.php:290
+#: modules/social/includes/class-admin.php:93
+#: modules/social/includes/class-admin.php:134
+msgid "Name"
+msgstr "Nombre"
+
+#: modules/consent/includes/admin/class-cookies-page.php:294
+msgid ""
+"Like «2 years», «30 minutes» or «session» to have it translated "
+"automatically; anything else is shown as written."
+msgstr ""
+"Como «2 years», «30 minutes» o «session» para que se traduzca sola; "
+"cualquier otra cosa sale tal cual se escribe."
+
+#
+#: modules/consent/includes/admin/class-cookies-page.php:296
+msgid "Add cookie"
+msgstr "Añadir cookie"
+
+#. translators: 1: link to the Open Cookie Database, 2: licence name, 3: date.
+#: modules/consent/includes/admin/class-cookies-page.php:303
+#, php-format
+msgid ""
+"Proposals use data from the %1$s, licensed under %2$s (extract of %3$s)."
+msgstr ""
+"Las propuestas usan datos de la %1$s, con licencia %2$s (extracto del %3$s)."
+
+#: modules/consent/includes/class-consent.php:259
+msgid "Analytics"
+msgstr "Analítica"
+
+#: modules/consent/includes/class-consent.php:260
 msgid "Help us understand how the site is used."
 msgstr "Nos ayudan a entender cómo se usa el sitio."
 
-#: modules/consent/includes/class-consent.php:207
+#: modules/consent/includes/class-consent.php:263
 msgid "Maps and third-party content"
 msgstr "Mapas y contenido de terceros"
 
-#: modules/consent/includes/class-consent.php:208
+#: modules/consent/includes/class-consent.php:264
 msgid ""
 "Load embedded maps and other content served by third parties, which may set "
 "their own cookies."
@@ -255,25 +537,44 @@ msgstr ""
 "Cargan mapas y otro contenido servido por terceros, que pueden instalar sus "
 "propias cookies."
 
-#: modules/consent/includes/class-consent.php:211
-msgid "Marketing"
-msgstr "Marketing"
+#: modules/consent/includes/class-consent.php:267
+msgid "Advertising"
+msgstr "Publicidad"
 
-#: modules/consent/includes/class-consent.php:212
+#: modules/consent/includes/class-consent.php:268
 msgid "Measure campaigns and show relevant advertising."
 msgstr "Miden campañas y muestran publicidad relevante."
 
+#: modules/consent/includes/class-consent.php:271
+msgid "Preferences"
+msgstr "Preferencias"
+
+#: modules/consent/includes/class-consent.php:272
+msgid ""
+"Remember choices that change how the site behaves or looks, such as the "
+"region or recently viewed items."
+msgstr ""
+"Recuerdan elecciones que cambian cómo funciona o se ve la web, como la "
+"región o lo último que has visto."
+
 #. translators: %s: name of the company that built the site (a brand, not translated).
-#: modules/consent/includes/class-consent.php:279
+#: modules/consent/includes/class-consent.php:368
 #, php-format
 msgid "Powered by %s"
 msgstr "Powered by %s"
 
-#: modules/consent/includes/class-consent.php:306
+#: modules/consent/includes/class-consent.php:401
+msgid ""
+"Cookie notice: detector on or off, and categories added by the administrator."
+msgstr ""
+"Aviso de cookies: detector encendido o apagado y categorías que añade el "
+"administrador."
+
+#: modules/consent/includes/class-consent.php:428
 msgid "Link text (empty: “Cookie settings”)"
 msgstr "Texto del enlace (vacío: «Configurar cookies»)"
 
-#: modules/consent/includes/class-consent.php:366
+#: modules/consent/includes/class-consent.php:501
 msgid ""
 "We use our own and third-party cookies for the purposes listed below. You "
 "can accept them, reject them or choose which ones to allow. Necessary "
@@ -283,24 +584,21 @@ msgstr ""
 "aceptarlas, rechazarlas o elegir cuáles permites. Las cookies necesarias "
 "están siempre activas."
 
-#: modules/consent/includes/class-consent.php:385
-#: modules/site/includes/admin/class-admin.php:163
-msgid "Cookies"
-msgstr "Cookies"
-
-#: modules/consent/includes/class-consent.php:389
+#: modules/consent/includes/class-consent.php:524
 msgid "Privacy and cookie policy"
 msgstr "Política de privacidad y cookies"
 
-#: modules/consent/includes/class-consent.php:395
+#: modules/consent/includes/class-consent.php:530
 msgid "Cookie categories"
 msgstr "Categorías de cookies"
 
-#: modules/consent/includes/class-consent.php:398
+#: modules/consent/includes/class-consent.php:533
+#: modules/consent/includes/class-cookie-table.php:53
 msgid "Necessary"
 msgstr "Necesarias"
 
-#: modules/consent/includes/class-consent.php:398
+#: modules/consent/includes/class-consent.php:533
+#: modules/consent/includes/class-cookie-table.php:54
 msgid ""
 "Required for the site to work, including remembering this choice. Always "
 "active."
@@ -308,23 +606,23 @@ msgstr ""
 "Imprescindibles para que el sitio funcione, también para recordar esta "
 "elección. Siempre activas."
 
-#: modules/consent/includes/class-consent.php:414
+#: modules/consent/includes/class-consent.php:549
 msgid "Save choices"
 msgstr "Guardar la selección"
 
-#: modules/consent/includes/class-consent.php:418
+#: modules/consent/includes/class-consent.php:553
 msgid "Accept all"
 msgstr "Aceptar todas"
 
-#: modules/consent/includes/class-consent.php:419
+#: modules/consent/includes/class-consent.php:554
 msgid "Reject all"
 msgstr "Rechazar todas"
 
-#: modules/consent/includes/class-consent.php:420
+#: modules/consent/includes/class-consent.php:555
 msgid "Configure"
 msgstr "Configurar"
 
-#: modules/consent/includes/class-consent.php:425
+#: modules/consent/includes/class-consent.php:560
 #: modules/external-links/includes/class-external-links.php:101
 #: modules/map/blocks/map/render.php:321
 #: modules/social/blocks/social-links/render.php:74
@@ -332,7 +630,7 @@ msgstr "Configurar"
 msgid "(opens in a new tab)"
 msgstr "(se abre en una pestaña nueva)"
 
-#: modules/consent/includes/class-consent.php:451
+#: modules/consent/includes/class-consent.php:586
 msgid ""
 "Cookie settings: this site declares no optional cookie categories, so there "
 "is no notice to reopen and this link is not shown."
@@ -340,25 +638,177 @@ msgstr ""
 "Configurar cookies: este sitio no declara categorías de cookies opcionales, "
 "así que no hay aviso que reabrir y el enlace no se muestra."
 
-#: modules/consent/includes/class-consent.php:457
+#: modules/consent/includes/class-consent.php:592
 msgid "Cookie settings"
 msgstr "Configurar cookies"
+
+#
+#: modules/consent/includes/class-cookie-registry.php:135
+msgid "This website"
+msgstr "Este sitio web"
+
+#: modules/consent/includes/class-cookie-registry.php:140
+msgid "Remembers your choice in the cookie notice."
+msgstr "Recuerda tu elección en el aviso de cookies."
+
+#: modules/consent/includes/class-cookie-registry.php:146
+msgid ""
+"Previous name of the cookie that remembers your choice in the cookie notice; "
+"it is replaced on the next visit."
+msgstr ""
+"Nombre anterior de la cookie que recuerda tu elección en el aviso de "
+"cookies; se sustituye en la siguiente visita."
+
+#: modules/consent/includes/class-cookie-registry.php:152
+#: modules/consent/includes/class-cookie-registry.php:158
+#: modules/consent/includes/class-cookie-registry.php:164
+msgid "Remembers the language in which you are browsing the site."
+msgstr "Recuerda el idioma en el que navegas por la web."
+
+#: modules/consent/includes/class-cookie-registry.php:170
+msgid "Checks that the browser accepts cookies. Only on the login page."
+msgstr ""
+"Comprueba que el navegador acepta cookies. Solo en la página de acceso."
+
+#: modules/consent/includes/class-cookie-registry.php:176
+msgid "Keeps the session of the site’s users (editors and administrators)."
+msgstr ""
+"Mantiene la sesión de los usuarios de la web (editores y administradores)."
+
+#: modules/consent/includes/class-cookie-registry.php:182
+msgid ""
+"Remembers the dashboard settings of the site’s users (editors and "
+"administrators)."
+msgstr ""
+"Recuerda los ajustes del escritorio de los usuarios de la web (editores y "
+"administradores)."
+
+#: modules/consent/includes/class-cookie-registry.php:191
+msgid ""
+"Statistics: recognises a returning visitor (an anonymous identifier). Only "
+"after accepting analytics."
+msgstr ""
+"Estadísticas: reconoce a un visitante que vuelve (con un identificador "
+"anónimo). Solo tras aceptar la analítica."
+
+#: modules/consent/includes/class-cookie-registry.php:197
+msgid "Statistics: groups the pages viewed in the same visit."
+msgstr "Estadísticas: agrupa las páginas vistas en una misma visita."
+
+#: modules/consent/includes/class-cookie-registry.php:203
+msgid "Statistics: remembers the website the visitor came from."
+msgstr "Estadísticas: recuerda desde qué web llegó el visitante."
+
+#: modules/consent/includes/class-cookie-registry.php:209
+msgid "Statistics: remembers that analytics cookies were accepted."
+msgstr "Estadísticas: recuerda que se aceptaron las cookies de analítica."
+
+#: modules/consent/includes/class-cookie-registry.php:215
+msgid ""
+"Remembers your name and email for the next comment, only if you ask for it."
+msgstr ""
+"Recuerda tu nombre y tu correo para el próximo comentario, solo si lo pides."
+
+#: modules/consent/includes/class-cookie-registry.php:356
+msgid ""
+"Invalid cookie name. Use the exact name, or a prefix ending in * for a "
+"family of cookies (e.g. _ga_*)."
+msgstr ""
+"Nombre de cookie no válido. Usa el nombre exacto, o un prefijo acabado en * "
+"para una familia de cookies (p. ej. _ga_*)."
+
+#: modules/consent/includes/class-cookie-registry.php:361
+msgid "The cookie list is full. Delete the cookies you do not need."
+msgstr "La lista de cookies está llena. Borra las que no necesites."
+
+#
+#: modules/consent/includes/class-cookie-table.php:103
+msgid "Session"
+msgstr "Sesión"
+
+#. translators: %d: number of seconds.
+#: modules/consent/includes/class-cookie-table.php:106
+#, php-format
+msgid "%d second"
+msgid_plural "%d seconds"
+msgstr[0] "%d segundo"
+msgstr[1] "%d segundos"
+
+#. translators: %d: number of minutes.
+#: modules/consent/includes/class-cookie-table.php:109
+#, php-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d minuto"
+msgstr[1] "%d minutos"
+
+#. translators: %d: number of hours.
+#: modules/consent/includes/class-cookie-table.php:112
+#, php-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d hora"
+msgstr[1] "%d horas"
+
+#. translators: %d: number of days.
+#: modules/consent/includes/class-cookie-table.php:115
+#, php-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d día"
+msgstr[1] "%d días"
+
+#. translators: %d: number of weeks.
+#: modules/consent/includes/class-cookie-table.php:118
+#, php-format
+msgid "%d week"
+msgid_plural "%d weeks"
+msgstr[0] "%d semana"
+msgstr[1] "%d semanas"
+
+#. translators: %d: number of months.
+#: modules/consent/includes/class-cookie-table.php:121
+#, php-format
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] "%d mes"
+msgstr[1] "%d meses"
+
+#. translators: %d: number of years.
+#: modules/consent/includes/class-cookie-table.php:124
+#, php-format
+msgid "%d year"
+msgid_plural "%d years"
+msgstr[0] "%d año"
+msgstr[1] "%d años"
+
+#: modules/consent/includes/class-cookie-table.php:146
+msgid ""
+"Cookie table: there are no confirmed cookies yet. Confirm them in Estrategia "
+"Web → Cookies and they will appear here."
+msgstr ""
+"Tabla de cookies: todavía no hay cookies confirmadas. Confírmalas en "
+"Estrategia Web → Cookies y saldrán aquí."
 
 #: modules/consent/module.php
 msgctxt "module name"
 msgid "Cookie notice"
 msgstr "Aviso de cookies"
 
+#
 #: modules/consent/module.php
 msgctxt "module description"
 msgid ""
 "Own cookie consent notice (Accept / Reject / Settings with declarable "
 "categories), the «Cookie settings» link block and the consent API for PHP "
-"and JavaScript."
+"and JavaScript, plus a cookie list fed by a detector and a cookie table "
+"block for the cookie policy."
 msgstr ""
 "Aviso de cookies propio (Aceptar / Rechazar / Configurar, con categorías "
 "declarables), el bloque del enlace «Configurar cookies» y la API del "
-"consentimiento para PHP y JavaScript."
+"consentimiento para PHP y JavaScript, además de una lista de cookies que "
+"alimenta un detector y un bloque con la tabla de cookies para la política de "
+"cookies."
 
 #: modules/external-links/module.php
 msgctxt "module name"
@@ -971,14 +1421,6 @@ msgstr "Mensaje de error"
 msgid "Email footer"
 msgstr "Pie de los correos"
 
-#: modules/forms/includes/admin/class-submissions-table.php:39
-#: modules/forms/includes/admin/class-submissions-table.php:86
-#: modules/redirects/includes/admin/class-tables.php:56
-#: modules/redirects/includes/admin/class-tables.php:90
-#: modules/redirects/includes/admin/class-tables.php:149
-msgid "Delete"
-msgstr "Borrar"
-
 #: modules/forms/includes/admin/class-submissions-table.php:56
 msgid "No submissions yet."
 msgstr "Todavía no hay envíos."
@@ -1006,10 +1448,6 @@ msgstr "Todos enviados"
 #: modules/forms/includes/admin/class-submissions-table.php:113
 msgid "Some failed"
 msgstr "Alguno falló"
-
-#: modules/forms/includes/admin/class-submissions-table.php:115
-msgid "Pending"
-msgstr "Pendiente"
 
 #: modules/forms/includes/class-blocks.php:80
 msgid ""
@@ -1114,6 +1552,116 @@ msgstr ""
 msgctxt "module name"
 msgid "Forms"
 msgstr "Formularios"
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:29
+msgid "Google"
+msgstr "Google"
+
+#
+#: modules/google-tags/includes/admin/class-google-tags-page.php:29
+#: modules/google-tags/includes/admin/class-google-tags-page.php:51
+msgid "Google tags"
+msgstr "Etiquetas de Google"
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:52
+msgid ""
+"An empty field loads nothing. Whatever is filled in waits for the cookie "
+"notice: Analytics needs «Analytics», Ads needs «Advertising», and Tag "
+"Manager asks for both. Logged-in editors and administrators are not measured."
+msgstr ""
+"Un campo vacío no carga nada. Lo que se rellene espera al aviso de cookies: "
+"Analytics necesita «Analítica», Ads necesita «Publicidad» y Tag Manager pide "
+"las dos. A los editores y administradores con sesión no se les mide."
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:58
+msgid "Google Analytics 4"
+msgstr "Google Analytics 4"
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:58
+msgid "Measurement ID of the GA4 web stream."
+msgstr "ID de medición del flujo web de GA4."
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:59
+msgid "Conversion ID of the Google Ads account."
+msgstr "ID de conversión de la cuenta de Google Ads."
+
+#
+#: modules/google-tags/includes/admin/class-google-tags-page.php:59
+msgid "Google Ads"
+msgstr "Google Ads"
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:60
+msgid "Conversion: form sent"
+msgstr "Conversión: formulario enviado"
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:60
+msgid ""
+"Optional. Conversion ID and label («send_to» of the conversion). Counted "
+"each time a form of the site is sent correctly, if the visitor accepted "
+"«Advertising»."
+msgstr ""
+"Opcional. ID y etiqueta de la conversión (el «send_to» de la conversión). Se "
+"cuenta cada vez que se envía bien un formulario de la web, si el visitante "
+"aceptó «Publicidad»."
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:61
+msgid "Container ID. The tags inside the container follow Consent Mode."
+msgstr ""
+"ID del contenedor. Las etiquetas del contenedor siguen el Consent Mode."
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:61
+msgid "Google Tag Manager"
+msgstr "Google Tag Manager"
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:64
+msgid "Loading"
+msgstr "Carga"
+
+#
+#: modules/google-tags/includes/admin/class-google-tags-page.php:69
+msgid ""
+"Basic (recommended): nothing is requested from Google until the visitor "
+"accepts."
+msgstr ""
+"Básico (recomendado): no se pide nada a Google hasta que el visitante acepta."
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:73
+msgid ""
+"Advanced: Google loads from the start with consent denied and sends "
+"cookieless pings. Better measurement, but data reaches Google before the "
+"visitor decides: decide it with the client."
+msgstr ""
+"Avanzado: Google se carga desde el principio con el consentimiento denegado "
+"y manda avisos sin cookies. Mide mejor, pero llegan datos a Google antes de "
+"que el visitante decida: decídelo con el cliente."
+
+#: modules/google-tags/includes/class-google-tags.php:118
+msgid "Google tags: GA4, Ads and Tag Manager IDs and the loading mode."
+msgstr ""
+"Etiquetas de Google: los ID de GA4, Ads y Tag Manager y el modo de carga."
+
+#. translators: %s: the value that was not saved.
+#: modules/google-tags/includes/class-google-tags.php:149
+#, php-format
+msgid "«%s» does not look like a valid ID and was not saved."
+msgstr "«%s» no parece un ID válido y no se ha guardado."
+
+#: modules/google-tags/module.php
+msgctxt "module description"
+msgid ""
+"Google Analytics 4, Google Ads (with an optional conversion for form "
+"submissions) and Google Tag Manager behind the cookie notice, with Consent "
+"Mode v2. An empty field loads nothing."
+msgstr ""
+"Google Analytics 4, Google Ads (con una conversión opcional por envío de "
+"formulario) y Google Tag Manager detrás del aviso de cookies, con Consent "
+"Mode v2. Un campo vacío no carga nada."
+
+#
+#: modules/google-tags/module.php
+msgctxt "module name"
+msgid "Google tags"
+msgstr "Etiquetas de Google"
 
 #: modules/language-switcher/blocks/language-switcher/block.json
 msgctxt "block description"
@@ -1341,6 +1889,59 @@ msgstr ""
 "Bloque de mapa en dos clics: una imagen fija con la dirección; el mapa de "
 "Google Maps solo se carga cuando el visitante lo pide (o si aceptó las "
 "cookies de mapas)."
+
+#: modules/matomo/includes/class-admin-fields.php:26
+msgid "Statistics (Matomo)"
+msgstr "Estadísticas (Matomo)"
+
+#: modules/matomo/includes/class-admin-fields.php:27
+msgid ""
+"Without the Matomo address or the site ID nothing is added to the site. "
+"Logged-in editors and administrators are not counted."
+msgstr ""
+"Sin la dirección de Matomo o sin el ID del sitio no se añade nada a la web. "
+"Los editores y administradores con sesión iniciada no se cuentan."
+
+#: modules/matomo/includes/class-admin-fields.php:30
+msgid "Matomo address"
+msgstr "Dirección de Matomo"
+
+#: modules/matomo/includes/class-admin-fields.php:33
+msgid "Example: https://stats.example.com/"
+msgstr "Ejemplo: https://stats.ejemplo.com/"
+
+#: modules/matomo/includes/class-admin-fields.php:37
+msgid "Site ID"
+msgstr "ID del sitio"
+
+#: modules/matomo/includes/class-admin-fields.php:46
+msgid "Without cookies (recommended): nothing to ask the visitor."
+msgstr "Sin cookies (recomendado): no hay nada que preguntar al visitante."
+
+#
+#: modules/matomo/includes/class-admin-fields.php:50
+msgid ""
+"Hybrid: without cookies until the visitor accepts «Analytics» in the cookie "
+"notice."
+msgstr ""
+"Híbrido: sin cookies hasta que el visitante acepta «Analítica» en el aviso "
+"de cookies."
+
+#
+#: modules/matomo/module.php
+msgctxt "module name"
+msgid "Matomo"
+msgstr "Matomo"
+
+#
+#: modules/matomo/module.php
+msgctxt "module description"
+msgid ""
+"Matomo tracking code, cookieless or hybrid (no cookies until the visitor "
+"accepts analytics in the cookie notice)."
+msgstr ""
+"Código de seguimiento de Matomo, sin cookies o híbrido (sin cookies hasta "
+"que el visitante acepta la analítica en el aviso de cookies)."
 
 #: modules/redirects/includes/admin/class-page.php:43
 #: modules/redirects/includes/admin/class-page.php:176
@@ -1678,7 +2279,7 @@ msgstr "Redirecciones"
 #: modules/site/includes/admin/class-admin.php:83
 #: modules/site/includes/class-bindings.php:50
 #: modules/site/includes/class-legacy-names.php:109
-#: modules/site/includes/class-settings.php:135
+#: modules/site/includes/class-settings.php:138
 msgid "Company details"
 msgstr "Datos de la empresa"
 
@@ -1767,42 +2368,6 @@ msgstr "Medios"
 #: modules/site/includes/admin/class-admin.php:144
 msgid "Allow SVG uploads (administrators only; files are sanitized)"
 msgstr "Permitir subir SVG (solo administradores; los ficheros se sanean)"
-
-#: modules/site/includes/admin/class-admin.php:148
-msgid "Statistics (Matomo)"
-msgstr "Estadísticas (Matomo)"
-
-#: modules/site/includes/admin/class-admin.php:149
-msgid ""
-"Without the Matomo address or the site ID nothing is added to the site. "
-"Logged-in editors and administrators are not counted."
-msgstr ""
-"Sin la dirección de Matomo o sin el ID del sitio no se añade nada a la web. "
-"Los editores y administradores con sesión iniciada no se cuentan."
-
-#: modules/site/includes/admin/class-admin.php:152
-msgid "Matomo address"
-msgstr "Dirección de Matomo"
-
-#: modules/site/includes/admin/class-admin.php:155
-msgid "Example: https://stats.example.com/"
-msgstr "Ejemplo: https://stats.ejemplo.com/"
-
-#: modules/site/includes/admin/class-admin.php:159
-msgid "Site ID"
-msgstr "ID del sitio"
-
-#: modules/site/includes/admin/class-admin.php:168
-msgid "Without cookies (recommended): nothing to ask the visitor."
-msgstr "Sin cookies (recomendado): no hay nada que preguntar al visitante."
-
-#: modules/site/includes/admin/class-admin.php:172
-msgid ""
-"Hybrid: without cookies until the visitor accepts «Statistics» in the cookie "
-"notice of the theme."
-msgstr ""
-"Híbrido: sin cookies hasta que el visitante acepta «Estadísticas» en el "
-"aviso de cookies del tema."
 
 #: modules/site/includes/class-company.php:91
 msgid "Company name"
@@ -2356,16 +2921,16 @@ msgstr "Logo (entero, nunca se recorta)"
 msgid "— None —"
 msgstr "— Ninguno —"
 
-#: modules/site/includes/class-settings.php:136
+#: modules/site/includes/class-settings.php:139
 msgid "Company details and site options of the Estrategia Web Site plugin."
 msgstr ""
 "Datos de la empresa y opciones de la web del plugin Estrategia Web Site."
 
-#: modules/site/includes/class-settings.php:257
+#: modules/site/includes/class-settings.php:260
 msgid "The email address is not valid. The previous one has been kept."
 msgstr "El correo electrónico no es válido. Se ha mantenido el anterior."
 
-#: modules/site/includes/class-settings.php:270
+#: modules/site/includes/class-settings.php:273
 msgid ""
 "The WhatsApp number is not valid (international format, digits only). The "
 "previous one has been kept."
@@ -2374,7 +2939,7 @@ msgstr ""
 "ha mantenido el anterior."
 
 #. translators: %s: the field name.
-#: modules/site/includes/class-settings.php:344
+#: modules/site/includes/class-settings.php:347
 #, php-format
 msgid ""
 "The address in «%s» is not a valid web address. The previous one has been "
@@ -2399,18 +2964,18 @@ msgctxt "module name"
 msgid "Company data and content types"
 msgstr "Datos de la empresa y tipos de contenido"
 
+#
 #: modules/site/module.php
 msgctxt "module description"
 msgid ""
 "Company details with Block Bindings and the [estrategia_web_company] "
 "shortcode, the usual content types of a corporate site (clients, "
-"testimonials, locations, projects, portfolio), sanitised SVG uploads and the "
-"Matomo code."
+"testimonials, locations, projects, portfolio) and sanitised SVG uploads."
 msgstr ""
 "Datos de la empresa con Block Bindings y el shortcode "
 "[estrategia_web_company], los tipos de contenido habituales de una web "
-"corporativa (clientes, opiniones, sedes, proyectos, portfolio), subida de "
-"SVG saneada y el código de Matomo."
+"corporativa (clientes, opiniones, sedes, proyectos, portfolio) y subida de "
+"SVG saneada."
 
 #: modules/social/blocks/social-links/block.json
 msgctxt "block title"
@@ -2514,11 +3079,6 @@ msgstr ""
 #: modules/social/includes/class-admin.php:125
 msgid "Icon"
 msgstr "Icono"
-
-#: modules/social/includes/class-admin.php:93
-#: modules/social/includes/class-admin.php:134
-msgid "Name"
-msgstr "Nombre"
 
 #: modules/social/includes/class-admin.php:94
 #: modules/social/includes/class-admin.php:142
@@ -2676,3 +3236,38 @@ msgid ""
 msgstr ""
 "Con WPML, /en/ enseña la portada traducida en vez de las últimas entradas. "
 "Sin WPML no hace nada."
+
+#~ msgid "Statistics"
+#~ msgstr "Estadísticas"
+
+#~ msgid "Marketing"
+#~ msgstr "Marketing"
+
+#~ msgctxt "module description"
+#~ msgid ""
+#~ "Own cookie consent notice (Accept / Reject / Settings with declarable "
+#~ "categories), the «Cookie settings» link block and the consent API for PHP "
+#~ "and JavaScript."
+#~ msgstr ""
+#~ "Aviso de cookies propio (Aceptar / Rechazar / Configurar, con categorías "
+#~ "declarables), el bloque del enlace «Configurar cookies» y la API del "
+#~ "consentimiento para PHP y JavaScript."
+
+#~ msgid ""
+#~ "Hybrid: without cookies until the visitor accepts «Statistics» in the "
+#~ "cookie notice of the theme."
+#~ msgstr ""
+#~ "Híbrido: sin cookies hasta que el visitante acepta «Estadísticas» en el "
+#~ "aviso de cookies del tema."
+
+#~ msgctxt "module description"
+#~ msgid ""
+#~ "Company details with Block Bindings and the [estrategia_web_company] "
+#~ "shortcode, the usual content types of a corporate site (clients, "
+#~ "testimonials, locations, projects, portfolio), sanitised SVG uploads and "
+#~ "the Matomo code."
+#~ msgstr ""
+#~ "Datos de la empresa con Block Bindings y el shortcode "
+#~ "[estrategia_web_company], los tipos de contenido habituales de una web "
+#~ "corporativa (clientes, opiniones, sedes, proyectos, portfolio), subida de "
+#~ "SVG saneada y el código de Matomo."

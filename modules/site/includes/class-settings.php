@@ -48,7 +48,10 @@
  *   «matomo.php»/«matomo.js» que se pega a veces del código de seguimiento;
  *   `matomo_site_id` es entero (0 = sin configurar); `matomo_mode` es uno de
  *   MATOMO_MODES (otro valor por REST → 400; por la pantalla, se queda el
- *   anterior). Qué hace cada modo, en la cabecera de class-matomo.php.
+ *   anterior). Qué hace cada modo, en la cabecera de
+ *   modules/matomo/includes/class-matomo.php (1.1.0: Matomo es su propio
+ *   módulo, pero sus claves y su saneado siguen AQUÍ, en esta opción, para
+ *   no migrar datos).
  * - La trampa: el controlador REST de ajustes devuelve null para TODA la
  *   opción si lo guardado no cumple el esquema (un tipo distinto, una clave de
  *   enabled_types que ya no está en el enum). Por eso sanitize() deja siempre

@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"__comment": "estrategia-web/cookie-table — la tabla de cookies confirmadas para la Política de cookies. Sin editor propio: supports.autoRegister (WP 7.0). Documentación y mantenimiento en la cabecera de includes/class-cookie-table.php.",
+	"apiVersion": 3,
+	"name": "estrategia-web/cookie-table",
+	"version": "1.1.0",
+	"title": "Cookie table",
+	"category": "widgets",
+	"icon": "editor-table",
+	"description": "Table of the site's cookies grouped by category (name, provider, purpose and duration), from the list confirmed in Estrategia Web → Cookies. For the cookie policy page.",
+	"keywords": [ "cookies", "policy", "privacy", "gdpr" ],
+	"textdomain": "estrategia-web",
+	"attributes": {
+		"category": { "type": "string", "enum": [ "", "necessary", "preferences", "statistics", "marketing", "maps" ], "default": "" },
+		"headingLevel": { "type": "integer", "enum": [ 2, 3, 4, 5, 6 ], "default": 3 }
+	},
+	"supports": {
+		"autoRegister": true,
+		"html": false,
+		"align": [ "wide", "full" ],
+		"typography": { "fontSize": true }
+	},
+	"style": "file:./style.css",
+	"render": "file:./render.php"
+}
