@@ -6,7 +6,7 @@
 //
 // Vista en rojo (14-10-2026): con Runtime sin mirar is_404() (consultando
 // en todas las peticiones), «una página que existe no toca la tabla» falla:
-// la regla /nosotros/ del CSV se come la página viva /nosotros/ con un 301.
+// la regla /about/ del CSV se come la página viva /about/ con un 301.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, CSV, api, coreApi, reset, get, seedPage } from "./lib.mjs";
@@ -80,9 +80,11 @@ test("contador y última visita", async () => {
 });
 
 test("una página que existe no toca la tabla; un 404 hace una consulta", async () => {
-  const page = await seedPage("<!-- wp:paragraph --><p>Viva</p><!-- /wp:paragraph -->", "nosotros");
+  // /about/ tiene regla en el CSV (→ /quienes-somos/). La página se borra en el reset del módulo:
+  // si se quedara, las pruebas siguientes en el mismo Playground verían una página viva.
+  const page = await seedPage("<!-- wp:paragraph --><p>Viva</p><!-- /wp:paragraph -->", "about");
   const live = await get(new URL(page.url).pathname);
-  assert.equal(live.status, 200, "la página viva gana a la regla /nosotros/ (solo actúan en los 404)");
+  assert.equal(live.status, 200, "la página viva gana a la regla /about/ (solo actúan en los 404)");
   const l = await api("/last");
   assert.equal(l.queries, 0, "cero consultas a las tablas del módulo en una página que existe");
   console.log(`  · página que existe: ${l.total} consultas en total, 0 del módulo`);

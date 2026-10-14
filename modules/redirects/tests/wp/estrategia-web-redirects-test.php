@@ -7,7 +7,8 @@
  *
  * Qué da (estrategia-web-redirects-test/v1):
  * - setup {on}: enciende o apaga el módulo (los Default: on + redirects).
- * - reset: vacía las dos tablas y los ajustes, y quita el Rank Math falso.
+ * - reset: vacía las dos tablas y los ajustes, quita el Rank Math falso y
+ *   borra las páginas «about» y «nosotros» que crean las pruebas.
  * - import {csv, dry_run}, rule {source, target, type, active}, rules,
  *   settings {log_404, log_days}, log, log-backdate, purge.
  * - last: lo que pasó en la última petición PÚBLICA (no REST ni admin):
@@ -95,6 +96,14 @@ add_action(
 				delete_option( 'estrategia_web_redirects_test_rank_math' );
 				delete_option( 'rank_math_modules' );
 				delete_option( 'estrategia_web_redirects_test_last' );
+				// Las páginas que crean estas pruebas con un origen del CSV como
+				// slug: vivas, taparían la regla en la tanda siguiente.
+				foreach ( array( 'about', 'nosotros' ) as $slug ) {
+					$page = get_page_by_path( $slug );
+					if ( $page ) {
+						wp_delete_post( $page->ID, true );
+					}
+				}
 				return array( 'ok' => true );
 			}
 		);
