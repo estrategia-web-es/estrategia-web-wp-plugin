@@ -11,6 +11,16 @@ bloques, en el README del tema (armazon-wp-padre, «Versiones»).
 
 ## Sin publicar
 
+### Migrador al plugin único (14-10-2026)
+
+- `includes/class-armazon-migration.php`: el paso 7 deja activo SOLO
+  `estrategia-web/estrategia-web.php` (salen armazon-site, armazon-forms y los
+  dos de la 1.0.0); el plan B de las tablas usa la migración de
+  `modules/forms/`; una segunda pasada tras el plan B ya no avisa de tablas
+  «duplicadas» si la nueva tiene las mismas filas. Orden de WP-CLI:
+  `wp estrategia-web migrate-armazon`. Ensayado en local con las versiones de
+  producción de Lavandería (0.7.9 / 0.5.4 / 0.2.2) y WPML.
+
 ### Rama modulo/contenido (14-10-2026)
 
 No obliga a tocar las webs: todo añade; nada cambia de nombre ni se borra.

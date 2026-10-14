@@ -363,6 +363,11 @@ final class Armazon_Migration {
 				continue;
 			}
 			$present = (int) $wpdb->get_var( "SELECT COUNT(*) FROM `$new_t`" ); // phpcs:ignore
+			if ( $present === $rows ) {
+				// Ya copiada (el plan B de una pasada anterior deja la vieja): nada que hacer.
+				// Idempotencia; la vieja se borra a mano, como dice el aviso de aquella pasada.
+				continue;
+			}
 			if ( $present ) {
 				self::$report['avisos'][] = "$old_t ($rows filas) y $new_t ($present filas) existen las dos y la nueva no está vacía: no se toca ninguna, se mira a mano";
 				continue;

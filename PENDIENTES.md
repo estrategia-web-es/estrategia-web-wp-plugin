@@ -22,9 +22,41 @@ cookies, en `consent`).
 
 - **Un tema + un plugin con módulos** (plugin 1.1.0, tema 1.1.0,
   14-10-2026): este repo es ahora el plugin `estrategia-web`, con Site, Forms
-  (repo archivado) y los cuatro bloques del tema como módulos; pantalla
-  «Estrategia Web → Módulos»; un dominio de traducción. Lavandería en local
-  ya lo usa. **Falta adaptar el migrador** (abajo, «Migrador al plugin único»).
+  (repo archivado) y los cuatro bloques del tema como módulos (los bloques
+  ya no viven en el tema); pantalla «Estrategia Web → Módulos»; un dominio
+  de traducción. Lavandería en local ya lo usa.
+- **Migrador al plugin único** (14-10-2026): `class-armazon-migration.php`
+  deja activo solo `estrategia-web/estrategia-web.php` (salen armazon-site,
+  armazon-forms y los dos de la 1.0.0). El desplegador de Lavandería sube un
+  plugin (sin `tests/`, `modules/*/tests/` ni `tools/`) y el tema sin
+  `blocks/`, aparta el MU-plugin de subidas, enciende `comments-off` una vez
+  y tiene los pasos opcionales `medios` y `limpieza`. Ensayado en local con
+  las versiones de producción; ver su cabecera.
+- **Subidas de imágenes** (módulo `uploads`, Default: on): 20 MB, umbral de
+  2560 px y borrar el original gigante, configurables en Ajustes → Medios.
+  Sustituye al MU-plugin de Lavandería, que el desplegador aparta al publicar.
+- **Cookies con detector y analítica** (fusionado el 14-10-2026): categorías
+  de la AEPD, detector de nombres, Open Cookie Database, pantalla Cookies,
+  tabla de la política; módulos `google-tags` (Consent Mode v2, Default: off)
+  y `matomo` (Default: on, la opción sigue en `estrategia_web_site`). Lo que
+  quedó fuera:
+  - la conversión de Google Ads de un formulario enviado SIN JavaScript (la
+    redirección con `af_result`) no se cuenta;
+  - la tabla de la política no lleva las cookies de terceros que nadie añade
+    a mano (las de google.com del iframe del mapa): el detector no las ve.
+- **Redes sociales personalizadas** (módulo `social`, Default: on): lista
+  libre (nombre, enlace, icono de la colección o SVG) y el bloque
+  `estrategia-web/social-links`. David revisará cómo la quiere.
+- **«Tipo de negocio» del cliente** (`estrategia_web_client_business_type`,
+  traducible). En Lavandería falta pasar a ese campo lo que hoy va entre
+  paréntesis en el título (a mano en el panel, tras publicar).
+- **Recuadro «Datos de la sede»** (y de cliente y opinión): `Meta_Panel` del
+  módulo `site`, con `wpml-config.xml` para copiar o traducir cada campo.
+- **Otros módulos nuevos**: `comments-off` (Default: off; Lavandería lo
+  enciende al desplegar), `featured-images` (tamaño `estrategia-web-small`,
+  200 px: `wp media regenerate --only-missing` en las webs que ya tienen
+  fotos), recorte vertical del carrusel en el móvil (lo pide el tema con
+  `estrategia_web_carousel_mobile_crop`).
 - **Fase 1: nombre Estrategia Web** en los tres repos (tema 1.0.0, este plugin
   1.0.0, formularios 1.0.0): carpetas, prefijos, bloques, opciones, tablas,
   cookie; alias de los nombres viejos hasta 2.0.0; «Powered by» apagado por
@@ -41,57 +73,25 @@ cookies, en `consent`).
 
 ### A añadir (todavía sin hacer)
 
-- **Subidas de imágenes** — hoy es un MU-plugin aparte en Lavandería
-  (`wp-content/mu-plugins/estrategia-web-subidas.php`, 12-10-2026): límite de
-  20 MB, umbral de serie de 2560 px y borrar el original gigante tras reducir.
-  Pasa a opción de este plugin (límite y umbral configurables) y el MU-plugin
-  se borra al publicarlo. Probado en el servidor: una foto de 4056×3040 y
-  4,2 MB quedó en 2560×1919 WebP (947 KB) sin original en el disco.
-- **Cookies con detector y analítica de Google**: HECHO en la rama
-  `modulo/cookies` (14-10-2026), sin fusionar: categorías de la AEPD, detector
-  de nombres, Open Cookie Database, pantalla Cookies, tabla de la política,
-  módulo `google-tags` (Consent Mode v2) y `matomo` como módulo. Al fusionar y
-  publicar, sale de aquí. Lo que quedó fuera:
-  - la conversión de Google Ads de un formulario enviado SIN JavaScript (la
-    redirección con `af_result`) no se cuenta;
-  - la tabla de la política no lleva las cookies de terceros que nadie añade
-    a mano (las de google.com del iframe del mapa): el detector no las ve.
-- **Redes sociales personalizadas**: lista libre (nombre, enlace, icono de una
-  colección o SVG subido) y un bloque para pintarlas. David revisará antes cómo
-  quiere esto.
-- **«Tipo de negocio» del cliente**: campo traducible aparte del título (caso:
-  «Portic Villas (agencia alquiler vacacional)» salía igual en inglés).
-- **Recuadro «Datos de la sede»** (ver la sección siguiente) y que cambie los
-  dos idiomas a la vez.
+(Nada de la lista de David del 12-10-2026: todo está en «Hecho y sin
+desplegar». Lo nuevo que pida entra aquí.)
 
----
+## WPML no copia los campos «copiar» al guardar desde el editor
+**Fecha:** 14-10-2026 · **Vence:** antes de decirle a David que cambie un teléfono en el panel
 
-## Migrador al plugin único
-**Fecha:** 14-10-2026 · **Vence:** antes de publicar nada en Lavandería
-
-Lo hace la «parte 3» (otro agente). Lo que cambió la 1.1.0 y el migrador
-tiene que saber:
-- `includes/class-armazon-migration.php`, paso 7 (`active_plugins`): hoy
-  pasa `armazon-site/armazon-site.php` y `armazon-forms/armazon-forms.php` a
-  `estrategia-web-site/…` y `estrategia-web-forms/…`. Tiene que dejar UNO:
-  `estrategia-web/estrategia-web.php` (quitar los dos viejos de la lista, sin
-  llamar a sus ganchos de desactivación), y comprobar en el paso previo que
-  existe `plugins/estrategia-web`, no las dos carpetas de la 1.0.0.
-- El cron de la purga de formularios conserva su nombre
-  (`estrategia_web_forms_purge`): el paso que quita el evento viejo
-  (`armazon_forms_purge`) sigue valiendo; el nuevo lo programa el módulo
-  forms solo, en init.
-- La opción `estrategia_web_modules` NO hace falta escribirla: sin ella
-  están todos los módulos encendidos, que es lo que usa Lavandería. Si se
-  escribe, que sea con `wp option update` (no con SQL), para que se apunte
-  `estrategia_web_modules_known`.
-- El dominio de traducción `estrategia-web-site` / `estrategia-web-forms` no
-  está guardado en la base de datos; nada que migrar. El contexto de cadenas
-  de WPML de los formularios sigue siendo `estrategia-web-forms`.
-- El desplegador de Lavandería sube hoy `plugins/estrategia-web-site` y
-  `plugins/estrategia-web-forms` desde dos repos: tiene que subir
-  `plugins/estrategia-web` desde este (sin `tests/`, `modules/*/tests/` ni
-  `tools/`) y el tema sin `blocks/`.
+Medido en el ensayo de la migración de Lavandería (local con WPML 5.1 real):
+con `wpml-config.xml` ya leído (teléfono de la sede = copiar, horario =
+traducir), cambiar el teléfono de la sede en castellano en el recuadro de
+`Meta_Panel` y guardar (Ctrl+S, REST 200) deja la traducción inglesa con el
+teléfono VIEJO. Lo mismo con `update_post_meta` y con `wp_update_post`. Sí
+copia `do_action( 'wpml_sync_custom_field', $id, $clave )`. Hipótesis (sin
+comprobar en el código de WPML): WPML copia en `save_post` mirando `$_POST`
+del editor clásico, y el editor de bloques guarda las metas por REST después
+de `save_post`. Arreglo propuesto: en el módulo `site`, al guardar una meta de
+`wpml-config.xml` con `action="copy"` (`updated_post_meta`/`added_post_meta`
+del tipo, o `rest_after_insert_<tipo>`), llamar a `wpml_sync_custom_field`. Con
+prueba en Lavandería (tiene WPML en local). Mientras tanto, el CHANGELOG
+promete una copia que no ocurre: cambiar el dato en los dos idiomas.
 
 ## Pruebas de los bloques: del tema al plugin
 **Fecha:** 14-10-2026 · **Vence:** —
@@ -125,17 +125,6 @@ Módulos».
 
 ---
 
-## Recuadro «Datos de la sede» en la pantalla de edición de la sede
-**Fecha:** 07-10-2026 · **Vence:** después de la fase 1 (el cambio de nombre)
-
-David quiso cambiar el teléfono de la sede Maioris y no encontró dónde: el
-editor de bloques esconde las metas de la sede (teléfono, dirección,
-horario, enlace y embed del mapa, mapa estático), y el panel «Campos
-personalizados» no sale con los tipos del plugin. Se cambió por WP-CLI.
-Hace falta un recuadro «Datos de la sede» en la pantalla de edición de la
-sede (barra lateral del documento o meta box) con esos campos, que guarde
-en las metas registradas (`estrategia_web_location_…`). Lo mismo, si se
-quiere, para cliente (ajuste de imagen) y opinión (autor, valoración).
 
 ## Tipos y taxonomías sin prefijo, antes de WordPress.org
 **Fecha:** 07-10-2026 · **Vence:** antes de mandarlo a WordPress.org
