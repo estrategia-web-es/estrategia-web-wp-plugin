@@ -8,9 +8,13 @@ import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, reset, seedPage, testApi, html, wp } from "./lib.mjs";
 
-// Los de Default: on (los que carga una web nueva) y los que existen. Un módulo
-// nuevo entra en la lista que le toque (1.1.0: matomo on, google-tags off).
-const ALL = ["carousel", "consent", "external-links", "forms", "language-switcher", "map", "matomo", "site", "social", "webp", "whatsapp", "wpml-front-page"];
+// Los módulos que existen y no son de prueba ni Default: off con su propia
+// prueba (redirects, google-tags). Un módulo nuevo entra aquí y, si nace
+// apagado, también en OFF.
+const ALL = ["carousel", "comments-off", "consent", "external-links", "featured-images", "forms", "language-switcher", "map", "matomo", "site", "social", "uploads", "webp", "whatsapp", "wpml-front-page"];
+// Los que nacen apagados (Default: off): sin opción guardada no se cargan.
+const OFF = ["comments-off"];
+const ON = ALL.filter((s) => !OFF.includes(s));
 
 before(reset);
 after(() => testApi("/modules", { method: "POST", body: { active: null } }));
@@ -18,7 +22,7 @@ after(() => testApi("/modules", { method: "POST", body: { active: null } }));
 test("sin opción guardada se cargan los módulos con Default: on, y solo esos", async () => {
   const m = await testApi("/modules");
   assert.equal(m.saved, null);
-  assert.deepEqual([...m.loaded].sort(), ALL);
+  assert.deepEqual([...m.loaded].sort(), ON);
   assert.equal((await wp("/block-types/estrategia-web/carousel")).status, 200);
   assert.equal((await wp("/block-types/armazon/carousel")).status, 200, "el alias del nombre viejo existe con el módulo encendido");
 });

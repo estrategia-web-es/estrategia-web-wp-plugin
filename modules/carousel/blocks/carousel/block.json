@@ -20,7 +20,9 @@
 		"perViewDesktop": { "type": "number", "default": 3 },
 		"autoplay": { "type": "boolean", "default": false },
 		"autoplayInterval": { "type": "number", "default": 6000 },
-		"imageSizes": { "type": "string", "default": "" }
+		"imageSizes": { "type": "string", "default": "" },
+		"mobileRatio": { "type": "string", "default": "" },
+		"mobileImageSizes": { "type": "string", "default": "" }
 	},
 	"supports": {
 		"align": [ "wide", "full" ],
@@ -31,7 +33,7 @@
 		"color": { "background": true, "text": true }
 	},
 	"editorScript": "file:./edit.js",
-	"viewScriptModule": "file:./view.js",
+	"viewScriptModule": "file:./view.min.js",
 	"style": "file:./style.css",
 	"render": "file:./render.php"
 }

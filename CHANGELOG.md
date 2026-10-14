@@ -87,6 +87,37 @@ ver (mismos slugs, misma revisión) y Matomo sigue midiendo igual.
 - **forms** lanza `estrategia-web:form-sent` al enviar bien con JS (lo usa la
   conversión de Google Ads).
 - Pruebas: `EW_PORT` elige el puerto del WordPress de pruebas.
+- **Módulo `uploads`** (Default: on): sustituye al MU-plugin de subidas de
+  Lavandería. Límite de subida 20 MB, umbral de reducción 2560 px y borrar
+  el original tras reducir, configurables en Ajustes → Medios (opción
+  `estrategia_web_uploads`). **Al publicarlo en Lavandería, el desplegador
+  borra `wp-content/mu-plugins/estrategia-web-subidas.php`** (los dos a la
+  vez no rompen, pero hacen lo mismo dos veces).
+- **Módulo `comments-off`** (Default: off): quita los comentarios del todo
+  (cerrados, menú, widget, barra, bloques del front, feeds), sin escribir
+  nada en la base de datos. En Lavandería se enciende a mano.
+- **Módulo `featured-images`** (Default: on): una imagen destacada de ancho
+  fijo en px lleva `sizes` de ese ancho (también dentro del carrusel, que
+  ahora respeta un sizes fijo); tamaño nuevo `estrategia-web-small` (200 px,
+  sin recortar); y `alt=""` cuando el alt repite el título que la ficha de
+  la Consulta pinta al lado (nunca si la imagen es un enlace). **En el
+  servidor, una vez: `wp media regenerate --only-missing --yes`**, para que
+  lo ya subido tenga el tamaño pequeño.
+- **Mapa: «Abrir en Google Maps» con nombre accesible por sede**
+  (`aria-label` «Abrir en Google Maps: <sede> (se abre en una pestaña
+  nueva)»): dos mapas en una página ya no tienen dos enlaces iguales a
+  destinos distintos (Lighthouse).
+- **Carrusel: recorte para el móvil** (atributos `mobileRatio` y
+  `mobileImageSizes`, o el filtro `estrategia_web_carousel_mobile_crop`):
+  por debajo de 782 px cada foto va en un `<picture>` con un recorte de la
+  forma de la caja, centrado en su object-position, generado la primera vez
+  y guardado como tamaño del adjunto. Lavandería local, portada en el móvil:
+  la foto LCP pasa de 92,5 KB (1536×1024) a 38,7 KB (720×895). **No hace nada
+  hasta que se pide**: Lavandería lo pide desde su tema (ver PENDIENTES).
+- **Carrusel: view.min.js** (24,8 → 7,7 KB) generado con
+  `node tools/minify.mjs` (esbuild fijo por npx); `tests/minified.test.mjs`
+  falla si view.js cambia y no se regenera. Y el ResizeObserver ya no mide
+  dos veces al arrancar (un reflow forzado menos).
 
 ## 1.1.0 — 14-10-2026
 

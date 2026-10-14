@@ -19,7 +19,11 @@
  * es ni lo uno ni lo otro no se rota: da la vuelta rebobinando, como la 0.5.0.
  *
  * Cómo se mantiene:
- * - Si se importa algo nuevo de WordPress, se añade a view.asset.php.
+ * - WordPress NO sirve este fichero: sirve view.min.js (1.1.x, ~8 KB en vez
+ *   de ~25). Después de editar aquí, `node tools/minify.mjs` en el mismo
+ *   commit; tests/minified.test.mjs (nivel 1) falla si se olvida.
+ * - Si se importa algo nuevo de WordPress, se añade a DEPS en
+ *   tools/minify.mjs (genera view.min.asset.php).
  * - La trampa: los manejadores que llaman a event.preventDefault() van con
  *   withSyncEvent(). Sin él, WordPress los ejecuta en diferido y el
  *   preventDefault llega tarde: la flecha del teclado mueve la pista Y además
@@ -597,8 +601,21 @@ const { state } = store( 'estrategia-web/carousel', {
 				track.addEventListener( 'touchcancel', touchEnd, { passive: true } );
 				track.addEventListener( 'wheel', take, { passive: true } );
 				// New width (rotating the phone, a breakpoint): rows and rotation
-				// are measured again.
-				const resize = new window.ResizeObserver( () => {
+				// are measured again. The observer also fires once right after
+				// observe() with the width that init just measured: that first
+				// call only records it (1.1.x). It used to measure everything
+				// twice, and measure() clears and restores `order`, which forces
+				// a layout (trace of Lavandería's home on a phone, 14-10-2026).
+				// Width read from the entry, never from the layout.
+				let width = null;
+				const resize = new window.ResizeObserver( ( entries ) => {
+					const now = entries[ entries.length - 1 ].contentRect.width;
+					const first = null === width;
+					const same = ! first && Math.abs( now - width ) < 0.5;
+					width = now;
+					if ( first || same ) {
+						return;
+					}
 					if ( ! ringState.moving && ! ringState.gliding ) {
 						measure( track );
 						settle( track );

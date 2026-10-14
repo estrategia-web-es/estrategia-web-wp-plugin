@@ -191,6 +191,23 @@ msgid ""
 "for."
 msgstr ""
 
+#: modules/comments-off/module.php
+msgctxt "module name"
+msgid "No comments"
+msgstr ""
+
+#: modules/comments-off/module.php
+msgctxt "module description"
+msgid ""
+"Turns comments off everywhere: closed on every post, no Comments menu, "
+"dashboard widget or toolbar item, no comment blocks on the site and no "
+"comment feeds."
+msgstr ""
+
+#: modules/comments-off/module.php:146
+msgid "Comments are closed."
+msgstr ""
+
 #: modules/consent/blocks/consent/block.json
 msgctxt "block title"
 msgid "Cookie settings link"
@@ -558,7 +575,7 @@ msgstr ""
 
 #: modules/consent/includes/class-consent.php:560
 #: modules/external-links/includes/class-external-links.php:101
-#: modules/map/blocks/map/render.php:321
+#: modules/map/blocks/map/render.php:335 modules/map/blocks/map/render.php:339
 #: modules/social/blocks/social-links/render.php:74
 #: modules/whatsapp/blocks/whatsapp/render.php:74
 msgid "(opens in a new tab)"
@@ -731,6 +748,19 @@ msgctxt "module description"
 msgid ""
 "Links to another domain open in a new tab, with rel=\"noopener\" and a "
 "hidden «(opens in a new tab)» for screen readers."
+msgstr ""
+
+#: modules/featured-images/module.php
+msgctxt "module name"
+msgid "Featured image tuning"
+msgstr ""
+
+#: modules/featured-images/module.php
+msgctxt "module description"
+msgid ""
+"Featured images with a fixed width in px download a file of that size, and a "
+"logo whose alt text only repeats the title shown next to it is marked as "
+"decorative."
 msgstr ""
 
 #: modules/forms/assets/editor.js:54 modules/forms/assets/editor.js:412
@@ -1700,7 +1730,13 @@ msgid ""
 "which may set its own cookies."
 msgstr ""
 
-#: modules/map/blocks/map/render.php:321
+#. translators: 1: place name (or its address), 2: «(opens in a new tab)». The text before the colon must be the visible text of the link.
+#: modules/map/blocks/map/render.php:333
+#, php-format
+msgid "Open in Google Maps: %1$s %2$s"
+msgstr ""
+
+#: modules/map/blocks/map/render.php:339
 msgid "Open in Google Maps"
 msgstr ""
 
@@ -2888,6 +2924,54 @@ msgstr ""
 #: modules/social/module.php
 msgctxt "module name"
 msgid "Social networks"
+msgstr ""
+
+#: modules/uploads/includes/class-uploads.php:196
+msgid "Image uploads"
+msgstr ""
+
+#: modules/uploads/includes/class-uploads.php:198
+msgid ""
+"Applies to images uploaded from now on. Images already in the library do not "
+"change."
+msgstr ""
+
+#: modules/uploads/includes/class-uploads.php:206
+msgid "Maximum upload size (MB)"
+msgstr ""
+
+#: modules/uploads/includes/class-uploads.php:212
+msgid ""
+"The server limit still applies if it is lower. 0 = only the server limit."
+msgstr ""
+
+#: modules/uploads/includes/class-uploads.php:221
+msgid "Scale down images larger than (px)"
+msgstr ""
+
+#: modules/uploads/includes/class-uploads.php:227
+msgid "Longest side. WordPress default: 2560. 0 = never scale down."
+msgstr ""
+
+#: modules/uploads/includes/class-uploads.php:236
+msgid "Original file"
+msgstr ""
+
+#: modules/uploads/includes/class-uploads.php:242
+msgid ""
+"Delete the original after scaling it down (only the scaled copy is kept)."
+msgstr ""
+
+#: modules/uploads/module.php
+msgctxt "module name"
+msgid "Image uploads"
+msgstr ""
+
+#: modules/uploads/module.php
+msgctxt "module description"
+msgid ""
+"Phone photos can be uploaded (up to 20 MB by default); WordPress scales them "
+"down to 2560 px and only the scaled copy is kept on disk."
 msgstr ""
 
 #: modules/webp/module.php

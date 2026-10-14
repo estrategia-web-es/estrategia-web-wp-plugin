@@ -202,6 +202,26 @@ msgstr ""
 "entradas de una Consulta), con flechas, puntos opcionales, bucle infinito y "
 "paso automático solo si se pide."
 
+#: modules/comments-off/module.php
+msgctxt "module name"
+msgid "No comments"
+msgstr "Sin comentarios"
+
+#: modules/comments-off/module.php
+msgctxt "module description"
+msgid ""
+"Turns comments off everywhere: closed on every post, no Comments menu, "
+"dashboard widget or toolbar item, no comment blocks on the site and no "
+"comment feeds."
+msgstr ""
+"Quita los comentarios de toda la web: cerrados en todas las entradas, sin "
+"menú Comentarios, sin widget del escritorio ni globo en la barra, sin "
+"bloques de comentarios en la web y sin feeds de comentarios."
+
+#: modules/comments-off/module.php:146
+msgid "Comments are closed."
+msgstr "Los comentarios están cerrados."
+
 #: modules/consent/blocks/consent/block.json
 msgctxt "block title"
 msgid "Cookie settings link"
@@ -624,7 +644,7 @@ msgstr "Configurar"
 
 #: modules/consent/includes/class-consent.php:560
 #: modules/external-links/includes/class-external-links.php:101
-#: modules/map/blocks/map/render.php:321
+#: modules/map/blocks/map/render.php:335 modules/map/blocks/map/render.php:339
 #: modules/social/blocks/social-links/render.php:74
 #: modules/whatsapp/blocks/whatsapp/render.php:74
 msgid "(opens in a new tab)"
@@ -824,6 +844,22 @@ msgstr ""
 "Los enlaces a otro dominio se abren en una pestaña nueva, con "
 "rel=\"noopener\" y un «(se abre en una pestaña nueva)» oculto para lectores "
 "de pantalla."
+
+#: modules/featured-images/module.php
+msgctxt "module name"
+msgid "Featured image tuning"
+msgstr "Ajustes de la imagen destacada"
+
+#: modules/featured-images/module.php
+msgctxt "module description"
+msgid ""
+"Featured images with a fixed width in px download a file of that size, and a "
+"logo whose alt text only repeats the title shown next to it is marked as "
+"decorative."
+msgstr ""
+"Las imágenes destacadas de ancho fijo en px bajan un archivo de ese tamaño, "
+"y un logo cuyo texto alternativo solo repite el título que se ve al lado se "
+"marca como decorativo."
 
 #: modules/forms/assets/editor.js:54 modules/forms/assets/editor.js:412
 msgid "Message"
@@ -1871,7 +1907,13 @@ msgstr ""
 "El mapa lo sirve Google. Al cargarlo, tu dirección IP se envía a Google, que "
 "puede instalar sus propias cookies."
 
-#: modules/map/blocks/map/render.php:321
+#. translators: 1: place name (or its address), 2: «(opens in a new tab)». The text before the colon must be the visible text of the link.
+#: modules/map/blocks/map/render.php:333
+#, php-format
+msgid "Open in Google Maps: %1$s %2$s"
+msgstr "Abrir en Google Maps: %1$s %2$s"
+
+#: modules/map/blocks/map/render.php:339
 msgid "Open in Google Maps"
 msgstr "Abrir en Google Maps"
 
@@ -3134,6 +3176,61 @@ msgstr ""
 msgctxt "module name"
 msgid "Social networks"
 msgstr "Redes sociales"
+
+#: modules/uploads/includes/class-uploads.php:196
+msgid "Image uploads"
+msgstr "Subidas de imágenes"
+
+#: modules/uploads/includes/class-uploads.php:198
+msgid ""
+"Applies to images uploaded from now on. Images already in the library do not "
+"change."
+msgstr ""
+"Se aplica a las imágenes que se suban a partir de ahora. Las que ya están en "
+"la biblioteca no cambian."
+
+#: modules/uploads/includes/class-uploads.php:206
+msgid "Maximum upload size (MB)"
+msgstr "Tamaño máximo de subida (MB)"
+
+#: modules/uploads/includes/class-uploads.php:212
+msgid ""
+"The server limit still applies if it is lower. 0 = only the server limit."
+msgstr ""
+"Si el límite del servidor es menor, manda ese. 0 = solo el límite del "
+"servidor."
+
+#: modules/uploads/includes/class-uploads.php:221
+msgid "Scale down images larger than (px)"
+msgstr "Reducir las imágenes mayores de (px)"
+
+#: modules/uploads/includes/class-uploads.php:227
+msgid "Longest side. WordPress default: 2560. 0 = never scale down."
+msgstr "Lado más largo. El de serie de WordPress: 2560. 0 = no reducir nunca."
+
+#: modules/uploads/includes/class-uploads.php:236
+msgid "Original file"
+msgstr "Archivo original"
+
+#: modules/uploads/includes/class-uploads.php:242
+msgid ""
+"Delete the original after scaling it down (only the scaled copy is kept)."
+msgstr ""
+"Borrar el original después de reducirlo (solo se guarda la copia reducida)."
+
+#: modules/uploads/module.php
+msgctxt "module name"
+msgid "Image uploads"
+msgstr "Subidas de imágenes"
+
+#: modules/uploads/module.php
+msgctxt "module description"
+msgid ""
+"Phone photos can be uploaded (up to 20 MB by default); WordPress scales them "
+"down to 2560 px and only the scaled copy is kept on disk."
+msgstr ""
+"Deja subir fotos del móvil (hasta 20 MB por defecto); WordPress las reduce a "
+"2560 px y en el disco solo se guarda la copia reducida."
 
 #: modules/webp/module.php
 msgctxt "module description"

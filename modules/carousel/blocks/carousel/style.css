@@ -38,6 +38,13 @@
 	padding-block-end: var(--wp--preset--spacing--8, 0.5rem);
 }
 
+/* El <picture> del recorte para el móvil (1.1.x, includes/carousel-mobile-crop.php)
+   no pinta caja: el <img> sigue siendo hijo, a efectos de maquetación, de su
+   figure, y las reglas del hijo sobre «.wp-block-image img» valen igual. */
+.estrategia-web-carousel__picture {
+	display: contents;
+}
+
 .estrategia-web-carousel__track > *,
 .estrategia-web-carousel__track > .wp-block-query > .wp-block-post-template > li {
 	flex: 0 0 calc((100% - (var(--estrategia-web-carousel-per-view) - 1) * var(--estrategia-web-carousel-gap)) / var(--estrategia-web-carousel-per-view));
