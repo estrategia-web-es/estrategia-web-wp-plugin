@@ -33,8 +33,13 @@ import fs from "node:fs";
 import path from "node:path";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
-const PORT = 9404;
+// EW_PORT=9412 node tests/run.mjs … para correr dos tandas a la vez (dos
+// worktrees, dos agentes): cada una con su Playground. Las pruebas leen la
+// base de AS_BASE (tests/lib.mjs y las lib.mjs de los módulos), que se pone
+// aquí para que la hereden.
+const PORT = Number(process.env.EW_PORT) || 9404;
 const BASE = `http://127.0.0.1:${PORT}`;
+process.env.AS_BASE ??= BASE;
 const only = process.argv.includes("--nivel") ? process.argv[process.argv.indexOf("--nivel") + 1] : null;
 
 // Todas las pruebas, con su ruta relativa a la raíz y un nombre corto para elegirlas.
