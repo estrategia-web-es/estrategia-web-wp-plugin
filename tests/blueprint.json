@@ -5,7 +5,7 @@
 		{
 			"step": "writeFile",
 			"path": "/wordpress/wp-content/mu-plugins/estrategia-web-test-loader.php",
-			"data": "<?php\n// Solo existe en el WordPress de pruebas (tests/blueprint.json). Un mu-plugin de pruebas por módulo que lo tenga.\nconst ESTRATEGIA_WEB_SITE_TESTING = true;\nconst ESTRATEGIA_WEB_FORMS_TESTING = true;\nrequire WP_CONTENT_DIR . '/plugins/estrategia-web/tests/wp/estrategia-web-site-test.php';\nrequire WP_CONTENT_DIR . '/plugins/estrategia-web/modules/forms/tests/wp/estrategia-web-forms-test.php';\n"
+			"data": "<?php\n// Solo existe en el WordPress de pruebas (tests/blueprint.json). Un mu-plugin de pruebas por módulo que lo tenga.\nconst ESTRATEGIA_WEB_SITE_TESTING = true;\nconst ESTRATEGIA_WEB_FORMS_TESTING = true;\nrequire WP_CONTENT_DIR . '/plugins/estrategia-web/tests/wp/estrategia-web-site-test.php';\nrequire WP_CONTENT_DIR . '/plugins/estrategia-web/modules/forms/tests/wp/estrategia-web-forms-test.php';\nrequire WP_CONTENT_DIR . '/plugins/estrategia-web/modules/consent/tests/wp/estrategia-web-cookies-test.php';\n"
 		},
 		{ "step": "activatePlugin", "pluginPath": "estrategia-web/estrategia-web.php" },
 		{

@@ -129,7 +129,7 @@ test("consent (0.5.0): contrato JS — evento estrategia-web:consent con detail.
   // open() lo reabre con lo elegido marcado.
   await page.evaluate(() => window.estrategiaWebConsent.open());
   await notice(page).waitFor({ state: "visible" });
-  assert.equal(await page.getByRole("checkbox", { name: /Estadísticas/ }).isChecked(), true);
+  assert.equal(await page.getByRole("checkbox", { name: /Analítica/ }).isChecked(), true, "1.1.0: «statistics» se rotula «Analítica»");
   assert.deepEqual(page.errors, []);
   await ctx.close();
 });

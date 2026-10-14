@@ -1,0 +1,26 @@
+/*
+ * estrategia-web/cookie-table — lo mínimo para que la tabla se lea en móvil:
+ * desplazamiento horizontal DENTRO de la tabla (no de la página) y el nombre
+ * de la cookie sin partir. El resto (bordes, colores, letra) es del tema, vía
+ * .wp-block-table.
+ */
+.estrategia-web-cookie-table__figure {
+	overflow-x: auto;
+	margin-block-end: 1.5em;
+}
+
+.estrategia-web-cookie-table__table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.estrategia-web-cookie-table__table th,
+.estrategia-web-cookie-table__table td {
+	text-align: start;
+	vertical-align: top;
+	padding: 0.5em 0.75em;
+}
+
+.estrategia-web-cookie-table__table td:first-child {
+	white-space: nowrap;
+}
