@@ -1,23 +1,69 @@
-# Estrategia Web Site — datos de la empresa y tipos de contenido de las webs de WordPress
+# Estrategia Web — el plugin de las webs de WordPress, por módulos
 
-Los **datos de la empresa** (nombre, teléfono, WhatsApp, dirección, redes…) en
-un solo sitio y enlazables desde cualquier bloque con **Block Bindings**; los
-**tipos de contenido habituales** de una web corporativa (clientes, opiniones,
-sedes, proyectos, portfolio), **cada uno activable**; y **subida de SVG
-saneada**. Lo usan todas las webs hechas con el tema padre del Armazón; es
-compartido y versionado, como el plugin hermano
-[armazon-wp-formularios](E:/Repositories/armazon-wp-formularios/README.md).
-El marco está en
+**Todo lo que no es diseño** en una web de Estrategia Web, en un solo plugin
+con **módulos que se encienden y se apagan** en **Estrategia Web → Módulos**.
+El diseño (plantillas, partes, patrones, `theme.json`) es del tema
+[Estrategia Web](E:/Repositories/armazon-wp-padre/README.md), que desde su
+1.1.0 no registra ningún bloque (requisito de WordPress.org).
+
+Decisión de David del 14-10-2026: **un tema + un plugin**. Hasta la 1.0.0
+(que nunca se publicó) eran tres piezas: el plugin «Estrategia Web Site»
+(este repo), el plugin «Estrategia Web Forms»
+([armazon-wp-formularios](E:/Repositories/armazon-wp-formularios/README.md),
+archivado) y cuatro bloques registrados por el tema. **Los nombres públicos
+de la 1.0.0 no cambian** (bloques, opciones, metas, tablas, rutas REST,
+filtros): cambió dónde vive el código. El marco general está en
 [armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md](E:/Repositories/armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md).
 
-- Slug y text domain: `estrategia-web-site` · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · versión 0.5.4
-- Desde 0.5.0 lleva también **el aviso de cookies** (vino del tema padre
-  0.6.0, que en su 0.7.0 ya no lo trae): ver «6. Aviso de cookies».
+- Slug, carpeta y text domain: `estrategia-web` (`estrategia-web/estrategia-web.php`) · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · versión **1.1.0**
+- El repo se sigue llamando `armazon-wp-sitio`; la carpeta del plugin en una web es `estrategia-web/`.
 - Sin dependencias, sin `node_modules`, sin paso de compilación.
 
-Por qué un plugin y no el tema padre: los datos y el contenido **no pueden
-desaparecer al cambiar de tema**. Lo que se ve (cómo se pinta una ficha de
-cliente) es del tema; lo que se guarda, de aquí.
+Por qué un plugin y no el tema padre: lo que se guarda y lo que funciona **no
+puede desaparecer al cambiar de tema**. Lo que se ve es del tema; lo que se
+guarda y lo que hace, de aquí.
+
+## Módulos
+
+| Módulo (carpeta) | Qué hace | Por defecto |
+|---|---|---|
+| `site` | datos de la empresa (Block Bindings, `[estrategia_web_company]`), tipos de contenido (clientes, opiniones, sedes, proyectos, portfolio), SVG saneado y Matomo: secciones 1 a 5 de abajo | encendido |
+| `consent` | el aviso de cookies y su API: sección 6 | encendido |
+| `webp` | tamaños de imagen en WebP: sección 7 | encendido |
+| `external-links` | enlaces a otro dominio en pestaña nueva: sección 8 | encendido |
+| `wpml-front-page` | con WPML, `/en/` enseña la portada traducida | encendido |
+| `forms` | formularios por bloques, avisos por correo y registro de envíos: [modules/forms/README.md](modules/forms/README.md) | encendido |
+| `carousel` | bloque `estrategia-web/carousel` | encendido |
+| `map` | bloque `estrategia-web/map` (mapa en dos clics) | encendido |
+| `whatsapp` | bloque `estrategia-web/whatsapp` y sus dos opciones | encendido |
+| `language-switcher` | bloque `estrategia-web/language-switcher` (WPML) | encendido |
+
+**Todos encendidos por defecto** porque son lo que ya usaba Lavandería: una
+web que actualiza no cambia. Un módulo apagado **no carga nada** (ni su PHP,
+ni sus bloques, ni sus assets) y **no borra nada** de lo que guardó.
+
+**Cómo se añade un módulo:** una carpeta `modules/<slug>/` con su
+`module.php`, que lleva una cabecera (nombre, descripción, si va encendido
+por defecto, de qué depende). Se descubre solo: no hay lista central. Todo lo
+que hay que saber —campos, el caso frontera de un módulo nuevo en una web
+que ya existía, las trampas— está en la cabecera de
+[includes/class-modules.php](includes/class-modules.php). El ejemplo mínimo
+es [modules/webp/module.php](modules/webp/module.php); el completo,
+[modules/forms/module.php](modules/forms/module.php).
+
+    estrategia-web.php          entrada: constantes y arranque del núcleo
+    includes/                   el núcleo, siempre cargado:
+      class-modules.php           el cargador (CÓMO SE AÑADE UN MÓDULO)
+      class-plugin.php            traducciones y ganchos estrategia_web_activate / _deactivate
+      class-blocks.php            etiquetas de autoRegister, traducciones del editor, alias armazon/…
+      class-armazon-migration.php el migrador de «Armazón» (para todas las piezas)
+      admin/class-modules-page.php  la pantalla «Estrategia Web → Módulos»
+    modules/<slug>/             module.php (cabecera + arranque), includes/, blocks/, assets/, tests/, uninstall.php
+    languages/                  estrategia-web.pot · estrategia-web-es_ES.po · .l10n.php (uno para todo)
+    tests/                      corredor, lib.mjs, blueprint y las pruebas del núcleo
+    tools/i18n.mjs              extrae (también las cabeceras de módulo), fusiona y compila
+    wpml-config.xml             WPML solo lee el de la raíz: aquí van los de todos los módulos
+    uninstall.php               llama al uninstall.php de cada módulo
 
 ---
 
@@ -133,7 +179,7 @@ unidos con «, ». Una clave inexistente o vacía no pinta nada.
   atributo de bloque ni en un `href` (para enlaces, el binding del botón).
 - `[[estrategia_web_company …]]` con dos corchetes es el **escape** de WordPress:
   sale literal. El porqué de shortcode y no bloque, en la cabecera de
-  [includes/class-shortcode.php](includes/class-shortcode.php).
+  [modules/site/includes/class-shortcode.php](modules/site/includes/class-shortcode.php).
 
 ### 2 ter. Fuente de Block Bindings `estrategia-web-site/location` (0.2.0)
 
@@ -261,7 +307,7 @@ pasa por `post_class` (deducido del núcleo, no probado).
 Con `allow_svg` activado, **solo** quien tiene `unfiltered_html` o
 `manage_options` puede subir `.svg` (no `.svgz`). Siempre se **sanea en
 servidor** por lista blanca de elementos y atributos
-([includes/class-svg-sanitizer.php](includes/class-svg-sanitizer.php)): fuera
+([modules/site/includes/class-svg-sanitizer.php](modules/site/includes/class-svg-sanitizer.php)): fuera
 `<script>`, atributos `on*`, `<foreignObject>`, enlaces `javascript:`, URL
 externas, `@import`, entidades (XXE) y comentarios; se quedan degradados,
 máscaras, filtros, texto y `<style>` con `url(#id)`. Las medidas (width/height
@@ -306,7 +352,7 @@ curl -u admin:APP_PASS -X POST https://web.test/wp-json/wp/v2/settings \
 - «Sin IP completa» se configura en el servidor de Matomo, no aquí.
 
 El porqué de cada decisión y sus trampas, en la cabecera de
-[includes/class-matomo.php](includes/class-matomo.php).
+[modules/site/includes/class-matomo.php](modules/site/includes/class-matomo.php).
 
 ### 6. Aviso de cookies (0.5.0)
 
@@ -314,7 +360,7 @@ Vino del tema padre (`armazon-wp-padre` ≤ 0.6.0, `inc/consent.php`) **sin
 cambiar el contrato**: el consentimiento es funcionalidad, no presentación, y
 una web que cambie de tema no puede quedarse sin aviso. La documentación
 entera (decisiones, cómo se mantiene, trampas) está en la cabecera de
-[includes/class-consent.php](includes/class-consent.php).
+[modules/consent/includes/class-consent.php](modules/consent/includes/class-consent.php).
 
 - **Sale solo si la web declara categorías** (`statistics`, `maps`,
   `marketing`) con el filtro `estrategia_web_consent_categories`; sin ninguna, no
@@ -326,7 +372,7 @@ entera (decisiones, cómo se mantiene, trampas) está en la cabecera de
   la misma revisión): quien ya eligió con el aviso del padre no lo vuelve a ver.
 - **PHP:** `estrategia_web_consent_has( 'maps' )`, `estrategia_web_consent_categories()` y
   las demás `estrategia_web_consent_*` de siempre
-  ([includes/consent-functions.php](includes/consent-functions.php)), y
+  ([modules/consent/includes/consent-functions.php](modules/consent/includes/consent-functions.php)), y
   `\EstrategiaWeb\Site\Consent`. Filtros: `estrategia_web_consent_categories`,
   `estrategia_web_consent_revision`, `estrategia_web_consent_max_age`, `estrategia_web_consent_text`.
 - **JS:** `window.estrategiaWebConsent` (`categories`, `has()`, `get()`, `open()`,
@@ -343,7 +389,7 @@ entera (decisiones, cómo se mantiene, trampas) está en la cabecera de
   contenido y las partes ya guardados con él siguen funcionando. Quitar el
   alias es versión mayor.
 - **Estilos:** hoja base neutra en el plugin
-  ([blocks/consent/style.css](blocks/consent/style.css)) que lee los tokens de
+  ([modules/consent/blocks/consent/style.css](modules/consent/blocks/consent/style.css)) que lee los tokens de
   `theme.json` (`base`, `contrast`, `border`, espaciado, tamaños) con valores
   de reserva. El tema afina con sus tokens o con CSS sobre `.estrategia-web-consent`.
 - **Convivencia:** con un tema padre viejo que aún trae su aviso, el plugin
@@ -396,7 +442,7 @@ la que pone la carga de contenido de Lavandería en todas) sigue sirviendo,
 tamaño intermedio (`foto-1024x683.jpg`) apunta a un fichero borrado. Después
 de regenerar hay que volver a escribir en el contenido la URL actual de la
 mediateca. El detalle, en la cabecera de
-[includes/class-webp.php](includes/class-webp.php).
+[modules/webp/includes/class-webp.php](modules/webp/includes/class-webp.php).
 
 **Calidad (0.5.4): 75**, no el 82 que WordPress pone a todo
 (`wp_editor_set_quality`, solo cuando lo que se guarda es `image/webp`: un
@@ -441,7 +487,7 @@ cualquier enlace del contenido a otro dominio.
 
 Decisiones, trampa (corre dentro del búfer de salida: un fallo no rompe la
 página pero deja los enlaces sin tocar, en silencio) y cómo se mantiene, en
-la cabecera de [includes/class-external-links.php](includes/class-external-links.php).
+la cabecera de [modules/external-links/includes/class-external-links.php](modules/external-links/includes/class-external-links.php).
 
 ### Glosario (código en inglés, dominio en castellano)
 
@@ -455,37 +501,54 @@ cookies / consentimiento · `powered by` la firma al pie del aviso ·
 
 ## Pruebas (fila 7)
 
-    node tests/run.mjs             1 → 2 → 3, para en el primer rojo (~2 min)
-    node tests/run.mjs --nivel 1   solo el 1 (cada commit, ~0,2 s)
-    node tests/run.mjs webp        el 1 y, de los demás, solo webp.test.mjs
+    node tests/run.mjs             1 → 2 → 3, para en el primer rojo
+    node tests/run.mjs --nivel 1   solo el 1 (cada commit, ~1 s)
+    node tests/run.mjs webp        el 1 y, de los demás, solo los que empiecen por «webp»
+    node tests/run.mjs forms/      el 1 y, de los demás, los del módulo forms
 
 Al desarrollar, **el nivel 1 siempre y, de los niveles 2 y 3, solo la prueba
 nueva** (fila 7, «Cuándo corre la batería»). La tanda entera, cuando la pida
 David o antes de llevar el plugin a una web en producción.
 
+**Dónde están (1.1.0):** las del núcleo en `tests/` (el cargador de módulos:
+[tests/modules.test.mjs](tests/modules.test.mjs), nivel 1, y
+[tests/modules-page.test.mjs](tests/modules-page.test.mjs), nivel 2) y las de
+cada módulo en `modules/<slug>/tests/`. El corredor las descubre en los dos
+sitios. Las de la tabla de abajo se mudaron de `tests/` a su módulo sin
+cambiar nada más que la ruta del `lib.mjs`; las de formularios están en
+[modules/forms/README.md](modules/forms/README.md). **Las de los cuatro
+bloques que vinieron del tema siguen en el repo del tema**
+(`armazon-wp-padre/tests/`), que monta este plugin: miden los bloques con el
+CSS del tema.
+
 El corredor arranca **Playground** (WP 7.1, PHP 8.3) en el **puerto 9404** si
-no hay uno, con el plugin montado y [tests/blueprint.json](tests/blueprint.json),
-y lo mata al terminar con `taskkill /T /F`. Las pruebas hablan con la **API
+no hay uno, con el plugin montado como `plugins/estrategia-web` y
+[tests/blueprint.json](tests/blueprint.json), y lo mata al terminar con
+`taskkill /T /F`. Todos los módulos comparten ese WordPress, con un mu-plugin
+de pruebas por módulo que lo necesite. Las pruebas hablan con la **API
 REST de verdad** como administrador y como autor (contraseñas de aplicación
 que crea [tests/wp/estrategia-web-site-test.php](tests/wp/estrategia-web-site-test.php)).
+La trampa de compartirlo: ese mu-plugin pone el sitio en `es_ES` y las de
+formularios esperan inglés; su `reset()` lo marca y vuelve a `en_US` (ver
+`modules/forms/tests/wp/estrategia-web-forms-test.php`).
 
-| Fichero | Nivel | Qué prueba |
+| Fichero (en `modules/<módulo>/tests/`) | Nivel | Qué prueba |
 |---|---|---|
-| [tests/pure.test.mjs](tests/pure.test.mjs) | 1 | tel:/mailto:/wa.me; SVG hostil saneado, SVG inaceptables, medidas; (0.5.2) qué enlace es externo (otro host, www, subdominio, `//`, relativos, anclas, otros esquemas) y `rel` con `noopener` sin perder lo que traía; (0.5.4) la calidad del WebP: 75 solo para `image/webp`, el filtro, 0 y el tope |
-| [tests/external-links.test.mjs](tests/external-links.test.mjs) | 2 | enlaces externos (0.5.2) en la página servida: el botón de wa.me con `_blank`, `noopener` y `aria-label`; internos, www, relativo, ancla, tel, mailto intactos; con `target` intacto; con `rel` y con `aria-label`, añadidos; enlace-imagen con su alt; «Powered by» sin duplicar; REST sin tocar; el filtro lo apaga. Vista en rojo sin el `boot()` |
-| [tests/settings.test.mjs](tests/settings.test.mjs) | 2 | guardar y leer por REST, fusión, saneado (correo/URL/WhatsApp inválidos no se guardan), esquema, `rewrite_slugs` (saneado, fusión por clave, 400), autor sin permiso |
-| [tests/bindings.test.mjs](tests/bindings.test.mjs) | 2 | párrafo con el teléfono, botón con wa.me, tel: (también `phone_secondary_href`), mailto:, `<br>`, escapado, `social.<red>` |
-| [tests/location.test.mjs](tests/location.test.mjs) | 2 | fuente de sedes: por slug (botón texto+url, título, dirección, mailto, mapa), inexistente/borrador/fuera de contexto vacíos, por contexto en una Consulta |
-| [tests/types.test.mjs](tests/types.test.mjs) | 2 | tipo inexistente sin activar; activar/desactivar sin perder contenido; slug `/clientes/`; meta saneado; Consulta por `client_sector` con título e imagen; `estrategia_web_client_image_fit` y la clase `has-image-fit-contain`; `rewrite_slugs` mueve el archivo a `/cliente/` y deja libre la página `/clientes/` |
-| [tests/legal.test.mjs](tests/legal.test.mjs) | 2 | datos legales (0.4.0): `registry` saneado y fusionado; frase legal con `[estrategia_web_company]` (razón social, NIF, domicilio en una línea, teléfono, correo, registro, escapado); clave inexistente vacía; `registry` por binding |
-| [tests/static-map.test.mjs](tests/static-map.test.mjs) | 2 | mapa estático de una sede (0.4.0): `estrategia_web_location_static_map` acepta ruta del tema, del sitio y URL del mismo dominio, y rechaza otro dominio, `//`, `javascript:`, `..`, no-imagen; `estrategia_web_location_static_map_id` solo adjuntos de imagen; en una Consulta, core/post-meta da a cada sede el suyo (párrafo e imagen); también por la fuente de sedes |
-| [tests/svg.test.mjs](tests/svg.test.mjs) | 2 | SVG con `<script>` subido saneado (multipart y sideload), medidas, autor no puede, `allow_svg` apagado |
-| [tests/matomo.test.mjs](tests/matomo.test.mjs) | 2 | Matomo (0.3.0): sin URL o sin id no se imprime; por defecto `disableCookies`; híbrido con `requireCookieConsent` y la categoría «statistics» declarada; saneado (URL, id, 400 del modo); sus claves no son datos enlazables |
-| [tests/matomo-browser.test.mjs](tests/matomo-browser.test.mjs) | 3 | con el `matomo.js` real ([tests/fixtures/matomo.js](tests/fixtures/matomo.js), 5.4.0, BSD-3) servido por una ruta falsa y, desde 0.5.0, con el **aviso de cookies real** (sus botones y su cookie, no un evento simulado): sin configuración no se pide; sin cookies mide, no deja cookies y no hay aviso; híbrido sin cookies hasta «Aceptar todas» (solo «mapas» no vale), `mtm_cookie_consent` y `_pk_id` al aceptar, borradas al «Rechazar todas»; aviso ya contestado al cargar; elección caducada olvida; a un administrador no se le mide |
-| [tests/consent.test.mjs](tests/consent.test.mjs) | 2 | aviso de cookies (0.5.0): sin categorías no sale; con ellas, en orden estable y con los tres botones; revisión y cookie iguales a las del padre; Matomo híbrido lo hace salir; «Powered by» (texto, `href`, `_blank`, `rel="noopener"` sin `nofollow`, después de los botones); el filtro cambia texto y URL, una URL vacía o no http(s) deja el texto sin enlace, `false` lo quita; enlace por bloque nuevo, alias viejo y shortcode |
-| [tests/consent-browser.test.mjs](tests/consent-browser.test.mjs) | 3 | aviso de cookies (0.5.0): sale; aceptar y rechazar pesan igual; rechazar guarda la cookie y persiste; el enlace (nuevo y alias) lo reabre con el foco dentro y Escape lo cierra; contrato JS (evento, `has`, `get`, `categories`, `grant`, `open`) y scripts diferidos; una cookie del aviso del padre sigue valiendo; «Powered by» visible, más pequeño que los botones y con contraste AA medido; (0.5.1) abierto es lo primero al tabular, sin trampa y Escape no lo cierra sin elegir; ≥ 16 px entre el texto y los botones a 402 y 1512 con el `:root :where(p)` de Lavandería |
-| [tests/webp.test.mjs](tests/webp.test.mjs) | 2 | WebP (0.5.1): el editor escribe WebP; JPEG y PNG subidos generan sus tamaños (y el principal) en WebP; el filtro a `false` lo apaga; la trampa de regenerar lo ya subido (la `.jpg` del contenido sin `srcset`, la intermedia rota) y su arreglo |
-| [tests/editor.test.mjs](tests/editor.test.mjs) | 3 | el editor enseña el valor enlazado y lista los datos (empresa y sede por slug); la pantalla de ajustes guarda, avisa y desactiva el último tipo |
+| [site/pure](modules/site/tests/pure.test.mjs) | 1 | tel:/mailto:/wa.me; SVG hostil saneado, SVG inaceptables, medidas; (0.5.2) qué enlace es externo (otro host, www, subdominio, `//`, relativos, anclas, otros esquemas) y `rel` con `noopener` sin perder lo que traía; (0.5.4) la calidad del WebP: 75 solo para `image/webp`, el filtro, 0 y el tope |
+| [external-links/external-links](modules/external-links/tests/external-links.test.mjs) | 2 | enlaces externos (0.5.2) en la página servida: el botón de wa.me con `_blank`, `noopener` y `aria-label`; internos, www, relativo, ancla, tel, mailto intactos; con `target` intacto; con `rel` y con `aria-label`, añadidos; enlace-imagen con su alt; «Powered by» sin duplicar; REST sin tocar; el filtro lo apaga. Vista en rojo sin el `boot()` |
+| [site/settings](modules/site/tests/settings.test.mjs) | 2 | guardar y leer por REST, fusión, saneado (correo/URL/WhatsApp inválidos no se guardan), esquema, `rewrite_slugs` (saneado, fusión por clave, 400), autor sin permiso |
+| [site/bindings](modules/site/tests/bindings.test.mjs) | 2 | párrafo con el teléfono, botón con wa.me, tel: (también `phone_secondary_href`), mailto:, `<br>`, escapado, `social.<red>` |
+| [site/location](modules/site/tests/location.test.mjs) | 2 | fuente de sedes: por slug (botón texto+url, título, dirección, mailto, mapa), inexistente/borrador/fuera de contexto vacíos, por contexto en una Consulta |
+| [site/types](modules/site/tests/types.test.mjs) | 2 | tipo inexistente sin activar; activar/desactivar sin perder contenido; slug `/clientes/`; meta saneado; Consulta por `client_sector` con título e imagen; `estrategia_web_client_image_fit` y la clase `has-image-fit-contain`; `rewrite_slugs` mueve el archivo a `/cliente/` y deja libre la página `/clientes/` |
+| [site/legal](modules/site/tests/legal.test.mjs) | 2 | datos legales (0.4.0): `registry` saneado y fusionado; frase legal con `[estrategia_web_company]` (razón social, NIF, domicilio en una línea, teléfono, correo, registro, escapado); clave inexistente vacía; `registry` por binding |
+| [site/static-map](modules/site/tests/static-map.test.mjs) | 2 | mapa estático de una sede (0.4.0): `estrategia_web_location_static_map` acepta ruta del tema, del sitio y URL del mismo dominio, y rechaza otro dominio, `//`, `javascript:`, `..`, no-imagen; `estrategia_web_location_static_map_id` solo adjuntos de imagen; en una Consulta, core/post-meta da a cada sede el suyo (párrafo e imagen); también por la fuente de sedes |
+| [site/svg](modules/site/tests/svg.test.mjs) | 2 | SVG con `<script>` subido saneado (multipart y sideload), medidas, autor no puede, `allow_svg` apagado |
+| [site/matomo](modules/site/tests/matomo.test.mjs) | 2 | Matomo (0.3.0): sin URL o sin id no se imprime; por defecto `disableCookies`; híbrido con `requireCookieConsent` y la categoría «statistics» declarada; saneado (URL, id, 400 del modo); sus claves no son datos enlazables |
+| [site/matomo-browser](modules/site/tests/matomo-browser.test.mjs) | 3 | con el `matomo.js` real ([modules/site/tests/fixtures/matomo.js](modules/site/tests/fixtures/matomo.js), 5.4.0, BSD-3) servido por una ruta falsa y, desde 0.5.0, con el **aviso de cookies real** (sus botones y su cookie, no un evento simulado): sin configuración no se pide; sin cookies mide, no deja cookies y no hay aviso; híbrido sin cookies hasta «Aceptar todas» (solo «mapas» no vale), `mtm_cookie_consent` y `_pk_id` al aceptar, borradas al «Rechazar todas»; aviso ya contestado al cargar; elección caducada olvida; a un administrador no se le mide |
+| [consent/consent](modules/consent/tests/consent.test.mjs) | 2 | aviso de cookies (0.5.0): sin categorías no sale; con ellas, en orden estable y con los tres botones; revisión y cookie iguales a las del padre; Matomo híbrido lo hace salir; «Powered by» (texto, `href`, `_blank`, `rel="noopener"` sin `nofollow`, después de los botones); el filtro cambia texto y URL, una URL vacía o no http(s) deja el texto sin enlace, `false` lo quita; enlace por bloque nuevo, alias viejo y shortcode |
+| [consent/consent-browser](modules/consent/tests/consent-browser.test.mjs) | 3 | aviso de cookies (0.5.0): sale; aceptar y rechazar pesan igual; rechazar guarda la cookie y persiste; el enlace (nuevo y alias) lo reabre con el foco dentro y Escape lo cierra; contrato JS (evento, `has`, `get`, `categories`, `grant`, `open`) y scripts diferidos; una cookie del aviso del padre sigue valiendo; «Powered by» visible, más pequeño que los botones y con contraste AA medido; (0.5.1) abierto es lo primero al tabular, sin trampa y Escape no lo cierra sin elegir; ≥ 16 px entre el texto y los botones a 402 y 1512 con el `:root :where(p)` de Lavandería |
+| [webp/webp](modules/webp/tests/webp.test.mjs) | 2 | WebP (0.5.1): el editor escribe WebP; JPEG y PNG subidos generan sus tamaños (y el principal) en WebP; el filtro a `false` lo apaga; la trampa de regenerar lo ya subido (la `.jpg` del contenido sin `srcset`, la intermedia rota) y su arreglo |
+| [site/editor](modules/site/tests/editor.test.mjs) | 3 | el editor enseña el valor enlazado y lista los datos (empresa y sede por slug); la pantalla de ajustes guarda, avisa y desactiva el último tipo |
 
 **Todas se han visto fallar** (02-10-2026): tres tandas de mutantes, diez en
 total, cada uno pillado por su prueba. Las de 0.2.0 (marcadas «(0.2.0)» en su
@@ -505,23 +568,36 @@ la prueba simulada escondía (ver CHANGELOG, 0.5.0).
 
 ## Textos y traducciones (fila 11)
 
-`languages/`: [estrategia-web-site.pot](languages/estrategia-web-site.pot),
-[estrategia-web-site-es_ES.po](languages/estrategia-web-site-es_ES.po) y su `.l10n.php`. Se
-generan con `node tools/i18n.mjs` (ver su cabecera). Igual que formularios, el
-`msgid` es el **texto en inglés** (convención de WordPress). No hay JSON del
-editor: `assets/editor.js` no lleva textos propios.
+**Un solo dominio para todo el plugin: `estrategia-web`** (desde la 1.1.0;
+antes, `estrategia-web-site` y `estrategia-web-forms`; el tema usa el mismo
+y WordPress junta los dos ficheros). `languages/`:
+[estrategia-web.pot](languages/estrategia-web.pot),
+[estrategia-web-es_ES.po](languages/estrategia-web-es_ES.po) y su `.l10n.php`.
+Se generan con `node tools/i18n.mjs` (ver su cabecera), que también saca el
+nombre y la descripción de cada `module.php`. El `msgid` es el **texto en
+inglés** (convención de WordPress). No hay JSON del editor: el núcleo pasa
+las traducciones a `wp.i18n` en línea (`includes/class-blocks.php`).
 
 ## Instalar en una web
 
-Copiar la carpeta a `wp-content/plugins/estrategia-web-site/` **sin `tests/` ni
-`tools/`**, activar, y en **Datos de la empresa** rellenar los datos y marcar
-los tipos que use esa web. `tests/wp/` abre rutas REST sin permisos: solo se
-carga con el mu-plugin del blueprint y la constante `ESTRATEGIA_WEB_SITE_TESTING`
-(doble llave), pero no tiene por qué estar en el servidor.
+Copiar la carpeta a `wp-content/plugins/estrategia-web/` **sin `tests/`, sin
+`modules/*/tests/` ni `tools/`**, activar, y en **Estrategia Web → Módulos**
+apagar lo que esa web no use (por defecto, todo encendido). Después, en
+**Datos de la empresa**, rellenar los datos y marcar los tipos. Los
+`tests/wp/` abren rutas REST sin permisos: solo se cargan con el mu-plugin
+del blueprint y sus constantes `ESTRATEGIA_WEB_*_TESTING` (doble llave), pero
+no tienen por qué estar en el servidor.
 
-**Secretos (fila 21): no hay.** Al **borrar** el plugin no se borra nada,
-salvo la opción si la web define `ESTRATEGIA_WEB_SITE_REMOVE_DATA`; el contenido de
-los tipos no se borra nunca ([uninstall.php](uninstall.php)).
+**No convive con los plugins de la 1.0.0** (`estrategia-web-site`,
+`estrategia-web-forms`) **ni con un tema padre que aún registre los bloques**
+(el 1.0.0): registrarían lo mismo dos veces. Una web que venga de ellos los
+desactiva al activar este (lo hace el migrador).
+
+**Secretos (fila 21): no hay.** Al **borrar** el plugin, el
+[uninstall.php](uninstall.php) de la raíz llama al de cada módulo: no se
+borran datos del cliente salvo que la web defina
+`ESTRATEGIA_WEB_SITE_REMOVE_DATA` o `ESTRATEGIA_WEB_FORMS_REMOVE_DATA`; el
+contenido de los tipos no se borra nunca.
 
 ## Nombres: de «Armazón Site» a «Estrategia Web Site» (1.0.0)
 
@@ -551,10 +627,10 @@ cada web. Está en [PENDIENTES.md](PENDIENTES.md) para decidir antes de
 mandarlo a WordPress.org.
 
 **Los nombres viejos siguen funcionando** durante la 1.x
-([includes/class-legacy-names.php](includes/class-legacy-names.php)): bloques,
+([modules/site/includes/class-legacy-names.php](modules/site/includes/class-legacy-names.php)): bloques,
 fuentes de bindings, shortcodes y la opción (si falta la nueva); la cookie
 vieja se lee y se pasa a la nueva sin volver a preguntar
-([includes/class-consent.php](includes/class-consent.php)). Se quitan en la
+([modules/consent/includes/class-consent.php](modules/consent/includes/class-consent.php)). Se quitan en la
 **2.0.0**.
 
 **EL MIGRADOR** ([includes/class-armazon-migration.php](includes/class-armazon-migration.php))
@@ -602,11 +678,14 @@ incluido desde `wp eval-file` como hace Lavandería
 ## Cómo se mantiene
 
 - **Quién y cuándo:** quien toque el plugin, en cada versión: número en
-  `estrategia-web-site.php` y `ESTRATEGIA_WEB_SITE_VERSION`, nota en el CHANGELOG,
-  `node tools/i18n.mjs` si cambió un texto, y `node tests/run.mjs` entero
-  antes de llevarlo a ninguna web.
+  `estrategia-web.php` y `ESTRATEGIA_WEB_VERSION` (los módulos no llevan
+  versión propia), nota en el CHANGELOG, `node tools/i18n.mjs` si cambió un
+  texto, y `node tests/run.mjs` entero antes de llevarlo a ninguna web.
 - **Qué entra:** lo que tendría **cualquier** web corporativa (un dato de
-  contacto, un tipo de ficha repetida). Lo de una sola web va a su tema hijo.
+  contacto, un tipo de ficha repetida, un bloque). Lo de una sola web va a su
+  tema hijo. Lo que se pueda querer apagar por separado es un **módulo
+  nuevo**, no una opción más dentro de otro (ver
+  [includes/class-modules.php](includes/class-modules.php)).
 - **El caso frontera:** «servicios». No es un tipo, a propósito: en estas webs
   un servicio es una página con diseño propio. Si varias webs acaban pidiendo
   fichas de servicio, entra como tipo nuevo (versión menor).

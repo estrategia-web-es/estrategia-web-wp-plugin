@@ -4,6 +4,58 @@ Una entrada por versión, la más nueva arriba. Se escribe en el mismo commit
 que sube el número (README, «Versiones»). Si una versión obliga a tocar algo
 en las webs, la entrada lo dice primero, con qué cambiar.
 
+Desde la 1.1.0 este es el CHANGELOG del plugin único **Estrategia Web**. La
+historia de los formularios hasta su 1.0.0 está en
+[modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), y la de los cuatro
+bloques, en el README del tema (armazon-wp-padre, «Versiones»).
+
+## 1.1.0 — 14-10-2026
+
+**Un tema + un plugin** (decisión de David, 14-10-2026). **Obliga a tocar las
+webs**: el plugin cambia de carpeta y sustituye a dos. Qué hacer en una web
+que venga de la 1.0.0 o de Armazón: desactivar `estrategia-web-site` y
+`estrategia-web-forms` (o `armazon-site` y `armazon-forms`), subir este en
+`plugins/estrategia-web/` y activarlo, y el tema padre a la 1.1.0 a la vez
+(lo hará el migrador de Lavandería, que es la única web).
+
+- **Un solo plugin, «Estrategia Web»** (`estrategia-web/estrategia-web.php`),
+  con lo que eran el plugin Estrategia Web Site, el plugin Estrategia Web
+  Forms (repo archivado) y los bloques carrusel, mapa, WhatsApp y selector de
+  idioma, que registraba el tema (WordPress.org no deja que un tema registre
+  bloques).
+- **Módulos activables** en **Estrategia Web → Módulos**: `site`, `consent`,
+  `webp`, `external-links`, `wpml-front-page`, `forms`, `carousel`, `map`,
+  `whatsapp`, `language-switcher`. **Todos encendidos por defecto**: una web
+  que actualiza no cambia. Un módulo apagado no carga nada y no borra nada.
+  Opciones nuevas: `estrategia_web_modules` (los encendidos) y
+  `estrategia_web_modules_known` (los que había al guardar; ver el caso
+  frontera en `includes/class-modules.php`).
+- **Un módulo nuevo es una carpeta** `modules/<slug>/` con un `module.php` de
+  cabecera: se descubre solo, sin lista central. Cómo, en la cabecera de
+  `includes/class-modules.php`.
+- **Nombres públicos sin cambios**: bloques `estrategia-web/…`,
+  `estrategia-web-site/…` y `estrategia-web-forms/…`, opciones y metas
+  `estrategia_web_…`, tablas, rutas REST, filtros, shortcodes y alias
+  `armazon…`. Los alias `armazon/carousel`… que daba el tema los da ahora el
+  núcleo, solo para los bloques cuyo módulo esté encendido.
+- **Un solo dominio de traducción: `estrategia-web`** (antes
+  `estrategia-web-site` y `estrategia-web-forms`). Las traducciones del editor
+  ya no van en JSON con el md5 de la ruta: el núcleo se las pasa a `wp.i18n`
+  en línea, para todos los bloques del plugin.
+- **Funciones del carrusel en un espacio de nombres**:
+  `estrategia_web_carousel_images_*()` del tema pasan a
+  `EstrategiaWeb\Carousel\images_*()`. Los filtros
+  (`estrategia_web_carousel_eager_slides`, `…_image_sizes`) no cambian.
+  Ningún hijo las llamaba.
+- **Ganchos para los módulos**: `estrategia_web_activate`,
+  `estrategia_web_deactivate` y `estrategia_web_modules_loaded`.
+- **Pruebas por módulo** en `modules/<slug>/tests/`, con un solo corredor y
+  un solo WordPress de pruebas (puerto 9404). Nuevas:
+  `tests/modules.test.mjs` (nivel 1) y `tests/modules-page.test.mjs` (nivel 2).
+- **El migrador** (`includes/class-armazon-migration.php`) no cambia en esta
+  versión: su paso 7 todavía activa los dos plugins de la 1.0.0. Adaptarlo
+  es la parte siguiente (ver PENDIENTES.md).
+
 ## 1.0.0 — 07-10-2026
 
 **MAYOR: cambio de nombre. Obliga a tocar las webs:** pasar el migrador

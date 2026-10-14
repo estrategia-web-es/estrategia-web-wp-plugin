@@ -12,14 +12,19 @@ aquí porque casi todo acaba en este plugin. **Cómo se mantiene**: cuando algo
 se termina Y se publica en las webs, sale de esta lista con el commit que lo
 cierra; si se termina pero no se publica, pasa a «Hecho y sin desplegar».
 
-**Decisión pendiente antes de nada** (David, 07-10-2026, «no lo abordamos
-todavía»): ¿un solo tema (solo diseño) + un solo plugin «Estrategia Web» con
-módulos activables, o como está (tema + plugin de sitio + plugin de
-formularios)? Lo de abajo se hace en la estructura que se elija; por eso nada
-se publica hasta decidirlo.
+**Estructura decidida** (David, 14-10-2026): un tema que solo es diseño + un
+plugin «Estrategia Web» con módulos activables. Lo de «A añadir» se hace como
+**módulo nuevo** (una carpeta en `modules/`, ver la cabecera de
+`includes/class-modules.php`) o dentro del módulo al que pertenece (las
+cookies, en `consent`).
 
 ### Hecho y sin desplegar (en local, commiteado)
 
+- **Un tema + un plugin con módulos** (plugin 1.1.0, tema 1.1.0,
+  14-10-2026): este repo es ahora el plugin `estrategia-web`, con Site, Forms
+  (repo archivado) y los cuatro bloques del tema como módulos; pantalla
+  «Estrategia Web → Módulos»; un dominio de traducción. Lavandería en local
+  ya lo usa. **Falta adaptar el migrador** (abajo, «Migrador al plugin único»).
 - **Fase 1: nombre Estrategia Web** en los tres repos (tema 1.0.0, este plugin
   1.0.0, formularios 1.0.0): carpetas, prefijos, bloques, opciones, tablas,
   cookie; alias de los nombres viejos hasta 2.0.0; «Powered by» apagado por
@@ -55,8 +60,65 @@ se publica hasta decidirlo.
   «Portic Villas (agencia alquiler vacacional)» salía igual en inglés).
 - **Recuadro «Datos de la sede»** (ver la sección siguiente) y que cambie los
   dos idiomas a la vez.
-- **Bloques fuera del tema** (carrusel, mapa, WhatsApp, selector de idioma) si
-  el tema va a WordPress.org: un tema allí no puede registrar bloques.
+
+---
+
+## Migrador al plugin único
+**Fecha:** 14-10-2026 · **Vence:** antes de publicar nada en Lavandería
+
+Lo hace la «parte 3» (otro agente). Lo que cambió la 1.1.0 y el migrador
+tiene que saber:
+- `includes/class-armazon-migration.php`, paso 7 (`active_plugins`): hoy
+  pasa `armazon-site/armazon-site.php` y `armazon-forms/armazon-forms.php` a
+  `estrategia-web-site/…` y `estrategia-web-forms/…`. Tiene que dejar UNO:
+  `estrategia-web/estrategia-web.php` (quitar los dos viejos de la lista, sin
+  llamar a sus ganchos de desactivación), y comprobar en el paso previo que
+  existe `plugins/estrategia-web`, no las dos carpetas de la 1.0.0.
+- El cron de la purga de formularios conserva su nombre
+  (`estrategia_web_forms_purge`): el paso que quita el evento viejo
+  (`armazon_forms_purge`) sigue valiendo; el nuevo lo programa el módulo
+  forms solo, en init.
+- La opción `estrategia_web_modules` NO hace falta escribirla: sin ella
+  están todos los módulos encendidos, que es lo que usa Lavandería. Si se
+  escribe, que sea con `wp option update` (no con SQL), para que se apunte
+  `estrategia_web_modules_known`.
+- El dominio de traducción `estrategia-web-site` / `estrategia-web-forms` no
+  está guardado en la base de datos; nada que migrar. El contexto de cadenas
+  de WPML de los formularios sigue siendo `estrategia-web-forms`.
+- El desplegador de Lavandería sube hoy `plugins/estrategia-web-site` y
+  `plugins/estrategia-web-forms` desde dos repos: tiene que subir
+  `plugins/estrategia-web` desde este (sin `tests/`, `modules/*/tests/` ni
+  `tools/`) y el tema sin `blocks/`.
+
+## Pruebas de los bloques: del tema al plugin
+**Fecha:** 14-10-2026 · **Vence:** —
+
+Las de carrusel, mapa y WhatsApp siguen en `armazon-wp-padre/tests/`, que
+monta este plugin con solo los módulos de bloques encendidos. Funcionan,
+pero quien toque `modules/carousel/` tiene que saber que su prueba está en
+otro repo (lo dice su `module.php`). Moverlas pide traer su siembra
+(`tests/fixtures/setup/setup.php` del tema) y medirlas sin el CSS del tema,
+o con un tema de prueba propio. Se hace la próxima vez que se toque uno.
+
+## Formularios: probarlo con WPML de verdad
+**Fecha:** 01-10-2026 · **Vence:** antes de la primera web con WPML
+
+(Venía de armazon-wp-formularios, archivado.) `class-language.php` y
+`wpml-config.xml` no se han ejecutado nunca con WPML en las pruebas del
+plugin (Playground no lo tiene). Lavandería sí tiene WPML en local
+(`tests/fixtures/wpml/`): traducir una página con formulario, enviar en el
+segundo idioma, mirar que el acuse sale traducido, que el registro dice ese
+idioma y que en Traducción de cadenas aparecen los textos por defecto; y que
+en la página traducida el desplegable con `defaultOption` llega con la misma
+opción marcada.
+
+## Formularios: nivel 4
+**Fecha:** 01-10-2026 · **Vence:** —
+
+(Venía de armazon-wp-formularios.) Nadie ha mirado con ojos de persona el
+editor de formularios (la rejilla de medio ancho, la tarjeta de los avisos,
+el panel lateral). Y desde la 1.1.0, tampoco la pantalla «Estrategia Web →
+Módulos».
 
 ---
 
