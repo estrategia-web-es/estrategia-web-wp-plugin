@@ -8,12 +8,15 @@ import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, reset, seedPage, testApi, html, wp } from "./lib.mjs";
 
-const ALL = ["carousel", "consent", "external-links", "forms", "language-switcher", "map", "site", "webp", "whatsapp", "wpml-front-page"];
+// Los de Default: on (los que carga una web nueva) y los que existen. Un módulo
+// nuevo entra en la lista que le toque (1.1.0: matomo on, google-tags off).
+const ALL = ["carousel", "consent", "external-links", "forms", "language-switcher", "map", "matomo", "site", "webp", "whatsapp", "wpml-front-page"];
+const EXISTING = [...ALL, "google-tags"].sort();
 
 before(reset);
 after(() => testApi("/modules", { method: "POST", body: { active: null } }));
 
-test("sin opción guardada se cargan todos los módulos (todos son Default: on)", async () => {
+test("sin opción guardada se cargan los módulos con Default: on, y solo esos", async () => {
   const m = await testApi("/modules");
   assert.equal(m.saved, null);
   assert.deepEqual([...m.loaded].sort(), ALL);
@@ -24,7 +27,7 @@ test("sin opción guardada se cargan todos los módulos (todos son Default: on)"
 test("al guardar se apunta qué módulos existían, y un módulo apagado no registra nada", async () => {
   await testApi("/modules", { method: "POST", body: { active: ALL.filter((s) => s !== "carousel" && s !== "forms").concat("no-existe") } });
   const m = await testApi("/modules");
-  assert.deepEqual([...m.known].sort(), ALL, "al guardar se apunta qué módulos existían");
+  assert.deepEqual([...m.known].sort(), EXISTING, "al guardar se apunta qué módulos existían");
   assert.ok(!m.saved.includes("no-existe"), "un slug que no existe no se guarda");
   assert.ok(!m.loaded.includes("carousel") && !m.loaded.includes("forms"));
 

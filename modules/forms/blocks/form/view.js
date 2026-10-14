@@ -110,6 +110,10 @@ store( 'estrategia-web-forms', {
 				ctx.message = data.message || '';
 				if ( data.ok ) {
 					form.reset();
+					// 1.1.0: aviso para quien mida conversiones (modules/google-tags).
+					// Solo el nombre del formulario, nunca lo escrito. Sin JS (envío
+					// con redirección) no hay evento: esa conversión no se cuenta.
+					document.dispatchEvent( new CustomEvent( 'estrategia-web:form-sent', { detail: { form: form.getAttribute( 'id' ) || '' } } ) );
 				} else {
 					showErrors( form, data.errors || {} );
 				}
