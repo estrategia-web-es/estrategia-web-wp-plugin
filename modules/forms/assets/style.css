@@ -1,0 +1,127 @@
+/*
+ * Estilo mínimo del formulario: SOLO la rejilla y lo que sin CSS no
+ * funcionaría (el honeypot oculto, los mensajes vacíos ocultos).
+ *
+ * Todo lo que es aspecto lo pone el tema. Para eso hay tres vías, de la más
+ * recomendada a la menos:
+ * 1. theme.json: el botón es .wp-element-button y hereda styles.elements.button.
+ * 2. Las variables de abajo (--estrategia-web-forms-*), en el CSS del tema hijo.
+ * 3. Las clases .estrategia-web-forms__*, que son estables entre versiones menores.
+ *
+ * La trampa: no subas la especificidad de estas reglas. Están con UNA clase a
+ * propósito para que cualquier regla del tema gane sin !important.
+ *
+ * La flecha del desplegable es la NATIVA del navegador, y aquí no se pone
+ * appearance:none (lo vigila tests/pure.test.mjs). Decidido el 03-10-2026 con
+ * la revisión de Lavandería («el select sale como una caja lisa»): la caja
+ * lisa la causaba el tema, que quitaba la flecha nativa para dibujar la suya y
+ * luego la borraba con el atajo «background» desde una regla más específica.
+ * Si el plugin pusiera su propio chevron, una versión menor cambiaría el
+ * aspecto de todas las webs y repetiría esa trampa en cualquier tema que
+ * pinte el fondo del campo. Por eso: el tema que quiera chevron propio pone
+ * appearance:none Y su flecha, juntos, y pinta el fondo con
+ * background-COLOR, nunca con el atajo.
+ */
+
+.estrategia-web-forms {
+	--estrategia-web-forms-gap: var(--wp--style--block-gap, 1rem);
+	--estrategia-web-forms-border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+	--estrategia-web-forms-radius: 4px;
+	--estrategia-web-forms-padding: 0.6em 0.75em;
+	--estrategia-web-forms-error: #b32d2e;
+	position: relative;
+}
+
+.estrategia-web-forms__fields {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--estrategia-web-forms-gap);
+}
+
+.estrategia-web-forms__field {
+	flex: 1 1 100%;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.35em;
+}
+
+.estrategia-web-forms__field--half {
+	flex-basis: calc(50% - var(--estrategia-web-forms-gap) / 2);
+}
+
+@media (max-width: 600px) {
+	.estrategia-web-forms__field--half {
+		flex-basis: 100%;
+	}
+}
+
+.estrategia-web-forms__field input:not([type="checkbox"]),
+.estrategia-web-forms__field select,
+.estrategia-web-forms__field textarea {
+	box-sizing: border-box;
+	width: 100%;
+	font: inherit;
+	color: inherit;
+	padding: var(--estrategia-web-forms-padding);
+	border: var(--estrategia-web-forms-border);
+	border-radius: var(--estrategia-web-forms-radius);
+	background: transparent;
+}
+
+.estrategia-web-forms__field--checkbox {
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: baseline;
+}
+
+.estrategia-web-forms__field--checkbox .estrategia-web-forms__label {
+	flex: 1;
+}
+
+.estrategia-web-forms__field--checkbox .estrategia-web-forms__error {
+	flex-basis: 100%;
+}
+
+.estrategia-web-forms__field--submit {
+	align-items: flex-start;
+}
+
+.estrategia-web-forms__required,
+.estrategia-web-forms__error,
+.estrategia-web-forms__status.is-error {
+	color: var(--estrategia-web-forms-error);
+}
+
+.estrategia-web-forms__error {
+	margin: 0;
+	font-size: 0.875em;
+}
+
+.estrategia-web-forms__error:empty,
+.estrategia-web-forms__status:empty {
+	display: none;
+}
+
+.estrategia-web-forms__status {
+	margin-top: var(--estrategia-web-forms-gap);
+}
+
+[aria-invalid="true"] {
+	border-color: var(--estrategia-web-forms-error) !important;
+}
+
+.estrategia-web-forms__field--submit button[disabled] {
+	opacity: 0.6;
+	cursor: progress;
+}
+
+/* El honeypot: fuera de la vista y del orden de tabulación, pero NO
+   display:none, que algunos robots saben saltarse. */
+.estrategia-web-forms__hp {
+	position: absolute !important;
+	left: -9999px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}

@@ -1,14 +1,23 @@
 <?php
 /**
- * Cableado: qué clase atiende cada gancho de WordPress. Si buscas dónde
- * empieza algo, empieza aquí.
+ * El núcleo: lo que se carga SIEMPRE, esté encendido el módulo que esté.
+ * Traducciones, el cargador de módulos, las ayudas comunes de bloques y la
+ * pantalla «Estrategia Web → Módulos». Nada de un módulo concreto vive aquí.
  *
- * La trampa del orden: los tipos de contenido se registran en `init` con lo
- * que diga la opción en ESA carga, y las traducciones tienen que estar antes
- * (prioridad 1) porque las etiquetas y los slugs salen de gettext.
+ * Ganchos que ofrece a los módulos:
+ * - estrategia_web_activate / estrategia_web_deactivate: al activar o
+ *   desactivar el PLUGIN entero en «Plugins». NO saltan al encender o apagar
+ *   un módulo en la pantalla (ver la trampa en class-modules.php).
+ * - estrategia_web_modules_loaded( $slugs ): justo después de cargar los
+ *   módulos, antes de plugins_loaded.
+ *
+ * La trampa del orden: un módulo se carga mientras WordPress carga los
+ * plugins, ANTES que el tema. Las traducciones se cargan en init con
+ * prioridad 1 porque las etiquetas de tipos y bloques salen de gettext y se
+ * registran en init (10).
  */
 
-namespace EstrategiaWeb\Site;
+namespace EstrategiaWeb;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -16,45 +25,31 @@ final class Plugin {
 
 	public static function boot(): void {
 		add_action( 'init', array( self::class, 'load_textdomain' ), 1 );
-		add_action( 'init', array( Settings::class, 'register' ) );
-		add_action( 'init', array( Content_Types::class, 'register' ) );
-		add_action( 'init', array( Bindings::class, 'register' ) );
-		add_action( 'init', array( Location::class, 'register' ) );
-		add_action( 'init', array( Shortcode::class, 'register' ) );
-		Legacy_Names::boot(); // los nombres de antes de 1.0.0, como alias (hasta 2.0.0)
-		add_action( 'enqueue_block_editor_assets', array( Bindings::class, 'enqueue_editor' ) );
-		add_filter( 'post_class', array( Content_Types::class, 'post_class' ), 10, 3 );
-		add_action( 'update_option_' . Settings::OPTION, array( Content_Types::class, 'maybe_flush' ), 10, 2 );
-		add_action( 'add_option_' . Settings::OPTION, static fn( $name, $value ) => Content_Types::maybe_flush( array(), $value ), 10, 2 );
-		Svg::boot();
-		Matomo::boot();
-		Consent::boot(); // El aviso de cookies (0.5.0). Arranca en after_setup_theme: ver su cabecera.
-		Webp::boot(); // Tamaños de imagen en WebP (0.5.1).
-		External_Links::boot(); // Enlaces a otro dominio en pestaña nueva (0.5.2).
-		Wpml_Front_Page::boot(); // La portada traducida en /en/ con WPML (0.5.3).
-
+		Modules::load();
+		Blocks::boot();
 		if ( is_admin() ) {
-			Admin::boot();
+			Admin\Modules_Page::boot();
 		}
 	}
 
 	/**
-	 * Las traducciones van DENTRO del plugin (languages/): no está en
-	 * wordpress.org y nadie más las va a servir. WordPress 6.5+ carga el
-	 * .l10n.php si existe.
+	 * Un solo dominio, estrategia-web, para todo el plugin (el mismo que el
+	 * tema: WordPress 6.5+ junta los dos ficheros en el mismo dominio). Las
+	 * traducciones van DENTRO del plugin (languages/): no está en
+	 * wordpress.org y nadie más las va a servir.
 	 */
 	public static function load_textdomain(): void {
-		load_plugin_textdomain( 'estrategia-web-site', false, dirname( plugin_basename( ESTRATEGIA_WEB_SITE_FILE ) ) . '/languages' );
+		load_plugin_textdomain( 'estrategia-web', false, dirname( plugin_basename( ESTRATEGIA_WEB_FILE ) ) . '/languages' );
 	}
 
 	public static function activate(): void {
 		self::load_textdomain();
-		Content_Types::register();
-		flush_rewrite_rules( false );
+		/** Al activar el plugin entero. Los módulos encendidos ya están cargados. */
+		do_action( 'estrategia_web_activate' );
 	}
 
 	public static function deactivate(): void {
-		// Los tipos ya no se registrarán: que sus URL dejen de existir. El contenido se queda.
-		delete_option( 'rewrite_rules' );
+		/** Al desactivar el plugin entero. */
+		do_action( 'estrategia_web_deactivate' );
 	}
 }

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Qué atributos de los bloques traduce WPML al traducir una página.
+
+	WPML lee este fichero solo, de la raíz del plugin; sin WPML no hace nada.
+	Por eso es UNO para todos los módulos (1.1.0; hasta entonces era del
+	plugin de formularios): un módulo con atributos que traducir añade aquí
+	sus <gutenberg-block>, en el mismo commit que el módulo. Es uno de los
+	tres ficheros compartidos (ver includes/class-modules.php). Lo de abajo
+	es del módulo forms.
+
+	Cómo se mantiene:
+	- Un atributo nuevo que lea una persona (visitante o destinatario de un
+	  correo) entra aquí en el mismo commit que en block.json.
+	- Caso frontera: el destinatario de un aviso («to») NO se traduce, para que
+	  el traductor no pueda desviar los correos. Si una web necesita otro
+	  destinatario por idioma, lo pone a mano en la página traducida.
+	  «name» y «formId» tampoco: son claves, y traducirlas partiría el
+	  registro y los marcadores. «defaultOption» del desplegable tampoco: es
+	  la POSICIÓN de la opción, y como «options» se traduce línea a línea sin
+	  cambiar el orden, la página traducida preselecciona la misma opción sola
+	  (ver includes/class-preselect.php). Un traductor que reordene las
+	  opciones la desplaza.
+	- La trampa: los textos que valen por defecto cuando el atributo está vacío
+	  (el botón «Enviar», el consentimiento) NO pasan por aquí, salen del .po.
+	  Si en la web original se rellenan, entonces sí hay que traducirlos aquí.
+-->
+<wpml-config>
+	<gutenberg-blocks>
+		<gutenberg-block type="estrategia-web-forms/form" translate="1">
+			<key name="successMessage" />
+			<key name="errorMessage" />
+		</gutenberg-block>
+		<gutenberg-block type="estrategia-web-forms/text" translate="1">
+			<key name="label" />
+			<key name="placeholder" />
+		</gutenberg-block>
+		<gutenberg-block type="estrategia-web-forms/email" translate="1">
+			<key name="label" />
+			<key name="placeholder" />
+		</gutenberg-block>
+		<gutenberg-block type="estrategia-web-forms/tel" translate="1">
+			<key name="label" />
+			<key name="placeholder" />
+		</gutenberg-block>
+		<gutenberg-block type="estrategia-web-forms/textarea" translate="1">
+			<key name="label" />
+			<key name="placeholder" />
+		</gutenberg-block>
+		<gutenberg-block type="estrategia-web-forms/select" translate="1">
+			<key name="label" />
+			<key name="placeholder" />
+			<key name="options" />
+		</gutenberg-block>
+		<gutenberg-block type="estrategia-web-forms/checkbox" translate="1">
+			<key name="label" />
+			<key name="privacyUrl" />
+		</gutenberg-block>
+		<gutenberg-block type="estrategia-web-forms/submit" translate="1">
+			<key name="text" />
+		</gutenberg-block>
+		<gutenberg-block type="estrategia-web-forms/notification" translate="1">
+			<key name="subject" />
+			<key name="body" />
+		</gutenberg-block>
+	</gutenberg-blocks>
+</wpml-config>

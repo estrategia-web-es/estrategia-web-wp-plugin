@@ -1,0 +1,2109 @@
+# Spanish translations for estrategia-web package.
+# Copyright (C) 2026 THE estrategia-web'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the estrategia-web package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: estrategia-web\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: includes/admin/class-modules-page.php:58
+#: includes/admin/class-modules-page.php:59
+msgid "Estrategia Web"
+msgstr "Estrategia Web"
+
+#: includes/admin/class-modules-page.php:66
+#: includes/admin/class-modules-page.php:81
+msgid "Modules"
+msgstr "Módulos"
+
+#: includes/admin/class-modules-page.php:82
+msgid ""
+"Each module adds one feature to the site. A module that is off loads "
+"nothing, and turning it off does not delete anything it saved: turning it on "
+"again brings it back as it was."
+msgstr ""
+"Cada módulo añade una función a la web. Un módulo apagado no carga nada, y "
+"apagarlo no borra nada de lo que guardó: al volver a encenderlo, vuelve tal "
+"como estaba."
+
+#: includes/admin/class-modules-page.php:99
+#: includes/admin/class-modules-page.php:139
+msgid "On"
+msgstr "Encendido"
+
+#: includes/admin/class-modules-page.php:100
+msgid "Module"
+msgstr "Módulo"
+
+#: includes/admin/class-modules-page.php:101
+msgid "Status"
+msgstr "Estado"
+
+#. translators: %s: names of other modules, comma separated.
+#: includes/admin/class-modules-page.php:125
+#, php-format
+msgid "Needs: %s."
+msgstr "Necesita: %s."
+
+#. translators: %s: names of the modules that are missing.
+#: includes/admin/class-modules-page.php:135
+#, php-format
+msgid "Not loaded: turn on %s."
+msgstr "No se carga: enciende %s."
+
+#: includes/admin/class-modules-page.php:141
+msgid "Off"
+msgstr "Apagado"
+
+#: modules/carousel/blocks/carousel/block.json
+msgctxt "block title"
+msgid "Carousel"
+msgstr "Carrusel"
+
+#: modules/carousel/blocks/carousel/block.json
+msgctxt "block description"
+msgid ""
+"Horizontal scrolling row of any blocks, with previous/next arrows and "
+"optional dots."
+msgstr ""
+"Fila desplazable en horizontal con cualquier bloque, con flechas de anterior "
+"y siguiente y puntos opcionales."
+
+#: modules/carousel/blocks/carousel/block.json
+msgctxt "block keyword"
+msgid "carousel"
+msgstr "carrusel"
+
+#: modules/carousel/blocks/carousel/block.json
+msgctxt "block keyword"
+msgid "gallery"
+msgstr "galería"
+
+#: modules/carousel/blocks/carousel/block.json
+msgctxt "block keyword"
+msgid "slider"
+msgstr "pase de diapositivas"
+
+#: modules/carousel/blocks/carousel/edit.js:56
+msgid "Carousel settings"
+msgstr "Ajustes del carrusel"
+
+#: modules/carousel/blocks/carousel/edit.js:58
+msgid "Accessible name"
+msgstr "Nombre accesible"
+
+#: modules/carousel/blocks/carousel/edit.js:59
+msgid "Read by screen readers. Defaults to “Carousel”."
+msgstr "Lo leen los lectores de pantalla. Si se deja vacío: «Carrusel»."
+
+#: modules/carousel/blocks/carousel/edit.js:64
+msgid "Show arrows"
+msgstr "Mostrar flechas"
+
+#: modules/carousel/blocks/carousel/edit.js:69
+msgid "Show dots"
+msgstr "Mostrar puntos"
+
+#: modules/carousel/blocks/carousel/edit.js:74
+msgid "Loop"
+msgstr "En bucle"
+
+#: modules/carousel/blocks/carousel/edit.js:75
+msgid ""
+"After the last slide, go back to the first one (and from the first to the "
+"last)."
+msgstr ""
+"Tras la última diapositiva, vuelve a la primera (y de la primera, a la "
+"última)."
+
+#: modules/carousel/blocks/carousel/edit.js:79
+msgid "Visible on mobile"
+msgstr "Visibles en móvil"
+
+#: modules/carousel/blocks/carousel/edit.js:80
+msgid "Visible on tablet"
+msgstr "Visibles en tableta"
+
+#: modules/carousel/blocks/carousel/edit.js:81
+msgid "Visible on desktop"
+msgstr "Visibles en escritorio"
+
+#: modules/carousel/blocks/carousel/edit.js:83
+msgid "Autoplay"
+msgstr "Reproducción automática"
+
+#: modules/carousel/blocks/carousel/edit.js:84
+msgid ""
+"Off by default for accessibility. Ignored when the visitor asks for reduced "
+"motion."
+msgstr ""
+"Desactivada por defecto por accesibilidad. No se aplica si el visitante pide "
+"reducir el movimiento."
+
+#: modules/carousel/blocks/carousel/render.php:155
+msgid "Carousel"
+msgstr "Carrusel"
+
+#: modules/carousel/blocks/carousel/render.php:175
+msgid "Pause carousel"
+msgstr "Pausar el carrusel"
+
+#: modules/carousel/blocks/carousel/render.php:176
+msgid "Play carousel"
+msgstr "Reanudar el carrusel"
+
+#: modules/carousel/blocks/carousel/render.php:183
+msgctxt "ARIA role description"
+msgid "carousel"
+msgstr "carrusel"
+
+#: modules/carousel/blocks/carousel/render.php:236
+msgid "Previous slide"
+msgstr "Diapositiva anterior"
+
+#: modules/carousel/blocks/carousel/render.php:246
+msgid "Next slide"
+msgstr "Diapositiva siguiente"
+
+#: modules/carousel/blocks/carousel/render.php:257
+msgid "Choose slide"
+msgstr "Elegir diapositiva"
+
+#. translators: %d: slide number.
+#: modules/carousel/blocks/carousel/render.php:263
+#, php-format
+msgid "Go to slide %d"
+msgstr "Ir a la diapositiva %d"
+
+#: modules/carousel/module.php
+msgctxt "module name"
+msgid "Carousel"
+msgstr "Carrusel"
+
+#: modules/carousel/module.php
+msgctxt "module description"
+msgid ""
+"Carousel block: a horizontal scrolling row of any blocks (or the posts of a "
+"Query) with arrows, optional dots, infinite loop and autoplay only if asked "
+"for."
+msgstr ""
+"Bloque de carrusel: una fila desplazable con cualquier bloque (o las "
+"entradas de una Consulta), con flechas, puntos opcionales, bucle infinito y "
+"paso automático solo si se pide."
+
+#: modules/consent/blocks/consent/block.json
+msgctxt "block title"
+msgid "Cookie settings link"
+msgstr "Enlace de configuración de cookies"
+
+#: modules/consent/blocks/consent/block.json
+msgctxt "block description"
+msgid ""
+"Reopens the cookie consent notice. Renders nothing when the site declares no "
+"optional cookie categories."
+msgstr ""
+"Vuelve a abrir el aviso de cookies. No muestra nada si el sitio no declara "
+"categorías de cookies opcionales."
+
+#: modules/consent/blocks/consent/block.json
+msgctxt "block keyword"
+msgid "consent"
+msgstr "consentimiento"
+
+#: modules/consent/blocks/consent/block.json
+msgctxt "block keyword"
+msgid "cookies"
+msgstr "cookies"
+
+#: modules/consent/blocks/consent/block.json
+msgctxt "block keyword"
+msgid "gdpr"
+msgstr "rgpd"
+
+#: modules/consent/blocks/consent/block.json
+msgctxt "block keyword"
+msgid "privacy"
+msgstr "privacidad"
+
+#: modules/consent/includes/class-consent.php:203
+msgid "Statistics"
+msgstr "Estadísticas"
+
+#: modules/consent/includes/class-consent.php:204
+msgid "Help us understand how the site is used."
+msgstr "Nos ayudan a entender cómo se usa el sitio."
+
+#: modules/consent/includes/class-consent.php:207
+msgid "Maps and third-party content"
+msgstr "Mapas y contenido de terceros"
+
+#: modules/consent/includes/class-consent.php:208
+msgid ""
+"Load embedded maps and other content served by third parties, which may set "
+"their own cookies."
+msgstr ""
+"Cargan mapas y otro contenido servido por terceros, que pueden instalar sus "
+"propias cookies."
+
+#: modules/consent/includes/class-consent.php:211
+msgid "Marketing"
+msgstr "Marketing"
+
+#: modules/consent/includes/class-consent.php:212
+msgid "Measure campaigns and show relevant advertising."
+msgstr "Miden campañas y muestran publicidad relevante."
+
+#. translators: %s: name of the company that built the site (a brand, not translated).
+#: modules/consent/includes/class-consent.php:279
+#, php-format
+msgid "Powered by %s"
+msgstr "Powered by %s"
+
+#: modules/consent/includes/class-consent.php:306
+msgid "Link text (empty: “Cookie settings”)"
+msgstr "Texto del enlace (vacío: «Configurar cookies»)"
+
+#: modules/consent/includes/class-consent.php:366
+msgid ""
+"We use our own and third-party cookies for the purposes listed below. You "
+"can accept them, reject them or choose which ones to allow. Necessary "
+"cookies are always active."
+msgstr ""
+"Usamos cookies propias y de terceros para los fines que se indican. Puedes "
+"aceptarlas, rechazarlas o elegir cuáles permites. Las cookies necesarias "
+"están siempre activas."
+
+#: modules/consent/includes/class-consent.php:385
+#: modules/site/includes/admin/class-admin.php:163
+msgid "Cookies"
+msgstr "Cookies"
+
+#: modules/consent/includes/class-consent.php:389
+msgid "Privacy and cookie policy"
+msgstr "Política de privacidad y cookies"
+
+#: modules/consent/includes/class-consent.php:395
+msgid "Cookie categories"
+msgstr "Categorías de cookies"
+
+#: modules/consent/includes/class-consent.php:398
+msgid "Necessary"
+msgstr "Necesarias"
+
+#: modules/consent/includes/class-consent.php:398
+msgid ""
+"Required for the site to work, including remembering this choice. Always "
+"active."
+msgstr ""
+"Imprescindibles para que el sitio funcione, también para recordar esta "
+"elección. Siempre activas."
+
+#: modules/consent/includes/class-consent.php:414
+msgid "Save choices"
+msgstr "Guardar la selección"
+
+#: modules/consent/includes/class-consent.php:418
+msgid "Accept all"
+msgstr "Aceptar todas"
+
+#: modules/consent/includes/class-consent.php:419
+msgid "Reject all"
+msgstr "Rechazar todas"
+
+#: modules/consent/includes/class-consent.php:420
+msgid "Configure"
+msgstr "Configurar"
+
+#: modules/consent/includes/class-consent.php:425
+#: modules/external-links/includes/class-external-links.php:101
+#: modules/map/blocks/map/render.php:321
+#: modules/whatsapp/blocks/whatsapp/render.php:74
+msgid "(opens in a new tab)"
+msgstr "(se abre en una pestaña nueva)"
+
+#: modules/consent/includes/class-consent.php:451
+msgid ""
+"Cookie settings: this site declares no optional cookie categories, so there "
+"is no notice to reopen and this link is not shown."
+msgstr ""
+"Configurar cookies: este sitio no declara categorías de cookies opcionales, "
+"así que no hay aviso que reabrir y el enlace no se muestra."
+
+#: modules/consent/includes/class-consent.php:457
+msgid "Cookie settings"
+msgstr "Configurar cookies"
+
+#: modules/consent/module.php
+msgctxt "module name"
+msgid "Cookie notice"
+msgstr "Aviso de cookies"
+
+#: modules/consent/module.php
+msgctxt "module description"
+msgid ""
+"Own cookie consent notice (Accept / Reject / Settings with declarable "
+"categories), the «Cookie settings» link block and the consent API for PHP "
+"and JavaScript."
+msgstr ""
+"Aviso de cookies propio (Aceptar / Rechazar / Configurar, con categorías "
+"declarables), el bloque del enlace «Configurar cookies» y la API del "
+"consentimiento para PHP y JavaScript."
+
+#: modules/external-links/module.php
+msgctxt "module name"
+msgid "External links in a new tab"
+msgstr "Enlaces externos en pestaña nueva"
+
+#: modules/external-links/module.php
+msgctxt "module description"
+msgid ""
+"Links to another domain open in a new tab, with rel=\"noopener\" and a "
+"hidden «(opens in a new tab)» for screen readers."
+msgstr ""
+"Los enlaces a otro dominio se abren en una pestaña nueva, con "
+"rel=\"noopener\" y un «(se abre en una pestaña nueva)» oculto para lectores "
+"de pantalla."
+
+#: modules/forms/assets/editor.js:52
+msgid "Name"
+msgstr "Nombre"
+
+#: modules/forms/assets/editor.js:54 modules/forms/assets/editor.js:412
+msgid "Message"
+msgstr "Mensaje"
+
+#: modules/forms/assets/editor.js:60
+msgid "Notice to the site"
+msgstr "Aviso a la web"
+
+#. translators: {{name}} es un marcador: no se traduce.
+#: modules/forms/assets/editor.js:63
+msgid "New message from {{name}}"
+msgstr "Nuevo mensaje de {{name}}"
+
+#. translators: lo que va entre {{ }} son marcadores: no se traducen.
+#: modules/forms/assets/editor.js:65
+msgid ""
+"New message sent from {{url_pagina}} on {{fecha}}:\n"
+"\n"
+"{{todos_los_campos}}"
+msgstr ""
+"Nuevo mensaje enviado desde {{url_pagina}} el {{fecha}}:\n"
+"\n"
+"{{todos_los_campos}}"
+
+#: modules/forms/assets/editor.js:71
+msgid "Acknowledgement to the sender"
+msgstr "Acuse al remitente"
+
+#: modules/forms/assets/editor.js:73
+msgid "We have received your message"
+msgstr "Hemos recibido tu mensaje"
+
+#. translators: lo que va entre {{ }} son marcadores: no se traducen.
+#: modules/forms/assets/editor.js:75
+msgid ""
+"Hello {{name}},\n"
+"\n"
+"Thank you for writing to us. We have received your message and will reply "
+"soon.\n"
+"\n"
+"{{todos_los_campos}}\n"
+"\n"
+"{{nombre_sitio}}"
+msgstr ""
+"Hola, {{name}}:\n"
+"\n"
+"Gracias por escribirnos. Hemos recibido tu mensaje y te responderemos "
+"pronto.\n"
+"\n"
+"{{todos_los_campos}}\n"
+"\n"
+"{{nombre_sitio}}"
+
+#: modules/forms/assets/editor.js:98
+msgid "Name in the submissions log"
+msgstr "Nombre en el registro de envíos"
+
+#: modules/forms/assets/editor.js:104
+msgid "Form identifier"
+msgstr "Identificador del formulario"
+
+#: modules/forms/assets/editor.js:105
+msgid ""
+"Groups the submissions of this form in the log, in every language. Change it "
+"only if two copies of the form must be counted apart."
+msgstr ""
+"Agrupa los envíos de este formulario en el registro, en todos los idiomas. "
+"Cámbialo solo si dos copias del formulario deben contarse por separado."
+
+#: modules/forms/assets/editor.js:113
+msgid "Messages"
+msgstr "Mensajes"
+
+#: modules/forms/assets/editor.js:116 modules/forms/assets/editor.js:123
+msgid "Empty: the default message from Forms → Settings."
+msgstr "Vacío: el mensaje por defecto de Formularios → Ajustes."
+
+#: modules/forms/assets/editor.js:146 modules/forms/assets/editor.js:307
+#: modules/forms/assets/editor.js:316
+msgid "Label"
+msgstr "Etiqueta"
+
+#: modules/forms/assets/editor.js:149
+msgid ""
+"The text between braces becomes the link to the privacy policy. Empty: the "
+"default text."
+msgstr ""
+"El texto entre llaves se convierte en el enlace a la política de privacidad. "
+"Vacío: el texto por defecto."
+
+#: modules/forms/assets/editor.js:157
+msgid "Name (key)"
+msgstr "Nombre (clave)"
+
+#: modules/forms/assets/editor.js:158
+msgid ""
+"Used in the email markers, e.g. {{name}}, and in the log. Lowercase letters, "
+"numbers, - and _."
+msgstr ""
+"Se usa en los marcadores de los correos, p. ej. {{name}}, y en el registro. "
+"Minúsculas, números, - y _."
+
+#: modules/forms/assets/editor.js:168
+msgid "Required"
+msgstr "Obligatorio"
+
+#: modules/forms/assets/editor.js:179
+msgid "First option (empty value)"
+msgstr "Primera opción (valor vacío)"
+
+#: modules/forms/assets/editor.js:179
+msgid "Placeholder"
+msgstr "Texto de ejemplo"
+
+#: modules/forms/assets/editor.js:187
+msgid "Autocomplete"
+msgstr "Autocompletar"
+
+#: modules/forms/assets/editor.js:188
+msgid ""
+"What the browser may fill in: name, organization, email, tel, street-"
+"address… Empty: email and phone fields still get email and tel."
+msgstr ""
+"Lo que puede rellenar el navegador: name, organization, email, tel, street-"
+"address… Vacío: los campos de correo y teléfono llevan igualmente email y "
+"tel."
+
+#: modules/forms/assets/editor.js:199
+msgid "Options"
+msgstr "Opciones"
+
+#: modules/forms/assets/editor.js:200
+msgid "One per line."
+msgstr "Una por línea."
+
+#: modules/forms/assets/editor.js:207
+msgid "Preselected option"
+msgstr "Opción preseleccionada"
+
+#: modules/forms/assets/editor.js:208
+msgid ""
+"In a synced pattern, set it per page in the pattern block instead. A link "
+"can also choose it with ?af_ followed by the field name."
+msgstr ""
+"En un patrón sincronizado se fija por página, en el bloque del patrón. Un "
+"enlace también puede elegirla con ?af_ y el nombre del campo."
+
+#: modules/forms/assets/editor.js:210
+msgid "None"
+msgstr "Ninguna"
+
+#: modules/forms/assets/editor.js:222
+msgid "Privacy consent"
+msgstr "Consentimiento de privacidad"
+
+#: modules/forms/assets/editor.js:223
+msgid "Always required, and links to the privacy policy."
+msgstr "Siempre obligatorio, y enlaza a la política de privacidad."
+
+#: modules/forms/assets/editor.js:233
+msgid "Privacy policy URL"
+msgstr "URL de la política de privacidad"
+
+#: modules/forms/assets/editor.js:234
+msgid ""
+"Empty: the privacy policy page set in Settings → Privacy (translated, with "
+"WPML)."
+msgstr ""
+"Vacío: la página de política de privacidad de Ajustes → Privacidad "
+"(traducida, con WPML)."
+
+#: modules/forms/assets/editor.js:245
+msgid "Width"
+msgstr "Ancho"
+
+#: modules/forms/assets/editor.js:248
+msgid "Full"
+msgstr "Completo"
+
+#: modules/forms/assets/editor.js:249
+msgid "Half"
+msgstr "Medio"
+
+#: modules/forms/assets/editor.js:255
+msgid "Field"
+msgstr "Campo"
+
+#: modules/forms/assets/editor.js:355
+msgid "Button text"
+msgstr "Texto del botón"
+
+#: modules/forms/assets/editor.js:405 modules/forms/assets/editor.js:424
+msgid "Email notification"
+msgstr "Aviso por correo"
+
+#: modules/forms/assets/editor.js:406
+msgid "Name of this notification"
+msgstr "Nombre de este aviso"
+
+#: modules/forms/assets/editor.js:407
+msgid ""
+"Addresses separated by commas, or a marker such as {{email}}. Empty: the "
+"site administrator email."
+msgstr ""
+"Direcciones separadas por comas, o un marcador como {{email}}. Vacío: el "
+"correo del administrador de la web."
+
+#: modules/forms/assets/editor.js:407 modules/forms/assets/editor.js:425
+msgid "To"
+msgstr "Para"
+
+#: modules/forms/assets/editor.js:408
+msgid "An address or a marker such as {{email}}. Optional."
+msgstr "Una dirección o un marcador como {{email}}. Opcional."
+
+#: modules/forms/assets/editor.js:408
+msgid "Reply to"
+msgstr "Responder a"
+
+#: modules/forms/assets/editor.js:409 modules/forms/assets/editor.js:426
+msgid "Subject"
+msgstr "Asunto"
+
+#: modules/forms/assets/editor.js:413
+msgid "Available markers:"
+msgstr "Marcadores disponibles:"
+
+#: modules/forms/assets/editor.js:425
+msgid "site administrator"
+msgstr "administrador de la web"
+
+#: modules/forms/assets/editor.js:427
+msgid "Not shown to visitors. Edit it in the side panel."
+msgstr "No lo ven los visitantes. Se edita en el panel lateral."
+
+#: modules/forms/blocks/checkbox/block.json
+msgctxt "block description"
+msgid ""
+"A checkbox. As a privacy consent it is always required and links to the "
+"privacy policy."
+msgstr ""
+"Una casilla. Como consentimiento de privacidad es siempre obligatoria y "
+"enlaza a la política de privacidad."
+
+#: modules/forms/blocks/checkbox/block.json
+msgctxt "block title"
+msgid "Checkbox"
+msgstr "Casilla"
+
+#: modules/forms/blocks/email/block.json
+msgctxt "block description"
+msgid "An email address, checked in the browser and on the server."
+msgstr "Una dirección de correo, comprobada en el navegador y en el servidor."
+
+#: modules/forms/blocks/email/block.json
+msgctxt "block title"
+msgid "Email field"
+msgstr "Campo de correo"
+
+#: modules/forms/blocks/form/block.json
+msgctxt "block description"
+msgid ""
+"A form built with blocks. Its fields go inside; its email notifications too."
+msgstr ""
+"Un formulario hecho con bloques. Dentro van sus campos, y también sus avisos "
+"por correo."
+
+#: modules/forms/blocks/form/block.json
+msgctxt "block title"
+msgid "Form"
+msgstr "Formulario"
+
+#: modules/forms/blocks/form/block.json
+#: modules/whatsapp/blocks/whatsapp/block.json
+msgctxt "block keyword"
+msgid "contact"
+msgstr "contacto"
+
+#: modules/forms/blocks/form/block.json
+msgctxt "block keyword"
+msgid "email"
+msgstr "correo"
+
+#: modules/forms/blocks/form/block.json
+msgctxt "block keyword"
+msgid "form"
+msgstr "formulario"
+
+#: modules/forms/blocks/notification/block.json
+msgctxt "block description"
+msgid ""
+"An email sent on every submission. Add one per recipient group: the site "
+"team, an acknowledgement to the sender… Never shown to visitors."
+msgstr ""
+"Un correo que sale con cada envío. Añade uno por grupo de destinatarios: el "
+"equipo de la web, un acuse al remitente… Los visitantes no lo ven nunca."
+
+#: modules/forms/blocks/notification/block.json
+msgctxt "block title"
+msgid "Email notification"
+msgstr "Aviso por correo"
+
+#: modules/forms/blocks/select/block.json
+msgctxt "block description"
+msgid "Choose one option from a list."
+msgstr "Elegir una opción de una lista."
+
+#: modules/forms/blocks/select/block.json
+msgctxt "block title"
+msgid "Dropdown field"
+msgstr "Campo desplegable"
+
+#: modules/forms/blocks/submit/block.json
+msgctxt "block title"
+msgid "Send button"
+msgstr "Botón de enviar"
+
+#: modules/forms/blocks/submit/block.json
+msgctxt "block description"
+msgid ""
+"The button that sends the form. Styled by the theme like any other button."
+msgstr ""
+"El botón que envía el formulario. Lo viste el tema como cualquier otro botón."
+
+#: modules/forms/blocks/tel/block.json
+msgctxt "block description"
+msgid "A phone number."
+msgstr "Un número de teléfono."
+
+#: modules/forms/blocks/tel/block.json
+msgctxt "block title"
+msgid "Phone field"
+msgstr "Campo de teléfono"
+
+#: modules/forms/blocks/text/block.json
+msgctxt "block description"
+msgid "A single line of text."
+msgstr "Una línea de texto."
+
+#: modules/forms/blocks/text/block.json
+msgctxt "block title"
+msgid "Text field"
+msgstr "Campo de texto"
+
+#: modules/forms/blocks/textarea/block.json
+msgctxt "block title"
+msgid "Message field"
+msgstr "Campo de mensaje"
+
+#: modules/forms/blocks/textarea/block.json
+msgctxt "block description"
+msgid "Several lines of text."
+msgstr "Varias líneas de texto."
+
+#: modules/forms/includes/admin/class-admin.php:45
+#: modules/forms/includes/admin/class-admin.php:53
+#: modules/forms/includes/admin/class-admin.php:99
+msgid "Form submissions"
+msgstr "Envíos de formularios"
+
+#: modules/forms/includes/admin/class-admin.php:46
+msgid "Forms"
+msgstr "Formularios"
+
+#: modules/forms/includes/admin/class-admin.php:53
+msgid "Submissions"
+msgstr "Envíos"
+
+#: modules/forms/includes/admin/class-admin.php:54
+#: modules/forms/includes/admin/class-admin.php:267
+msgid "Form settings"
+msgstr "Ajustes de formularios"
+
+#: modules/forms/includes/admin/class-admin.php:54
+msgid "Settings"
+msgstr "Ajustes"
+
+#: modules/forms/includes/admin/class-admin.php:71
+#: modules/forms/includes/admin/class-admin.php:260
+msgid "You are not allowed to see this page."
+msgstr "No tienes permiso para ver esta página."
+
+#: modules/forms/includes/admin/class-admin.php:100
+msgid "Export CSV"
+msgstr "Exportar CSV"
+
+#. translators: %d: número de envíos borrados.
+#: modules/forms/includes/admin/class-admin.php:106
+#, php-format
+msgid "%d submission deleted."
+msgid_plural "%d submissions deleted."
+msgstr[0] "%d envío borrado."
+msgstr[1] "%d envíos borrados."
+
+#: modules/forms/includes/admin/class-admin.php:123
+msgid "Submission not found"
+msgstr "Envío no encontrado"
+
+#: modules/forms/includes/admin/class-admin.php:124
+#: modules/forms/includes/admin/class-admin.php:129
+#: modules/forms/includes/admin/class-admin.php:172
+msgid "Back to the list"
+msgstr "Volver a la lista"
+
+#. translators: %d: número del envío.
+#: modules/forms/includes/admin/class-admin.php:128
+#, php-format
+msgid "Submission #%d"
+msgstr "Envío n.º %d"
+
+#: modules/forms/includes/admin/class-admin.php:131
+#: modules/forms/includes/admin/class-submissions-table.php:32
+msgid "Data"
+msgstr "Datos"
+
+#: modules/forms/includes/admin/class-admin.php:133
+#: modules/forms/includes/class-notifier.php:157
+msgid "No"
+msgstr "No"
+
+#: modules/forms/includes/admin/class-admin.php:133
+#: modules/forms/includes/class-notifier.php:157
+msgid "Yes"
+msgstr "Sí"
+
+#: modules/forms/includes/admin/class-admin.php:138
+#: modules/forms/includes/admin/class-submissions-table.php:34
+msgid "Notifications"
+msgstr "Avisos"
+
+#: modules/forms/includes/admin/class-admin.php:139
+msgid "Notification"
+msgstr "Aviso"
+
+#: modules/forms/includes/admin/class-admin.php:139
+msgid "Recipients"
+msgstr "Destinatarios"
+
+#: modules/forms/includes/admin/class-admin.php:139
+msgid "Result"
+msgstr "Resultado"
+
+#: modules/forms/includes/admin/class-admin.php:141
+#: modules/forms/includes/admin/class-submissions-table.php:114
+msgid "Failed"
+msgstr "Fallo"
+
+#: modules/forms/includes/admin/class-admin.php:141
+msgid "Sent"
+msgstr "Enviado"
+
+#: modules/forms/includes/admin/class-admin.php:145
+msgid "This form has no notifications."
+msgstr "Este formulario no tiene avisos."
+
+#: modules/forms/includes/admin/class-admin.php:149
+msgid "Details"
+msgstr "Detalles"
+
+#: modules/forms/includes/admin/class-admin.php:151
+#: modules/forms/includes/admin/class-submissions-table.php:31
+msgid "Form"
+msgstr "Formulario"
+
+#: modules/forms/includes/admin/class-admin.php:152
+#: modules/forms/includes/admin/class-submissions-table.php:30
+msgid "Date"
+msgstr "Fecha"
+
+#: modules/forms/includes/admin/class-admin.php:153
+msgid "Page"
+msgstr "Página"
+
+#: modules/forms/includes/admin/class-admin.php:154
+#: modules/forms/includes/admin/class-submissions-table.php:33
+#: modules/language-switcher/blocks/language-switcher/render.php:81
+msgid "Language"
+msgstr "Idioma"
+
+#: modules/forms/includes/admin/class-admin.php:155
+msgid "IP (truncated)"
+msgstr "IP (truncada)"
+
+#: modules/forms/includes/admin/class-admin.php:156
+msgid "User agent"
+msgstr "Navegador (user agent)"
+
+#: modules/forms/includes/admin/class-admin.php:163
+msgid "Delete this submission"
+msgstr "Borrar este envío"
+
+#: modules/forms/includes/admin/class-admin.php:170
+msgid "Delete submissions"
+msgstr "Borrar envíos"
+
+#: modules/forms/includes/admin/class-admin.php:172
+msgid "No submissions selected."
+msgstr "No hay envíos seleccionados."
+
+#. translators: %d: número de envíos.
+#: modules/forms/includes/admin/class-admin.php:178
+#, php-format
+msgid ""
+"You are about to permanently delete %d submission. This cannot be undone."
+msgid_plural ""
+"You are about to permanently delete %d submissions. This cannot be undone."
+msgstr[0] "Vas a borrar definitivamente %d envío. No se puede deshacer."
+msgstr[1] "Vas a borrar definitivamente %d envíos. No se puede deshacer."
+
+#: modules/forms/includes/admin/class-admin.php:188
+msgid "Yes, delete"
+msgstr "Sí, borrar"
+
+#: modules/forms/includes/admin/class-admin.php:189
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: modules/forms/includes/admin/class-admin.php:194
+#: modules/forms/includes/admin/class-admin.php:205
+msgid "You are not allowed to do this."
+msgstr "No tienes permiso para hacer esto."
+
+#: modules/forms/includes/admin/class-admin.php:268
+msgid ""
+"Fields, notifications and messages of each form are set in the form block, "
+"in the editor. Here only what is common to all forms."
+msgstr ""
+"Los campos, los avisos y los mensajes de cada formulario se configuran en su "
+"bloque, en el editor. Aquí solo lo común a todos."
+
+#: modules/forms/includes/admin/class-admin.php:271
+msgid "Submission log"
+msgstr "Registro de envíos"
+
+#: modules/forms/includes/admin/class-admin.php:274
+msgid "Keep submissions for (days)"
+msgstr "Conservar los envíos durante (días)"
+
+#: modules/forms/includes/admin/class-admin.php:276
+msgid "0 keeps them forever. Older submissions are deleted once a day."
+msgstr "0 los conserva siempre. Los más antiguos se borran una vez al día."
+
+#. translators: 1: fecha de la última purga, 2: envíos borrados.
+#: modules/forms/includes/admin/class-admin.php:280
+#, php-format
+msgid "Last purge: %1$s, %2$d deleted."
+msgstr "Última purga: %1$s, %2$d borrados."
+
+#: modules/forms/includes/admin/class-admin.php:286
+msgid "Anti-spam"
+msgstr "Antispam"
+
+#: modules/forms/includes/admin/class-admin.php:289
+msgid "Minimum filling time (seconds)"
+msgstr "Tiempo mínimo de relleno (segundos)"
+
+#: modules/forms/includes/admin/class-admin.php:293
+msgid "Submissions allowed per IP"
+msgstr "Envíos permitidos por IP"
+
+#: modules/forms/includes/admin/class-admin.php:295
+msgid "every (minutes)"
+msgstr "cada (minutos)"
+
+#: modules/forms/includes/admin/class-admin.php:297
+msgid "0 submissions disables the limit."
+msgstr "0 envíos desactiva el límite."
+
+#: modules/forms/includes/admin/class-admin.php:300
+msgid "Default texts"
+msgstr "Textos por defecto"
+
+#: modules/forms/includes/admin/class-admin.php:301
+msgid ""
+"Leave empty to use the built-in text, already translated. If you fill them "
+"in and the site uses WPML, translate them in WPML → String Translation "
+"(domain estrategia-web-forms)."
+msgstr ""
+"Déjalos vacíos para usar el texto incorporado, ya traducido. Si los rellenas "
+"y la web usa WPML, se traducen en WPML → Traducción de cadenas (dominio "
+"estrategia-web-forms)."
+
+#: modules/forms/includes/admin/class-admin.php:304
+msgid "Success message"
+msgstr "Mensaje de éxito"
+
+#: modules/forms/includes/admin/class-admin.php:308
+msgid "Error message"
+msgstr "Mensaje de error"
+
+#: modules/forms/includes/admin/class-admin.php:312
+msgid "Email footer"
+msgstr "Pie de los correos"
+
+#: modules/forms/includes/admin/class-submissions-table.php:39
+#: modules/forms/includes/admin/class-submissions-table.php:86
+msgid "Delete"
+msgstr "Borrar"
+
+#: modules/forms/includes/admin/class-submissions-table.php:56
+msgid "No submissions yet."
+msgstr "Todavía no hay envíos."
+
+#: modules/forms/includes/admin/class-submissions-table.php:64
+msgid "Filter by form"
+msgstr "Filtrar por formulario"
+
+#: modules/forms/includes/admin/class-submissions-table.php:65
+msgid "All forms"
+msgstr "Todos los formularios"
+
+#: modules/forms/includes/admin/class-submissions-table.php:70
+msgid "Filter"
+msgstr "Filtrar"
+
+#: modules/forms/includes/admin/class-submissions-table.php:85
+msgid "View"
+msgstr "Ver"
+
+#: modules/forms/includes/admin/class-submissions-table.php:112
+msgid "All sent"
+msgstr "Todos enviados"
+
+#: modules/forms/includes/admin/class-submissions-table.php:113
+msgid "Some failed"
+msgstr "Alguno falló"
+
+#: modules/forms/includes/admin/class-submissions-table.php:115
+msgid "Pending"
+msgstr "Pendiente"
+
+#: modules/forms/includes/class-blocks.php:80
+msgid ""
+"The message could not be sent. Please check your connection and try again."
+msgstr ""
+"No se ha podido enviar el mensaje. Comprueba tu conexión y vuelve a "
+"intentarlo."
+
+#: modules/forms/includes/class-blocks.php:103
+msgid "Leave this field empty"
+msgstr "Deja este campo vacío"
+
+#: modules/forms/includes/class-blocks.php:167
+msgid "Choose an option"
+msgstr "Elige una opción"
+
+#: modules/forms/includes/class-blocks.php:193
+msgid "Send"
+msgstr "Enviar"
+
+#. translators: lo que va entre llaves se convierte en el enlace a la política de privacidad.
+#. translators: lo que va entre llaves se convierte en el enlace a la política de privacidad; {texto|url} enlaza a esa url.
+#: modules/forms/includes/class-blocks.php:242
+#: modules/forms/includes/class-blocks.php:266
+msgid "I have read and accept the {privacy policy}."
+msgstr "He leído y acepto la {política de privacidad}."
+
+#: modules/forms/includes/class-notifier.php:59
+msgid "No valid recipient."
+msgstr "Ningún destinatario válido."
+
+#: modules/forms/includes/class-notifier.php:63
+msgid "New message"
+msgstr "Nuevo mensaje"
+
+#: modules/forms/includes/class-notifier.php:109
+msgid "wp_mail() returned false."
+msgstr "wp_mail() devolvió false."
+
+#: modules/forms/includes/class-rest.php:82
+msgid "This form is no longer available. Please reload the page."
+msgstr "Este formulario ya no está disponible. Recarga la página."
+
+#: modules/forms/includes/class-rest.php:118
+msgid "The form was sent too quickly. Please wait a few seconds and try again."
+msgstr ""
+"El formulario se ha enviado demasiado rápido. Espera unos segundos y vuelve "
+"a intentarlo."
+
+#: modules/forms/includes/class-rest.php:119
+msgid "The form has expired. Please reload the page and try again."
+msgstr "El formulario ha caducado. Recarga la página y vuelve a intentarlo."
+
+#: modules/forms/includes/class-rest.php:127
+msgid "Too many messages from your connection. Please try again later."
+msgstr "Demasiados mensajes desde tu conexión. Vuelve a intentarlo más tarde."
+
+#: modules/forms/includes/class-settings.php:103
+msgid "Thank you. Your message has been sent."
+msgstr "Gracias. Tu mensaje se ha enviado."
+
+#: modules/forms/includes/class-settings.php:104
+msgid "The message could not be sent. Please check the form and try again."
+msgstr ""
+"No se ha podido enviar el mensaje. Revisa el formulario y vuelve a "
+"intentarlo."
+
+#: modules/forms/includes/class-validator.php:53
+msgid "You must check this box to continue."
+msgstr "Tienes que marcar esta casilla para continuar."
+
+#: modules/forms/includes/class-validator.php:54
+msgid "This field is required."
+msgstr "Este campo es obligatorio."
+
+#: modules/forms/includes/class-validator.php:61
+msgid "This text is too long."
+msgstr "Este texto es demasiado largo."
+
+#: modules/forms/includes/class-validator.php:68
+msgid "Please enter a valid email address."
+msgstr "Escribe una dirección de correo válida."
+
+#: modules/forms/includes/class-validator.php:73
+msgid "Please enter a valid phone number."
+msgstr "Escribe un número de teléfono válido."
+
+#: modules/forms/includes/class-validator.php:78
+msgid "Please choose one of the options."
+msgstr "Elige una de las opciones."
+
+#: modules/forms/module.php
+msgctxt "module description"
+msgid ""
+"Block-based forms with several email notifications made from templates, a "
+"log of everything sent and WPML support."
+msgstr ""
+"Formularios por bloques con varios avisos por correo hechos con plantillas, "
+"registro de todo lo enviado y compatibles con WPML."
+
+#: modules/forms/module.php
+msgctxt "module name"
+msgid "Forms"
+msgstr "Formularios"
+
+#: modules/language-switcher/blocks/language-switcher/block.json
+msgctxt "block description"
+msgid ""
+"Current language with a drop-down list of the other languages, linking to "
+"the same page translated. Uses WPML; without WPML it shows nothing."
+msgstr ""
+"Idioma actual con un desplegable de los demás idiomas, que enlaza a la misma "
+"página traducida. Usa WPML; sin WPML no se muestra nada."
+
+#: modules/language-switcher/blocks/language-switcher/block.json
+msgctxt "block title"
+msgid "Language switcher"
+msgstr "Selector de idioma"
+
+#: modules/language-switcher/blocks/language-switcher/block.json
+msgctxt "block keyword"
+msgid "idioma"
+msgstr "idioma"
+
+#: modules/language-switcher/blocks/language-switcher/block.json
+msgctxt "block keyword"
+msgid "language"
+msgstr "idioma"
+
+#: modules/language-switcher/blocks/language-switcher/block.json
+msgctxt "block keyword"
+msgid "translation"
+msgstr "traducción"
+
+#: modules/language-switcher/blocks/language-switcher/block.json
+msgctxt "block keyword"
+msgid "wpml"
+msgstr "wpml"
+
+#: modules/language-switcher/blocks/language-switcher/labels.php:8
+msgid "Show the current language as (code: “ES”, name: “Español”)"
+msgstr "Mostrar el idioma actual como (code: «ES», name: «Español»)"
+
+#: modules/language-switcher/blocks/language-switcher/render.php:111
+msgid "Language:"
+msgstr "Idioma:"
+
+#: modules/language-switcher/module.php
+msgctxt "module name"
+msgid "Language switcher"
+msgstr "Selector de idioma"
+
+#: modules/language-switcher/module.php
+msgctxt "module description"
+msgid ""
+"Language switcher block for WPML: the current language and links to the same "
+"page in the others, as a drop-down or inline. Without WPML it shows nothing."
+msgstr ""
+"Bloque selector de idioma para WPML: el idioma actual y enlaces a la misma "
+"página en los demás, en desplegable o en línea. Sin WPML no pinta nada."
+
+#: modules/map/blocks/map/block.json
+msgctxt "block title"
+msgid "Map (two clicks)"
+msgstr "Mapa (en dos clics)"
+
+#: modules/map/blocks/map/block.json
+msgctxt "block description"
+msgid ""
+"Static image with the address. The Google Maps embed only loads after the "
+"visitor asks for it."
+msgstr ""
+"Imagen estática con la dirección. El mapa de Google Maps solo se carga "
+"cuando el visitante lo pide."
+
+#: modules/map/blocks/map/block.json
+msgctxt "block keyword"
+msgid "address"
+msgstr "dirección"
+
+#: modules/map/blocks/map/block.json
+msgctxt "block keyword"
+msgid "google maps"
+msgstr "google maps"
+
+#: modules/map/blocks/map/block.json
+msgctxt "block keyword"
+msgid "location"
+msgstr "ubicación"
+
+#: modules/map/blocks/map/block.json
+msgctxt "block keyword"
+msgid "map"
+msgstr "mapa"
+
+#: modules/map/blocks/map/edit.js:34
+msgid "Map settings"
+msgstr "Ajustes del mapa"
+
+#: modules/map/blocks/map/edit.js:36
+msgid "Show the place details"
+msgstr "Mostrar los datos del sitio"
+
+#: modules/map/blocks/map/edit.js:37
+msgid "Turn it off when the address is already next to the map."
+msgstr "Desactívalo cuando la dirección ya está al lado del mapa."
+
+#: modules/map/blocks/map/edit.js:41
+msgid "Place name"
+msgstr "Nombre del sitio"
+
+#: modules/map/blocks/map/edit.js:54
+msgid "Google Maps embed URL"
+msgstr "URL para insertar de Google Maps"
+
+#: modules/map/blocks/map/edit.js:55
+msgid "Google Maps › Share › Embed a map. You can paste the whole iframe code."
+msgstr ""
+"Google Maps › Compartir › Insertar un mapa. Puedes pegar el código del "
+"iframe entero."
+
+#: modules/map/blocks/map/edit.js:62
+msgid "Optional. Empty: a search for the address."
+msgstr "Opcional. Vacío: una búsqueda de la dirección."
+
+#: modules/map/blocks/map/edit.js:67
+msgid "Static map"
+msgstr "Mapa estático"
+
+#: modules/map/blocks/map/edit.js:68
+msgid ""
+"An OpenStreetMap image made with tools/static-map.mjs, shown under the place "
+"details until the visitor loads Google Maps. It must be served by this site."
+msgstr ""
+"Una imagen de OpenStreetMap hecha con tools/static-map.mjs; se ve bajo los "
+"datos del sitio hasta que el visitante carga Google Maps. Tiene que servirla "
+"este sitio."
+
+#: modules/map/blocks/map/edit.js:72
+msgid "A theme path (assets/maps/place.webp) or a URL of this site."
+msgstr "Una ruta del tema (assets/maps/sede.webp) o una URL de este sitio."
+
+#: modules/map/blocks/map/edit.js:85
+msgid "Choose from the media library"
+msgstr "Elegir de la mediateca"
+
+#: modules/map/blocks/map/edit.js:85 modules/map/blocks/map/edit.js:123
+msgid "Replace image"
+msgstr "Cambiar la imagen"
+
+#: modules/map/blocks/map/edit.js:93 modules/map/blocks/map/edit.js:135
+msgid "Remove image"
+msgstr "Quitar la imagen"
+
+#: modules/map/blocks/map/edit.js:99
+msgid "Static image"
+msgstr "Imagen estática"
+
+#: modules/map/blocks/map/edit.js:100
+msgid "Optional. Without an image the map shows a box with the place details."
+msgstr ""
+"Opcional. Sin imagen, el mapa enseña un recuadro con los datos del sitio."
+
+#: modules/map/blocks/map/edit.js:102
+msgid "Use the featured image of the post"
+msgstr "Usar la imagen destacada de la entrada"
+
+#: modules/map/blocks/map/edit.js:103
+msgid "Inside a Query Loop."
+msgstr "Dentro de una Consulta."
+
+#: modules/map/blocks/map/edit.js:123
+msgid "Choose image"
+msgstr "Elegir imagen"
+
+#: modules/map/blocks/map/edit.js:138
+msgid "Image alternative text"
+msgstr "Texto alternativo de la imagen"
+
+#: modules/map/blocks/map/render.php:185
+msgid ""
+"Map: add the address and the Google Maps embed URL in the block settings."
+msgstr ""
+"Mapa: añade la dirección y la URL para insertar de Google Maps en los "
+"ajustes del bloque."
+
+#. translators: %s: postal address.
+#: modules/map/blocks/map/render.php:207
+#, php-format
+msgid "Street map around %s"
+msgstr "Plano de las calles alrededor de %s"
+
+#: modules/map/blocks/map/render.php:208
+msgid "Street map of the area"
+msgstr "Plano de las calles de la zona"
+
+#. translators: %s: postal address.
+#: modules/map/blocks/map/render.php:265
+#, php-format
+msgid "Map: %s"
+msgstr "Mapa: %s"
+
+#: modules/map/blocks/map/render.php:266
+msgid "Map"
+msgstr "Mapa"
+
+#: modules/map/blocks/map/render.php:315
+msgid "Show map"
+msgstr "Ver mapa"
+
+#: modules/map/blocks/map/render.php:316
+msgid ""
+"The map is served by Google. Loading it sends your IP address to Google, "
+"which may set its own cookies."
+msgstr ""
+"El mapa lo sirve Google. Al cargarlo, tu dirección IP se envía a Google, que "
+"puede instalar sus propias cookies."
+
+#: modules/map/blocks/map/render.php:321
+msgid "Open in Google Maps"
+msgstr "Abrir en Google Maps"
+
+#: modules/map/module.php
+msgctxt "module name"
+msgid "Map"
+msgstr "Mapa"
+
+#: modules/map/module.php
+msgctxt "module description"
+msgid ""
+"Two-click map block: a static image with the address; the Google Maps embed "
+"only loads after the visitor asks for it (or accepted the maps cookies)."
+msgstr ""
+"Bloque de mapa en dos clics: una imagen fija con la dirección; el mapa de "
+"Google Maps solo se carga cuando el visitante lo pide (o si aceptó las "
+"cookies de mapas)."
+
+#: modules/site/includes/admin/class-admin.php:33
+#: modules/site/includes/admin/class-admin.php:34
+#: modules/site/includes/admin/class-admin.php:83
+#: modules/site/includes/class-bindings.php:50
+#: modules/site/includes/class-legacy-names.php:109
+#: modules/site/includes/class-settings.php:135
+msgid "Company details"
+msgstr "Datos de la empresa"
+
+#: modules/site/includes/admin/class-admin.php:45
+#: modules/site/includes/class-content-types.php:72
+msgid "Clients"
+msgstr "Clientes"
+
+#: modules/site/includes/admin/class-admin.php:46
+#: modules/site/includes/class-content-types.php:110
+msgid "Testimonials"
+msgstr "Opiniones"
+
+#: modules/site/includes/admin/class-admin.php:47
+#: modules/site/includes/class-content-types.php:136
+msgid "Locations"
+msgstr "Sedes"
+
+#: modules/site/includes/admin/class-admin.php:48
+#: modules/site/includes/class-content-types.php:167
+msgid "Projects"
+msgstr "Proyectos"
+
+#: modules/site/includes/admin/class-admin.php:49
+#: modules/site/includes/class-content-types.php:199
+msgid "Portfolio"
+msgstr "Portfolio"
+
+#: modules/site/includes/admin/class-admin.php:84
+msgid ""
+"These details appear wherever a block is linked to them (Block Bindings, "
+"source «Company details»). Change them here and they change across the whole "
+"site."
+msgstr ""
+"Estos datos salen allí donde un bloque esté enlazado a ellos (Block "
+"Bindings, fuente «Datos de la empresa»). Si los cambias aquí, cambian en "
+"toda la web."
+
+#: modules/site/includes/admin/class-admin.php:89
+msgid "Company"
+msgstr "Empresa"
+
+#: modules/site/includes/admin/class-admin.php:95
+msgid ""
+"As it appears in the legal notice, without «Registered in». Example: "
+"Registro Mercantil de Mallorca, tomo 1234, folio 56, hoja PM-7890, "
+"inscripción 1.ª"
+msgstr ""
+"Tal como aparece en el aviso legal, sin «Inscrita en». Ejemplo: Registro "
+"Mercantil de Mallorca, tomo 1234, folio 56, hoja PM-7890, inscripción 1.ª"
+
+#: modules/site/includes/admin/class-admin.php:102
+msgid "Contact"
+msgstr "Contacto"
+
+#: modules/site/includes/admin/class-admin.php:108
+msgid "International format, digits only, without +. Example: 34600000000."
+msgstr "Formato internacional, solo dígitos, sin +. Ejemplo: 34600000000."
+
+#: modules/site/includes/admin/class-admin.php:109
+msgid "Text that appears already written when the chat opens."
+msgstr "Texto que aparece ya escrito al abrir el chat."
+
+#: modules/site/includes/admin/class-admin.php:113
+msgid "Social networks"
+msgstr "Redes sociales"
+
+#: modules/site/includes/admin/class-admin.php:128
+msgid "Content types"
+msgstr "Tipos de contenido"
+
+#: modules/site/includes/admin/class-admin.php:129
+msgid ""
+"Only the checked types appear in the menu and on the site. Unchecking a type "
+"does not delete its content: it comes back when it is checked again."
+msgstr ""
+"Solo los tipos marcados aparecen en el menú y en la web. Desmarcar un tipo "
+"no borra su contenido: vuelve al marcarlo otra vez."
+
+#: modules/site/includes/admin/class-admin.php:140
+msgid "Media"
+msgstr "Medios"
+
+#: modules/site/includes/admin/class-admin.php:144
+msgid "Allow SVG uploads (administrators only; files are sanitized)"
+msgstr "Permitir subir SVG (solo administradores; los ficheros se sanean)"
+
+#: modules/site/includes/admin/class-admin.php:148
+msgid "Statistics (Matomo)"
+msgstr "Estadísticas (Matomo)"
+
+#: modules/site/includes/admin/class-admin.php:149
+msgid ""
+"Without the Matomo address or the site ID nothing is added to the site. "
+"Logged-in editors and administrators are not counted."
+msgstr ""
+"Sin la dirección de Matomo o sin el ID del sitio no se añade nada a la web. "
+"Los editores y administradores con sesión iniciada no se cuentan."
+
+#: modules/site/includes/admin/class-admin.php:152
+msgid "Matomo address"
+msgstr "Dirección de Matomo"
+
+#: modules/site/includes/admin/class-admin.php:155
+msgid "Example: https://stats.example.com/"
+msgstr "Ejemplo: https://stats.ejemplo.com/"
+
+#: modules/site/includes/admin/class-admin.php:159
+msgid "Site ID"
+msgstr "ID del sitio"
+
+#: modules/site/includes/admin/class-admin.php:168
+msgid "Without cookies (recommended): nothing to ask the visitor."
+msgstr "Sin cookies (recomendado): no hay nada que preguntar al visitante."
+
+#: modules/site/includes/admin/class-admin.php:172
+msgid ""
+"Hybrid: without cookies until the visitor accepts «Statistics» in the cookie "
+"notice of the theme."
+msgstr ""
+"Híbrido: sin cookies hasta que el visitante acepta «Estadísticas» en el "
+"aviso de cookies del tema."
+
+#: modules/site/includes/class-company.php:91
+msgid "Company name"
+msgstr "Nombre comercial"
+
+#: modules/site/includes/class-company.php:92
+msgid "Legal name"
+msgstr "Razón social"
+
+#: modules/site/includes/class-company.php:93
+msgid "Tax ID"
+msgstr "NIF/CIF"
+
+#: modules/site/includes/class-company.php:94
+msgid "Company registry"
+msgstr "Inscripción registral"
+
+#: modules/site/includes/class-company.php:95
+#: modules/site/includes/class-content-types.php:153
+msgid "Email"
+msgstr "Correo electrónico"
+
+#: modules/site/includes/class-company.php:96
+#: modules/site/includes/class-content-types.php:152
+msgid "Phone"
+msgstr "Teléfono"
+
+#: modules/site/includes/class-company.php:97
+msgid "Secondary phone"
+msgstr "Teléfono secundario"
+
+#: modules/site/includes/class-company.php:98
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+#: modules/site/includes/class-company.php:99
+msgid "WhatsApp message"
+msgstr "Mensaje de WhatsApp"
+
+#: modules/site/includes/class-company.php:100
+#: modules/site/includes/class-content-types.php:151
+msgid "Address"
+msgstr "Dirección"
+
+#: modules/site/includes/class-company.php:101
+#: modules/site/includes/class-content-types.php:154
+msgid "Opening hours"
+msgstr "Horario"
+
+#: modules/site/includes/class-company.php:102
+msgid "Map link"
+msgstr "Enlace al mapa"
+
+#: modules/site/includes/class-company.php:103
+msgid "Facebook"
+msgstr "Facebook"
+
+#: modules/site/includes/class-company.php:104
+msgid "Instagram"
+msgstr "Instagram"
+
+#: modules/site/includes/class-company.php:105
+msgid "LinkedIn"
+msgstr "LinkedIn"
+
+#: modules/site/includes/class-company.php:106
+msgid "X (Twitter)"
+msgstr "X (Twitter)"
+
+#: modules/site/includes/class-company.php:107
+msgid "YouTube"
+msgstr "YouTube"
+
+#: modules/site/includes/class-company.php:108
+msgid "TikTok"
+msgstr "TikTok"
+
+#: modules/site/includes/class-company.php:109
+#: modules/site/includes/class-location.php:133
+msgid "Phone (link)"
+msgstr "Teléfono (enlace)"
+
+#: modules/site/includes/class-company.php:110
+msgid "Secondary phone (link)"
+msgstr "Teléfono secundario (enlace)"
+
+#: modules/site/includes/class-company.php:111
+#: modules/site/includes/class-location.php:134
+msgid "Email (link)"
+msgstr "Correo electrónico (enlace)"
+
+#: modules/site/includes/class-company.php:112
+msgid "WhatsApp (link)"
+msgstr "WhatsApp (enlace)"
+
+#: modules/site/includes/class-content-types.php:69
+msgctxt "URL slug"
+msgid "clients"
+msgstr "clientes"
+
+#: modules/site/includes/class-content-types.php:73
+msgid "Client"
+msgstr "Cliente"
+
+#: modules/site/includes/class-content-types.php:74
+msgid "Add client"
+msgstr "Añadir cliente"
+
+#: modules/site/includes/class-content-types.php:75
+msgid "Edit client"
+msgstr "Editar cliente"
+
+#: modules/site/includes/class-content-types.php:76
+msgid "New client"
+msgstr "Nuevo cliente"
+
+#: modules/site/includes/class-content-types.php:77
+msgid "View client"
+msgstr "Ver cliente"
+
+#: modules/site/includes/class-content-types.php:78
+msgid "View clients"
+msgstr "Ver clientes"
+
+#: modules/site/includes/class-content-types.php:79
+msgid "Search clients"
+msgstr "Buscar clientes"
+
+#: modules/site/includes/class-content-types.php:80
+msgid "No clients found."
+msgstr "No hay clientes."
+
+#: modules/site/includes/class-content-types.php:81
+msgid "No clients found in Trash."
+msgstr "No hay clientes en la papelera."
+
+#: modules/site/includes/class-content-types.php:82
+msgid "All clients"
+msgstr "Todos los clientes"
+
+#: modules/site/includes/class-content-types.php:83
+msgid "Logo or photo"
+msgstr "Logo o foto"
+
+#: modules/site/includes/class-content-types.php:84
+msgid "Set logo or photo"
+msgstr "Poner logo o foto"
+
+#: modules/site/includes/class-content-types.php:88
+msgctxt "URL slug"
+msgid "client-sector"
+msgstr "sector"
+
+#: modules/site/includes/class-content-types.php:90
+msgid "Sectors"
+msgstr "Sectores"
+
+#: modules/site/includes/class-content-types.php:91
+msgid "Sector"
+msgstr "Sector"
+
+#: modules/site/includes/class-content-types.php:92
+msgid "Add sector"
+msgstr "Añadir sector"
+
+#: modules/site/includes/class-content-types.php:93
+msgid "Edit sector"
+msgstr "Editar sector"
+
+#: modules/site/includes/class-content-types.php:94
+msgid "Search sectors"
+msgstr "Buscar sectores"
+
+#: modules/site/includes/class-content-types.php:95
+msgid "All sectors"
+msgstr "Todos los sectores"
+
+#: modules/site/includes/class-content-types.php:96
+msgid "No sectors found."
+msgstr "No hay sectores."
+
+#: modules/site/includes/class-content-types.php:100
+msgid "Client website"
+msgstr "Web del cliente"
+
+#: modules/site/includes/class-content-types.php:102
+msgid "Image fit (cover for a photo, contain for a logo)"
+msgstr "Encaje de la imagen (cover para una foto, contain para un logo)"
+
+#: modules/site/includes/class-content-types.php:107
+msgctxt "URL slug"
+msgid "testimonials"
+msgstr "opiniones"
+
+#: modules/site/includes/class-content-types.php:111
+msgid "Testimonial"
+msgstr "Opinión"
+
+#: modules/site/includes/class-content-types.php:112
+msgid "Add testimonial"
+msgstr "Añadir opinión"
+
+#: modules/site/includes/class-content-types.php:113
+msgid "Edit testimonial"
+msgstr "Editar opinión"
+
+#: modules/site/includes/class-content-types.php:114
+msgid "New testimonial"
+msgstr "Nueva opinión"
+
+#: modules/site/includes/class-content-types.php:115
+msgid "View testimonial"
+msgstr "Ver opinión"
+
+#: modules/site/includes/class-content-types.php:116
+msgid "View testimonials"
+msgstr "Ver opiniones"
+
+#: modules/site/includes/class-content-types.php:117
+msgid "Search testimonials"
+msgstr "Buscar opiniones"
+
+#: modules/site/includes/class-content-types.php:118
+msgid "No testimonials found."
+msgstr "No hay opiniones."
+
+#: modules/site/includes/class-content-types.php:119
+msgid "No testimonials found in Trash."
+msgstr "No hay opiniones en la papelera."
+
+#: modules/site/includes/class-content-types.php:120
+msgid "All testimonials"
+msgstr "Todas las opiniones"
+
+#: modules/site/includes/class-content-types.php:121
+msgid "Author photo"
+msgstr "Foto del autor"
+
+#: modules/site/includes/class-content-types.php:122
+msgid "Set author photo"
+msgstr "Poner foto del autor"
+
+#: modules/site/includes/class-content-types.php:125
+msgid "Author"
+msgstr "Autor"
+
+#: modules/site/includes/class-content-types.php:126
+msgid "Author role or company"
+msgstr "Cargo o empresa del autor"
+
+#: modules/site/includes/class-content-types.php:127
+msgid "Rating (1 to 5)"
+msgstr "Valoración (1 a 5)"
+
+#: modules/site/includes/class-content-types.php:128
+msgid "Related client"
+msgstr "Cliente relacionado"
+
+#: modules/site/includes/class-content-types.php:133
+msgctxt "URL slug"
+msgid "locations"
+msgstr "sedes"
+
+#: modules/site/includes/class-content-types.php:137
+msgid "Location"
+msgstr "Sede"
+
+#: modules/site/includes/class-content-types.php:138
+msgid "Add location"
+msgstr "Añadir sede"
+
+#: modules/site/includes/class-content-types.php:139
+msgid "Edit location"
+msgstr "Editar sede"
+
+#: modules/site/includes/class-content-types.php:140
+msgid "New location"
+msgstr "Nueva sede"
+
+#: modules/site/includes/class-content-types.php:141
+msgid "View location"
+msgstr "Ver sede"
+
+#: modules/site/includes/class-content-types.php:142
+msgid "View locations"
+msgstr "Ver sedes"
+
+#: modules/site/includes/class-content-types.php:143
+msgid "Search locations"
+msgstr "Buscar sedes"
+
+#: modules/site/includes/class-content-types.php:144
+msgid "No locations found."
+msgstr "No hay sedes."
+
+#: modules/site/includes/class-content-types.php:145
+msgid "No locations found in Trash."
+msgstr "No hay sedes en la papelera."
+
+#: modules/site/includes/class-content-types.php:146
+msgid "All locations"
+msgstr "Todas las sedes"
+
+#: modules/site/includes/class-content-types.php:147
+msgid "Static map image"
+msgstr "Imagen estática del mapa"
+
+#: modules/site/includes/class-content-types.php:148
+msgid "Set static map image"
+msgstr "Poner imagen estática del mapa"
+
+#: modules/site/includes/class-content-types.php:155
+msgid "Google Maps link"
+msgstr "Enlace a Google Maps"
+
+#: modules/site/includes/class-content-types.php:156
+msgid "Map embed URL"
+msgstr "URL para incrustar el mapa"
+
+#: modules/site/includes/class-content-types.php:158
+msgid "Static map image (theme path or URL of this site)"
+msgstr "Imagen del mapa estático (ruta del tema o URL de esta web)"
+
+#: modules/site/includes/class-content-types.php:159
+msgid "Static map image (media library ID)"
+msgstr "Imagen del mapa estático (ID de la mediateca)"
+
+#: modules/site/includes/class-content-types.php:164
+msgctxt "URL slug"
+msgid "projects"
+msgstr "proyectos"
+
+#: modules/site/includes/class-content-types.php:168
+msgid "Project"
+msgstr "Proyecto"
+
+#: modules/site/includes/class-content-types.php:169
+msgid "Add project"
+msgstr "Añadir proyecto"
+
+#: modules/site/includes/class-content-types.php:170
+msgid "Edit project"
+msgstr "Editar proyecto"
+
+#: modules/site/includes/class-content-types.php:171
+msgid "New project"
+msgstr "Nuevo proyecto"
+
+#: modules/site/includes/class-content-types.php:172
+msgid "View project"
+msgstr "Ver proyecto"
+
+#: modules/site/includes/class-content-types.php:173
+msgid "View projects"
+msgstr "Ver proyectos"
+
+#: modules/site/includes/class-content-types.php:174
+msgid "Search projects"
+msgstr "Buscar proyectos"
+
+#: modules/site/includes/class-content-types.php:175
+msgid "No projects found."
+msgstr "No hay proyectos."
+
+#: modules/site/includes/class-content-types.php:176
+msgid "No projects found in Trash."
+msgstr "No hay proyectos en la papelera."
+
+#: modules/site/includes/class-content-types.php:177
+msgid "All projects"
+msgstr "Todos los proyectos"
+
+#: modules/site/includes/class-content-types.php:181
+msgctxt "URL slug"
+msgid "project-category"
+msgstr "categoria-proyecto"
+
+#: modules/site/includes/class-content-types.php:183
+msgid "Project categories"
+msgstr "Categorías de proyecto"
+
+#: modules/site/includes/class-content-types.php:184
+msgid "Project category"
+msgstr "Categoría de proyecto"
+
+#: modules/site/includes/class-content-types.php:185
+#: modules/site/includes/class-content-types.php:217
+msgid "Add category"
+msgstr "Añadir categoría"
+
+#: modules/site/includes/class-content-types.php:186
+#: modules/site/includes/class-content-types.php:218
+msgid "Edit category"
+msgstr "Editar categoría"
+
+#: modules/site/includes/class-content-types.php:187
+#: modules/site/includes/class-content-types.php:219
+msgid "Search categories"
+msgstr "Buscar categorías"
+
+#: modules/site/includes/class-content-types.php:188
+#: modules/site/includes/class-content-types.php:220
+msgid "All categories"
+msgstr "Todas las categorías"
+
+#: modules/site/includes/class-content-types.php:189
+#: modules/site/includes/class-content-types.php:221
+msgid "No categories found."
+msgstr "No hay categorías."
+
+#: modules/site/includes/class-content-types.php:196
+msgctxt "URL slug"
+msgid "portfolio"
+msgstr "portfolio"
+
+#: modules/site/includes/class-content-types.php:200
+msgid "Portfolio item"
+msgstr "Trabajo del portfolio"
+
+#: modules/site/includes/class-content-types.php:201
+msgid "Add portfolio item"
+msgstr "Añadir trabajo"
+
+#: modules/site/includes/class-content-types.php:202
+msgid "Edit portfolio item"
+msgstr "Editar trabajo"
+
+#: modules/site/includes/class-content-types.php:203
+msgid "New portfolio item"
+msgstr "Nuevo trabajo"
+
+#: modules/site/includes/class-content-types.php:204
+msgid "View portfolio item"
+msgstr "Ver trabajo"
+
+#: modules/site/includes/class-content-types.php:205
+msgid "View portfolio"
+msgstr "Ver portfolio"
+
+#: modules/site/includes/class-content-types.php:206
+msgid "Search portfolio"
+msgstr "Buscar en el portfolio"
+
+#: modules/site/includes/class-content-types.php:207
+msgid "No portfolio items found."
+msgstr "No hay trabajos en el portfolio."
+
+#: modules/site/includes/class-content-types.php:208
+msgid "No portfolio items found in Trash."
+msgstr "No hay trabajos en la papelera."
+
+#: modules/site/includes/class-content-types.php:209
+msgid "All portfolio items"
+msgstr "Todos los trabajos"
+
+#: modules/site/includes/class-content-types.php:213
+msgctxt "URL slug"
+msgid "portfolio-category"
+msgstr "categoria-portfolio"
+
+#: modules/site/includes/class-content-types.php:215
+msgid "Portfolio categories"
+msgstr "Categorías del portfolio"
+
+#: modules/site/includes/class-content-types.php:216
+msgid "Portfolio category"
+msgstr "Categoría del portfolio"
+
+#: modules/site/includes/class-legacy-names.php:110
+#: modules/site/includes/class-location.php:64
+msgid "Location details"
+msgstr "Datos de la sede"
+
+#: modules/site/includes/class-location.php:130
+msgid "Location name"
+msgstr "Nombre de la sede"
+
+#: modules/site/includes/class-settings.php:136
+msgid "Company details and site options of the Estrategia Web Site plugin."
+msgstr ""
+"Datos de la empresa y opciones de la web del plugin Estrategia Web Site."
+
+#: modules/site/includes/class-settings.php:257
+msgid "The email address is not valid. The previous one has been kept."
+msgstr "El correo electrónico no es válido. Se ha mantenido el anterior."
+
+#: modules/site/includes/class-settings.php:270
+msgid ""
+"The WhatsApp number is not valid (international format, digits only). The "
+"previous one has been kept."
+msgstr ""
+"El número de WhatsApp no es válido (formato internacional, solo dígitos). Se "
+"ha mantenido el anterior."
+
+#. translators: %s: the field name.
+#: modules/site/includes/class-settings.php:344
+#, php-format
+msgid ""
+"The address in «%s» is not a valid web address. The previous one has been "
+"kept."
+msgstr ""
+"La dirección de «%s» no es una dirección web válida. Se ha mantenido la "
+"anterior."
+
+#: modules/site/includes/class-svg.php:90
+msgid "You are not allowed to upload SVG files."
+msgstr "No tienes permiso para subir ficheros SVG."
+
+#: modules/site/includes/class-svg.php:97
+msgid ""
+"This SVG file could not be read or is not safe, so it has not been uploaded."
+msgstr ""
+"Este fichero SVG no se ha podido leer o no es seguro, así que no se ha "
+"subido."
+
+#: modules/site/module.php
+msgctxt "module name"
+msgid "Company data and content types"
+msgstr "Datos de la empresa y tipos de contenido"
+
+#: modules/site/module.php
+msgctxt "module description"
+msgid ""
+"Company details with Block Bindings and the [estrategia_web_company] "
+"shortcode, the usual content types of a corporate site (clients, "
+"testimonials, locations, projects, portfolio), sanitised SVG uploads and the "
+"Matomo code."
+msgstr ""
+"Datos de la empresa con Block Bindings y el shortcode "
+"[estrategia_web_company], los tipos de contenido habituales de una web "
+"corporativa (clientes, opiniones, sedes, proyectos, portfolio), subida de "
+"SVG saneada y el código de Matomo."
+
+#: modules/webp/module.php
+msgctxt "module description"
+msgid ""
+"Image sizes generated from JPEG and PNG uploads are saved as WebP (quality "
+"75)."
+msgstr ""
+"Los tamaños que se generan al subir un JPEG o un PNG se guardan en WebP "
+"(calidad 75)."
+
+#: modules/webp/module.php
+msgctxt "module name"
+msgid "WebP images"
+msgstr "Imágenes en WebP"
+
+#: modules/whatsapp/blocks/whatsapp/block.json
+msgctxt "block description"
+msgid ""
+"Floating button that opens a WhatsApp chat with a predefined message. Meant "
+"for the footer template part."
+msgstr ""
+"Botón flotante que abre un chat de WhatsApp con un mensaje predefinido. "
+"Pensado para la parte de pie."
+
+#: modules/whatsapp/blocks/whatsapp/block.json
+msgctxt "block title"
+msgid "WhatsApp button"
+msgstr "Botón de WhatsApp"
+
+#: modules/whatsapp/blocks/whatsapp/block.json
+msgctxt "block keyword"
+msgid "chat"
+msgstr "chat"
+
+#: modules/whatsapp/blocks/whatsapp/block.json
+msgctxt "block keyword"
+msgid "whatsapp"
+msgstr "whatsapp"
+
+#: modules/whatsapp/blocks/whatsapp/labels.php:8
+msgid "Phone in international format (empty: site option)"
+msgstr "Teléfono en formato internacional (vacío: la opción del sitio)"
+
+#: modules/whatsapp/blocks/whatsapp/labels.php:9
+msgid "Predefined message (empty: site option)"
+msgstr "Mensaje predefinido (vacío: la opción del sitio)"
+
+#: modules/whatsapp/blocks/whatsapp/labels.php:10
+msgid "Position"
+msgstr "Posición"
+
+#: modules/whatsapp/blocks/whatsapp/labels.php:11
+msgid "Accessible name (empty: “Chat on WhatsApp”)"
+msgstr "Nombre accesible (vacío: «Escríbenos por WhatsApp»)"
+
+#: modules/whatsapp/blocks/whatsapp/render.php:51
+msgid ""
+"WhatsApp button: set the phone number in the block settings or in the "
+"estrategia_web_whatsapp_phone site option."
+msgstr ""
+"Botón de WhatsApp: pon el número de teléfono en los ajustes del bloque o en "
+"la opción del sitio estrategia_web_whatsapp_phone."
+
+#: modules/whatsapp/blocks/whatsapp/render.php:62
+msgid "Chat on WhatsApp"
+msgstr "Escríbenos por WhatsApp"
+
+#: modules/whatsapp/module.php
+msgctxt "module description"
+msgid ""
+"Floating button that opens a WhatsApp chat with a predefined message. The "
+"number and the message are site options, not per page."
+msgstr ""
+"Botón flotante que abre un chat de WhatsApp con un mensaje predefinido. El "
+"número y el mensaje son opciones del sitio, no de cada página."
+
+#: modules/whatsapp/module.php
+msgctxt "module name"
+msgid "WhatsApp button"
+msgstr "Botón de WhatsApp"
+
+#: modules/whatsapp/module.php:46
+msgid "WhatsApp phone number in international format, digits only."
+msgstr "Número de WhatsApp en formato internacional, solo dígitos."
+
+#: modules/whatsapp/module.php:57
+msgid "Predefined WhatsApp message."
+msgstr "Mensaje predefinido de WhatsApp."
+
+#: modules/wpml-front-page/module.php
+msgctxt "module name"
+msgid "Translated front page (WPML)"
+msgstr "Portada traducida (WPML)"
+
+#: modules/wpml-front-page/module.php
+msgctxt "module description"
+msgid ""
+"With WPML, /en/ shows the translated front page instead of the latest posts. "
+"Without WPML it does nothing."
+msgstr ""
+"Con WPML, /en/ enseña la portada traducida en vez de las últimas entradas. "
+"Sin WPML no hace nada."

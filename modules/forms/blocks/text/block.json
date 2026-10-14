@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "estrategia-web-forms/text",
+	"version": "0.1.0",
+	"title": "Text field",
+	"category": "widgets",
+	"icon": "editor-textcolor",
+	"description": "A single line of text.",
+	"textdomain": "estrategia-web",
+	"ancestor": [ "estrategia-web-forms/form" ],
+	"usesContext": [ "estrategia-web-forms/formId" ],
+	"attributes": {
+		"label": { "type": "string", "default": "" },
+		"name": { "type": "string", "default": "" },
+		"required": { "type": "boolean", "default": false },
+		"placeholder": { "type": "string", "default": "" },
+		"autocomplete": { "type": "string", "default": "" },
+		"width": { "type": "string", "enum": [ "full", "half" ], "default": "full" }
+	},
+	"supports": { "html": false, "reusable": false },
+	"editorScript": "estrategia-web-forms-editor",
+	"style": "estrategia-web-forms"
+}

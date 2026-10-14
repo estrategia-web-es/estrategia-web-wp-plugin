@@ -15,7 +15,12 @@
  * - Contraseñas de aplicación sin HTTPS (Playground va por http): así las
  *   pruebas hablan con la API REST de verdad como admin y como autor.
  * - Rutas estrategia-web-site-test/v1/*: ping, reset, users, page, raw-post,
- *   consent-categories (0.3.0, solo lee un filtro), consent-setup (0.5.0).
+ *   consent-categories (0.3.0, solo lee un filtro), consent-setup (0.5.0),
+ *   modules (1.1.0: GET qué módulos cargó la petición; POST guarda la lista
+ *   como la pantalla, o la borra con «active»: null).
+ * - Desde la 1.1.0 es el mu-plugin de pruebas del NÚCLEO y de los módulos
+ *   que vienen de Estrategia Web Site; forms trae el suyo
+ *   (modules/forms/tests/wp/). Los dos los carga tests/blueprint.json.
  * - consent-setup (0.5.0) hace de TEMA para el aviso de cookies: guarda en la
  *   opción estrategia_web_site_test_consent qué categorías declara «la web», qué
  *   devuelve el filtro del «Powered by» y si hay un
@@ -109,6 +114,35 @@ add_action(
 		};
 
 		$route( '/ping', 'GET', static fn() => array( 'ok' => true ) );
+
+		// 1.1.0, módulos: lo que se cargó en ESTA petición y lo guardado.
+		// POST guarda la lista con update_option (como la pantalla), así que
+		// pasa por el gancho que escribe _known; la siguiente petición ya
+		// carga lo nuevo. Con «null», borra las dos opciones (por defecto).
+		$route(
+			'/modules',
+			'GET',
+			static fn() => array(
+				'loaded'  => \EstrategiaWeb\Modules::loaded(),
+				'blocked' => (object) \EstrategiaWeb\Modules::blocked(),
+				'saved'   => get_option( \EstrategiaWeb\Modules::OPTION, null ),
+				'known'   => get_option( \EstrategiaWeb\Modules::KNOWN_OPTION, null ),
+			)
+		);
+		$route(
+			'/modules',
+			'POST',
+			static function ( WP_REST_Request $r ) {
+				$active = $r->get_param( 'active' );
+				if ( null === $active ) {
+					delete_option( \EstrategiaWeb\Modules::OPTION );
+					delete_option( \EstrategiaWeb\Modules::KNOWN_OPTION );
+				} else {
+					update_option( \EstrategiaWeb\Modules::OPTION, \EstrategiaWeb\Modules::sanitize( (array) $active ) );
+				}
+				return array( 'ok' => true );
+			}
+		);
 
 		// 0.5.1. WebP: si el editor de imágenes de este PHP sabe escribir WebP
 		// (si no, la prueba no probaría nada), y un JPEG de verdad hecho con GD
@@ -204,6 +238,9 @@ add_action(
 				delete_option( 'estrategia_web_site_test_consent' );
 				delete_option( 'estrategia_web_site_test_webp' );
 				delete_option( 'estrategia_web_site_test_external_links' );
+				delete_option( 'estrategia_web_test_suite' ); // La marca de las pruebas de forms (vuelve el es_ES).
+				delete_option( 'estrategia_web_modules' ); // 1.1.0: todos los módulos, como recién instalado.
+				delete_option( 'estrategia_web_modules_known' );
 				delete_option( 'rewrite_rules' );
 				$types = "'client','testimonial','location','project','portfolio'";
 				$ids   = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type IN ($types) OR (post_type = 'attachment' AND post_title LIKE 'prueba-%')" ); // phpcs:ignore

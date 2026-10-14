@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "estrategia-web-forms/checkbox",
+	"version": "0.1.0",
+	"title": "Checkbox",
+	"category": "widgets",
+	"icon": "yes-alt",
+	"description": "A checkbox. As a privacy consent it is always required and links to the privacy policy.",
+	"textdomain": "estrategia-web",
+	"ancestor": [ "estrategia-web-forms/form" ],
+	"usesContext": [ "estrategia-web-forms/formId" ],
+	"attributes": {
+		"label": { "type": "string", "default": "" },
+		"name": { "type": "string", "default": "" },
+		"required": { "type": "boolean", "default": false },
+		"placeholder": { "type": "string", "default": "" },
+		"width": { "type": "string", "enum": [ "full", "half" ], "default": "full" },
+		"consent": { "type": "boolean", "default": false },
+		"privacyUrl": { "type": "string", "default": "" }
+	},
+	"supports": { "html": false, "reusable": false },
+	"editorScript": "estrategia-web-forms-editor",
+	"style": "estrategia-web-forms"
+}

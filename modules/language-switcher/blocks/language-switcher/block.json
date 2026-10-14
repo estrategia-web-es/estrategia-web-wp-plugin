@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"__comment": "estrategia-web/language-switcher — selector de idioma (WPML). Sin editor propio: supports.autoRegister (WP 7.0). Documentación y mantenimiento en la cabecera de render.php.",
+	"apiVersion": 3,
+	"name": "estrategia-web/language-switcher",
+	"version": "0.1.0",
+	"title": "Language switcher",
+	"category": "widgets",
+	"icon": "translation",
+	"description": "Current language with a drop-down list of the other languages, linking to the same page translated. Uses WPML; without WPML it shows nothing.",
+	"keywords": [ "language", "wpml", "translation", "idioma" ],
+	"textdomain": "estrategia-web",
+	"attributes": {
+		"display": { "type": "string", "enum": [ "code", "name" ], "default": "code" },
+		"layout": { "type": "string", "enum": [ "dropdown", "inline" ], "default": "dropdown" }
+	},
+	"supports": {
+		"autoRegister": true,
+		"html": false,
+		"interactivity": true
+	},
+	"viewScriptModule": "file:./view.js",
+	"style": "file:./style.css",
+	"render": "file:./render.php"
+}

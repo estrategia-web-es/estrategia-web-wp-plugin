@@ -1,0 +1,40 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"__comment": "estrategia-web/map — mapa en dos clics. Documentación y mantenimiento en la cabecera de render.php.",
+	"apiVersion": 3,
+	"name": "estrategia-web/map",
+	"version": "0.6.0",
+	"title": "Map (two clicks)",
+	"category": "embed",
+	"icon": "location-alt",
+	"description": "Static image with the address. The Google Maps embed only loads after the visitor asks for it.",
+	"keywords": [ "map", "google maps", "location", "address" ],
+	"textdomain": "estrategia-web",
+	"attributes": {
+		"placeName": { "type": "string", "default": "" },
+		"address": { "type": "string", "default": "" },
+		"phone": { "type": "string", "default": "" },
+		"hours": { "type": "string", "default": "" },
+		"showDetails": { "type": "boolean", "default": true },
+		"useFeaturedImage": { "type": "boolean", "default": false },
+		"embedUrl": { "type": "string", "default": "" },
+		"mapsUrl": { "type": "string", "default": "" },
+		"imageId": { "type": "number", "default": 0 },
+		"imageUrl": { "type": "string", "default": "" },
+		"imageAlt": { "type": "string", "default": "" },
+		"staticMapId": { "type": "number", "default": 0 },
+		"staticMapUrl": { "type": "string", "default": "" }
+	},
+	"usesContext": [ "postId", "postType" ],
+	"supports": {
+		"align": [ "wide", "full" ],
+		"anchor": true,
+		"html": false,
+		"interactivity": true,
+		"spacing": { "margin": true }
+	},
+	"editorScript": "file:./edit.js",
+	"viewScriptModule": "file:./view.js",
+	"style": "file:./style.css",
+	"render": "file:./render.php"
+}

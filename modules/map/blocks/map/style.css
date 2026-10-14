@@ -1,0 +1,138 @@
+/*
+ * estrategia-web/map — estilos. Solo tokens de theme.json. La proporción del
+ * recuadro se ajusta en el hijo con --estrategia-web-map-ratio (por defecto 16/9).
+ */
+.estrategia-web-map {
+	--estrategia-web-map-ratio: 16 / 9;
+	margin-inline: 0;
+	/*
+	 * OCUPA TODO EL ANCHO, siempre. Un Grupo vertical de WordPress es un flex
+	 * en columna con align-items:flex-start (alineado a la izquierda): sus
+	 * hijos no se estiran y se miden «a lo que ocupe su contenido». El marco
+	 * del mapa no tiene contenido en flujo (su alto sale de aspect-ratio y de
+	 * su ancho), así que en esa medición ancho 0 → alto 0: el mapa se quedaba
+	 * en 2 px (solo el borde) con todo lo de dentro cortado.
+	 * Lo pillo la comparacion de altos de Lavanderia el 03-10-2026
+	 * (Autoservicio un 14 % mas corta). La 0.3.1 lo intento con flex:none y no
+	 * servia: el problema no era encogerse sino el ancho de la medicion.
+	 * Ver tests/map-in-flex.test.mjs.
+	 */
+	inline-size: 100%;
+	flex: none;
+}
+
+.estrategia-web-map__frame {
+	position: relative;
+	aspect-ratio: var(--estrategia-web-map-ratio);
+	overflow: hidden;
+	background: var(--wp--preset--color--surface, #eee);
+	border-radius: 4px;
+}
+
+.estrategia-web-map__image,
+.estrategia-web-map__iframe,
+.estrategia-web-map__placeholder {
+	display: block;
+	inline-size: 100%;
+	block-size: 100%;
+	border: 0;
+}
+
+.estrategia-web-map__image {
+	object-fit: cover;
+}
+
+/*
+ * Sin imagen (lo normal desde 0.3.0): un recuadro con los datos del sitio en
+ * texto, con los colores del tema. No imita un mapa: una captura de Google
+ * Maps como «foto» se veía mal y mentía (no se puede mover). Un hijo lo viste
+ * sobre estas clases o con su propio fondo decorativo.
+ */
+.estrategia-web-map__card {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	align-content: center;
+	gap: var(--wp--preset--spacing--8, 0.5rem);
+	padding: var(--wp--preset--spacing--24, 1.5rem);
+	background: var(--wp--preset--color--surface, #f4f4f4);
+	color: var(--wp--preset--color--contrast, inherit);
+}
+
+.estrategia-web-map__card > * {
+	margin: 0;
+}
+
+.estrategia-web-map__name {
+	font-weight: 600;
+}
+
+.estrategia-web-map__card-address {
+	font-style: normal;
+}
+
+/*
+ * Con mapa estático (0.5.0): el mapa llena el marco y el recuadro de datos
+ * flota a la izquierda, sin pasar del 42 % para no tapar el marcador, que va
+ * en el centro. En un bloque estrecho no cabe encima: el marco pierde la
+ * proporción, el mapa la lleva él y el recuadro va debajo.
+ */
+.estrategia-web-map.has-static-map {
+	container-type: inline-size;
+}
+
+.estrategia-web-map__static {
+	display: block;
+	inline-size: 100%;
+	block-size: 100%;
+	object-fit: cover;
+}
+
+.estrategia-web-map.has-static-map .estrategia-web-map__card {
+	inset: var(--wp--preset--spacing--16, 1rem) auto auto var(--wp--preset--spacing--16, 1rem);
+	max-inline-size: min(22rem, 42%);
+	border-radius: 4px;
+	box-shadow: 0 1px 4px rgb(0 0 0 / 0.2);
+}
+
+@container (max-width: 479px) {
+	.estrategia-web-map.has-static-map .estrategia-web-map__frame {
+		aspect-ratio: auto;
+	}
+	.estrategia-web-map.has-static-map .estrategia-web-map__static,
+	.estrategia-web-map.has-static-map .estrategia-web-map__iframe {
+		aspect-ratio: var(--estrategia-web-map-ratio);
+		block-size: auto;
+	}
+	.estrategia-web-map.has-static-map .estrategia-web-map__card {
+		position: static;
+		max-inline-size: none;
+		border-radius: 0;
+		box-shadow: none;
+	}
+}
+
+.estrategia-web-map [hidden] {
+	display: none;
+}
+
+.estrategia-web-map__caption {
+	display: grid;
+	gap: var(--wp--preset--spacing--8, 0.5rem);
+	margin-block-start: var(--wp--preset--spacing--16, 1rem);
+}
+
+.estrategia-web-map__address {
+	font-style: normal;
+	font-weight: 600;
+}
+
+.estrategia-web-map__notice {
+	margin: var(--wp--preset--spacing--8, 0.5rem) 0 0;
+	font-size: var(--wp--preset--font-size--small, 0.875rem);
+	color: var(--wp--preset--color--muted, inherit);
+}
+
+.estrategia-web-map__load {
+	cursor: pointer;
+}

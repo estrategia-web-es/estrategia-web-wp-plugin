@@ -1,0 +1,152 @@
+/*
+ * estrategia-web/carousel — estilos. Todo cuelga de .estrategia-web-carousel (ámbito por
+ * prefijo de clase, la convención de los bloques de WordPress).
+ * Colores y medidas: solo tokens de theme.json (var(--wp--preset--...)).
+ * Un hijo ajusta con las propiedades --estrategia-web-carousel-* o con CSS propio
+ * sobre estas clases; no copia este fichero.
+ * Los cortes 480px / 782px repiten settings.viewport de theme.json (CSS no
+ * admite variables en @container): si cambian allí, cambian aquí.
+ */
+.estrategia-web-carousel {
+	--estrategia-web-carousel-gap: var(--wp--preset--spacing--16, 1rem);
+	--estrategia-web-carousel-per-view: var(--estrategia-web-carousel-per-view-mobile, 1);
+	--estrategia-web-carousel-control-size: 2.75rem;
+	container-type: inline-size;
+	position: relative;
+}
+
+@container (width > 480px) {
+	.estrategia-web-carousel__track {
+		--estrategia-web-carousel-per-view: var(--estrategia-web-carousel-per-view-tablet, 2);
+	}
+}
+
+@container (width > 782px) {
+	.estrategia-web-carousel__track {
+		--estrategia-web-carousel-per-view: var(--estrategia-web-carousel-per-view-desktop, 3);
+	}
+}
+
+.estrategia-web-carousel__track {
+	display: flex;
+	gap: var(--estrategia-web-carousel-gap);
+	overflow-x: auto;
+	overscroll-behavior-x: contain;
+	scroll-snap-type: x mandatory;
+	scroll-behavior: smooth;
+	scrollbar-width: thin;
+	padding-block-end: var(--wp--preset--spacing--8, 0.5rem);
+}
+
+.estrategia-web-carousel__track > *,
+.estrategia-web-carousel__track > .wp-block-query > .wp-block-post-template > li {
+	flex: 0 0 calc((100% - (var(--estrategia-web-carousel-per-view) - 1) * var(--estrategia-web-carousel-gap)) / var(--estrategia-web-carousel-per-view));
+	min-width: 0;
+	margin-block: 0 !important;
+	scroll-snap-align: start;
+}
+
+/*
+ * Una Consulta dentro (0.2.0): la consulta y su <ul> desaparecen como cajas y
+ * cada <li> pasa a ser hija flex de la pista. Va con más especificidad que el
+ * «display: grid» del diseño en rejilla del post-template.
+ */
+.estrategia-web-carousel:not(.is-editing) .estrategia-web-carousel__track > .wp-block-query,
+.estrategia-web-carousel:not(.is-editing) .estrategia-web-carousel__track > .wp-block-query > .wp-block-post-template {
+	display: contents;
+}
+
+.estrategia-web-carousel__track > .wp-block-image img {
+	width: 100%;
+	height: auto;
+}
+
+/* En el editor el «appender» de InnerBlocks no es una diapositiva. */
+.estrategia-web-carousel.is-editing .estrategia-web-carousel__track > .block-list-appender {
+	flex: 0 0 auto;
+	align-self: center;
+}
+
+/* Sin JS (o sin nada que desplazar) no hay controles: queda una fila desplazable. */
+.estrategia-web-carousel:not(.is-ready) .estrategia-web-carousel__controls,
+.estrategia-web-carousel:not(.is-ready) .estrategia-web-carousel__dots,
+.estrategia-web-carousel.is-static .estrategia-web-carousel__controls,
+.estrategia-web-carousel.is-static .estrategia-web-carousel__dots {
+	display: none;
+}
+
+.estrategia-web-carousel__controls {
+	display: flex;
+	justify-content: flex-end;
+	gap: var(--wp--preset--spacing--8, 0.5rem);
+	margin-block-start: var(--wp--preset--spacing--16, 1rem);
+}
+
+.estrategia-web-carousel__arrow,
+.estrategia-web-carousel__toggle {
+	display: inline-grid;
+	place-items: center;
+	inline-size: var(--estrategia-web-carousel-control-size);
+	block-size: var(--estrategia-web-carousel-control-size);
+	padding: 0;
+	border: 1px solid var(--wp--preset--color--border, currentColor);
+	border-radius: 50%;
+	background: var(--wp--preset--color--base, transparent);
+	color: var(--wp--preset--color--contrast, currentColor);
+	cursor: pointer;
+}
+
+.estrategia-web-carousel__arrow:disabled {
+	opacity: 0.4;
+	cursor: default;
+}
+
+.estrategia-web-carousel__toggle-icon {
+	inline-size: 0.75rem;
+	block-size: 0.75rem;
+	/* Triángulo de «reproducir» */
+	background: currentColor;
+	clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.estrategia-web-carousel__toggle-icon.is-playing {
+	/* Dos barras de «pausa» */
+	clip-path: polygon(0 0, 35% 0, 35% 100%, 0 100%, 0 0, 65% 0, 100% 0, 100% 100%, 65% 100%, 65% 0);
+}
+
+.estrategia-web-carousel__dots {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: var(--wp--preset--spacing--8, 0.5rem);
+	margin-block-start: var(--wp--preset--spacing--16, 1rem);
+}
+
+.estrategia-web-carousel__dot {
+	inline-size: 1.5rem;
+	block-size: 1.5rem;
+	padding: 0;
+	border: 0;
+	background: none;
+	cursor: pointer;
+}
+
+.estrategia-web-carousel__dot::before {
+	content: "";
+	display: block;
+	inline-size: 0.625rem;
+	block-size: 0.625rem;
+	margin: auto;
+	border-radius: 50%;
+	border: 1px solid var(--wp--preset--color--contrast, currentColor);
+}
+
+.estrategia-web-carousel__dot[aria-current="true"]::before {
+	background: var(--wp--preset--color--contrast, currentColor);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.estrategia-web-carousel__track {
+		scroll-behavior: auto;
+	}
+}

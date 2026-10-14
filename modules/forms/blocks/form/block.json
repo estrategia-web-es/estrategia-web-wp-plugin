@@ -1,0 +1,31 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "estrategia-web-forms/form",
+	"version": "0.1.0",
+	"title": "Form",
+	"category": "widgets",
+	"icon": "feedback",
+	"description": "A form built with blocks. Its fields go inside; its email notifications too.",
+	"keywords": [ "contact", "form", "email" ],
+	"textdomain": "estrategia-web",
+	"attributes": {
+		"formId": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"successMessage": { "type": "string", "default": "" },
+		"errorMessage": { "type": "string", "default": "" }
+	},
+	"providesContext": {
+		"estrategia-web-forms/formId": "formId"
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"spacing": { "margin": true, "padding": true },
+		"interactivity": true
+	},
+	"editorScript": "estrategia-web-forms-editor",
+	"editorStyle": "estrategia-web-forms-editor",
+	"style": "estrategia-web-forms",
+	"viewScriptModule": "file:./view.js"
+}

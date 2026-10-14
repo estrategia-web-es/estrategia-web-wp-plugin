@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"__comment": "estrategia-web/whatsapp — botón flotante de WhatsApp. Sin editor propio: supports.autoRegister (WP 7.0). Documentación y mantenimiento en la cabecera de render.php.",
+	"apiVersion": 3,
+	"name": "estrategia-web/whatsapp",
+	"version": "0.1.1",
+	"title": "WhatsApp button",
+	"category": "widgets",
+	"icon": "format-chat",
+	"description": "Floating button that opens a WhatsApp chat with a predefined message. Meant for the footer template part.",
+	"keywords": [ "whatsapp", "chat", "contact" ],
+	"textdomain": "estrategia-web",
+	"attributes": {
+		"phone": { "type": "string", "default": "" },
+		"message": { "type": "string", "default": "" },
+		"position": { "type": "string", "enum": [ "bottom-right", "bottom-left" ], "default": "bottom-right" },
+		"label": { "type": "string", "default": "" }
+	},
+	"supports": {
+		"autoRegister": true,
+		"html": false,
+		"multiple": false
+	},
+	"style": "file:./style.css",
+	"render": "file:./render.php"
+}

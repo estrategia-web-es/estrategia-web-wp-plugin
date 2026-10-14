@@ -1,0 +1,37 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"__comment": "estrategia-web/carousel — fila desplazable con scroll-snap. Documentación y mantenimiento en la cabecera de render.php.",
+	"apiVersion": 3,
+	"name": "estrategia-web/carousel",
+	"version": "0.7.4",
+	"title": "Carousel",
+	"category": "design",
+	"icon": "slides",
+	"description": "Horizontal scrolling row of any blocks, with previous/next arrows and optional dots.",
+	"keywords": [ "carousel", "slider", "gallery" ],
+	"textdomain": "estrategia-web",
+	"attributes": {
+		"label": { "type": "string", "default": "" },
+		"showArrows": { "type": "boolean", "default": true },
+		"showDots": { "type": "boolean", "default": false },
+		"loop": { "type": "boolean", "default": true },
+		"perViewMobile": { "type": "number", "default": 1 },
+		"perViewTablet": { "type": "number", "default": 2 },
+		"perViewDesktop": { "type": "number", "default": 3 },
+		"autoplay": { "type": "boolean", "default": false },
+		"autoplayInterval": { "type": "number", "default": 6000 },
+		"imageSizes": { "type": "string", "default": "" }
+	},
+	"supports": {
+		"align": [ "wide", "full" ],
+		"anchor": true,
+		"html": false,
+		"interactivity": true,
+		"spacing": { "margin": true, "padding": true },
+		"color": { "background": true, "text": true }
+	},
+	"editorScript": "file:./edit.js",
+	"viewScriptModule": "file:./view.js",
+	"style": "file:./style.css",
+	"render": "file:./render.php"
+}

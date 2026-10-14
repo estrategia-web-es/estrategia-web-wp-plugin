@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "estrategia-web-forms/notification",
+	"version": "0.1.0",
+	"title": "Email notification",
+	"category": "widgets",
+	"icon": "email-alt",
+	"description": "An email sent on every submission. Add one per recipient group: the site team, an acknowledgement to the sender… Never shown to visitors.",
+	"textdomain": "estrategia-web",
+	"ancestor": [ "estrategia-web-forms/form" ],
+	"attributes": {
+		"label": { "type": "string", "default": "" },
+		"to": { "type": "string", "default": "" },
+		"replyTo": { "type": "string", "default": "" },
+		"subject": { "type": "string", "default": "" },
+		"body": { "type": "string", "default": "" }
+	},
+	"supports": { "html": false, "reusable": false },
+	"editorScript": "estrategia-web-forms-editor",
+	"editorStyle": "estrategia-web-forms-editor"
+}

@@ -1,0 +1,53 @@
+/*
+ * Solo para el editor: la rejilla del formulario (los bloques del editor van
+ * envueltos de otra manera que en la web) y la tarjeta de los avisos.
+ */
+
+.estrategia-web-forms--editor {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--wp--style--block-gap, 1rem);
+}
+
+.estrategia-web-forms--editor > * {
+	flex: 1 1 100%;
+	margin-block: 0 !important;
+}
+
+.estrategia-web-forms--editor > .estrategia-web-forms__field--half {
+	flex-basis: calc(50% - var(--wp--style--block-gap, 1rem) / 2);
+}
+
+.estrategia-web-forms--editor > .block-list-appender {
+	flex-basis: 100%;
+}
+
+.estrategia-web-forms-editor__key {
+	font-family: monospace;
+	font-size: 11px;
+	opacity: 0.6;
+}
+
+.estrategia-web-forms-editor__check {
+	display: flex;
+	gap: 0.5em;
+	align-items: baseline;
+}
+
+.estrategia-web-forms__field--submit .wp-block-button__link {
+	display: inline-block;
+	min-width: 6em;
+}
+
+.estrategia-web-forms-notification {
+	display: flex;
+	flex-direction: column;
+	gap: 0.2em;
+	padding: 0.75em 1em;
+	border: 1px dashed #949494;
+	border-radius: 4px;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	font-size: 13px;
+	background: #f6f7f7;
+	color: #1e1e1e;
+}

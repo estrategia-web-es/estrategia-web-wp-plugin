@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "estrategia-web-forms/select",
+	"version": "0.2.0",
+	"title": "Dropdown field",
+	"category": "widgets",
+	"icon": "list-view",
+	"description": "Choose one option from a list.",
+	"textdomain": "estrategia-web",
+	"ancestor": [ "estrategia-web-forms/form" ],
+	"usesContext": [ "estrategia-web-forms/formId", "pattern/overrides" ],
+	"attributes": {
+		"label": { "type": "string", "default": "" },
+		"name": { "type": "string", "default": "" },
+		"required": { "type": "boolean", "default": false },
+		"placeholder": { "type": "string", "default": "" },
+		"autocomplete": { "type": "string", "default": "" },
+		"width": { "type": "string", "enum": [ "full", "half" ], "default": "full" },
+		"options": { "type": "string", "default": "" },
+		"defaultOption": { "type": "integer", "default": 0 }
+	},
+	"supports": { "html": false, "reusable": false },
+	"editorScript": "estrategia-web-forms-editor",
+	"style": "estrategia-web-forms"
+}
