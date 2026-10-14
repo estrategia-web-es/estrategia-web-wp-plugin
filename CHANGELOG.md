@@ -35,6 +35,19 @@ No obliga a tocar las webs: todo añade; nada cambia de nombre ni se borra.
 - **`site`: el embed del mapa de la sede** admite pegar el `<iframe>` entero
   (se guarda su `src`), como ya admitía el bloque del mapa.
 - Pruebas: `tests/run.mjs` acepta `AS_PORT` (otro puerto que el 9404).
+- **Módulo `redirects`** (Default: off): redirecciones 301/302/410 editables
+  en **Estrategia Web → Redirecciones**, con contador y última visita,
+  importar/exportar CSV (el de Lavandería, 83 reglas, entra entero),
+  validación de bucles y duplicados, registro de 404 opcional (solo la ruta,
+  sin IP) con «Crear redirección», aviso si Rank Math u otro sistema de
+  redirecciones está activo y `wp estrategia-web redirects import|list|export`.
+  Solo mira su tabla en los 404 (0 consultas en una página que existe).
+  Tablas nuevas `{prefijo}estrategia_web_redirects` y `…_404`; opciones
+  `estrategia_web_redirects_settings` y `…_db_version`. **No cambia nada en
+  las webs**: nace apagado. Cómo se mantiene, en
+  `modules/redirects/module.php`.
+- Pruebas: `EW_PORT` elige el puerto del Playground de `tests/run.mjs`
+  (9404 por defecto).
 
 ## 1.1.0 — 14-10-2026
 

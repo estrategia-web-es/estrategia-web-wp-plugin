@@ -34,6 +34,10 @@ cookies, en `consent`).
   contenido solo con `--contenido`, con huella por entrada y sin tocar lo
   editado en el panel ni las páginas inglesas de WPML.
 - **bajar-contenido.mjs** (Lavandería): trae al repo lo editado en el servidor.
+- **Redirecciones editables en el panel** (módulo `redirects`, Default: off,
+  14-10-2026): CSV de Lavandería entero, `%3F` y `?p=`/`?page_id=`, solo en
+  los 404, registro de 404, aviso de Rank Math, WP-CLI. En Lavandería se
+  queda APAGADO (las lleva Rank Math).
 
 ### A añadir (todavía sin hacer)
 
@@ -49,10 +53,6 @@ cookies, en `consent`).
   «publicidad» y Consent Mode v2 de Google.
 - **Analítica**: Google Analytics 4, Google Ads (conversiones) y Tag Manager,
   como alternativa a Matomo, siempre detrás del consentimiento.
-- **Redirecciones editables en el panel**: origen, destino, tipo (301, 302,
-  410), importar CSV (el de Lavandería está en
-  `docs/redirecciones/redirecciones-2026-10-07.csv`), contador. Ojo: las
-  variantes `%3F` y `?p=ID` de las URL viejas.
 - **Redes sociales personalizadas**: lista libre (nombre, enlace, icono de una
   colección o SVG subido) y un bloque para pintarlas. David revisará antes cómo
   quiere esto.

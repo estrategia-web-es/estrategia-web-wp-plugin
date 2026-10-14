@@ -127,6 +127,8 @@ add_action(
 				'blocked' => (object) \EstrategiaWeb\Modules::blocked(),
 				'saved'   => get_option( \EstrategiaWeb\Modules::OPTION, null ),
 				'known'   => get_option( \EstrategiaWeb\Modules::KNOWN_OPTION, null ),
+				// Los que hay en disco, encendidos o no (los Default: off no salen en «loaded»).
+				'available' => array_keys( \EstrategiaWeb\Modules::available() ),
 			)
 		);
 		$route(

@@ -38,9 +38,11 @@ guarda y lo que hace, de aquí.
 | `whatsapp` | bloque `estrategia-web/whatsapp` y sus dos opciones | encendido |
 | `language-switcher` | bloque `estrategia-web/language-switcher` (WPML) | encendido |
 | `social` | lista libre de redes (**Estrategia Web → Redes sociales**, opción `estrategia_web_social_links`) y bloque `estrategia-web/social-links`; necesita `site`. Todo en la cabecera de [modules/social/module.php](modules/social/module.php) | encendido (sin publicar) |
+| `redirects` | redirecciones 301/302/410 editables en **Estrategia Web → Redirecciones**, importar/exportar CSV, registro de 404 opcional, `wp estrategia-web redirects import\|list\|export`: [modules/redirects/module.php](modules/redirects/module.php) | **apagado** |
 
-**Todos encendidos por defecto** porque son lo que ya usaba Lavandería: una
-web que actualiza no cambia. Un módulo apagado **no carga nada** (ni su PHP,
+**Encendidos por defecto los que ya usaba Lavandería**: una web que
+actualiza no cambia. `redirects` nace apagado porque cambia lo que ve el
+visitante y en Lavandería las redirecciones las lleva Rank Math. Un módulo apagado **no carga nada** (ni su PHP,
 ni sus bloques, ni sus assets) y **no borra nada** de lo que guardó.
 
 **Cómo se añade un módulo:** una carpeta `modules/<slug>/` con su
@@ -566,6 +568,9 @@ formularios esperan inglés; su `reset()` lo marca y vuelve a `en_US` (ver
 | [site/meta-panel-editor](modules/site/tests/meta-panel-editor.test.mjs) | 3 | (sin publicar) el panel «Datos de la sede» sale abierto, enseña los valores y guarda el teléfono cambiado ahí; la meta box «Datos del cliente» en la pantalla clásica; el panel de la opinión guarda valoración y cliente como números; una página no lo lleva. Vista en rojo en su primera ejecución: el panel nacía cerrado y el cliente no tenía ninguno |
 | [social/social](modules/social/tests/social.test.mjs) | 2 | (sin publicar) sin lista guardada, las redes de «Datos de la empresa»; nombre accesible «Instagram de …», `_blank` + `noopener`, `currentColor`, sin `<title>`; la lista manda en su orden, icono adivinado, correo a `mailto:` sin pestaña nueva, fuera `javascript:`; SVG propio saneado y con su color, un PNG no vale; lista vacía no pinta nada; un autor no puede |
 | [social/social-admin](modules/social/tests/social-admin.test.mjs) | 3 | (sin publicar) la pantalla «Redes sociales»: añadir, subir, quitar y guardar en el orden que se ve; vaciarla guarda `[]`; el bloque se ve en el editor sin errores |
+| [redirects/pure](modules/redirects/tests/pure.test.mjs) | 1 | normalizar y casar (%3F, `?p=`/`?page_id=`, barra final, mayúsculas, query de más); el CSV real de Lavandería (83 reglas) entero y sin errores; bucles, duplicados, destinos y tipos; CSV con `;`, BOM y «revisar» |
+| [redirects/server](modules/redirects/tests/server.test.mjs) | 2 | apagado por defecto; importar el CSV real (dry-run, idempotente); sus orígenes redirigen con variantes; 410; contador; 0 consultas en una página que existe y 1 en un 404; registro de 404 sin query y su purga; coste de una búsqueda con 84 y 5000 reglas |
+| [redirects/admin](modules/redirects/tests/admin.test.mjs) | 3 | la pantalla: lista y búsqueda, alta, error de bucle sin perder lo escrito, aviso de Rank Math, importar subiendo el CSV, exportar, «Crear redirección» desde el registro de 404 |
 
 **Todas se han visto fallar** (02-10-2026): tres tandas de mutantes, diez en
 total, cada uno pillado por su prueba. Las de 0.2.0 (marcadas «(0.2.0)» en su

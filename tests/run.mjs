@@ -33,9 +33,11 @@ import fs from "node:fs";
 import path from "node:path";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
-// AS_PORT cambia el puerto (varios agentes en paralelo, cada uno con su
-// WordPress); las pruebas lo reciben como AS_BASE, que es lo que lee lib.mjs.
-const PORT = Number(process.env.AS_PORT) || 9404;
+// EW_PORT=9412 node tests/run.mjs … (o AS_PORT, el mismo) para correr dos
+// tandas a la vez, cada una con su Playground. Las pruebas leen la base de
+// AS_BASE (tests/lib.mjs y las lib.mjs de los módulos), que se pone aquí
+// para que la hereden.
+const PORT = Number(process.env.EW_PORT || process.env.AS_PORT) || 9404;
 const BASE = `http://127.0.0.1:${PORT}`;
 process.env.AS_BASE ??= BASE;
 const only = process.argv.includes("--nivel") ? process.argv[process.argv.indexOf("--nivel") + 1] : null;
