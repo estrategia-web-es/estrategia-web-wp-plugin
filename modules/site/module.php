@@ -1,19 +1,21 @@
 <?php
 /**
  * Module Name: Company data and content types
- * Description: Company details with Block Bindings and the [estrategia_web_company] shortcode, the usual content types of a corporate site (clients, testimonials, locations, projects, portfolio), sanitised SVG uploads and the Matomo code.
+ * Description: Company details with Block Bindings and the [estrategia_web_company] shortcode, the usual content types of a corporate site (clients, testimonials, locations, projects, portfolio) and sanitised SVG uploads.
  * Default: on
  * Requires:
  *
  * Lo que era el plugin «Estrategia Web Site» hasta la 1.0.0, menos lo que se
  * pudo separar sin reescribirlo (aviso de cookies, WebP, enlaces externos,
- * portada de WPML: cada uno es su módulo). Pantalla propia: «Datos de la
- * empresa» (includes/admin/class-admin.php).
+ * portada de WPML, Matomo: cada uno es su módulo). Pantalla propia: «Datos de
+ * la empresa» (includes/admin/class-admin.php).
  *
- * Por qué Matomo y SVG siguen aquí y no en su módulo: sus ajustes viven en la
- * misma opción (estrategia_web_site, clase Settings) y la misma pantalla que
- * los datos de la empresa. Separarlos es partir Settings, y eso es trabajo
- * del módulo que los saque (el de analítica: GA4/Tag Manager), no de la base.
+ * Por qué SVG sigue aquí y no en su módulo: su ajuste vive en la misma opción
+ * (estrategia_web_site, clase Settings) y la misma pantalla que los datos de
+ * la empresa. Matomo salió en la 1.1.0 (modules/matomo) SIN partir la opción:
+ * sus claves matomo_* y su saneado siguen en Settings, y sus campos los pinta
+ * él en el gancho estrategia_web_site_settings_sections de la pantalla. Es el
+ * camino para el próximo que salga de aquí.
  *
  * Constantes: ESTRATEGIA_WEB_SITE_DIR y _URL apuntan a ESTA carpeta (antes, a
  * la raíz del plugin); ESTRATEGIA_WEB_SITE_VERSION es la del plugin.
@@ -43,7 +45,6 @@ require_once __DIR__ . '/includes/class-location.php';
 require_once __DIR__ . '/includes/class-shortcode.php';
 require_once __DIR__ . '/includes/class-content-types.php';
 require_once __DIR__ . '/includes/class-svg.php';
-require_once __DIR__ . '/includes/class-matomo.php';
 require_once __DIR__ . '/includes/class-legacy-names.php';
 require_once __DIR__ . '/includes/admin/class-admin.php';
 
@@ -61,7 +62,6 @@ add_filter( 'post_class', array( Content_Types::class, 'post_class' ), 10, 3 );
 add_action( 'update_option_' . Settings::OPTION, array( Content_Types::class, 'maybe_flush' ), 10, 2 );
 add_action( 'add_option_' . Settings::OPTION, static fn( $name, $value ) => Content_Types::maybe_flush( array(), $value ), 10, 2 );
 Svg::boot();
-Matomo::boot();
 
 // Al activar el plugin: los tipos registrados y sus URL al día. Al
 // desactivarlo, que sus URL dejen de existir (el contenido se queda).

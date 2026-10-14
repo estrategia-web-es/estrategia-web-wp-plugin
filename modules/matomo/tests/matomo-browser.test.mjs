@@ -2,7 +2,7 @@
 //
 // Matomo (0.3.0). No se llama a ningún Matomo: las peticiones a
 // https://stats.ejemplo.test/ se interceptan; matomo.js se sirve desde
-// modules/site/tests/fixtures/matomo.js (el rastreador REAL, BSD-3, 5.4.0) y matomo.php
+// modules/matomo/tests/fixtures/matomo.js (el rastreador REAL, BSD-3, 5.4.0) y matomo.php
 // contesta 204. Así lo que se prueba es lo que hace el rastreador con
 // nuestras órdenes, no un doble que se porta como creemos.
 //

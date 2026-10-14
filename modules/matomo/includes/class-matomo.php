@@ -43,8 +43,12 @@
  *
  * Cómo se mantiene:
  * - Quién y cuándo: quien toque el plugin; la prueba es
- *   tests/matomo.test.mjs (nivel 2) y tests/matomo-browser.test.mjs (nivel 3,
- *   con el matomo.js real de tests/fixtures/ servido por una ruta falsa).
+ *   modules/matomo/tests/matomo.test.mjs (nivel 2) y matomo-browser.test.mjs
+ *   (nivel 3, con el matomo.js real de tests/fixtures/ servido por una ruta
+ *   falsa).
+ * - 1.1.0: es su propio módulo (modules/matomo), pero la OPCIÓN sigue siendo
+ *   la del módulo site (estrategia_web_site, claves matomo_*), con su saneado
+ *   en Settings: no hay migración de datos. Ver modules/matomo/module.php.
  * - Un modo nuevo: Settings::MATOMO_MODES + script() + la pantalla + README.
  *   Quitar uno es versión mayor (ver la trampa de Settings).
  * - Caso frontera: la categoría se retira en el aviso en una página y el
@@ -74,7 +78,9 @@
  *   Matomo (Anonimizar IP), no en el código de seguimiento.
  */
 
-namespace EstrategiaWeb\Site;
+namespace EstrategiaWeb\Matomo;
+
+use EstrategiaWeb\Site\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
