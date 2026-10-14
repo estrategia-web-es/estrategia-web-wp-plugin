@@ -33,8 +33,11 @@ import fs from "node:fs";
 import path from "node:path";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
-const PORT = 9404;
+// EW_PORT cambia el puerto (p. ej. EW_PORT=9411 para un worktree en paralelo
+// con otro que ya usa el 9404). Las pruebas lo reciben como AS_BASE (lib.mjs).
+const PORT = Number(process.env.EW_PORT || 9404);
 const BASE = `http://127.0.0.1:${PORT}`;
+process.env.AS_BASE ||= BASE;
 const only = process.argv.includes("--nivel") ? process.argv[process.argv.indexOf("--nivel") + 1] : null;
 
 // Todas las pruebas, con su ruta relativa a la raíz y un nombre corto para elegirlas.
