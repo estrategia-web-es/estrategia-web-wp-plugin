@@ -33,8 +33,11 @@ import fs from "node:fs";
 import path from "node:path";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
-const PORT = 9404;
+// AS_PORT cambia el puerto (varios agentes en paralelo, cada uno con su
+// WordPress); las pruebas lo reciben como AS_BASE, que es lo que lee lib.mjs.
+const PORT = Number(process.env.AS_PORT) || 9404;
 const BASE = `http://127.0.0.1:${PORT}`;
+process.env.AS_BASE ??= BASE;
 const only = process.argv.includes("--nivel") ? process.argv[process.argv.indexOf("--nivel") + 1] : null;
 
 // Todas las pruebas, con su ruta relativa a la raíz y un nombre corto para elegirlas.
