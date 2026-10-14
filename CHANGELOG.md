@@ -9,6 +9,33 @@ historia de los formularios hasta su 1.0.0 está en
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), y la de los cuatro
 bloques, en el README del tema (armazon-wp-padre, «Versiones»).
 
+## Sin publicar
+
+### Rama modulo/contenido (14-10-2026)
+
+No obliga a tocar las webs: todo añade; nada cambia de nombre ni se borra.
+
+- **Módulo nuevo `social`** (Default: on, necesita `site`): lista libre y
+  ordenada de redes en **Estrategia Web → Redes sociales** (opción
+  `estrategia_web_social_links`: nombre, enlace, icono de una colección de
+  17 —Simple Icons, CC0; Bootstrap Icons, MIT— o un SVG de la mediateca,
+  saneado al pintarlo) y bloque `estrategia-web/social-links` (solo iconos o
+  icono y nombre, tres tamaños, color del texto). Mientras la lista no se
+  guarda, salen las redes de «Datos de la empresa». Con WPML, nombre y
+  enlace como textos de administración (sin probar con WPML).
+- **`site`: «Tipo de negocio» del cliente** (`estrategia_web_client_business_type`),
+  traducible, enlazable con core/post-meta.
+- **`site`: dónde se editan los campos de sede, cliente y opinión**: panel
+  en la barra lateral del editor (sede, opinión) y meta box en la pantalla
+  clásica (cliente). Abierto al entrar.
+- **`site`: WPML** (`wpml-config.xml`, `<custom-fields>`): teléfono, correo,
+  enlaces y mapa de la sede, web y ajuste de imagen del cliente, autor,
+  valoración y cliente de la opinión se COPIAN a las traducciones; dirección,
+  horario, tipo de negocio y cargo se TRADUCEN.
+- **`site`: el embed del mapa de la sede** admite pegar el `<iframe>` entero
+  (se guarda su `src`), como ya admitía el bloque del mapa.
+- Pruebas: `tests/run.mjs` acepta `AS_PORT` (otro puerto que el 9404).
+
 ## 1.1.0 — 14-10-2026
 
 **Un tema + un plugin** (decisión de David, 14-10-2026). **Obliga a tocar las

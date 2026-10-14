@@ -1,0 +1,27 @@
+/* Pantalla «Redes sociales» (includes/class-admin.php). */
+.estrategia-web-social__table td {
+	vertical-align: middle;
+}
+
+.estrategia-web-social__preview {
+	display: inline-flex;
+	inline-size: 24px;
+	block-size: 24px;
+	margin-inline-end: 6px;
+	vertical-align: middle;
+	color: #1d2327;
+}
+
+.estrategia-web-social__preview svg,
+.estrategia-web-social__preview img {
+	inline-size: 100%;
+	block-size: 100%;
+}
+
+.estrategia-web-social__actions {
+	white-space: nowrap;
+}
+
+.estrategia-web-social__actions .button + .button {
+	margin-inline-start: 4px;
+}
