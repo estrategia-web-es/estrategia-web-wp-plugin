@@ -323,7 +323,7 @@ msgstr ""
 
 #: modules/consent/includes/class-consent.php:425
 #: modules/external-links/includes/class-external-links.php:101
-#: modules/map/blocks/map/render.php:321
+#: modules/map/blocks/map/render.php:335 modules/map/blocks/map/render.php:339
 #: modules/whatsapp/blocks/whatsapp/render.php:74
 msgid "(opens in a new tab)"
 msgstr ""
@@ -361,6 +361,19 @@ msgctxt "module description"
 msgid ""
 "Links to another domain open in a new tab, with rel=\"noopener\" and a "
 "hidden «(opens in a new tab)» for screen readers."
+msgstr ""
+
+#: modules/featured-images/module.php
+msgctxt "module name"
+msgid "Featured image tuning"
+msgstr ""
+
+#: modules/featured-images/module.php
+msgctxt "module description"
+msgid ""
+"Featured images with a fixed width in px download a file of that size, and a "
+"logo whose alt text only repeats the title shown next to it is marked as "
+"decorative."
 msgstr ""
 
 #: modules/forms/assets/editor.js:52
@@ -1253,7 +1266,13 @@ msgid ""
 "which may set its own cookies."
 msgstr ""
 
-#: modules/map/blocks/map/render.php:321
+#. translators: 1: place name (or its address), 2: «(opens in a new tab)». The text before the colon must be the visible text of the link.
+#: modules/map/blocks/map/render.php:333
+#, php-format
+msgid "Open in Google Maps: %1$s %2$s"
+msgstr ""
+
+#: modules/map/blocks/map/render.php:339
 msgid "Open in Google Maps"
 msgstr ""
 

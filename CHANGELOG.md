@@ -20,6 +20,17 @@ bloques, en el README del tema (armazon-wp-padre, «Versiones»).
 - **Módulo `comments-off`** (Default: off): quita los comentarios del todo
   (cerrados, menú, widget, barra, bloques del front, feeds), sin escribir
   nada en la base de datos. En Lavandería se enciende a mano.
+- **Módulo `featured-images`** (Default: on): una imagen destacada de ancho
+  fijo en px lleva `sizes` de ese ancho (también dentro del carrusel, que
+  ahora respeta un sizes fijo); tamaño nuevo `estrategia-web-small` (200 px,
+  sin recortar); y `alt=""` cuando el alt repite el título que la ficha de
+  la Consulta pinta al lado (nunca si la imagen es un enlace). **En el
+  servidor, una vez: `wp media regenerate --only-missing --yes`**, para que
+  lo ya subido tenga el tamaño pequeño.
+- **Mapa: «Abrir en Google Maps» con nombre accesible por sede**
+  (`aria-label` «Abrir en Google Maps: <sede> (se abre en una pestaña
+  nueva)»): dos mapas en una página ya no tienen dos enlaces iguales a
+  destinos distintos (Lighthouse).
 
 ## 1.1.0 — 14-10-2026
 

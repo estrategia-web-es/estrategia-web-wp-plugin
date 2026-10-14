@@ -265,7 +265,11 @@ function images_filter( $image ) {
 	}
 
 	$sizes = (string) $tag->get_attribute( 'sizes' );
-	if ( null !== $tag->get_attribute( 'srcset' ) && '' !== $carousel['sizes'] ) {
+	// Un sizes que ya es un ancho fijo («82px», lo pone el módulo
+	// featured-images a una imagen destacada de ancho fijo) es deliberado y
+	// más exacto que el de la diapositiva: se respeta (1.1.x).
+	$fixed = (bool) preg_match( '/^\s*(?:auto\s*,\s*)?\d+(?:\.\d+)?px\s*$/i', $sizes );
+	if ( ! $fixed && null !== $tag->get_attribute( 'srcset' ) && '' !== $carousel['sizes'] ) {
 		$sizes = $carousel['sizes'];
 	}
 	$sizes = (string) preg_replace( '/^\s*auto\s*,\s*/i', '', $sizes );

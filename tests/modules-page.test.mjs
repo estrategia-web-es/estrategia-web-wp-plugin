@@ -8,7 +8,7 @@ import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, reset, seedPage, testApi, html, wp } from "./lib.mjs";
 
-const ALL = ["carousel", "comments-off", "consent", "external-links", "forms", "language-switcher", "map", "site", "uploads", "webp", "whatsapp", "wpml-front-page"];
+const ALL = ["carousel", "comments-off", "consent", "external-links", "featured-images", "forms", "language-switcher", "map", "site", "uploads", "webp", "whatsapp", "wpml-front-page"];
 // Los que nacen apagados (Default: off): sin opción guardada no se cargan.
 const OFF = ["comments-off"];
 const ON = ALL.filter((s) => !OFF.includes(s));

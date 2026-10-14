@@ -317,7 +317,25 @@ $estrategia_web_title = '' !== $estrategia_web_address
 		</div>
 		<?php endif; ?>
 		<?php if ( '' !== $estrategia_web_maps_url ) : ?>
-		<a class="estrategia-web-map__link" href="<?php echo esc_url( $estrategia_web_maps_url ); ?>" target="_blank" rel="noopener noreferrer">
+		<?php
+		// Nombre accesible distinto por sede (1.1.x): con dos mapas en la página,
+		// dos enlaces iguales a destinos distintos fallan en Lighthouse («Los
+		// enlaces tienen nombres distintos»). El texto visible va el PRIMERO
+		// dentro del nombre (WCAG 2.5.3, la etiqueta dentro del nombre); la sede
+		// (o la dirección, si no tiene nombre) solo la oye el lector de pantalla.
+		// Va en aria-label y NO en un span oculto: el span cuenta en innerText y
+		// en el texto copiado, y la dirección saldría dos veces donde la ficha ya
+		// la dice al lado (showDetails:false; prueba map-details del tema). Sin
+		// sede ni dirección no hay aria-label: el nombre es el texto de siempre.
+		$estrategia_web_link_for = preg_replace( '/\s+/', ' ', '' !== $estrategia_web_place ? $estrategia_web_place : $estrategia_web_address );
+		$estrategia_web_link_aria = '' === $estrategia_web_link_for ? '' : sprintf(
+			/* translators: 1: place name (or its address), 2: «(opens in a new tab)». The text before the colon must be the visible text of the link. */
+			__( 'Open in Google Maps: %1$s %2$s', 'estrategia-web' ),
+			$estrategia_web_link_for,
+			__( '(opens in a new tab)', 'estrategia-web' )
+		);
+		?>
+		<a class="estrategia-web-map__link" href="<?php echo esc_url( $estrategia_web_maps_url ); ?>" target="_blank" rel="noopener noreferrer"<?php echo '' !== $estrategia_web_link_aria ? ' aria-label="' . esc_attr( $estrategia_web_link_aria ) . '"' : ''; ?>>
 			<?php esc_html_e( 'Open in Google Maps', 'estrategia-web' ); ?><span class="screen-reader-text"> <?php esc_html_e( '(opens in a new tab)', 'estrategia-web' ); ?></span>
 		</a>
 		<?php endif; ?>
