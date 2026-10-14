@@ -17,7 +17,7 @@
 // salían en .jpg. Y la primera versión de esta prueba suponía que el
 // original se quedaba en JPEG con su srcset en WebP: falló, y así se supo
 // cómo es de verdad la trampa.
-import { test, before } from "node:test";
+import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { reset, testApi, upload, png, seedPage, html, wp } from "../../../tests/lib.mjs";
 
@@ -34,9 +34,16 @@ const servesImage = async (url) => {
 };
 const sizeFiles = (json) => Object.entries(json.media_details.sizes).filter(([name]) => name !== "full");
 
+// El módulo uploads (Default: on) BORRA el original que WordPress guarda al
+// convertir a WebP, y aquí se mira justo ese original: se apaga el borrado
+// mientras corre esta prueba y se deja como estaba al acabar.
+const keepOriginals = (keep) => wp("/settings", { method: "POST", body: { estrategia_web_uploads: { delete_original: !keep } } });
+
 before(async () => {
   await reset();
+  await keepOriginals(true);
 });
+after(() => keepOriginals(false));
 
 test("webp (0.5.1): el editor de imágenes de este PHP escribe WebP", async () => {
   assert.equal((await testApi("/webp-support")).webp, true, "sin soporte de WebP esta prueba no prueba nada");

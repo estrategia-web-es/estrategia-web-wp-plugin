@@ -8,15 +8,18 @@ import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, reset, seedPage, testApi, html, wp } from "./lib.mjs";
 
-const ALL = ["carousel", "consent", "external-links", "forms", "language-switcher", "map", "site", "webp", "whatsapp", "wpml-front-page"];
+const ALL = ["carousel", "comments-off", "consent", "external-links", "forms", "language-switcher", "map", "site", "uploads", "webp", "whatsapp", "wpml-front-page"];
+// Los que nacen apagados (Default: off): sin opción guardada no se cargan.
+const OFF = ["comments-off"];
+const ON = ALL.filter((s) => !OFF.includes(s));
 
 before(reset);
 after(() => testApi("/modules", { method: "POST", body: { active: null } }));
 
-test("sin opción guardada se cargan todos los módulos (todos son Default: on)", async () => {
+test("sin opción guardada se cargan los módulos Default: on, y solo esos", async () => {
   const m = await testApi("/modules");
   assert.equal(m.saved, null);
-  assert.deepEqual([...m.loaded].sort(), ALL);
+  assert.deepEqual([...m.loaded].sort(), ON);
   assert.equal((await wp("/block-types/estrategia-web/carousel")).status, 200);
   assert.equal((await wp("/block-types/armazon/carousel")).status, 200, "el alias del nombre viejo existe con el módulo encendido");
 });

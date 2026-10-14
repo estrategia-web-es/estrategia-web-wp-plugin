@@ -2,7 +2,7 @@
 # Copyright (C) 2026 THE estrategia-web'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the estrategia-web package.
 # Automatically generated, 2026.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: estrategia-web\n"
@@ -94,31 +94,31 @@ msgctxt "block keyword"
 msgid "slider"
 msgstr "pase de diapositivas"
 
-#: modules/carousel/blocks/carousel/edit.js:56
+#: modules/carousel/blocks/carousel/edit.js:57
 msgid "Carousel settings"
 msgstr "Ajustes del carrusel"
 
-#: modules/carousel/blocks/carousel/edit.js:58
+#: modules/carousel/blocks/carousel/edit.js:59
 msgid "Accessible name"
 msgstr "Nombre accesible"
 
-#: modules/carousel/blocks/carousel/edit.js:59
+#: modules/carousel/blocks/carousel/edit.js:60
 msgid "Read by screen readers. Defaults to “Carousel”."
 msgstr "Lo leen los lectores de pantalla. Si se deja vacío: «Carrusel»."
 
-#: modules/carousel/blocks/carousel/edit.js:64
+#: modules/carousel/blocks/carousel/edit.js:65
 msgid "Show arrows"
 msgstr "Mostrar flechas"
 
-#: modules/carousel/blocks/carousel/edit.js:69
+#: modules/carousel/blocks/carousel/edit.js:70
 msgid "Show dots"
 msgstr "Mostrar puntos"
 
-#: modules/carousel/blocks/carousel/edit.js:74
+#: modules/carousel/blocks/carousel/edit.js:75
 msgid "Loop"
 msgstr "En bucle"
 
-#: modules/carousel/blocks/carousel/edit.js:75
+#: modules/carousel/blocks/carousel/edit.js:76
 msgid ""
 "After the last slide, go back to the first one (and from the first to the "
 "last)."
@@ -126,23 +126,23 @@ msgstr ""
 "Tras la última diapositiva, vuelve a la primera (y de la primera, a la "
 "última)."
 
-#: modules/carousel/blocks/carousel/edit.js:79
+#: modules/carousel/blocks/carousel/edit.js:80
 msgid "Visible on mobile"
 msgstr "Visibles en móvil"
 
-#: modules/carousel/blocks/carousel/edit.js:80
+#: modules/carousel/blocks/carousel/edit.js:81
 msgid "Visible on tablet"
 msgstr "Visibles en tableta"
 
-#: modules/carousel/blocks/carousel/edit.js:81
+#: modules/carousel/blocks/carousel/edit.js:82
 msgid "Visible on desktop"
 msgstr "Visibles en escritorio"
 
-#: modules/carousel/blocks/carousel/edit.js:83
+#: modules/carousel/blocks/carousel/edit.js:84
 msgid "Autoplay"
 msgstr "Reproducción automática"
 
-#: modules/carousel/blocks/carousel/edit.js:84
+#: modules/carousel/blocks/carousel/edit.js:85
 msgid ""
 "Off by default for accessibility. Ignored when the visitor asks for reduced "
 "motion."
@@ -200,6 +200,23 @@ msgstr ""
 "Bloque de carrusel: una fila desplazable con cualquier bloque (o las "
 "entradas de una Consulta), con flechas, puntos opcionales, bucle infinito y "
 "paso automático solo si se pide."
+
+#: modules/comments-off/module.php
+msgctxt "module name"
+msgid "No comments"
+msgstr "Sin comentarios"
+
+#: modules/comments-off/module.php
+msgctxt "module description"
+msgid ""
+"Turns comments off everywhere: closed on every post, no Comments menu, "
+"dashboard widget or toolbar item, no comment blocks on the site and no "
+"comment feeds."
+msgstr "Quita los comentarios de toda la web: cerrados en todas las entradas, sin menú Comentarios, sin widget del escritorio ni globo en la barra, sin bloques de comentarios en la web y sin feeds de comentarios."
+
+#: modules/comments-off/module.php:146
+msgid "Comments are closed."
+msgstr "Los comentarios están cerrados."
 
 #: modules/consent/blocks/consent/block.json
 msgctxt "block title"
@@ -2005,6 +2022,54 @@ msgstr ""
 "[estrategia_web_company], los tipos de contenido habituales de una web "
 "corporativa (clientes, opiniones, sedes, proyectos, portfolio), subida de "
 "SVG saneada y el código de Matomo."
+
+#: modules/uploads/includes/class-uploads.php:196
+msgid "Image uploads"
+msgstr "Subidas de imágenes"
+
+#: modules/uploads/includes/class-uploads.php:198
+msgid ""
+"Applies to images uploaded from now on. Images already in the library do not "
+"change."
+msgstr "Se aplica a las imágenes que se suban a partir de ahora. Las que ya están en la biblioteca no cambian."
+
+#: modules/uploads/includes/class-uploads.php:206
+msgid "Maximum upload size (MB)"
+msgstr "Tamaño máximo de subida (MB)"
+
+#: modules/uploads/includes/class-uploads.php:212
+msgid ""
+"The server limit still applies if it is lower. 0 = only the server limit."
+msgstr "Si el límite del servidor es menor, manda ese. 0 = solo el límite del servidor."
+
+#: modules/uploads/includes/class-uploads.php:221
+msgid "Scale down images larger than (px)"
+msgstr "Reducir las imágenes mayores de (px)"
+
+#: modules/uploads/includes/class-uploads.php:227
+msgid "Longest side. WordPress default: 2560. 0 = never scale down."
+msgstr "Lado más largo. El de serie de WordPress: 2560. 0 = no reducir nunca."
+
+#: modules/uploads/includes/class-uploads.php:236
+msgid "Original file"
+msgstr "Archivo original"
+
+#: modules/uploads/includes/class-uploads.php:242
+msgid ""
+"Delete the original after scaling it down (only the scaled copy is kept)."
+msgstr "Borrar el original después de reducirlo (solo se guarda la copia reducida)."
+
+#: modules/uploads/module.php
+msgctxt "module name"
+msgid "Image uploads"
+msgstr "Subidas de imágenes"
+
+#: modules/uploads/module.php
+msgctxt "module description"
+msgid ""
+"Phone photos can be uploaded (up to 20 MB by default); WordPress scales them "
+"down to 2560 px and only the scaled copy is kept on disk."
+msgstr "Deja subir fotos del móvil (hasta 20 MB por defecto); WordPress las reduce a 2560 px y en el disco solo se guarda la copia reducida."
 
 #: modules/webp/module.php
 msgctxt "module description"

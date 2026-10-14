@@ -90,53 +90,53 @@ msgctxt "block keyword"
 msgid "slider"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:56
+#: modules/carousel/blocks/carousel/edit.js:57
 msgid "Carousel settings"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:58
+#: modules/carousel/blocks/carousel/edit.js:59
 msgid "Accessible name"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:59
+#: modules/carousel/blocks/carousel/edit.js:60
 msgid "Read by screen readers. Defaults to “Carousel”."
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:64
+#: modules/carousel/blocks/carousel/edit.js:65
 msgid "Show arrows"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:69
+#: modules/carousel/blocks/carousel/edit.js:70
 msgid "Show dots"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:74
+#: modules/carousel/blocks/carousel/edit.js:75
 msgid "Loop"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:75
+#: modules/carousel/blocks/carousel/edit.js:76
 msgid ""
 "After the last slide, go back to the first one (and from the first to the "
 "last)."
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:79
+#: modules/carousel/blocks/carousel/edit.js:80
 msgid "Visible on mobile"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:80
+#: modules/carousel/blocks/carousel/edit.js:81
 msgid "Visible on tablet"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:81
+#: modules/carousel/blocks/carousel/edit.js:82
 msgid "Visible on desktop"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:83
+#: modules/carousel/blocks/carousel/edit.js:84
 msgid "Autoplay"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:84
+#: modules/carousel/blocks/carousel/edit.js:85
 msgid ""
 "Off by default for accessibility. Ignored when the visitor asks for reduced "
 "motion."
@@ -188,6 +188,23 @@ msgid ""
 "Carousel block: a horizontal scrolling row of any blocks (or the posts of a "
 "Query) with arrows, optional dots, infinite loop and autoplay only if asked "
 "for."
+msgstr ""
+
+#: modules/comments-off/module.php
+msgctxt "module name"
+msgid "No comments"
+msgstr ""
+
+#: modules/comments-off/module.php
+msgctxt "module description"
+msgid ""
+"Turns comments off everywhere: closed on every post, no Comments menu, "
+"dashboard widget or toolbar item, no comment blocks on the site and no "
+"comment feeds."
+msgstr ""
+
+#: modules/comments-off/module.php:146
+msgid "Comments are closed."
 msgstr ""
 
 #: modules/consent/blocks/consent/block.json
@@ -1889,6 +1906,54 @@ msgid ""
 "shortcode, the usual content types of a corporate site (clients, "
 "testimonials, locations, projects, portfolio), sanitised SVG uploads and the "
 "Matomo code."
+msgstr ""
+
+#: modules/uploads/includes/class-uploads.php:196
+msgid "Image uploads"
+msgstr ""
+
+#: modules/uploads/includes/class-uploads.php:198
+msgid ""
+"Applies to images uploaded from now on. Images already in the library do not "
+"change."
+msgstr ""
+
+#: modules/uploads/includes/class-uploads.php:206
+msgid "Maximum upload size (MB)"
+msgstr ""
+
+#: modules/uploads/includes/class-uploads.php:212
+msgid ""
+"The server limit still applies if it is lower. 0 = only the server limit."
+msgstr ""
+
+#: modules/uploads/includes/class-uploads.php:221
+msgid "Scale down images larger than (px)"
+msgstr ""
+
+#: modules/uploads/includes/class-uploads.php:227
+msgid "Longest side. WordPress default: 2560. 0 = never scale down."
+msgstr ""
+
+#: modules/uploads/includes/class-uploads.php:236
+msgid "Original file"
+msgstr ""
+
+#: modules/uploads/includes/class-uploads.php:242
+msgid ""
+"Delete the original after scaling it down (only the scaled copy is kept)."
+msgstr ""
+
+#: modules/uploads/module.php
+msgctxt "module name"
+msgid "Image uploads"
+msgstr ""
+
+#: modules/uploads/module.php
+msgctxt "module description"
+msgid ""
+"Phone photos can be uploaded (up to 20 MB by default); WordPress scales them "
+"down to 2560 px and only the scaled copy is kept on disk."
 msgstr ""
 
 #: modules/webp/module.php

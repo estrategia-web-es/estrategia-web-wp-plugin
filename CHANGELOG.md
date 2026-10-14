@@ -9,6 +9,18 @@ historia de los formularios hasta su 1.0.0 está en
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), y la de los cuatro
 bloques, en el README del tema (armazon-wp-padre, «Versiones»).
 
+## Sin publicar
+
+- **Módulo `uploads`** (Default: on): sustituye al MU-plugin de subidas de
+  Lavandería. Límite de subida 20 MB, umbral de reducción 2560 px y borrar
+  el original tras reducir, configurables en Ajustes → Medios (opción
+  `estrategia_web_uploads`). **Al publicarlo en Lavandería, el desplegador
+  borra `wp-content/mu-plugins/estrategia-web-subidas.php`** (los dos a la
+  vez no rompen, pero hacen lo mismo dos veces).
+- **Módulo `comments-off`** (Default: off): quita los comentarios del todo
+  (cerrados, menú, widget, barra, bloques del front, feeds), sin escribir
+  nada en la base de datos. En Lavandería se enciende a mano.
+
 ## 1.1.0 — 14-10-2026
 
 **Un tema + un plugin** (decisión de David, 14-10-2026). **Obliga a tocar las
