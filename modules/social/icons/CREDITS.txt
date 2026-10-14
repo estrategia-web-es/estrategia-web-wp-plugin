@@ -1,0 +1,33 @@
+Iconos de redes sociales del módulo «social» (Estrategia Web)
+=============================================================
+
+De dónde sale cada uno, y su licencia. Las dos son compatibles con la GPL
+del plugin.
+
+Simple Icons 13.21.0 — CC0 1.0 (dominio público)
+https://simpleicons.org/ · https://github.com/simple-icons/simple-icons
+  instagram, facebook, linkedin, x, youtube, tiktok, whatsapp, telegram,
+  pinterest, google, google-maps (Google Maps), tripadvisor, threads,
+  bluesky, vimeo
+
+Bootstrap Icons 1.11.3 — MIT, Copyright (c) 2019-2024 The Bootstrap Authors
+https://icons.getbootstrap.com/ · https://github.com/twbs/icons
+  email (envelope-fill), website (globe2)
+
+  Permission is hereby granted, free of charge, to any person obtaining a
+  copy of this software and associated documentation files (the
+  "Software"), to deal in the Software without restriction, including
+  without limitation the rights to use, copy, modify, merge, publish,
+  distribute, sublicense, and/or sell copies of the Software, and to permit
+  persons to whom the Software is furnished to do so, subject to the
+  following conditions: The above copyright notice and this permission
+  notice shall be included in all copies or substantial portions of the
+  Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+
+Los logotipos son marcas de sus dueños: se usan solo para enlazar a su red.
+
+Cómo se toca: se descargaron de jsDelivr y se limpiaron (solo viewBox y
+<path>, sin título ni color: se pintan con currentColor). Un icono nuevo:
+fichero <slug>.svg aquí con la misma forma, su línea arriba con su
+licencia (solo CC0, MIT, GPL o compatibles) y su nombre en Icons::labels()
+(includes/class-icons.php).
