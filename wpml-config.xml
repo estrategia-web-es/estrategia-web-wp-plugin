@@ -64,4 +64,42 @@
 			<key name="body" />
 		</gutenberg-block>
 	</gutenberg-blocks>
+	<!--
+		Módulo site (sin publicar): las metas de sede, cliente y opinión. El
+		criterio (copy = igual en todos los idiomas; translate = texto que se
+		lee) y el caso frontera están en modules/site/includes/class-meta-panel.php;
+		Meta_Panel::WPML_COPY / WPML_TRANSLATE dicen lo mismo y la prueba
+		modules/site/tests/meta-panel.test.mjs falla si no coinciden.
+	-->
+	<custom-fields>
+		<custom-field action="copy">estrategia_web_location_phone</custom-field>
+		<custom-field action="copy">estrategia_web_location_email</custom-field>
+		<custom-field action="copy">estrategia_web_location_map_url</custom-field>
+		<custom-field action="copy">estrategia_web_location_map_embed</custom-field>
+		<custom-field action="copy">estrategia_web_location_static_map</custom-field>
+		<custom-field action="copy">estrategia_web_location_static_map_id</custom-field>
+		<custom-field action="translate">estrategia_web_location_address</custom-field>
+		<custom-field action="translate">estrategia_web_location_schedule</custom-field>
+		<custom-field action="copy">client_url</custom-field>
+		<custom-field action="copy">estrategia_web_client_image_fit</custom-field>
+		<custom-field action="translate">estrategia_web_client_business_type</custom-field>
+		<custom-field action="copy">estrategia_web_testimonial_author</custom-field>
+		<custom-field action="translate">testimonial_role</custom-field>
+		<custom-field action="copy">estrategia_web_testimonial_rating</custom-field>
+		<custom-field action="copy">testimonial_client</custom-field>
+	</custom-fields>
+	<!--
+		Módulo social (sin publicar): nombre y enlace de cada red, por POSICIÓN
+		en la lista («*» es el índice). Reordenar la lista desplaza las
+		traducciones; ver modules/social/includes/class-links.php. icon e
+		icon_id no se traducen: son el mismo dibujo en todos los idiomas.
+	-->
+	<admin-texts>
+		<key name="estrategia_web_social_links">
+			<key name="*">
+				<key name="name" />
+				<key name="url" />
+			</key>
+		</key>
+	</admin-texts>
 </wpml-config>

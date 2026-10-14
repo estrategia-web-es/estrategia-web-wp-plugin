@@ -2,7 +2,7 @@
 # Copyright (C) 2026 THE estrategia-web'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the estrategia-web package.
 # Automatically generated, 2026.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: estrategia-web\n"
@@ -94,31 +94,31 @@ msgctxt "block keyword"
 msgid "slider"
 msgstr "pase de diapositivas"
 
-#: modules/carousel/blocks/carousel/edit.js:56
+#: modules/carousel/blocks/carousel/edit.js:57
 msgid "Carousel settings"
 msgstr "Ajustes del carrusel"
 
-#: modules/carousel/blocks/carousel/edit.js:58
+#: modules/carousel/blocks/carousel/edit.js:59
 msgid "Accessible name"
 msgstr "Nombre accesible"
 
-#: modules/carousel/blocks/carousel/edit.js:59
+#: modules/carousel/blocks/carousel/edit.js:60
 msgid "Read by screen readers. Defaults to “Carousel”."
 msgstr "Lo leen los lectores de pantalla. Si se deja vacío: «Carrusel»."
 
-#: modules/carousel/blocks/carousel/edit.js:64
+#: modules/carousel/blocks/carousel/edit.js:65
 msgid "Show arrows"
 msgstr "Mostrar flechas"
 
-#: modules/carousel/blocks/carousel/edit.js:69
+#: modules/carousel/blocks/carousel/edit.js:70
 msgid "Show dots"
 msgstr "Mostrar puntos"
 
-#: modules/carousel/blocks/carousel/edit.js:74
+#: modules/carousel/blocks/carousel/edit.js:75
 msgid "Loop"
 msgstr "En bucle"
 
-#: modules/carousel/blocks/carousel/edit.js:75
+#: modules/carousel/blocks/carousel/edit.js:76
 msgid ""
 "After the last slide, go back to the first one (and from the first to the "
 "last)."
@@ -126,23 +126,23 @@ msgstr ""
 "Tras la última diapositiva, vuelve a la primera (y de la primera, a la "
 "última)."
 
-#: modules/carousel/blocks/carousel/edit.js:79
+#: modules/carousel/blocks/carousel/edit.js:80
 msgid "Visible on mobile"
 msgstr "Visibles en móvil"
 
-#: modules/carousel/blocks/carousel/edit.js:80
+#: modules/carousel/blocks/carousel/edit.js:81
 msgid "Visible on tablet"
 msgstr "Visibles en tableta"
 
-#: modules/carousel/blocks/carousel/edit.js:81
+#: modules/carousel/blocks/carousel/edit.js:82
 msgid "Visible on desktop"
 msgstr "Visibles en escritorio"
 
-#: modules/carousel/blocks/carousel/edit.js:83
+#: modules/carousel/blocks/carousel/edit.js:84
 msgid "Autoplay"
 msgstr "Reproducción automática"
 
-#: modules/carousel/blocks/carousel/edit.js:84
+#: modules/carousel/blocks/carousel/edit.js:85
 msgid ""
 "Off by default for accessibility. Ignored when the visitor asks for reduced "
 "motion."
@@ -327,6 +327,7 @@ msgstr "Configurar"
 #: modules/consent/includes/class-consent.php:425
 #: modules/external-links/includes/class-external-links.php:101
 #: modules/map/blocks/map/render.php:321
+#: modules/social/blocks/social-links/render.php:74
 #: modules/whatsapp/blocks/whatsapp/render.php:74
 msgid "(opens in a new tab)"
 msgstr "(se abre en una pestaña nueva)"
@@ -373,10 +374,6 @@ msgstr ""
 "Los enlaces a otro dominio se abren en una pestaña nueva, con "
 "rel=\"noopener\" y un «(se abre en una pestaña nueva)» oculto para lectores "
 "de pantalla."
-
-#: modules/forms/assets/editor.js:52
-msgid "Name"
-msgstr "Nombre"
 
 #: modules/forms/assets/editor.js:54 modules/forms/assets/editor.js:412
 msgid "Message"
@@ -1223,12 +1220,6 @@ msgstr "Nombre del sitio"
 msgid "Google Maps embed URL"
 msgstr "URL para insertar de Google Maps"
 
-#: modules/map/blocks/map/edit.js:55
-msgid "Google Maps › Share › Embed a map. You can paste the whole iframe code."
-msgstr ""
-"Google Maps › Compartir › Insertar un mapa. Puedes pegar el código del "
-"iframe entero."
-
 #: modules/map/blocks/map/edit.js:62
 msgid "Optional. Empty: a search for the address."
 msgstr "Opcional. Vacío: una búsqueda de la dirección."
@@ -1255,6 +1246,7 @@ msgid "Choose from the media library"
 msgstr "Elegir de la mediateca"
 
 #: modules/map/blocks/map/edit.js:85 modules/map/blocks/map/edit.js:123
+#: modules/site/assets/meta-panel.js:47
 msgid "Replace image"
 msgstr "Cambiar la imagen"
 
@@ -1279,7 +1271,7 @@ msgstr "Usar la imagen destacada de la entrada"
 msgid "Inside a Query Loop."
 msgstr "Dentro de una Consulta."
 
-#: modules/map/blocks/map/edit.js:123
+#: modules/map/blocks/map/edit.js:123 modules/site/assets/meta-panel.js:47
 msgid "Choose image"
 msgstr "Elegir imagen"
 
@@ -1345,6 +1337,22 @@ msgstr ""
 "Google Maps solo se carga cuando el visitante lo pide (o si aceptó las "
 "cookies de mapas)."
 
+#: modules/site/assets/meta-panel.js:56
+msgid "— None —"
+msgstr "— Ninguno —"
+
+#: modules/site/assets/meta-panel.js:71
+msgid "No rating"
+msgstr "Sin valoración"
+
+#: modules/site/assets/meta-panel.js:79
+msgid "Photo (fills the box, may be cropped)"
+msgstr "Foto (llena el recuadro, puede recortarse)"
+
+#: modules/site/assets/meta-panel.js:80
+msgid "Logo (whole, never cropped)"
+msgstr "Logo (entero, nunca se recorta)"
+
 #: modules/site/includes/admin/class-admin.php:33
 #: modules/site/includes/admin/class-admin.php:34
 #: modules/site/includes/admin/class-admin.php:83
@@ -1360,22 +1368,22 @@ msgid "Clients"
 msgstr "Clientes"
 
 #: modules/site/includes/admin/class-admin.php:46
-#: modules/site/includes/class-content-types.php:110
+#: modules/site/includes/class-content-types.php:114
 msgid "Testimonials"
 msgstr "Opiniones"
 
 #: modules/site/includes/admin/class-admin.php:47
-#: modules/site/includes/class-content-types.php:136
+#: modules/site/includes/class-content-types.php:140
 msgid "Locations"
 msgstr "Sedes"
 
 #: modules/site/includes/admin/class-admin.php:48
-#: modules/site/includes/class-content-types.php:167
+#: modules/site/includes/class-content-types.php:172
 msgid "Projects"
 msgstr "Proyectos"
 
 #: modules/site/includes/admin/class-admin.php:49
-#: modules/site/includes/class-content-types.php:199
+#: modules/site/includes/class-content-types.php:204
 msgid "Portfolio"
 msgstr "Portfolio"
 
@@ -1415,6 +1423,8 @@ msgid "Text that appears already written when the chat opens."
 msgstr "Texto que aparece ya escrito al abrir el chat."
 
 #: modules/site/includes/admin/class-admin.php:113
+#: modules/social/includes/class-admin.php:45
+#: modules/social/includes/class-admin.php:82
 msgid "Social networks"
 msgstr "Redes sociales"
 
@@ -1491,12 +1501,13 @@ msgid "Company registry"
 msgstr "Inscripción registral"
 
 #: modules/site/includes/class-company.php:95
-#: modules/site/includes/class-content-types.php:153
+#: modules/site/includes/class-content-types.php:157
+#: modules/social/includes/class-icons.php:80
 msgid "Email"
 msgstr "Correo electrónico"
 
 #: modules/site/includes/class-company.php:96
-#: modules/site/includes/class-content-types.php:152
+#: modules/site/includes/class-content-types.php:156
 msgid "Phone"
 msgstr "Teléfono"
 
@@ -1513,12 +1524,12 @@ msgid "WhatsApp message"
 msgstr "Mensaje de WhatsApp"
 
 #: modules/site/includes/class-company.php:100
-#: modules/site/includes/class-content-types.php:151
+#: modules/site/includes/class-content-types.php:155
 msgid "Address"
 msgstr "Dirección"
 
 #: modules/site/includes/class-company.php:101
-#: modules/site/includes/class-content-types.php:154
+#: modules/site/includes/class-content-types.php:158
 msgid "Opening hours"
 msgstr "Horario"
 
@@ -1662,293 +1673,352 @@ msgstr "Web del cliente"
 msgid "Image fit (cover for a photo, contain for a logo)"
 msgstr "Encaje de la imagen (cover para una foto, contain para un logo)"
 
-#: modules/site/includes/class-content-types.php:107
+#: modules/site/includes/class-content-types.php:106
+msgid "Business type"
+msgstr "Tipo de negocio"
+
+#: modules/site/includes/class-content-types.php:111
 msgctxt "URL slug"
 msgid "testimonials"
 msgstr "opiniones"
 
-#: modules/site/includes/class-content-types.php:111
+#: modules/site/includes/class-content-types.php:115
 msgid "Testimonial"
 msgstr "Opinión"
 
-#: modules/site/includes/class-content-types.php:112
+#: modules/site/includes/class-content-types.php:116
 msgid "Add testimonial"
 msgstr "Añadir opinión"
 
-#: modules/site/includes/class-content-types.php:113
+#: modules/site/includes/class-content-types.php:117
 msgid "Edit testimonial"
 msgstr "Editar opinión"
 
-#: modules/site/includes/class-content-types.php:114
+#: modules/site/includes/class-content-types.php:118
 msgid "New testimonial"
 msgstr "Nueva opinión"
 
-#: modules/site/includes/class-content-types.php:115
+#: modules/site/includes/class-content-types.php:119
 msgid "View testimonial"
 msgstr "Ver opinión"
 
-#: modules/site/includes/class-content-types.php:116
+#: modules/site/includes/class-content-types.php:120
 msgid "View testimonials"
 msgstr "Ver opiniones"
 
-#: modules/site/includes/class-content-types.php:117
+#: modules/site/includes/class-content-types.php:121
 msgid "Search testimonials"
 msgstr "Buscar opiniones"
 
-#: modules/site/includes/class-content-types.php:118
+#: modules/site/includes/class-content-types.php:122
 msgid "No testimonials found."
 msgstr "No hay opiniones."
 
-#: modules/site/includes/class-content-types.php:119
+#: modules/site/includes/class-content-types.php:123
 msgid "No testimonials found in Trash."
 msgstr "No hay opiniones en la papelera."
 
-#: modules/site/includes/class-content-types.php:120
+#: modules/site/includes/class-content-types.php:124
 msgid "All testimonials"
 msgstr "Todas las opiniones"
 
-#: modules/site/includes/class-content-types.php:121
+#: modules/site/includes/class-content-types.php:125
 msgid "Author photo"
 msgstr "Foto del autor"
 
-#: modules/site/includes/class-content-types.php:122
+#: modules/site/includes/class-content-types.php:126
 msgid "Set author photo"
 msgstr "Poner foto del autor"
 
-#: modules/site/includes/class-content-types.php:125
+#: modules/site/includes/class-content-types.php:129
 msgid "Author"
 msgstr "Autor"
 
-#: modules/site/includes/class-content-types.php:126
+#: modules/site/includes/class-content-types.php:130
 msgid "Author role or company"
 msgstr "Cargo o empresa del autor"
 
-#: modules/site/includes/class-content-types.php:127
+#: modules/site/includes/class-content-types.php:131
 msgid "Rating (1 to 5)"
 msgstr "Valoración (1 a 5)"
 
-#: modules/site/includes/class-content-types.php:128
+#: modules/site/includes/class-content-types.php:132
 msgid "Related client"
 msgstr "Cliente relacionado"
 
-#: modules/site/includes/class-content-types.php:133
+#: modules/site/includes/class-content-types.php:137
 msgctxt "URL slug"
 msgid "locations"
 msgstr "sedes"
 
-#: modules/site/includes/class-content-types.php:137
+#: modules/site/includes/class-content-types.php:141
 msgid "Location"
 msgstr "Sede"
 
-#: modules/site/includes/class-content-types.php:138
+#: modules/site/includes/class-content-types.php:142
 msgid "Add location"
 msgstr "Añadir sede"
 
-#: modules/site/includes/class-content-types.php:139
+#: modules/site/includes/class-content-types.php:143
 msgid "Edit location"
 msgstr "Editar sede"
 
-#: modules/site/includes/class-content-types.php:140
+#: modules/site/includes/class-content-types.php:144
 msgid "New location"
 msgstr "Nueva sede"
 
-#: modules/site/includes/class-content-types.php:141
+#: modules/site/includes/class-content-types.php:145
 msgid "View location"
 msgstr "Ver sede"
 
-#: modules/site/includes/class-content-types.php:142
+#: modules/site/includes/class-content-types.php:146
 msgid "View locations"
 msgstr "Ver sedes"
 
-#: modules/site/includes/class-content-types.php:143
+#: modules/site/includes/class-content-types.php:147
 msgid "Search locations"
 msgstr "Buscar sedes"
 
-#: modules/site/includes/class-content-types.php:144
+#: modules/site/includes/class-content-types.php:148
 msgid "No locations found."
 msgstr "No hay sedes."
 
-#: modules/site/includes/class-content-types.php:145
+#: modules/site/includes/class-content-types.php:149
 msgid "No locations found in Trash."
 msgstr "No hay sedes en la papelera."
 
-#: modules/site/includes/class-content-types.php:146
+#: modules/site/includes/class-content-types.php:150
 msgid "All locations"
 msgstr "Todas las sedes"
 
-#: modules/site/includes/class-content-types.php:147
+#: modules/site/includes/class-content-types.php:151
 msgid "Static map image"
 msgstr "Imagen estática del mapa"
 
-#: modules/site/includes/class-content-types.php:148
+#: modules/site/includes/class-content-types.php:152
 msgid "Set static map image"
 msgstr "Poner imagen estática del mapa"
 
-#: modules/site/includes/class-content-types.php:155
+#: modules/site/includes/class-content-types.php:159
 msgid "Google Maps link"
 msgstr "Enlace a Google Maps"
 
-#: modules/site/includes/class-content-types.php:156
+#: modules/site/includes/class-content-types.php:161
 msgid "Map embed URL"
 msgstr "URL para incrustar el mapa"
 
-#: modules/site/includes/class-content-types.php:158
+#: modules/site/includes/class-content-types.php:163
 msgid "Static map image (theme path or URL of this site)"
 msgstr "Imagen del mapa estático (ruta del tema o URL de esta web)"
 
-#: modules/site/includes/class-content-types.php:159
+#: modules/site/includes/class-content-types.php:164
 msgid "Static map image (media library ID)"
 msgstr "Imagen del mapa estático (ID de la mediateca)"
 
-#: modules/site/includes/class-content-types.php:164
+#: modules/site/includes/class-content-types.php:169
 msgctxt "URL slug"
 msgid "projects"
 msgstr "proyectos"
 
-#: modules/site/includes/class-content-types.php:168
+#: modules/site/includes/class-content-types.php:173
 msgid "Project"
 msgstr "Proyecto"
 
-#: modules/site/includes/class-content-types.php:169
+#: modules/site/includes/class-content-types.php:174
 msgid "Add project"
 msgstr "Añadir proyecto"
 
-#: modules/site/includes/class-content-types.php:170
+#: modules/site/includes/class-content-types.php:175
 msgid "Edit project"
 msgstr "Editar proyecto"
 
-#: modules/site/includes/class-content-types.php:171
+#: modules/site/includes/class-content-types.php:176
 msgid "New project"
 msgstr "Nuevo proyecto"
 
-#: modules/site/includes/class-content-types.php:172
+#: modules/site/includes/class-content-types.php:177
 msgid "View project"
 msgstr "Ver proyecto"
 
-#: modules/site/includes/class-content-types.php:173
+#: modules/site/includes/class-content-types.php:178
 msgid "View projects"
 msgstr "Ver proyectos"
 
-#: modules/site/includes/class-content-types.php:174
+#: modules/site/includes/class-content-types.php:179
 msgid "Search projects"
 msgstr "Buscar proyectos"
 
-#: modules/site/includes/class-content-types.php:175
+#: modules/site/includes/class-content-types.php:180
 msgid "No projects found."
 msgstr "No hay proyectos."
 
-#: modules/site/includes/class-content-types.php:176
+#: modules/site/includes/class-content-types.php:181
 msgid "No projects found in Trash."
 msgstr "No hay proyectos en la papelera."
 
-#: modules/site/includes/class-content-types.php:177
+#: modules/site/includes/class-content-types.php:182
 msgid "All projects"
 msgstr "Todos los proyectos"
 
-#: modules/site/includes/class-content-types.php:181
+#: modules/site/includes/class-content-types.php:186
 msgctxt "URL slug"
 msgid "project-category"
 msgstr "categoria-proyecto"
 
-#: modules/site/includes/class-content-types.php:183
+#: modules/site/includes/class-content-types.php:188
 msgid "Project categories"
 msgstr "Categorías de proyecto"
 
-#: modules/site/includes/class-content-types.php:184
+#: modules/site/includes/class-content-types.php:189
 msgid "Project category"
 msgstr "Categoría de proyecto"
 
-#: modules/site/includes/class-content-types.php:185
-#: modules/site/includes/class-content-types.php:217
+#: modules/site/includes/class-content-types.php:190
+#: modules/site/includes/class-content-types.php:222
 msgid "Add category"
 msgstr "Añadir categoría"
 
-#: modules/site/includes/class-content-types.php:186
-#: modules/site/includes/class-content-types.php:218
+#: modules/site/includes/class-content-types.php:191
+#: modules/site/includes/class-content-types.php:223
 msgid "Edit category"
 msgstr "Editar categoría"
 
-#: modules/site/includes/class-content-types.php:187
-#: modules/site/includes/class-content-types.php:219
+#: modules/site/includes/class-content-types.php:192
+#: modules/site/includes/class-content-types.php:224
 msgid "Search categories"
 msgstr "Buscar categorías"
 
-#: modules/site/includes/class-content-types.php:188
-#: modules/site/includes/class-content-types.php:220
+#: modules/site/includes/class-content-types.php:193
+#: modules/site/includes/class-content-types.php:225
 msgid "All categories"
 msgstr "Todas las categorías"
 
-#: modules/site/includes/class-content-types.php:189
-#: modules/site/includes/class-content-types.php:221
+#: modules/site/includes/class-content-types.php:194
+#: modules/site/includes/class-content-types.php:226
 msgid "No categories found."
 msgstr "No hay categorías."
 
-#: modules/site/includes/class-content-types.php:196
+#: modules/site/includes/class-content-types.php:201
 msgctxt "URL slug"
 msgid "portfolio"
 msgstr "portfolio"
 
-#: modules/site/includes/class-content-types.php:200
+#: modules/site/includes/class-content-types.php:205
 msgid "Portfolio item"
 msgstr "Trabajo del portfolio"
 
-#: modules/site/includes/class-content-types.php:201
+#: modules/site/includes/class-content-types.php:206
 msgid "Add portfolio item"
 msgstr "Añadir trabajo"
 
-#: modules/site/includes/class-content-types.php:202
+#: modules/site/includes/class-content-types.php:207
 msgid "Edit portfolio item"
 msgstr "Editar trabajo"
 
-#: modules/site/includes/class-content-types.php:203
+#: modules/site/includes/class-content-types.php:208
 msgid "New portfolio item"
 msgstr "Nuevo trabajo"
 
-#: modules/site/includes/class-content-types.php:204
+#: modules/site/includes/class-content-types.php:209
 msgid "View portfolio item"
 msgstr "Ver trabajo"
 
-#: modules/site/includes/class-content-types.php:205
+#: modules/site/includes/class-content-types.php:210
 msgid "View portfolio"
 msgstr "Ver portfolio"
 
-#: modules/site/includes/class-content-types.php:206
+#: modules/site/includes/class-content-types.php:211
 msgid "Search portfolio"
 msgstr "Buscar en el portfolio"
 
-#: modules/site/includes/class-content-types.php:207
+#: modules/site/includes/class-content-types.php:212
 msgid "No portfolio items found."
 msgstr "No hay trabajos en el portfolio."
 
-#: modules/site/includes/class-content-types.php:208
+#: modules/site/includes/class-content-types.php:213
 msgid "No portfolio items found in Trash."
 msgstr "No hay trabajos en la papelera."
 
-#: modules/site/includes/class-content-types.php:209
+#: modules/site/includes/class-content-types.php:214
 msgid "All portfolio items"
 msgstr "Todos los trabajos"
 
-#: modules/site/includes/class-content-types.php:213
+#: modules/site/includes/class-content-types.php:218
 msgctxt "URL slug"
 msgid "portfolio-category"
 msgstr "categoria-portfolio"
 
-#: modules/site/includes/class-content-types.php:215
+#: modules/site/includes/class-content-types.php:220
 msgid "Portfolio categories"
 msgstr "Categorías del portfolio"
 
-#: modules/site/includes/class-content-types.php:216
+#: modules/site/includes/class-content-types.php:221
 msgid "Portfolio category"
 msgstr "Categoría del portfolio"
 
 #: modules/site/includes/class-legacy-names.php:110
 #: modules/site/includes/class-location.php:64
+#: modules/site/includes/class-meta-panel.php:110
 msgid "Location details"
 msgstr "Datos de la sede"
 
 #: modules/site/includes/class-location.php:130
 msgid "Location name"
 msgstr "Nombre de la sede"
+
+#: modules/site/includes/class-meta-panel.php:111
+msgid "Client details"
+msgstr "Datos del cliente"
+
+#: modules/site/includes/class-meta-panel.php:112
+msgid "Testimonial details"
+msgstr "Datos de la opinión"
+
+#: modules/site/includes/class-meta-panel.php:119
+msgid "Google Maps › Share › Copy link."
+msgstr "Google Maps › Compartir › Copiar enlace."
+
+#: modules/site/includes/class-meta-panel.php:120
+msgid "Google Maps › Share › Embed a map. You can paste the whole iframe code."
+msgstr ""
+"Google Maps › Compartir › Insertar un mapa. Puedes pegar el código del "
+"iframe entero."
+
+#: modules/site/includes/class-meta-panel.php:121
+msgid ""
+"Map picture shown before Google Maps loads (privacy: Google only loads after "
+"a click)."
+msgstr ""
+"Imagen del mapa que se ve antes de cargar Google Maps (privacidad: Google "
+"solo se carga tras un clic)."
+
+#: modules/site/includes/class-meta-panel.php:122
+msgid ""
+"Only if the picture is not in the media library: a theme path (assets/maps/"
+"place.webp) or a URL of this site. The picture above wins."
+msgstr ""
+"Solo si la imagen no está en la mediateca: una ruta del tema (assets/maps/"
+"sede.webp) o una URL de este sitio. Si hay imagen arriba, manda esa."
+
+#: modules/site/includes/class-meta-panel.php:123
+msgid ""
+"What the client does, e.g. “holiday rental agency”. It is translated; the "
+"name is not."
+msgstr ""
+"A qué se dedica el cliente, p. ej. «agencia de alquiler vacacional». Se "
+"traduce; el nombre no."
+
+#: modules/site/includes/class-meta-panel.php:141
+msgid "Changed in the original language: it is copied to the translations."
+msgstr "Se cambia en el idioma original: se copia a las traducciones."
+
+#: modules/site/includes/class-meta-panel.php:149
+msgid ""
+"Phone, links and map are copied to the translations when you save; address "
+"and opening hours are translated in each language."
+msgstr ""
+"El teléfono, los enlaces y el mapa se copian a las traducciones al guardar; "
+"la dirección y el horario se traducen en cada idioma."
 
 #: modules/site/includes/class-settings.php:136
 msgid "Company details and site options of the Estrategia Web Site plugin."
@@ -2005,6 +2075,169 @@ msgstr ""
 "[estrategia_web_company], los tipos de contenido habituales de una web "
 "corporativa (clientes, opiniones, sedes, proyectos, portfolio), subida de "
 "SVG saneada y el código de Matomo."
+
+#: modules/social/blocks/social-links/block.json
+msgctxt "block title"
+msgid "Social networks"
+msgstr "Redes sociales"
+
+#: modules/social/blocks/social-links/block.json
+msgctxt "block description"
+msgid ""
+"The site's social network links, from Estrategia Web › Social networks. "
+"Icons take the text colour."
+msgstr ""
+"Los enlaces a las redes sociales de la web, de Estrategia Web › Redes "
+"sociales. Los iconos toman el color del texto."
+
+#: modules/social/blocks/social-links/block.json
+msgctxt "block keyword"
+msgid "facebook"
+msgstr "facebook"
+
+#: modules/social/blocks/social-links/block.json
+msgctxt "block keyword"
+msgid "instagram"
+msgstr "instagram"
+
+#: modules/social/blocks/social-links/block.json
+msgctxt "block keyword"
+msgid "redes"
+msgstr "redes"
+
+#: modules/social/blocks/social-links/block.json
+msgctxt "block keyword"
+msgid "social"
+msgstr "sociales"
+
+#: modules/social/blocks/social-links/labels.php:8
+msgid "Show (icons: only icons; icons-names: icon and name)"
+msgstr "Mostrar (icons: solo iconos; icons-names: icono y nombre)"
+
+#: modules/social/blocks/social-links/labels.php:9
+msgid "Icon size"
+msgstr "Tamaño del icono"
+
+#: modules/social/blocks/social-links/render.php:58
+msgid "Social networks: add them in Estrategia Web › Social networks."
+msgstr "Redes sociales: añádelas en Estrategia Web › Redes sociales."
+
+#. translators: 1: network name («Instagram»), 2: company name.
+#: modules/social/blocks/social-links/render.php:72
+#, php-format
+msgid "%1$s of %2$s"
+msgstr "%1$s de %2$s"
+
+#: modules/social/includes/class-admin.php:66
+msgid "Move up"
+msgstr "Subir"
+
+#: modules/social/includes/class-admin.php:67
+msgid "Move down"
+msgstr "Bajar"
+
+#: modules/social/includes/class-admin.php:68
+msgid "Remove"
+msgstr "Quitar"
+
+#: modules/social/includes/class-admin.php:69
+msgid "Own SVG…"
+msgstr "SVG propio…"
+
+#: modules/social/includes/class-admin.php:70
+msgid "Remove own SVG"
+msgstr "Quitar el SVG propio"
+
+#: modules/social/includes/class-admin.php:71
+msgid "Choose an SVG icon"
+msgstr "Elige un icono SVG"
+
+#: modules/social/includes/class-admin.php:72
+msgid "Use this icon"
+msgstr "Usar este icono"
+
+#: modules/social/includes/class-admin.php:83
+msgid ""
+"The links shown by the “Social networks” block, in this order. The icon is "
+"guessed from the link; choose one only if it gets it wrong, or use your own "
+"SVG from the media library."
+msgstr ""
+"Los enlaces que enseña el bloque «Redes sociales», en este orden. El icono "
+"se adivina del enlace; elige uno solo si se equivoca, o usa tu propio SVG de "
+"la mediateca."
+
+#: modules/social/includes/class-admin.php:85
+msgid ""
+"Not saved yet: until you save this list, the block uses the networks of "
+"Company details."
+msgstr ""
+"Todavía sin guardar: hasta que guardes esta lista, el bloque usa las redes "
+"de «Datos de la empresa»."
+
+#: modules/social/includes/class-admin.php:92
+#: modules/social/includes/class-admin.php:125
+msgid "Icon"
+msgstr "Icono"
+
+#: modules/social/includes/class-admin.php:93
+#: modules/social/includes/class-admin.php:134
+msgid "Name"
+msgstr "Nombre"
+
+#: modules/social/includes/class-admin.php:94
+#: modules/social/includes/class-admin.php:142
+msgid "Link"
+msgstr "Enlace"
+
+#: modules/social/includes/class-admin.php:95
+msgid "Order"
+msgstr "Orden"
+
+#: modules/social/includes/class-admin.php:103
+msgid "Add network"
+msgstr "Añadir red"
+
+#: modules/social/includes/class-admin.php:104
+msgid ""
+"To remove a network without JavaScript, empty its link. Your own SVG can "
+"only be uploaded if “Allow SVG uploads” is on in Company details."
+msgstr ""
+"Para quitar una red sin JavaScript, vacía su enlace. Solo se puede subir un "
+"SVG propio si «Permitir subir SVG» está marcado en «Datos de la empresa»."
+
+#: modules/social/includes/class-admin.php:111
+msgid "Automatic (from the link)"
+msgstr "Automático (según el enlace)"
+
+#: modules/social/includes/class-admin.php:137
+msgid "Empty: the icon name"
+msgstr "Vacío: el nombre del icono"
+
+#: modules/social/includes/class-icons.php:74
+msgid "Google (Business Profile)"
+msgstr "Google (Perfil de Empresa)"
+
+#: modules/social/includes/class-icons.php:81
+msgid "Website"
+msgstr "Web"
+
+#: modules/social/includes/class-links.php:67
+msgid "Social network links, in order."
+msgstr "Enlaces a las redes sociales, en orden."
+
+#: modules/social/module.php
+msgctxt "module description"
+msgid ""
+"Free, ordered list of social network links (name, link, icon from an "
+"included collection or your own SVG) and a block that shows them."
+msgstr ""
+"Lista libre y ordenada de enlaces a redes sociales (nombre, enlace e icono "
+"de una colección incluida o un SVG propio) y un bloque que los enseña."
+
+#: modules/social/module.php
+msgctxt "module name"
+msgid "Social networks"
+msgstr "Redes sociales"
 
 #: modules/webp/module.php
 msgctxt "module description"

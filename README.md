@@ -37,6 +37,7 @@ guarda y lo que hace, de aquí.
 | `map` | bloque `estrategia-web/map` (mapa en dos clics) | encendido |
 | `whatsapp` | bloque `estrategia-web/whatsapp` y sus dos opciones | encendido |
 | `language-switcher` | bloque `estrategia-web/language-switcher` (WPML) | encendido |
+| `social` | lista libre de redes (**Estrategia Web → Redes sociales**, opción `estrategia_web_social_links`) y bloque `estrategia-web/social-links`; necesita `site`. Todo en la cabecera de [modules/social/module.php](modules/social/module.php) | encendido (sin publicar) |
 
 **Todos encendidos por defecto** porque son lo que ya usaba Lavandería: una
 web que actualiza no cambia. Un módulo apagado **no carga nada** (ni su PHP,
@@ -232,14 +233,25 @@ reactivarlo. Todos `public`, `show_in_rest` (ruta REST = nombre del tipo:
 
 | Tipo | Menú | Slug (es_ES) | Usa | Campos (`register_post_meta`, `single`, `show_in_rest`) | Taxonomía |
 |---|---|---|---|---|---|
-| `client` | Clientes | `/clientes/` | título = nombre, imagen destacada = logo/foto, extracto, orden manual | `client_url` (URL), `estrategia_web_client_image_fit` (`cover` por defecto o `contain`; otro valor → `cover`; 0.2.0) | `client_sector` (jerárquica, slug `/sector/`) |
+| `client` | Clientes | `/clientes/` | título = nombre, imagen destacada = logo/foto, extracto, orden manual | `client_url` (URL), `estrategia_web_client_image_fit` (`cover` por defecto o `contain`; otro valor → `cover`; 0.2.0), `estrategia_web_client_business_type` (texto: «agencia de alquiler vacacional», lo que antes iba entre paréntesis en el título; se traduce con WPML; sin publicar) | `client_sector` (jerárquica, slug `/sector/`) |
 | `testimonial` | Opiniones | `/opiniones/` | título (interno), contenido = la opinión, imagen = foto del autor, orden | `estrategia_web_testimonial_author`, `testimonial_role` (texto), `estrategia_web_testimonial_rating` (entero 0-5; **0 = sin valoración**), `testimonial_client` (id de un `client`, o 0) | — |
-| `location` | Sedes | `/sedes/` | título = sede, contenido, imagen = mapa estático, extracto, orden | `estrategia_web_location_address`, `estrategia_web_location_schedule` (varias líneas), `estrategia_web_location_phone`, `estrategia_web_location_email`, `estrategia_web_location_map_url` (enlace a Google Maps), `estrategia_web_location_map_embed` (URL de embed para el bloque `estrategia-web/map` del padre), `estrategia_web_location_static_map` (0.4.0: imagen del mapa estático servida por **este** sitio: ruta del tema `assets/maps/sede.webp`, ruta del sitio `/wp-content/…` o URL del mismo dominio, acabada en webp/png/jpg/gif/avif/svg; cualquier otra → `''`), `estrategia_web_location_static_map_id` (0.4.0: entero, id de un adjunto de **imagen**; si no, 0) | — |
+| `location` | Sedes | `/sedes/` | título = sede, contenido, imagen = mapa estático, extracto, orden | `estrategia_web_location_address`, `estrategia_web_location_schedule` (varias líneas), `estrategia_web_location_phone`, `estrategia_web_location_email`, `estrategia_web_location_map_url` (enlace a Google Maps), `estrategia_web_location_map_embed` (URL de embed para el bloque `estrategia-web/map`; sin publicar: si se pega el `<iframe>` entero se guarda su `src`), `estrategia_web_location_static_map` (0.4.0: imagen del mapa estático servida por **este** sitio: ruta del tema `assets/maps/sede.webp`, ruta del sitio `/wp-content/…` o URL del mismo dominio, acabada en webp/png/jpg/gif/avif/svg; cualquier otra → `''`), `estrategia_web_location_static_map_id` (0.4.0: entero, id de un adjunto de **imagen**; si no, 0) | — |
 | `project` | Proyectos | `/proyectos/` | título, contenido, imagen, extracto, orden, revisiones | — | `project_category` (`/categoria-proyecto/`) |
 | `portfolio` | Portfolio | `/portfolio/` | ídem | — | `portfolio_category` (`/categoria-portfolio/`) |
 
+**Dónde se editan** (sin publicar): en la pantalla de la sede y de la
+opinión, panel **«Datos de la sede» / «Datos de la opinión»** en la barra
+lateral del editor; en la del cliente (pantalla clásica: no tiene
+`editor`), recuadro **«Datos del cliente»**. Con WPML, teléfono, correo,
+enlaces, mapa, ajuste de imagen, autor y valoración se **copian** del
+original a la traducción; dirección, horario, tipo de negocio y cargo se
+**traducen**. El criterio, en la cabecera de
+[modules/site/includes/class-meta-panel.php](modules/site/includes/class-meta-panel.php).
+
 Todos los tipos llevan `custom-fields`, así que los campos se pintan con la
-fuente **`core/post-meta`** dentro de una Consulta. Una Consulta de clientes
+fuente **`core/post-meta`** dentro de una Consulta (el tipo de negocio en la
+ficha de un cliente: un párrafo con
+`{"source":"core/post-meta","args":{"key":"estrategia_web_client_business_type"}}`). Una Consulta de clientes
 de un sector (id 3) con logo y nombre:
 
 ```html
@@ -549,6 +561,11 @@ formularios esperan inglés; su `reset()` lo marca y vuelve a `en_US` (ver
 | [consent/consent-browser](modules/consent/tests/consent-browser.test.mjs) | 3 | aviso de cookies (0.5.0): sale; aceptar y rechazar pesan igual; rechazar guarda la cookie y persiste; el enlace (nuevo y alias) lo reabre con el foco dentro y Escape lo cierra; contrato JS (evento, `has`, `get`, `categories`, `grant`, `open`) y scripts diferidos; una cookie del aviso del padre sigue valiendo; «Powered by» visible, más pequeño que los botones y con contraste AA medido; (0.5.1) abierto es lo primero al tabular, sin trampa y Escape no lo cierra sin elegir; ≥ 16 px entre el texto y los botones a 402 y 1512 con el `:root :where(p)` de Lavandería |
 | [webp/webp](modules/webp/tests/webp.test.mjs) | 2 | WebP (0.5.1): el editor escribe WebP; JPEG y PNG subidos generan sus tamaños (y el principal) en WebP; el filtro a `false` lo apaga; la trampa de regenerar lo ya subido (la `.jpg` del contenido sin `srcset`, la intermedia rota) y su arreglo |
 | [site/editor](modules/site/tests/editor.test.mjs) | 3 | el editor enseña el valor enlazado y lista los datos (empresa y sede por slug); la pantalla de ajustes guarda, avisa y desactiva el último tipo |
+| [site/meta-panel](modules/site/tests/meta-panel.test.mjs) | 1 | (sin publicar) toda meta de sede, cliente y opinión está decidida para WPML (copy/translate) y `wpml-config.xml` dice lo mismo que `Meta_Panel`. Vista en rojo con el teléfono pasado a «translate» en el XML |
+| [site/meta-fields](modules/site/tests/meta-fields.test.mjs) | 2 | (sin publicar) `estrategia_web_client_business_type` saneado y pintado por core/post-meta en una Consulta de clientes; el embed de la sede guarda el `src` del `<iframe>` pegado y rechaza `javascript:` |
+| [site/meta-panel-editor](modules/site/tests/meta-panel-editor.test.mjs) | 3 | (sin publicar) el panel «Datos de la sede» sale abierto, enseña los valores y guarda el teléfono cambiado ahí; la meta box «Datos del cliente» en la pantalla clásica; el panel de la opinión guarda valoración y cliente como números; una página no lo lleva. Vista en rojo en su primera ejecución: el panel nacía cerrado y el cliente no tenía ninguno |
+| [social/social](modules/social/tests/social.test.mjs) | 2 | (sin publicar) sin lista guardada, las redes de «Datos de la empresa»; nombre accesible «Instagram de …», `_blank` + `noopener`, `currentColor`, sin `<title>`; la lista manda en su orden, icono adivinado, correo a `mailto:` sin pestaña nueva, fuera `javascript:`; SVG propio saneado y con su color, un PNG no vale; lista vacía no pinta nada; un autor no puede |
+| [social/social-admin](modules/social/tests/social-admin.test.mjs) | 3 | (sin publicar) la pantalla «Redes sociales»: añadir, subir, quitar y guardar en el orden que se ve; vaciarla guarda `[]`; el bloque se ve en el editor sin errores |
 
 **Todas se han visto fallar** (02-10-2026): tres tandas de mutantes, diez en
 total, cada uno pillado por su prueba. Las de 0.2.0 (marcadas «(0.2.0)» en su
