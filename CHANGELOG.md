@@ -9,6 +9,48 @@ historia de los formularios hasta su 1.0.0 está en
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), y la de los cuatro
 bloques, en el README del tema (armazon-wp-padre, «Versiones»).
 
+## Sin publicar
+
+### Cookies con detector, Google y Matomo aparte (rama modulo/cookies)
+
+**Obliga a tocar las webs: no.** Quien ya contestó el aviso no lo vuelve a
+ver (mismos slugs, misma revisión) y Matomo sigue midiendo igual.
+
+- **Aviso de cookies, categorías de la AEPD**: necesarias, **preferencias**
+  (nueva, `preferences`), analítica y publicidad, más mapas. Los slugs de
+  siempre (`statistics`, `marketing`) se quedan y se ROTULAN «Analítica» y
+  «Publicidad» (antes «Estadísticas» y «Marketing»); se aceptan los alias
+  `analytics`, `advertising` y `ads` en PHP y JS. Al enseñarlas, preferencias
+  va primera y publicidad antes que mapas (no toca la revisión).
+- **Reabrir el panel desde cualquier enlace**: `#estrategia-web-consent`, la
+  clase `estrategia-web-consent-open` o `data-estrategia-web-consent-open`
+  (para el menú del pie), además del bloque, el shortcode y `.open()`.
+- **Registro de cookies con detector** (módulo `consent`): al ACEPTAR, el
+  navegador manda los NOMBRES de sus cookies (nunca valores) a
+  `POST /wp-json/estrategia-web/v1/cookies/seen`, como mucho cuando cambia su
+  lista o cada 7 días; sin nonce (caché de página) y con límites de ritmo por
+  IP (sin guardarla) y por hora. Pantalla **Estrategia Web → Cookies**:
+  pendientes con propuesta (base propia + extracto de la **Open Cookie
+  Database**, Apache 2.0, `modules/consent/data/`, regenerable con
+  `tools/open-cookie-database.mjs`), confirmar/cambiar/ignorar, añadir a mano
+  las de terceros, comodines (`_ga_*`) y categorías extra para el aviso.
+  `wp-wpml_current_language` va como necesaria (WPML, 1 día).
+- **Tabla de cookies para la política**: bloque `estrategia-web/cookie-table`
+  y shortcode `[estrategia_web_cookie_table]`, solo lo confirmado, por
+  categoría; textos fijos por `.po`, los del administrador por WPML String
+  Translation (contexto `estrategia-web-cookies`).
+- **Módulo nuevo `google-tags`** (Default: off, Requires: consent): GA4, Google
+  Ads (+ conversión de envío de formulario) y Tag Manager con **Consent Mode
+  v2** (`default` denied antes que nada, `update` al elegir). Modo básico por
+  defecto: nada de Google hasta aceptar Analítica o Publicidad; modo
+  avanzado opcional. Pantalla **Estrategia Web → Google**.
+- **Matomo es su propio módulo** (`matomo`, Default: on, Requires: site), sin
+  migrar la opción (`estrategia_web_site`, claves `matomo_*`). Gancho nuevo
+  `estrategia_web_site_settings_sections` en «Datos de la empresa».
+- **forms** lanza `estrategia-web:form-sent` al enviar bien con JS (lo usa la
+  conversión de Google Ads).
+- Pruebas: `EW_PORT` elige el puerto del WordPress de pruebas.
+
 ## 1.1.0 — 14-10-2026
 
 **Un tema + un plugin** (decisión de David, 14-10-2026). **Obliga a tocar las

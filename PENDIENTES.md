@@ -43,12 +43,15 @@ cookies, en `consent`).
   Pasa a opción de este plugin (límite y umbral configurables) y el MU-plugin
   se borra al publicarlo. Probado en el servidor: una foto de 4056×3040 y
   4,2 MB quedó en 2560×1919 WebP (947 KB) sin original en el disco.
-- **Cookies como módulo o plugin aparte, con detector automático**: el
-  navegador del visitante que acepta manda solo los NOMBRES de las cookies; el
-  panel las lista y propone categoría con la Open Cookie Database. Categoría
-  «publicidad» y Consent Mode v2 de Google.
-- **Analítica**: Google Analytics 4, Google Ads (conversiones) y Tag Manager,
-  como alternativa a Matomo, siempre detrás del consentimiento.
+- **Cookies con detector y analítica de Google**: HECHO en la rama
+  `modulo/cookies` (14-10-2026), sin fusionar: categorías de la AEPD, detector
+  de nombres, Open Cookie Database, pantalla Cookies, tabla de la política,
+  módulo `google-tags` (Consent Mode v2) y `matomo` como módulo. Al fusionar y
+  publicar, sale de aquí. Lo que quedó fuera:
+  - la conversión de Google Ads de un formulario enviado SIN JavaScript (la
+    redirección con `af_result`) no se cuenta;
+  - la tabla de la política no lleva las cookies de terceros que nadie añade
+    a mano (las de google.com del iframe del mapa): el detector no las ve.
 - **Redirecciones editables en el panel**: origen, destino, tipo (301, 302,
   410), importar CSV (el de Lavandería está en
   `docs/redirecciones/redirecciones-2026-10-07.csv`), contador. Ojo: las

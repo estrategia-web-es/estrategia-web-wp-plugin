@@ -47,7 +47,7 @@ final class Admin_Fields {
 						</label>
 						<label style="display:block;margin:.4em 0">
 							<input type="radio" name="<?php echo esc_attr( $name( 'matomo_mode' ) ); ?>" value="hybrid" <?php checked( 'hybrid', $data['matomo_mode'] ); ?>>
-							<?php esc_html_e( 'Hybrid: without cookies until the visitor accepts «Statistics» in the cookie notice of the theme.', 'estrategia-web' ); ?>
+							<?php esc_html_e( 'Hybrid: without cookies until the visitor accepts «Analytics» in the cookie notice.', 'estrategia-web' ); ?>
 						</label>
 					</fieldset>
 				</td>

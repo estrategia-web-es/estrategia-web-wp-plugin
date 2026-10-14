@@ -44,6 +44,7 @@ msgid "Module"
 msgstr ""
 
 #: includes/admin/class-modules-page.php:101
+#: modules/consent/includes/admin/class-cookies-page.php:226
 msgid "Status"
 msgstr ""
 
@@ -90,53 +91,53 @@ msgctxt "block keyword"
 msgid "slider"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:56
+#: modules/carousel/blocks/carousel/edit.js:57
 msgid "Carousel settings"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:58
+#: modules/carousel/blocks/carousel/edit.js:59
 msgid "Accessible name"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:59
+#: modules/carousel/blocks/carousel/edit.js:60
 msgid "Read by screen readers. Defaults to “Carousel”."
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:64
+#: modules/carousel/blocks/carousel/edit.js:65
 msgid "Show arrows"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:69
+#: modules/carousel/blocks/carousel/edit.js:70
 msgid "Show dots"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:74
+#: modules/carousel/blocks/carousel/edit.js:75
 msgid "Loop"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:75
+#: modules/carousel/blocks/carousel/edit.js:76
 msgid ""
 "After the last slide, go back to the first one (and from the first to the "
 "last)."
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:79
+#: modules/carousel/blocks/carousel/edit.js:80
 msgid "Visible on mobile"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:80
+#: modules/carousel/blocks/carousel/edit.js:81
 msgid "Visible on tablet"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:81
+#: modules/carousel/blocks/carousel/edit.js:82
 msgid "Visible on desktop"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:83
+#: modules/carousel/blocks/carousel/edit.js:84
 msgid "Autoplay"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:84
+#: modules/carousel/blocks/carousel/edit.js:85
 msgid ""
 "Off by default for accessibility. Ignored when the visitor asks for reduced "
 "motion."
@@ -208,117 +209,496 @@ msgid "consent"
 msgstr ""
 
 #: modules/consent/blocks/consent/block.json
+#: modules/consent/blocks/cookie-table/block.json
 msgctxt "block keyword"
 msgid "cookies"
 msgstr ""
 
 #: modules/consent/blocks/consent/block.json
+#: modules/consent/blocks/cookie-table/block.json
 msgctxt "block keyword"
 msgid "gdpr"
 msgstr ""
 
 #: modules/consent/blocks/consent/block.json
+#: modules/consent/blocks/cookie-table/block.json
 msgctxt "block keyword"
 msgid "privacy"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:203
-msgid "Statistics"
+#: modules/consent/blocks/cookie-table/block.json
+msgctxt "block title"
+msgid "Cookie table"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:204
+#: modules/consent/blocks/cookie-table/block.json
+msgctxt "block description"
+msgid ""
+"Table of the site's cookies grouped by category (name, provider, purpose and "
+"duration), from the list confirmed in Estrategia Web → Cookies. For the "
+"cookie policy page."
+msgstr ""
+
+#: modules/consent/blocks/cookie-table/block.json
+msgctxt "block keyword"
+msgid "policy"
+msgstr ""
+
+#: modules/consent/blocks/cookie-table/labels.php:8
+msgid "Category (empty: all)"
+msgstr ""
+
+#: modules/consent/blocks/cookie-table/labels.php:9
+msgid "Heading level of each category"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:53
+#: modules/consent/includes/admin/class-cookies-page.php:148
+#: modules/consent/includes/class-consent.php:520
+#: modules/matomo/includes/class-admin-fields.php:41
+msgid "Cookies"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:63
+msgid "Sorry, you are not allowed to do that."
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:123
+#: modules/forms/includes/admin/class-submissions-table.php:115
+msgid "Pending"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:124
+msgid "Confirmed"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:125
+msgid "Ignored"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:150
+msgid "Changes saved."
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:150
+msgid "Cookie deleted."
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:152
+msgid ""
+"Not saved: check the cookie name (exact name, or a prefix ending in *) and "
+"that the list is not full."
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:155
+msgid ""
+"The active theme brings its own cookie notice: these settings do not apply "
+"to it."
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:158
+msgid "Cookie notice"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:163
+msgid "Categories the notice asks about"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:172
+msgid "declared by the code (theme or a module)"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:177
+msgid ""
+"Changing the categories shows the notice again to every visitor: they are "
+"being asked about something new. Without any category, the notice does not "
+"appear."
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:181
+msgid "Cookie detector"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:185
+msgid ""
+"When a visitor accepts cookies, their browser sends the NAMES (never the "
+"values) of the cookies it sees on this site, at most once a week or when the "
+"list changes. New names appear below as pending."
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:190
+msgid "Save notice settings"
+msgstr ""
+
+#. translators: 1: category name, 2: list of cookie names.
+#: modules/consent/includes/admin/class-cookies-page.php:206
+#, php-format
+msgid ""
+"The notice does not ask about «%1$s», but these confirmed cookies belong to "
+"it: %2$s. Either the notice should ask about it (above), or the cookies "
+"should not be set."
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:214
+msgid "Cookies of this site"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:215
+msgid ""
+"Only confirmed cookies appear in the cookie table of the policy (block "
+"«Cookie table» or shortcode [estrategia_web_cookie_table]). Proposals come "
+"from our own list and from the Open Cookie Database: check them. A name "
+"ending in * covers every cookie that starts like that."
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:219
+msgid "Confirm all pending proposals"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:225
+#: modules/consent/includes/class-cookie-table.php:163
+msgid "Cookie"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:227
+#: modules/consent/includes/admin/class-cookies-page.php:291
+msgid "Category"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:228
+#: modules/consent/includes/admin/class-cookies-page.php:292
+#: modules/consent/includes/class-cookie-table.php:164
+msgid "Provider"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:229
+#: modules/consent/includes/admin/class-cookies-page.php:293
+#: modules/consent/includes/class-cookie-table.php:165
+msgid "Purpose"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:230
+#: modules/consent/includes/admin/class-cookies-page.php:294
+#: modules/consent/includes/class-cookie-table.php:166
+msgid "Duration"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:231
+msgid "Seen"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:232
+msgid "Actions"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:237
+msgid ""
+"No cookies yet. They appear when a visitor accepts the notice, or add them "
+"below."
+msgstr ""
+
+#. translators: %s: a concrete cookie name.
+#: modules/consent/includes/admin/class-cookies-page.php:248
+#, php-format
+msgid "e.g. %s"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:264
+msgid "Added by hand"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:266
+msgid "Proposal: Open Cookie Database"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:268
+msgid "Proposal: Estrategia Web"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:276
+msgid "Save"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:277
+#: modules/forms/includes/admin/class-submissions-table.php:39
+#: modules/forms/includes/admin/class-submissions-table.php:86
+msgid "Delete"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:285
+msgid "Add a cookie by hand"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:286
+msgid ""
+"For third-party cookies the detector cannot see (for example, the ones "
+"Google sets on its own domain when a map loads). Empty fields are filled "
+"with the proposal, if there is one."
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:290
+msgid "Name"
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:294
+msgid ""
+"Like «2 years», «30 minutes» or «session» to have it translated "
+"automatically; anything else is shown as written."
+msgstr ""
+
+#: modules/consent/includes/admin/class-cookies-page.php:296
+msgid "Add cookie"
+msgstr ""
+
+#. translators: 1: link to the Open Cookie Database, 2: licence name, 3: date.
+#: modules/consent/includes/admin/class-cookies-page.php:303
+#, php-format
+msgid ""
+"Proposals use data from the %1$s, licensed under %2$s (extract of %3$s)."
+msgstr ""
+
+#: modules/consent/includes/class-consent.php:259
+msgid "Analytics"
+msgstr ""
+
+#: modules/consent/includes/class-consent.php:260
 msgid "Help us understand how the site is used."
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:207
+#: modules/consent/includes/class-consent.php:263
 msgid "Maps and third-party content"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:208
+#: modules/consent/includes/class-consent.php:264
 msgid ""
 "Load embedded maps and other content served by third parties, which may set "
 "their own cookies."
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:211
-msgid "Marketing"
+#: modules/consent/includes/class-consent.php:267
+msgid "Advertising"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:212
+#: modules/consent/includes/class-consent.php:268
 msgid "Measure campaigns and show relevant advertising."
 msgstr ""
 
+#: modules/consent/includes/class-consent.php:271
+msgid "Preferences"
+msgstr ""
+
+#: modules/consent/includes/class-consent.php:272
+msgid ""
+"Remember choices that change how the site behaves or looks, such as the "
+"region or recently viewed items."
+msgstr ""
+
 #. translators: %s: name of the company that built the site (a brand, not translated).
-#: modules/consent/includes/class-consent.php:279
+#: modules/consent/includes/class-consent.php:368
 #, php-format
 msgid "Powered by %s"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:306
+#: modules/consent/includes/class-consent.php:401
+msgid ""
+"Cookie notice: detector on or off, and categories added by the administrator."
+msgstr ""
+
+#: modules/consent/includes/class-consent.php:428
 msgid "Link text (empty: “Cookie settings”)"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:366
+#: modules/consent/includes/class-consent.php:501
 msgid ""
 "We use our own and third-party cookies for the purposes listed below. You "
 "can accept them, reject them or choose which ones to allow. Necessary "
 "cookies are always active."
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:385
-#: modules/site/includes/admin/class-admin.php:163
-msgid "Cookies"
-msgstr ""
-
-#: modules/consent/includes/class-consent.php:389
+#: modules/consent/includes/class-consent.php:524
 msgid "Privacy and cookie policy"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:395
+#: modules/consent/includes/class-consent.php:530
 msgid "Cookie categories"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:398
+#: modules/consent/includes/class-consent.php:533
+#: modules/consent/includes/class-cookie-table.php:53
 msgid "Necessary"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:398
+#: modules/consent/includes/class-consent.php:533
+#: modules/consent/includes/class-cookie-table.php:54
 msgid ""
 "Required for the site to work, including remembering this choice. Always "
 "active."
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:414
+#: modules/consent/includes/class-consent.php:549
 msgid "Save choices"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:418
+#: modules/consent/includes/class-consent.php:553
 msgid "Accept all"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:419
+#: modules/consent/includes/class-consent.php:554
 msgid "Reject all"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:420
+#: modules/consent/includes/class-consent.php:555
 msgid "Configure"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:425
+#: modules/consent/includes/class-consent.php:560
 #: modules/external-links/includes/class-external-links.php:101
 #: modules/map/blocks/map/render.php:321
 #: modules/whatsapp/blocks/whatsapp/render.php:74
 msgid "(opens in a new tab)"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:451
+#: modules/consent/includes/class-consent.php:586
 msgid ""
 "Cookie settings: this site declares no optional cookie categories, so there "
 "is no notice to reopen and this link is not shown."
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:457
+#: modules/consent/includes/class-consent.php:592
 msgid "Cookie settings"
+msgstr ""
+
+#: modules/consent/includes/class-cookie-registry.php:135
+msgid "This website"
+msgstr ""
+
+#: modules/consent/includes/class-cookie-registry.php:140
+msgid "Remembers your choice in the cookie notice."
+msgstr ""
+
+#: modules/consent/includes/class-cookie-registry.php:146
+msgid ""
+"Previous name of the cookie that remembers your choice in the cookie notice; "
+"it is replaced on the next visit."
+msgstr ""
+
+#: modules/consent/includes/class-cookie-registry.php:152
+#: modules/consent/includes/class-cookie-registry.php:158
+#: modules/consent/includes/class-cookie-registry.php:164
+msgid "Remembers the language in which you are browsing the site."
+msgstr ""
+
+#: modules/consent/includes/class-cookie-registry.php:170
+msgid "Checks that the browser accepts cookies. Only on the login page."
+msgstr ""
+
+#: modules/consent/includes/class-cookie-registry.php:176
+msgid "Keeps the session of the site’s users (editors and administrators)."
+msgstr ""
+
+#: modules/consent/includes/class-cookie-registry.php:182
+msgid ""
+"Remembers the dashboard settings of the site’s users (editors and "
+"administrators)."
+msgstr ""
+
+#: modules/consent/includes/class-cookie-registry.php:191
+msgid ""
+"Statistics: recognises a returning visitor (an anonymous identifier). Only "
+"after accepting analytics."
+msgstr ""
+
+#: modules/consent/includes/class-cookie-registry.php:197
+msgid "Statistics: groups the pages viewed in the same visit."
+msgstr ""
+
+#: modules/consent/includes/class-cookie-registry.php:203
+msgid "Statistics: remembers the website the visitor came from."
+msgstr ""
+
+#: modules/consent/includes/class-cookie-registry.php:209
+msgid "Statistics: remembers that analytics cookies were accepted."
+msgstr ""
+
+#: modules/consent/includes/class-cookie-registry.php:215
+msgid ""
+"Remembers your name and email for the next comment, only if you ask for it."
+msgstr ""
+
+#: modules/consent/includes/class-cookie-registry.php:356
+msgid ""
+"Invalid cookie name. Use the exact name, or a prefix ending in * for a "
+"family of cookies (e.g. _ga_*)."
+msgstr ""
+
+#: modules/consent/includes/class-cookie-registry.php:361
+msgid "The cookie list is full. Delete the cookies you do not need."
+msgstr ""
+
+#: modules/consent/includes/class-cookie-table.php:103
+msgid "Session"
+msgstr ""
+
+#. translators: %d: number of seconds.
+#: modules/consent/includes/class-cookie-table.php:106
+#, php-format
+msgid "%d second"
+msgid_plural "%d seconds"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of minutes.
+#: modules/consent/includes/class-cookie-table.php:109
+#, php-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of hours.
+#: modules/consent/includes/class-cookie-table.php:112
+#, php-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of days.
+#: modules/consent/includes/class-cookie-table.php:115
+#, php-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of weeks.
+#: modules/consent/includes/class-cookie-table.php:118
+#, php-format
+msgid "%d week"
+msgid_plural "%d weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of months.
+#: modules/consent/includes/class-cookie-table.php:121
+#, php-format
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of years.
+#: modules/consent/includes/class-cookie-table.php:124
+#, php-format
+msgid "%d year"
+msgid_plural "%d years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: modules/consent/includes/class-cookie-table.php:146
+msgid ""
+"Cookie table: there are no confirmed cookies yet. Confirm them in Estrategia "
+"Web → Cookies and they will appear here."
 msgstr ""
 
 #: modules/consent/module.php
@@ -331,7 +711,8 @@ msgctxt "module description"
 msgid ""
 "Own cookie consent notice (Accept / Reject / Settings with declarable "
 "categories), the «Cookie settings» link block and the consent API for PHP "
-"and JavaScript."
+"and JavaScript, plus a cookie list fed by a detector and a cookie table "
+"block for the cookie policy."
 msgstr ""
 
 #: modules/external-links/module.php
@@ -344,10 +725,6 @@ msgctxt "module description"
 msgid ""
 "Links to another domain open in a new tab, with rel=\"noopener\" and a "
 "hidden «(opens in a new tab)» for screen readers."
-msgstr ""
-
-#: modules/forms/assets/editor.js:52
-msgid "Name"
 msgstr ""
 
 #: modules/forms/assets/editor.js:54 modules/forms/assets/editor.js:412
@@ -906,11 +1283,6 @@ msgstr ""
 msgid "Email footer"
 msgstr ""
 
-#: modules/forms/includes/admin/class-submissions-table.php:39
-#: modules/forms/includes/admin/class-submissions-table.php:86
-msgid "Delete"
-msgstr ""
-
 #: modules/forms/includes/admin/class-submissions-table.php:56
 msgid "No submissions yet."
 msgstr ""
@@ -937,10 +1309,6 @@ msgstr ""
 
 #: modules/forms/includes/admin/class-submissions-table.php:113
 msgid "Some failed"
-msgstr ""
-
-#: modules/forms/includes/admin/class-submissions-table.php:115
-msgid "Pending"
 msgstr ""
 
 #: modules/forms/includes/class-blocks.php:80
@@ -1037,6 +1405,97 @@ msgstr ""
 #: modules/forms/module.php
 msgctxt "module name"
 msgid "Forms"
+msgstr ""
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:29
+msgid "Google"
+msgstr ""
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:29
+#: modules/google-tags/includes/admin/class-google-tags-page.php:51
+msgid "Google tags"
+msgstr ""
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:52
+msgid ""
+"An empty field loads nothing. Whatever is filled in waits for the cookie "
+"notice: Analytics needs «Analytics», Ads needs «Advertising», and Tag "
+"Manager asks for both. Logged-in editors and administrators are not measured."
+msgstr ""
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:58
+msgid "Google Analytics 4"
+msgstr ""
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:58
+msgid "Measurement ID of the GA4 web stream."
+msgstr ""
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:59
+msgid "Conversion ID of the Google Ads account."
+msgstr ""
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:59
+msgid "Google Ads"
+msgstr ""
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:60
+msgid "Conversion: form sent"
+msgstr ""
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:60
+msgid ""
+"Optional. Conversion ID and label («send_to» of the conversion). Counted "
+"each time a form of the site is sent correctly, if the visitor accepted "
+"«Advertising»."
+msgstr ""
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:61
+msgid "Container ID. The tags inside the container follow Consent Mode."
+msgstr ""
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:61
+msgid "Google Tag Manager"
+msgstr ""
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:64
+msgid "Loading"
+msgstr ""
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:69
+msgid ""
+"Basic (recommended): nothing is requested from Google until the visitor "
+"accepts."
+msgstr ""
+
+#: modules/google-tags/includes/admin/class-google-tags-page.php:73
+msgid ""
+"Advanced: Google loads from the start with consent denied and sends "
+"cookieless pings. Better measurement, but data reaches Google before the "
+"visitor decides: decide it with the client."
+msgstr ""
+
+#: modules/google-tags/includes/class-google-tags.php:118
+msgid "Google tags: GA4, Ads and Tag Manager IDs and the loading mode."
+msgstr ""
+
+#. translators: %s: the value that was not saved.
+#: modules/google-tags/includes/class-google-tags.php:149
+#, php-format
+msgid "«%s» does not look like a valid ID and was not saved."
+msgstr ""
+
+#: modules/google-tags/module.php
+msgctxt "module description"
+msgid ""
+"Google Analytics 4, Google Ads (with an optional conversion for form "
+"submissions) and Google Tag Manager behind the cookie notice, with Consent "
+"Mode v2. An empty field loads nothing."
+msgstr ""
+
+#: modules/google-tags/module.php
+msgctxt "module name"
+msgid "Google tags"
 msgstr ""
 
 #: modules/language-switcher/blocks/language-switcher/block.json
@@ -1252,12 +1711,56 @@ msgid ""
 "only loads after the visitor asks for it (or accepted the maps cookies)."
 msgstr ""
 
+#: modules/matomo/includes/class-admin-fields.php:26
+msgid "Statistics (Matomo)"
+msgstr ""
+
+#: modules/matomo/includes/class-admin-fields.php:27
+msgid ""
+"Without the Matomo address or the site ID nothing is added to the site. "
+"Logged-in editors and administrators are not counted."
+msgstr ""
+
+#: modules/matomo/includes/class-admin-fields.php:30
+msgid "Matomo address"
+msgstr ""
+
+#: modules/matomo/includes/class-admin-fields.php:33
+msgid "Example: https://stats.example.com/"
+msgstr ""
+
+#: modules/matomo/includes/class-admin-fields.php:37
+msgid "Site ID"
+msgstr ""
+
+#: modules/matomo/includes/class-admin-fields.php:46
+msgid "Without cookies (recommended): nothing to ask the visitor."
+msgstr ""
+
+#: modules/matomo/includes/class-admin-fields.php:50
+msgid ""
+"Hybrid: without cookies until the visitor accepts «Analytics» in the cookie "
+"notice."
+msgstr ""
+
+#: modules/matomo/module.php
+msgctxt "module name"
+msgid "Matomo"
+msgstr ""
+
+#: modules/matomo/module.php
+msgctxt "module description"
+msgid ""
+"Matomo tracking code, cookieless or hybrid (no cookies until the visitor "
+"accepts analytics in the cookie notice)."
+msgstr ""
+
 #: modules/site/includes/admin/class-admin.php:33
 #: modules/site/includes/admin/class-admin.php:34
 #: modules/site/includes/admin/class-admin.php:83
 #: modules/site/includes/class-bindings.php:50
 #: modules/site/includes/class-legacy-names.php:109
-#: modules/site/includes/class-settings.php:135
+#: modules/site/includes/class-settings.php:138
 msgid "Company details"
 msgstr ""
 
@@ -1336,38 +1839,6 @@ msgstr ""
 
 #: modules/site/includes/admin/class-admin.php:144
 msgid "Allow SVG uploads (administrators only; files are sanitized)"
-msgstr ""
-
-#: modules/site/includes/admin/class-admin.php:148
-msgid "Statistics (Matomo)"
-msgstr ""
-
-#: modules/site/includes/admin/class-admin.php:149
-msgid ""
-"Without the Matomo address or the site ID nothing is added to the site. "
-"Logged-in editors and administrators are not counted."
-msgstr ""
-
-#: modules/site/includes/admin/class-admin.php:152
-msgid "Matomo address"
-msgstr ""
-
-#: modules/site/includes/admin/class-admin.php:155
-msgid "Example: https://stats.example.com/"
-msgstr ""
-
-#: modules/site/includes/admin/class-admin.php:159
-msgid "Site ID"
-msgstr ""
-
-#: modules/site/includes/admin/class-admin.php:168
-msgid "Without cookies (recommended): nothing to ask the visitor."
-msgstr ""
-
-#: modules/site/includes/admin/class-admin.php:172
-msgid ""
-"Hybrid: without cookies until the visitor accepts «Statistics» in the cookie "
-"notice of the theme."
 msgstr ""
 
 #: modules/site/includes/class-company.php:91
@@ -1846,22 +2317,22 @@ msgstr ""
 msgid "Location name"
 msgstr ""
 
-#: modules/site/includes/class-settings.php:136
+#: modules/site/includes/class-settings.php:139
 msgid "Company details and site options of the Estrategia Web Site plugin."
 msgstr ""
 
-#: modules/site/includes/class-settings.php:257
+#: modules/site/includes/class-settings.php:260
 msgid "The email address is not valid. The previous one has been kept."
 msgstr ""
 
-#: modules/site/includes/class-settings.php:270
+#: modules/site/includes/class-settings.php:273
 msgid ""
 "The WhatsApp number is not valid (international format, digits only). The "
 "previous one has been kept."
 msgstr ""
 
 #. translators: %s: the field name.
-#: modules/site/includes/class-settings.php:344
+#: modules/site/includes/class-settings.php:347
 #, php-format
 msgid ""
 "The address in «%s» is not a valid web address. The previous one has been "
@@ -1887,8 +2358,7 @@ msgctxt "module description"
 msgid ""
 "Company details with Block Bindings and the [estrategia_web_company] "
 "shortcode, the usual content types of a corporate site (clients, "
-"testimonials, locations, projects, portfolio), sanitised SVG uploads and the "
-"Matomo code."
+"testimonials, locations, projects, portfolio) and sanitised SVG uploads."
 msgstr ""
 
 #: modules/webp/module.php
