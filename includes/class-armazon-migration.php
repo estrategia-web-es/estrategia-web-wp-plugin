@@ -1,8 +1,13 @@
 <?php
 /**
- * EL MIGRADOR de «Armazón» a «Estrategia Web» (1.0.0): pasa una web hecha con
- * el tema padre Armazón y los plugins armazon-site / armazon-forms a los
- * nombres nuevos, EN SITIO, sin volver a cargar contenido.
+ * EL MIGRADOR de «Armazón» a «Estrategia Web»: pasa una web hecha con el tema
+ * padre Armazón y los plugins armazon-site / armazon-forms a la estructura de
+ * la 1.1.0 (tema padre estrategia-web + el plugin ÚNICO estrategia-web), EN
+ * SITIO, sin volver a cargar contenido. Los nombres públicos (bloques,
+ * opciones, metas, tablas) son los de la 1.0.0; lo que cambió en la 1.1.0 es
+ * solo la carpeta del plugin, así que una web que ya estaba en la 1.0.0
+ * (estrategia-web-site + estrategia-web-forms) también pasa por aquí: solo
+ * le toca el paso 7.
  *
  * Qué hace, en este orden (cada paso dice qué cambiaría y cuántos):
  *   1. contenido  post_content de todas las entradas (páginas, entradas,
@@ -36,16 +41,24 @@
  *                 no se pierden.
  *   6. tema       template/stylesheet armazon → estrategia-web y el término
  *                 wp_theme «armazon» de las plantillas personalizadas.
- *   7. plugins    active_plugins: armazon-site/armazon-site.php y
- *                 armazon-forms/armazon-forms.php → los nuevos. Sin llamar a
- *                 sus ganchos de activación (sus opciones y tablas ya están
- *                 migradas); el evento de cron viejo se quita.
+ *   7. plugins    active_plugins: armazon-site/armazon-site.php,
+ *                 armazon-forms/armazon-forms.php (y los dos de la 1.0.0,
+ *                 estrategia-web-site/… y estrategia-web-forms/…) salen de la
+ *                 lista y entra UNO: estrategia-web/estrategia-web.php. Sin
+ *                 llamar a ganchos de activación ni de desactivación (las
+ *                 opciones y tablas ya están migradas; las tablas de
+ *                 formularios y su cron los rehace el módulo forms en cada
+ *                 carga si faltan); el evento de cron viejo se quita. Las
+ *                 CARPETAS viejas no se tocan: se borran a mano (o con el
+ *                 desplegador) cuando la web ya responde con el plugin nuevo.
+ *                 La lista de módulos (estrategia_web_modules) NO se escribe:
+ *                 sin ella valen los «Default» de cada módulo.
  *   8. caché      la de objetos y, si está, la de SiteGround.
  *   La cookie del consentimiento NO se migra aquí (vive en el navegador): la
  *   pasa blocks/consent/view.js la primera vez que vuelve cada visitante.
  *
  * Cómo se usa:
- *   - WP-CLI, con el plugin nuevo activo: wp estrategia-web-site migrate-armazon [--dry-run]
+ *   - WP-CLI, con el plugin nuevo activo: wp estrategia-web migrate-armazon [--dry-run]
  *   - Sin activar nada (lo que hace Lavandería): incluir este fichero desde
  *     «wp eval-file» y llamar a Armazon_Migration::run( $seco ). Ver
  *     lavanderia-mallorca/despliegue/migrar-a-estrategia-web.mjs.
@@ -55,8 +68,9 @@
  *
  * IDEMPOTENTE: cada paso busca lo viejo; pasarlo dos veces no cambia nada la
  * segunda (lo comprueba la prueba de Lavandería). En seco no escribe nada.
- * Los pasos 6 y 7 se saltan si las carpetas nuevas no están en el servidor:
- * primero se suben los paquetes.
+ * Los pasos 6 y 7 se saltan si las carpetas nuevas (themes/estrategia-web,
+ * plugins/estrategia-web) no están en el servidor: primero se suben los
+ * paquetes.
  *
  * Cómo se mantiene:
  * - Quién: quien toque el cambio de nombre. Cuándo: si aparece otro sitio
@@ -79,9 +93,14 @@ final class Armazon_Migration {
 
 	public const THEME = array( 'armazon' => 'estrategia-web' );
 
+	/** El plugin único (1.1.0). Todos los de antes acaban en él. */
+	public const PLUGIN = 'estrategia-web/estrategia-web.php';
+
 	public const PLUGINS = array(
-		'armazon-site/armazon-site.php'   => 'estrategia-web-site/estrategia-web-site.php',
-		'armazon-forms/armazon-forms.php' => 'estrategia-web-forms/estrategia-web-forms.php',
+		'armazon-site/armazon-site.php'                 => self::PLUGIN,
+		'armazon-forms/armazon-forms.php'               => self::PLUGIN,
+		'estrategia-web-site/estrategia-web-site.php'   => self::PLUGIN,
+		'estrategia-web-forms/estrategia-web-forms.php' => self::PLUGIN,
 	);
 
 	/** Metas de los tipos del plugin que ganaron prefijo en 1.0.0. */
@@ -357,7 +376,7 @@ final class Armazon_Migration {
 
 	/** Crea las tablas nuevas con la migración del plugin de formularios nuevo (plan B de tables()). */
 	private static function create_forms_tables(): bool {
-		$dir = WP_PLUGIN_DIR . '/estrategia-web-forms/includes/';
+		$dir = WP_PLUGIN_DIR . '/' . dirname( self::PLUGIN ) . '/modules/forms/includes/';
 		if ( ! is_file( $dir . 'migrations/0001-create-tables.php' ) ) {
 			return false;
 		}
@@ -462,11 +481,11 @@ final class Armazon_Migration {
 
 if ( defined( 'WP_CLI' ) && WP_CLI && class_exists( '\WP_CLI' ) ) {
 	\WP_CLI::add_command(
-		'estrategia-web-site migrate-armazon',
+		'estrategia-web migrate-armazon',
 		static function ( $args, $assoc ) {
 			$report = Armazon_Migration::run( ! empty( $assoc['dry-run'] ) );
 			\WP_CLI::line( wp_json_encode( $report, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
 		},
-		array( 'shortdesc' => 'Pasa una web de Armazón a Estrategia Web (contenido, metas, opciones, tablas, WPML, tema y plugins). Con --dry-run solo lo cuenta.' )
+		array( 'shortdesc' => 'Pasa una web de Armazón (o de la 1.0.0) a Estrategia Web 1.1.0 (contenido, metas, opciones, tablas, WPML, tema y el plugin único). Con --dry-run solo lo cuenta.' )
 	);
 }
