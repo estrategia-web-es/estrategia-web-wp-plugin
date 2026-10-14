@@ -8,7 +8,8 @@
  * Lo que era el plugin «Estrategia Web Site» hasta la 1.0.0, menos lo que se
  * pudo separar sin reescribirlo (aviso de cookies, WebP, enlaces externos,
  * portada de WPML: cada uno es su módulo). Pantalla propia: «Datos de la
- * empresa» (includes/admin/class-admin.php).
+ * empresa» (includes/admin/class-admin.php). Y en el editor de una sede, un
+ * cliente o una opinión, el panel con sus campos (includes/class-meta-panel.php).
  *
  * Por qué Matomo y SVG siguen aquí y no en su módulo: sus ajustes viven en la
  * misma opción (estrategia_web_site, clase Settings) y la misma pantalla que
@@ -45,6 +46,7 @@ require_once __DIR__ . '/includes/class-content-types.php';
 require_once __DIR__ . '/includes/class-svg.php';
 require_once __DIR__ . '/includes/class-matomo.php';
 require_once __DIR__ . '/includes/class-legacy-names.php';
+require_once __DIR__ . '/includes/class-meta-panel.php';
 require_once __DIR__ . '/includes/admin/class-admin.php';
 
 // La trampa del orden: los tipos de contenido se registran en init con lo
@@ -62,6 +64,7 @@ add_action( 'update_option_' . Settings::OPTION, array( Content_Types::class, 'm
 add_action( 'add_option_' . Settings::OPTION, static fn( $name, $value ) => Content_Types::maybe_flush( array(), $value ), 10, 2 );
 Svg::boot();
 Matomo::boot();
+Meta_Panel::boot(); // Sin publicar: «Datos de la sede/del cliente/de la opinión» en el editor.
 
 // Al activar el plugin: los tipos registrados y sus URL al día. Al
 // desactivarlo, que sus URL dejen de existir (el contenido se queda).

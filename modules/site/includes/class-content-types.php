@@ -100,6 +100,10 @@ final class Content_Types {
 					'client_url'       => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Client website', 'estrategia-web' ) ),
 					// 0.2.0. 'contain' = la imagen es un LOGO (no se recorta); ver post_class().
 					'estrategia_web_client_image_fit' => array( 'type' => 'string', 'sanitize' => 'fit', 'default' => 'cover', 'label' => __( 'Image fit (cover for a photo, contain for a logo)', 'estrategia-web' ) ),
+					// Sin publicar. Lo que iba entre paréntesis en el título («Portic
+					// Villas (agencia de alquiler vacacional)»): el nombre no se
+					// traduce y esto sí (wpml-config.xml, «translate»).
+					'estrategia_web_client_business_type' => array( 'type' => 'string', 'sanitize' => 'text', 'label' => __( 'Business type', 'estrategia-web' ) ),
 				),
 			),
 			'testimonial' => array(
@@ -153,7 +157,8 @@ final class Content_Types {
 					'estrategia_web_location_email'     => array( 'type' => 'string', 'sanitize' => 'email', 'label' => __( 'Email', 'estrategia-web' ) ),
 					'estrategia_web_location_schedule'  => array( 'type' => 'string', 'sanitize' => 'textarea', 'label' => __( 'Opening hours', 'estrategia-web' ) ),
 					'estrategia_web_location_map_url'   => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Google Maps link', 'estrategia-web' ) ),
-					'estrategia_web_location_map_embed' => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Map embed URL', 'estrategia-web' ) ),
+					// 'embed' (sin publicar; antes 'url'): admite pegar el <iframe> entero y se queda con su src.
+					'estrategia_web_location_map_embed' => array( 'type' => 'string', 'sanitize' => 'embed', 'label' => __( 'Map embed URL', 'estrategia-web' ) ),
 					// 0.4.0. Para staticMapUrl / staticMapId de estrategia-web/map (tema padre). Ver local_image_url().
 					'estrategia_web_location_static_map'    => array( 'type' => 'string', 'sanitize' => 'local_image', 'label' => __( 'Static map image (theme path or URL of this site)', 'estrategia-web' ) ),
 					'estrategia_web_location_static_map_id' => array( 'type' => 'integer', 'sanitize' => 'image_id', 'label' => __( 'Static map image (media library ID)', 'estrategia-web' ) ),
@@ -308,9 +313,23 @@ final class Content_Types {
 		return array_map( static fn( $meta ) => $meta['label'], self::definitions()[ $type ]['meta'] ?? array() );
 	}
 
+	/**
+	 * @return array<string,array{label:string,type:string,sanitize:string}> Los campos de un tipo
+	 * con su clase de saneado: el panel del editor (Meta_Panel) elige el control con ella.
+	 */
+	public static function meta_definitions( string $type ): array {
+		return array_map(
+			static fn( $meta ) => array( 'label' => $meta['label'], 'type' => $meta['type'], 'sanitize' => $meta['sanitize'] ),
+			self::definitions()[ $type ]['meta'] ?? array()
+		);
+	}
+
 	private static function sanitizer( string $kind ): callable {
 		return match ( $kind ) {
 			'url'      => static fn( $v ) => esc_url_raw( trim( (string) $v ), array( 'http', 'https' ) ),
+			// El código que da Google Maps (Compartir › Insertar un mapa) es un <iframe>:
+			// se guarda solo su src. Una URL suelta pasa igual que con 'url'.
+			'embed'    => static fn( $v ) => esc_url_raw( trim( html_entity_decode( preg_match( '/src\s*=\s*["\']([^"\']+)["\']/i', (string) $v, $m ) ? $m[1] : (string) $v ) ), array( 'http', 'https' ) ),
 			'email'    => static fn( $v ) => is_email( trim( (string) $v ) ) ? sanitize_email( (string) $v ) : '',
 			'textarea' => static fn( $v ) => sanitize_textarea_field( (string) $v ),
 			// 0 = sin valoración; cualquier otra cosa se lleva al intervalo 1-5.
