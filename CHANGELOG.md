@@ -31,6 +31,17 @@ bloques, en el README del tema (armazon-wp-padre, «Versiones»).
   (`aria-label` «Abrir en Google Maps: <sede> (se abre en una pestaña
   nueva)»): dos mapas en una página ya no tienen dos enlaces iguales a
   destinos distintos (Lighthouse).
+- **Carrusel: recorte para el móvil** (atributos `mobileRatio` y
+  `mobileImageSizes`, o el filtro `estrategia_web_carousel_mobile_crop`):
+  por debajo de 782 px cada foto va en un `<picture>` con un recorte de la
+  forma de la caja, centrado en su object-position, generado la primera vez
+  y guardado como tamaño del adjunto. Lavandería local, portada en el móvil:
+  la foto LCP pasa de 92,5 KB (1536×1024) a 38,7 KB (720×895). **No hace nada
+  hasta que se pide**: Lavandería lo pide desde su tema (ver PENDIENTES).
+- **Carrusel: view.min.js** (24,8 → 7,7 KB) generado con
+  `node tools/minify.mjs` (esbuild fijo por npx); `tests/minified.test.mjs`
+  falla si view.js cambia y no se regenera. Y el ResizeObserver ya no mide
+  dos veces al arrancar (un reflow forzado menos).
 
 ## 1.1.0 — 14-10-2026
 

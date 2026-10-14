@@ -103,6 +103,8 @@ function images_register( string $id, array $attributes ): void {
 		'eager' => max( 0, $eager ),
 		'sizes' => images_sizes( $attributes ),
 		'hero'  => false,
+		// 1.1.x: recorte para el móvil (null si no se pide). Ver carousel-mobile-crop.php.
+		'crop'  => mobile_crop_config( $attributes ),
 	);
 }
 
@@ -220,9 +222,11 @@ function images_mark( string $content, string $id ): string {
 /**
  * Fixes loading, fetchpriority and sizes of a marked carousel image. See the header.
  *
- * @param string $image The img tag, already with WordPress' attributes.
+ * @param string $image         The img tag, already with WordPress' attributes.
+ * @param string $context       Filter context (unused).
+ * @param int    $attachment_id Attachment id, 0 if WordPress did not find it (wp-image-ID class).
  */
-function images_filter( $image ) {
+function images_filter( $image, $context = '', $attachment_id = 0 ) {
 	if ( ! is_string( $image ) || ! str_contains( $image, 'data-estrategia-web-carousel' ) ) {
 		return $image;
 	}
@@ -277,6 +281,11 @@ function images_filter( $image ) {
 		$lazy = 'lazy' === $tag->get_attribute( 'loading' );
 		$tag->set_attribute( 'sizes', ( $lazy ? 'auto, ' : '' ) . $sizes );
 	}
-	return $tag->get_updated_html();
+	$html = $tag->get_updated_html();
+	// 1.1.x: en el móvil, un recorte de la foto con la forma de la caja (carousel-mobile-crop.php).
+	if ( ! empty( $carousel['crop'] ) && (int) $attachment_id > 0 ) {
+		$html = mobile_picture( $html, $carousel['crop'], (int) $attachment_id, (string) $tag->get_attribute( 'style' ) );
+	}
+	return $html;
 }
-add_filter( 'wp_content_img_tag', __NAMESPACE__ . '\images_filter', 20 );
+add_filter( 'wp_content_img_tag', __NAMESPACE__ . '\images_filter', 20, 3 );
