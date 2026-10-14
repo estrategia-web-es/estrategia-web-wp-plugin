@@ -13,7 +13,7 @@ const ALL = ["carousel", "consent", "external-links", "forms", "language-switche
 before(reset);
 after(() => testApi("/modules", { method: "POST", body: { active: null } }));
 
-test("sin opción guardada se cargan todos los módulos (todos son Default: on)", async () => {
+test("sin opción guardada se cargan los módulos Default: on, y solo esos", async () => {
   const m = await testApi("/modules");
   assert.equal(m.saved, null);
   assert.deepEqual([...m.loaded].sort(), ALL);
@@ -24,7 +24,9 @@ test("sin opción guardada se cargan todos los módulos (todos son Default: on)"
 test("al guardar se apunta qué módulos existían, y un módulo apagado no registra nada", async () => {
   await testApi("/modules", { method: "POST", body: { active: ALL.filter((s) => s !== "carousel" && s !== "forms").concat("no-existe") } });
   const m = await testApi("/modules");
-  assert.deepEqual([...m.known].sort(), ALL, "al guardar se apunta qué módulos existían");
+  // Contra lo que hay en disco, no contra ALL: un módulo Default: off (redirects) existe sin cargarse.
+  assert.deepEqual([...m.known].sort(), [...m.available].sort(), "al guardar se apunta qué módulos existían");
+  for (const slug of ALL) assert.ok(m.known.includes(slug), slug);
   assert.ok(!m.saved.includes("no-existe"), "un slug que no existe no se guarda");
   assert.ok(!m.loaded.includes("carousel") && !m.loaded.includes("forms"));
 

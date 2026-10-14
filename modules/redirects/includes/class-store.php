@@ -83,7 +83,9 @@ UNIQUE KEY path_hash (path_hash),
 KEY last_seen (last_seen)
 ) {$charset};"
 		);
-		update_option( self::DB_VERSION_OPT, self::DB_VERSION, false );
+		// Autocargada A PROPÓSITO (forms no lo hace): se lee en cada petición,
+		// y sin autocarga es una consulta más en todas las páginas de la web.
+		update_option( self::DB_VERSION_OPT, self::DB_VERSION, true );
 	}
 
 	/** Ruta de la instalación («/blog» si WordPress vive en una subcarpeta; '' si no). */
