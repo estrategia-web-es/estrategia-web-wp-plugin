@@ -90,53 +90,53 @@ msgctxt "block keyword"
 msgid "slider"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:56
+#: modules/carousel/blocks/carousel/edit.js:57
 msgid "Carousel settings"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:58
+#: modules/carousel/blocks/carousel/edit.js:59
 msgid "Accessible name"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:59
+#: modules/carousel/blocks/carousel/edit.js:60
 msgid "Read by screen readers. Defaults to “Carousel”."
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:64
+#: modules/carousel/blocks/carousel/edit.js:65
 msgid "Show arrows"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:69
+#: modules/carousel/blocks/carousel/edit.js:70
 msgid "Show dots"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:74
+#: modules/carousel/blocks/carousel/edit.js:75
 msgid "Loop"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:75
+#: modules/carousel/blocks/carousel/edit.js:76
 msgid ""
 "After the last slide, go back to the first one (and from the first to the "
 "last)."
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:79
+#: modules/carousel/blocks/carousel/edit.js:80
 msgid "Visible on mobile"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:80
+#: modules/carousel/blocks/carousel/edit.js:81
 msgid "Visible on tablet"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:81
+#: modules/carousel/blocks/carousel/edit.js:82
 msgid "Visible on desktop"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:83
+#: modules/carousel/blocks/carousel/edit.js:84
 msgid "Autoplay"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/edit.js:84
+#: modules/carousel/blocks/carousel/edit.js:85
 msgid ""
 "Off by default for accessibility. Ignored when the visitor asks for reduced "
 "motion."
@@ -734,11 +734,13 @@ msgstr ""
 
 #: modules/forms/includes/admin/class-admin.php:133
 #: modules/forms/includes/class-notifier.php:157
+#: modules/redirects/includes/admin/class-tables.php:113
 msgid "No"
 msgstr ""
 
 #: modules/forms/includes/admin/class-admin.php:133
 #: modules/forms/includes/class-notifier.php:157
+#: modules/redirects/includes/admin/class-tables.php:113
 msgid "Yes"
 msgstr ""
 
@@ -908,6 +910,9 @@ msgstr ""
 
 #: modules/forms/includes/admin/class-submissions-table.php:39
 #: modules/forms/includes/admin/class-submissions-table.php:86
+#: modules/redirects/includes/admin/class-tables.php:56
+#: modules/redirects/includes/admin/class-tables.php:90
+#: modules/redirects/includes/admin/class-tables.php:149
 msgid "Delete"
 msgstr ""
 
@@ -1250,6 +1255,315 @@ msgctxt "module description"
 msgid ""
 "Two-click map block: a static image with the address; the Google Maps embed "
 "only loads after the visitor asks for it (or accepted the maps cookies)."
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:43
+#: modules/redirects/includes/admin/class-page.php:176
+#: modules/redirects/includes/admin/class-page.php:181
+msgid "Redirects"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:154
+msgid "Redirect saved."
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:155
+msgid ""
+"Redirect saved, but that source is a page that exists on the website: the "
+"redirect only works on addresses that give a 404. It will start working when "
+"the page is deleted or unpublished."
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:156
+msgid "Deleted."
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:157
+msgid "Updated."
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:158
+msgid "Choose a CSV file."
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:159
+msgid "Settings saved."
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:160
+msgid "The 404 log is empty."
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:177
+msgid "Add new"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:178
+msgid "404 log"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:179
+msgid "Import / export"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:185
+msgid "There are two redirect systems on this website."
+msgstr ""
+
+#. translators: %s: names of other active redirect plugins, e.g. "Rank Math".
+#: modules/redirects/includes/admin/class-page.php:187
+#, php-format
+msgid ""
+"Also active: %s. Both act on the same addresses and the other one usually "
+"goes first. Keep the rules in only one of them, or turn this module off in "
+"Estrategia Web → Modules."
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:196
+msgid "Edit redirect"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:222
+msgid "Search redirects"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:263
+#: modules/redirects/includes/admin/class-tables.php:33
+msgid "Source"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:265
+msgid ""
+"The old path, without the domain. Upper case, a final slash and any extra ?"
+"parameters are ignored when matching; ?p=123 and ?page_id=123 are the same, "
+"and so are %3F and ?."
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:268
+#: modules/redirects/includes/admin/class-tables.php:35
+msgid "Type"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:270
+msgid "301 — moved permanently"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:271
+msgid "302 — moved temporarily"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:272
+msgid "410 — gone, no destination"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:276
+#: modules/redirects/includes/admin/class-tables.php:34
+msgid "Destination"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:278
+msgid ""
+"A path on this website (/new-page/) or a full address (https://…). Empty for "
+"410."
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:281
+msgid "Note"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:285
+#: modules/redirects/includes/admin/class-tables.php:38
+msgid "Active"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:286
+msgid "This redirect is working"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:289
+msgid "Add redirect"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:289
+msgid "Save redirect"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:300
+msgid "Record the addresses that give a 404 error"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:301
+msgid "Forget addresses not seen for"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:301
+msgid "days"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:302
+msgid ""
+"Only the path is recorded (and ?p= of old WordPress addresses), with a "
+"counter and dates: no IP address, browser or other personal data."
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:303
+msgid "Save settings"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:308
+msgid "Empty the 404 log"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:314
+msgid "Search paths"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:327
+msgid "Test only, nothing was saved."
+msgstr ""
+
+#. translators: 1: new rules, 2: updated rules, 3: unchanged rules, 4: rows with errors.
+#: modules/redirects/includes/admin/class-page.php:330
+#, php-format
+msgid "%1$d new, %2$d updated, %3$d unchanged, %4$d with errors."
+msgstr ""
+
+#. translators: 1: line number in the CSV, 2: source path, 3: error message.
+#: modules/redirects/includes/admin/class-page.php:336
+#, php-format
+msgid "Line %1$d (%2$s): %3$s"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:343
+msgid "Import"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:344
+msgid ""
+"A CSV with the columns origen, destino, tipo and motivo (or source, target, "
+"type, note). A source that already has a redirect is updated; nothing is "
+"deleted."
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:349
+msgid "Test only: show what would happen without saving"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:350
+msgid "Import CSV"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:352
+msgid "Export"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-page.php:353
+msgid "Download CSV"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-tables.php:36
+#: modules/redirects/includes/admin/class-tables.php:134
+msgid "Hits"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-tables.php:37
+msgid "Last hit"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-tables.php:54
+msgid "Activate"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-tables.php:55
+msgid "Deactivate"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-tables.php:78
+msgid "No redirects yet."
+msgstr ""
+
+#: modules/redirects/includes/admin/class-tables.php:89
+msgid "Edit"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-tables.php:90
+msgid "Delete this redirect?"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-tables.php:101
+msgid "410 Gone"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-tables.php:133
+msgid "Path"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-tables.php:135
+msgid "First seen"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-tables.php:136
+msgid "Last seen"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-tables.php:170
+msgid "No 404 errors recorded."
+msgstr ""
+
+#: modules/redirects/includes/admin/class-tables.php:180
+msgid "Create redirect"
+msgstr ""
+
+#: modules/redirects/includes/class-importer.php:133
+msgid "The source is empty."
+msgstr ""
+
+#: modules/redirects/includes/class-importer.php:135
+msgid ""
+"The source is an address of another website. Write the path only (/old-"
+"page/)."
+msgstr ""
+
+#: modules/redirects/includes/class-importer.php:137
+msgid "The home page itself cannot be redirected."
+msgstr ""
+
+#: modules/redirects/includes/class-importer.php:139
+msgid "The type must be 301, 302 or 410."
+msgstr ""
+
+#: modules/redirects/includes/class-importer.php:141
+msgid "A 301 or 302 redirect needs a destination."
+msgstr ""
+
+#: modules/redirects/includes/class-importer.php:143
+msgid ""
+"The destination must be a path starting with / or a full http(s) address, "
+"without spaces."
+msgstr ""
+
+#: modules/redirects/includes/class-importer.php:145
+msgid "The destination is the same as the source."
+msgstr ""
+
+#: modules/redirects/includes/class-importer.php:147
+msgid "There is already a rule for this source."
+msgstr ""
+
+#: modules/redirects/includes/class-importer.php:149
+msgid "This rule would create a redirect loop with other rules."
+msgstr ""
+
+#: modules/redirects/module.php
+msgctxt "module description"
+msgid ""
+"Editable 301, 302 and 410 redirects with hit counters, CSV import and "
+"export, and an optional 404 log."
+msgstr ""
+
+#: modules/redirects/module.php
+msgctxt "module name"
+msgid "Redirects"
 msgstr ""
 
 #: modules/site/includes/admin/class-admin.php:33

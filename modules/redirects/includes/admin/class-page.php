@@ -62,18 +62,23 @@ final class Page {
 			return;
 		}
 		// phpcs:disable WordPress.Security.NonceVerification -- se verifica abajo, antes de cada acción.
-		$do = isset( $_REQUEST['do'] ) ? sanitize_key( $_REQUEST['do'] ) : '';
-		if ( '' === $do || '-1' === $do ) {
-			foreach ( array( 'action', 'action2' ) as $field ) { // Acción en lote de WP_List_Table.
+		$do    = isset( $_REQUEST['do'] ) ? sanitize_key( $_REQUEST['do'] ) : '';
+		$nonce = self::NONCE;
+		if ( '' === $do ) {
+			// Acción en lote de WP_List_Table. Su formulario ya lleva el nonce
+			// «bulk-<plural>» de la tabla (display_tablenav) con el nombre
+			// _wpnonce: uno propio en el mismo formulario quedaría pisado.
+			foreach ( array( 'action', 'action2' ) as $field ) {
 				if ( ! empty( $_POST[ $field ] ) && '-1' !== $_POST[ $field ] ) {
-					$do = sanitize_key( $_POST[ $field ] );
+					$do    = sanitize_key( $_POST[ $field ] );
+					$nonce = 'log_delete' === $do ? 'bulk-not_found' : 'bulk-redirects';
 				}
 			}
 		}
 		if ( '' === $do || '-1' === $do ) {
 			return;
 		}
-		check_admin_referer( self::NONCE );
+		check_admin_referer( $nonce );
 		$ids = isset( $_REQUEST['ids'] ) ? array_map( 'intval', (array) $_REQUEST['ids'] ) : ( isset( $_REQUEST['id'] ) ? array( (int) $_REQUEST['id'] ) : array() );
 
 		switch ( $do ) {
@@ -216,8 +221,7 @@ final class Page {
 		echo '<form method="get"><input type="hidden" name="page" value="' . esc_attr( self::SLUG ) . '" />';
 		$table->search_box( __( 'Search redirects', 'estrategia-web' ), 'ew-redirects' );
 		echo '</form><form method="post" action="' . esc_url( self::url() ) . '">';
-		wp_nonce_field( self::NONCE );
-		$table->display();
+		$table->display(); // Lleva su nonce bulk-redirects (ver handle()).
 		echo '</form>';
 	}
 
@@ -309,8 +313,7 @@ final class Page {
 		echo '<form method="get"><input type="hidden" name="page" value="' . esc_attr( self::SLUG ) . '" /><input type="hidden" name="view" value="log" />';
 		$table->search_box( __( 'Search paths', 'estrategia-web' ), 'ew-404' );
 		echo '</form><form method="post" action="' . esc_url( self::url( array( 'view' => 'log' ) ) ) . '">';
-		wp_nonce_field( self::NONCE );
-		$table->display();
+		$table->display(); // Lleva su nonce bulk-not_found (ver handle()).
 		echo '</form>';
 	}
 

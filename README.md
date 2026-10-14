@@ -37,9 +37,11 @@ guarda y lo que hace, de aquí.
 | `map` | bloque `estrategia-web/map` (mapa en dos clics) | encendido |
 | `whatsapp` | bloque `estrategia-web/whatsapp` y sus dos opciones | encendido |
 | `language-switcher` | bloque `estrategia-web/language-switcher` (WPML) | encendido |
+| `redirects` | redirecciones 301/302/410 editables en **Estrategia Web → Redirecciones**, importar/exportar CSV, registro de 404 opcional, `wp estrategia-web redirects import\|list\|export`: [modules/redirects/module.php](modules/redirects/module.php) | **apagado** |
 
-**Todos encendidos por defecto** porque son lo que ya usaba Lavandería: una
-web que actualiza no cambia. Un módulo apagado **no carga nada** (ni su PHP,
+**Encendidos por defecto los que ya usaba Lavandería**: una web que
+actualiza no cambia. `redirects` nace apagado porque cambia lo que ve el
+visitante y en Lavandería las redirecciones las lleva Rank Math. Un módulo apagado **no carga nada** (ni su PHP,
 ni sus bloques, ni sus assets) y **no borra nada** de lo que guardó.
 
 **Cómo se añade un módulo:** una carpeta `modules/<slug>/` con su
@@ -549,6 +551,9 @@ formularios esperan inglés; su `reset()` lo marca y vuelve a `en_US` (ver
 | [consent/consent-browser](modules/consent/tests/consent-browser.test.mjs) | 3 | aviso de cookies (0.5.0): sale; aceptar y rechazar pesan igual; rechazar guarda la cookie y persiste; el enlace (nuevo y alias) lo reabre con el foco dentro y Escape lo cierra; contrato JS (evento, `has`, `get`, `categories`, `grant`, `open`) y scripts diferidos; una cookie del aviso del padre sigue valiendo; «Powered by» visible, más pequeño que los botones y con contraste AA medido; (0.5.1) abierto es lo primero al tabular, sin trampa y Escape no lo cierra sin elegir; ≥ 16 px entre el texto y los botones a 402 y 1512 con el `:root :where(p)` de Lavandería |
 | [webp/webp](modules/webp/tests/webp.test.mjs) | 2 | WebP (0.5.1): el editor escribe WebP; JPEG y PNG subidos generan sus tamaños (y el principal) en WebP; el filtro a `false` lo apaga; la trampa de regenerar lo ya subido (la `.jpg` del contenido sin `srcset`, la intermedia rota) y su arreglo |
 | [site/editor](modules/site/tests/editor.test.mjs) | 3 | el editor enseña el valor enlazado y lista los datos (empresa y sede por slug); la pantalla de ajustes guarda, avisa y desactiva el último tipo |
+| [redirects/pure](modules/redirects/tests/pure.test.mjs) | 1 | normalizar y casar (%3F, `?p=`/`?page_id=`, barra final, mayúsculas, query de más); el CSV real de Lavandería (83 reglas) entero y sin errores; bucles, duplicados, destinos y tipos; CSV con `;`, BOM y «revisar» |
+| [redirects/server](modules/redirects/tests/server.test.mjs) | 2 | apagado por defecto; importar el CSV real (dry-run, idempotente); sus orígenes redirigen con variantes; 410; contador; 0 consultas en una página que existe y 1 en un 404; registro de 404 sin query y su purga; coste de una búsqueda con 84 y 5000 reglas |
+| [redirects/admin](modules/redirects/tests/admin.test.mjs) | 3 | la pantalla: lista y búsqueda, alta, error de bucle sin perder lo escrito, aviso de Rank Math, importar subiendo el CSV, exportar, «Crear redirección» desde el registro de 404 |
 
 **Todas se han visto fallar** (02-10-2026): tres tandas de mutantes, diez en
 total, cada uno pillado por su prueba. Las de 0.2.0 (marcadas «(0.2.0)» en su
