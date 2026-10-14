@@ -44,10 +44,30 @@
  * falla si no.
  *
  * Con WPML, en una TRADUCCIÓN los campos «copy» salen bloqueados con la
- * nota «se cambia en el idioma original»: WPML los pisaría en el siguiente
- * guardado del original. (Leído en el código de WPML, no probado: la copia
- * la hace WpmlSavePostHooks en wp_after_insert_post, prioridad 100, que la
- * API REST dispara DESPUÉS de guardar las metas.)
+ * nota «se cambia en el idioma original»: WPML los pisaría en la siguiente
+ * copia desde el original.
+ *
+ * LA COPIA LA PIDE ESTE MÓDULO (sync_copy_field), no se deja a WPML. Medido
+ * el 14-10-2026 con WPML 5.1 en Lavandería local: cambiar el teléfono en el
+ * panel y guardar dejaba la sede inglesa con el teléfono VIEJO. La causa,
+ * leída en WPML (inc/post-translation/wpml-post-translation.class.php):
+ * copia en save_post (prioridad 100, after_save_post) SOLO las metas que ha
+ * visto cambiar antes en esa misma petición, y olvida la lista al acabar
+ * save_post. La API REST (el editor de bloques) hace wp_update_post — y con
+ * él save_post — y DESPUÉS guarda las metas: llegan tarde. Un
+ * update_post_meta suelto (WP-CLI, la semilla) no pasa ni por save_post.
+ * Por eso, cada vez que se añade, cambia o borra un campo «copy» en el
+ * ORIGINAL de uno de estos tipos, se llama a wpml_sync_custom_field (la API
+ * pública de WPML). Al escribir en la traducción WPML vuelve a disparar
+ * updated_post_meta, pero esa entrada es traducción y se descarta; la guarda
+ * $syncing corta cualquier otra vuelta. La meta box del cliente pasa por
+ * aquí también (y WPML copia otra vez en su save_post: inofensivo).
+ * Prueba: tests/wpml-sync.test.mjs (nivel 1, doble de WPML).
+ * La trampa al probarlo con WPML de verdad: WPML no lee wpml-config.xml hasta
+ * que se abre una pantalla de su lista (Plugins, Idiomas…; WPML_Config::
+ * load_config). En un Playground recién sembrado la lista «copy» está VACÍA
+ * y wpml_sync_custom_field no hace nada: parece que el arreglo falla. Abrir
+ * /wp-admin/plugins.php antes de medir.
  *
  * Cómo se mantiene:
  * - Quién y cuándo: quien añada un campo a un tipo en Content_Types. El
@@ -116,6 +136,34 @@ final class Meta_Panel {
 			add_action( 'save_post_' . $type, array( self::class, 'save_meta_box' ), 10, 2 );
 		}
 		add_filter( 'estrategia_web_editor_script_handles', static fn( $handles ) => array_merge( (array) $handles, array( 'estrategia-web-site-meta-panel' ) ) );
+		foreach ( array( 'added_post_meta', 'updated_post_meta', 'deleted_post_meta' ) as $hook ) {
+			add_action( $hook, array( self::class, 'sync_copy_field' ), 10, 3 );
+		}
+	}
+
+	/** Evita que la copia se llame a sí misma (ver la cabecera). */
+	private static bool $syncing = false;
+
+	/**
+	 * Con WPML: un campo «copy» que cambia en el ORIGINAL se copia ya a sus
+	 * traducciones. Ver en la cabecera por qué no basta con WPML.
+	 *
+	 * @param int|int[] $meta_id Id de la meta (un array en deleted_post_meta). No se usa.
+	 */
+	public static function sync_copy_field( $meta_id, $post_id, $meta_key ): void {
+		if ( self::$syncing || ! self::wpml_active() || ! in_array( $meta_key, self::WPML_COPY, true ) ) {
+			return;
+		}
+		$type = (string) get_post_type( (int) $post_id );
+		if ( ! in_array( $type, self::TYPES, true ) || self::is_translation( $type, (int) $post_id ) ) {
+			return;
+		}
+		self::$syncing = true;
+		try {
+			do_action( 'wpml_sync_custom_field', (int) $post_id, $meta_key );
+		} finally {
+			self::$syncing = false;
+		}
 	}
 
 	public static function titles(): array {

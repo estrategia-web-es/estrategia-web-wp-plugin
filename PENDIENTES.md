@@ -76,23 +76,6 @@ cookies, en `consent`).
 (Nada de la lista de David del 12-10-2026: todo está en «Hecho y sin
 desplegar». Lo nuevo que pida entra aquí.)
 
-## WPML no copia los campos «copiar» al guardar desde el editor
-**Fecha:** 14-10-2026 · **Vence:** antes de decirle a David que cambie un teléfono en el panel
-
-Medido en el ensayo de la migración de Lavandería (local con WPML 5.1 real):
-con `wpml-config.xml` ya leído (teléfono de la sede = copiar, horario =
-traducir), cambiar el teléfono de la sede en castellano en el recuadro de
-`Meta_Panel` y guardar (Ctrl+S, REST 200) deja la traducción inglesa con el
-teléfono VIEJO. Lo mismo con `update_post_meta` y con `wp_update_post`. Sí
-copia `do_action( 'wpml_sync_custom_field', $id, $clave )`. Hipótesis (sin
-comprobar en el código de WPML): WPML copia en `save_post` mirando `$_POST`
-del editor clásico, y el editor de bloques guarda las metas por REST después
-de `save_post`. Arreglo propuesto: en el módulo `site`, al guardar una meta de
-`wpml-config.xml` con `action="copy"` (`updated_post_meta`/`added_post_meta`
-del tipo, o `rest_after_insert_<tipo>`), llamar a `wpml_sync_custom_field`. Con
-prueba en Lavandería (tiene WPML en local). Mientras tanto, el CHANGELOG
-promete una copia que no ocurre: cambiar el dato en los dos idiomas.
-
 ## Pruebas de los bloques: del tema al plugin
 **Fecha:** 14-10-2026 · **Vence:** —
 

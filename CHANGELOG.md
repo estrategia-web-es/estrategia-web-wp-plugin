@@ -41,7 +41,12 @@ No obliga a tocar las webs: todo añade; nada cambia de nombre ni se borra.
 - **`site`: WPML** (`wpml-config.xml`, `<custom-fields>`): teléfono, correo,
   enlaces y mapa de la sede, web y ajuste de imagen del cliente, autor,
   valoración y cliente de la opinión se COPIAN a las traducciones; dirección,
-  horario, tipo de negocio y cargo se TRADUCEN.
+  horario, tipo de negocio y cargo se TRADUCEN. La copia se pide a WPML
+  (`wpml_sync_custom_field`) cada vez que cambia uno de esos campos en el
+  ORIGINAL: WPML solo copia en `save_post` lo que cambió antes en la misma
+  petición, y el editor de bloques guarda las metas por REST después, así que
+  sin esto la traducción se quedaba con el teléfono viejo (medido con WPML
+  5.1 en Lavandería local).
 - **`site`: el embed del mapa de la sede** admite pegar el `<iframe>` entero
   (se guarda su `src`), como ya admitía el bloque del mapa.
 - Pruebas: `tests/run.mjs` acepta `AS_PORT` (otro puerto que el 9404).
