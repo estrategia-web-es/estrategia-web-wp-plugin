@@ -15,7 +15,7 @@
  * How to maintain: if a WPML version changes a hook, it is changed here and
  * nowhere else. The trap: WPML is not in the test environment (it is paid),
  * so this class is tested by hand on a site with WPML before every version
- * that touches it — noted in the README, «Versiones».
+ * that touches it — noted in the README, «Versions».
  */
 
 namespace EstrategiaWeb\Forms;

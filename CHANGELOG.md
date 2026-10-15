@@ -1,13 +1,13 @@
-# Cambios
+# Changelog
 
-Una entrada por versión, la más nueva arriba. Se escribe en el mismo commit
-que sube el número (README, «Versiones»). Si una versión obliga a tocar algo
-en las webs, la entrada lo dice primero, con qué cambiar.
+One entry per version, newest first. It is written in the same commit that
+bumps the number (README, «Versions»). If a version requires changing
+something on the sites, the entry says so first, along with what to change.
 
-Desde la 1.1.0 este es el CHANGELOG del plugin único **Estrategia Web**. La
-historia de los formularios hasta su 1.0.0 está en
-[modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), y la de los cuatro
-bloques, en el README del tema (armazon-wp-padre, «Versiones»).
+Since 1.1.0 this is the CHANGELOG of the single **Estrategia Web** plugin.
+The history of the forms up to their 1.0.0 is in
+[modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
+four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
 ## 1.3.0 — 15-10-2026
 
@@ -16,451 +16,472 @@ bloques, en el README del tema (armazon-wp-padre, «Versiones»).
 
 ## 1.2.0 — 15-10-2026
 
-### Tipos y taxonomías con prefijo `eweb_` (15-10-2026) — versión propuesta 1.2.0
+### Types and taxonomies with the `eweb_` prefix (15-10-2026) — proposed version 1.2.0
 
-**Obliga a pasar un migrador en cada web que ya tenga clientes, opiniones o
-sedes**, justo después de subir el plugin (Lavandería: lo hace
-`desplegar.mjs`, una vez). Sin él, la web no encuentra sus tipos.
+**Requires running a migrator on every site that already has clients,
+testimonials or locations**, right after uploading the plugin (Lavandería:
+`desplegar.mjs` does it, once). Without it, the site cannot find its types.
 
-- **`site`: los tipos y taxonomías se registran con prefijo**:
-  `client` → `eweb_client`, `client_sector` → `eweb_client_sector`, y así los
-  ocho (tabla en el README, «Tipos con prefijo»). WordPress.org lo exige y
-  `estrategia_web_` no cabe en los 20 caracteres de un tipo. `eweb_` lo
-  decidió David: ningún plugin de WordPress.org lo usa (`ew_`, 13; `ewp_`,
-  9). El prefijo vive solo en `Type_Names::PREFIX`
+- **`site`: types and taxonomies are registered with a prefix**:
+  `client` → `eweb_client`, `client_sector` → `eweb_client_sector`, and so on
+  for all eight (table in the README, «Prefixed types»). WordPress.org
+  requires it and `estrategia_web_` does not fit in the 20 characters of a
+  type. `eweb_` was David's decision: no WordPress.org plugin uses it
+  (`ew_`, 13; `ewp_`, 9). The prefix lives only in `Type_Names::PREFIX`
   (modules/site/includes/class-type-names.php).
-- **Rehace las reglas de URL al migrar**: el ensayo enseñó que si se
-  borraban y las rehacía una petición de /en/, /sedes/ daba 404.
-  **No cambian** las URL públicas, la opción `estrategia_web_site` (sigue en
-  claves), el filtro `estrategia_web_site_rewrite_slug` (recibe la clave),
-  las metas, los bloques ni las tablas. Las rutas REST pasan a
-  `/wp/v2/eweb_client`….
-- **Alias hasta la 2.0.0** (`Unprefixed_Names`): Consultas y `post-terms`
-  guardados con el nombre viejo pintan lo nuevo; `/wp/v2/client…` contesta
-  como `/wp/v2/eweb_client…` si nadie más tiene esa ruta. En el editor, no.
-- **Migrador** `Prefix_Migration` (`wp estrategia-web migrate-prefix
-  [--dry-run]`): wp_posts, términos, contenido de bloques, plantillas, menús,
-  WPML, Rank Math y preferencias de pantalla; idempotente; filtro
-  `estrategia_web_prefix_migration_post` para quien guarde huellas.
-- **`estrategia_web_type_name( 'client' )`**: el nombre registrado, para los
-  patrones de los temas.
-- **Tabla de nombres públicos** en el README («El contrato», sección 0) y
-  guía de alta de una web nueva: [docs/web-nueva.md](docs/web-nueva.md).
-- **Versión**: la regla de «Versiones» dice que renombrar un tipo es MAYOR.
-  Se propone 1.2.0 porque el alias y el migrador mantienen las webs
-  existentes (hoy solo Lavandería); lo que se rompe sin aviso es el código
-  de un tema que pida `get_posts( 'client' )`, y no hay ninguno. Lo decide
-  David.
+- **Rebuilds the URL rules when migrating**: the dry run showed that if they
+  were deleted and a request to /en/ rebuilt them, /sedes/ returned 404.
+  **Unchanged**: the public URLs, the `estrategia_web_site` option (still
+  keyed by the unprefixed keys), the `estrategia_web_site_rewrite_slug` filter
+  (it receives the key), the meta, the blocks and the tables. The REST routes
+  become `/wp/v2/eweb_client`….
+- **Aliases until 2.0.0** (`Unprefixed_Names`): Query Loops and `post-terms`
+  saved with the old name render the new one; `/wp/v2/client…` answers like
+  `/wp/v2/eweb_client…` if nobody else owns that route. In the editor, no.
+- **Migrator** `Prefix_Migration` (`wp estrategia-web migrate-prefix
+  [--dry-run]`): wp_posts, terms, block content, templates, menus, WPML,
+  Rank Math and screen preferences; idempotent; filter
+  `estrategia_web_prefix_migration_post` for anyone who stores fingerprints.
+- **`estrategia_web_type_name( 'client' )`**: the registered name, for the
+  themes' patterns.
+- **Table of public names** in the README («The contract», section 0) and
+  a guide to setting up a new site: [docs/web-nueva.md](docs/web-nueva.md).
+- **Version**: the «Versions» rule says renaming a type is MAJOR. 1.2.0 is
+  proposed because the alias and the migrator keep the existing sites
+  working (today only Lavandería); what breaks without warning is a theme's
+  code asking for `get_posts( 'client' )`, and there is none. David
+  decides.
 
-### Redes: fuera los campos fijos de «Datos de la empresa» (15-10-2026)
+### Social networks: the fixed fields leave «Company details» (15-10-2026)
 
-No obliga a tocar las webs ni al desplegador: la migración corre sola en la
-primera petición y no borra nada.
+Does not require changes to the sites or the deployer: the migration runs on
+its own on the first request and deletes nothing.
 
-- **`site`: los seis campos fijos de redes** (`social.facebook`,
-  `social.instagram`, …) **ya no salen en «Datos de la empresa»**; en su
-  lugar, un enlace a **Estrategia Web → Redes sociales**. El objeto `social`
-  de `estrategia_web_site` se sigue aceptando por REST y se queda guardado.
-  **Obsoleto: sale en la 2.0.0.**
-- **`social`: migración idempotente** (`Links::migrate`, en `init`): si la
-  lista `estrategia_web_social_links` no se ha guardado nunca y algún campo
-  fijo tiene valor, se copian a la lista una vez, en su orden y con su icono.
-  Sin valores, no escribe nada. Con la lista ya guardada (también vacía), no
-  vuelve a correr.
-- **Alias `social.<red>` hasta la 2.0.0**: `Company::value()`, la fuente de
-  Block Bindings y `[estrategia_web_company]` dan el enlace de la primera red
-  de la lista con ese icono (elegido o adivinado del enlace). Con el módulo
-  `social` apagado, el valor viejo guardado.
-- **El bloque `estrategia-web/social-links` ya no usa los campos fijos de
-  respaldo**: pinta solo la lista. La pantalla «Redes sociales» pierde el
-  aviso «Todavía sin guardar».
+- **`site`: the six fixed social network fields** (`social.facebook`,
+  `social.instagram`, …) **no longer appear in «Company details»**; in their
+  place, a link to **Estrategia Web → Social networks**. The `social` object
+  of `estrategia_web_site` is still accepted over REST and stays stored.
+  **Deprecated: removed in 2.0.0.**
+- **`social`: idempotent migration** (`Links::migrate`, on `init`): if the
+  `estrategia_web_social_links` list has never been saved and some fixed
+  field has a value, they are copied to the list once, in their order and
+  with their icon. With no values, it writes nothing. With the list already
+  saved (even empty), it does not run again.
+- **`social.<network>` alias until 2.0.0**: `Company::value()`, the Block
+  Bindings source and `[estrategia_web_company]` return the link of the first
+  network in the list with that icon (chosen or guessed from the link). With
+  the `social` module off, the old stored value.
+- **The `estrategia-web/social-links` block no longer uses the fixed fields
+  as a fallback**: it renders only the list. The «Social networks» screen
+  loses the «Not saved yet» notice.
 
-### Migrador al plugin único (14-10-2026)
+### Migrator to the single plugin (14-10-2026)
 
-- `includes/class-armazon-migration.php`: el paso 7 deja activo SOLO
-  `estrategia-web/estrategia-web.php` (salen armazon-site, armazon-forms y los
-  dos de la 1.0.0); el plan B de las tablas usa la migración de
-  `modules/forms/`; una segunda pasada tras el plan B ya no avisa de tablas
-  «duplicadas» si la nueva tiene las mismas filas. Orden de WP-CLI:
-  `wp estrategia-web migrate-armazon`. Ensayado en local con las versiones de
-  producción de Lavandería (0.7.9 / 0.5.4 / 0.2.2) y WPML.
+- `includes/class-armazon-migration.php`: step 7 leaves ONLY
+  `estrategia-web/estrategia-web.php` active (armazon-site, armazon-forms and
+  the two from 1.0.0 go away); plan B for the tables uses the migration in
+  `modules/forms/`; a second pass after plan B no longer warns about
+  «duplicate» tables if the new one has the same rows. WP-CLI command:
+  `wp estrategia-web migrate-armazon`. Rehearsed locally with Lavandería's
+  production versions (0.7.9 / 0.5.4 / 0.2.2) and WPML.
 
-### Rama modulo/contenido (14-10-2026)
+### Branch modulo/contenido (14-10-2026)
 
-No obliga a tocar las webs: todo añade; nada cambia de nombre ni se borra.
+Does not require changes to the sites: everything is additive; nothing is
+renamed or deleted.
 
-- **Módulo nuevo `social`** (Default: on, necesita `site`): lista libre y
-  ordenada de redes en **Estrategia Web → Redes sociales** (opción
-  `estrategia_web_social_links`: nombre, enlace, icono de una colección de
-  17 —Simple Icons, CC0; Bootstrap Icons, MIT— o un SVG de la mediateca,
-  saneado al pintarlo) y bloque `estrategia-web/social-links` (solo iconos o
-  icono y nombre, tres tamaños, color del texto). Las redes de «Datos de la
-  empresa» se migran a la lista (ver arriba, 15-10-2026). Con WPML, nombre y
-  enlace como textos de administración (sin probar con WPML).
-- **`site`: «Tipo de negocio» del cliente** (`estrategia_web_client_business_type`),
-  traducible, enlazable con core/post-meta.
-- **`site`: dónde se editan los campos de sede, cliente y opinión**: panel
-  en la barra lateral del editor (sede, opinión) y meta box en la pantalla
-  clásica (cliente). Abierto al entrar.
-- **`site`: WPML** (`wpml-config.xml`, `<custom-fields>`): teléfono, correo,
-  enlaces y mapa de la sede, web y ajuste de imagen del cliente, autor,
-  valoración y cliente de la opinión se COPIAN a las traducciones; dirección,
-  horario, tipo de negocio y cargo se TRADUCEN. La copia se pide a WPML
-  (`wpml_sync_custom_field`) cada vez que cambia uno de esos campos en el
-  ORIGINAL: WPML solo copia en `save_post` lo que cambió antes en la misma
-  petición, y el editor de bloques guarda las metas por REST después, así que
-  sin esto la traducción se quedaba con el teléfono viejo (medido con WPML
-  5.1 en Lavandería local).
-- **`site`: el embed del mapa de la sede** admite pegar el `<iframe>` entero
-  (se guarda su `src`), como ya admitía el bloque del mapa.
-- Pruebas: `tests/run.mjs` acepta `AS_PORT` (otro puerto que el 9404).
-- **Módulo `redirects`** (Default: off): redirecciones 301/302/410 editables
-  en **Estrategia Web → Redirecciones**, con contador y última visita,
-  importar/exportar CSV (el de Lavandería, 83 reglas, entra entero),
-  validación de bucles y duplicados, registro de 404 opcional (solo la ruta,
-  sin IP) con «Crear redirección», aviso si Rank Math u otro sistema de
-  redirecciones está activo y `wp estrategia-web redirects import|list|export`.
-  Solo mira su tabla en los 404 (0 consultas en una página que existe).
-  Tablas nuevas `{prefijo}estrategia_web_redirects` y `…_404`; opciones
-  `estrategia_web_redirects_settings` y `…_db_version`. **No cambia nada en
-  las webs**: nace apagado. Cómo se mantiene, en
+- **New module `social`** (Default: on, needs `site`): free, ordered list of
+  social networks in **Estrategia Web → Social networks** (option
+  `estrategia_web_social_links`: name, link, icon from a collection of
+  17 —Simple Icons, CC0; Bootstrap Icons, MIT— or an SVG from the media
+  library, sanitized when rendered) and block `estrategia-web/social-links`
+  (icons only or icon and name, three sizes, text colour). The networks in
+  «Company details» are migrated to the list (see above, 15-10-2026). With
+  WPML, name and link as admin texts (untested with WPML).
+- **`site`: the client's «Business type»**
+  (`estrategia_web_client_business_type`), translatable, bindable with
+  core/post-meta.
+- **`site`: where the location, client and testimonial fields are edited**:
+  panel in the editor sidebar (location, testimonial) and meta box on the
+  classic screen (client). Open on entry.
+- **`site`: WPML** (`wpml-config.xml`, `<custom-fields>`): the location's
+  phone, email, links and map, the client's website and image fit, and the
+  testimonial's author, rating and client are COPIED to translations;
+  address, opening hours, business type and job title are TRANSLATED. The
+  copy is requested from WPML (`wpml_sync_custom_field`) every time one of
+  those fields changes in the ORIGINAL: WPML only copies on `save_post` what
+  changed earlier in the same request, and the block editor saves the meta
+  over REST afterwards, so without this the translation kept the old phone
+  number (measured with WPML 5.1 on local Lavandería).
+- **`site`: the location's map embed** accepts pasting the whole `<iframe>`
+  (its `src` is stored), as the map block already did.
+- Tests: `tests/run.mjs` accepts `AS_PORT` (a port other than 9404).
+- **Module `redirects`** (Default: off): editable 301/302/410 redirects in
+  **Estrategia Web → Redirects**, with hit counter and last visit, CSV
+  import/export (Lavandería's, 83 rules, goes in whole), loop and duplicate
+  validation, optional 404 log (path only, no IP) with «Create redirect», a
+  warning if Rank Math or another redirect system is active, and
+  `wp estrategia-web redirects import|list|export`. It only looks at its
+  table on 404s (0 queries on a page that exists). New tables
+  `{prefix}estrategia_web_redirects` and `…_404`; options
+  `estrategia_web_redirects_settings` and `…_db_version`. **Changes nothing
+  on the sites**: it ships off. How it is maintained, in
   `modules/redirects/module.php`.
-- Pruebas: `EW_PORT` elige el puerto del Playground de `tests/run.mjs`
-  (9404 por defecto).
-### Cookies con detector, Google y Matomo aparte (rama modulo/cookies)
+- Tests: `EW_PORT` chooses the Playground port of `tests/run.mjs`
+  (9404 by default).
+### Cookies with a detector, Google and Matomo separate (branch modulo/cookies)
 
-**Obliga a tocar las webs: no.** Quien ya contestó el aviso no lo vuelve a
-ver (mismos slugs, misma revisión) y Matomo sigue midiendo igual.
+**Requires changes to the sites: no.** Whoever already answered the notice
+does not see it again (same slugs, same revision) and Matomo keeps measuring
+the same way.
 
-- **Aviso de cookies, categorías de la AEPD**: necesarias, **preferencias**
-  (nueva, `preferences`), analítica y publicidad, más mapas. Los slugs de
-  siempre (`statistics`, `marketing`) se quedan y se ROTULAN «Analítica» y
-  «Publicidad» (antes «Estadísticas» y «Marketing»); se aceptan los alias
-  `analytics`, `advertising` y `ads` en PHP y JS. Al enseñarlas, preferencias
-  va primera y publicidad antes que mapas (no toca la revisión).
-- **Reabrir el panel desde cualquier enlace**: `#estrategia-web-consent`, la
-  clase `estrategia-web-consent-open` o `data-estrategia-web-consent-open`
-  (para el menú del pie), además del bloque, el shortcode y `.open()`.
-- **Registro de cookies con detector** (módulo `consent`): al ACEPTAR, el
-  navegador manda los NOMBRES de sus cookies (nunca valores) a
-  `POST /wp-json/estrategia-web/v1/cookies/seen`, como mucho cuando cambia su
-  lista o cada 7 días; sin nonce (caché de página) y con límites de ritmo por
-  IP (sin guardarla) y por hora. Pantalla **Estrategia Web → Cookies**:
-  pendientes con propuesta (base propia + extracto de la **Open Cookie
-  Database**, Apache 2.0, `modules/consent/data/`, regenerable con
-  `tools/open-cookie-database.mjs`), confirmar/cambiar/ignorar, añadir a mano
-  las de terceros, comodines (`_ga_*`) y categorías extra para el aviso.
-  `wp-wpml_current_language` va como necesaria (WPML, 1 día).
-- **Tabla de cookies para la política**: bloque `estrategia-web/cookie-table`
-  y shortcode `[estrategia_web_cookie_table]`, solo lo confirmado, por
-  categoría; textos fijos por `.po`, los del administrador por WPML String
-  Translation (contexto `estrategia-web-cookies`).
-- **Módulo nuevo `google-tags`** (Default: off, Requires: consent): GA4, Google
-  Ads (+ conversión de envío de formulario) y Tag Manager con **Consent Mode
-  v2** (`default` denied antes que nada, `update` al elegir). Modo básico por
-  defecto: nada de Google hasta aceptar Analítica o Publicidad; modo
-  avanzado opcional. Pantalla **Estrategia Web → Google**.
-- **Matomo es su propio módulo** (`matomo`, Default: on, Requires: site), sin
-  migrar la opción (`estrategia_web_site`, claves `matomo_*`). Gancho nuevo
-  `estrategia_web_site_settings_sections` en «Datos de la empresa».
-- **forms** lanza `estrategia-web:form-sent` al enviar bien con JS (lo usa la
-  conversión de Google Ads).
-- Pruebas: `EW_PORT` elige el puerto del WordPress de pruebas.
-- **Módulo `uploads`** (Default: on): sustituye al MU-plugin de subidas de
-  Lavandería. Límite de subida 20 MB, umbral de reducción 2560 px y borrar
-  el original tras reducir, configurables en Ajustes → Medios (opción
-  `estrategia_web_uploads`). **Al publicarlo en Lavandería, el desplegador
-  borra `wp-content/mu-plugins/estrategia-web-subidas.php`** (los dos a la
-  vez no rompen, pero hacen lo mismo dos veces).
-- **Módulo `comments-off`** (Default: off): quita los comentarios del todo
-  (cerrados, menú, widget, barra, bloques del front, feeds), sin escribir
-  nada en la base de datos. En Lavandería se enciende a mano.
-- **Módulo `featured-images`** (Default: on): una imagen destacada de ancho
-  fijo en px lleva `sizes` de ese ancho (también dentro del carrusel, que
-  ahora respeta un sizes fijo); tamaño nuevo `estrategia-web-small` (200 px,
-  sin recortar); y `alt=""` cuando el alt repite el título que la ficha de
-  la Consulta pinta al lado (nunca si la imagen es un enlace). **En el
-  servidor, una vez: `wp media regenerate --only-missing --yes`**, para que
-  lo ya subido tenga el tamaño pequeño.
-- **Mapa: «Abrir en Google Maps» con nombre accesible por sede**
-  (`aria-label` «Abrir en Google Maps: <sede> (se abre en una pestaña
-  nueva)»): dos mapas en una página ya no tienen dos enlaces iguales a
-  destinos distintos (Lighthouse).
-- **Carrusel: recorte para el móvil** (atributos `mobileRatio` y
-  `mobileImageSizes`, o el filtro `estrategia_web_carousel_mobile_crop`):
-  por debajo de 782 px cada foto va en un `<picture>` con un recorte de la
-  forma de la caja, centrado en su object-position, generado la primera vez
-  y guardado como tamaño del adjunto. Lavandería local, portada en el móvil:
-  la foto LCP pasa de 92,5 KB (1536×1024) a 38,7 KB (720×895). **No hace nada
-  hasta que se pide**: Lavandería lo pide desde su tema (ver PENDIENTES).
-- **Carrusel: view.min.js** (24,8 → 7,7 KB) generado con
-  `node tools/minify.mjs` (esbuild fijo por npx); `tests/minified.test.mjs`
-  falla si view.js cambia y no se regenera. Y el ResizeObserver ya no mide
-  dos veces al arrancar (un reflow forzado menos).
+- **Cookie notice, AEPD categories**: necessary, **preferences**
+  (new, `preferences`), analytics and advertising, plus maps. The usual slugs
+  (`statistics`, `marketing`) stay and are LABELLED «Analytics» and
+  «Advertising» (previously «Statistics» and «Marketing»); the aliases
+  `analytics`, `advertising` and `ads` are accepted in PHP and JS. When
+  shown, preferences goes first and advertising before maps (does not touch
+  the revision).
+- **Reopen the panel from any link**: `#estrategia-web-consent`, the class
+  `estrategia-web-consent-open` or `data-estrategia-web-consent-open`
+  (for the footer menu), in addition to the block, the shortcode and
+  `.open()`.
+- **Cookie register with a detector** (module `consent`): on ACCEPT, the
+  browser sends the NAMES of its cookies (never values) to
+  `POST /wp-json/estrategia-web/v1/cookies/seen`, at most when its list
+  changes or every 7 days; no nonce (page cache) and with rate limits per IP
+  (without storing it) and per hour. Screen **Estrategia Web → Cookies**:
+  pending ones with a proposal (own database + an extract of the **Open
+  Cookie Database**, Apache 2.0, `modules/consent/data/`, regenerable with
+  `tools/open-cookie-database.mjs`), confirm/change/ignore, add third-party
+  ones by hand, wildcards (`_ga_*`) and extra categories for the notice.
+  `wp-wpml_current_language` is classed as necessary (WPML, 1 day).
+- **Cookie table for the policy**: block `estrategia-web/cookie-table`
+  and shortcode `[estrategia_web_cookie_table]`, only what is confirmed, by
+  category; fixed texts via `.po`, the administrator's via WPML String
+  Translation (context `estrategia-web-cookies`).
+- **New module `google-tags`** (Default: off, Requires: consent): GA4, Google
+  Ads (+ form submission conversion) and Tag Manager with **Consent Mode
+  v2** (`default` denied before anything else, `update` on choosing). Basic
+  mode by default: nothing from Google until Analytics or Advertising is
+  accepted; optional advanced mode. Screen **Estrategia Web → Google**.
+- **Matomo is its own module** (`matomo`, Default: on, Requires: site),
+  without migrating the option (`estrategia_web_site`, keys `matomo_*`). New
+  hook `estrategia_web_site_settings_sections` in «Company details».
+- **forms** fires `estrategia-web:form-sent` on a successful JS submission
+  (used by the Google Ads conversion).
+- Tests: `EW_PORT` chooses the port of the test WordPress.
+- **Module `uploads`** (Default: on): replaces Lavandería's uploads
+  MU-plugin. Upload limit 20 MB, downscaling threshold 2560 px and deleting
+  the original after downscaling, configurable in Settings → Media (option
+  `estrategia_web_uploads`). **When publishing it on Lavandería, the deployer
+  deletes `wp-content/mu-plugins/estrategia-web-subidas.php`** (both at once
+  do not break anything, but they do the same thing twice).
+- **Module `comments-off`** (Default: off): removes comments entirely
+  (closed, menu, widget, admin bar, front-end blocks, feeds), without writing
+  anything to the database. On Lavandería it is switched on by hand.
+- **Module `featured-images`** (Default: on): a featured image with a fixed
+  width in px gets `sizes` of that width (also inside the carousel, which
+  now respects a fixed sizes); new size `estrategia-web-small` (200 px,
+  uncropped); and `alt=""` when the alt repeats the title that the Query
+  card renders next to it (never if the image is a link). **On the server,
+  once: `wp media regenerate --only-missing --yes`**, so that what is
+  already uploaded gets the small size.
+- **Map: «Open in Google Maps» with an accessible name per location**
+  (`aria-label` «Open in Google Maps: <location> (opens in a new tab)»):
+  two maps on one page no longer have two identical links to different
+  destinations (Lighthouse).
+- **Carousel: crop for mobile** (attributes `mobileRatio` and
+  `mobileImageSizes`, or the filter `estrategia_web_carousel_mobile_crop`):
+  below 782 px each photo goes in a `<picture>` with a crop in the shape of
+  the box, centred on its object-position, generated the first time and
+  stored as an attachment size. Local Lavandería, home page on mobile: the
+  LCP photo goes from 92.5 KB (1536×1024) to 38.7 KB (720×895). **Does
+  nothing until asked for**: Lavandería asks for it from its theme (see
+  TODO).
+- **Carousel: view.min.js** (24.8 → 7.7 KB) generated with
+  `node tools/minify.mjs` (pinned esbuild via npx); `tests/minified.test.mjs`
+  fails if view.js changes and is not regenerated. And the ResizeObserver no
+  longer measures twice on startup (one forced reflow less).
 
 ## 1.1.0 — 14-10-2026
 
-**Un tema + un plugin** (decisión de David, 14-10-2026). **Obliga a tocar las
-webs**: el plugin cambia de carpeta y sustituye a dos. Qué hacer en una web
-que venga de la 1.0.0 o de Armazón: desactivar `estrategia-web-site` y
-`estrategia-web-forms` (o `armazon-site` y `armazon-forms`), subir este en
-`plugins/estrategia-web/` y activarlo, y el tema padre a la 1.1.0 a la vez
-(lo hará el migrador de Lavandería, que es la única web).
+**One theme + one plugin** (David's decision, 14-10-2026). **Requires
+changes to the sites**: the plugin changes folder and replaces two. What to
+do on a site coming from 1.0.0 or from Armazón: deactivate
+`estrategia-web-site` and `estrategia-web-forms` (or `armazon-site` and
+`armazon-forms`), upload this one to `plugins/estrategia-web/` and activate
+it, and the parent theme to 1.1.0 at the same time (Lavandería's migrator
+will do it; it is the only site).
 
-- **Un solo plugin, «Estrategia Web»** (`estrategia-web/estrategia-web.php`),
-  con lo que eran el plugin Estrategia Web Site, el plugin Estrategia Web
-  Forms (repo archivado) y los bloques carrusel, mapa, WhatsApp y selector de
-  idioma, que registraba el tema (WordPress.org no deja que un tema registre
-  bloques).
-- **Módulos activables** en **Estrategia Web → Módulos**: `site`, `consent`,
+- **A single plugin, «Estrategia Web»** (`estrategia-web/estrategia-web.php`),
+  with what used to be the Estrategia Web Site plugin, the Estrategia Web
+  Forms plugin (archived repo) and the carousel, map, WhatsApp and language
+  switcher blocks, which the theme used to register (WordPress.org does not
+  allow a theme to register blocks).
+- **Switchable modules** in **Estrategia Web → Modules**: `site`, `consent`,
   `webp`, `external-links`, `wpml-front-page`, `forms`, `carousel`, `map`,
-  `whatsapp`, `language-switcher`. **Todos encendidos por defecto**: una web
-  que actualiza no cambia. Un módulo apagado no carga nada y no borra nada.
-  Opciones nuevas: `estrategia_web_modules` (los encendidos) y
-  `estrategia_web_modules_known` (los que había al guardar; ver el caso
-  frontera en `includes/class-modules.php`).
-- **Un módulo nuevo es una carpeta** `modules/<slug>/` con un `module.php` de
-  cabecera: se descubre solo, sin lista central. Cómo, en la cabecera de
+  `whatsapp`, `language-switcher`. **All on by default**: a site that
+  updates does not change. A module that is off loads nothing and deletes
+  nothing. New options: `estrategia_web_modules` (the ones on) and
+  `estrategia_web_modules_known` (the ones that existed when saving; see the
+  edge case in `includes/class-modules.php`).
+- **A new module is a folder** `modules/<slug>/` with a header `module.php`:
+  it is discovered on its own, with no central list. How, in the header of
   `includes/class-modules.php`.
-- **Nombres públicos sin cambios**: bloques `estrategia-web/…`,
-  `estrategia-web-site/…` y `estrategia-web-forms/…`, opciones y metas
-  `estrategia_web_…`, tablas, rutas REST, filtros, shortcodes y alias
-  `armazon…`. Los alias `armazon/carousel`… que daba el tema los da ahora el
-  núcleo, solo para los bloques cuyo módulo esté encendido.
-- **Un solo dominio de traducción: `estrategia-web`** (antes
-  `estrategia-web-site` y `estrategia-web-forms`). Las traducciones del editor
-  ya no van en JSON con el md5 de la ruta: el núcleo se las pasa a `wp.i18n`
-  en línea, para todos los bloques del plugin.
-- **Funciones del carrusel en un espacio de nombres**:
-  `estrategia_web_carousel_images_*()` del tema pasan a
-  `EstrategiaWeb\Carousel\images_*()`. Los filtros
-  (`estrategia_web_carousel_eager_slides`, `…_image_sizes`) no cambian.
-  Ningún hijo las llamaba.
-- **Ganchos para los módulos**: `estrategia_web_activate`,
-  `estrategia_web_deactivate` y `estrategia_web_modules_loaded`.
-- **Pruebas por módulo** en `modules/<slug>/tests/`, con un solo corredor y
-  un solo WordPress de pruebas (puerto 9404). Nuevas:
-  `tests/modules.test.mjs` (nivel 1) y `tests/modules-page.test.mjs` (nivel 2).
-- **El migrador** (`includes/class-armazon-migration.php`) no cambia en esta
-  versión: su paso 7 todavía activa los dos plugins de la 1.0.0. Adaptarlo
-  es la parte siguiente (ver PENDIENTES.md).
+- **Public names unchanged**: blocks `estrategia-web/…`,
+  `estrategia-web-site/…` and `estrategia-web-forms/…`, options and meta
+  `estrategia_web_…`, tables, REST routes, filters, shortcodes and
+  `armazon…` aliases. The `armazon/carousel`… aliases that the theme
+  provided are now provided by the core, only for the blocks whose module is
+  on.
+- **A single text domain: `estrategia-web`** (previously
+  `estrategia-web-site` and `estrategia-web-forms`). The editor translations
+  no longer go in JSON with the md5 of the path: the core passes them inline
+  to `wp.i18n`, for all the plugin's blocks.
+- **Carousel functions in a namespace**:
+  the theme's `estrategia_web_carousel_images_*()` become
+  `EstrategiaWeb\Carousel\images_*()`. The filters
+  (`estrategia_web_carousel_eager_slides`, `…_image_sizes`) do not change.
+  No child theme called them.
+- **Hooks for the modules**: `estrategia_web_activate`,
+  `estrategia_web_deactivate` and `estrategia_web_modules_loaded`.
+- **Tests per module** in `modules/<slug>/tests/`, with a single runner and
+  a single test WordPress (port 9404). New:
+  `tests/modules.test.mjs` (level 1) and `tests/modules-page.test.mjs`
+  (level 2).
+- **The migrator** (`includes/class-armazon-migration.php`) does not change
+  in this version: its step 7 still activates the two plugins from 1.0.0.
+  Adapting it is the next part (see TODO.md).
 
 ## 1.0.0 — 07-10-2026
 
-**MAYOR: cambio de nombre. Obliga a tocar las webs:** pasar el migrador
-(abajo) y actualizar a la vez el tema padre a Estrategia Web 1.0.0.
+**MAJOR: name change. Requires changes to the sites:** run the migrator
+(below) and update the parent theme to Estrategia Web 1.0.0 at the same
+time.
 
-- **«Armazón Site» pasa a «Estrategia Web Site»**: carpeta y fichero
+- **«Armazón Site» becomes «Estrategia Web Site»**: folder and file
   `estrategia-web-site/estrategia-web-site.php`, text domain, namespace
-  `EstrategiaWeb\Site`, funciones, constantes, filtros, opción, metas, fuentes
-  de bindings, bloque, cookie, API JS, evento, shortcodes, handles y clases
-  (tabla en el README, «Nombres»). Autor, Plugin URI y Author URI: Estrategia
-  Web, https://estrategiaweb.es/.
-- **Metas con prefijo**: las de los tipos (`location_…`, `client_image_fit`,
-  `testimonial_…`) pasan a `estrategia_web_…`, también como claves de los
-  bindings `core/post-meta` y de la fuente `…/location`.
-- **«Powered by Estrategia Web» APAGADO por defecto** (guideline 10 de
-  WordPress.org); se enciende con `add_filter(
+  `EstrategiaWeb\Site`, functions, constants, filters, option, meta, bindings
+  sources, block, cookie, JS API, event, shortcodes, handles and classes
+  (table in the README, «Names: from «Armazón Site» to «Estrategia Web Site»
+  (1.0.0)»). Author, Plugin URI and Author URI: Estrategia Web,
+  https://estrategiaweb.es/.
+- **Prefixed meta**: those of the types (`location_…`, `client_image_fit`,
+  `testimonial_…`) become `estrategia_web_…`, also as keys of the
+  `core/post-meta` bindings and of the `…/location` source.
+- **«Powered by Estrategia Web» OFF by default** (WordPress.org guideline
+  10); it is switched on with `add_filter(
   'estrategia_web_site_consent_powered_by', '__return_true' )`.
-- **Cookie del consentimiento**: `estrategia_web_consent`, mismo formato y
-  revisión. La vieja se lee si falta la nueva y el navegador la pasa a la
-  nueva: nadie vuelve a ver el aviso por el cambio.
-- **Alias** de los nombres viejos hasta la 2.0.0
-  (`includes/class-legacy-names.php`); sustituye al alias `armazon/consent`
-  que había desde la 0.5.0.
-- **El migrador** (`includes/class-armazon-migration.php`, comando WP-CLI
-  `estrategia-web-site migrate-armazon [--dry-run]`): contenido, metas,
-  opciones, tablas de formularios, cadenas de WPML, tema y plugins activos.
-  Probado en local sobre una web cargada con los nombres viejos.
-- README: «Si cambias de proveedor».
+- **Consent cookie**: `estrategia_web_consent`, same format and revision.
+  The old one is read if the new one is missing and the browser moves it to
+  the new one: nobody sees the notice again because of the change.
+- **Aliases** for the old names until 2.0.0
+  (`includes/class-legacy-names.php`); it replaces the `armazon/consent`
+  alias that existed since 0.5.0.
+- **The migrator** (`includes/class-armazon-migration.php`, WP-CLI command
+  `estrategia-web-site migrate-armazon [--dry-run]`): content, meta,
+  options, form tables, WPML strings, active theme and plugins. Tested
+  locally on a site loaded with the old names.
+- README: «If you change provider».
 
 ## 0.5.4 — 06-10-2026
 
-Parche: no obliga a tocar ninguna web. Cambia el peso de los WebP que se
-generen desde que esté activo.
+Patch: does not require changes to any site. Changes the weight of the WebP
+files generated from the moment it is active.
 
-- **WebP a calidad 75** (`includes/class-webp.php`, `Webp::quality`): filtro
-  `wp_editor_set_quality` de WordPress, solo cuando el formato que se guarda
-  es `image/webp` (JPEG y PNG que sigan siéndolo, intactos). WordPress usa 82
-  para todo. Por qué: el PageSpeed de Lavandería (móvil, 06-10-2026) daba
-  ~371 KB en «mejorar la entrega de imágenes», parte por compresión. Ajuste:
-  `armazon_site_webp_quality` (0 o menos, la de WordPress; tope 100).
-- **La trampa:** lo ya subido sigue a 82 hasta regenerarlo, y regenerar a
-  secas tiene la trampa de 0.5.1. En Lavandería lo hace el paso «webp» de
-  `despliegue/desplegar.mjs` (marca `_lm_webp_calidad` por adjunto).
-- Prueba: `tests/pure.test.mjs` (nivel 1), con `apply_filters` de mentira en
-  `tests/php/pure.php`. No hay prueba de nivel 2 que mire el peso real: la
-  calidad que llega al editor es la que dice el filtro de WordPress, y eso es
-  lo que se prueba.
+- **WebP at quality 75** (`includes/class-webp.php`, `Webp::quality`):
+  WordPress's `wp_editor_set_quality` filter, only when the format being
+  saved is `image/webp` (JPEG and PNG that remain so, untouched). WordPress
+  uses 82 for everything. Why: Lavandería's PageSpeed (mobile, 06-10-2026)
+  reported ~371 KB under «improve image delivery», partly due to
+  compression. Setting: `armazon_site_webp_quality` (0 or less, WordPress's
+  value; capped at 100).
+- **The trap:** what is already uploaded stays at 82 until regenerated, and
+  regenerating plainly has the 0.5.1 trap. On Lavandería it is done by the
+  «webp» step of `despliegue/desplegar.mjs` (marks `_lm_webp_calidad` per
+  attachment).
+- Test: `tests/pure.test.mjs` (level 1), with a fake `apply_filters` in
+  `tests/php/pure.php`. There is no level 2 test that checks the real
+  weight: the quality that reaches the editor is what WordPress's filter
+  says, and that is what is tested.
 
 ## 0.5.3 — 06-10-2026
 
-Parche: no obliga a tocar ninguna web. Solo actúa con WPML.
+Patch: does not require changes to any site. Only acts with WPML.
 
-- **La portada traducida** (`includes/class-wpml-front-page.php`): en la parte
-  pública, `page_on_front` y `page_for_posts` se traducen al idioma de la
-  petición con `wpml_object_id`. En Lavandería, con WPML 5.0.2 en el servidor,
-  /en/ redirigía a /en/home/ porque WordPress seguía viendo la portada
-  castellana; en local WPML sí lo hacía. Se apaga con
-  `armazon_site_wpml_front_page`. La trampa: por WP-CLI no se puede comprobar
-  (WPML no carga su parte pública); hay que pedir /en/.
+- **The translated front page** (`includes/class-wpml-front-page.php`): on
+  the public side, `page_on_front` and `page_for_posts` are translated into
+  the request's language with `wpml_object_id`. On Lavandería, with WPML
+  5.0.2 on the server, /en/ redirected to /en/home/ because WordPress still
+  saw the Spanish front page; locally WPML did do it. It is switched off
+  with `armazon_site_wpml_front_page`. The trap: it cannot be checked via
+  WP-CLI (WPML does not load its public side); you have to request /en/.
 
 ## 0.5.2 — 06-10-2026
 
-Parche: no obliga a tocar ninguna web. Cambia cómo se abren los enlaces a
-otro dominio en todas las que lo actualicen.
+Patch: does not require changes to any site. Changes how links to another
+domain open on every site that updates.
 
-- **Enlaces externos en pestaña nueva** (`includes/class-external-links.php`):
-  todo `<a href>` del frontal a otro host sale con `target="_blank"`,
-  `noopener` añadido a `rel` (sin quitar lo que traía) y `aria-label` con
-  «(se abre en una pestaña nueva)» al final. Un solo filtro sobre la página
-  entera (`wp_template_enhancement_output_buffer`, WP 6.9+) con
-  `WP_HTML_Tag_Processor`. Internos: el mismo host, con o sin `www.`, y sus
-  subdominios. No se tocan relativos, anclas, `mailto:`, `tel:`, `sms:`,
-  `javascript:` ni los que ya traen `target` (el «Powered by» no se
-  duplica). Se apaga con `add_filter( 'armazon_site_external_links',
-  '__return_false' )`. Lo pidió David por «Hablar con un asesor» (wa.me) en
-  /hosteleria/ de Lavandería.
-  **Caso frontera:** la web vieja del cliente en otro dominio cuenta como
-  externa.
-- **Pruebas:** `node tests/run.mjs <nombre>` corre el nivel 1 y, de los
-  demás, solo esa prueba (fila 7, «Cuándo corre la batería»).
+- **External links in a new tab** (`includes/class-external-links.php`):
+  every front-end `<a href>` to another host gets `target="_blank"`,
+  `noopener` added to `rel` (without removing what it had) and an
+  `aria-label` ending in «(opens in a new tab)». A single filter over the
+  whole page (`wp_template_enhancement_output_buffer`, WP 6.9+) with
+  `WP_HTML_Tag_Processor`. Internal: the same host, with or without `www.`,
+  and its subdomains. Relative links, anchors, `mailto:`, `tel:`, `sms:`,
+  `javascript:` and those that already have a `target` are left alone (the
+  «Powered by» is not duplicated). It is switched off with `add_filter(
+  'armazon_site_external_links', '__return_false' )`. David asked for it
+  because of «Hablar con un asesor» (talk to an advisor, wa.me) on
+  Lavandería's /hosteleria/.
+  **Edge case:** the client's old website on another domain counts as
+  external.
+- **Tests:** `node tests/run.mjs <name>` runs level 1 and, of the rest,
+  only that test (Armazón row 7, «Cuándo corre la batería», "when the suite runs").
 
 ## 0.5.1 — 06-10-2026
 
-Parche: no obliga a tocar ninguna web. **Pero el WebP pide un paso aparte
-para lo ya subido** (abajo, la trampa).
+Patch: does not require changes to any site. **But WebP needs a separate
+step for what is already uploaded** (below, the trap).
 
-- **WebP** (`includes/class-webp.php`): los JPEG y PNG subidos se guardan en
-  WebP, también el fichero principal (el `.jpg` queda como
-  `original_image`). Solo si el servidor sabe escribir WebP. Se apaga con
-  `add_filter( 'armazon_site_webp', '__return_false' )`.
-  **La trampa:** lo ya subido no cambia solo, y al regenerar
-  (`wp media regenerate`) las URL guardadas en el contenido no cambian: la
-  `.jpg` principal sigue sirviendo pero **sin `srcset`** (peor que antes) y
-  la de un tamaño intermedio se rompe. Después de regenerar, volver a
-  escribir en el contenido la URL actual de la mediateca.
-- **Aviso de cookies, orden de foco:** se pinta al principio del `body`
-  (`wp_body_open`), así que abierto es lo primero al tabular (WCAG 2.4.3;
-  antes, unos 30-35 tabuladores). Sin trampa de foco; Escape sigue sin
-  cerrarlo la primera vez.
-- **Aviso de cookies, el texto ya no queda pegado a los botones:** los
-  márgenes del título, el texto y el «Powered by» van con dos clases. Con
-  una empataban con `:root :where(p) { margin: 0 }` del `theme.json` del
-  tema, que se carga después y ganaba (0,6 px en Lavandería). Hueco texto →
-  botones de 24 px.
-- Aviso: el enlace del texto, subrayado (WCAG 1.4.1); el «Powered by» con
-  24 px de diana (2.5.8); y `view-transition-name: armazon-consent` sin
-  animación, para que no salte en las transiciones del tema padre 0.7.5.
-- Pruebas: `tests/webp.test.mjs` (nivel 2, nueva) y dos más en
-  `tests/consent-browser.test.mjs` (nivel 3). Vistas fallar antes del
-  arreglo: los tamaños salían en `.jpg`, el primer Tab iba a «Saltar al
-  contenido» y el hueco era de 0,6 px.
+- **WebP** (`includes/class-webp.php`): uploaded JPEG and PNG files are
+  saved as WebP, including the main file (the `.jpg` stays as
+  `original_image`). Only if the server can write WebP. It is switched off
+  with `add_filter( 'armazon_site_webp', '__return_false' )`.
+  **The trap:** what is already uploaded does not change on its own, and
+  when regenerating (`wp media regenerate`) the URLs stored in the content
+  do not change: the main `.jpg` keeps working but **without `srcset`**
+  (worse than before) and that of an intermediate size breaks. After
+  regenerating, write the media library's current URL back into the
+  content.
+- **Cookie notice, focus order:** it is rendered at the start of the `body`
+  (`wp_body_open`), so when open it is the first thing reached by tabbing
+  (WCAG 2.4.3; previously, about 30-35 tab presses). No focus trap; Escape
+  still does not close it the first time.
+- **Cookie notice, the text no longer sticks to the buttons:** the margins
+  of the title, the text and the «Powered by» use two classes. With one they
+  tied with `:root :where(p) { margin: 0 }` from the theme's `theme.json`,
+  which loads later and won (0.6 px on Lavandería). Gap from text to
+  buttons: 24 px.
+- Notice: the link in the text, underlined (WCAG 1.4.1); the «Powered by»
+  with a 24 px target (2.5.8); and `view-transition-name: armazon-consent`
+  without animation, so it does not jump during the parent theme 0.7.5
+  transitions.
+- Tests: `tests/webp.test.mjs` (level 2, new) and two more in
+  `tests/consent-browser.test.mjs` (level 3). Seen failing before the fix:
+  the sizes came out as `.jpg`, the first Tab went to «Skip to content» and
+  the gap was 0.6 px.
 
 ## 0.5.0 — 05-10-2026
 
-Menor para el plugin (solo añade), pero **va junto con el tema padre 0.7.0**,
-que deja de traer el aviso de cookies: en cada web se suben los dos a la vez.
-Con este plugin y el padre viejo, el plugin se aparta y sale el aviso del
-padre como hasta ahora.
+Minor for the plugin (additive only), but **it goes together with parent
+theme 0.7.0**, which stops shipping the cookie notice: on each site both are
+uploaded at the same time. With this plugin and the old parent, the plugin
+steps aside and the parent's notice shows as before.
 
-- **Aviso de cookies**, traído del tema padre con el mismo contrato: la misma
-  cookie `armazon_consent` y la misma revisión (quien ya eligió no vuelve a
-  ver el aviso), el filtro `armazon_consent_categories`, las funciones
-  `armazon_consent_*`, `window.armazonConsent` (`categories`, `has`, `get`,
-  `open`, `grant`), el evento `armazon:consent`, el store `armazon/consent`,
-  los `<script type="text/plain" data-armazon-consent>`, el shortcode
-  `[armazon_consent_settings]` y la WP Consent API. Por qué: es
-  funcionalidad, no presentación; una web que cambie de tema no puede
-  quedarse sin aviso, y Matomo ya dependía de él.
-- Bloque del enlace **`armazon-site/consent`**; el nombre viejo
-  `armazon/consent` se registra como alias oculto, así que lo ya guardado
-  sigue pintando el enlace.
-- Estilos base neutros en el plugin, que leen los tokens del tema.
-- **«Powered by Estrategia Web»** al pie del aviso: enlace a
-  https://estrategiaweb.es/ en pestaña nueva, `rel="noopener"`, sin
-  `nofollow`. Se cambia o se quita con el filtro
-  `armazon_site_consent_powered_by`.
-- Matomo híbrido: su cabecera ya no habla del «aviso del tema padre». Con
-  cualquier tema hay aviso y, por tanto, consentimiento.
-- **Arreglo** (salió al probar Matomo con el aviso real): si el aviso
-  hidrataba después de `window.load`, Matomo no se enteraba de una elección
-  caducada y seguía con sus cookies (1 de cada 3 cargas). El aviso lanza
-  ahora `armazon:consent-ready` una vez al arrancar (con `accepted: null` si
-  no hay elección) y Matomo lo escucha.
-- `tools/i18n.mjs` extrae también `blocks/` (PHP y `block.json`).
-- Pruebas: `tests/consent.test.mjs` (nivel 2) y
-  `tests/consent-browser.test.mjs` (nivel 3); `tests/matomo-browser.test.mjs`
-  usa el aviso REAL en vez de simular el evento. La ruta de pruebas
-  `consent-setup` hace de tema (categorías, «Powered by», script diferido).
+- **Cookie notice**, brought over from the parent theme with the same
+  contract: the same `armazon_consent` cookie and the same revision
+  (whoever already chose does not see the notice again), the
+  `armazon_consent_categories` filter, the `armazon_consent_*` functions,
+  `window.armazonConsent` (`categories`, `has`, `get`, `open`, `grant`), the
+  `armazon:consent` event, the `armazon/consent` store, the
+  `<script type="text/plain" data-armazon-consent>` tags, the
+  `[armazon_consent_settings]` shortcode and the WP Consent API. Why: it is
+  functionality, not presentation; a site that changes theme cannot be left
+  without a notice, and Matomo already depended on it.
+- Link block **`armazon-site/consent`**; the old name `armazon/consent` is
+  registered as a hidden alias, so what is already saved still renders the
+  link.
+- Neutral base styles in the plugin, which read the theme's tokens.
+- **«Powered by Estrategia Web»** at the foot of the notice: a link to
+  https://estrategiaweb.es/ in a new tab, `rel="noopener"`, without
+  `nofollow`. It is changed or removed with the
+  `armazon_site_consent_powered_by` filter.
+- Hybrid Matomo: its header no longer talks about the «parent theme's
+  notice». With any theme there is a notice and, therefore, consent.
+- **Fix** (found while testing Matomo with the real notice): if the notice
+  hydrated after `window.load`, Matomo did not learn about an expired choice
+  and kept its cookies (1 in 3 loads). The notice now fires
+  `armazon:consent-ready` once on startup (with `accepted: null` if there is
+  no choice) and Matomo listens for it.
+- `tools/i18n.mjs` also extracts `blocks/` (PHP and `block.json`).
+- Tests: `tests/consent.test.mjs` (level 2) and
+  `tests/consent-browser.test.mjs` (level 3); `tests/matomo-browser.test.mjs`
+  uses the REAL notice instead of simulating the event. The
+  `consent-setup` test route acts as the theme (categories, «Powered by»,
+  deferred script).
 
 ## 0.4.0 — 03-10-2026
 
-Menor: solo añade. Ninguna web tiene que tocar nada.
+Minor: additive only. No site has to change anything.
 
-- Datos legales: clave `registry` en la opción `armazon_site` (la
-  inscripción registral tal como la escribe el aviso legal, texto libre), en
-  la pantalla, en REST (fusionada y saneada), en la fuente
-  `armazon-site/company` y en `Company::value()`. Razón social, NIF y
-  domicilio ya estaban (`legal_name`, `tax_id`, `address`).
-- Shortcode `[armazon_company key="…"]`: un dato de la empresa dentro de una
-  frase (el aviso legal), escapado y en una línea (dirección y horario
-  unidos con «, »). Un binding sustituye el párrafo entero.
-- Sedes: campos `location_static_map` (URL de la imagen del mapa estático,
-  solo del propio sitio: ruta del tema, ruta del sitio o mismo dominio) y
-  `location_static_map_id` (adjunto de imagen), para `staticMapUrl` de
-  `armazon/map` del tema padre con core/post-meta en una Consulta. También
-  en la fuente `armazon-site/location`.
-- Pruebas: `tests/legal.test.mjs` y `tests/static-map.test.mjs` (nivel 2).
+- Legal details: `registry` key in the `armazon_site` option (the company
+  registry entry as the legal notice writes it, free text), on the screen,
+  in REST (merged and sanitized), in the `armazon-site/company` source and
+  in `Company::value()`. Company name, tax ID and registered address were
+  already there (`legal_name`, `tax_id`, `address`).
+- Shortcode `[armazon_company key="…"]`: a company detail inside a sentence
+  (the legal notice), escaped and on one line (address and opening hours
+  joined with «, »). A binding replaces the whole paragraph.
+- Locations: fields `location_static_map` (URL of the static map image,
+  only from the site itself: theme path, site path or same domain) and
+  `location_static_map_id` (image attachment), for `staticMapUrl` of the
+  parent theme's `armazon/map` with core/post-meta in a Query Loop. Also in
+  the `armazon-site/location` source.
+- Tests: `tests/legal.test.mjs` and `tests/static-map.test.mjs` (level 2).
 
 ## 0.3.0 — 03-10-2026
 
-Menor: solo añade. Ninguna web tiene que tocar nada; sin configurar Matomo,
-no se imprime nada.
+Minor: additive only. No site has to change anything; without Matomo
+configured, nothing is printed.
 
-- Matomo: claves `matomo_url`, `matomo_site_id` y `matomo_mode`
-  (`cookieless` por defecto, o `hybrid`) en la opción `armazon_site`, y su
-  sección «Estadísticas (Matomo)» en la pantalla. El código de seguimiento va
-  en el `<head>`; no se mide en el escritorio, vistas previas ni a quien
-  puede editar (filtro `armazon_site_matomo_track`).
-- Modo híbrido: sin cookies hasta que el visitante acepta «statistics» en el
-  aviso del tema padre (`rememberCookieConsentGiven`; al retirarla,
-  `forgetCookieConsentGiven`). Declara la categoría con
-  `armazon_consent_categories`. Su legalidad no está verificada (CNIL).
-- Pruebas: `tests/matomo.test.mjs` (nivel 2) y `tests/matomo-browser.test.mjs`
-  (nivel 3, con el matomo.js real en `tests/fixtures/`).
+- Matomo: keys `matomo_url`, `matomo_site_id` and `matomo_mode`
+  (`cookieless` by default, or `hybrid`) in the `armazon_site` option, and
+  its «Statistics (Matomo)» section on the screen. The tracking code goes in
+  the `<head>`; nothing is tracked in the admin, previews or for anyone who
+  can edit (filter `armazon_site_matomo_track`).
+- Hybrid mode: no cookies until the visitor accepts «statistics» in the
+  parent theme's notice (`rememberCookieConsentGiven`; on withdrawal,
+  `forgetCookieConsentGiven`). It declares the category with
+  `armazon_consent_categories`. Its legality is not verified (CNIL).
+- Tests: `tests/matomo.test.mjs` (level 2) and
+  `tests/matomo-browser.test.mjs` (level 3, with the real matomo.js in
+  `tests/fixtures/`).
 
 ## 0.2.0 — 02-10-2026
 
-Menor: solo añade. Ninguna web tiene que tocar nada.
+Minor: additive only. No site has to change anything.
 
-- Fuente `armazon-site/company`: clave derivada `phone_secondary_href`
-  (`tel:` del teléfono secundario).
-- Fuente nueva `armazon-site/location`: los datos de UNA sede, por slug
-  (`{"slug":"maioris","key":"location_phone"}`) desde cualquier página o por
-  el contexto de una Consulta (`{"key":…}`). Claves `title`, los campos
-  `location_*` y las derivadas `location_phone_href` y `location_email_href`.
-  También en el editor.
-- Clientes que son un logo: campo `client_image_fit` (`cover` por defecto o
-  `contain`) y clase `has-image-fit-contain` en la entrada (post_class) cuando
-  vale `contain`. Sin CSS: lo pinta el tema.
-- Slugs públicos por web: clave `rewrite_slugs` en la opción `armazon_site`
-  (objeto tipo-o-taxonomía → slug, `sanitize_title`, vacío = el de siempre,
-  fusión por clave). Se aplica antes del filtro `armazon_site_rewrite_slug`,
-  que sigue mandando, y al cambiar se rehacen las reglas de URL. Una web que
-  movía `/clientes/` con el filtro desde su tema puede pasarlo a la opción
-  (no obligatorio: el filtro sigue funcionando igual).
+- Source `armazon-site/company`: derived key `phone_secondary_href`
+  (`tel:` of the secondary phone).
+- New source `armazon-site/location`: the details of ONE location, by slug
+  (`{"slug":"maioris","key":"location_phone"}`) from any page or from the
+  context of a Query Loop (`{"key":…}`). Keys `title`, the `location_*`
+  fields and the derived `location_phone_href` and `location_email_href`.
+  Also in the editor.
+- Clients that are a logo: field `client_image_fit` (`cover` by default or
+  `contain`) and class `has-image-fit-contain` on the post (post_class) when
+  it is `contain`. No CSS: the theme renders it.
+- Public slugs per site: key `rewrite_slugs` in the `armazon_site` option
+  (object type-or-taxonomy → slug, `sanitize_title`, empty = the usual one,
+  merged by key). It is applied before the `armazon_site_rewrite_slug`
+  filter, which still has the last word, and on change the URL rules are
+  rebuilt. A site that moved `/clientes/` with the filter from its theme can
+  move it to the option (not mandatory: the filter keeps working the same).
 
 ## 0.1.0 — 02-10-2026
 
-Primera versión.
+First version.
 
-- Datos de la empresa: opción `armazon_site` con pantalla propia, Settings API
-  y esquema REST; se guarda fusionando y lo inválido no pisa lo anterior.
-- Fuente de Block Bindings `armazon-site/company` (web y editor), con las
-  derivadas `phone_href`, `email_href` y `whatsapp_href`.
-- Tipos activables `client`, `testimonial`, `location`, `project`,
-  `portfolio`, con taxonomías `client_sector`, `project_category`,
-  `portfolio_category` y sus campos meta. Desactivar no borra contenido.
-- Subida de SVG para administradores, saneada por lista blanca, con medidas.
-- Traducción es_ES (`.po` y `.l10n.php`).
+- Company details: `armazon_site` option with its own screen, Settings API
+  and REST schema; it is saved by merging and invalid data does not
+  overwrite what was there.
+- Block Bindings source `armazon-site/company` (front end and editor), with
+  the derived `phone_href`, `email_href` and `whatsapp_href`.
+- Switchable types `client`, `testimonial`, `location`, `project`,
+  `portfolio`, with taxonomies `client_sector`, `project_category`,
+  `portfolio_category` and their meta fields. Deactivating does not delete
+  content.
+- SVG upload for administrators, sanitized by allowlist, with dimensions.
+- es_ES translation (`.po` and `.l10n.php`).

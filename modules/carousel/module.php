@@ -19,7 +19,7 @@
  *
  * Tests: they are still in the theme repo (armazon-wp-padre/tests/carousel*.test.mjs),
  * because they measure the carousel with the theme CSS and its test site;
- * that server mounts this plugin. Moving them here is pending (PENDIENTES.md).
+ * that server mounts this plugin. Moving them here is pending (TODO.md).
  */
 
 namespace EstrategiaWeb\Carousel;

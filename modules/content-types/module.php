@@ -98,7 +98,7 @@
  *     does not even load wpml_sync_custom_field: nothing is copied, and it
  *     looks like this module failing (measured, class-wpml.php).
  *   · Moving the existing eweb_ types (client, location…) to this system is
- *     NOT done here: PENDIENTES says how.
+ *     NOT done here: TODO.md says how.
  */
 
 namespace EstrategiaWeb\ContentTypes;

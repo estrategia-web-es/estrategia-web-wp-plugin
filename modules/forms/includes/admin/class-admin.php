@@ -4,7 +4,7 @@
  * export CSV, delete with confirmation) and «Forms → Settings».
  *
  * Notifications are NOT configured here but in the form block (the editor
- * sidebar): see README, «Por qué los avisos viven en el bloque».
+ * sidebar): see README, «Why the notifications live in the block».
  *
  * Who gets in: the 'manage_options' capability, changeable with the
  * 'estrategia_web_forms_capability' filter (e.g. 'edit_pages' so that an

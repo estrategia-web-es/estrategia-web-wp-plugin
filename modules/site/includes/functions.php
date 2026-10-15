@@ -1,7 +1,7 @@
 <?php
 /**
  * Global functions of the site module, for THEMES (no namespace, with the
- * estrategia_web_ prefix). Contract: README, «Nombres públicos».
+ * estrategia_web_ prefix). Contract: README, «Public names».
  *
  * How to maintain: only what a theme needs to call from a pattern or a PHP
  * template goes in here; the logic stays in its classes. A theme that uses

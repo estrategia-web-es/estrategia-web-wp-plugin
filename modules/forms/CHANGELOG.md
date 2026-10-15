@@ -1,85 +1,87 @@
-# Cambios
+# Changelog
 
-Una entrada por versión, la más nueva arriba. Se escribe en el mismo commit
-que sube el número (README, «Versiones»). Si una versión obliga a tocar algo
-en las webs, la entrada lo dice primero, con qué cambiar.
+One entry per version, newest on top. It is written in the same commit that
+bumps the number (README, «Versions»). If a version requires changing
+something on the sites, the entry says so first, with what to change.
 
 ## 1.0.0 — 07-10-2026
 
-**MAYOR: cambio de nombre. Obliga a tocar las webs:** pasar el migrador
-(plugin Estrategia Web Site 1.0.0) y cambiar en el tema hijo las clases y
-propiedades `armazon-forms…` por `estrategia-web-forms…`.
+**MAJOR: rename. Requires changes on the sites:** run the migrator
+(Estrategia Web Site plugin 1.0.0) and change, in the child theme, the
+`armazon-forms…` classes and properties to `estrategia-web-forms…`.
 
-- **«Armazón Forms» pasa a «Estrategia Web Forms»**: carpeta y fichero
+- **«Armazón Forms» becomes «Estrategia Web Forms»**: folder and file
   `estrategia-web-forms/estrategia-web-forms.php`, text domain, namespace
-  `EstrategiaWeb\Forms`, funciones, constantes, filtros, opciones, tablas,
-  bloques, ruta REST, contexto de WPML, handles y clases (tabla en el README,
-  «Nombres»). Autor, Plugin URI y Author URI: Estrategia Web,
-  https://estrategiaweb.es/.
-- **Alias** de los nueve bloques `armazon-forms/…` hasta la 2.0.0
-  (`includes/class-legacy-names.php`). La ruta REST vieja no tiene alias
-  (solo la llamaba el JS del propio bloque).
-- Las tablas, las opciones y las cadenas las pasa el migrador de Estrategia
-  Web Site: los envíos se conservan (RENAME TABLE).
-- README: «Si cambias de proveedor».
+  `EstrategiaWeb\Forms`, functions, constants, filters, options, tables,
+  blocks, REST route, WPML context, handles and classes (table in the README,
+  «Names: from «Armazón Forms» to «Estrategia Web Forms» (1.0.0)»). Author,
+  Plugin URI and Author URI: Estrategia Web, https://estrategiaweb.es/.
+- **Aliases** for the nine `armazon-forms/…` blocks until 2.0.0
+  (`includes/class-legacy-names.php`). The old REST route has no alias
+  (only the block's own JS called it).
+- Tables, options and strings are moved by the Estrategia Web Site migrator:
+  submissions are preserved (RENAME TABLE).
+- README: «If you change provider».
 
 ## 0.2.2 — 06-10-2026
 
-No obliga a tocar ninguna web: correo y teléfono siguen llevando `email` y
-`tel`. Para que un campo de texto lo lleve, hay que ponérselo.
+Does not require changing any site: email and phone still carry `email` and
+`tel`. For a text field to carry it, you have to set it.
 
-- **Atributo `autocomplete`** en los campos de texto, correo, teléfono,
-  área de texto y desplegable (WCAG 1.3.5). Se pinta tal cual; vacío, el
-  correo lleva `email` y el teléfono `tel`, como antes. Un texto sin él no
-  lo lleva: no se adivina por el nombre del campo. Valores: los de la
-  especificación HTML (`name`, `organization`, `given-name`, `work tel`,
-  `off`…); lo que no sean palabras en minúscula, cifras y guiones se
-  descarta. Control nuevo en el editor («Autocompletar»).
-- De la auditoría de Lavandería (06-10-2026): en Contacto, nombre y empresa
-  no lo llevaban. Allí: `"autocomplete":"name"` y
-  `"autocomplete":"organization"` en sus bloques.
-- Prueba: `tests/autocomplete.test.mjs` (nivel 2), vista fallar antes.
+- **`autocomplete` attribute** on the text, email, phone, textarea and
+  dropdown fields (WCAG 1.3.5). It is output as is; when empty, email gets
+  `email` and phone gets `tel`, as before. A text field without it doesn't
+  carry it: it is not guessed from the field name. Values: those of the HTML
+  specification (`name`, `organization`, `given-name`, `work tel`,
+  `off`…); anything that is not lowercase words, digits and hyphens is
+  discarded. New control in the editor («Autocompletar»
+  at the time; now «Autocomplete»).
+- From the Lavandería audit (06-10-2026): on Contacto, name and company
+  didn't have it. There: `"autocomplete":"name"` and
+  `"autocomplete":"organization"` on their blocks.
+- Test: `tests/autocomplete.test.mjs` (level 2), seen failing first.
 
 ## 0.2.1 — 06-10-2026
 
-No obliga a tocar ninguna web: `{texto}` enlaza a la privacidad como antes.
+Does not require changing any site: `{text}` links to privacy as before.
 
-- Consentimiento: **varios enlaces en la misma frase** con `{texto|url}`
+- Consent: **several links in the same sentence** with `{text|url}`
   («la {protección de datos|/proteccion/} y {Sus datos seguros|/sus-datos/}»).
-  Antes solo se enlazaba la primera llave, y a la página de privacidad del
-  sitio. Una url que esc_url() deja vacía (javascript:…) queda como texto.
-  Prueba: tests/consent-links.test.mjs (nivel 2).
+  Previously only the first pair of braces was linked, and to the site's
+  privacy page. A url that esc_url() empties (javascript:…) stays as text.
+  Test: tests/consent-links.test.mjs (level 2).
 
 ## 0.2.0 — 03-10-2026
 
-No obliga a tocar ninguna web: sin `defaultOption` el desplegable sale como
-antes.
+Does not require changing any site: without `defaultOption` the dropdown
+comes out as before.
 
-- Desplegable: **opción preseleccionada** según la página. Atributo
-  `defaultOption` (posición, 1 = la primera, 0 = ninguna) con su control en
-  el panel; en un bloque sincronizado, por página con
-  `"content":{"<campo>":{"defaultOption":N}}` en el `core/block`; y desde un
-  enlace con `?af_<campo>=` (posición o slug de la opción). Solo se marca
-  una opción que existe. Al reordenar las opciones en el editor, la
-  preselección sigue a su texto.
-- WPML: `defaultOption` no se traduce; vale en todos los idiomas porque es
-  una posición.
-- La flecha del desplegable sigue siendo la nativa: decidido y documentado
-  que el chevron propio es del tema (README, «Cómo lo usa un tema hijo»).
-- Traducción es_ES de los tres textos nuevos del editor.
+- Dropdown: **preselected option** depending on the page. `defaultOption`
+  attribute (position, 1 = the first, 0 = none) with its control in the
+  panel; in a synced block, per page with
+  `"content":{"<field>":{"defaultOption":N}}` on the `core/block`; and from a
+  link with `?af_<field>=` (position or slug of the option). Only an option
+  that exists is selected. When reordering the options in the editor, the
+  preselection follows its text.
+- WPML: `defaultOption` is not translated; it holds in every language
+  because it is a position.
+- The dropdown arrow is still the native one: decided and documented that a
+  custom chevron belongs to the theme (README, «How a child theme uses it»).
+- es_ES translation of the three new editor texts.
 
 ## 0.1.0 — 01-10-2026
 
-Primera versión.
+First version.
 
-- Bloques: formulario, texto, correo, teléfono, mensaje, desplegable, casilla
-  (con consentimiento RGPD), botón y aviso por correo.
-- Varios avisos por formulario con plantilla HTML + texto y marcadores
+- Blocks: form, text, email, phone, message, dropdown, checkbox (with GDPR
+  consent), button and email notification.
+- Several notifications per form with HTML + text template and markers
   `{{campo}}`, `{{todos_los_campos}}`, `{{fecha}}`, `{{url_pagina}}`,
   `{{nombre_sitio}}`.
-- Registro de envíos (tabla propia, migración 0001), pantalla de envíos con
-  filtro, ficha, CSV y borrado con confirmación; retención con purga diaria.
-- Endpoint REST con token firmado, honeypot, tiempo mínimo y límite por IP.
-  Con y sin JavaScript (Interactivity API).
-- WPML: `wpml-config.xml` y cadenas de ajustes; idioma del envío registrado.
-- Traducción es_ES (`.po`, `.l10n.php` y JSON del editor).
+- Submission log (own table, migration 0001), submissions screen with
+  filter, detail view, CSV and delete with confirmation; retention with a
+  daily purge.
+- REST endpoint with signed token, honeypot, minimum time and per-IP limit.
+  With and without JavaScript (Interactivity API).
+- WPML: `wpml-config.xml` and settings strings; submission language logged.
+- es_ES translation (`.po`, `.l10n.php` and editor JSON).

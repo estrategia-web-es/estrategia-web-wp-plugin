@@ -214,7 +214,7 @@ final class Registrar {
 	 *
 	 * Only REST is checked: the block editor. NOT checked: the classic screen
 	 * of a type without «editor» in supports (its meta box marks the field as
-	 * required but publishes anyway; PENDIENTES), WP-CLI and update_post_meta()
+	 * required but publishes anyway; TODO.md), WP-CLI and update_post_meta()
 	 * in code (the developer, not the editor).
 	 *
 	 * @param \stdClass        $prepared The post about to be saved.
