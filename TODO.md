@@ -154,12 +154,17 @@ armazon-wp-formularios).
 ## WPML: what gets translated from here
 **Date:** 02-10-2026 · **Due:** before the first site with WPML
 
-There is no `wpml-config.xml`. The post types and taxonomies do not declare
-whether they are translatable, and the company details (opening hours,
-WhatsApp message) are not registered as strings. On a site with WPML it has
-to be decided: translatable types yes (clients and testimonials probably
-not), and `schedule`, `address` and `whatsapp_message` as strings. And the
-slugs: with WPML, WPML translates them, not gettext.
+Partly done (checked 15-10-2026): `wpml-config.xml` exists since 1.1.0 and
+declares the meta of locations, clients and testimonials (copy/translate) and
+the social links list; Lavandería runs on WPML. Still open:
+- The company details in the `estrategia_web_site` option (`schedule`,
+  `address`, `whatsapp_message`) are not declared in `<admin-texts>`, so WPML
+  does not offer them for translation.
+- The post types and taxonomies do not declare whether they are translatable
+  (`<custom-types>`/`<taxonomies>`); on Lavandería that was set by hand in
+  WPML's settings. A new site (Gastronòmicament, four languages) would repeat
+  it by hand.
+- URL slugs: with WPML, WPML translates them, not gettext.
 
 ## Manual order in a Query Loop
 **Date:** 02-10-2026 · **Due:** —
