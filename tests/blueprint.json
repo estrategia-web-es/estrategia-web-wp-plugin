@@ -5,7 +5,7 @@
 		{
 			"step": "writeFile",
 			"path": "/wordpress/wp-content/mu-plugins/estrategia-web-test-loader.php",
-			"data": "<?php\n// Only exists in the test WordPress (tests/blueprint.json). One test mu-plugin per module that has one.\nconst ESTRATEGIA_WEB_SITE_TESTING = true;\nconst ESTRATEGIA_WEB_FORMS_TESTING = true;\nrequire WP_CONTENT_DIR . '/plugins/estrategia-web/tests/wp/estrategia-web-site-test.php';\nrequire WP_CONTENT_DIR . '/plugins/estrategia-web/modules/forms/tests/wp/estrategia-web-forms-test.php';\nconst ESTRATEGIA_WEB_REDIRECTS_TESTING = true;\nrequire WP_CONTENT_DIR . '/plugins/estrategia-web/modules/redirects/tests/wp/estrategia-web-redirects-test.php';require WP_CONTENT_DIR . '/plugins/estrategia-web/modules/consent/tests/wp/estrategia-web-cookies-test.php';\n"
+			"data": "<?php\n// Only exists in the test WordPress (tests/blueprint.json). One test mu-plugin per module that has one.\nconst ESTRATEGIA_WEB_SITE_TESTING = true;\nconst ESTRATEGIA_WEB_FORMS_TESTING = true;\nrequire WP_CONTENT_DIR . '/plugins/estrategia-web/tests/wp/estrategia-web-site-test.php';\nrequire WP_CONTENT_DIR . '/plugins/estrategia-web/modules/forms/tests/wp/estrategia-web-forms-test.php';\nconst ESTRATEGIA_WEB_REDIRECTS_TESTING = true;\nrequire WP_CONTENT_DIR . '/plugins/estrategia-web/modules/redirects/tests/wp/estrategia-web-redirects-test.php';require WP_CONTENT_DIR . '/plugins/estrategia-web/modules/consent/tests/wp/estrategia-web-cookies-test.php';\nrequire WP_CONTENT_DIR . '/plugins/estrategia-web/modules/content-types/tests/wp/estrategia-web-content-types-test.php';\n"
 		},
 		{ "step": "activatePlugin", "pluginPath": "estrategia-web/estrategia-web.php" },
 		{
