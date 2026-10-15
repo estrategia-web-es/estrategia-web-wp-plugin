@@ -1,81 +1,85 @@
 <?php
 /**
- * Matomo (Armazón, fila 16): el código de seguimiento en el <head> de la web,
- * con la URL, el id del sitio y el modo de la opción `estrategia_web_site`
- * (`matomo_url`, `matomo_site_id`, `matomo_mode`; ver Settings).
+ * Matomo (Armazón, row 16): the tracking code in the site's <head>, with the
+ * URL, site id and mode from the `estrategia_web_site` option (`matomo_url`,
+ * `matomo_site_id`, `matomo_mode`; see Settings).
  *
- * Los dos modos:
- * - `cookieless` (por defecto, el de la fila 16): `disableCookies`. Matomo no
- *   pone ninguna cookie y no hay nada que preguntar: el aviso de cookies
- *   (includes/class-consent.php) ni siquiera sale si no hay otra categoría.
- * - `hybrid`: el rastreo empieza SIN cookies (`requireCookieConsent`: Matomo
- *   manda las visitas pero no escribe cookies) y, cuando el visitante acepta
- *   «statistics» en el aviso de cookies, se llama a
- *   `rememberCookieConsentGiven` (Matomo guarda su propia cookie
- *   mtm_cookie_consent y a partir de ahí usa _pk_id/_pk_ses); si la retira,
- *   `forgetCookieConsentGiven` (borra su consentimiento y sus cookies).
- *   Referencia: https://developer.matomo.org/guides/tracking-consent
- *   OJO: la legalidad del híbrido (medir sin cookies ANTES de preguntar) no
- *   está verificada; el criterio de la CNIL para la exención de consentimiento
- *   es más estrecho. Por eso no es el modo por defecto.
+ * The two modes:
+ * - `cookieless` (the default, row 16's): `disableCookies`. Matomo sets no
+ *   cookie at all and there is nothing to ask: the cookie notice
+ *   (includes/class-consent.php) does not even show if there is no other
+ *   category.
+ * - `hybrid`: tracking starts WITHOUT cookies (`requireCookieConsent`: Matomo
+ *   sends the visits but writes no cookies) and, when the visitor accepts
+ *   «statistics» in the cookie notice, `rememberCookieConsentGiven` is called
+ *   (Matomo stores its own mtm_cookie_consent cookie and from then on uses
+ *   _pk_id/_pk_ses); if it is withdrawn, `forgetCookieConsentGiven` (deletes
+ *   its consent and its cookies).
+ *   Reference: https://developer.matomo.org/guides/tracking-consent
+ *   NOTE: the legality of hybrid (measuring without cookies BEFORE asking) is
+ *   not verified; the CNIL's criterion for the consent exemption is narrower.
+ *   That is why it is not the default mode.
  *
- * Cómo se entera del consentimiento (contrato del aviso, que desde 0.5.0 es de
- * este mismo plugin: includes/class-consent.php y blocks/consent/view.js; antes
- * vivía en el tema padre): el evento «estrategia-web:consent» en document
- * (detail.accepted = categorías aceptadas), que se lanza al arrancar si ya
- * había elección y en cada cambio, y window.estrategiaWebConsent.get() (null = sin
- * elegir). Se escuchan LAS DOS cosas: el módulo del aviso puede llegar antes
- * o después que este script. Se habla con él SOLO por ese contrato, no
- * llamando a Consent: así sigue valiendo con un tema padre viejo que aún
- * traiga su propio aviso (Consent::active() = false).
- * - En modo híbrido el plugin DECLARA la categoría «statistics» con el filtro
- *   `estrategia_web_consent_categories` (prioridad 99), para que el aviso salga sin
- *   que el tema tenga que acordarse.
- * - Desde 0.5.0 el aviso no depende del tema: con cualquier tema hay aviso y
- *   evento. (Hasta 0.4.0, sin el tema padre el híbrido se quedaba sin cookies
- *   para siempre.)
+ * How it learns about consent (the notice's contract, which since 0.5.0
+ * belongs to this same plugin: includes/class-consent.php and
+ * blocks/consent/view.js; it used to live in the parent theme): the
+ * «estrategia-web:consent» event on document (detail.accepted = accepted
+ * categories), fired on startup if there was already a choice and on every
+ * change, and window.estrategiaWebConsent.get() (null = no choice yet). BOTH
+ * are listened to: the notice module may arrive before or after this script.
+ * It talks to it ONLY through that contract, not by calling Consent: that way
+ * it keeps working with an old parent theme that still ships its own notice
+ * (Consent::active() = false).
+ * - In hybrid mode the plugin DECLARES the «statistics» category with the
+ *   `estrategia_web_consent_categories` filter (priority 99), so the notice
+ *   shows without the theme having to remember.
+ * - Since 0.5.0 the notice does not depend on the theme: with any theme there
+ *   is a notice and an event. (Up to 0.4.0, without the parent theme hybrid
+ *   stayed cookieless forever.)
  *
- * Quién NO se mide: el escritorio, el editor, las vistas previas y los
- * usuarios con sesión que pueden editar (`edit_posts`: autores y arriba). Es
- * lo habitual (el plugin oficial de Matomo para WordPress tampoco mide a los
- * administradores por defecto) y evita que la gente de la web infle las
- * cifras. Una web que quiera otra cosa: filtro `estrategia_web_site_matomo_track`.
+ * Who is NOT measured: the dashboard, the editor, previews and logged-in users
+ * who can edit (`edit_posts`: authors and up). This is the usual practice (the
+ * official Matomo plugin for WordPress does not measure administrators by
+ * default either) and keeps the site's own people from inflating the figures.
+ * A site that wants something else: the `estrategia_web_site_matomo_track`
+ * filter.
  *
- * Cómo se mantiene:
- * - Quién y cuándo: quien toque el plugin; la prueba es
- *   modules/matomo/tests/matomo.test.mjs (nivel 2) y matomo-browser.test.mjs
- *   (nivel 3, con el matomo.js real de tests/fixtures/ servido por una ruta
- *   falsa).
- * - 1.1.0: es su propio módulo (modules/matomo), pero la OPCIÓN sigue siendo
- *   la del módulo site (estrategia_web_site, claves matomo_*), con su saneado
- *   en Settings: no hay migración de datos. Ver modules/matomo/module.php.
- * - Un modo nuevo: Settings::MATOMO_MODES + script() + la pantalla + README.
- *   Quitar uno es versión mayor (ver la trampa de Settings).
- * - Caso frontera: la categoría se retira en el aviso en una página y el
- *   visitante sigue navegando. El aviso solo RECARGA si había un
- *   <script type="text/plain" data-estrategia-web-consent> ya ejecutado; este código
- *   no lo es, así que no hay recarga: se llama a forgetCookieConsentGiven al
- *   momento y basta.
- * - La trampa 1: mtm_cookie_consent dura 30 años y la elección del aviso 12
- *   meses. Cuando la del aviso caduca (o cambia su revisión), get() da null y
- *   NO llega evento: por eso, al cargar la página, si el aviso está y dice
- *   «sin elegir», se llama a forgetCookieConsentGiven. Sin eso Matomo
- *   seguiría con cookies con un consentimiento que ya no existe.
- *   «Al cargar» NO es window.load: el aviso hidrata cuando puede, y a veces
- *   DESPUÉS de load (medido el 05-10-2026 al probar con el aviso real: 1 de
- *   cada 3 cargas; la prueba simulada de 0.3.0 no podía verlo). Por eso se
- *   escucha también «estrategia-web:consent-ready», que el aviso lanza una vez al
- *   arrancar, con elección o sin ella (0.5.0).
- * - La trampa 2: un hijo que declara categorías con
- *   `fn() => array( 'maps' )` (sin mirar lo que recibe) PISA la de este
- *   plugin si corre después. Por eso este filtro va a prioridad 99. Si un
- *   hijo la necesita aún más tarde, que añada en vez de sustituir.
- * - La trampa 3: el código va en línea en el <head> y es el mismo para todos
- *   los visitantes, así que una caché de página no rompe nada: la decisión
- *   de cookies se toma en el navegador. El filtro de quién se mide sí depende
- *   de la sesión, pero a los usuarios con sesión no se les sirve caché.
- * - «Sin IP completa» (fila 16) NO es de aquí: se configura en el servidor de
- *   Matomo (Anonimizar IP), no en el código de seguimiento.
+ * How to maintain:
+ * - Who and when: whoever touches the plugin; the tests are
+ *   modules/matomo/tests/matomo.test.mjs (level 2) and matomo-browser.test.mjs
+ *   (level 3, with the real matomo.js from tests/fixtures/ served from a fake
+ *   route).
+ * - 1.1.0: it is its own module (modules/matomo), but the OPTION is still the
+ *   site module's (estrategia_web_site, matomo_* keys), sanitized in Settings:
+ *   there is no data migration. See modules/matomo/module.php.
+ * - A new mode: Settings::MATOMO_MODES + script() + the screen + README.
+ *   Removing one is a major version (see the pitfall in Settings).
+ * - Edge case: the category is withdrawn in the notice on one page and the
+ *   visitor keeps browsing. The notice only RELOADS if there was an already
+ *   executed <script type="text/plain" data-estrategia-web-consent>; this code
+ *   is not one, so there is no reload: forgetCookieConsentGiven is called
+ *   right away and that is enough.
+ * - Pitfall 1: mtm_cookie_consent lasts 30 years and the notice's choice 12
+ *   months. When the notice's choice expires (or its revision changes), get()
+ *   returns null and NO event arrives: so, on page load, if the notice is
+ *   there and says «no choice yet», forgetCookieConsentGiven is called.
+ *   Without that Matomo would keep using cookies on a consent that no longer
+ *   exists.
+ *   «On load» is NOT window.load: the notice hydrates when it can, sometimes
+ *   AFTER load (measured on 2026-10-05 testing with the real notice: 1 in 3
+ *   loads; the simulated 0.3.0 test could not see it). That is why
+ *   «estrategia-web:consent-ready» is also listened to; the notice fires it
+ *   once on startup, with or without a choice (0.5.0).
+ * - Pitfall 2: a child theme that declares categories with
+ *   `fn() => array( 'maps' )` (ignoring what it receives) OVERWRITES this
+ *   plugin's if it runs later. That is why this filter runs at priority 99.
+ *   If a child needs to run even later, it should append instead of replace.
+ * - Pitfall 3: the code is inline in the <head> and identical for every
+ *   visitor, so a page cache breaks nothing: the cookie decision is made in
+ *   the browser. The who-is-measured filter does depend on the session, but
+ *   logged-in users are not served from cache.
+ * - «No full IP» (row 16) does NOT belong here: it is configured on the
+ *   Matomo server (Anonymize IP), not in the tracking code.
  */
 
 namespace EstrategiaWeb\Matomo;
@@ -86,7 +90,7 @@ defined( 'ABSPATH' ) || exit;
 
 final class Matomo {
 
-	/** Categoría del aviso de cookies que da el consentimiento en modo híbrido. */
+	/** Cookie notice category that grants consent in hybrid mode. */
 	public const CONSENT_CATEGORY = 'statistics';
 
 	public static function boot(): void {
@@ -95,7 +99,7 @@ final class Matomo {
 	}
 
 	/**
-	 * La configuración lista para usar, o null si falta la URL o el id.
+	 * The configuration ready to use, or null if the URL or the id is missing.
 	 *
 	 * @return array{url: string, site_id: int, mode: string}|null
 	 */
@@ -113,19 +117,19 @@ final class Matomo {
 		);
 	}
 
-	/** Si en esta petición se mide. */
+	/** Whether this request is measured. */
 	public static function should_track(): bool {
 		$track = ! is_admin() && ! is_preview() && ! is_customize_preview() && ! current_user_can( 'edit_posts' );
 		/**
-		 * Decide si esta petición se mide (por defecto: no en el escritorio, ni
-		 * en vistas previas, ni para quien puede editar).
+		 * Decides whether this request is measured (by default: not in the
+		 * dashboard, not in previews, not for users who can edit).
 		 *
-		 * @param bool $track Lo decidido por el plugin.
+		 * @param bool $track What the plugin decided.
 		 */
 		return (bool) apply_filters( 'estrategia_web_site_matomo_track', $track );
 	}
 
-	/** En modo híbrido, el aviso tiene que preguntar por las estadísticas. */
+	/** In hybrid mode, the notice has to ask about statistics. */
 	public static function consent_categories( mixed $categories ): array {
 		$categories = (array) $categories;
 		$config     = self::config();
@@ -143,7 +147,7 @@ final class Matomo {
 		wp_print_inline_script_tag( self::script( $config ), array( 'id' => 'estrategia-web-site-matomo' ) );
 	}
 
-	/** El JS de seguimiento. Sin textos de pantalla: nada que traducir. */
+	/** The tracking JS. No on-screen text: nothing to translate. */
 	public static function script( array $config ): string {
 		$url      = wp_json_encode( $config['url'] );
 		$site_id  = wp_json_encode( (string) $config['site_id'] );
@@ -167,7 +171,7 @@ JS;
 		if ( ! $hybrid ) {
 			return $js;
 		}
-		// Híbrido: sigue al aviso de cookies (por su contrato JS). Ver la cabecera (las dos vías y la trampa 1).
+		// Hybrid: follows the cookie notice (through its JS contract). See the header (the two channels and pitfall 1).
 		$js .= <<<JS
 
 (function () {

@@ -1,13 +1,13 @@
 <?php
 /**
- * Los campos de Matomo en la pantalla «Datos de la empresa» (la del módulo
- * site, que los guarda en su opción). Se pintan en el gancho
- * estrategia_web_site_settings_sections que esa pantalla lanza antes del
- * botón Guardar; el saneado es el de Settings (site), así que aquí no se
- * valida nada. Por qué la opción no se movió: modules/matomo/module.php.
+ * The Matomo fields on the «Company details» screen (the site module's, which
+ * stores them in its option). They are rendered on the
+ * estrategia_web_site_settings_sections hook that screen fires before the Save
+ * button; sanitization is Settings' (site), so nothing is validated here. Why
+ * the option was not moved: modules/matomo/module.php.
  *
- * Cómo se mantiene: un campo nuevo de Matomo, su fila aquí con el name
- * estrategia_web_site[clave] y su clave en Settings (esquema + saneado).
+ * How to maintain: a new Matomo field gets its row here with the name
+ * estrategia_web_site[key] and its key in Settings (schema + sanitization).
  */
 
 namespace EstrategiaWeb\Matomo;
@@ -18,11 +18,11 @@ final class Admin_Fields {
 
 	/**
 	 * @param array    $data Settings::all().
-	 * @param callable $name Clave → name del campo (estrategia_web_site[clave]).
+	 * @param callable $name Key → field name (estrategia_web_site[key]).
 	 */
 	public static function render( array $data, callable $name ): void {
 		?>
-		<?php // 0.3.0. Qué hace cada modo y por qué: cabecera de modules/matomo/includes/class-matomo.php. ?>
+		<?php // 0.3.0. What each mode does and why: header of modules/matomo/includes/class-matomo.php. ?>
 		<h2><?php esc_html_e( 'Statistics (Matomo)', 'estrategia-web' ); ?></h2>
 		<p><?php esc_html_e( 'Without the Matomo address or the site ID nothing is added to the site. Logged-in editors and administrators are not counted.', 'estrategia-web' ); ?></p>
 		<table class="form-table" role="presentation">

@@ -1,25 +1,26 @@
-// NIVEL: 3 — navegador. NECESITA NAVEGADOR PORQUE: las cookies las pone (o no) el matomo.js de verdad al ejecutarse, y el consentimiento llega del aviso real por un evento del DOM.
+// NIVEL: 3 — browser. NEEDS A BROWSER BECAUSE: the cookies are set (or not) by the real matomo.js when it runs, and consent comes from the real notice through a DOM event.
 //
-// Matomo (0.3.0). No se llama a ningún Matomo: las peticiones a
-// https://stats.ejemplo.test/ se interceptan; matomo.js se sirve desde
-// modules/matomo/tests/fixtures/matomo.js (el rastreador REAL, BSD-3, 5.4.0) y matomo.php
-// contesta 204. Así lo que se prueba es lo que hace el rastreador con
-// nuestras órdenes, no un doble que se porta como creemos.
+// Matomo (0.3.0). No Matomo server is called: requests to
+// https://stats.ejemplo.test/ are intercepted; matomo.js is served from
+// modules/matomo/tests/fixtures/matomo.js (the REAL tracker, BSD-3, 5.4.0) and
+// matomo.php answers 204. So what is tested is what the tracker does with our
+// commands, not a double that behaves the way we think it does.
 //
-// El consentimiento llega del AVISO REAL (0.5.0: el aviso es de este plugin,
-// includes/class-consent.php): se pulsan sus botones y se guarda su cookie.
-// Hasta 0.4.0 el aviso era del tema padre, que aquí no estaba, y esta prueba
-// lo SIMULABA lanzando el evento a mano; eso no veía si el aviso y Matomo se
-// entendían de verdad (orden de carga de los dos scripts incluido).
-// Y no lo veía: al pasarla al aviso real, «elección caducada» falló 1 de cada
-// 3 veces. El aviso hidrataba DESPUÉS de window.load y Matomo nunca se
-// enteraba de «sin elegir». Arreglado con estrategia-web:consent-ready (trampa 1 de
-// includes/class-matomo.php); verde 5 de 5 después. También vista fallar
-// quitando el evento estrategia-web:consent del aviso.
+// Consent comes from the REAL NOTICE (0.5.0: the notice belongs to this
+// plugin, includes/class-consent.php): its buttons are clicked and its cookie
+// is stored. Up to 0.4.0 the notice belonged to the parent theme, which was
+// not present here, and this test SIMULATED it by firing the event by hand;
+// that could not see whether the notice and Matomo really understood each
+// other (including the load order of the two scripts).
+// And it did not see it: when switched to the real notice, «expired choice»
+// failed 1 in 3 times. The notice hydrated AFTER window.load and Matomo never
+// learned about «no choice yet». Fixed with estrategia-web:consent-ready
+// (pitfall 1 in includes/class-matomo.php); green 5 out of 5 afterwards. Also
+// seen failing by removing the estrategia-web:consent event from the notice.
 //
-// Cómo se mantiene: al actualizar el fixture, que la cabecera diga la
-// versión; y la prueba de control («híbrido con consentimiento SÍ pone
-// _pk_id») tiene que seguir en verde, o las de «sin cookies» no demuestran nada.
+// How to maintain: when updating the fixture, make its header state the
+// version; and the control test («hybrid with consent DOES set _pk_id») must
+// stay green, or the «no cookies» tests prove nothing.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import crypto from "node:crypto";
@@ -37,7 +38,7 @@ before(async () => {
 });
 after(() => browser?.close());
 
-/** Contexto nuevo con Matomo interceptado (y, si se dan, cookies puestas antes). Devuelve { ctx, page, hits, errors }. */
+/** New context with Matomo intercepted (and, if given, cookies set beforehand). Returns { ctx, page, hits, errors }. */
 async function open({ cookies = [] } = {}) {
   const ctx = await browser.newContext({ viewport: { width: 1200, height: 900 } });
   const hits = [];
@@ -63,10 +64,10 @@ async function until(fn, what, ms = 8000) {
     if (await fn()) return;
     await new Promise((r) => setTimeout(r, 100));
   }
-  assert.fail("no llegó: " + what);
+  assert.fail("never arrived: " + what);
 }
 
-test("matomo (0.3.0): sin configuración no se pide matomo.js", async () => {
+test("matomo (0.3.0): without configuration matomo.js is not requested", async () => {
   await reset();
   const { ctx, page, hits } = await open();
   let asked = false;
@@ -74,74 +75,74 @@ test("matomo (0.3.0): sin configuración no se pide matomo.js", async () => {
   await page.goto(BASE + "/");
   await page.waitForLoadState("load");
   assert.equal(await page.locator("#estrategia-web-site-matomo").count(), 0);
-  assert.equal(asked, false, "ninguna petición a Matomo");
+  assert.equal(asked, false, "no request to Matomo");
   assert.equal(hits.length, 0);
   await ctx.close();
 });
 
-test("matomo (0.3.0): modo SIN cookies mide (llega matomo.php), no deja ninguna cookie de Matomo y no hay aviso", async () => {
+test("matomo (0.3.0): COOKIELESS mode measures (matomo.php is hit), leaves no Matomo cookie and there is no notice", async () => {
   await reset();
   await saveCompany({ matomo_url: MATOMO, matomo_site_id: 3, matomo_mode: "cookieless" });
   const { ctx, page, hits, errors } = await open();
   await page.goto(BASE + "/");
-  await until(() => hits.some((u) => u.includes("matomo.php") && u.includes("idsite=3")), "la visita en matomo.php");
+  await until(() => hits.some((u) => u.includes("matomo.php") && u.includes("idsite=3")), "the visit in matomo.php");
   await page.evaluate(() => window._paq.push(["trackEvent", "prueba", "clic"]));
-  await until(() => hits.length >= 2, "el segundo envío");
-  assert.deepEqual(await matomoCookies(ctx), [], "sin cookies de Matomo");
-  assert.equal(await page.locator("#estrategia-web-consent").count(), 0, "sin cookies no hay nada que preguntar: no hay aviso");
+  await until(() => hits.length >= 2, "the second hit");
+  assert.deepEqual(await matomoCookies(ctx), [], "no Matomo cookies");
+  assert.equal(await page.locator("#estrategia-web-consent").count(), 0, "without cookies there is nothing to ask: no notice");
   assert.deepEqual(errors, []);
   await ctx.close();
 });
 
-test("matomo (0.5.0): HÍBRIDO con el aviso REAL — sin cookies hasta «Aceptar todas», _pk_id después, y «Rechazar todas» las borra", async () => {
+test("matomo (0.5.0): HYBRID with the REAL notice — no cookies until «Aceptar todas», _pk_id afterwards, and «Rechazar todas» deletes them", async () => {
   await reset();
   await saveCompany({ matomo_url: MATOMO, matomo_site_id: 3, matomo_mode: "hybrid" });
   await testApi("/consent-setup", { method: "POST", body: { categories: ["maps"] } });
   const { ctx, page, hits, errors } = await open();
   await page.goto(BASE + "/");
-  await until(() => hits.some((u) => u.includes("matomo.php")), "la visita sin cookies");
+  await until(() => hits.some((u) => u.includes("matomo.php")), "the cookieless visit");
   const notice = page.locator("#estrategia-web-consent");
   await notice.waitFor({ state: "visible" });
-  assert.deepEqual(await matomoCookies(ctx), [], "antes de contestar, ninguna cookie");
+  assert.deepEqual(await matomoCookies(ctx), [], "before answering, no cookie");
 
-  // Solo «mapas»: no es consentimiento para Matomo.
+  // Only «maps»: that is not consent for Matomo.
   await page.getByRole("button", { name: "Configurar", exact: true }).click();
   await page.getByRole("checkbox", { name: /Mapas y contenido de terceros/ }).check();
   await page.getByRole("button", { name: "Guardar la selección" }).click();
   await notice.waitFor({ state: "hidden" });
   await page.evaluate(() => window._paq.push(["trackPageView"]));
-  await until(() => hits.filter((u) => u.includes("matomo.php")).length >= 2, "el segundo envío");
-  assert.deepEqual(await matomoCookies(ctx), [], "aceptar otra categoría no da consentimiento a Matomo");
+  await until(() => hits.filter((u) => u.includes("matomo.php")).length >= 2, "the second hit");
+  assert.deepEqual(await matomoCookies(ctx), [], "accepting another category does not give consent to Matomo");
 
-  // Aceptar todas.
+  // Accept all.
   await page.evaluate(() => window.estrategiaWebConsent.open());
   await notice.waitFor({ state: "visible" });
   await page.getByRole("button", { name: "Aceptar todas" }).click();
-  await until(async () => (await matomoCookies(ctx)).includes("mtm_cookie_consent"), "mtm_cookie_consent tras aceptar");
-  // Control: con el consentimiento, el siguiente envío SÍ escribe el id de visitante.
+  await until(async () => (await matomoCookies(ctx)).includes("mtm_cookie_consent"), "mtm_cookie_consent after accepting");
+  // Control: with consent, the next hit DOES write the visitor id.
   await page.evaluate(() => window._paq.push(["trackPageView"]));
-  await until(async () => (await matomoCookies(ctx)).some((n) => n.startsWith("_pk_id")), "_pk_id tras aceptar");
+  await until(async () => (await matomoCookies(ctx)).some((n) => n.startsWith("_pk_id")), "_pk_id after accepting");
 
-  // Rechazar todas.
+  // Reject all.
   await page.evaluate(() => window.estrategiaWebConsent.open());
   await notice.waitFor({ state: "visible" });
   await page.getByRole("button", { name: "Rechazar todas" }).click();
-  await until(async () => (await matomoCookies(ctx)).length === 0, "que se borren al retirar el consentimiento");
+  await until(async () => (await matomoCookies(ctx)).length === 0, "them being deleted when consent is withdrawn");
   assert.deepEqual(errors, []);
   await ctx.close();
 });
 
-test("matomo (0.5.0): híbrido con el aviso ya contestado (su cookie) al cargar: recuerda sin que nadie pulse nada", async () => {
+test("matomo (0.5.0): hybrid with the notice already answered (its cookie) on load: remembers without anyone clicking", async () => {
   await reset();
   await saveCompany({ matomo_url: MATOMO, matomo_site_id: 3, matomo_mode: "hybrid" });
   const { ctx, page } = await open({ cookies: [consentCookie(md5("statistics|1"), ["statistics"])] });
   await page.goto(BASE + "/");
-  await until(async () => (await matomoCookies(ctx)).includes("mtm_cookie_consent"), "mtm_cookie_consent al cargar");
-  assert.ok(await page.locator("#estrategia-web-consent").isHidden(), "el aviso no sale con la elección guardada");
+  await until(async () => (await matomoCookies(ctx)).includes("mtm_cookie_consent"), "mtm_cookie_consent on load");
+  assert.ok(await page.locator("#estrategia-web-consent").isHidden(), "the notice does not show with the choice saved");
   await ctx.close();
 });
 
-test("matomo (0.5.0): híbrido con la elección del aviso caducada (otra revisión) OLVIDA un consentimiento de Matomo anterior", async () => {
+test("matomo (0.5.0): hybrid with the notice's choice expired (another revision) FORGETS an earlier Matomo consent", async () => {
   await reset();
   await saveCompany({ matomo_url: MATOMO, matomo_site_id: 3, matomo_mode: "hybrid" });
   const { ctx, page } = await open({
@@ -149,11 +150,11 @@ test("matomo (0.5.0): híbrido con la elección del aviso caducada (otra revisi�
   });
   await page.goto(BASE + "/");
   await page.locator("#estrategia-web-consent").waitFor({ state: "visible" });
-  await until(async () => !(await matomoCookies(ctx)).includes("mtm_cookie_consent"), "que se borre mtm_cookie_consent");
+  await until(async () => !(await matomoCookies(ctx)).includes("mtm_cookie_consent"), "mtm_cookie_consent being deleted");
   await ctx.close();
 });
 
-test("matomo (0.3.0): a un administrador con sesión no se le mide", async () => {
+test("matomo (0.3.0): a logged-in administrator is not measured", async () => {
   await reset();
   await saveCompany({ matomo_url: MATOMO, matomo_site_id: 3 });
   const { ctx, page } = await open();
@@ -164,11 +165,11 @@ test("matomo (0.3.0): a un administrador con sesión no se le mide", async () =>
     await Promise.all([page.waitForURL(/wp-admin/), page.click("#wp-submit")]);
   }
   await page.goto(BASE + "/");
-  assert.equal(await page.locator("#estrategia-web-site-matomo").count(), 0, "sin código para quien edita");
+  assert.equal(await page.locator("#estrategia-web-site-matomo").count(), 0, "no code for whoever edits");
   await ctx.close();
 
   const anon = await open();
   await anon.page.goto(BASE + "/");
-  assert.equal(await anon.page.locator("#estrategia-web-site-matomo").count(), 1, "control: a un visitante sí");
+  assert.equal(await anon.page.locator("#estrategia-web-site-matomo").count(), 1, "control: a visitor is measured");
   await anon.ctx.close();
 });
