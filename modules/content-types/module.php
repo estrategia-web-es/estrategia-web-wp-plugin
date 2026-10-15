@@ -94,7 +94,9 @@
  *     'gmt_offset' option and friends). «gmct_»: 0. Check before choosing.
  *   · WPML does not read the config until an admin screen of its list opens
  *     (class-wpml.php): on a fresh test site, open /wp-admin/plugins.php
- *     before measuring a «copy».
+ *     before measuring a «copy». And with WPML's setup not completed, WPML
+ *     does not even load wpml_sync_custom_field: nothing is copied, and it
+ *     looks like this module failing (measured, class-wpml.php).
  *   · Moving the existing eweb_ types (client, location…) to this system is
  *     NOT done here: PENDIENTES says how.
  */

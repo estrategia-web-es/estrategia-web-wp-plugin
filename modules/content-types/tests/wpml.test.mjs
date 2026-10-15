@@ -2,8 +2,9 @@
 //
 // Why the copy on save (a59bf65, 14-10-2026, generalized here): with WPML 5.1
 // the REST API saves the meta AFTER save_post, where WPML copies, so the
-// translation kept the old value. The real-WPML check is in the report of
-// this module's branch; this is the one that runs on every commit.
+// translation kept the old value. The check with REAL WPML (and its control)
+// is told in the header of includes/class-wpml.php; this is the one that
+// runs on every commit, because Playground has no WPML.
 //
 // If there is no `php` on the PATH the test FAILS (it is not skipped).
 //

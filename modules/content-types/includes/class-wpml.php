@@ -40,6 +40,19 @@
  * ORIGINAL, sync() calls wpml_sync_custom_field (WPML's public API). The
  * write in the translation fires updated_post_meta again; that post is a
  * translation and is skipped, and $syncing cuts any other loop.
+ *
+ * MEASURED WITH REAL WPML (15-10-2026, WPML 5.0.2 in Lavandería local, the
+ * example in the theme's content-types/): the filter made gmct_restaurant
+ * and gmct_cuisine translatable (custom_posts_sync_option = 1) and the four
+ * fields read-only copy/translate in WPML's settings; changing phone and
+ * price of the Spanish original by REST put them in the English translation,
+ * address untouched; in the translation's editor the three «copy» fields are
+ * locked. CONTROL: with sync() unhooked, the translation kept the old phone.
+ * THE TRAP of that measurement: with WPML's setup NOT completed (a fresh
+ * Playground), WPML does not load its API hooks at all — has_action(
+ * 'wpml_sync_custom_field' ) is false — and nothing is copied. It looks like
+ * this fix failing. Complete the setup first (Lavandería: semilla/v1/idiomas
+ * accion=activar).
  */
 
 namespace EstrategiaWeb\ContentTypes;
