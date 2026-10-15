@@ -38,7 +38,7 @@
  *   boolean. Labels, help and option labels are a string or an object
  *   locale → string ({"ca": "…", "es": "…", "en": "…"}).
  *   NO repeaters and NO groups, on purpose: a recipe's ingredients go as
- *   blocks in the content. Example: examples/gmct_restaurant.json.
+ *   blocks in the content. Example: examples/gment_restaurant.json.
  *
  * WHAT A DEFINITION GENERATES (class-registrar.php): register_post_type and
  * register_taxonomy; one register_post_meta per field (show_in_rest, typed,
@@ -83,15 +83,18 @@
  *
  * - THE TRAPS:
  *   · WordPress cuts a post type at 20 characters WITHOUT an error (and a
- *     taxonomy at 32): «gmct_restaurant_menu» (20) fits, one more letter
- *     registers a different name from the one in the file. The validator
- *     refuses it instead.
+ *     taxonomy at 32): «gment_restaurant_bar» (20) fits; «gment_restaurant_menu»
+ *     (21) would register a different name from the one in the file. The
+ *     validator refuses it instead. The prefix counts: every letter it has
+ *     is one less for the name.
  *   · A file with ONE error is not registered at all. Never half a type:
  *     a type without its required field, or with a field typed differently,
  *     would write data that the fixed file then reads wrong.
  *   · The example prefix: «gmt_» was the obvious one for Gastronòmicament
  *     and buscar-colisiones found it in 2,804 plugins (WordPress's own
- *     'gmt_offset' option and friends). «gmct_»: 0. Check before choosing.
+ *     'gmt_offset' option and friends). «gment_» (David, 15-10-2026): 0.
+ *     «gmct_», the first example, also had 0 but did not read as the brand.
+ *     Check before choosing.
  *   · WPML does not read the config until an admin screen of its list opens
  *     (class-wpml.php): on a fresh test site, open /wp-admin/plugins.php
  *     before measuring a «copy». And with WPML's setup not completed, WPML

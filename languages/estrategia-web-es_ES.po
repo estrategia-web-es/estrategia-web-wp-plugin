@@ -2,7 +2,7 @@
 # Copyright (C) 2026 THE estrategia-web'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the estrategia-web package.
 # Automatically generated, 2026.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: estrategia-web\n"
@@ -259,7 +259,7 @@ msgctxt "block keyword"
 msgid "privacy"
 msgstr "privacidad"
 
-# 
+#
 #: modules/consent/blocks/cookie-table/block.json
 msgctxt "block title"
 msgid "Cookie table"
@@ -296,7 +296,7 @@ msgstr "Nivel del título de cada categoría"
 msgid "Cookies"
 msgstr "Cookies"
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:65
 msgid "Sorry, you are not allowed to do that."
 msgstr "No tienes permiso para hacer esto."
@@ -306,7 +306,7 @@ msgstr "No tienes permiso para hacer esto."
 msgid "Pending"
 msgstr "Pendiente"
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:126
 msgid "Confirmed"
 msgstr "Confirmada"
@@ -319,7 +319,7 @@ msgstr "Ignorada"
 msgid "Changes saved."
 msgstr "Cambios guardados."
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:152
 msgid "Cookie deleted."
 msgstr "Cookie borrada."
@@ -340,7 +340,7 @@ msgstr ""
 "El tema activo trae su propio aviso de cookies: estos ajustes no se le "
 "aplican."
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:160
 msgid "Cookie notice"
 msgstr "Aviso de cookies"
@@ -362,7 +362,7 @@ msgstr ""
 "Cambiar las categorías vuelve a enseñar el aviso a todos los visitantes: se "
 "les pregunta por algo nuevo. Sin ninguna categoría, el aviso no sale."
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:183
 msgid "Cookie detector"
 msgstr "Detector de cookies"
@@ -378,7 +378,7 @@ msgstr ""
 "semana o cuando cambia la lista. Los nombres nuevos salen abajo como "
 "pendientes."
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:192
 msgid "Save notice settings"
 msgstr "Guardar los ajustes del aviso"
@@ -395,7 +395,7 @@ msgstr ""
 "categoría: %2$s. O el aviso pregunta por ella (arriba), o esas cookies no se "
 "deberían poner."
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:216
 msgid "Cookies of this site"
 msgstr "Cookies de esta web"
@@ -416,13 +416,13 @@ msgstr ""
 msgid "Confirm all pending proposals"
 msgstr "Confirmar todas las propuestas pendientes"
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:227
 #: modules/consent/includes/class-cookie-table.php:163
 msgid "Cookie"
 msgstr "Cookie"
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:229
 #: modules/consent/includes/admin/class-cookies-page.php:293
 msgid "Category"
@@ -440,7 +440,7 @@ msgstr "Proveedor"
 msgid "Purpose"
 msgstr "Finalidad"
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:232
 #: modules/consent/includes/admin/class-cookies-page.php:296
 #: modules/consent/includes/class-cookie-table.php:166
@@ -451,7 +451,7 @@ msgstr "Duración"
 msgid "Seen"
 msgstr "Vista"
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:234
 msgid "Actions"
 msgstr "Acciones"
@@ -478,7 +478,7 @@ msgstr "Añadida a mano"
 msgid "Proposal: Open Cookie Database"
 msgstr "Propuesta: Open Cookie Database"
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:270
 msgid "Proposal: Estrategia Web"
 msgstr "Propuesta: Estrategia Web"
@@ -524,7 +524,7 @@ msgstr ""
 "Como «2 years», «30 minutes» o «session» para que se traduzca sola; "
 "cualquier otra cosa sale tal cual se escribe."
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:298
 msgid "Add cookie"
 msgstr "Añadir cookie"
@@ -662,7 +662,7 @@ msgstr ""
 msgid "Cookie settings"
 msgstr "Configurar cookies"
 
-# 
+#
 #: modules/consent/includes/class-cookie-registry.php:134
 msgid "This website"
 msgstr "Este sitio web"
@@ -741,7 +741,7 @@ msgstr ""
 msgid "The cookie list is full. Delete the cookies you do not need."
 msgstr "La lista de cookies está llena. Borra las que no necesites."
 
-# 
+#
 #: modules/consent/includes/class-cookie-table.php:103
 msgid "Session"
 msgstr "Sesión"
@@ -815,7 +815,7 @@ msgctxt "module name"
 msgid "Cookie notice"
 msgstr "Aviso de cookies"
 
-# 
+#
 #: modules/consent/module.php
 msgctxt "module description"
 msgid ""
@@ -889,12 +889,12 @@ msgstr ""
 msgid "copy"
 msgstr "copiar"
 
-# 
+#
 #: modules/content-types/includes/admin/class-page.php:62
 msgid "translate"
 msgstr "traducir"
 
-# 
+#
 #: modules/content-types/includes/admin/class-page.php:63
 msgid "ignore"
 msgstr "ignorar"
@@ -941,7 +941,7 @@ msgstr "Tipo"
 msgid "WPML"
 msgstr "WPML"
 
-# 
+#
 #: modules/content-types/includes/admin/class-page.php:87
 msgid "yes"
 msgstr "sí"
@@ -957,7 +957,7 @@ msgstr "Se cambia en el idioma original: se copia a las traducciones."
 msgid "%s details"
 msgstr "%s: datos"
 
-# 
+#
 #: modules/content-types/includes/class-fields-panel.php:72
 msgid ""
 "Fields that are the same in every language are copied to the translations "
@@ -1032,12 +1032,12 @@ msgstr "Ver %s"
 msgid "Search %s"
 msgstr "Buscar %s"
 
-# 
+#
 #: modules/content-types/includes/class-registrar.php:174
 msgid "Nothing found."
 msgstr "No se ha encontrado nada."
 
-# 
+#
 #: modules/content-types/includes/class-registrar.php:175
 msgid "Nothing found in the trash."
 msgstr "No hay nada en la papelera."
@@ -1055,10 +1055,10 @@ msgstr "El fichero no es un objeto JSON."
 #: modules/content-types/includes/class-schema.php:62
 msgid ""
 "“prefix” must be 2 to 9 lowercase letters or digits followed by “_” (e.g. "
-"“gmct_”)."
+"“gment_”)."
 msgstr ""
 "«prefix» tiene que ser de 2 a 9 letras minúsculas o cifras seguidas de "
-"«_» (por ejemplo, «gmct_»)."
+"«_» (por ejemplo, «gment_»)."
 
 #. translators: %s: a prefix such as eweb_
 #: modules/content-types/includes/class-schema.php:66
@@ -1385,7 +1385,7 @@ msgstr "%1$s.%2$s es obligatorio: un texto o un objeto idioma → texto."
 msgid "Unknown key “%1$s”. Allowed: %2$s."
 msgstr "Clave desconocida «%1$s». Se admiten: %2$s."
 
-# 
+#
 #: modules/content-types/module.php
 msgctxt "module name"
 msgid "Content types from JSON"
@@ -1433,68 +1433,68 @@ msgstr ""
 "y un logo cuyo texto alternativo solo repite el título que se ve al lado se "
 "marca como decorativo."
 
-#: modules/forms/assets/editor.js:55 modules/forms/assets/editor.js:413
+#: modules/forms/assets/editor.js:58 modules/forms/assets/editor.js:416
 msgid "Message"
 msgstr "Mensaje"
 
-#: modules/forms/assets/editor.js:61
+#: modules/forms/assets/editor.js:64
 msgid "Notice to the site"
 msgstr "Aviso a la web"
 
 #. translators: {{name}} is a marker: do not translate it.
-#: modules/forms/assets/editor.js:64
+#: modules/forms/assets/editor.js:67
 msgid "New message from {{name}}"
 msgstr "Nuevo mensaje de {{name}}"
 
 #. translators: what goes between {{ }} are markers: do not translate them.
-#: modules/forms/assets/editor.js:66
+#: modules/forms/assets/editor.js:69
 msgid ""
-"New message sent from {{url_pagina}} on {{fecha}}:\n"
+"New message sent from {{page_url}} on {{submission_date}}:\n"
 "\n"
-"{{todos_los_campos}}"
+"{{all_fields}}"
 msgstr ""
-"Nuevo mensaje enviado desde {{url_pagina}} el {{fecha}}:\n"
+"Nuevo mensaje enviado desde {{page_url}} el {{submission_date}}:\n"
 "\n"
-"{{todos_los_campos}}"
+"{{all_fields}}"
 
-#: modules/forms/assets/editor.js:72
+#: modules/forms/assets/editor.js:75
 msgid "Acknowledgement to the sender"
 msgstr "Acuse al remitente"
 
-#: modules/forms/assets/editor.js:74
+#: modules/forms/assets/editor.js:77
 msgid "We have received your message"
 msgstr "Hemos recibido tu mensaje"
 
 #. translators: what goes between {{ }} are markers: do not translate them.
-#: modules/forms/assets/editor.js:76
+#: modules/forms/assets/editor.js:79
 msgid ""
 "Hello {{name}},\n"
 "\n"
 "Thank you for writing to us. We have received your message and will reply "
 "soon.\n"
 "\n"
-"{{todos_los_campos}}\n"
+"{{all_fields}}\n"
 "\n"
-"{{nombre_sitio}}"
+"{{site_name}}"
 msgstr ""
 "Hola, {{name}}:\n"
 "\n"
 "Gracias por escribirnos. Hemos recibido tu mensaje y te responderemos "
 "pronto.\n"
 "\n"
-"{{todos_los_campos}}\n"
+"{{all_fields}}\n"
 "\n"
-"{{nombre_sitio}}"
+"{{site_name}}"
 
-#: modules/forms/assets/editor.js:99
+#: modules/forms/assets/editor.js:102
 msgid "Name in the submissions log"
 msgstr "Nombre en el registro de envíos"
 
-#: modules/forms/assets/editor.js:105
+#: modules/forms/assets/editor.js:108
 msgid "Form identifier"
 msgstr "Identificador del formulario"
 
-#: modules/forms/assets/editor.js:106
+#: modules/forms/assets/editor.js:109
 msgid ""
 "Groups the submissions of this form in the log, in every language. Change it "
 "only if two copies of the form must be counted apart."
@@ -1502,20 +1502,20 @@ msgstr ""
 "Agrupa los envíos de este formulario en el registro, en todos los idiomas. "
 "Cámbialo solo si dos copias del formulario deben contarse por separado."
 
-#: modules/forms/assets/editor.js:114
+#: modules/forms/assets/editor.js:117
 msgid "Messages"
 msgstr "Mensajes"
 
-#: modules/forms/assets/editor.js:117 modules/forms/assets/editor.js:124
+#: modules/forms/assets/editor.js:120 modules/forms/assets/editor.js:127
 msgid "Empty: the default message from Forms → Settings."
 msgstr "Vacío: el mensaje por defecto de Formularios → Ajustes."
 
-#: modules/forms/assets/editor.js:147 modules/forms/assets/editor.js:308
-#: modules/forms/assets/editor.js:317
+#: modules/forms/assets/editor.js:150 modules/forms/assets/editor.js:311
+#: modules/forms/assets/editor.js:320
 msgid "Label"
 msgstr "Etiqueta"
 
-#: modules/forms/assets/editor.js:150
+#: modules/forms/assets/editor.js:153
 msgid ""
 "The text between braces becomes the link to the privacy policy. Empty: the "
 "default text."
@@ -1523,11 +1523,11 @@ msgstr ""
 "El texto entre llaves se convierte en el enlace a la política de privacidad. "
 "Vacío: el texto por defecto."
 
-#: modules/forms/assets/editor.js:158
+#: modules/forms/assets/editor.js:161
 msgid "Name (key)"
 msgstr "Nombre (clave)"
 
-#: modules/forms/assets/editor.js:159
+#: modules/forms/assets/editor.js:162
 msgid ""
 "Used in the email markers, e.g. {{name}}, and in the log. Lowercase letters, "
 "numbers, - and _."
@@ -1535,19 +1535,19 @@ msgstr ""
 "Se usa en los marcadores de los correos, p. ej. {{name}}, y en el registro. "
 "Minúsculas, números, - y _."
 
-#: modules/forms/assets/editor.js:180
+#: modules/forms/assets/editor.js:183
 msgid "First option (empty value)"
 msgstr "Primera opción (valor vacío)"
 
-#: modules/forms/assets/editor.js:180
+#: modules/forms/assets/editor.js:183
 msgid "Placeholder"
 msgstr "Texto de ejemplo"
 
-#: modules/forms/assets/editor.js:188
+#: modules/forms/assets/editor.js:191
 msgid "Autocomplete"
 msgstr "Autocompletar"
 
-#: modules/forms/assets/editor.js:189
+#: modules/forms/assets/editor.js:192
 msgid ""
 "What the browser may fill in: name, organization, email, tel, street-"
 "address… Empty: email and phone fields still get email and tel."
@@ -1556,19 +1556,19 @@ msgstr ""
 "address… Vacío: los campos de correo y teléfono llevan igualmente email y "
 "tel."
 
-#: modules/forms/assets/editor.js:200
+#: modules/forms/assets/editor.js:203
 msgid "Options"
 msgstr "Opciones"
 
-#: modules/forms/assets/editor.js:201
+#: modules/forms/assets/editor.js:204
 msgid "One per line."
 msgstr "Una por línea."
 
-#: modules/forms/assets/editor.js:208
+#: modules/forms/assets/editor.js:211
 msgid "Preselected option"
 msgstr "Opción preseleccionada"
 
-#: modules/forms/assets/editor.js:209
+#: modules/forms/assets/editor.js:212
 msgid ""
 "In a synced pattern, set it per page in the pattern block instead. A link "
 "can also choose it with ?af_ followed by the field name."
@@ -1576,23 +1576,23 @@ msgstr ""
 "En un patrón sincronizado se fija por página, en el bloque del patrón. Un "
 "enlace también puede elegirla con ?af_ y el nombre del campo."
 
-#: modules/forms/assets/editor.js:211
+#: modules/forms/assets/editor.js:214
 msgid "None"
 msgstr "Ninguna"
 
-#: modules/forms/assets/editor.js:223
+#: modules/forms/assets/editor.js:226
 msgid "Privacy consent"
 msgstr "Consentimiento de privacidad"
 
-#: modules/forms/assets/editor.js:224
+#: modules/forms/assets/editor.js:227
 msgid "Always required, and links to the privacy policy."
 msgstr "Siempre obligatorio, y enlaza a la política de privacidad."
 
-#: modules/forms/assets/editor.js:234
+#: modules/forms/assets/editor.js:237
 msgid "Privacy policy URL"
 msgstr "URL de la política de privacidad"
 
-#: modules/forms/assets/editor.js:235
+#: modules/forms/assets/editor.js:238
 msgid ""
 "Empty: the privacy policy page set in Settings → Privacy (translated, with "
 "WPML)."
@@ -1600,31 +1600,31 @@ msgstr ""
 "Vacío: la página de política de privacidad de Ajustes → Privacidad "
 "(traducida, con WPML)."
 
-#: modules/forms/assets/editor.js:246
+#: modules/forms/assets/editor.js:249
 msgid "Width"
 msgstr "Ancho"
 
-#: modules/forms/assets/editor.js:249
+#: modules/forms/assets/editor.js:252
 msgid "Full"
 msgstr "Completo"
 
-#: modules/forms/assets/editor.js:250
+#: modules/forms/assets/editor.js:253
 msgid "Half"
 msgstr "Medio"
 
-#: modules/forms/assets/editor.js:356
+#: modules/forms/assets/editor.js:359
 msgid "Button text"
 msgstr "Texto del botón"
 
-#: modules/forms/assets/editor.js:406 modules/forms/assets/editor.js:425
+#: modules/forms/assets/editor.js:409 modules/forms/assets/editor.js:428
 msgid "Email notification"
 msgstr "Aviso por correo"
 
-#: modules/forms/assets/editor.js:407
+#: modules/forms/assets/editor.js:410
 msgid "Name of this notification"
 msgstr "Nombre de este aviso"
 
-#: modules/forms/assets/editor.js:408
+#: modules/forms/assets/editor.js:411
 msgid ""
 "Addresses separated by commas, or a marker such as {{email}}. Empty: the "
 "site administrator email."
@@ -1632,31 +1632,31 @@ msgstr ""
 "Direcciones separadas por comas, o un marcador como {{email}}. Vacío: el "
 "correo del administrador de la web."
 
-#: modules/forms/assets/editor.js:408 modules/forms/assets/editor.js:426
+#: modules/forms/assets/editor.js:411 modules/forms/assets/editor.js:429
 msgid "To"
 msgstr "Para"
 
-#: modules/forms/assets/editor.js:409
+#: modules/forms/assets/editor.js:412
 msgid "An address or a marker such as {{email}}. Optional."
 msgstr "Una dirección o un marcador como {{email}}. Opcional."
 
-#: modules/forms/assets/editor.js:409
+#: modules/forms/assets/editor.js:412
 msgid "Reply to"
 msgstr "Responder a"
 
-#: modules/forms/assets/editor.js:410 modules/forms/assets/editor.js:427
+#: modules/forms/assets/editor.js:413 modules/forms/assets/editor.js:430
 msgid "Subject"
 msgstr "Asunto"
 
-#: modules/forms/assets/editor.js:414
+#: modules/forms/assets/editor.js:417
 msgid "Available markers:"
 msgstr "Marcadores disponibles:"
 
-#: modules/forms/assets/editor.js:426
+#: modules/forms/assets/editor.js:429
 msgid "site administrator"
 msgstr "administrador de la web"
 
-#: modules/forms/assets/editor.js:428
+#: modules/forms/assets/editor.js:431
 msgid "Not shown to visitors. Edit it in the side panel."
 msgstr "No lo ven los visitantes. Se edita en el panel lateral."
 
@@ -2157,7 +2157,7 @@ msgstr "Formularios"
 msgid "Google"
 msgstr "Google"
 
-# 
+#
 #: modules/google-tags/includes/admin/class-google-tags-page.php:29
 #: modules/google-tags/includes/admin/class-google-tags-page.php:51
 msgid "Google tags"
@@ -2185,7 +2185,7 @@ msgstr "ID de medición del flujo web de GA4."
 msgid "Conversion ID of the Google Ads account."
 msgstr "ID de conversión de la cuenta de Google Ads."
 
-# 
+#
 #: modules/google-tags/includes/admin/class-google-tags-page.php:59
 msgid "Google Ads"
 msgstr "Google Ads"
@@ -2217,7 +2217,7 @@ msgstr "Google Tag Manager"
 msgid "Loading"
 msgstr "Carga"
 
-# 
+#
 #: modules/google-tags/includes/admin/class-google-tags-page.php:69
 msgid ""
 "Basic (recommended): nothing is requested from Google until the visitor "
@@ -2257,7 +2257,7 @@ msgstr ""
 "formulario) y Google Tag Manager detrás del aviso de cookies, con Consent "
 "Mode v2. Un campo vacío no carga nada."
 
-# 
+#
 #: modules/google-tags/module.php
 msgctxt "module name"
 msgid "Google tags"
@@ -2515,7 +2515,7 @@ msgstr "ID del sitio"
 msgid "Without cookies (recommended): nothing to ask the visitor."
 msgstr "Sin cookies (recomendado): no hay nada que preguntar al visitante."
 
-# 
+#
 #: modules/matomo/includes/class-admin-fields.php:50
 msgid ""
 "Hybrid: without cookies until the visitor accepts «Analytics» in the cookie "
@@ -2524,13 +2524,13 @@ msgstr ""
 "Híbrido: sin cookies hasta que el visitante acepta «Analítica» en el aviso "
 "de cookies."
 
-# 
+#
 #: modules/matomo/module.php
 msgctxt "module name"
 msgid "Matomo"
 msgstr "Matomo"
 
-# 
+#
 #: modules/matomo/module.php
 msgctxt "module description"
 msgid ""
@@ -3548,7 +3548,7 @@ msgctxt "module name"
 msgid "Company data and content types"
 msgstr "Datos de la empresa y tipos de contenido"
 
-# 
+#
 #: modules/site/module.php
 msgctxt "module description"
 msgid ""

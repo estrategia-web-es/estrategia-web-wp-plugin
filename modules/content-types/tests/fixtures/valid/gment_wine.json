@@ -1,0 +1,19 @@
+{
+  "$schema": "../../../content-types.schema.json",
+  "prefix": "gment_",
+  "name": "gment_wine",
+  "slug": "wines",
+  "labels": { "singular": { "es": "Vino", "en": "Wine" }, "plural": { "es": "Vinos", "en": "Wines" } },
+  "icon": "dashicons-carrot",
+  "taxonomies": ["gment_cuisine"],
+  "fields": [
+    { "name": "gment_winery", "type": "relation", "label": "Restaurant", "post_type": "gment_restaurant" },
+    { "name": "gment_vintage", "type": "number", "label": "Vintage", "integer": true, "min": 1900, "max": 2100, "required": true },
+    { "name": "gment_alcohol", "type": "number", "label": "Alcohol (%)", "min": 0, "max": 20 },
+    { "name": "gment_contact", "type": "email", "label": "Contact" },
+    { "name": "gment_label", "type": "image", "label": "Label" },
+    { "name": "gment_released", "type": "date", "label": "Released" },
+    { "name": "gment_organic", "type": "boolean", "label": "Organic" },
+    { "name": "gment_tasting", "type": "text", "label": "Tasting note" }
+  ]
+}

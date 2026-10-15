@@ -59,7 +59,7 @@ final class Schema {
 
 		$prefix = $def['prefix'] ?? null;
 		if ( ! is_string( $prefix ) || ! preg_match( '/^[a-z][a-z0-9]{1,8}_$/', $prefix ) ) {
-			$errors[] = __( '“prefix” must be 2 to 9 lowercase letters or digits followed by “_” (e.g. “gmct_”).', 'estrategia-web' );
+			$errors[] = __( '“prefix” must be 2 to 9 lowercase letters or digits followed by “_” (e.g. “gment_”).', 'estrategia-web' );
 			$prefix   = null;
 		} elseif ( in_array( $prefix, self::RESERVED_PREFIXES, true ) ) {
 			/* translators: %s: a prefix such as eweb_ */

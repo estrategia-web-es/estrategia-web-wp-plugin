@@ -1,7 +1,7 @@
 {
   "$schema": "../content-types.schema.json",
-  "prefix": "gmct_",
-  "name": "gmct_restaurant",
+  "prefix": "gment_",
+  "name": "gment_restaurant",
   "slug": "restaurants",
   "labels": {
     "singular": { "ca": "Restaurant", "es": "Restaurante", "en": "Restaurant" },
@@ -12,7 +12,7 @@
   "wpml": "translate",
   "taxonomies": [
     {
-      "name": "gmct_cuisine",
+      "name": "gment_cuisine",
       "slug": "cuisine",
       "labels": {
         "singular": { "ca": "Tipus de cuina", "es": "Tipo de cocina", "en": "Cuisine" },
@@ -24,20 +24,20 @@
   ],
   "fields": [
     {
-      "name": "gmct_phone",
+      "name": "gment_phone",
       "type": "tel",
       "label": { "ca": "Telèfon", "es": "Teléfono", "en": "Phone" },
       "wpml": "copy"
     },
     {
-      "name": "gmct_address",
+      "name": "gment_address",
       "type": "textarea",
       "label": { "ca": "Adreça", "es": "Dirección", "en": "Address" },
       "required": true,
       "wpml": "translate"
     },
     {
-      "name": "gmct_price_range",
+      "name": "gment_price_range",
       "type": "select",
       "label": { "ca": "Preu", "es": "Precio", "en": "Price range" },
       "options": [
@@ -49,7 +49,7 @@
       "wpml": "copy"
     },
     {
-      "name": "gmct_website",
+      "name": "gment_website",
       "type": "url",
       "label": { "ca": "Web", "es": "Web", "en": "Website" },
       "help": { "ca": "L'adreça completa, amb https://", "es": "La dirección completa, con https://", "en": "The full address, with https://" },

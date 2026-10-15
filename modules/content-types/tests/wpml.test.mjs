@@ -33,37 +33,37 @@ test("the example is read from disk without errors", () => {
 
 test("fields: the example's copy / translate, and what WPML already had is kept (a single entry becomes a list)", () => {
   assert.deepEqual(field("estrategia_web_location_phone"), [{ value: "estrategia_web_location_phone", attr: { action: "copy" } }]);
-  assert.deepEqual(field("gmct_phone"), [{ value: "gmct_phone", attr: { action: "copy" } }], "phone: copy, and only once although gmct_wine declares it as ignore");
-  assert.deepEqual(field("gmct_address"), [{ value: "gmct_address", attr: { action: "translate" } }]);
-  assert.deepEqual(field("gmct_price_range"), [{ value: "gmct_price_range", attr: { action: "copy" } }]);
-  assert.deepEqual(field("gmct_website"), [{ value: "gmct_website", attr: { action: "copy" } }]);
+  assert.deepEqual(field("gment_phone"), [{ value: "gment_phone", attr: { action: "copy" } }], "phone: copy, and only once although gment_wine declares it as ignore");
+  assert.deepEqual(field("gment_address"), [{ value: "gment_address", attr: { action: "translate" } }]);
+  assert.deepEqual(field("gment_price_range"), [{ value: "gment_price_range", attr: { action: "copy" } }]);
+  assert.deepEqual(field("gment_website"), [{ value: "gment_website", attr: { action: "copy" } }]);
   assert.deepEqual(cfg["gutenberg-blocks"], { "gutenberg-block": [] }, "other sections untouched");
 });
 
 test("relation and image with copy: WPML copies the ID of the TRANSLATED post (post-ids)", () => {
-  assert.deepEqual(field("gmct_winery")[0].attr, { action: "copy", type: "post-ids", "sub-type": "gmct_restaurant" });
-  assert.deepEqual(field("gmct_label")[0].attr, { action: "copy", type: "post-ids", "sub-type": "attachment" });
-  assert.deepEqual(field("gmct_pairs")[0].attr, { action: "translate" }, "translate: no post-ids");
+  assert.deepEqual(field("gment_winery")[0].attr, { action: "copy", type: "post-ids", "sub-type": "gment_restaurant" });
+  assert.deepEqual(field("gment_label")[0].attr, { action: "copy", type: "post-ids", "sub-type": "attachment" });
+  assert.deepEqual(field("gment_pairs")[0].attr, { action: "translate" }, "translate: no post-ids");
 });
 
 test("types and taxonomies: translate=1, display-as-translated=2; a referenced taxonomy is not declared twice", () => {
   assert.deepEqual(cfg["custom-types"]["custom-type"], [
-    { value: "gmct_restaurant", attr: { translate: "1" } },
-    { value: "gmct_wine", attr: { translate: "2" } },
+    { value: "gment_restaurant", attr: { translate: "1" } },
+    { value: "gment_wine", attr: { translate: "2" } },
   ]);
-  assert.deepEqual(cfg.taxonomies.taxonomy, [{ value: "gmct_cuisine", attr: { translate: "1" } }]);
+  assert.deepEqual(cfg.taxonomies.taxonomy, [{ value: "gment_cuisine", attr: { translate: "1" } }]);
   assert.equal(config.not_array, "x", "something that is not an array goes back untouched");
 });
 
 test("copy on save: a «copy» field written in the ORIGINAL asks WPML once, and the translation gets it", () => {
-  assert.deepEqual(wpml.phone_new, ["10:gmct_phone"]);
-  assert.deepEqual(wpml.phone_changed, ["10:gmct_phone"], "one copy: the write in the translation does not ask again");
+  assert.deepEqual(wpml.phone_new, ["10:gment_phone"]);
+  assert.deepEqual(wpml.phone_changed, ["10:gment_phone"], "one copy: the write in the translation does not ask again");
   assert.equal(wpml.phone_in_ca, "971 00 00 02");
-  assert.deepEqual(wpml.price, ["10:gmct_price_range"]);
-  assert.deepEqual(wpml.website, ["10:gmct_website"]);
-  assert.deepEqual(wpml.phone_deleted, ["10:gmct_phone"]);
+  assert.deepEqual(wpml.price, ["10:gment_price_range"]);
+  assert.deepEqual(wpml.website, ["10:gment_website"]);
+  assert.deepEqual(wpml.phone_deleted, ["10:gment_phone"]);
   assert.equal(wpml.phone_ca_deleted, false, "deleting in the original deletes in the translation");
-  assert.deepEqual(wpml.untranslated, ["50:gmct_phone"], "not translated yet: asked anyway (WPML does nothing)");
+  assert.deepEqual(wpml.untranslated, ["50:gment_phone"], "not translated yet: asked anyway (WPML does nothing)");
 });
 
 test("no copy: «translate» fields, writes in the translation, other types", () => {

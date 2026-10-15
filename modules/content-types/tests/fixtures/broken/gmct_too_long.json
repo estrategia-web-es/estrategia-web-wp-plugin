@@ -1,6 +1,0 @@
-{
-  "prefix": "gmct_",
-  "name": "gmct_restaurant_menus",
-  "labels": { "singular": "Menu", "plural": "Menus" },
-  "fields": [{ "name": "gmct_price", "type": "number", "label": "Price", "requird": true }]
-}
