@@ -1,360 +1,377 @@
-# Módulo `forms` — los formularios de las webs de WordPress
+# Module `forms` — the forms of the WordPress sites
 
-> **Desde el 14-10-2026 (plugin Estrategia Web 1.1.0) esto es un MÓDULO del
-> plugin único**, no un plugin aparte (el repo armazon-wp-formularios quedó
-> archivado). Lo que cambia respecto a lo que cuenta este README, escrito
-> cuando era plugin:
-> - Se instala con el plugin `estrategia-web` y se enciende o apaga en
->   «Estrategia Web → Módulos». Su arranque es [module.php](module.php).
-> - **Dominio de traducción: `estrategia-web`** (no `estrategia-web-forms`), en
->   `languages/` de la raíz del plugin; ya no hay JSON del editor.
-> - `wpml-config.xml` está en la raíz del plugin (WPML solo lee ese).
-> - Pruebas: [tests/](tests/), corridas por el `tests/run.mjs` de la raíz del
->   plugin (`node tests/run.mjs forms/`), en el puerto **9404** (antes 9402).
-> - Lo demás —bloques, rutas REST, tablas, opciones, menú «Formularios»— es
->   igual, con los mismos nombres.
+> **Since 14-10-2026 (Estrategia Web plugin 1.1.0) this is a MODULE of the
+> single plugin**, not a separate plugin (the armazon-wp-formularios repo was
+> archived). What changes with respect to what this README says, written
+> when it was a plugin:
+> - It is installed with the `estrategia-web` plugin and switched on or off
+>   in «Estrategia Web → Modules». Its bootstrap is [module.php](module.php).
+> - **Translation domain: `estrategia-web`** (not `estrategia-web-forms`), in
+>   `languages/` at the plugin root; there is no longer an editor JSON.
+> - `wpml-config.xml` is at the plugin root (WPML only reads that one).
+> - Tests: [tests/](tests/), run by the `tests/run.mjs` at the plugin root
+>   (`node tests/run.mjs forms/`), on port **9404** (formerly 9402).
+> - Everything else —blocks, REST routes, tables, options, «Forms» menu— is
+>   the same, with the same names.
 
-Formularios **por bloques**, con **varios avisos por correo** hechos con
-plantillas, **registro de todo lo enviado** y **compatibles con WPML**. Lo usan
-todas las webs hechas con el tema padre del Armazón; es compartido y
-versionado. El porqué de que sea propio (Contact Form 7 no gusta; Formello está
-abandonado, sin WPML) está en
+Forms **built from blocks**, with **several email notifications** made from
+templates, a **log of everything submitted**, and **WPML-compatible**. Every
+site built with the Armazón parent theme uses it; it is shared and versioned.
+The reason it is our own (Contact Form 7 is disliked; Formello is abandoned,
+no WPML) is in
 [armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md](E:/Repositories/armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md).
 
-- Slug y text domain: `estrategia-web-forms` · WordPress **7.1+** · PHP **8.1+** · GPLv2+
-- Sin dependencias, sin `node_modules`, sin paso de compilación.
+- Slug and text domain: `estrategia-web-forms` · WordPress **7.1+** · PHP **8.1+** · GPLv2+
+- No dependencies, no `node_modules`, no build step.
 
-## Qué hace
+## What it does
 
-1. **Bloques**: «Formulario» (contenedor) y dentro «Campo de texto», «Campo de
-   correo», «Campo de teléfono», «Campo de mensaje», «Campo desplegable»,
-   «Casilla» (también el consentimiento RGPD), «Botón de enviar» y «Aviso por
-   correo». Cada campo tiene etiqueta, nombre (clave), obligatorio, texto de
-   ejemplo y ancho (completo / medio). Se pueden meter en grupos y columnas: el
-   formulario se maqueta como cualquier bloque.
-2. **Avisos**: cada bloque «Aviso por correo» es un correo que sale con cada
-   envío — al equipo, acuse al remitente, una copia a otro sitio… — con
-   destinatarios, responder-a, asunto y cuerpo, todos con marcadores.
-3. **Registro**: cada envío se guarda con formulario, página, fecha, idioma,
-   datos, resultado de cada aviso (enviado / fallo y motivo), IP truncada y
-   navegador. Pantalla **Formularios → Envíos**: lista, filtro por formulario,
-   ficha, exportar CSV y borrar con confirmación. Retención configurable con
-   purga diaria.
-4. **Seguridad**: envío por un endpoint REST propio con token firmado,
-   validación en servidor por tipo de campo, honeypot, tiempo mínimo de
-   relleno y límite de envíos por IP.
-5. **Funciona sin JavaScript** (POST normal y redirección) y **con JavaScript**
-   (Interactivity API, sin recargar, mensajes en una zona `aria-live`).
+1. **Blocks**: «Form» (container) and inside it «Text field», «Email
+   field», «Phone field», «Message field», «Dropdown field», «Checkbox»
+   (also the GDPR consent), «Send button» and «Email notification». Each
+   field has a label, name (key), required, placeholder
+   text and width (full / half). They can be put inside groups and columns: the
+   form is laid out like any other block.
+2. **Notifications**: each «Email notification» block is an email sent with
+   every submission — to the team, an acknowledgement to the sender, a copy
+   somewhere else… — with recipients, reply-to, subject and body, all with
+   markers.
+3. **Log**: each submission is stored with form, page, date, language, data,
+   result of each notification (sent / failed and reason), truncated IP and
+   browser. **Forms → Submissions** screen: list, filter by form, detail
+   view, CSV export and delete with confirmation. Configurable retention with
+   a daily purge.
+4. **Security**: submission through its own REST endpoint with a signed
+   token, server-side validation by field type, honeypot, minimum fill-in time
+   and a per-IP submission limit.
+5. **Works without JavaScript** (plain POST and redirect) and **with
+   JavaScript** (Interactivity API, no reload, messages in an `aria-live`
+   region).
 
-## Configurar un formulario
+## Configuring a form
 
-1. En el editor, añade el bloque **Formulario**. Llega con una plantilla:
-   nombre, correo, mensaje, consentimiento, botón y dos avisos (a la web y
-   acuse al remitente). Cambia, quita o añade lo que haga falta.
-2. En el panel lateral del formulario: el **nombre en el registro** y, si
-   hace falta, los mensajes de éxito y error propios.
-3. Cada campo: su **nombre (clave)** es el que se usa en los marcadores
-   (`{{email}}`) y en el registro. Se genera solo; cámbialo antes de publicar,
-   no después (el registro agrupa por él).
-4. Cada **aviso**, en su panel lateral:
-   - **Para**: direcciones separadas por comas o un marcador (`{{email}}`).
-     Vacío = el correo del administrador de la web.
-   - **Responder a**: una dirección o un marcador. Opcional.
-   - **Asunto** y **Mensaje**: texto con marcadores. Mensaje vacío =
+1. In the editor, add the **Form** block. It comes with a template:
+   name, email, message, consent, button and two notifications (to the site
+   and an acknowledgement to the sender). Change, remove or add whatever is
+   needed.
+2. In the form's side panel: the **Name in the submissions log**, the **Form
+   identifier** and, if needed, custom success and error messages.
+3. Each field: its **name (key)** is the one used in markers (`{{email}}`)
+   and in the log. It is generated automatically; change it before
+   publishing, not after (the log groups by it).
+4. Each **notification**, in its side panel:
+   - **To**: addresses separated by commas or a marker (`{{email}}`).
+     Empty = the site administrator's email.
+   - **Reply to**: an address or a marker. Optional.
+   - **Subject** and **Message**: text with markers. Empty message =
      `{{todos_los_campos}}`.
-5. La **casilla de consentimiento** es siempre obligatoria. Lo que va entre
-   llaves en su etiqueta es el enlace: «He leído y acepto la {política de
-   privacidad}». Sin URL propia enlaza a la página de privacidad de *Ajustes →
-   Privacidad* (con WPML, la traducida).
+5. The **consent checkbox** is always required. Whatever goes between braces
+   in its label is the link: «I have read and accept the {privacy policy}.»
+   (on a Spanish site, «He leído y acepto la {política de privacidad}»).
+   Without its own URL it links to the privacy page from *Settings → Privacy*
+   (with WPML, the translated one).
 
-**Formularios → Ajustes** tiene solo lo común: retención, antispam y los
-textos por defecto.
+**Forms → Settings** only has the common things: retention,
+antispam and the default texts.
 
-### Preseleccionar una opción del desplegable según la página
+### Preselecting a dropdown option depending on the page
 
-El mismo formulario en varias páginas, y en cada una el desplegable llega ya
-con la suya (presupuesto en hostelería → «Lavandería para hoteles…»). La
-opción se indica por su **posición**: 1 es la primera, 0 ninguna.
+The same form on several pages, and on each one the dropdown arrives with its
+own option already selected (quote on the hospitality page → «Lavandería para
+hoteles…»). The option is given by its **position**: 1 is the first, 0 none.
 
-- **Formulario normal** (o patrón NO sincronizado, que se copia en cada
-  página): panel del campo → **Opción preseleccionada**. Queda en el bloque:
+- **Normal form** (or a NON-synced pattern, which is copied into each page):
+  field panel → **Preselected option**. It stays in the block:
   `<!-- wp:estrategia-web-forms/select {"name":"servicio","options":"…","defaultOption":2} /-->`.
-- **Bloque sincronizado** (el mismo formulario en todas las páginas): sus
-  bloques de dentro son los mismos en todas, así que la opción se fija en el
-  bloque del patrón de CADA página, en su atributo `content`, con la clave
-  del **nombre del campo**. En el editor de código de la página:
+- **Synced block** (the same form on every page): its inner blocks are the
+  same on all of them, so the option is set on the pattern block of EACH
+  page, in its `content` attribute, keyed by the **field name**. In the
+  page's code editor:
   `<!-- wp:block {"ref":123,"content":{"servicio":{"defaultOption":1}}} /-->`.
-  No hay control en el panel para esto: WordPress solo deja anular por página
-  los bloques del núcleo.
-- **Desde un enlace**: `?af_servicio=2` o
-  `?af_servicio=lavanderia-para-barcos-y-yates` (el texto de la opción como
-  slug). Gana a lo de la página. `af_` delante a propósito: un campo llamado
-  `name`, `p` o `s` chocaría con WordPress. Un valor que no es opción se
-  ignora y nunca llega al HTML.
+  There is no panel control for this: WordPress only allows per-page
+  overrides on core blocks.
+- **From a link**: `?af_servicio=2` or
+  `?af_servicio=lavanderia-para-barcos-y-yates` (the option text as a slug).
+  It wins over the page setting. The `af_` prefix is on purpose: a field
+  called `name`, `p` or `s` would clash with WordPress. A value that is not
+  an option is ignored and never reaches the HTML.
 
-Si el visitante ya eligió (vuelta de un envío sin JS con errores), manda lo
-que eligió. Con WPML, la posición vale en todos los idiomas porque las
-opciones se traducen sin cambiar el orden; el enlace con slug lleva el texto
-de su idioma. El orden de las fuentes, el porqué de la posición y las
-trampas, en [includes/class-preselect.php](includes/class-preselect.php).
+If the visitor already chose (coming back from a no-JS submission with
+errors), what they chose wins. With WPML, the position holds in every
+language because options are translated without changing their order; the
+slug link carries the text in its own language. The order of the sources,
+the reason for using the position and the pitfalls, in
+[includes/class-preselect.php](includes/class-preselect.php).
 
-### Marcadores
+### Markers
 
-| Marcador | Qué pone |
+| Marker | What it inserts |
 |---|---|
-| `{{nombre_del_campo}}` | lo que escribió el visitante en ese campo (una casilla: Sí / No) |
-| `{{todos_los_campos}}` | todos los campos con su etiqueta; tabla en HTML, líneas en texto |
-| `{{fecha}}` | fecha y hora del envío, con el formato de la web |
-| `{{url_pagina}}` | la página desde la que se envió |
-| `{{nombre_sitio}}` | el nombre de la web |
+| `{{nombre_del_campo}}` | what the visitor typed in that field (a checkbox: Sí / No) |
+| `{{todos_los_campos}}` | all fields with their label; a table in HTML, lines in plain text |
+| `{{fecha}}` | date and time of the submission, in the site's format |
+| `{{url_pagina}}` | the page the form was submitted from |
+| `{{nombre_sitio}}` | the site name |
 
-Un campo opcional vacío se sustituye por nada. Un marcador **que no existe**
-(`{{emial}}`) se deja tal cual, a propósito: la errata se ve en el correo.
+An empty optional field is replaced with nothing. A marker **that does not
+exist** (`{{emial}}`) is left as is, on purpose: the typo shows in the email.
 
-### Plantilla de los correos
+### Email template
 
-Cada aviso sale en HTML (sencillo: tablas y estilos en línea) con la versión
-en texto como alternativa. La plantilla es
-[templates/email.php](templates/email.php); una web la sustituye **sin tocar
-el plugin** copiándola a `<tema>/estrategia-web-forms/email.php` (hijo o padre).
+Each notification is sent as HTML (simple: tables and inline styles) with the
+plain-text version as the alternative. The template is
+[templates/email.php](templates/email.php); a site replaces it **without
+touching the plugin** by copying it to `<theme>/estrategia-web-forms/email.php`
+(child or parent).
 
-## Cómo lo usa un tema hijo
+## How a child theme uses it
 
-Nada que programar: se instala el plugin y se usan los bloques. Para vestirlo:
+Nothing to code: install the plugin and use the blocks. To style it:
 
-- **El botón** es `.wp-element-button`: hereda `styles.elements.button` del
-  `theme.json`.
-- **Los campos** heredan tipografía y color; el borde, el radio, el relleno,
-  el hueco y el color de error son variables: `--estrategia-web-forms-border`,
+- **The button** is `.wp-element-button`: it inherits `styles.elements.button`
+  from `theme.json`.
+- **The fields** inherit typography and colour; border, radius, padding, gap
+  and error colour are variables: `--estrategia-web-forms-border`,
   `--estrategia-web-forms-radius`, `--estrategia-web-forms-padding`, `--estrategia-web-forms-gap`,
-  `--estrategia-web-forms-error`, en el CSS del hijo sobre `.estrategia-web-forms`.
-- Las clases `.estrategia-web-forms__*` son estables entre versiones menores.
-- **La flecha del desplegable** es la nativa del navegador: el plugin no la
-  quita. Un tema que quiera su propio chevron pone `appearance: none` y su
-  flecha juntos, y pinta el fondo con `background-color`, no con el atajo
-  `background`, que borra la imagen de la flecha (fue la «caja lisa» de la
-  revisión de Lavandería, 03-10-2026). Por qué no lo pone el plugin, en la
-  cabecera de [assets/style.css](assets/style.css).
-- Un patrón del hijo puede llevar un formulario entero (bloques con sus
-  atributos). Copias de un mismo patrón comparten identificador y se agrupan
-  en el registro; si deben ir aparte, se cambia en el editor.
+  `--estrategia-web-forms-error`, in the child's CSS on `.estrategia-web-forms`.
+- The `.estrategia-web-forms__*` classes are stable across minor versions.
+- **The dropdown arrow** is the browser's native one: the plugin does not
+  remove it. A theme that wants its own chevron sets `appearance: none` and
+  its arrow together, and paints the background with `background-color`, not
+  with the `background` shorthand, which wipes out the arrow image (that was
+  the «caja lisa» —"plain box"— of the Lavandería review, 03-10-2026). Why
+  the plugin doesn't do it, in the header of
+  [assets/style.css](assets/style.css).
+- A child-theme pattern can carry an entire form (blocks with their
+  attributes). Copies of the same pattern share an identifier and are grouped
+  together in the log; if they should be kept apart, change it in the editor.
 
-Ganchos para lo raro: `estrategia_web_forms_email` (retocar un aviso),
-`estrategia_web_forms_submitted` y `estrategia_web_forms_rejected` (acciones),
-`estrategia_web_forms_capability` (quién ve los envíos, por defecto
-`manage_options`), `estrategia_web_forms_client_ip` (IP tras un proxy de confianza),
-`estrategia_web_forms_csv_separator` (`;` por defecto) y `estrategia_web_forms_settings`.
+Hooks for the unusual: `estrategia_web_forms_email` (tweak a notification),
+`estrategia_web_forms_submitted` and `estrategia_web_forms_rejected` (actions),
+`estrategia_web_forms_capability` (who sees the submissions, `manage_options`
+by default), `estrategia_web_forms_client_ip` (IP behind a trusted proxy),
+`estrategia_web_forms_csv_separator` (`;` by default) and `estrategia_web_forms_settings`.
 
-## Decisiones, con su porqué
+## Decisions, with their reasons
 
-### Por qué los avisos viven en el bloque y no en una pantalla aparte
+### Why the notifications live in the block and not on a separate screen
 
-- **Se traducen con la página.** Con WPML, la página traducida lleva sus
-  avisos traducidos, así que el acuse sale en el idioma del visitante sin
-  hacer nada más. En una pantalla de administración habría que registrar cada
-  texto como cadena suelta.
-- **Se ve cuántos avisos tiene cada formulario** al editarlo.
-- **No llegan al navegador del visitante**: los bloques de aviso no pintan
-  nada, y la configuración de `post_content` solo la ve quien puede editar.
+- **They are translated with the page.** With WPML, the translated page
+  carries its translated notifications, so the acknowledgement goes out in
+  the visitor's language without doing anything else. On an admin screen
+  each text would have to be registered as a standalone string.
+- **You can see how many notifications each form has** while editing it.
+- **They never reach the visitor's browser**: notification blocks render
+  nothing, and the configuration in `post_content` is only visible to those
+  who can edit.
 
-Y lo que lo hace seguro: al pintar el formulario, el servidor guarda una
-**foto de su definición** (campos y avisos) en una tabla y en el HTML solo
-pone su hash. Al recibir el envío valida y avisa con la foto. El visitante no
-puede añadir campos, quitar un obligatorio ni cambiar un destinatario: solo
-señalar una definición que el servidor pintó. Funciona igual si el formulario
-está en una página, un patrón sincronizado o una parte de plantilla. Detalle y
-trampas en la cabecera de
+And what makes it safe: when rendering the form, the server stores a
+**snapshot of its definition** (fields and notifications) in a table and only
+puts its hash in the HTML. On receiving the submission it validates and
+notifies using the snapshot. The visitor cannot add fields, remove a
+required one or change a recipient: only point to a definition the server
+rendered. It works the same whether the form is on a page, a synced pattern
+or a template part. Details and pitfalls in the header of
 [includes/class-definitions.php](includes/class-definitions.php).
 
-Cada aviso es un **bloque** y no una lista en un atributo para que WPML lo
-traduzca con claves planas (`subject`, `body`) en
-[wpml-config.xml](wpml-config.xml), sin depender de cómo trate los atributos
-anidados.
+Each notification is a **block** and not a list in an attribute so that WPML
+translates it with flat keys (`subject`, `body`) in
+[wpml-config.xml](wpml-config.xml), without depending on how it handles
+nested attributes.
 
-### Por qué tabla propia y no un tipo de entrada privado
+### Why its own table and not a private post type
 
-Filtrar, exportar y purgar por fecha son una consulta; con un CPT los datos
-irían a `postmeta`, y **WPML trataría los envíos como contenido traducible**.
-Dos tablas con migraciones numeradas (Armazón, fila 14):
+Filtering, exporting and purging by date are one query; with a CPT the data
+would go into `postmeta`, and **WPML would treat submissions as translatable
+content**. Two tables with numbered migrations (Armazón, row 14):
 [includes/class-migrations.php](includes/class-migrations.php).
 
-### Por qué el editor no se compila
+### Why the editor is not compiled
 
-[assets/editor.js](assets/editor.js) es JavaScript moderno escrito con
-`wp.element.createElement` en vez de JSX, y lee los globales `wp.*` que el
-editor ya trae. Sin `@wordpress/scripts`, sin `node_modules`, sin `build/`:
+[assets/editor.js](assets/editor.js) is modern JavaScript written with
+`wp.element.createElement` instead of JSX, and reads the `wp.*` globals the
+editor already ships. No `@wordpress/scripts`, no `node_modules`, no `build/`:
 
-- el plugin se instala copiando la carpeta, y lo que hay en git es lo que corre;
-- no hay una versión de herramientas que envejezca (`@wordpress/scripts`
-  arrastra cientos de paquetes que habría que mantener al día en un plugin de
-  ~400 líneas de editor);
-- el precio es escribir `h('div', …)` en vez de `<div>`, que en estos bloques
-  (formularios de paneles laterales) es poco.
+- the plugin is installed by copying the folder, and what is in git is what
+  runs;
+- there is no tooling version to go stale (`@wordpress/scripts` drags in
+  hundreds of packages that would have to be kept up to date in a plugin with
+  ~400 lines of editor code);
+- the price is writing `h('div', …)` instead of `<div>`, which in these
+  blocks (side-panel forms) is little.
 
-**No es un módulo ES** (`import`): los bloques del editor se registran con
-scripts clásicos que corren antes de que el editor arranque, y un módulo se
-ejecuta diferido. El lado público **sí** es módulo:
-[blocks/form/view.js](blocks/form/view.js), con la Interactivity API, que
-WordPress sirve como módulo sin compilar.
+**It is not an ES module** (`import`): editor blocks are registered with
+classic scripts that run before the editor starts, and a module runs
+deferred. The public side **is** a module:
+[blocks/form/view.js](blocks/form/view.js), with the Interactivity API, which
+WordPress serves as an uncompiled module.
 
-### Por qué un token propio y no `wp_create_nonce()`
+### Why its own token and not `wp_create_nonce()`
 
-Un nonce de WordPress va atado al usuario, y la API REST trata como anónima
-cualquier petición con cookies sin cabecera `X-WP-Nonce`. Un editor con la
-sesión abierta que probara su formulario sin JavaScript fallaría siempre. El
-token es la hora de pintado firmada con la sal del sitio, ligada a la
-definición; caduca a los 7 días y es también el reloj del tiempo mínimo.
-Ver [includes/class-token.php](includes/class-token.php).
+A WordPress nonce is tied to the user, and the REST API treats as anonymous
+any request with cookies but no `X-WP-Nonce` header. An editor with an open
+session testing their form without JavaScript would always fail. The token
+is the render time signed with the site salt, bound to the definition; it
+expires after 7 days and is also the clock for the minimum fill-in time.
+See [includes/class-token.php](includes/class-token.php).
 
 ### WPML
 
-Todo lo que sabe de WPML está en
-[includes/class-language.php](includes/class-language.php), y solo actúa si
-WPML está activo:
+Everything it knows about WPML is in
+[includes/class-language.php](includes/class-language.php), and it only acts
+if WPML is active:
 
-- Los textos de los bloques (etiquetas, opciones, mensajes, asunto y cuerpo de
-  los avisos) los traduce WPML con la página, según
-  [wpml-config.xml](wpml-config.xml). El destinatario no se traduce a
-  propósito (que un traductor no pueda desviar los correos).
-- Los textos de **Ajustes** se registran con `wpml_register_single_string` y
-  se traducen con `wpml_translate_single_string` (dominio `estrategia-web-forms`).
-- El idioma del envío es el de la página que vio el visitante
-  (`wpml_current_language` al pintar), queda en el registro, y al enviar se
-  cambia a él (`wpml_switch_language` + `switch_to_locale`) para que los textos
-  fijos de los correos salgan en su idioma.
-- Sin WPML, el idioma es el locale de WordPress (`es_ES`) y todo funciona igual.
+- The block texts (labels, options, messages, notification subject and
+  body) are translated by WPML along with the page, according to
+  [wpml-config.xml](wpml-config.xml). The recipient is deliberately not
+  translated (so a translator cannot redirect the emails).
+- The **Settings** texts are registered with
+  `wpml_register_single_string` and translated with
+  `wpml_translate_single_string` (domain `estrategia-web-forms`).
+- The submission language is that of the page the visitor saw
+  (`wpml_current_language` at render time), it is stored in the log, and on
+  submission the code switches to it (`wpml_switch_language` +
+  `switch_to_locale`) so the fixed texts of the emails come out in that
+  language.
+- Without WPML, the language is the WordPress locale (`es_ES`) and
+  everything works the same.
 
-### Textos y traducciones (fila 11) — y dónde se aparta
+### Strings and translations (row 11) — and where it departs
 
 `languages/`: [estrategia-web-forms.pot](languages/estrategia-web-forms.pot),
-[estrategia-web-forms-es_ES.po](languages/estrategia-web-forms-es_ES.po), su
-`.l10n.php` (formato PHP de WP 6.5+) y el JSON del editor. Se generan con
-`node tools/i18n.mjs` (ver su cabecera; necesita GNU gettext, que trae Git
-para Windows).
+[estrategia-web-forms-es_ES.po](languages/estrategia-web-forms-es_ES.po), its
+`.l10n.php` (WP 6.5+ PHP format) and the editor JSON. They are generated with
+`node tools/i18n.mjs` (see its header; it needs GNU gettext, which ships with
+Git for Windows).
 
-**Se aparta de la fila 11 en una cosa, y lo dice:** el `msgid` es el **texto
-en inglés**, no una clave simbólica. Es la convención de la plataforma —
-`__( 'Send', … )`—: WordPress, Poedit, Loco Translate y la traducción de
-cadenas de WPML esperan el texto de origen, y con claves una web en un idioma
-sin `.po` enseñaría `form.submit` en el botón. El precio es el que avisa la
-fila: cambiar el inglés deja la traducción como *fuzzy*, y el script lo cuenta.
+**It departs from row 11 in one thing, and says so:** the `msgid` is the
+**English text**, not a symbolic key. It is the platform convention —
+`__( 'Send', … )`—: WordPress, Poedit, Loco Translate and WPML string
+translation expect the source text, and with keys a site in a language with
+no `.po` would show `form.submit` on the button. The price is the one the
+row warns about: changing the English marks the translation as *fuzzy*, and
+the script reports it.
 
-## Pruebas (fila 7)
+## Tests (row 7)
 
-    node tests/run.mjs             1 → 2 → 3, para en el primer rojo
-    node tests/run.mjs --nivel 1   solo el 1 (cada commit, ~0,2 s)
+    node tests/run.mjs             1 → 2 → 3, stops at the first red
+    node tests/run.mjs --nivel 1   only level 1 (every commit, ~0.2 s)
 
-El corredor arranca **Playground** (WP 7.1, PHP 8.3) si no hay uno en el
-puerto 9402, con el plugin montado y [tests/blueprint.json](tests/blueprint.json),
-y lo mata al terminar. Los correos no salen: un mu-plugin de prueba
-([tests/wp/estrategia-web-forms-test.php](tests/wp/estrategia-web-forms-test.php)) los
-intercepta con `pre_wp_mail` y los guarda para que la prueba los lea.
+The runner starts **Playground** (WP 7.1, PHP 8.3) if there isn't one on
+port 9402, with the plugin mounted and [tests/blueprint.json](tests/blueprint.json),
+and kills it at the end. Emails are not sent: a test mu-plugin
+([tests/wp/estrategia-web-forms-test.php](tests/wp/estrategia-web-forms-test.php))
+intercepts them with `pre_wp_mail` and stores them for the test to read.
 
-| Fichero | Nivel | Qué prueba |
+| File | Level | What it tests |
 |---|---|---|
-| [tests/pure.test.mjs](tests/pure.test.mjs) | 1 | marcadores, IP truncada, token, preselección (con el PHP de la máquina); el CSS base no quita la flecha del desplegable |
-| [tests/preselect.test.mjs](tests/preselect.test.mjs) | 2 | opción preseleccionada por atributo, por URL (slug y posición, valor ajeno ignorado), por página en un bloque sincronizado, y la vuelta sin JS |
-| [tests/server.test.mjs](tests/server.test.mjs) | 2 | HTML público sin destinatarios, obligatorio vacío en servidor, correo y opción inválidos, honeypot, tiempo mínimo, token falso, límite por IP, envío completo con N avisos y marcadores, sin JS (303), purga |
-| [tests/autocomplete.test.mjs](tests/autocomplete.test.mjs) | 2 | `autocomplete` (0.2.2): el del bloque se pinta (name, organization, en texto, desplegable y área de texto); correo y teléfono con email y tel por defecto y cambiables; un texto sin él no lo lleva; un valor con comillas no se cuela. Vista fallar antes del código |
-| [tests/browser.test.mjs](tests/browser.test.mjs) | 3 | con JS sin recargar y `aria-live`, validación nativa, error de servidor saltándose el navegador, sin JS de verdad |
-| [tests/admin.test.mjs](tests/admin.test.mjs) | 3 | lista, filtro, ficha, CSV (e inyección en CSV), nonce, borrar con confirmación, bloques en el editor; la preselección sigue a su texto al reordenar opciones, y abrir y guardar una página no borra el `content` de su bloque sincronizado |
-| [tests/i18n.test.mjs](tests/i18n.test.mjs) | 3 | es_ES: textos por defecto, errores, idioma registrado, correo y editor |
+| [tests/pure.test.mjs](tests/pure.test.mjs) | 1 | markers, truncated IP, token, preselection (with the machine's PHP); the base CSS does not remove the dropdown arrow |
+| [tests/preselect.test.mjs](tests/preselect.test.mjs) | 2 | option preselected by attribute, by URL (slug and position, foreign value ignored), per page in a synced block, and the no-JS return |
+| [tests/server.test.mjs](tests/server.test.mjs) | 2 | public HTML without recipients, empty required field on the server, invalid email and option, honeypot, minimum time, fake token, per-IP limit, full submission with N notifications and markers, no JS (303), purge |
+| [tests/autocomplete.test.mjs](tests/autocomplete.test.mjs) | 2 | `autocomplete` (0.2.2): the block's value is output (name, organization, on text, dropdown and textarea); email and phone with email and tel by default and changeable; a text field without it doesn't carry it; a value with quotes doesn't sneak through. Seen failing before the code |
+| [tests/browser.test.mjs](tests/browser.test.mjs) | 3 | with JS without reloading and `aria-live`, native validation, server error bypassing the browser, real no-JS |
+| [tests/admin.test.mjs](tests/admin.test.mjs) | 3 | list, filter, detail view, CSV (and CSV injection), nonce, delete with confirmation, blocks in the editor; the preselection follows its text when reordering options, and opening and saving a page does not wipe the `content` of its synced block |
+| [tests/i18n.test.mjs](tests/i18n.test.mjs) | 3 | es_ES: default texts, errors, logged language, email and editor |
 
-Todas se han visto fallar: se rompió a propósito el código que cubre cada una
-(tres tandas de mutantes, 01-10-2026; las de la preselección, 03-10-2026) y
-se comprobó que se ponía en rojo. La de «abrir y guardar no borra el
-`content`» no se puede ver en rojo rompiendo el plugin: vigila a WordPress,
-y se pondrá roja el día que el editor empiece a tirarlo.
+All of them have been seen failing: the code each one covers was broken on
+purpose (three rounds of mutants, 01-10-2026; the preselection ones,
+03-10-2026) and they were checked to go red. The «opening and saving does
+not wipe the `content`» test cannot be seen red by breaking the plugin: it
+watches WordPress, and it will go red the day the editor starts dropping it.
 
-## Instalar en una web
+## Installing on a site
 
-Copiar la carpeta a `wp-content/plugins/estrategia-web-forms/` **sin `tests/` ni
-`tools/`** y activar. `tests/wp/` abre rutas REST sin permisos: no se carga
-si no la carga el `blueprint` de pruebas (doble llave: un mu-plugin que no
-existe en una web y la constante `ESTRATEGIA_WEB_FORMS_TESTING`), pero no tiene por
-qué estar en el servidor.
+Copy the folder to `wp-content/plugins/estrategia-web-forms/` **without
+`tests/` or `tools/`** and activate. `tests/wp/` opens REST routes without
+permissions: it is not loaded unless the test `blueprint` loads it (double
+key: a mu-plugin that doesn't exist on a site and the
+`ESTRATEGIA_WEB_FORMS_TESTING` constant), but there is no reason for it to be
+on the server.
 
-**Secretos (fila 21): no hay.** El token se firma con `wp_salt('nonce')`, que
-vive en el `wp-config.php` de cada web. El envío de correo es cosa de la web
-(`wp_mail` y su SMTP): el plugin no guarda credenciales.
+**Secrets (row 21): none.** The token is signed with `wp_salt('nonce')`,
+which lives in each site's `wp-config.php`. Sending email is the site's job
+(`wp_mail` and its SMTP): the plugin stores no credentials.
 
-Al **borrar** el plugin no se borra el registro, salvo que la web defina
-`ESTRATEGIA_WEB_FORMS_REMOVE_DATA` a `true` ([uninstall.php](uninstall.php)).
+**Deleting** the plugin does not delete the log, unless the site defines
+`ESTRATEGIA_WEB_FORMS_REMOVE_DATA` as `true` ([uninstall.php](uninstall.php)).
 
-## Nombres: de «Armazón Forms» a «Estrategia Web Forms» (1.0.0)
+## Names: from «Armazón Forms» to «Estrategia Web Forms» (1.0.0)
 
-Hasta la 0.2.2 el plugin se llamó **Armazón Forms** (carpeta
-`armazon-forms`). En la 1.0.0 (07-10-2026) pasó a **Estrategia Web Forms**
-para poder publicarse en WordPress.org (prefijos únicos de 4 o más
-caracteres). Las entradas 0.x del CHANGELOG son del nombre viejo; el repo
-sigue en `E:\Repositories\armazon-wp-formularios`.
+Up to 0.2.2 the plugin was called **Armazón Forms** (folder
+`armazon-forms`). In 1.0.0 (07-10-2026) it became **Estrategia Web Forms**
+so it could be published on WordPress.org (unique prefixes of 4 or more
+characters). The 0.x CHANGELOG entries use the old name; the repo is still
+at `E:\Repositories\armazon-wp-formularios`.
 
-| Qué | Antes | Ahora |
+| What | Before | Now |
 |---|---|---|
-| Carpeta, fichero, text domain | `armazon-forms/armazon-forms.php` | `estrategia-web-forms/estrategia-web-forms.php` |
+| Folder, file, text domain | `armazon-forms/armazon-forms.php` | `estrategia-web-forms/estrategia-web-forms.php` |
 | Namespace | `Armazon\Forms` | `EstrategiaWeb\Forms` |
-| Funciones, constantes, filtros, opciones | `armazon_forms_…`, `ARMAZON_FORMS_…` | `estrategia_web_forms_…`, `ESTRATEGIA_WEB_FORMS_…` |
-| Tablas | `{prefijo}armazon_forms_submissions`, `…_definitions` | `{prefijo}estrategia_web_forms_…` |
-| Bloques | `armazon-forms/form`, `/text`… | `estrategia-web-forms/…` |
-| Ruta REST | `armazon-forms/v1` | `estrategia-web-forms/v1` |
-| Clases CSS y propiedades | `.armazon-forms__…`, `--armazon-forms-…` | `.estrategia-web-forms__…`, `--estrategia-web-forms-…` |
-| Contexto de WPML | `armazon-forms` | `estrategia-web-forms` |
+| Functions, constants, filters, options | `armazon_forms_…`, `ARMAZON_FORMS_…` | `estrategia_web_forms_…`, `ESTRATEGIA_WEB_FORMS_…` |
+| Tables | `{prefix}armazon_forms_submissions`, `…_definitions` | `{prefix}estrategia_web_forms_…` |
+| Blocks | `armazon-forms/form`, `/text`… | `estrategia-web-forms/…` |
+| REST route | `armazon-forms/v1` | `estrategia-web-forms/v1` |
+| CSS classes and properties | `.armazon-forms__…`, `--armazon-forms-…` | `.estrategia-web-forms__…`, `--estrategia-web-forms-…` |
+| WPML context | `armazon-forms` | `estrategia-web-forms` |
 
-Los bloques viejos siguen pintando durante la 1.x
-([includes/class-legacy-names.php](includes/class-legacy-names.php)); se
-quitan en la **2.0.0**. Las tablas, las opciones y las cadenas de WPML las
-pasa **el migrador**, que vive en el plugin Estrategia Web Site
-(`includes/class-armazon-migration.php`): los envíos se renombran con
-`RENAME TABLE`, no se copian ni se pierden.
+The old blocks keep rendering throughout 1.x
+([includes/class-legacy-names.php](includes/class-legacy-names.php)); they
+are removed in **2.0.0**. Tables, options and WPML strings are moved by
+**the migrator**, which lives in the Estrategia Web Site plugin
+(`includes/class-armazon-migration.php`): submissions are renamed with
+`RENAME TABLE`, not copied or lost.
 
-## Si cambias de proveedor
+## If you change provider
 
-- **Licencia:** GPL-2.0-or-later. Es tuyo para usarlo, cambiarlo y
-  llevártelo: no depende de ningún servicio nuestro (el correo sale por el
-  `wp_mail` de la web).
-- **Si desactivas el plugin**, el formulario deja de verse: sus bloques
-  son dinámicos y sin el plugin no pintan nada (queda, si lo hay, el texto
-  que rodee al formulario en la página). Nadie puede enviar nada.
-- **El registro de envíos no se borra** al desactivar ni al borrar el plugin
-  (salvo `ESTRATEGIA_WEB_FORMS_REMOVE_DATA`). Está en dos tablas propias de
-  la base de datos.
-- **Exportar, ANTES de desactivarlo:** Formularios › Envíos › «Exportar CSV»
-  por formulario. Con el plugin ya quitado: `wp db export --tables=<prefijo>estrategia_web_forms_submissions,<prefijo>estrategia_web_forms_definitions`
-  (los campos de cada envío van en JSON en la columna `data`).
+- **License:** GPL-2.0-or-later. It is yours to use, change and take with
+  you: it does not depend on any service of ours (email goes out through the
+  site's `wp_mail`).
+- **If you deactivate the plugin**, the form stops showing: its blocks are
+  dynamic and without the plugin they render nothing (what remains, if any,
+  is the text around the form on the page). Nobody can submit anything.
+- **The submission log is not deleted** when deactivating or deleting the
+  plugin (unless `ESTRATEGIA_WEB_FORMS_REMOVE_DATA`). It is in two tables of
+  its own in the database.
+- **Export, BEFORE deactivating it:** Forms › Submissions › «Export CSV»
+  per form. With the plugin already removed: `wp db export --tables=<prefix>estrategia_web_forms_submissions,<prefix>estrategia_web_forms_definitions`
+  (each submission's fields are stored as JSON in the `data` column).
 
-## Versiones
+## Versions
 
-`MAYOR.MENOR.PARCHE`, con su nota en [CHANGELOG.md](CHANGELOG.md).
+`MAJOR.MINOR.PATCH`, with its note in [CHANGELOG.md](CHANGELOG.md).
 
-- **Una versión menor o de parche nunca obliga a tocar una web**: ni sus
-  bloques, ni su tema hijo, ni su plantilla de correo. Es la misma regla del
-  tema padre (condición 2 de la decisión).
-- Lo que rompa algo de una web —renombrar un atributo, una clase
-  `.estrategia-web-forms__*`, un marcador, la variable de una plantilla de correo— es
-  **versión mayor**, con nota de qué cambiar en cada web.
-- Una web puede quedarse en una versión vieja: nadie está obligado a
-  actualizar el mismo día.
-- La forma de la base de datos va aparte (`Migrations::LATEST`); sube cuando
-  hay migración, y la migración corre sola al cargar.
+- **A minor or patch version never requires changing a site**: neither its
+  blocks, nor its child theme, nor its email template. It is the same rule as
+  the parent theme (condition 2 of the decision).
+- Anything that breaks something on a site —renaming an attribute, a
+  `.estrategia-web-forms__*` class, a marker, the variable of an email
+  template— is a **major version**, with a note on what to change on each
+  site.
+- A site can stay on an old version: nobody is forced to update the same
+  day.
+- The database shape is versioned separately (`Migrations::LATEST`); it goes
+  up when there is a migration, and the migration runs by itself on load.
 
-## Cómo se mantiene
+## How to maintain
 
-- **Quién y cuándo:** quien toque el plugin, en cada versión: número en
-  `estrategia-web-forms.php` y `ESTRATEGIA_WEB_FORMS_VERSION`, nota en el CHANGELOG,
-  `node tools/i18n.mjs` si cambió un texto, y `node tests/run.mjs` entero antes
-  de llevarlo a ninguna web.
-- **Qué entra aquí y qué no:** entra lo que vale para **cualquier** formulario
-  de **cualquier** web (un tipo de campo, un marcador, una regla antispam). Lo
-  que necesita una sola web va en su tema hijo, con los ganchos de arriba.
-- **El caso frontera:** «el cliente quiere el aviso con su logo». Eso no es
-  una opción del plugin: es la plantilla `estrategia-web-forms/email.php` del hijo.
-  Si **todas** las webs acaban queriendo logo, entonces sí entra aquí.
-- **La trampa:** WPML no está en las pruebas (es de pago). Toda versión que
-  toque [includes/class-language.php](includes/class-language.php) o
-  [wpml-config.xml](wpml-config.xml) se prueba a mano en una web con WPML
-  antes de llevarla a las demás: un formulario traducido, un envío en el
-  segundo idioma y mirar que el acuse sale en ese idioma.
-- **Cada fichero dice cómo se mantiene en su cabecera.** Si cambias uno,
-  revisa que su cabecera siga siendo verdad.
+- **Who and when:** whoever touches the plugin, on every version: number in
+  `estrategia-web-forms.php` and `ESTRATEGIA_WEB_FORMS_VERSION`, note in the
+  CHANGELOG, `node tools/i18n.mjs` if a text changed, and the whole
+  `node tests/run.mjs` before taking it to any site.
+- **What goes in here and what doesn't:** what goes in is what applies to
+  **any** form on **any** site (a field type, a marker, an antispam rule).
+  What only one site needs goes in its child theme, with the hooks above.
+- **The borderline case:** «the client wants the notification with their
+  logo». That is not a plugin option: it is the child's
+  `estrategia-web-forms/email.php` template. If **every** site ends up
+  wanting a logo, then it does go in here.
+- **The trap:** WPML is not in the tests (it is paid). Every version that
+  touches [includes/class-language.php](includes/class-language.php) or
+  [wpml-config.xml](wpml-config.xml) is tested by hand on a site with WPML
+  before taking it to the others: a translated form, a submission in the
+  second language, and checking that the acknowledgement comes out in that
+  language.
+- **Each file says how it is maintained in its header.** If you change one,
+  check that its header is still true.
 
-Pendiente: [PENDIENTES.md](PENDIENTES.md).
+Pending: [TODO.md](../../TODO.md).

@@ -1,8 +1,8 @@
 /**
  * The block editor side: each block's edit() and its sidebar panel.
  *
- * NO BUILD STEP, on purpose (see README, «Por qué el editor no se
- * compila»): no JSX, no @wordpress/scripts, no node_modules. It is written
+ * NO BUILD STEP, on purpose (see README, «Why the editor is not
+ * compiled»): no JSX, no @wordpress/scripts, no node_modules. It is written
  * with h() = wp.element.createElement and reads from the wp.* globals the
  * editor already loads; the dependencies are declared in Blocks::register().
  *
