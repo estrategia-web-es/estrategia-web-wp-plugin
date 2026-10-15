@@ -41,7 +41,8 @@
  *   9. avisos      lo que NO sabe migrar y nombra un tipo viejo: opciones con
  *                  el nombre como cadena serializada. Se listan para mirarlas
  *                  a mano; no se tocan.
- *  10. permalinks  rewrite_rules se borra (WordPress las rehace) y la caché.
+ *  10. permalinks  las reglas de URL se rehacen en la misma pasada (ver la
+ *                  trampa de /en/ en run()) y se vacía la caché.
  * La opción estrategia_web_site NO cambia: enabled_types y rewrite_slugs
  * hablan en CLAVES (ver la cabecera de Type_Names).
  *
@@ -222,7 +223,12 @@ final class Prefix_Migration {
 		self::screens( $types );
 		self::leftovers( $types + $taxes );
 		if ( ! self::$dry ) {
-			delete_option( 'rewrite_rules' );
+			// Las reglas se REHACEN aquí, no se borran: si se borran, las rehace la
+			// siguiente petición, y si es una de /en/ (WPML cambia el idioma) los
+			// slugs traducidos salen en inglés (/locations/) y /sedes/ da 404 para
+			// todos. Medido en el ensayo de Lavandería del 15-10-2026. Aquí corren
+			// con el idioma del sitio (WP-CLI) y con los tipos nuevos ya registrados.
+			flush_rewrite_rules( false );
 			wp_cache_flush();
 			if ( function_exists( 'sg_cachepress_purge_cache' ) ) {
 				sg_cachepress_purge_cache();
