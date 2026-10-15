@@ -222,7 +222,7 @@ final class Registrar {
 	 * @return \stdClass|\WP_Error
 	 */
 	public static function check_required( $prepared, $request ) {
-		$id     = (int) ( $prepared->ID ?? 0 );
+		$id    = (int) ( $prepared->ID ?? 0 );
 		$status = $prepared->post_status ?? ( $id ? get_post_status( $id ) : 'draft' );
 		if ( ! in_array( $status, array( 'publish', 'future' ), true ) ) {
 			return $prepared;
@@ -251,10 +251,18 @@ final class Registrar {
 			if ( ! $field['required'] ) {
 				continue;
 			}
-			$value = array_key_exists( $field['name'], $incoming )
-				? call_user_func( self::sanitizer( $field ), $incoming[ $field['name'] ] )
-				: ( $post_id ? get_post_meta( $post_id, $field['name'], true ) : $field['default'] );
-			if ( '' === $value || null === $value || ( in_array( $field['meta_type'], array( 'integer' ), true ) && 0 === (int) $value && in_array( $field['type'], array( 'image', 'relation' ), true ) ) ) {
+			$sent = array_key_exists( $field['name'], $incoming );
+			if ( 'number' === $field['type'] ) {
+				// 0 is a number (a free entry costs 0 €): empty is NOT GIVEN, never stored or sent blank.
+				$empty = $sent ? ! is_numeric( $incoming[ $field['name'] ] ) : ! ( $post_id && metadata_exists( 'post', $post_id, $field['name'] ) );
+			} else {
+				$value = $sent
+					? call_user_func( self::sanitizer( $field ), $incoming[ $field['name'] ] )
+					: ( $post_id ? get_post_meta( $post_id, $field['name'], true ) : $field['default'] );
+				// image and relation store an ID: 0 is «none».
+				$empty = '' === $value || null === $value || ( in_array( $field['type'], array( 'image', 'relation' ), true ) && 0 === (int) $value );
+			}
+			if ( $empty ) {
 				$out[ $field['name'] ] = Schema::text( $field['label'], $locale );
 			}
 		}

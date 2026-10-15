@@ -12,9 +12,12 @@
  * Fields_Panel::render_meta_box() (classic screen), and the rest in the
  * header of module.php.
  *
- * The trap: integer and number meta must travel as NUMBERS. A "3" string is
- * refused by the REST API («is not of type integer») and the whole save
- * fails. An emptied number goes as null, which deletes the meta.
+ * The trap: an EMPTIED number must travel as null (which deletes the meta,
+ * so it goes back to its default). An empty string is refused by the REST
+ * API («is not of type number») and the whole save fails, with the post left
+ * unsaved. (Measured 15-10-2026 on WP 7.1: a numeric string such as "2019"
+ * IS accepted and converted; it is the "" that breaks. Numbers are still
+ * sent as numbers.)
  */
 ( function ( wp, config ) {
 	if ( ! wp || ! wp.plugins || ! config ) {
