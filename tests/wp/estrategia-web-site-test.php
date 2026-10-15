@@ -17,7 +17,9 @@
  * - Rutas estrategia-web-site-test/v1/*: ping, reset, users, page, raw-post,
  *   consent-categories (0.3.0, solo lee un filtro), consent-setup (0.5.0),
  *   modules (1.1.0: GET qué módulos cargó la petición; POST guarda la lista
- *   como la pantalla, o la borra con «active»: null).
+ *   como la pantalla, o la borra con «active»: null), legacy-types y
+ *   prefix-migration (1.2.0: siembra por SQL una web con los tipos sin
+ *   prefijo y pasa el migrador; modules/site/tests/prefix-migration.test.mjs).
  * - Desde la 1.1.0 es el mu-plugin de pruebas del NÚCLEO y de los módulos
  *   que vienen de Estrategia Web Site; forms trae el suyo
  *   (modules/forms/tests/wp/). Los dos los carga tests/blueprint.json.
@@ -245,13 +247,20 @@ add_action(
 				delete_option( 'estrategia_web_modules' ); // 1.1.0: todos los módulos, como recién instalado.
 				delete_option( 'estrategia_web_modules_known' );
 				delete_option( 'rewrite_rules' );
-				$types = "'client','testimonial','location','project','portfolio'";
+				delete_option( 'icl_sitepress_settings#custom_posts_sync_option' ); // Los de legacy-types (1.2.0).
+				delete_option( 'WPML(setup/translate-everything-taxonomies)' );
+				delete_option( 'rank_math_known_post_types' );
+				// Con y sin prefijo (1.2.0): la prueba del migrador siembra filas con los nombres viejos.
+				$renamed = \EstrategiaWeb\Site\Type_Names::renamed();
+				$names   = array_merge( array_keys( $renamed ), array_values( $renamed ) );
+				$types   = "'" . implode( "','", array_diff( $names, \EstrategiaWeb\Site\Type_Names::TAXONOMIES, array_map( array( \EstrategiaWeb\Site\Type_Names::class, 'name' ), \EstrategiaWeb\Site\Type_Names::TAXONOMIES ) ) ) . "'";
+				$taxes   = "'" . implode( "','", array_merge( \EstrategiaWeb\Site\Type_Names::TAXONOMIES, array_map( array( \EstrategiaWeb\Site\Type_Names::class, 'name' ), \EstrategiaWeb\Site\Type_Names::TAXONOMIES ) ) ) . "'";
 				$ids   = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type IN ($types) OR (post_type = 'attachment' AND post_title LIKE 'prueba-%')" ); // phpcs:ignore
 				foreach ( $ids as $id ) {
 					wp_delete_post( (int) $id, true );
 				}
 				// Las taxonomías pueden no estar registradas: se borra a mano.
-				$tt = $wpdb->get_col( "SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE taxonomy IN ('client_sector','project_category','portfolio_category')" ); // phpcs:ignore
+				$tt = $wpdb->get_col( "SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE taxonomy IN ($taxes)" ); // phpcs:ignore
 				if ( $tt ) {
 					$in = implode( ',', array_map( 'intval', $tt ) );
 					$wpdb->query( "DELETE FROM {$wpdb->term_relationships} WHERE term_taxonomy_id IN ($in)" ); // phpcs:ignore
@@ -320,6 +329,52 @@ add_action(
 				$row = $wpdb->get_row( $wpdb->prepare( "SELECT ID, post_type, post_status, post_title FROM {$wpdb->posts} WHERE ID = %d", (int) $r['id'] ), ARRAY_A ); // phpcs:ignore
 				return $row ? $row : new WP_Error( 'not_found', 'no existe', array( 'status' => 404 ) );
 			}
+		);
+
+		// 1.2.0: una web de ANTES del prefijo, sembrada por SQL (con el plugin
+		// nuevo no se puede crear un «client» por REST): un cliente con su
+		// sector, una sede con teléfono, y una página con la Consulta vieja.
+		$route(
+			'/legacy-types',
+			'POST',
+			static function () {
+				global $wpdb;
+				$insert = static function ( string $type, string $title, string $slug, string $content = '' ) use ( $wpdb ): int {
+					$wpdb->insert( $wpdb->posts, array( 'post_type' => $type, 'post_title' => $title, 'post_name' => $slug, 'post_status' => 'publish', 'post_content' => $content, 'post_date' => current_time( 'mysql' ), 'post_date_gmt' => current_time( 'mysql', true ), 'post_modified' => current_time( 'mysql' ), 'post_modified_gmt' => current_time( 'mysql', true ), 'post_author' => 1 ) ); // phpcs:ignore
+					return (int) $wpdb->insert_id;
+				};
+				$client = $insert( 'client', 'Hotel de antes', 'hotel-de-antes' );
+				$wpdb->insert( $wpdb->terms, array( 'name' => 'Hoteles de antes', 'slug' => 'hoteles-de-antes' ) ); // phpcs:ignore
+				$term = (int) $wpdb->insert_id;
+				$wpdb->insert( $wpdb->term_taxonomy, array( 'term_id' => $term, 'taxonomy' => 'client_sector', 'description' => '', 'count' => 1 ) ); // phpcs:ignore
+				$tt = (int) $wpdb->insert_id;
+				$wpdb->insert( $wpdb->term_relationships, array( 'object_id' => $client, 'term_taxonomy_id' => $tt ) ); // phpcs:ignore
+				$location = $insert( 'location', 'Sede de antes', 'sede-de-antes' );
+				add_post_meta( $location, 'estrategia_web_location_phone', '971 11 22 33' );
+				$query = '<!-- wp:query {"queryId":5,"query":{"perPage":10,"pages":0,"offset":0,"postType":"client","order":"asc","orderBy":"title","inherit":false,"taxQuery":{"client_sector":[' . $term . ']}}} -->'
+					. '<div class="wp-block-query"><!-- wp:post-template --><!-- wp:post-title /--><!-- wp:post-terms {"term":"client_sector"} /--><!-- /wp:post-template --></div><!-- /wp:query -->';
+				$page = $insert( 'page', 'Clientes de antes', 'clientes-de-antes', $query );
+				// Como los guardan WPML 5.1 y Rank Math en Lavandería (sin esos plugins aquí: solo las filas).
+				update_option( 'icl_sitepress_settings#custom_posts_sync_option', array( 'v' => array( 'page' => 1, 'client' => 2, 'location' => 2 ) ) );
+				update_option( 'WPML(setup/translate-everything-taxonomies)', array( 'v' => array( 'client_sector' => array() ) ) );
+				update_option( 'rank_math_known_post_types', array( 'post' => 'post', 'client' => 'client' ) );
+				wp_cache_flush();
+				return array( 'client' => $client, 'term' => $term, 'location' => $location, 'page' => $page );
+			}
+		);
+
+		// Unas opciones tal cual están (solo lee): lo que dejó el migrador.
+		$route(
+			'/options',
+			'POST',
+			static fn( WP_REST_Request $r ) => array_combine( (array) $r->get_param( 'names' ), array_map( static fn( $n ) => get_option( (string) $n, null ), (array) $r->get_param( 'names' ) ) )
+		);
+
+		// El migrador del prefijo (includes/class-prefix-migration.php), en seco o de verdad.
+		$route(
+			'/prefix-migration',
+			'POST',
+			static fn( WP_REST_Request $r ) => \EstrategiaWeb\Site\Prefix_Migration::run( (bool) $r->get_param( 'dry' ) )
 		);
 	}
 );

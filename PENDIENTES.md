@@ -70,6 +70,12 @@ cookies, en `consent`).
   14-10-2026): CSV de Lavandería entero, `%3F` y `?p=`/`?page_id=`, solo en
   los 404, registro de 404, aviso de Rank Math, WP-CLI. En Lavandería se
   queda APAGADO (las lleva Rank Math).
+- **Tipos y taxonomías con prefijo `eweb_`** (15-10-2026, rama
+  prefijo-tipos, versión propuesta 1.2.0): `Type_Names`, alias
+  `Unprefixed_Names` hasta 2.0.0, migrador `Prefix_Migration` (y en
+  Lavandería `despliegue/prefijo-tipos.mjs`, que el desplegador pasa una
+  vez). Tabla de nombres públicos en el README y guía
+  [docs/web-nueva.md](docs/web-nueva.md).
 
 ### A añadir (todavía sin hacer)
 
@@ -109,17 +115,17 @@ Módulos».
 ---
 
 
-## Tipos y taxonomías sin prefijo, antes de WordPress.org
-**Fecha:** 07-10-2026 · **Vence:** antes de mandarlo a WordPress.org
+## Tres metas sin prefijo, antes de WordPress.org
+**Fecha:** 15-10-2026 · **Vence:** antes de mandarlo a WordPress.org
 
-En la 1.0.0 todo ganó el prefijo `estrategia_web_` / `estrategia-web-`
-menos los tipos (`client`, `testimonial`, `location`, `project`,
-`portfolio`) y sus taxonomías (`client_sector`…). Son nombres genéricos que
-otro plugin puede usar, y la revisión de WordPress.org suele pedir prefijo.
-No se cambiaron porque cambiar un tipo cambia su ruta REST, las Consultas
-guardadas en las páginas (`"postType":"client"`) y sus filas en
-`wp_posts`: necesita su propio paso en el migrador y una versión mayor
-(2.0.0). Lo decide David.
+Los tipos ganaron prefijo en la 1.2.0 (`eweb_client`…; rama prefijo-tipos).
+Quedan tres METAS de antes de la 1.0.0 sin prefijo: `client_url`,
+`testimonial_role` y `testimonial_client` (las demás son
+`estrategia_web_…`). Mismo problema que tenían los tipos: otro plugin puede
+usar `client_url`. Arreglo: un paso más en `Prefix_Migration` (metas de los
+tipos `eweb_*`), `wpml-config.xml`, `Meta_Panel::WPML_*`, los bindings
+`core/post-meta` del contenido y las pruebas. No se hizo con los tipos
+porque el encargo del 15-10-2026 decía «metas no cambian». Lo decide David.
 
 ## Remoto del repo (fila 24)
 **Fecha:** 02-10-2026 · **Vence:** antes de instalarlo en la primera web

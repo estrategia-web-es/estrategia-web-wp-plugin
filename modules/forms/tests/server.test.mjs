@@ -4,7 +4,10 @@
 // que haría un robot o alguien que se salta la validación del navegador.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { reset, settings, mails, submissions, seedPage, loadForm, submit, GOOD, TEAM, FAIL, waitMinTime, testApi } from "./lib.mjs";
+import { reset, settings, mails, submissions, seedPage, loadForm, submit, GOOD, TEAM, FAIL, waitMinTime, testApi, BASE } from "./lib.mjs";
+
+// La URL del WordPress de la tanda, escapada para una expresión regular (con EW_PORT no es la 9404).
+const SITE = BASE.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
 
 let page;
 before(async () => {
@@ -125,7 +128,7 @@ test("envío bueno: se registra con todo y salen los N avisos con los marcadores
   assert.deepEqual(team.to, [TEAM]);
   assert.equal(team.subject, "Nuevo mensaje de Ana");
   assert.ok(team.headers.includes("Reply-To: ana@ejemplo.test"), "responder-a sale del campo email");
-  assert.match(team.html, /Desde http:\/\/127\.0\.0\.1:9404\/contacto\//);
+  assert.match(team.html, new RegExp(`Desde ${SITE}/contacto/`));
   assert.match(team.html, /Sitio de pruebas/);
   assert.match(team.html, /<th[^>]*>Teléfono<\/th><td[^>]*>\+34 600 000 000<\/td>/, "{{todos_los_campos}} como tabla en HTML");
   assert.match(team.text, /Mensaje: \nHola,\nquería información\./, "y como líneas en la versión texto");
@@ -142,7 +145,7 @@ test("sin JS: redirección 303 a la página con el resultado", async () => {
   await waitMinTime();
   const r = await submit(hidden, { ...GOOD, mensaje: "" }, { js: false });
   assert.equal(r.status, 303);
-  assert.match(r.location, /^http:\/\/127\.0\.0\.1:9404\/contacto\/\?af_result=[a-z0-9]{20}#af-contacto-status$/);
+  assert.match(r.location, new RegExp(`^${SITE}/contacto/\\?af_result=[a-z0-9]{20}#af-contacto-status$`));
   const html = await (await fetch(r.location)).text();
   assert.match(html, /aria-invalid="true"/, "el campo con error se marca");
   assert.match(html, /value="Ana"/, "lo escrito se conserva");

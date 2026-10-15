@@ -42,6 +42,7 @@ require_once ESTRATEGIA_WEB_DIR . 'includes/class-modules.php';
 require_once ESTRATEGIA_WEB_DIR . 'includes/class-plugin.php';
 require_once ESTRATEGIA_WEB_DIR . 'includes/class-blocks.php';
 require_once ESTRATEGIA_WEB_DIR . 'includes/class-armazon-migration.php';
+require_once ESTRATEGIA_WEB_DIR . 'includes/class-prefix-migration.php';
 require_once ESTRATEGIA_WEB_DIR . 'includes/admin/class-modules-page.php';
 
 register_activation_hook( __FILE__, array( EstrategiaWeb\Plugin::class, 'activate' ) );

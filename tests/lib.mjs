@@ -7,8 +7,17 @@
 // una página, mirar la fila cruda de la base de datos).
 import { createRequire } from "node:module";
 import zlib from "node:zlib";
+import fs from "node:fs";
 
 export const BASE = process.env.AS_BASE || "http://127.0.0.1:9404";
+
+// El nombre REGISTRADO de un tipo o taxonomía del módulo site (1.2.0):
+// type("client") → "eweb_client" (también su ruta REST). El prefijo se lee de
+// Type_Names para no escribirlo a fuego en ninguna prueba.
+export const PREFIX = fs
+  .readFileSync(new URL("../modules/site/includes/class-type-names.php", import.meta.url), "utf8")
+  .match(/const PREFIX = '([^']*)'/)[1];
+export const type = (key) => PREFIX + key;
 
 // Playwright sin node_modules propio: el de portal-hs (CLAUDE.md, 3.9).
 export const playwright = () => createRequire("E:/Repositories/portal-hs/package.json")("playwright");
