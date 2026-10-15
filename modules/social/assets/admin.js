@@ -1,12 +1,12 @@
 /**
- * Pantalla «Redes sociales»: Subir / Bajar / Quitar, «Añadir red», la vista
- * del icono y el SVG propio de la mediateca. Script clásico, sin compilar.
- * Lo que hace la pantalla sin esto, y cómo se mantiene: cabecera de
- * includes/class-admin.php.
+ * “Social networks” screen: Move up / Move down / Remove, “Add network”, the
+ * icon preview and the custom SVG from the media library. Classic script, not
+ * compiled. What the screen does without this, and how to maintain it: header
+ * of includes/class-admin.php.
  *
- * La trampa: los name="estrategia_web_social_links[n][campo]" llevan la
- * POSICIÓN. Al mover filas los n se quedan desordenados y PHP guardaría por
- * n, no por cómo se ve; por eso se renumeran justo antes de enviar.
+ * The trap: the name="estrategia_web_social_links[n][field]" carry the
+ * POSITION. Moving rows leaves the n out of order and PHP would save by n,
+ * not by what is on screen; that is why they are renumbered right before submit.
  */
 ( function () {
 	const table = document.querySelector( '.estrategia-web-social__rows' );
@@ -16,9 +16,9 @@
 	const icons = window.estrategiaWebSocialIcons || {};
 	const t = window.estrategiaWebSocialText || {};
 	const addButton = document.querySelector( '.estrategia-web-social__add' );
-	const template = table.lastElementChild.cloneNode( true ); // La fila vacía.
+	const template = table.lastElementChild.cloneNode( true ); // The empty row.
 
-	// Lo mismo que Icons::guess() en PHP, en corto: solo para la vista previa.
+	// Same as Icons::guess() in PHP, in short: only for the preview.
 	const guess = ( url ) => {
 		const u = String( url || '' ).toLowerCase();
 		if ( u.startsWith( 'mailto:' ) || /^[^\s@]+@[^\s@]+$/.test( u ) ) return 'email';
@@ -48,7 +48,7 @@
 			return;
 		}
 		if ( Number( field( row, 'icon_id' ).value ) > 0 ) {
-			return; // El SVG propio que pintó PHP: se deja.
+			return; // The custom SVG PHP rendered: leave it.
 		}
 		const slug = field( row, 'icon' ).value || guess( field( row, 'url' ).value );
 		box.innerHTML = icons[ slug ] || '';

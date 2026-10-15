@@ -1,10 +1,10 @@
-Iconos de redes sociales del módulo «social» (Estrategia Web)
-=============================================================
+Social network icons of the “social” module (Estrategia Web)
+============================================================
 
-De dónde sale cada uno, y su licencia. Las dos son compatibles con la GPL
-del plugin.
+Where each one comes from, and its licence. Both are compatible with the
+plugin's GPL.
 
-Simple Icons 13.21.0 — CC0 1.0 (dominio público)
+Simple Icons 13.21.0 — CC0 1.0 (public domain)
 https://simpleicons.org/ · https://github.com/simple-icons/simple-icons
   instagram, facebook, linkedin, x, youtube, tiktok, whatsapp, telegram,
   pinterest, google, google-maps (Google Maps), tripadvisor, threads,
@@ -24,10 +24,11 @@ https://icons.getbootstrap.com/ · https://github.com/twbs/icons
   notice shall be included in all copies or substantial portions of the
   Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
 
-Los logotipos son marcas de sus dueños: se usan solo para enlazar a su red.
+The logos are trademarks of their owners: they are used only to link to
+their network.
 
-Cómo se toca: se descargaron de jsDelivr y se limpiaron (solo viewBox y
-<path>, sin título ni color: se pintan con currentColor). Un icono nuevo:
-fichero <slug>.svg aquí con la misma forma, su línea arriba con su
-licencia (solo CC0, MIT, GPL o compatibles) y su nombre en Icons::labels()
-(includes/class-icons.php).
+How to maintain: they were downloaded from jsDelivr and cleaned up (only
+viewBox and <path>, no title or colour: they are painted with currentColor).
+A new icon: a <slug>.svg file here with the same shape, its line above with
+its licence (only CC0, MIT, GPL or compatible) and its name in
+Icons::labels() (includes/class-icons.php).

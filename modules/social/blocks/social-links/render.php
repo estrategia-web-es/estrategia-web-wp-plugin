@@ -1,43 +1,43 @@
 <?php
 /**
- * estrategia-web/social-links — las redes sociales de la web.
+ * estrategia-web/social-links — the site's social networks.
  *
- * Qué pinta: una lista (<ul>) con un enlace por red, en el orden de
- * «Estrategia Web → Redes sociales» (opción estrategia_web_social_links; ver
- * modules/social/includes/class-links.php). Sin JavaScript. Si no hay redes,
- * no pinta nada en la web; en el editor, un aviso de dónde se ponen.
+ * What it renders: a list (<ul>) with one link per network, in the order of
+ * “Estrategia Web → Social networks” (option estrategia_web_social_links; see
+ * modules/social/includes/class-links.php). No JavaScript. If there are no
+ * networks, it renders nothing on the site; in the editor, a notice saying
+ * where to add them.
  *
- * Atributos:
- * - display: «icons» (solo iconos) o «icons-names» (icono y nombre).
- * - size: small / medium / large → 1.25em / 1.5em / 2em, en la variable
- *   --estrategia-web-social-size (un tema la cambia sin tocar esto).
- * Y los de serie: color del texto (los iconos lo toman, ver abajo), tamaño
- * de letra (los em de arriba lo siguen) y margen.
+ * Attributes:
+ * - display: “icons” (icons only) or “icons-names” (icon and name).
+ * - size: small / medium / large → 1.25em / 1.5em / 2em, in the variable
+ *   --estrategia-web-social-size (a theme changes it without touching this).
+ * Plus the built-in ones: text colour (the icons take it, see below), font
+ * size (the em values above follow it) and margin.
  *
- * Decisiones:
- * - COLOR: los iconos son <svg fill="currentColor"> y el enlace lleva
- *   color: inherit, así que salen del color del texto donde se ponga el
- *   bloque (blanco en un pie oscuro) sin configurar nada. No se pintan con
- *   los colores de cada marca: eso es diseño de una web, no del plugin.
- * - ACCESIBLE: el nombre de cada enlace es «Instagram de <Empresa>» (el
- *   nombre de «Datos de la empresa», o el del sitio) más «(se abre en una
- *   pestaña nueva)», en texto oculto visualmente y no en aria-label, para que
- *   lo traduzcan los traductores automáticos (como el botón de WhatsApp). En
- *   «icons-names» el nombre visible va aria-hidden para no leerlo dos veces;
- *   el oculto empieza por él (WCAG 2.5.3, la etiqueta dentro del nombre).
- * - Pestaña nueva con rel="noopener noreferrer" solo en los enlaces http(s):
- *   un mailto: o un tel: no abren ninguna página.
- * - Diana táctil de 44 px como mínimo (WCAG 2.5.8 pide 24; 44 es la de
- *   Apple y la que piden los móviles), aunque el icono sea pequeño.
+ * Decisions:
+ * - COLOUR: icons are <svg fill="currentColor"> and the link has
+ *   color: inherit, so they take the text colour wherever the block is
+ *   placed (white in a dark footer) with no configuration. They are not
+ *   painted in each brand's colours: that is a site's design, not the plugin's.
+ * - ACCESSIBLE: each link's name is “Instagram of <Company>” (the name from
+ *   “Company details”, or the site's) plus “(opens in a new tab)”, in
+ *   visually hidden text and not in aria-label, so automatic translators
+ *   translate it (like the WhatsApp button). In “icons-names” the visible
+ *   name is aria-hidden so it is not read twice; the hidden one starts with
+ *   it (WCAG 2.5.3, label in name).
+ * - New tab with rel="noopener noreferrer" only on http(s) links: a mailto:
+ *   or a tel: opens no page.
+ * - Touch target of at least 44 px (WCAG 2.5.8 asks for 24; 44 is Apple's
+ *   and what mobiles expect), even if the icon is small.
  *
- * Cómo se mantiene:
- * - Caso frontera: «que en el pie salgan en blanco y en la página de
- *   contacto con su color de marca» es diseño: color del bloque en el pie, y
- *   para el color de marca, CSS del tema por .is-network-<slug>. No se añade
- *   un atributo por marca.
- * - La trampa: la vista previa del editor la pinta ESTE fichero por REST
- *   (autoRegister → ServerSideRender). Un cambio aquí se ve en los dos
- *   sitios; un error aquí rompe también el editor.
+ * How to maintain:
+ * - Edge case: “white in the footer and in brand colour on the contact
+ *   page” is design: block colour in the footer, and for the brand colour,
+ *   theme CSS via .is-network-<slug>. No per-brand attribute is added.
+ * - The trap: the editor preview is rendered by THIS file via REST
+ *   (autoRegister → ServerSideRender). A change here shows in both places;
+ *   an error here breaks the editor too.
  *
  * @package estrategia-web
  *
@@ -76,7 +76,7 @@ $estrategia_web_owner   = Links::owner();
 		?>
 		<li class="estrategia-web-social-links__item is-network-<?php echo esc_attr( $estrategia_web_item['icon'] ); ?>">
 			<a class="estrategia-web-social-links__link" href="<?php echo esc_url( $estrategia_web_item['url'], Links::PROTOCOLS ); ?>"<?php echo $estrategia_web_item['new_tab'] ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>>
-				<?php echo $estrategia_web_item['svg']; // phpcs:ignore WordPress.Security.EscapeOutput -- SVG de la colección o saneado por Svg_Sanitizer (Icons). ?>
+				<?php echo $estrategia_web_item['svg']; // phpcs:ignore WordPress.Security.EscapeOutput -- SVG from the collection or sanitized by Svg_Sanitizer (Icons). ?>
 				<?php if ( 'icons-names' === $estrategia_web_display ) : ?>
 					<span class="estrategia-web-social-links__name" aria-hidden="true"><?php echo esc_html( $estrategia_web_item['name'] ); ?></span>
 				<?php endif; ?>

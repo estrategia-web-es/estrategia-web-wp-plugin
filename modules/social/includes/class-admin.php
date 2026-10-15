@@ -1,29 +1,29 @@
 <?php
 /**
- * Pantalla «Estrategia Web → Redes sociales» (manage_options): la lista de
- * redes, una fila por red (nombre, enlace, icono), con Subir / Bajar /
- * Quitar y «Añadir red». Guarda por options.php (Settings API): el saneado
- * es el mismo que por REST (Links::sanitize).
+ * “Estrategia Web → Social networks” screen (manage_options): the list of
+ * networks, one row per network (name, link, icon), with Move up / Move
+ * down / Remove and “Add network”. Saves through options.php (Settings
+ * API): the sanitizing is the same as via REST (Links::sanitize).
  *
- * Ordenar con botones y no arrastrando, a propósito: se puede con teclado y
- * con lector de pantalla, y no necesita ninguna librería.
+ * Reordering with buttons rather than drag and drop, on purpose: it works
+ * with the keyboard and with a screen reader, and needs no library.
  *
- * Sin JavaScript también funciona: salen las redes guardadas y una fila vacía
- * para añadir otra; se quita una vaciando su enlace. assets/admin.js (script
- * clásico, sin compilar) solo añade los botones, la vista del icono y el
- * selector de SVG de la mediateca, y renumera los name="…[n][…]" al enviar
- * para que el orden guardado sea el que se ve.
+ * It also works without JavaScript: the saved networks are shown plus an
+ * empty row to add another; a network is removed by emptying its link.
+ * assets/admin.js (classic script, not compiled) only adds the buttons, the
+ * icon preview and the media library SVG picker, and renumbers the
+ * name="…[n][…]" on submit so the saved order is the one on screen.
  *
- * Cómo se mantiene:
- * - Un campo nuevo por red: su <td> en row() (con data-field), su línea en
- *   Links::sanitize_item y el esquema, y admin.js no se toca si el name
- *   sigue la forma estrategia_web_social_links[n][campo].
- * - Caso frontera: el SVG propio se elige de la mediateca, que solo deja
- *   SUBIR SVG si «Datos de la empresa → Permitir SVG» está marcado (y el
- *   usuario puede: módulo site, class-svg.php). La pantalla lo dice.
- * - La trampa: el grupo de settings_fields() tiene que ser Links::GROUP, el
- *   mismo de register_setting, o options.php contesta «la opción no está en
- *   la lista permitida».
+ * How to maintain:
+ * - A new per-network field: its <td> in row() (with data-field), its line
+ *   in Links::sanitize_item and the schema; admin.js is not touched if the
+ *   name follows the form estrategia_web_social_links[n][field].
+ * - Edge case: the custom SVG is picked from the media library, which only
+ *   allows UPLOADING SVG if “Company details → Allow SVG” is ticked (and the
+ *   user is allowed: site module, class-svg.php). The screen says so.
+ * - The trap: the settings_fields() group must be Links::GROUP, the same as
+ *   in register_setting, or options.php answers “the option is not in the
+ *   allowed list”.
  */
 
 namespace EstrategiaWeb\Social;
@@ -58,8 +58,8 @@ final class Admin {
 	}
 
 	/**
-	 * Los textos de admin.js. No es un script de bloque ni del editor, así que
-	 * class-blocks.php no se entera: se le pasan aquí ya traducidos.
+	 * The strings of admin.js. It is not a block or editor script, so
+	 * class-blocks.php does not pick it up: they are passed here already translated.
 	 */
 	private static function inline_translations(): void {
 		$strings = array(
@@ -83,7 +83,7 @@ final class Admin {
 		echo '<p>' . esc_html__( 'The links shown by the “Social networks” block, in this order. The icon is guessed from the link; choose one only if it gets it wrong, or use your own SVG from the media library.', 'estrategia-web' ) . '</p>';
 		echo '<form method="post" action="options.php">';
 		settings_fields( Links::GROUP );
-		// Para que una lista vacía llegue (ver la cabecera de Links).
+		// So that an empty list gets through (see the header of Links).
 		printf( '<input type="hidden" name="%s[]" value="">', esc_attr( Links::OPTION ) );
 		echo '<table class="widefat striped estrategia-web-social__table"><thead><tr>';
 		echo '<th scope="col">' . esc_html__( 'Icon', 'estrategia-web' ) . '</th>';
@@ -95,7 +95,7 @@ final class Admin {
 		foreach ( $items as $item ) {
 			self::row( $index++, $item );
 		}
-		self::row( $index, array( 'name' => '', 'url' => '', 'icon' => '', 'icon_id' => 0 ) ); // La vacía, para añadir.
+		self::row( $index, array( 'name' => '', 'url' => '', 'icon' => '', 'icon_id' => 0 ) ); // The empty one, for adding.
 		echo '</tbody></table>';
 		echo '<p><button type="button" class="button estrategia-web-social__add" hidden>' . esc_html__( 'Add network', 'estrategia-web' ) . '</button></p>';
 		echo '<p class="description">' . esc_html__( 'To remove a network without JavaScript, empty its link. Your own SVG can only be uploaded if “Allow SVG uploads” is on in Company details.', 'estrategia-web' ) . '</p>';
@@ -117,11 +117,11 @@ final class Admin {
 		echo '<tr class="estrategia-web-social__row">';
 		printf(
 			'<td><span class="estrategia-web-social__preview" aria-hidden="true">%1$s</span> <label class="screen-reader-text" for="%2$s-icon">%3$s</label><select id="%2$s-icon" data-field="icon" name="%4$s">%5$s</select><input type="hidden" data-field="icon_id" name="%6$s" value="%7$d"></td>',
-			$preview, // phpcs:ignore WordPress.Security.EscapeOutput -- SVG de Icons (colección o saneado).
+			$preview, // phpcs:ignore WordPress.Security.EscapeOutput -- SVG from Icons (collection or sanitized).
 			esc_attr( $id ),
 			esc_html__( 'Icon', 'estrategia-web' ),
 			esc_attr( $name( 'icon' ) ),
-			$options, // phpcs:ignore WordPress.Security.EscapeOutput -- escapado arriba.
+			$options, // phpcs:ignore WordPress.Security.EscapeOutput -- escaped above.
 			esc_attr( $name( 'icon_id' ) ),
 			(int) $item['icon_id']
 		);
