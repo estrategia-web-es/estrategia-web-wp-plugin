@@ -1,26 +1,26 @@
 <?php
 /**
- * Migraciones numeradas de las tablas propias (Armazón, fila 14).
+ * Numbered migrations of the plugin's own tables (Armazón, row 14).
  *
- * Cada migración es un fichero includes/migrations/NNNN-nombre.php que
- * DEVUELVE una función (\wpdb $wpdb): string. La cadena es lo que hizo
- * («creó 2 tablas», «rellenó 340 filas, 0 fallos»), y queda escrita en la
- * opción estrategia_web_forms_migrations_log con la fecha: una migración que acaba
- * en silencio no se distingue de una que no corrió.
+ * Each migration is a file includes/migrations/NNNN-name.php that RETURNS a
+ * function (\wpdb $wpdb): string. The string is what it did («created 2
+ * tables», «filled 340 rows, 0 failures»), and it is written to the option
+ * estrategia_web_forms_migrations_log with the date: a migration that ends
+ * silently cannot be told apart from one that did not run.
  *
- * Se aplican una vez y en orden, al activar y en cada carga si la versión
- * guardada (estrategia_web_forms_db_version) es menor que LATEST.
+ * They are applied once and in order, on activation and on every load if
+ * the stored version (estrategia_web_forms_db_version) is lower than LATEST.
  *
- * Cómo se mantiene:
- * - Quién y cuándo: quien cambie la forma de una tabla, en el mismo commit que
- *   el código que la usa. Se añade el fichero NNNN siguiente y se sube LATEST.
- * - Nunca se edita una migración ya publicada: las webs que la aplicaron no
- *   la vuelven a correr. Lo que haya que corregir va en una nueva.
- * - Caso frontera: añadir una columna con valor por defecto ES una migración
- *   (dbDelta la añade, pero la versión tiene que subir para que corra).
- * - La trampa: dbDelta es quisquilloso con el formato del CREATE TABLE (dos
- *   espacios tras PRIMARY KEY, una columna por línea, sin comillas
- *   invertidas). Si no lo respetas, no da error: simplemente no altera nada.
+ * How to maintain:
+ * - Who and when: whoever changes the shape of a table, in the same commit
+ *   as the code that uses it. Add the next NNNN file and bump LATEST.
+ * - Never edit a migration that has already been released: sites that
+ *   applied it do not run it again. Whatever needs fixing goes in a new one.
+ * - Edge case: adding a column with a default value IS a migration (dbDelta
+ *   adds it, but the version has to go up for it to run).
+ * - The trap: dbDelta is picky about the CREATE TABLE format (two spaces
+ *   after PRIMARY KEY, one column per line, no backticks). If you do not
+ *   follow it, there is no error: it simply does not alter anything.
  */
 
 namespace EstrategiaWeb\Forms;

@@ -1,16 +1,17 @@
 <?php
 /**
- * Purga programada del registro según la retención (Ajustes → «Conservar
- * envíos durante N días»; 0 = no borrar nunca).
+ * Scheduled purge of the log according to the retention (Settings → «Keep
+ * submissions for N days»; 0 = never delete).
  *
- * Corre una vez al día con WP-Cron. Lo que borra queda escrito en la opción
- * estrategia_web_forms_last_purge (fecha y cuántos), que la pantalla de ajustes
- * enseña: una purga que no dice nada no se distingue de una que no corrió.
+ * Runs once a day with WP-Cron. What it deletes is written to the option
+ * estrategia_web_forms_last_purge (date and how many), which the settings
+ * screen shows: a purge that says nothing cannot be told apart from one that
+ * did not run.
  *
- * La trampa: WP-Cron no es un cron de verdad. Corre cuando alguien visita la
- * web, así que en una web sin visitas la purga se retrasa. Si una web
- * desactiva WP-Cron (DISABLE_WP_CRON) tiene que tener un cron del sistema que
- * llame a wp-cron.php, o la retención no se cumple.
+ * The trap: WP-Cron is not a real cron. It runs when someone visits the
+ * site, so on a site without visits the purge is delayed. If a site
+ * disables WP-Cron (DISABLE_WP_CRON) it must have a system cron that calls
+ * wp-cron.php, or the retention is not enforced.
  */
 
 namespace EstrategiaWeb\Forms;

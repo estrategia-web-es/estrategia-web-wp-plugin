@@ -1,20 +1,21 @@
 <?php
 /**
- * El nonce del formulario: una marca de tiempo firmada con la sal del sitio.
+ * The form nonce: a timestamp signed with the site salt.
  *
- * Clase PURA (nivel 1): recibe el secreto y la hora, no los busca.
+ * PURE class (level 1): it receives the secret and the time, it does not
+ * look them up.
  *
- * Por qué NO es wp_create_nonce(): un nonce de WordPress va atado al usuario,
- * y la API REST trata como ANÓNIMA cualquier petición con cookies que no
- * lleve la cabecera X-WP-Nonce. Un editor con la sesión abierta que probara
- * su propio formulario sin JavaScript fallaría siempre: el nonce se hizo para
- * su usuario y se comprueba contra el usuario 0. Este token hace lo mismo
- * —prueba que el envío sale de un formulario que pintó este servidor, para
- * esa definición y hace poco— sin depender de quién mira.
+ * Why it is NOT wp_create_nonce(): a WordPress nonce is tied to the user,
+ * and the REST API treats as ANONYMOUS any request with cookies that does
+ * not carry the X-WP-Nonce header. An editor with an open session testing
+ * their own form without JavaScript would always fail: the nonce was made
+ * for their user and is checked against user 0. This token does the same
+ * —proves the submission comes from a form this server rendered, for that
+ * definition and recently— without depending on who is looking.
  *
- * Y de paso es el reloj del antispam: la marca de tiempo es el momento en que
- * se pintó el formulario (o el primer foco, si hay JS: ver view.js), así que
- * «demasiado rápido» y «caducado» salen de la misma comprobación.
+ * And it doubles as the antispam clock: the timestamp is the moment the
+ * form was rendered (or the first focus, with JS: see view.js), so «too
+ * fast» and «expired» come out of the same check.
  */
 
 namespace EstrategiaWeb\Forms;
@@ -33,7 +34,7 @@ final class Token {
 	}
 
 	/**
-	 * @return string Una de las constantes OK, INVALID, TOO_FAST, EXPIRED.
+	 * @return string One of the constants OK, INVALID, TOO_FAST, EXPIRED.
 	 */
 	public static function verify( string $token, string $definition_hash, int $now, string $secret, int $min_seconds, int $max_age ): string {
 		if ( ! preg_match( '/^(\d{9,12})\.([a-f0-9]{40})$/', $token, $m ) ) {

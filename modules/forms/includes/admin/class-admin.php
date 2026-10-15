@@ -1,23 +1,22 @@
 <?php
 /**
- * Pantallas de administración: «Formularios → Envíos» (listar, filtrar por
- * formulario, ver uno, exportar CSV, borrar con confirmación) y
- * «Formularios → Ajustes».
+ * Admin screens: «Forms → Submissions» (list, filter by form, view one,
+ * export CSV, delete with confirmation) and «Forms → Settings».
  *
- * Los avisos NO se configuran aquí sino en el bloque del formulario (panel
- * lateral del editor): ver README, «Por qué los avisos viven en el bloque».
+ * Notifications are NOT configured here but in the form block (the editor
+ * sidebar): see README, «Por qué los avisos viven en el bloque».
  *
- * Quién entra: la capacidad 'manage_options', cambiable con el filtro
- * 'estrategia_web_forms_capability' (p. ej. 'edit_pages' para que un editor vea los
- * envíos). Es la misma para ver, exportar y borrar: quien puede ver los datos
- * personales puede hacer con ellos todo lo demás, y separarlo daría una
- * falsa sensación de control.
+ * Who gets in: the 'manage_options' capability, changeable with the
+ * 'estrategia_web_forms_capability' filter (e.g. 'edit_pages' so that an
+ * editor can see the submissions). It is the same for viewing, exporting and
+ * deleting: whoever can see the personal data can do everything else with
+ * it, and splitting it would give a false sense of control.
  *
- * Cómo se mantiene: toda acción que cambie algo va por admin-post.php con su
- * nonce y su comprobación de capacidad, y las dos cosas se prueban en
- * tests/admin.test.mjs. La trampa: un enlace GET que borra lo puede disparar
- * un <img> en otra web; por eso «Borrar» lleva a una pantalla de
- * confirmación y el borrado de verdad es un POST.
+ * How to maintain: every action that changes something goes through
+ * admin-post.php with its nonce and its capability check, and both are
+ * tested in tests/admin.test.mjs. The trap: a GET link that deletes can be
+ * triggered by an <img> on another site; that is why «Delete» leads to a
+ * confirmation screen and the actual deletion is a POST.
  */
 
 namespace EstrategiaWeb\Forms;
@@ -70,7 +69,7 @@ final class Admin {
 		if ( ! current_user_can( self::capability() ) ) {
 			wp_die( esc_html__( 'You are not allowed to see this page.', 'estrategia-web' ), 403 );
 		}
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- solo lectura; lo que escribe va por admin-post con nonce.
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read only; whatever writes goes through admin-post with a nonce.
 		$action = sanitize_key( $_GET['action'] ?? '' );
 		if ( '' === $action || '-1' === $action ) {
 			$action = sanitize_key( $_GET['action2'] ?? '' );
@@ -102,7 +101,7 @@ final class Admin {
 			<?php if ( null !== $deleted ) : ?>
 				<div class="notice notice-success is-dismissible"><p>
 					<?php
-					/* translators: %d: número de envíos borrados. */
+					/* translators: %d: number of deleted submissions. */
 					echo esc_html( sprintf( _n( '%d submission deleted.', '%d submissions deleted.', $deleted, 'estrategia-web' ), $deleted ) );
 					?>
 				</p></div>
@@ -124,7 +123,7 @@ final class Admin {
 			echo '<p><a href="' . esc_url( $back ) . '">' . esc_html__( 'Back to the list', 'estrategia-web' ) . '</a></p></div>';
 			return;
 		}
-		/* translators: %d: número del envío. */
+		/* translators: %d: submission number. */
 		echo '<h1>' . esc_html( sprintf( __( 'Submission #%d', 'estrategia-web' ), $row['id'] ) ) . '</h1>';
 		echo '<p><a href="' . esc_url( $back ) . '">&larr; ' . esc_html__( 'Back to the list', 'estrategia-web' ) . '</a></p>';
 
@@ -174,7 +173,7 @@ final class Admin {
 		}
 		echo '<p>' . esc_html(
 			sprintf(
-				/* translators: %d: número de envíos. */
+				/* translators: %d: number of submissions. */
 				_n( 'You are about to permanently delete %d submission. This cannot be undone.', 'You are about to permanently delete %d submissions. This cannot be undone.', count( $ids ), 'estrategia-web' ),
 				count( $ids )
 			)
@@ -208,7 +207,7 @@ final class Admin {
 		$form_id = Definitions::clean_id( (string) wp_unslash( $_GET['form_id'] ?? '' ) );
 		$rows    = Submissions::query( $form_id, 0 )['rows'];
 
-		// Columnas de datos: la unión de los campos de todos los envíos, en orden de aparición.
+		// Data columns: the union of the fields of all submissions, in order of appearance.
 		$fields = array();
 		foreach ( $rows as $row ) {
 			foreach ( $row['data'] as $field ) {
@@ -216,14 +215,14 @@ final class Admin {
 			}
 		}
 
-		/** Separador del CSV. ';' por defecto: es el que abre Excel en español sin preguntar. */
+		/** CSV separator. ';' by default: it is the one Spanish-locale Excel opens without asking. */
 		$sep = (string) apply_filters( 'estrategia_web_forms_csv_separator', ';' );
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename="estrategia-web-forms-' . ( $form_id ?: 'all' ) . '-' . gmdate( 'Y-m-d' ) . '.csv"' );
 		$out = fopen( 'php://output', 'w' );
-		fwrite( $out, "\xEF\xBB\xBF" ); // BOM: sin él Excel lee las tildes mal.
+		fwrite( $out, "\xEF\xBB\xBF" ); // BOM: without it Excel misreads accented characters.
 
 		$header = array( 'id', 'date_utc', 'form_id', 'form', 'page', 'language', 'status', 'notifications', 'ip', 'user_agent' );
 		fputcsv( $out, array_merge( $header, array_values( $fields ) ), $sep, '"', '' );
@@ -247,8 +246,8 @@ final class Admin {
 	}
 
 	/**
-	 * Inyección en CSV: una celda que empieza por = + - @ la ejecuta Excel
-	 * como fórmula. El visitante escribe lo que quiere, así que se neutraliza.
+	 * CSV injection: a cell starting with = + - @ is run by Excel as a
+	 * formula. The visitor types whatever they want, so it is neutralized.
 	 */
 	public static function csv_cell( $value ): string {
 		$value = (string) $value;
@@ -276,7 +275,7 @@ final class Admin {
 							<p class="description"><?php esc_html_e( '0 keeps them forever. Older submissions are deleted once a day.', 'estrategia-web' ); ?>
 							<?php
 							if ( is_array( $purge ) ) {
-								/* translators: 1: fecha de la última purga, 2: envíos borrados. */
+								/* translators: 1: date of the last purge, 2: deleted submissions. */
 								echo esc_html( sprintf( __( 'Last purge: %1$s, %2$d deleted.', 'estrategia-web' ), get_date_from_gmt( gmdate( 'Y-m-d H:i:s', strtotime( $purge['at'] ) ), get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ), (int) $purge['deleted'] ) );
 							}
 							?>

@@ -1,22 +1,22 @@
 <?php
 /**
- * El registro de envíos: lectura y escritura de la tabla propia.
+ * The submissions log: reading and writing the plugin's own table.
  *
- * Por qué tabla y no un tipo de entrada privado (CPT):
- * - Filtrar por formulario, ordenar por fecha, exportar y purgar por
- *   antigüedad son UNA consulta SQL; con un CPT los datos irían a postmeta
- *   (una fila por campo) y cada filtro sería un JOIN.
- * - WPML trata los tipos de entrada como contenido traducible: un CPT de
- *   envíos aparecería en su gestión de traducciones y habría que excluirlo
- *   a mano en cada web. Una tabla propia no la ve.
- * - Un envío no es contenido: no tiene revisiones, ni autor, ni enlace
- *   público. Un CPT trae todo eso y hay que irlo apagando.
- * El precio: la forma de la tabla la mantenemos nosotros (Migrations).
+ * Why a table and not a private post type (CPT):
+ * - Filtering by form, sorting by date, exporting and purging by age are ONE
+ *   SQL query; with a CPT the data would go to postmeta (one row per field)
+ *   and every filter would be a JOIN.
+ * - WPML treats post types as translatable content: a submissions CPT would
+ *   show up in its translation management and would have to be excluded by
+ *   hand on every site. A table of our own is invisible to it.
+ * - A submission is not content: it has no revisions, no author, no public
+ *   link. A CPT brings all that and it has to be switched off piece by piece.
+ * The price: we maintain the table's shape ourselves (Migrations).
  *
- * Cómo se mantiene: cada fila lleva format_version. Si cambia la forma de
- * data o notifications, sube FORMAT, se añade una migración que convierta las
- * viejas, y decode() sigue entendiendo las dos mientras la migración no haya
- * corrido en todas las webs.
+ * How to maintain: each row carries format_version. If the shape of data or
+ * notifications changes, bump FORMAT, add a migration that converts the old
+ * rows, and decode() keeps understanding both until the migration has run
+ * on every site.
  */
 
 namespace EstrategiaWeb\Forms;
@@ -94,7 +94,7 @@ final class Submissions {
 		);
 	}
 
-	/** @return array<string, string> form_id => título más reciente. */
+	/** @return array<string, string> form_id => most recent title. */
 	public static function forms(): array {
 		global $wpdb;
 		$table = Migrations::submissions_table();
@@ -118,7 +118,7 @@ final class Submissions {
 		return (int) $wpdb->query( $wpdb->prepare( "DELETE FROM $table WHERE id IN ($placeholders)", $ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	}
 
-	/** Borra los envíos anteriores a hace $days días. Devuelve cuántos. */
+	/** Deletes the submissions older than $days days. Returns how many. */
 	public static function purge_older_than( int $days ): int {
 		if ( $days <= 0 ) {
 			return 0;

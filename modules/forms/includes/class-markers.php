@@ -1,18 +1,19 @@
 <?php
 /**
- * Sustitución de marcadores {{nombre}} en las plantillas de los avisos.
+ * Replacement of {{name}} markers in the notification templates.
  *
- * Clase PURA: no llama a WordPress, y por eso se prueba en el nivel 1
- * (tests/markers.test.mjs la ejecuta con el PHP de la máquina).
+ * PURE class: it does not call WordPress, which is why it is tested at
+ * level 1 (tests/markers.test.mjs runs it with the machine's PHP).
  *
- * Reglas, que el README repite para quien escribe plantillas:
- * - Un marcador conocido sin valor (campo opcional vacío) se sustituye por "".
- * - Un marcador DESCONOCIDO se deja tal cual, a propósito: una errata en la
- *   plantilla ({{emial}}) se ve en el correo en vez de desaparecer en silencio.
- * - Se admiten espacios dentro de las llaves: {{ nombre }}.
+ * Rules, which the README repeats for whoever writes templates:
+ * - A known marker without a value (empty optional field) is replaced by "".
+ * - An UNKNOWN marker is left as is, on purpose: a typo in the template
+ *   ({{emial}}) shows up in the email instead of vanishing silently.
+ * - Spaces are allowed inside the braces: {{ name }}.
  *
- * Los nombres de los marcadores fijos van en castellano porque los escribe
- * quien configura el formulario, no el código (fila 8: el dominio en su idioma).
+ * The names of the fixed markers are in Spanish because they are written by
+ * whoever configures the form, not by the code (row 8: the domain in its own
+ * language).
  */
 
 namespace EstrategiaWeb\Forms;
@@ -27,10 +28,10 @@ final class Markers {
 	public const SITE_NAME  = 'nombre_sitio';
 
 	/**
-	 * @param string                $template Plantilla con marcadores.
-	 * @param array<string, string> $values   nombre del marcador => valor ya preparado.
-	 * @param callable|null         $escape   Se aplica a cada valor antes de insertarlo (HTML); null = tal cual.
-	 * @param string[]              $raw      Marcadores que NO se escapan aunque haya $escape (p. ej. la tabla HTML ya montada).
+	 * @param string                $template Template with markers.
+	 * @param array<string, string> $values   marker name => value already prepared.
+	 * @param callable|null         $escape   Applied to each value before inserting it (HTML); null = as is.
+	 * @param string[]              $raw      Markers that are NOT escaped even if there is $escape (e.g. the HTML table already built).
 	 */
 	public static function replace( string $template, array $values, ?callable $escape = null, array $raw = array() ): string {
 		$values = array_change_key_case( $values, CASE_LOWER );
@@ -54,8 +55,8 @@ final class Markers {
 	}
 
 	/**
-	 * Quita saltos de línea: un asunto o una cabecera con "\n" es una
-	 * inyección de cabeceras en potencia.
+	 * Strips line breaks: a subject or a header with "\n" is a potential
+	 * header injection.
 	 */
 	public static function single_line( string $value ): string {
 		return trim( (string) preg_replace( '/[\r\n\t]+/', ' ', $value ) );

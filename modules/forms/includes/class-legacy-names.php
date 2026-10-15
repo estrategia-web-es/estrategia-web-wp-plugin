@@ -1,30 +1,31 @@
 <?php
 /**
- * Los nombres de antes de 1.0.0 (cuando el plugin se llamaba «Armazón
- * Forms»), como ALIAS que pintan lo mismo que los nuevos: los bloques
+ * The names from before 1.0.0 (when the plugin was called «Armazón
+ * Forms»), as ALIASES that render the same as the new ones: the blocks
  * armazon-forms/… → estrategia-web-forms/….
  *
- * Un alias copia el tipo nuevo (atributos, supports) y, al pintar, renombra
- * el bloque y sus hijos (y las clases de su marcado guardado) y lo pinta con
- * render_block(): sale EXACTAMENTE lo que saldría con el nombre nuevo. Oculto
- * del insertador. En el editor, un bloque viejo sale como «no admitido» hasta
- * que se pasa el migrador (estrategia-web-site, class-armazon-migration.php),
- * que es quien reescribe el contenido, las opciones, las tablas del registro
- * y las cadenas de WPML; esto es solo la red para el marcado que quede.
+ * An alias copies the new type (attributes, supports) and, when rendering,
+ * renames the block and its children (and the classes in its saved markup)
+ * and renders it with render_block(): the output is EXACTLY what the new
+ * name would produce. Hidden from the inserter. In the editor, an old block
+ * shows up as «unsupported» until the migrator runs (estrategia-web-site,
+ * class-armazon-migration.php), which is what rewrites the content, the
+ * options, the log tables and the WPML strings; this is only the safety net
+ * for any markup left over.
  *
- * Lo que NO tiene alias, y por qué: la ruta REST armazon-forms/v1. Solo la
- * llama el JS del propio bloque, que sale del plugin nuevo; una página
- * cacheada con el JS viejo tampoco lo encontraría (la carpeta vieja ya no
- * está). Por eso el migrador vacía la caché.
+ * What has NO alias, and why: the REST route armazon-forms/v1. Only the
+ * block's own JS calls it, and that comes from the new plugin; a cached page
+ * with the old JS would not find it either (the old folder is gone). That is
+ * why the migrator clears the cache.
  *
- * Cómo se mantiene:
- * - CUÁNDO SE QUITA: en la 2.0.0, una vez pasado el migrador en todas las
- *   webs que usaron Armazón (07-10-2026: solo Lavandería Mallorca).
- * - Un bloque nuevo NO entra aquí: solo los nombres que existieron con
- *   «armazon-forms/». Se sacan de Blocks::BLOCKS, que en 1.0.0 es la lista
- *   de entonces; si se añade un bloque después, se pone aquí a mano una lista
- *   fija con los nueve de 1.0.0.
- * - La trampa: el alias necesita el tipo nuevo ya registrado, por eso init 99.
+ * How to maintain:
+ * - WHEN IT IS REMOVED: in 2.0.0, once the migrator has run on every site
+ *   that used Armazón (07-10-2026: only Lavandería Mallorca).
+ * - A new block does NOT go here: only the names that existed with
+ *   «armazon-forms/». They are taken from Blocks::BLOCKS, which in 1.0.0 is
+ *   the list from back then; if a block is added later, put a fixed list
+ *   here by hand with the nine from 1.0.0.
+ * - The trap: the alias needs the new type already registered, hence init 99.
  */
 
 namespace EstrategiaWeb\Forms;
@@ -66,9 +67,9 @@ final class Legacy_Names {
 	}
 
 	/**
-	 * Un bloque leído con nombres viejos, con los nuevos (él y sus hijos).
+	 * A block read with old names, with the new ones (itself and its children).
 	 *
-	 * @param array $parsed Bloque de parse_blocks().
+	 * @param array $parsed Block from parse_blocks().
 	 */
 	public static function rename( array $parsed ): array {
 		$name = (string) ( $parsed['blockName'] ?? '' );

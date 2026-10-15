@@ -1,12 +1,12 @@
-// NIVEL: 2 — WordPress de Playground, porque ESCRIBE: envíos en la tabla, correos interceptados, transitorios del límite.
+// NIVEL: 2 — Playground WordPress, because it WRITES: submissions in the table, intercepted emails, rate-limit transients.
 //
-// Todo lo de aquí se hace SIN navegador, fabricando la petición: es justo lo
-// que haría un robot o alguien que se salta la validación del navegador.
+// Everything here is done WITHOUT a browser, crafting the request: that is exactly
+// what a bot or someone bypassing the browser's validation would do.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { reset, settings, mails, submissions, seedPage, loadForm, submit, GOOD, TEAM, FAIL, waitMinTime, testApi, BASE } from "./lib.mjs";
 
-// La URL del WordPress de la tanda, escapada para una expresión regular (con EW_PORT no es la 9404).
+// The URL of the run's WordPress, escaped for a regular expression (with EW_PORT it is not 9404).
 const SITE = BASE.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
 
 let page;
@@ -15,49 +15,49 @@ before(async () => {
   page = await seedPage();
 });
 
-test("el HTML público no contiene destinatarios ni plantillas de los avisos", async () => {
+test("the public HTML contains no notification recipients or templates", async () => {
   const { html, hidden } = await loadForm(page.url);
-  assert.match(html, /name="fields\[nombre\]"/, "el formulario se pinta");
-  assert.ok(hidden._af_def && hidden._af_token, "lleva definición y token");
+  assert.match(html, /name="fields\[nombre\]"/, "the form is rendered");
+  assert.ok(hidden._af_def && hidden._af_token, "it carries definition and token");
   for (const secret of [TEAM, FAIL, "Nuevo mensaje de", "Hemos recibido tu mensaje", "Aviso al equipo", "{{"]) {
-    assert.ok(!html.includes(secret), `el HTML público contiene «${secret}»`);
+    assert.ok(!html.includes(secret), `the public HTML contains «${secret}»`);
   }
 });
 
-test("un obligatorio vacío falla en el servidor aunque nadie lo valide antes", async () => {
+test("an empty required field fails on the server even if nobody validates it before", async () => {
   await reset();
   const { hidden } = await loadForm(page.url);
   await waitMinTime();
   const r = await submit(hidden, { ...GOOD, mensaje: "", privacidad: "" });
   assert.equal(r.status, 422);
   assert.equal(r.json.ok, false);
-  assert.ok(r.json.errors.mensaje, "error en mensaje");
-  assert.ok(r.json.errors.privacidad, "el consentimiento es obligatorio aunque el bloque no diga required");
-  assert.equal((await submissions()).length, 0, "no se guarda nada");
-  assert.equal((await mails()).length, 0, "no sale ningún aviso");
+  assert.ok(r.json.errors.mensaje, "error on mensaje");
+  assert.ok(r.json.errors.privacidad, "consent is required even if the block does not say required");
+  assert.equal((await submissions()).length, 0, "nothing is saved");
+  assert.equal((await mails()).length, 0, "no notification goes out");
 });
 
-test("correo mal formado y opción que no está en la lista: error de servidor", async () => {
+test("malformed email and an option not in the list: server error", async () => {
   const { hidden } = await loadForm(page.url);
   await waitMinTime();
-  const r = await submit(hidden, { ...GOOD, email: "no-es-correo", servicio: "Tintorería" });
+  const r = await submit(hidden, { ...GOOD, email: "not-an-email", servicio: "Tintorería" });
   assert.equal(r.status, 422);
   assert.ok(r.json.errors.email);
   assert.ok(r.json.errors.servicio);
 });
 
-test("honeypot relleno: contesta éxito y no guarda ni avisa", async () => {
+test("filled honeypot: answers success and neither saves nor notifies", async () => {
   await reset();
   const { hidden } = await loadForm(page.url);
   await waitMinTime();
   const r = await submit(hidden, GOOD, { extra: { af_website: "http://spam.example" } });
   assert.equal(r.status, 200);
-  assert.equal(r.json.ok, true, "al robot no se le dice que ha fallado");
+  assert.equal(r.json.ok, true, "the bot is not told it failed");
   assert.equal((await submissions()).length, 0);
   assert.equal((await mails()).length, 0);
 });
 
-test("tiempo mínimo: enviar antes de tiempo se rechaza", async () => {
+test("minimum time: submitting too early is rejected", async () => {
   await reset();
   await settings({ min_seconds: 30 });
   const { hidden } = await loadForm(page.url);
@@ -68,7 +68,7 @@ test("tiempo mínimo: enviar antes de tiempo se rechaza", async () => {
   await settings({ min_seconds: 1 });
 });
 
-test("token manipulado o de otra definición: rechazado", async () => {
+test("tampered token or one from another definition: rejected", async () => {
   await reset();
   const { hidden } = await loadForm(page.url);
   await waitMinTime();
@@ -79,7 +79,7 @@ test("token manipulado o de otra definición: rechazado", async () => {
   assert.equal((await submissions()).length, 0);
 });
 
-test("límite por IP: el tercer envío en la ventana se rechaza", async () => {
+test("per-IP limit: the third submission in the window is rejected", async () => {
   await reset();
   await settings({ rate_limit: 2, rate_window: 10 });
   const { hidden } = await loadForm(page.url);
@@ -93,7 +93,7 @@ test("límite por IP: el tercer envío en la ventana se rechaza", async () => {
   await settings({ rate_limit: 0 });
 });
 
-test("envío bueno: se registra con todo y salen los N avisos con los marcadores sustituidos", async () => {
+test("good submission: logged with everything and the N notifications go out with markers replaced", async () => {
   await reset();
   const { hidden } = await loadForm(page.url);
   await waitMinTime();
@@ -102,16 +102,16 @@ test("envío bueno: se registra con todo y salen los N avisos con los marcadores
   assert.equal(r.json.ok, true);
 
   const [row] = await submissions();
-  assert.ok(row, "hay un envío en el registro");
+  assert.ok(row, "there is a submission in the log");
   assert.equal(row.form_id, "contacto");
   assert.equal(row.form_title, "Contacto");
   assert.equal(row.page_url, page.url);
   assert.equal(Number(row.post_id), page.id);
-  assert.ok(row.lang, "el idioma queda registrado");
-  assert.equal(row.ip, "127.0.0.0", "IP truncada, nunca entera");
+  assert.ok(row.lang, "the language is recorded");
+  assert.equal(row.ip, "127.0.0.0", "truncated IP, never the full one");
   assert.equal(row.user_agent, "estrategia-web-forms-test/1.0");
-  assert.equal(row.status, "partial", "dos avisos bien y uno mal");
-  assert.deepEqual(row.data.map((d) => d.name), ["nombre", "email", "telefono", "servicio", "mensaje", "privacidad"], "solo los campos de la definición");
+  assert.equal(row.status, "partial", "two notifications OK and one failed");
+  assert.deepEqual(row.data.map((d) => d.name), ["nombre", "email", "telefono", "servicio", "mensaje", "privacidad"], "only the definition's fields");
   assert.deepEqual(
     row.notifications.map((n) => [n.label, n.to, n.status]),
     [
@@ -120,26 +120,26 @@ test("envío bueno: se registra con todo y salen los N avisos con los marcadores
       ["Aviso que falla", FAIL, "failed"],
     ]
   );
-  assert.ok(row.notifications[2].error, "el fallo guarda su motivo");
+  assert.ok(row.notifications[2].error, "the failure stores its reason");
 
   const sent = await mails();
-  assert.equal(sent.length, 3, "se intentan los tres avisos");
+  assert.equal(sent.length, 3, "all three notifications are attempted");
   const [team, ack] = sent;
   assert.deepEqual(team.to, [TEAM]);
   assert.equal(team.subject, "Nuevo mensaje de Ana");
-  assert.ok(team.headers.includes("Reply-To: ana@ejemplo.test"), "responder-a sale del campo email");
+  assert.ok(team.headers.includes("Reply-To: ana@ejemplo.test"), "reply-to comes from the email field");
   assert.match(team.html, new RegExp(`Desde ${SITE}/contacto/`));
   assert.match(team.html, /Sitio de pruebas/);
-  assert.match(team.html, /<th[^>]*>Teléfono<\/th><td[^>]*>\+34 600 000 000<\/td>/, "{{todos_los_campos}} como tabla en HTML");
-  assert.match(team.text, /Mensaje: \nHola,\nquería información\./, "y como líneas en la versión texto");
-  assert.deepEqual(ack.to, ["ana@ejemplo.test"], "el acuse va al correo que escribió el visitante");
+  assert.match(team.html, /<th[^>]*>Teléfono<\/th><td[^>]*>\+34 600 000 000<\/td>/, "{{todos_los_campos}} as an HTML table");
+  assert.match(team.text, /Mensaje: \nHola,\nquería información\./, "and as lines in the text version");
+  assert.deepEqual(ack.to, ["ana@ejemplo.test"], "the acknowledgement goes to the email the visitor typed");
   assert.match(ack.text, /^Hola Ana, gracias por escribir\.\nServicio: Planchado/);
   for (const m of sent) {
-    assert.ok(!m.html.includes("{{") && !m.text.includes("{{") && !m.subject.includes("{{"), "ningún marcador sin sustituir");
+    assert.ok(!m.html.includes("{{") && !m.text.includes("{{") && !m.subject.includes("{{"), "no unreplaced marker");
   }
 });
 
-test("sin JS: redirección 303 a la página con el resultado", async () => {
+test("without JS: 303 redirect to the page with the result", async () => {
   await reset();
   const { hidden } = await loadForm(page.url);
   await waitMinTime();
@@ -147,12 +147,12 @@ test("sin JS: redirección 303 a la página con el resultado", async () => {
   assert.equal(r.status, 303);
   assert.match(r.location, new RegExp(`^${SITE}/contacto/\\?af_result=[a-z0-9]{20}#af-contacto-status$`));
   const html = await (await fetch(r.location)).text();
-  assert.match(html, /aria-invalid="true"/, "el campo con error se marca");
-  assert.match(html, /value="Ana"/, "lo escrito se conserva");
+  assert.match(html, /aria-invalid="true"/, "the field with an error is marked");
+  assert.match(html, /value="Ana"/, "what was typed is kept");
   assert.equal((await submissions()).length, 0);
 });
 
-test("purga programada: borra lo más viejo que la retención y deja lo demás", async () => {
+test("scheduled purge: deletes what is older than the retention and leaves the rest", async () => {
   await reset();
   await settings({ retention_days: 30 });
   const { hidden } = await loadForm(page.url);
@@ -162,7 +162,7 @@ test("purga programada: borra lo más viejo que la retención y deja lo demás",
   const [a] = await submissions();
   await testApi("/backdate", { method: "POST", body: { id: a.id, days: 31 } });
   const r = await testApi("/purge", { method: "POST" });
-  assert.equal(r.scheduled, true, "la purga está programada en WP-Cron");
+  assert.equal(r.scheduled, true, "the purge is scheduled in WP-Cron");
   assert.equal(r.last_purge.deleted, 1);
   const left = await submissions();
   assert.equal(left.length, 1);

@@ -5,26 +5,26 @@
  * Default: on
  * Requires:
  *
- * Lo que era el plugin «Estrategia Web Forms» hasta la 1.0.0 (repo
- * armazon-wp-formularios, archivado el 14-10-2026). Su documentación entera
- * sigue en modules/forms/README.md y su historia en modules/forms/CHANGELOG.md
- * (de aquí en adelante, en el CHANGELOG.md de la raíz).
+ * What used to be the «Estrategia Web Forms» plugin up to 1.0.0 (repo
+ * armazon-wp-formularios, archived on 14-10-2026). Its full documentation
+ * is still in modules/forms/README.md and its history in
+ * modules/forms/CHANGELOG.md (from now on, in the root CHANGELOG.md).
  *
- * Nombres públicos de la 1.0.0, que no cambian: bloques
- * estrategia-web-forms/…, rutas REST estrategia-web-forms/v1/…, tablas
- * {prefijo}estrategia_web_forms_submissions y …_definitions, opciones
- * estrategia_web_forms_*, el contexto de cadenas de WPML
- * «estrategia-web-forms» y el menú «Formularios».
+ * Public names from 1.0.0, which do not change: blocks
+ * estrategia-web-forms/…, REST routes estrategia-web-forms/v1/…, tables
+ * {prefix}estrategia_web_forms_submissions and …_definitions, options
+ * estrategia_web_forms_*, the WPML string context «estrategia-web-forms»
+ * and the «Formularios» menu.
  *
- * Constantes: ESTRATEGIA_WEB_FORMS_DIR y _URL apuntan a ESTA carpeta;
- * ESTRATEGIA_WEB_FORMS_VERSION es la del plugin. La versión de la BASE DE
- * DATOS es otra cosa: Migrations::LATEST, y solo sube con una migración.
+ * Constants: ESTRATEGIA_WEB_FORMS_DIR and _URL point to THIS folder;
+ * ESTRATEGIA_WEB_FORMS_VERSION is the plugin's. The DATABASE version is
+ * something else: Migrations::LATEST, and it only goes up with a migration.
  *
- * Es el ejemplo completo de módulo: bloques (blocks/), pruebas de los tres
- * niveles (tests/, con su lib.mjs y su mu-plugin de pruebas tests/wp/),
- * desinstalación (uninstall.php) y lo que tiene que existir antes de usarlo
- * (las tablas) hecho idempotente en cada carga, porque encender el módulo
- * en la pantalla NO pasa por el gancho de activación.
+ * This is the complete example of a module: blocks (blocks/), tests at all
+ * three levels (tests/, with its lib.mjs and its test mu-plugin tests/wp/),
+ * uninstall (uninstall.php) and what must exist before using it (the
+ * tables) made idempotent on every load, because switching the module on
+ * in the screen does NOT go through the activation hook.
  */
 
 namespace EstrategiaWeb\Forms;
@@ -53,12 +53,12 @@ require_once __DIR__ . '/includes/class-cron.php';
 require_once __DIR__ . '/includes/admin/class-submissions-table.php';
 require_once __DIR__ . '/includes/admin/class-admin.php';
 
-// Idempotentes en cada carga: así funciona también al encender el módulo.
+// Idempotent on every load: that way it also works when the module is switched on.
 add_action( 'plugins_loaded', array( Migrations::class, 'maybe_run' ) );
 add_action( 'init', array( Cron::class, 'schedule' ) );
 
 add_action( 'init', array( Blocks::class, 'register' ) );
-Legacy_Names::boot(); // Los bloques armazon-forms/… como alias (hasta 2.0.0).
+Legacy_Names::boot(); // The armazon-forms/… blocks as aliases (until 2.0.0).
 add_action( 'rest_api_init', array( Rest::class, 'register_routes' ) );
 add_action( Cron::HOOK, array( Cron::class, 'purge' ) );
 add_action( 'update_option_' . Settings::OPTION, array( Settings::class, 'register_strings' ) );
@@ -71,9 +71,10 @@ add_action(
 		Cron::schedule();
 	}
 );
-// Al desactivar el plugin se quita la purga. Al APAGAR solo el módulo no
-// (no está cargado para hacerlo): el evento sigue programado, sin nadie que
-// lo escuche, y no hace nada; al encenderlo, schedule() ve que ya está.
+// Deactivating the plugin removes the purge. Switching OFF just the module
+// does not (it is not loaded to do it): the event stays scheduled, with
+// nobody listening, and does nothing; when switched on, schedule() sees it
+// is already there.
 add_action( 'estrategia_web_deactivate', array( Cron::class, 'unschedule' ) );
 
 if ( is_admin() ) {

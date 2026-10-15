@@ -1,14 +1,14 @@
-// NIVEL: 2 — WordPress de Playground, porque el atributo lo pinta render_callback al servir la página.
+// NIVEL: 2 — Playground WordPress, because the attribute is rendered by render_callback when serving the page.
 //
-// autocomplete (0.2.2, WCAG 1.3.5 «Identificar el propósito de la entrada»).
-// Nació de la auditoría de Lavandería (06-10-2026): en Contacto, nombre y
-// empresa no lo llevaban (correo y teléfono sí, fijo por tipo).
-// - el atributo autocomplete de cada campo se pinta: name, organization…;
-// - correo y teléfono llevan email y tel por defecto, y se pueden cambiar;
-// - un campo de texto sin el atributo no lleva autocomplete (no se adivina);
-// - también en el desplegable y el área de texto;
-// - un valor con comillas o caracteres raros no se cuela en el HTML.
-// Vista fallar el 06-10-2026 antes del código: nombre sin autocomplete.
+// autocomplete (0.2.2, WCAG 1.3.5 «Identify Input Purpose»).
+// Born from the Lavandería audit (06-10-2026): on Contacto, name and
+// company did not have it (email and phone did, fixed by type).
+// - each field's autocomplete attribute is rendered: name, organization…;
+// - email and phone carry email and tel by default, and can be changed;
+// - a text field without the attribute has no autocomplete (no guessing);
+// - also in the dropdown and the text area;
+// - a value with quotes or odd characters does not leak into the HTML.
+// Seen failing on 06-10-2026 before the code: name without autocomplete.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { reset, seedPage, loadForm, TEAM } from "./lib.mjs";
@@ -35,36 +35,36 @@ before(async () => {
   ({ html } = await loadForm(page.url));
 });
 
-/** El autocomplete del control (input, select o textarea) de un campo; null si no lo lleva. */
+/** The autocomplete of a field's control (input, select or textarea); null if it has none. */
 const autocomplete = (name) => {
   const tag = html.match(new RegExp(`<(?:input|select|textarea)[^>]*name="fields\\[${name}\\]"[^>]*>`))?.[0];
-  assert.ok(tag, `no está el campo ${name}`);
+  assert.ok(tag, `field ${name} is missing`);
   return tag.match(/\sautocomplete="([^"]*)"/)?.[1] ?? null;
 };
 
-test("el atributo autocomplete del campo se pinta (nombre, empresa)", () => {
+test("the field's autocomplete attribute is rendered (name, company)", () => {
   assert.equal(autocomplete("nombre"), "name");
   assert.equal(autocomplete("empresa"), "organization");
 });
 
-test("correo y teléfono: email y tel por defecto, y el atributo los cambia", () => {
+test("email and phone: email and tel by default, and the attribute changes them", () => {
   assert.equal(autocomplete("email"), "email");
   assert.equal(autocomplete("telefono"), "tel");
   assert.equal(autocomplete("movil"), "work tel");
   assert.equal(autocomplete("otro"), "off");
 });
 
-test("un texto sin el atributo no lleva autocomplete: no se adivina por el nombre", () => {
+test("a text field without the attribute has no autocomplete: it is not guessed from the name", () => {
   assert.equal(autocomplete("referencia"), null);
 });
 
-test("también en el desplegable y en el área de texto", () => {
+test("also in the dropdown and in the text area", () => {
   assert.equal(autocomplete("pais"), "country-name");
   assert.equal(autocomplete("direccion"), "street-address");
 });
 
-test("un valor con comillas no se cuela en el HTML", () => {
-  assert.ok(!/onfocus/i.test(html), "se coló un atributo");
+test("a value with quotes does not leak into the HTML", () => {
+  assert.ok(!/onfocus/i.test(html), "an attribute leaked");
   const value = autocomplete("malo");
-  assert.ok(value === null || /^[a-z0-9 -]+$/.test(value), `valor sin sanear: ${value}`);
+  assert.ok(value === null || /^[a-z0-9 -]+$/.test(value), `unsanitized value: ${value}`);
 });

@@ -1,18 +1,19 @@
 <?php
 /**
- * Validación y saneado EN SERVIDOR de un envío, según la definición.
+ * SERVER-SIDE validation and sanitizing of a submission, according to the
+ * definition.
  *
- * El navegador ya valida (required, type=email…), pero eso es comodidad del
- * visitante, no seguridad: aquí se repite todo, porque un envío se puede
- * fabricar sin navegador. Solo se leen los campos que dice la definición;
- * cualquier otra cosa que llegue se ignora.
+ * The browser already validates (required, type=email…), but that is a
+ * convenience for the visitor, not security: everything is repeated here,
+ * because a submission can be forged without a browser. Only the fields the
+ * definition lists are read; anything else that arrives is ignored.
  *
- * Cómo se mantiene:
- * - Un tipo de campo nuevo: su caso en clean() y su límite en MAX_LENGTH.
- * - Caso frontera: un campo NO obligatorio con un valor mal formado (un
- *   correo opcional escrito mal) da error igual. Vacío sí vale; mal, no.
- * - La trampa: los límites cuentan caracteres (mb_strlen), no bytes. Con
- *   strlen un texto con tildes se cortaba antes de lo anunciado.
+ * How to maintain:
+ * - A new field type: its case in clean() and its limit in MAX_LENGTH.
+ * - Edge case: a NON-required field with a malformed value (an optional
+ *   email typed wrong) still gives an error. Empty is fine; wrong is not.
+ * - The trap: the limits count characters (mb_strlen), not bytes. With
+ *   strlen a text with accents was cut earlier than advertised.
  */
 
 namespace EstrategiaWeb\Forms;
@@ -31,8 +32,8 @@ final class Validator {
 	);
 
 	/**
-	 * @param array                $definition Definición cargada del servidor.
-	 * @param array<string, mixed> $input      Lo recibido en fields[...], sin barras (wp_unslash).
+	 * @param array                $definition Definition loaded from the server.
+	 * @param array<string, mixed> $input      What arrived in fields[...], unslashed (wp_unslash).
 	 * @return array{values: array<string, string>, errors: array<string, string>}
 	 */
 	public static function validate( array $definition, array $input ): array {

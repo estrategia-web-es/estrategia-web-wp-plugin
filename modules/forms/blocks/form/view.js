@@ -1,27 +1,27 @@
 /**
- * El lado del navegador del formulario, con la Interactivity API.
+ * The browser side of the form, with the Interactivity API.
  *
- * Es un módulo ES que WordPress carga tal cual (viewScriptModule en
- * block.json): no hay paso de compilación. Sin JavaScript el formulario
- * funciona igual —el <form> manda al mismo endpoint y vuelve con una
- * redirección—; esto solo evita la recarga.
+ * It is an ES module that WordPress loads as is (viewScriptModule in
+ * block.json): there is no build step. Without JavaScript the form works
+ * the same —the <form> posts to the same endpoint and comes back with a
+ * redirect—; this only avoids the reload.
  *
- * Qué hace:
- * - submit: manda el formulario con fetch, pinta el mensaje en la zona
- *   aria-live y marca los campos con error que diga el servidor.
- * - start (primer foco): si la página viene de una caché vieja y su token
- *   tiene más de 12 horas, pide uno nuevo. No lo pide siempre: el token lleva
- *   la hora en que se pintó la página, que es la que mide el tiempo mínimo
- *   de relleno, y renovarlo al primer foco castigaría al que rellena rápido
- *   con el autocompletado.
+ * What it does:
+ * - submit: sends the form with fetch, shows the message in the aria-live
+ *   area and marks the fields the server reports as invalid.
+ * - start (first focus): if the page comes from an old cache and its token
+ *   is older than 12 hours, it asks for a new one. It does not always ask:
+ *   the token carries the time the page was rendered, which is what measures
+ *   the minimum filling time, and renewing it on first focus would punish
+ *   whoever fills it in quickly with autocomplete.
  *
- * Cómo se mantiene: los textos que este fichero enseña vienen del servidor
- * (mensajes de la respuesta y context.networkError), nunca escritos aquí —
- * así se traducen con el .po y con WPML como todo lo demás.
- * La trampa: las acciones son generadores (function*) para no perder el
- * contexto tras cada yield; con async/await, getContext() fallaría después
- * del primer await. Y submit necesita withSyncEvent porque llama a
- * preventDefault() de forma síncrona.
+ * How to maintain: the texts this file shows come from the server (response
+ * messages and context.networkError), never written here — that way they are
+ * translated with the .po and with WPML like everything else.
+ * The trap: the actions are generators (function*) so as not to lose the
+ * context after each yield; with async/await, getContext() would fail after
+ * the first await. And submit needs withSyncEvent because it calls
+ * preventDefault() synchronously.
  */
 import { store, getContext, getElement, withSyncEvent } from '@wordpress/interactivity';
 
@@ -80,7 +80,7 @@ store( 'estrategia-web-forms', {
 					}
 				}
 			} catch ( e ) {
-				// Sin token nuevo se manda con el viejo y el servidor dirá si caducó.
+				// Without a new token it is sent with the old one and the server will say if it expired.
 			}
 		},
 
@@ -110,9 +110,9 @@ store( 'estrategia-web-forms', {
 				ctx.message = data.message || '';
 				if ( data.ok ) {
 					form.reset();
-					// 1.1.0: aviso para quien mida conversiones (modules/google-tags).
-					// Solo el nombre del formulario, nunca lo escrito. Sin JS (envío
-					// con redirección) no hay evento: esa conversión no se cuenta.
+					// 1.1.0: signal for whoever measures conversions (modules/google-tags).
+					// Only the form name, never what was typed. Without JS (submission
+					// with redirect) there is no event: that conversion is not counted.
 					document.dispatchEvent( new CustomEvent( 'estrategia-web:form-sent', { detail: { form: form.getAttribute( 'id' ) || '' } } ) );
 				} else {
 					showErrors( form, data.errors || {} );

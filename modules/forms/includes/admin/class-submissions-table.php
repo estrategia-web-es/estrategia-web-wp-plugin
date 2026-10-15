@@ -1,7 +1,7 @@
 <?php
 /**
- * La lista de envíos (WP_List_Table): filtro por formulario, paginación y la
- * acción en bloque «Borrar», que lleva a la pantalla de confirmación.
+ * The submissions list (WP_List_Table): filter by form, pagination and the
+ * «Delete» bulk action, which leads to the confirmation screen.
  */
 
 namespace EstrategiaWeb\Forms;

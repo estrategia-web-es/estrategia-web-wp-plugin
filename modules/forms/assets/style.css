@@ -1,26 +1,26 @@
 /*
- * Estilo mínimo del formulario: SOLO la rejilla y lo que sin CSS no
- * funcionaría (el honeypot oculto, los mensajes vacíos ocultos).
+ * Minimal form styles: ONLY the grid and what would not work without CSS
+ * (the hidden honeypot, the hidden empty messages).
  *
- * Todo lo que es aspecto lo pone el tema. Para eso hay tres vías, de la más
- * recomendada a la menos:
- * 1. theme.json: el botón es .wp-element-button y hereda styles.elements.button.
- * 2. Las variables de abajo (--estrategia-web-forms-*), en el CSS del tema hijo.
- * 3. Las clases .estrategia-web-forms__*, que son estables entre versiones menores.
+ * Everything about looks is up to the theme. There are three ways, from
+ * most to least recommended:
+ * 1. theme.json: the button is .wp-element-button and inherits styles.elements.button.
+ * 2. The variables below (--estrategia-web-forms-*), in the child theme CSS.
+ * 3. The .estrategia-web-forms__* classes, which are stable across minor versions.
  *
- * La trampa: no subas la especificidad de estas reglas. Están con UNA clase a
- * propósito para que cualquier regla del tema gane sin !important.
+ * The trap: do not raise the specificity of these rules. They use ONE class
+ * on purpose so that any theme rule wins without !important.
  *
- * La flecha del desplegable es la NATIVA del navegador, y aquí no se pone
- * appearance:none (lo vigila tests/pure.test.mjs). Decidido el 03-10-2026 con
- * la revisión de Lavandería («el select sale como una caja lisa»): la caja
- * lisa la causaba el tema, que quitaba la flecha nativa para dibujar la suya y
- * luego la borraba con el atajo «background» desde una regla más específica.
- * Si el plugin pusiera su propio chevron, una versión menor cambiaría el
- * aspecto de todas las webs y repetiría esa trampa en cualquier tema que
- * pinte el fondo del campo. Por eso: el tema que quiera chevron propio pone
- * appearance:none Y su flecha, juntos, y pinta el fondo con
- * background-COLOR, nunca con el atajo.
+ * The dropdown arrow is the browser's NATIVE one, and appearance:none is not
+ * set here (tests/pure.test.mjs guards it). Decided on 03-10-2026 with the
+ * Lavandería review («the select shows up as a plain box»): the plain box
+ * was caused by the theme, which removed the native arrow to draw its own
+ * and then erased it with the «background» shorthand from a more specific
+ * rule. If the plugin set its own chevron, a minor version would change the
+ * look of every site and repeat that trap in any theme that paints the
+ * field background. Hence: a theme that wants its own chevron sets
+ * appearance:none AND its arrow, together, and paints the background with
+ * background-COLOR, never with the shorthand.
  */
 
 .estrategia-web-forms {
@@ -116,8 +116,8 @@
 	cursor: progress;
 }
 
-/* El honeypot: fuera de la vista y del orden de tabulación, pero NO
-   display:none, que algunos robots saben saltarse. */
+/* The honeypot: out of sight and out of the tab order, but NOT
+   display:none, which some bots know how to skip. */
 .estrategia-web-forms__hp {
 	position: absolute !important;
 	left: -9999px;

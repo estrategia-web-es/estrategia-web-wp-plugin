@@ -1,21 +1,21 @@
 <?php
 /**
- * Idioma y WPML: el ÚNICO sitio del plugin que sabe que WPML existe.
+ * Language and WPML: the ONLY place in the plugin that knows WPML exists.
  *
- * Sin WPML todo funciona igual: el «idioma» es el locale de WordPress
- * (es_ES) y los textos salen tal cual. Con WPML, el idioma es su código
- * (es, en, ca) y se usan sus ganchos públicos:
+ * Without WPML everything works the same: the «language» is the WordPress
+ * locale (es_ES) and texts come out as they are. With WPML, the language is
+ * its code (es, en, ca) and its public hooks are used:
  *   - wpml_current_language, wpml_active_languages, wpml_switch_language
- *   - wpml_register_single_string / wpml_translate_single_string (ajustes)
- *   - wpml_object_id (la página de privacidad traducida)
+ *   - wpml_register_single_string / wpml_translate_single_string (settings)
+ *   - wpml_object_id (the translated privacy page)
  *
- * Los textos de CADA formulario no pasan por aquí: son atributos de bloque y
- * WPML los traduce con la página, según wpml-config.xml.
+ * The texts of EACH form do not go through here: they are block attributes
+ * and WPML translates them with the page, according to wpml-config.xml.
  *
- * Cómo se mantiene: si una versión de WPML cambia un gancho, se cambia aquí y
- * en ningún otro sitio. La trampa: WPML no está en el entorno de pruebas (es
- * de pago), así que esta clase se prueba a mano en una web con WPML antes de
- * cada versión que la toque — anotado en el README, «Versiones».
+ * How to maintain: if a WPML version changes a hook, it is changed here and
+ * nowhere else. The trap: WPML is not in the test environment (it is paid),
+ * so this class is tested by hand on a site with WPML before every version
+ * that touches it — noted in the README, «Versiones».
  */
 
 namespace EstrategiaWeb\Forms;
@@ -30,7 +30,7 @@ final class Language {
 		return defined( 'ICL_SITEPRESS_VERSION' );
 	}
 
-	/** Idioma de lo que se está pintando ahora: código WPML o locale de WP. */
+	/** Language of what is being rendered now: WPML code or WP locale. */
 	public static function current(): string {
 		if ( self::wpml_active() ) {
 			$code = apply_filters( 'wpml_current_language', null );
@@ -52,8 +52,8 @@ final class Language {
 	}
 
 	/**
-	 * Cambia WPML y gettext al idioma del envío mientras se montan los
-	 * correos y los mensajes. Devuelve lo necesario para volver.
+	 * Switches WPML and gettext to the submission's language while the
+	 * emails and messages are built. Returns what is needed to switch back.
 	 *
 	 * @return array{0: bool, 1: ?string}
 	 */
@@ -90,7 +90,7 @@ final class Language {
 		return $value;
 	}
 
-	/** El id de la traducción de un objeto (página, entrada) en $lang, o el mismo id. */
+	/** The id of an object's translation (page, post) in $lang, or the same id. */
 	public static function object_id( int $id, string $type, string $lang ): int {
 		if ( $id && self::wpml_active() ) {
 			return (int) apply_filters( 'wpml_object_id', $id, $type, true, $lang );

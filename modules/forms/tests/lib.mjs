@@ -1,14 +1,14 @@
-// NIVEL: BANCO DE TRABAJO — no es una prueba. Ayudantes comunes de las pruebas de nivel 2 y 3.
+// NIVEL: BANCO DE TRABAJO — not a test. Shared helpers for the level 2 and 3 tests.
 //
-// Habla con el WordPress de Playground que arranca tests/run.mjs de la RAÍZ
-// del plugin (puerto 9404, el mismo para todos los módulos desde la 1.1.0;
-// antes, 9402) y con las rutas de prueba de
+// Talks to the Playground WordPress that tests/run.mjs at the plugin ROOT
+// starts (port 9404, the same for all modules since 1.1.0; before that, 9402)
+// and to the test routes in
 // modules/forms/tests/wp/estrategia-web-forms-test.php.
 import { createRequire } from "node:module";
 
 export const BASE = process.env.AF_BASE || process.env.AS_BASE || "http://127.0.0.1:9404";
 
-// Playwright sin node_modules propio: el de portal-hs (CLAUDE.md, 3.9).
+// Playwright without its own node_modules: the one in portal-hs (CLAUDE.md, 3.9).
 export const playwright = () => createRequire("E:/Repositories/portal-hs/package.json")("playwright");
 
 export async function testApi(path, { method = "GET", body } = {}) {
@@ -21,23 +21,23 @@ export async function testApi(path, { method = "GET", body } = {}) {
   return res.json();
 }
 
-// Primero el reset del NÚCLEO (tests/wp/estrategia-web-site-test.php) y
-// después el propio. Desde la 1.1.0 todos los módulos comparten WordPress, y
-// lo que deja otra prueba se queda: medido el 14-10-2026, el aviso de cookies
-// que siembra consent-browser.test.mjs seguía abierto aquí, su botón
-// «Guardar» casaba con button[type=submit] y las cuatro pruebas de
-// browser.test.mjs se quedaban esperando. El orden importa: el propio va
-// DESPUÉS porque marca «estrategia_web_test_suite = forms» (el idioma).
+// First the CORE reset (tests/wp/estrategia-web-site-test.php) and
+// then our own. Since 1.1.0 all modules share WordPress, and whatever
+// another test leaves behind stays: measured on 14-10-2026, the cookie notice
+// seeded by consent-browser.test.mjs was still open here, its «Guardar»
+// button matched button[type=submit] and the four tests in
+// browser.test.mjs hung waiting. Order matters: ours goes
+// AFTER because it sets «estrategia_web_test_suite = forms» (the language).
 export const reset = async () => {
   const core = await fetch(BASE + "/wp-json/estrategia-web-site-test/v1/reset", { method: "POST" });
-  if (!core.ok) throw new Error("reset del núcleo -> " + core.status);
+  if (!core.ok) throw new Error("core reset -> " + core.status);
   return testApi("/reset", { method: "POST" });
 };
 export const settings = (s) => testApi("/settings", { method: "POST", body: s });
 export const mails = () => testApi("/mails");
 export const submissions = () => testApi("/submissions");
 
-// Los destinatarios de los avisos: lo que NUNCA debe aparecer en el HTML público.
+// The notification recipients: what must NEVER appear in the public HTML.
 export const TEAM = "equipo@ejemplo.test";
 export const FAIL = "fail@ejemplo.test";
 
@@ -58,7 +58,7 @@ export async function seedPage(content = FORM, slug = "contacto") {
   return testApi("/page", { method: "POST", body: { slug, title: "Contacto", content } });
 }
 
-/** Los campos ocultos del formulario pintado (_af_def, _af_token, _af_page). */
+/** The hidden fields of the rendered form (_af_def, _af_token, _af_page). */
 export function hiddenFields(html) {
   const out = {};
   for (const m of html.matchAll(/<input type="hidden" name="(_af_[a-z]+)" value="([^"]*)"/g)) out[m[1]] = m[2].replace(/&amp;/g, "&");
@@ -70,7 +70,7 @@ export async function loadForm(url) {
   return { html, hidden: hiddenFields(html) };
 }
 
-/** Envío como lo haría el JS (respuesta JSON) o como un navegador sin JS (redirección). */
+/** Submission as the JS would do it (JSON response) or as a browser without JS (redirect). */
 export async function submit(hidden, fields, { js = true, extra = {} } = {}) {
   const body = new URLSearchParams();
   for (const [k, v] of Object.entries(hidden)) body.append(k, v);
@@ -96,7 +96,7 @@ export const GOOD = {
 };
 
 /**
- * El tiempo mínimo de relleno ES lo que se mide (Armazón, fila 7: la única
- * espera fija legítima). Las pruebas ponen min_seconds = 1.
+ * The minimum fill time IS what is being measured (Armazón, row 7: the only
+ * legitimate fixed wait). The tests set min_seconds = 1.
  */
 export const waitMinTime = () => new Promise((r) => setTimeout(r, 1100));
