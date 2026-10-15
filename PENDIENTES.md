@@ -5,6 +5,13 @@ de git, con el commit que lo cierra.
 
 ---
 
+## The plugin's translations must not depend on the site language (WPLANG)
+**Date:** 15-10-2026 · **Due:** before the next site (Gastronòmicament, Catalan by default)
+
+Measured in Lavandería production after publishing 1.1.0/1.2.0: WPLANG was empty (en_US) and WPML sets the Spanish locale LATER than `Plugin::load_textdomain()` (init, priority 1). The plugin loaded `estrategia-web-en_US` (does not exist), so every plugin string on the Spanish site came out in English (cookie notice «Accept all», maps «Show map») and the location CPT slug was registered as `locations` instead of `sedes`. Local tests did not catch it because the local site has WPLANG = es_ES. Fixed on the server by setting WPLANG = es_ES (Settings → General). Pending in code: with WPML active, take the locale of WPML's current language (or reload on `wpml_language_has_switched`) instead of trusting `determine_locale()` at init; and a test that boots with WPLANG empty and a WPML default language that is not English. The deployer's check should also look for a translated plugin string, not only `lang`.
+
+---
+
 ## Hoja de ruta Estrategia Web — lo que tienen que llevar TODAS las webs (12-10-2026)
 
 Lista de David, para que las webs nuevas y las ya hechas lleven lo mismo. Va
