@@ -1,355 +1,371 @@
-# Alta de una web nueva con Estrategia Web
+# Setting up a new site with Estrategia Web
 
-La guía para montar una web de cliente con las dos piezas comunes —el **tema
-padre** `estrategia-web` y el **plugin** `estrategia-web`— y un **tema hijo**
-propio. Escrita el 15-10-2026 a partir de lo que hay en Lavandería Mallorca,
-la única web hecha así: **la prueba de que esto escala es que la próxima web
-salga siguiendo esta guía sin preguntar**. Donde hoy hay que preguntar a
-alguien, pone **HUECO**.
+The guide for building a client site with the two shared pieces —the
+**parent theme** `estrategia-web` and the **plugin** `estrategia-web`— plus
+its own **child theme**. Written on 15-10-2026 from what exists in
+Lavandería Mallorca, the only site built this way so far: **the proof that
+this scales is that the next site comes out of following this guide without
+asking anyone**. Wherever today you have to ask someone, it says **GAP**.
 
-**El caso real con el que se prueba: rehacer https://gastronomicament.cat**
-(Grup Gastronòmicament, desde 2006). Lo que se sabe a 15-10-2026, de leer la
-portada y de David: revista gastronómica de Baleares, **en catalán** con
-castellano, inglés y alemán (WPML probable); es **WordPress** (confirmado) en
-**Raiola Networks** con cPanel, **sin SSH**, varios GB (sobre todo fotos);
-menú Restaurants, Receptes, Alimentació (con buscador), Vinícola, Actualitat
-(Fires i rutes, Concursos i premis, Cursos i tallers, Reportatges i
-novetats…; unas 133 páginas de artículos) y Contacte; boletín
-(«Subscriu-m'hi»), buscador, comentarios en los artículos y redes (Facebook,
-X, Instagram, correo); **sin sedes ni direcciones**. Cada sección dice qué
-le toca a esta web con «**Gastronòmicament:**». Lo que pide y aún no tenemos,
-con una propuesta cada cosa, está en la sección 8.
+**The real case it is tested against: rebuilding https://gastronomicament.cat**
+(Grup Gastronòmicament, since 2006). What is known as of 15-10-2026, from
+reading the home page and from David: a gastronomy magazine for the Balearic
+Islands, **in Catalan** with Spanish, English and German (probably WPML); it
+is **WordPress** (confirmed) on **Raiola Networks** with cPanel, **no SSH**,
+several GB (mostly photos); menu Restaurants, Receptes, Alimentació (with a
+search box), Vinícola, Actualitat (Fires i rutes, Concursos i premis, Cursos
+i tallers, Reportatges i novetats…; about 133 pages of articles) and
+Contacte; newsletter («Subscriu-m'hi»), search, comments on articles and
+social networks (Facebook, X, Instagram, email); **no branches or
+addresses**. Each section says what applies to this site with
+«**Gastronòmicament:**». What it needs and we do not have yet, with a
+proposal for each item, is in section 8.
 
-Las tres piezas y qué lleva cada una:
+The three pieces and what each one carries:
 
-| Pieza | Repo | Qué lleva | Qué NO lleva |
+| Piece | Repo | What it carries | What it does NOT carry |
 |---|---|---|---|
-| Tema padre `estrategia-web` | `armazon-wp-padre` | plantillas, partes, patrones genéricos, `theme.json` base | ningún bloque (desde su 1.1.0), ningún dato |
-| Plugin `estrategia-web` | `armazon-wp-sitio` (este) | todo lo que se guarda o funciona: datos de la empresa, tipos, bloques, formularios, cookies, analítica, redirecciones, subidas… en **módulos** | diseño |
-| Tema hijo `<cliente>` | el repo de la web | la marca: tokens, estilos de sección, patrones con su aspecto, partes | contenido (ni un teléfono ni un nombre de cliente: lo comprueba `theme-has-no-content.test.mjs` en Lavandería) |
+| Parent theme `estrategia-web` | `armazon-wp-padre` | templates, parts, generic patterns, base `theme.json` | no blocks (since its 1.1.0), no data |
+| Plugin `estrategia-web` | `armazon-wp-sitio` (this one) | everything that is stored or does something: company data, types, blocks, forms, cookies, analytics, redirects, uploads… in **modules** | design |
+| Child theme `<client>` | the site's repo | the brand: tokens, section styles, patterns with their look, parts | content (not a single phone number or client name: checked by `theme-has-no-content.test.mjs` in Lavandería) |
 
 ---
 
-## 1. Qué se instala y en qué orden
+## 1. What is installed and in what order
 
-1. **WordPress 7.1+**, PHP 8.1+, en el idioma PRINCIPAL de la web (Ajustes ›
-   Generales): castellano en Lavandería; **catalán** en Gastronòmicament (ver
-   8.4: el plugin hoy solo trae `es_ES`).
-2. **El plugin `estrategia-web`** (carpeta `wp-content/plugins/estrategia-web/`,
-   sin `tests/`, `modules/*/tests/` ni `tools/`) y activarlo. Va antes que
-   el tema: el padre pinta bloques que registra el plugin
-   (`estrategia-web/map`, `/carousel`…).
-3. **El tema padre `estrategia-web`** (carpeta `wp-content/themes/estrategia-web/`,
-   sin `blocks/` si aún la trae, sin `tests/`). No se activa solo.
-4. **El tema hijo** (carpeta `wp-content/themes/<cliente>/`) y se activa
-   ESTE. Si ya había un tema con la misma carpeta, ver la trampa de
-   `switch_theme` en la cabecera de `lavanderia-mallorca/despliegue/desplegar.mjs`.
-5. **WPML** (si la web es bilingüe; sección 5) y **Rank Math** (SEO; sus
-   ajustes por tipo usan los nombres registrados, `pt_eweb_client_…`).
+1. **WordPress 7.1+**, PHP 8.1+, in the site's MAIN language (Settings ›
+   General): Spanish in Lavandería; **Catalan** in Gastronòmicament (see
+   8.4: today the plugin only ships `es_ES`).
+2. **The `estrategia-web` plugin** (folder `wp-content/plugins/estrategia-web/`,
+   without `tests/`, `modules/*/tests/` or `tools/`), and activate it. It
+   goes before the theme: the parent renders blocks that the plugin
+   registers (`estrategia-web/map`, `/carousel`…).
+3. **The `estrategia-web` parent theme** (folder `wp-content/themes/estrategia-web/`,
+   without `blocks/` if it still has it, without `tests/`). It is not
+   activated on its own.
+4. **The child theme** (folder `wp-content/themes/<client>/`), and THIS is
+   the one activated. If there was already a theme with the same folder,
+   see the `switch_theme` trap in the header of
+   `lavanderia-mallorca/despliegue/desplegar.mjs`.
+5. **WPML** (if the site is bilingual; section 5) and **Rank Math** (SEO;
+   its per-type settings use the registered names, `pt_eweb_client_…`).
 
-En una web publicada esto lo hace el desplegador (sección 6); a mano solo en
-la primera instalación o en un servidor sin SSH.
+On a live site the deployer does this (section 6); by hand only on the first
+install or on a server without SSH.
 
-## 2. El tema hijo: cómo se crea
+## 2. The child theme: how it is created
 
-Se copia la estructura del de Lavandería (`lavanderia-mallorca/theme/`) y se
-vacía de marca. Lo **genérico** (se copia tal cual y se cambia el prefijo):
+Copy the structure of Lavandería's (`lavanderia-mallorca/theme/`) and strip
+out the brand. The **generic** part (copied as is, changing the prefix):
 
-    style.css            cabecera (Template: estrategia-web) y solo reglas de base
-    functions.php        solo ganchos; prefijo <cliente>_ en todas las funciones
-    inc/*.php            ayudas de patrones (una por asunto; se cargan con glob)
-    templates/           front-page, page, page-full, page-hero (las del padre ya sirven)
+    style.css            header (Template: estrategia-web) and only base rules
+    functions.php        only hooks; prefix <client>_ on every function
+    inc/*.php            pattern helpers (one per concern; loaded with glob)
+    templates/           front-page, page, page-full, page-hero (the parent's already work)
     parts/               header, footer, navigation-overlay
-    languages/           su .po/.l10n.php
-    (y en la raíz del repo de la web, fuera del tema: tools/juntar-css.mjs,
-    que junta assets/css/*.css en assets/css/dist/: la web carga una hoja)
+    languages/           its .po/.l10n.php
+    (and at the root of the site's repo, outside the theme: tools/juntar-css.mjs,
+    which joins assets/css/*.css into assets/css/dist/: the site loads one sheet)
 
-Lo **de la marca** (se hace de nuevo para cada cliente):
+The **brand** part (made anew for each client):
 
-    theme.json           colores, letras, radios, sombras, huecos
-    styles/block/*.json  un estilo por TIPO de sección (no por página)
-    assets/css/*.css     el CSS que theme.json no sabe decir, con el nombre del estilo
+    theme.json           colours, fonts, radii, shadows, spacing
+    styles/block/*.json  one style per section TYPE (not per page)
+    assets/css/*.css     the CSS theme.json cannot express, named after the style
     assets/fonts, deco, iconos
-    patterns/*.php       secciones con su aspecto y texto de ejemplo neutro
+    patterns/*.php       sections with their look and neutral sample text
 
-Reglas que ya están escritas y no se repiten aquí: `lavanderia-mallorca/theme/README.md`
-(qué va en el tema y qué no; nombres de hojas; patrones). Las que importan
-para el plugin:
+Rules already written down and not repeated here:
+`lavanderia-mallorca/theme/README.md` (what goes in the theme and what does
+not; stylesheet names; patterns). The ones that matter for the plugin:
 
-- **Los tipos del plugin en un patrón**, siempre con su nombre registrado y
-  pedido al plugin, nunca a fuego:
+- **The plugin's types in a pattern**, always by their registered name,
+  asked from the plugin, never hard-coded:
   `"postType":"<?php echo esc_attr( function_exists( 'estrategia_web_type_name' ) ? estrategia_web_type_name( 'client' ) : 'client' ); ?>"`.
-- **Los datos de la empresa** van por Block Bindings
-  (`estrategia-web-site/company`, `estrategia-web-site/location`) o por
-  `[estrategia_web_company key="…"]`; nunca escritos en el tema.
-- **Las categorías del aviso de cookies** que pida la web (`maps` si hay
-  mapas) las declara el hijo con el filtro `estrategia_web_consent_categories`
-  (ver `lavanderia-mallorca/theme/functions.php`).
+- **Company data** goes through Block Bindings
+  (`estrategia-web-site/company`, `estrategia-web-site/location`) or through
+  `[estrategia_web_company key="…"]`; never written into the theme.
+- **The cookie notice categories** the site needs (`maps` if there are
+  maps) are declared by the child with the `estrategia_web_consent_categories`
+  filter (see `lavanderia-mallorca/theme/functions.php`).
 
-**HUECO — no hay plantilla de tema hijo.** Hoy se copia Lavandería y se
-borra a mano lo suyo; no hay un `armazon-wp-hijo` vacío con la estructura.
-Propuesta (sin hacer): sacar de Lavandería un repo plantilla con lo genérico
-de arriba y `tools/juntar-css.mjs`, como `armazon-template-tool` para las
-herramientas (Armazón, fila 23: el generador vive en el repo plantilla).
+**GAP — there is no child theme template.** Today you copy Lavandería and
+delete its own stuff by hand; there is no empty `armazon-wp-hijo` with the
+structure. Proposal (not done): extract from Lavandería a template repo with
+the generic part above and `tools/juntar-css.mjs`, like
+`armazon-template-tool` for tools (Armazón, row 23: the generator lives in
+the template repo).
 
-## 3. Qué módulos encender
+## 3. Which modules to turn on
 
-En **Estrategia Web › Módulos**. Por defecto vienen encendidos los que usa
-Lavandería; apagar un módulo no borra nada de lo que guardó.
+In **Estrategia Web › Modules**. By default the ones Lavandería uses come
+switched on; turning a module off does not delete anything it stored.
 
-| Caso | Módulos |
+| Case | Modules |
 |---|---|
-| Toda web | `site` (datos de la empresa y tipos), `consent` (aviso de cookies), `webp`, `uploads`, `external-links`, `featured-images` |
-| Con formulario de contacto o presupuesto | `forms` |
-| Con sedes y mapa | `site` (tipo `location`) + `map` |
-| Con portada en carrusel | `carousel` |
-| Con WhatsApp | `whatsapp` |
-| Con redes sociales en el pie | `social` |
-| Bilingüe con WPML | `language-switcher`, `wpml-front-page` |
-| Analítica sin cookies (Matomo) | `matomo` |
-| Google Analytics, Ads o Tag Manager | `google-tags` (apagado por defecto; necesita `consent`) |
-| Web que sustituye a otra (URL viejas) | `redirects` (apagado por defecto; si Rank Math ya lleva redirecciones, una sola de las dos) |
-| Sin comentarios | `comments-off` (apagado por defecto) |
+| Every site | `site` (company data and types), `consent` (cookie notice), `webp`, `uploads`, `external-links`, `featured-images` |
+| With a contact or quote form | `forms` |
+| With branches and a map | `site` (type `location`) + `map` |
+| With a carousel home page | `carousel` |
+| With WhatsApp | `whatsapp` |
+| With social networks in the footer | `social` |
+| Bilingual with WPML | `language-switcher`, `wpml-front-page` |
+| Cookieless analytics (Matomo) | `matomo` |
+| Google Analytics, Ads or Tag Manager | `google-tags` (off by default; needs `consent`) |
+| Site replacing another one (old URLs) | `redirects` (off by default; if Rank Math already handles redirects, only one of the two) |
+| No comments | `comments-off` (off by default) |
 
-La lista completa y qué hace cada uno: [README](../README.md), «Módulos».
+The full list and what each one does: [README](../README.md#modules),
+«Modules».
 
-**Gastronòmicament:** `site` (datos de la empresa; **ningún** tipo de los
-nuestros: no tiene clientes ni sedes; sus tipos son otros, 8.1), `consent`,
-`webp`, `uploads` (y su recorte a 2560 px y WebP pesa en la importación, 8.2),
-`external-links`, `featured-images`, `forms` (Contacte), `social`,
-`language-switcher` y `wpml-front-page` (cuatro idiomas, 8.4), `redirects`
-**encendido** (las URL viejas, 8.2), `matomo` o `google-tags` según lo que
-mida hoy. `comments-off` **apagado**: tiene comentarios (8.5). Sin `map` ni
-`whatsapp` mientras no se pidan.
+**Gastronòmicament:** `site` (company data; **none** of our types: it has
+no clients or branches; its types are different ones, 8.1), `consent`,
+`webp`, `uploads` (and its 2560 px resize and WebP matter for the import,
+8.2), `external-links`, `featured-images`, `forms` (Contacte), `social`,
+`language-switcher` and `wpml-front-page` (four languages, 8.4), `redirects`
+**on** (the old URLs, 8.2), `matomo` or `google-tags` depending on what it
+measures with today. `comments-off` **off**: it has comments (8.5). No `map`
+or `whatsapp` until they are asked for.
 
-## 4. Qué se configura en el panel
+## 4. What is configured in the admin
 
-En este orden (lo de después usa lo de antes):
+In this order (later steps use earlier ones):
 
-1. **Estrategia Web › Datos de la empresa**: nombre comercial y legal, CIF,
-   inscripción registral, teléfonos, correo, dirección, horario, mapa,
-   WhatsApp; **qué tipos de contenido usa la web** (clientes, opiniones,
-   sedes, proyectos, portfolio); SVG sí/no; Matomo (URL, id del sitio,
-   modo). Si la web tiene una **página** `/clientes/` y el tipo clientes, el
-   archivo del tipo la pisaría: fijar otro slug en `rewrite_slugs` (README,
-   sección 3).
-2. **Sedes** (si la web las tiene): una por sede, con teléfono, correo,
-   dirección, horario, enlace e *embed* de Google Maps y la imagen estática
-   del mapa (panel «Datos de la sede» del editor).
-3. **Clientes y opiniones**: título, foto o logo (y «Logo» en el ajuste de
-   imagen si lo es), sector; la opinión con autor y valoración.
-4. **Estrategia Web › Redes sociales**: la lista (nombre, enlace, icono).
-5. **Estrategia Web › Cookies**: revisar lo que el detector encuentra y
-   completar lo que no ve (las de terceros dentro de un iframe). La tabla de
-   la política sale del bloque `estrategia-web/cookie-table`.
-6. **Google** (si `google-tags`): GA4, Ads, Tag Manager.
-7. **Estrategia Web › Formularios › Ajustes**: remitente y destinatarios.
-8. **Ajustes › Medios › Subidas de imágenes**: tamaño máximo, umbral de
-   píxeles y si se borra el original.
-9. **Estrategia Web › Redirecciones** (si `redirects`): importar el CSV de
-   las URL viejas.
-10. **Rank Math**: títulos y sitemap por tipo (salen como `eweb_client`…).
+1. **Estrategia Web › Company data**: trade name and legal name, tax ID
+   (CIF), company registry entry, phone numbers, email, address, opening
+   hours, map, WhatsApp; **which content types the site uses** (clients,
+   testimonials, branches, projects, portfolio); SVG yes/no; Matomo (URL,
+   site id, mode). If the site has a `/clientes/` **page** and the clients
+   type, the type's archive would override it: set a different slug in
+   `rewrite_slugs` (README,
+   [«3. Content types»](../README.md#3-content-types)).
+2. **Branches** (if the site has them): one per branch, with phone, email,
+   address, opening hours, Google Maps link and *embed*, and the static map
+   image («Branch data» panel in the editor).
+3. **Clients and testimonials**: title, photo or logo (and «Logo» in the
+   image setting if it is one), sector; the testimonial with author and
+   rating.
+4. **Estrategia Web › Social networks**: the list (name, link, icon).
+5. **Estrategia Web › Cookies**: review what the detector finds and add
+   what it cannot see (third-party ones inside an iframe). The policy table
+   comes from the `estrategia-web/cookie-table` block.
+6. **Google** (if `google-tags`): GA4, Ads, Tag Manager.
+7. **Estrategia Web › Forms › Settings**: sender and recipients.
+8. **Settings › Media › Image uploads**: maximum size, pixel threshold and
+   whether the original is deleted.
+9. **Estrategia Web › Redirects** (if `redirects`): import the CSV of the
+   old URLs.
+10. **Rank Math**: titles and sitemap per type (they show up as
+    `eweb_client`…).
 
-**HUECO — los datos los da el cliente.** No hay un formulario de alta que
-el cliente rellene: hoy David los pide por correo. Lista mínima que hay que
-pedirle: los campos del punto 1, sedes, logo en vectorial (o se vectoriza,
-avisándole: redibuja la marca), fotos, textos legales (aviso legal,
-privacidad, cookies) y si habrá inglés.
+**GAP — the data comes from the client.** There is no onboarding form for
+the client to fill in: today David asks for it by email. Minimum list to
+ask for: the fields in step 1, branches, logo in vector format (or it gets
+vectorised, telling them: it redraws the brand), photos, legal texts (legal
+notice, privacy, cookies) and whether there will be English.
 
-**HUECO — los textos legales.** Lavandería los tiene en su semilla; no hay
-plantilla común con los huecos marcados.
+**GAP — the legal texts.** Lavandería has them in its seed; there is no
+shared template with the blanks marked.
 
-## 5. WPML: sí o no
+## 5. WPML: yes or no
 
-- **No** (monolingüe): no se instala; los módulos `language-switcher` y
-  `wpml-front-page` no hacen nada sin él.
-- **Sí**: idioma por defecto castellano, segundo idioma por directorio
-  (`/en/`). Los tipos `eweb_location`, `eweb_client`, `eweb_testimonial` y la
-  taxonomía `eweb_client_sector` traducibles «mostrando el original si falta»
-  (modo 2); las páginas, traducibles (modo 1). Qué campos de una sede se
-  copian y cuáles se traducen lo dice `wpml-config.xml` del plugin. **La
-  trampa** (medida en Lavandería): WPML no lee el `wpml-config.xml` de un
-  plugin activado sin sus ganchos hasta que se abre una pantalla suya; el
-  desplegador lo fuerza (`WPML_Config::load_config_run`).
-- **HUECO — la licencia de WPML** es de pago y por web: quién la compra y a
-  nombre de quién, no está escrito.
+- **No** (monolingual): it is not installed; the `language-switcher` and
+  `wpml-front-page` modules do nothing without it.
+- **Yes**: default language Spanish, second language by directory
+  (`/en/`). The types `eweb_location`, `eweb_client`, `eweb_testimonial` and
+  the taxonomy `eweb_client_sector` translatable «showing the original if
+  missing» (mode 2); pages, translatable (mode 1). Which branch fields are
+  copied and which are translated is defined in the plugin's
+  `wpml-config.xml`. **The trap** (measured in Lavandería): WPML does not
+  read the `wpml-config.xml` of a plugin activated without its hooks until
+  one of its screens is opened; the deployer forces it
+  (`WPML_Config::load_config_run`).
+- **GAP — the WPML licence** is paid and per site: who buys it and in whose
+  name is not written down.
 
-## 6. La semilla y la carga de contenido
+## 6. The seed and content loading
 
-La **semilla** es el contenido de arranque en ficheros (`content/semilla/`
-del repo de la web): páginas en HTML de bloques, clientes, sedes, menús,
-datos de la empresa, fotos. La **carga** (`cargar.mjs`) la sube por la API
-REST a cualquier WordPress (Playground local o el servidor por SSH),
-idempotente, y desde el 07-10-2026 **no pisa lo editado en el panel**
-(huellas). En producción el contenido es del cliente: la semilla sirve para
-**arrancar** y para el WordPress local, no para sincronizar.
+The **seed** is the starting content in files (`content/semilla/` in the
+site's repo): pages in block HTML, clients, branches, menus, company data,
+photos. The **loader** (`cargar.mjs`) uploads it through the REST API to any
+WordPress (local Playground or the server over SSH), idempotently, and since
+07-10-2026 it **does not overwrite what was edited in the admin**
+(fingerprints). In production the content belongs to the client: the seed
+is for **bootstrapping** and for the local WordPress, not for syncing.
 
-Qué de Lavandería se reutiliza, y qué está atado a ella:
+What from Lavandería is reusable, and what is tied to it:
 
-| Script | Reutilizable | Atado a Lavandería |
+| Script | Reusable | Tied to Lavandería |
 |---|---|---|
-| `content/semilla/cargar.mjs` | el motor entero: fases, marcadores `{{media:…}}`, huellas, puente SSH, WPML | las fases leen `clientes.json`, `sedes.json`, `paginas.json` con su forma; el idioma `en` fijo; los modos de WPML |
-| `content/semilla/idiomas.php`, `puente.php`, `tipos.mjs` | **sí, tal cual** | — |
-| `despliegue/desplegar.mjs` | copia, paquetes desde HEAD, subida, migradores, comprobación, registro del OK | constantes al principio (`DEST`, `URL_BASE`, `WP`, `CHILD`, `DESACTIVAR`, `MODULOS_ENCENDER`, `MU_SUBIDAS`, las páginas que comprueba) y el pasado de esa web (tema hijo de spectra-one, MU-plugin de subidas) |
-| `despliegue/bajar-contenido.mjs` (+ `.php`) | el mecanismo (bajar y «desrellenar» marcadores) | la forma de la semilla de Lavandería |
-| `despliegue/prefijo-tipos.mjs`, `migrar-a-estrategia-web.mjs` | sí (con `--destino`/`--wp-path`) | solo los valores por defecto |
+| `content/semilla/cargar.mjs` | the whole engine: phases, `{{media:…}}` markers, fingerprints, SSH bridge, WPML | the phases read `clientes.json`, `sedes.json`, `paginas.json` in their shape; the `en` language hard-coded; the WPML modes |
+| `content/semilla/idiomas.php`, `puente.php`, `tipos.mjs` | **yes, as is** | — |
+| `despliegue/desplegar.mjs` | copy, packages from HEAD, upload, migrators, check, recording of the OK | constants at the top (`DEST`, `URL_BASE`, `WP`, `CHILD`, `DESACTIVAR`, `MODULOS_ENCENDER`, `MU_SUBIDAS`, the pages it checks) and that site's past (spectra-one child theme, uploads MU-plugin) |
+| `despliegue/bajar-contenido.mjs` (+ `.php`) | the mechanism (download and «un-fill» markers) | the shape of Lavandería's seed |
+| `despliegue/prefijo-tipos.mjs`, `migrar-a-estrategia-web.mjs` | yes (with `--destino`/`--wp-path`) | only the defaults |
 
-**Propuesta (sin hacer, lo decide David): sacar a un repo común
-`armazon-wp-carga`** —o como herramienta con nombre, Armazón fila 27— el
-motor de la carga (`cargar.mjs` sin sus fases de Lavandería, `idiomas.php`,
-`puente.php`, `tipos.mjs`) y el esqueleto del desplegador con sus
-constantes en un `web.json` por web. Cada web se quedaría solo con su
-`content/semilla/` y ese `web.json`. Mientras no se haga, **una web nueva
-copia los scripts de Lavandería y cambia las constantes**, y un arreglo en
-uno hay que llevarlo a mano al otro (es lo que la propuesta evita).
+**Proposal (not done, David decides): extract into a shared repo
+`armazon-wp-carga`** —or as a named tool, Armazón row 27— the loading
+engine (`cargar.mjs` without its Lavandería phases, `idiomas.php`,
+`puente.php`, `tipos.mjs`) and the skeleton of the deployer with its
+constants in a per-site `web.json`. Each site would keep only its
+`content/semilla/` and that `web.json`. Until that is done, **a new site
+copies Lavandería's scripts and changes the constants**, and a fix in one
+has to be carried over to the other by hand (which is what the proposal
+avoids).
 
-**HUECO — sin plantilla de semilla.** Las páginas de una web nueva se
-escriben o se diseñan desde cero (en Lavandería salieron del kit de diseño);
-no hay una semilla mínima (inicio, contacto, legales) para empezar.
+**GAP — no seed template.** The pages of a new site are written or
+designed from scratch (in Lavandería they came from the design kit); there
+is no minimal seed (home, contact, legal pages) to start from.
 
-## 7. Lista de comprobación antes de publicar
+## 7. Checklist before going live
 
-- [ ] Plugin, padre e hijo en las versiones de `main`, empaquetados desde
-      el HEAD (no desde el árbol de trabajo).
-- [ ] Copia de la base de datos y de `wp-content` (el desplegador la hace;
-      a mano, antes de nada).
-- [ ] **Migradores en seco leídos**: el de Armazón (solo webs viejas) y el
-      del prefijo de los tipos (`--seco`), sin avisos sin explicar.
-- [ ] Módulos: los de la sección 3, y ninguno de más.
-- [ ] Datos de la empresa completos; tipos marcados; slugs que no pisen
-      páginas.
-- [ ] Aviso de cookies: categorías declaradas (`maps` si hay mapas), nada
-      de terceros antes de aceptar (el desplegador lo mide con Playwright),
-      tabla de la política con todas las cookies.
-- [ ] Páginas legales enlazadas en el pie y en el aviso.
-- [ ] Accesibilidad **medida**: `node E:/Repositories/atlas/bin/kit-accesibilidad.mjs <url> --contraste`
-      (cero fallos no es «conforme»: decirlo así).
-- [ ] Imágenes en WebP y sin rotas (`comprobar-imagenes.mjs`).
-- [ ] Con WPML: `/en/` responde, el selector de idioma sale, los campos
-      «copy» de las sedes llegan a la traducción.
-- [ ] Rank Math: sitemap con los tipos que se ven; títulos por tipo.
-- [ ] Formularios: un envío de prueba llega al destinatario.
-- [ ] Batería entera del plugin, del padre y del hijo en verde.
-- [ ] El OK de David, literal, para `desplegar.mjs --ok "<frase>"`.
+- [ ] Plugin, parent and child at the `main` versions, packaged from HEAD
+      (not from the working tree).
+- [ ] Backup of the database and of `wp-content` (the deployer does it; by
+      hand, before anything else).
+- [ ] **Dry-run migrators read**: the Armazón one (old sites only) and the
+      type prefix one (`--seco`), with no unexplained warnings.
+- [ ] Modules: the ones from section 3, and none extra.
+- [ ] Company data complete; types ticked; slugs that do not override
+      pages.
+- [ ] Cookie notice: categories declared (`maps` if there are maps), no
+      third-party content before accepting (the deployer measures it with
+      Playwright), policy table with every cookie.
+- [ ] Legal pages linked in the footer and in the notice.
+- [ ] Accessibility **measured**: `node E:/Repositories/atlas/bin/kit-accesibilidad.mjs <url> --contraste`
+      (zero failures is not «compliant»: say it that way).
+- [ ] Images in WebP and none broken (`comprobar-imagenes.mjs`).
+- [ ] With WPML: `/en/` responds, the language switcher shows up, the
+      «copy» fields of the branches reach the translation.
+- [ ] Rank Math: sitemap with the visible types; titles per type.
+- [ ] Forms: a test submission reaches the recipient.
+- [ ] Full test suite of the plugin, the parent and the child green.
+- [ ] David's OK, verbatim, for `desplegar.mjs --ok "<phrase>"`.
 
-## 8. Lo que pide Gastronòmicament y aún no tenemos
+## 8. What Gastronòmicament needs and we do not have yet
 
-Cinco huecos, cada uno con una **propuesta** (sin hacer: se decide y se
-hace cuando toque). El criterio para decidir dónde va cada cosa es el del
-Armazón: si la próxima web lo haría igual sin saber de qué va, es del plugin;
-si no, es de la web.
+Five gaps, each with a **proposal** (not done: it is decided and done when
+the time comes). The criterion for deciding where each thing goes is the
+Armazón one: if the next site would do it the same way without knowing what
+it is about, it belongs in the plugin; if not, it belongs in the site.
 
-### 8.1 Tipos de contenido PROPIOS (restaurante, receta, producto, bodega)
+### 8.1 Site-specific content types (restaurant, recipe, product, winery)
 
-Los nuestros (clientes, opiniones, sedes…) son de toda web corporativa; un
-«restaurante» con su cocina y su precio es de esta web. **Propuesta: un
-plugin propio de la web** (`gastronomicament-tipos`, en el repo de la web,
-junto al tema hijo), **no el tema hijo** (lo que se guarda no puede
-desaparecer al cambiar de tema: README, primera sección) **ni el plugin
-común** (no lo haría igual la siguiente web). Y para que no se invente cada
-vez, el plugin común le da **el molde**:
+Ours (clients, testimonials, branches…) belong to any corporate site; a
+«restaurant» with its cuisine and its price belongs to this site.
+**Proposal: a site-specific plugin** (`gastronomicament-tipos`, in the
+site's repo, next to the child theme), **not the child theme** (what is
+stored cannot disappear when the theme changes: README, first section)
+**nor the shared plugin** (the next site would not do it the same way). And
+so it is not reinvented every time, the shared plugin gives it **the
+mould**:
 
-- Declarar un tipo con la misma forma que `Content_Types::definitions()`
-  (etiquetas, slug traducible, supports, taxonomía, METAS con su saneado) por
-  un filtro, p. ej. `estrategia_web_content_types`, y que el plugin común
-  haga el resto: registrar, `rewrite_slugs`, el panel de campos
-  (`Meta_Panel`), la copia WPML de los campos «copy» y su prueba.
-- **Prefijo propio** de la web en sus nombres (`gm_restaurant`, metas
-  `gastronomicament_…`): el `eweb_` es solo de los tipos del plugin común.
-- Integración, igual que los nuestros: Consultas por `"postType"`, campos por
-  `core/post-meta`, `wpml-config.xml` propio en la raíz de ESE plugin (WPML lo
-  lee de cada plugin activo), y las reglas de esta guía (huellas, semilla)
-  no cambian.
-- **HUECO**: el filtro-molde no existe; hoy un tipo propio se registra a mano
-  con `register_post_type` y no tiene panel de campos ni copia WPML.
+- Declare a type with the same shape as `Content_Types::definitions()`
+  (labels, translatable slug, supports, taxonomy, METAS with their
+  sanitising) through a filter, e.g. `estrategia_web_content_types`, and let
+  the shared plugin do the rest: registering, `rewrite_slugs`, the fields
+  panel (`Meta_Panel`), the WPML copy of the «copy» fields and its test.
+- **The site's own prefix** in its names (`gm_restaurant`, metas
+  `gastronomicament_…`): `eweb_` is only for the shared plugin's types.
+- Integration, same as ours: Query loops by `"postType"`, fields through
+  `core/post-meta`, its own `wpml-config.xml` at the root of THAT plugin
+  (WPML reads it from every active plugin), and the rules in this guide
+  (fingerprints, seed) do not change.
+- **GAP**: the mould filter does not exist; today a site-specific type is
+  registered by hand with `register_post_type` and has no fields panel or
+  WPML copy.
 
-### 8.2 IMPORTAR lo que ya existe (miles de entradas, medios, URL viejas)
+### 8.2 IMPORTING what already exists (thousands of posts, media, old URLs)
 
-La semilla y `cargar.mjs` son para **crear** una web desde ficheros; aquí
-hay que **traer** una web viva. **Procedimiento por defecto para un hosting
-sin SSH** (es el caso de Raiola):
+The seed and `cargar.mjs` are for **creating** a site from files; here a
+live site has to be **brought over**. **Default procedure for hosting
+without SSH** (which is Raiola's case):
 
-1. **Base de datos**: copia por cPanel (Copia de seguridad › base de datos) o
-   phpMyAdmin (Exportar). Se importa en LOCAL y es la vía PRINCIPAL: conserva
-   lo que la API REST no da, sobre todo las **relaciones de traducción de
-   WPML** (`icl_translations`), los ajustes y las metas que no están en REST.
-2. **Fotos** (`wp-content/uploads`, varios GB): por **FTP con réplica
-   incremental** (`lftp -e "mirror --only-newer --parallel=4 …"`), con una
-   cuenta FTP de cPanel **limitada a `wp-content/uploads`**. **No un zip
-   único**: con GB se corta, y no se puede reanudar.
-3. La web vieja **sigue publicando** mientras se rehace: el día del cambio,
-   una **resincronización final** de solo lo nuevo (otro `mirror
-   --only-newer` y las entradas nuevas de la base de datos, por fecha).
-4. Al importar, el módulo `uploads` (2560 px y WebP) **reduce el peso**:
-   **medir antes y después** (GB de `uploads`, peso medio por foto) y
-   apuntarlo, que es un argumento para el cliente.
-5. **URL viejas → `redirects`**: si cambian (estructura de enlaces,
-   categorías), se exportan viejas y nuevas y se importa el CSV en
-   Estrategia Web › Redirecciones (`wp estrategia-web redirects import`).
-6. La **API REST** (con una contraseña de aplicación de un usuario de solo
-   lectura, guardada fuera del repo) queda para **comprobar en vivo**:
-   cuántas entradas y medios hay hoy, qué tipos y taxonomías propios están
-   registrados, y si devuelve idioma y traducciones. **La trampa**: la REST
-   del núcleo NO trae las relaciones de WPML; según la versión y la
-   configuración de WPML se exponen o no. Por eso no es la vía de importación.
+1. **Database**: backup through cPanel (Backup › database) or phpMyAdmin
+   (Export). It is imported LOCALLY and it is the MAIN route: it keeps what
+   the REST API does not provide, above all the **WPML translation
+   relationships** (`icl_translations`), the settings and the metas that are
+   not in REST.
+2. **Photos** (`wp-content/uploads`, several GB): over **FTP with an
+   incremental mirror** (`lftp -e "mirror --only-newer --parallel=4 …"`),
+   with a cPanel FTP account **restricted to `wp-content/uploads`**. **Not a
+   single zip**: with GB it breaks off, and it cannot be resumed.
+3. The old site **keeps publishing** while it is rebuilt: on switchover
+   day, a **final resync** of only what is new (another `mirror
+   --only-newer` and the new database posts, by date).
+4. On import, the `uploads` module (2560 px and WebP) **reduces the
+   weight**: **measure before and after** (GB of `uploads`, average weight
+   per photo) and write it down, since it is an argument for the client.
+5. **Old URLs → `redirects`**: if they change (permalink structure,
+   categories), export old and new ones and import the CSV in
+   Estrategia Web › Redirects (`wp estrategia-web redirects import`).
+6. The **REST API** (with an application password of a read-only user,
+   kept outside the repo) is left for **live checking**: how many posts and
+   media there are today, which custom types and taxonomies are registered,
+   and whether it returns language and translations. **The trap**: core
+   REST does NOT include the WPML relationships; depending on the WPML
+   version and configuration they are exposed or not. That is why it is not
+   the import route.
 
-**Lo primero con el acceso delante**: si el plan tiene SSH (si lo tiene,
-`wp db export` y `rsync` sustituyen a los pasos 1 y 2), la versión de WPML,
-si la REST da `lang`/traducciones, los tipos y taxonomías propios
-registrados (de un plugin o del tema: 8.1), y el número de entradas y de
-medios. **HUECO**: no hay importador; la propuesta es un script en el repo de
-la web, idempotente y con `--seco`, que pase de la copia local a la
-estructura nueva (tipos propios, bloques) y escriba el CSV de redirecciones.
+**First thing once you have access**: whether the plan has SSH (if it does,
+`wp db export` and `rsync` replace steps 1 and 2), the WPML version, whether
+REST returns `lang`/translations, the custom types and taxonomies registered
+(by a plugin or by the theme: 8.1), and the number of posts and media
+items. **GAP**: there is no importer; the proposal is a script in the site's
+repo, idempotent and with `--seco`, that goes from the local copy to the new
+structure (custom types, blocks) and writes the redirects CSV.
 
-### 8.3 Boletín («Subscriu-m'hi»)
+### 8.3 Newsletter («Subscriu-m'hi»)
 
-**No tenemos nada.** Propuesta: **no** guardar suscriptores en WordPress
-(datos personales, bajas, envíos: es un servicio entero); un **formulario del
-módulo `forms`** que mande el alta a un servicio de boletines (Brevo, Mailchimp,
-MailerLite…) por su API, con el consentimiento de la casilla y doble
-confirmación del propio servicio. Encaja como un aviso más de `forms` («al
-enviar, alta en la lista X»). **HUECO**: qué servicio usa hoy, cuántos
-suscriptores tiene y si se migran (los datos son suyos y de sus lectores:
-eso lo decide el cliente con su RGPD).
+**We have nothing.** Proposal: do **not** store subscribers in WordPress
+(personal data, unsubscribes, sending: it is a whole service); a **form from
+the `forms` module** that sends the sign-up to a newsletter service (Brevo,
+Mailchimp, MailerLite…) through its API, with the checkbox consent and the
+service's own double opt-in. It fits as one more `forms` action («on submit,
+subscribe to list X»). **GAP**: which service it uses today, how many
+subscribers it has and whether they are migrated (the data belongs to it
+and its readers: that is the client's call under its GDPR).
 
-### 8.4 Cuatro idiomas y catalán como principal
+### 8.4 Four languages and Catalan as the main one
 
-- **WPML con cuatro idiomas** (ca, es, en, de): solo se ha probado con dos.
-  Lo que hay que mirar: el selector (`language-switcher`) con cuatro, la
-  portada traducida (`wpml-front-page`), la carga (`cargar.mjs` tiene el
-  inglés fijo: `LANG = 'en'`) y los slugs traducidos (la trampa de /en/:
-  las reglas de URL se rehacen con el idioma de la petición; README y
+- **WPML with four languages** (ca, es, en, de): only tested with two.
+  What has to be checked: the switcher (`language-switcher`) with four, the
+  translated home page (`wpml-front-page`), the loader (`cargar.mjs` has
+  English hard-coded: `LANG = 'en'`) and translated slugs (the /en/ trap:
+  URL rules are rebuilt with the request's language; README and
   `Prefix_Migration::run`).
-- **Catalán como idioma principal**: los textos del plugin, del padre y del
-  hijo existen en `es_ES`; **falta `ca`**. Propuesta: `ca.po` en los tres con
-  `tools/i18n.mjs` (fusiona y compila), en **imperativo de tú** para los
-  botones (la regla de David para interfaces en catalán), y revisarlo con el
-  léxico de David antes de publicar.
-- Los slugs de los tipos y de las páginas se traducen con gettext: en una web
-  publicada, **fijarlos** (`rewrite_slugs`) antes de cambiar o añadir idiomas.
-- **HUECO**: quién traduce al alemán y quién revisa el catalán.
+- **Catalan as the main language**: the strings of the plugin, the parent
+  and the child exist in `es_ES`; **`ca` is missing**. Proposal: `ca.po` in
+  all three with `tools/i18n.mjs` (merges and compiles), in the **informal
+  (tu) imperative** for buttons (David's rule for Catalan interfaces), and
+  reviewed against David's vocabulary before going live.
+- Type and page slugs are translated with gettext: on a live site, **pin
+  them** (`rewrite_slugs`) before changing or adding languages.
+- **GAP**: who translates into German and who reviews the Catalan.
 
-### 8.5 Comentarios
+### 8.5 Comments
 
-Lavandería los apaga (`comments-off`). Aquí hay comentarios en los artículos:
-el módulo se deja **apagado** y la web usa los comentarios de WordPress.
-Propuesta: moderación previa (Ajustes › Comentarios), sin enlaces, con el
-aviso de privacidad en el formulario. **HUECO**: la plantilla `single.html`
-del tema padre **no lleva bloque de comentarios** (medido el 15-10-2026):
-o se añade en el padre (lo haría igual la siguiente web con comentarios) o
-en el hijo de esta web. **HUECO**: cuánto spam recibe hoy y si usa
-algo (Akismet u otro) — se mira con la copia de la base de datos (8.2).
+Lavandería turns them off (`comments-off`). Here there are comments on
+articles: the module is left **off** and the site uses WordPress comments.
+Proposal: prior moderation (Settings › Discussion), no links, with the
+privacy notice in the form. **GAP**: the parent theme's `single.html`
+template **has no comments block** (measured on 15-10-2026): either it is
+added in the parent (the next site with comments would do it the same way)
+or in this site's child. **GAP**: how much spam it gets today and whether
+it uses anything (Akismet or other) — checked with the database copy (8.2).
 
-## Cómo se mantiene esta guía
+## How to maintain this guide
 
-- **Quién y cuándo**: quien dé de alta una web. Cada paso que haya tenido
-  que preguntar se escribe aquí en el mismo commit, y un **HUECO** que se
-  cierra se quita (con el commit que lo cierra).
-- **Criterio**: entra lo que se haría igual en la próxima web sin saber de
-  qué va (Armazón: «la estructura viaja, el contenido no»). Lo de una web
-  concreta va al repo de esa web.
-- **Caso frontera, con nombre**: los slugs de los tipos (`/clientes/`). Son
-  del plugin y se fijan por web en `rewrite_slugs`; NO en el tema hijo.
-- **La trampa**: esta guía se escribió con UNA web hecha. Lo que dice
-  «genérico» es una hipótesis hasta la segunda; si algo de aquí no valió,
-  se corrige aquí, no solo en la web nueva.
+- **Who and when**: whoever sets up a site. Every step they had to ask
+  about is written here in the same commit, and a **GAP** that gets closed
+  is removed (with the commit that closes it).
+- **Criterion**: what goes in is what would be done the same way on the
+  next site without knowing what it is about (Armazón: «the structure
+  travels, the content does not»). What belongs to a specific site goes in
+  that site's repo.
+- **Boundary case, by name**: the type slugs (`/clientes/`). They belong to
+  the plugin and are pinned per site in `rewrite_slugs`; NOT in the child
+  theme.
+- **The trap**: this guide was written with ONE site built. Whatever it
+  calls «generic» is a hypothesis until the second one; if something here
+  did not hold, it is fixed here, not only in the new site.

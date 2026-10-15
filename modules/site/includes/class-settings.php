@@ -4,7 +4,7 @@
  * the Settings API and exposed over REST (/wp/v2/settings) with its schema.
  *
  * It is CONTRACT: the parent theme, the child themes and the content load read
- * and write these names (README, «El contrato»). Renaming a key is a major
+ * and write these names (README, «The contract»). Renaming a key is a major
  * version.
  *
  * How it is saved (and why this way):

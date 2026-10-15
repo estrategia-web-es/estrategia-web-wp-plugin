@@ -1,7 +1,7 @@
-# Pendientes — armazon-wp-sitio
+# TODO — armazon-wp-sitio
 
-Un solo sitio (Armazón, fila 25). Lo terminado **sale** de aquí: al historial
-de git, con el commit que lo cierra.
+A single place (Armazón, row 25). Whatever is finished **leaves** this file:
+it goes to the git history, with the commit that closes it.
 
 ---
 
@@ -12,156 +12,165 @@ Measured in Lavandería production after publishing 1.1.0/1.2.0: WPLANG was empt
 
 ---
 
-## Hoja de ruta Estrategia Web — lo que tienen que llevar TODAS las webs (12-10-2026)
+## Estrategia Web roadmap — what EVERY site must have (12-10-2026)
 
-Lista de David, para que las webs nuevas y las ya hechas lleven lo mismo. Va
-aquí porque casi todo acaba en este plugin. **Cómo se mantiene**: cuando algo
-se termina Y se publica en las webs, sale de esta lista con el commit que lo
-cierra; si se termina pero no se publica, pasa a «Hecho y sin desplegar».
+David's list, so that new sites and existing ones carry the same things. It
+lives here because almost all of it ends up in this plugin. **How to
+maintain**: when something is finished AND published on the sites, it leaves
+this list with the commit that closes it; if it is finished but not
+published, it moves to «Done and not deployed».
 
-**Estructura decidida** (David, 14-10-2026): un tema que solo es diseño + un
-plugin «Estrategia Web» con módulos activables. Lo de «A añadir» se hace como
-**módulo nuevo** (una carpeta en `modules/`, ver la cabecera de
-`includes/class-modules.php`) o dentro del módulo al que pertenece (las
-cookies, en `consent`).
+**Decided structure** (David, 14-10-2026): a theme that is only design + an
+«Estrategia Web» plugin with modules that can be switched on. The «To add»
+items are built as a **new module** (a folder in `modules/`, see the header
+of `includes/class-modules.php`) or inside the module they belong to (the
+cookies, in `consent`).
 
-### Hecho y sin desplegar (en local, commiteado)
+### Done and not deployed (local, committed)
 
-- **Un tema + un plugin con módulos** (plugin 1.1.0, tema 1.1.0,
-  14-10-2026): este repo es ahora el plugin `estrategia-web`, con Site, Forms
-  (repo archivado) y los cuatro bloques del tema como módulos (los bloques
-  ya no viven en el tema); pantalla «Estrategia Web → Módulos»; un dominio
-  de traducción. Lavandería en local ya lo usa.
-- **Migrador al plugin único** (14-10-2026): `class-armazon-migration.php`
-  deja activo solo `estrategia-web/estrategia-web.php` (salen armazon-site,
-  armazon-forms y los dos de la 1.0.0). El desplegador de Lavandería sube un
-  plugin (sin `tests/`, `modules/*/tests/` ni `tools/`) y el tema sin
-  `blocks/`, aparta el MU-plugin de subidas, enciende `comments-off` una vez
-  y tiene los pasos opcionales `medios` y `limpieza`. Ensayado en local con
-  las versiones de producción; ver su cabecera.
-- **Subidas de imágenes** (módulo `uploads`, Default: on): 20 MB, umbral de
-  2560 px y borrar el original gigante, configurables en Ajustes → Medios.
-  Sustituye al MU-plugin de Lavandería, que el desplegador aparta al publicar.
-- **Cookies con detector y analítica** (fusionado el 14-10-2026): categorías
-  de la AEPD, detector de nombres, Open Cookie Database, pantalla Cookies,
-  tabla de la política; módulos `google-tags` (Consent Mode v2, Default: off)
-  y `matomo` (Default: on, la opción sigue en `estrategia_web_site`). Lo que
-  quedó fuera:
-  - la conversión de Google Ads de un formulario enviado SIN JavaScript (la
-    redirección con `af_result`) no se cuenta;
-  - la tabla de la política no lleva las cookies de terceros que nadie añade
-    a mano (las de google.com del iframe del mapa): el detector no las ve.
-- **Redes sociales personalizadas** (módulo `social`, Default: on): lista
-  libre (nombre, enlace, icono de la colección o SVG) y el bloque
-  `estrategia-web/social-links`. David revisará cómo la quiere.
-- **«Tipo de negocio» del cliente** (`estrategia_web_client_business_type`,
-  traducible). En Lavandería falta pasar a ese campo lo que hoy va entre
-  paréntesis en el título (a mano en el panel, tras publicar).
-- **Recuadro «Datos de la sede»** (y de cliente y opinión): `Meta_Panel` del
-  módulo `site`, con `wpml-config.xml` para copiar o traducir cada campo.
-- **Otros módulos nuevos**: `comments-off` (Default: off; Lavandería lo
-  enciende al desplegar), `featured-images` (tamaño `estrategia-web-small`,
-  200 px: `wp media regenerate --only-missing` en las webs que ya tienen
-  fotos), recorte vertical del carrusel en el móvil (lo pide el tema con
-  `estrategia_web_carousel_mobile_crop`).
-- **Fase 1: nombre Estrategia Web** en los tres repos (tema 1.0.0, este plugin
-  1.0.0, formularios 1.0.0): carpetas, prefijos, bloques, opciones, tablas,
-  cookie; alias de los nombres viejos hasta 2.0.0; «Powered by» apagado por
-  defecto (WordPress.org, guideline 10). Migrador: Lavandería
-  `despliegue/migrar-a-estrategia-web.mjs` (--seco contra el servidor, limpio).
-- **Desplegador que no pisa el contenido** (Lavandería): publicar = código; el
-  contenido solo con `--contenido`, con huella por entrada y sin tocar lo
-  editado en el panel ni las páginas inglesas de WPML.
-- **bajar-contenido.mjs** (Lavandería): trae al repo lo editado en el servidor.
-- **Redirecciones editables en el panel** (módulo `redirects`, Default: off,
-  14-10-2026): CSV de Lavandería entero, `%3F` y `?p=`/`?page_id=`, solo en
-  los 404, registro de 404, aviso de Rank Math, WP-CLI. En Lavandería se
-  queda APAGADO (las lleva Rank Math).
-- **Tipos y taxonomías con prefijo `eweb_`** (15-10-2026, rama
-  prefijo-tipos, versión propuesta 1.2.0): `Type_Names`, alias
-  `Unprefixed_Names` hasta 2.0.0, migrador `Prefix_Migration` (y en
-  Lavandería `despliegue/prefijo-tipos.mjs`, que el desplegador pasa una
-  vez). Tabla de nombres públicos en el README y guía
+- **One theme + one plugin with modules** (plugin 1.1.0, theme 1.1.0,
+  14-10-2026): this repo is now the `estrategia-web` plugin, with Site, Forms
+  (repo archived) and the theme's four blocks as modules (the blocks no
+  longer live in the theme); «Estrategia Web → Modules» screen; one
+  translation domain. Lavandería already uses it locally.
+- **Migrator to the single plugin** (14-10-2026): `class-armazon-migration.php`
+  leaves only `estrategia-web/estrategia-web.php` active (out go armazon-site,
+  armazon-forms and the two from 1.0.0). Lavandería's deployer uploads one
+  plugin (without `tests/`, `modules/*/tests/` or `tools/`) and the theme
+  without `blocks/`, sets aside the uploads MU-plugin, switches
+  `comments-off` on once, and has the optional steps `medios` and
+  `limpieza`. Rehearsed locally with the production versions; see its
+  header.
+- **Image uploads** (`uploads` module, Default: on): 20 MB, 2560 px threshold
+  and deleting the giant original, configurable in Settings → Media.
+  Replaces Lavandería's MU-plugin, which the deployer sets aside on publish.
+- **Cookies with detector and analytics** (merged on 14-10-2026): AEPD
+  categories, name detector, Open Cookie Database, Cookies screen, policy
+  table; `google-tags` (Consent Mode v2, Default: off) and `matomo`
+  (Default: on, the option stays in `estrategia_web_site`) modules. What
+  was left out:
+  - the Google Ads conversion of a form sent WITHOUT JavaScript (the
+    redirect with `af_result`) is not counted;
+  - the policy table does not include third-party cookies nobody adds by
+    hand (the google.com ones from the map iframe): the detector does not
+    see them.
+- **Custom social networks** (`social` module, Default: on): free list
+  (name, link, icon from the collection or SVG) and the
+  `estrategia-web/social-links` block. David will review how he wants it.
+- **Client «Business type»** (`estrategia_web_client_business_type`,
+  translatable). In Lavandería, what today goes in brackets in the title
+  still has to be moved to that field (by hand in the admin, after
+  publishing).
+- **«Location details» box** (and the client and testimonial ones): the
+  `site` module's `Meta_Panel`, with `wpml-config.xml` to copy or translate
+  each field.
+- **Other new modules**: `comments-off` (Default: off; Lavandería switches it
+  on when deploying), `featured-images` (size `estrategia-web-small`,
+  200 px: `wp media regenerate --only-missing` on sites that already have
+  photos), vertical crop of the carousel on mobile (the theme asks for it
+  with `estrategia_web_carousel_mobile_crop`).
+- **Phase 1: the Estrategia Web name** in the three repos (theme 1.0.0, this
+  plugin 1.0.0, forms 1.0.0): folders, prefixes, blocks, options, tables,
+  cookie; aliases of the old names until 2.0.0; «Powered by» off by default
+  (WordPress.org, guideline 10). Migrator: Lavandería
+  `despliegue/migrar-a-estrategia-web.mjs` (--seco against the server,
+  clean).
+- **Deployer that does not overwrite content** (Lavandería): publishing =
+  code; content only with `--contenido`, with a fingerprint per post and
+  without touching what was edited in the admin or WPML's English pages.
+- **bajar-contenido.mjs** (Lavandería): brings what was edited on the server
+  into the repo.
+- **Redirects editable in the admin** (`redirects` module, Default: off,
+  14-10-2026): Lavandería's whole CSV, `%3F` and `?p=`/`?page_id=`, only on
+  404s, 404 log, Rank Math notice, WP-CLI. In Lavandería it stays OFF (Rank
+  Math handles them).
+- **Post types and taxonomies with the `eweb_` prefix** (15-10-2026, branch
+  prefijo-tipos, proposed version 1.2.0): `Type_Names`, the
+  `Unprefixed_Names` alias until 2.0.0, the `Prefix_Migration` migrator (and
+  in Lavandería `despliegue/prefijo-tipos.mjs`, which the deployer runs
+  once). Table of public names in the README and the guide
   [docs/web-nueva.md](docs/web-nueva.md).
 
-### A añadir (todavía sin hacer)
+### To add (not done yet)
 
-(Nada de la lista de David del 12-10-2026: todo está en «Hecho y sin
-desplegar». Lo nuevo que pida entra aquí.)
+(Nothing from David's list of 12-10-2026: everything is in «Done and not
+deployed». Whatever new he asks for goes here.)
 
-## Pruebas de los bloques: del tema al plugin
-**Fecha:** 14-10-2026 · **Vence:** —
+## Block tests: from the theme to the plugin
+**Date:** 14-10-2026 · **Due:** —
 
-Las de carrusel, mapa y WhatsApp siguen en `armazon-wp-padre/tests/`, que
-monta este plugin con solo los módulos de bloques encendidos. Funcionan,
-pero quien toque `modules/carousel/` tiene que saber que su prueba está en
-otro repo (lo dice su `module.php`). Moverlas pide traer su siembra
-(`tests/fixtures/setup/setup.php` del tema) y medirlas sin el CSS del tema,
-o con un tema de prueba propio. Se hace la próxima vez que se toque uno.
+The carousel, map and WhatsApp ones are still in `armazon-wp-padre/tests/`,
+which mounts this plugin with only the block modules switched on. They work,
+but whoever touches `modules/carousel/` has to know that its test lives in
+another repo (its `module.php` says so). Moving them requires bringing their
+seeding along (the theme's `tests/fixtures/setup/setup.php`) and measuring
+them without the theme's CSS, or with a test theme of their own. It gets done
+the next time one of them is touched.
 
-## Formularios: probarlo con WPML de verdad
-**Fecha:** 01-10-2026 · **Vence:** antes de la primera web con WPML
+## Forms: test it with real WPML
+**Date:** 01-10-2026 · **Due:** before the first site with WPML
 
-(Venía de armazon-wp-formularios, archivado.) `class-language.php` y
-`wpml-config.xml` no se han ejecutado nunca con WPML en las pruebas del
-plugin (Playground no lo tiene). Lavandería sí tiene WPML en local
-(`tests/fixtures/wpml/`): traducir una página con formulario, enviar en el
-segundo idioma, mirar que el acuse sale traducido, que el registro dice ese
-idioma y que en Traducción de cadenas aparecen los textos por defecto; y que
-en la página traducida el desplegable con `defaultOption` llega con la misma
-opción marcada.
+(Came from armazon-wp-formularios, archived.) `class-language.php` and
+`wpml-config.xml` have never run with WPML in the plugin's tests (Playground
+does not have it). Lavandería does have WPML locally
+(`tests/fixtures/wpml/`): translate a page with a form, submit in the second
+language, check that the acknowledgement comes out translated, that the log
+records that language and that the default strings show up in String
+Translation; and that on the translated page the dropdown with
+`defaultOption` arrives with the same option selected.
 
-## Formularios: nivel 4
-**Fecha:** 01-10-2026 · **Vence:** —
+## Forms: level 4
+**Date:** 01-10-2026 · **Due:** —
 
-(Venía de armazon-wp-formularios.) Nadie ha mirado con ojos de persona el
-editor de formularios (la rejilla de medio ancho, la tarjeta de los avisos,
-el panel lateral). Y desde la 1.1.0, tampoco la pantalla «Estrategia Web →
-Módulos».
+(Came from armazon-wp-formularios.) Nobody has looked with human eyes at the
+form editor (the half-width grid, the notifications card, the sidebar). And
+since 1.1.0, not at the «Estrategia Web → Modules» screen either.
 
 ---
 
 
-## Tres metas sin prefijo, antes de WordPress.org
-**Fecha:** 15-10-2026 · **Vence:** antes de mandarlo a WordPress.org
+## Three unprefixed meta keys, before WordPress.org
+**Date:** 15-10-2026 · **Due:** before submitting it to WordPress.org
 
-Los tipos ganaron prefijo en la 1.2.0 (`eweb_client`…; rama prefijo-tipos).
-Quedan tres METAS de antes de la 1.0.0 sin prefijo: `client_url`,
-`testimonial_role` y `testimonial_client` (las demás son
-`estrategia_web_…`). Mismo problema que tenían los tipos: otro plugin puede
-usar `client_url`. Arreglo: un paso más en `Prefix_Migration` (metas de los
-tipos `eweb_*`), `wpml-config.xml`, `Meta_Panel::WPML_*`, los bindings
-`core/post-meta` del contenido y las pruebas. No se hizo con los tipos
-porque el encargo del 15-10-2026 decía «metas no cambian». Lo decide David.
+The post types got a prefix in 1.2.0 (`eweb_client`…; branch prefijo-tipos).
+Three META keys from before 1.0.0 remain unprefixed: `client_url`,
+`testimonial_role` and `testimonial_client` (the rest are
+`estrategia_web_…`). Same problem the post types had: another plugin may use
+`client_url`. Fix: one more step in `Prefix_Migration` (meta of the `eweb_*`
+types), `wpml-config.xml`, `Meta_Panel::WPML_*`, the content's
+`core/post-meta` bindings and the tests. It was not done together with the
+types because the brief of 15-10-2026 said «metas no cambian» (meta keys do
+not change). David decides.
 
-## Remoto del repo (fila 24)
-**Fecha:** 02-10-2026 · **Vence:** antes de instalarlo en la primera web
+## Repo remote (row 24)
+**Date:** 02-10-2026 · **Due:** before installing it on the first site
 
-Nació sin remoto: se creó en una sesión sin permiso para crear repos en
-GitHub. No es un «ninguno» decidido como el de `atlas`: el preferente es
-GitHub privado, y un plugin que van a usar varias webs necesita un sitio del
-que descargarlo. Lo decide David (el mismo caso que armazon-wp-formularios).
+It was born without a remote: it was created in a session without permission
+to create repos on GitHub. It is not a deliberate «none» like `atlas`'s: the
+preferred option is private GitHub, and a plugin several sites will use needs
+a place to download it from. David decides (same case as
+armazon-wp-formularios).
 
-## WPML: qué se traduce de aquí
-**Fecha:** 02-10-2026 · **Vence:** antes de la primera web con WPML
+## WPML: what gets translated from here
+**Date:** 02-10-2026 · **Due:** before the first site with WPML
 
-No hay `wpml-config.xml`. Los tipos y taxonomías no declaran si son
-traducibles, y los datos de la empresa (horario, mensaje de WhatsApp) no se
-registran como cadenas. En una web con WPML hay que decidir: tipos
-traducibles sí (clientes y opiniones probablemente no), y `schedule`,
-`address` y `whatsapp_message` como cadenas. Y los slugs: con WPML, los
-traduce WPML, no gettext.
+There is no `wpml-config.xml`. The post types and taxonomies do not declare
+whether they are translatable, and the company details (opening hours,
+WhatsApp message) are not registered as strings. On a site with WPML it has
+to be decided: translatable types yes (clients and testimonials probably
+not), and `schedule`, `address` and `whatsapp_message` as strings. And the
+slugs: with WPML, WPML translates them, not gettext.
 
-## Orden manual en una Consulta
-**Fecha:** 02-10-2026 · **Vence:** —
+## Manual order in a Query Loop
+**Date:** 02-10-2026 · **Due:** —
 
-Los tipos llevan `page-attributes` (orden manual) pero ninguna prueba mira una
-Consulta con `"orderBy":"menu_order"`. El README pone `title` en el ejemplo
-por eso. Una prueba de nivel 2 en types.test.mjs lo cierra.
+The post types have `page-attributes` (manual order) but no test looks at a
+Query Loop with `"orderBy":"menu_order"`. That is why the README uses `title`
+in the example. A level 2 test in types.test.mjs closes it.
 
-## Nivel 4: mirarlo
-**Fecha:** 02-10-2026 · **Vence:** —
+## Level 4: look at it
+**Date:** 02-10-2026 · **Due:** —
 
-Las pruebas comprueban que funciona, no que se vea bien. Nadie ha mirado aún
-con ojos de persona la pantalla «Datos de la empresa», el panel «Atributos»
-de un bloque con la fuente, ni un SVG en la mediateca.
+The tests check that it works, not that it looks right. Nobody has yet
+looked with human eyes at the «Company details» screen, a block's
+«Attributes» panel with the source, or an SVG in the media library.

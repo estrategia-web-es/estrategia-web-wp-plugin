@@ -7,7 +7,7 @@
  * defined, which only that loader defines. Double lock on purpose: these REST
  * routes open the database to anyone (permission_callback __return_true) and
  * create users with application passwords. When deploying to a site, the
- * tests/ folder is NOT uploaded (README, «Instalar en una web»).
+ * tests/ folder is NOT uploaded (README, «Installing on a site»).
  *
  * What it provides:
  * - The site language set to es_ES (locale filter): public slugs and labels
