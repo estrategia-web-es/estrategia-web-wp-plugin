@@ -738,6 +738,538 @@ msgid ""
 "block for the cookie policy."
 msgstr ""
 
+#: modules/content-types/assets/fields-panel.js:53
+#: modules/map/blocks/map/edit.js:123 modules/site/assets/meta-panel.js:47
+msgid "Choose image"
+msgstr ""
+
+#: modules/content-types/assets/fields-panel.js:53
+#: modules/map/blocks/map/edit.js:85 modules/map/blocks/map/edit.js:123
+#: modules/site/assets/meta-panel.js:47
+msgid "Replace image"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:25
+#: modules/content-types/includes/admin/class-page.php:34
+#: modules/site/includes/admin/class-admin.php:122
+msgid "Content types"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:35
+msgid ""
+"Content types, taxonomies and fields declared in JSON files of the site. "
+"This screen only shows them: they are changed in the files, in the site’s "
+"repository."
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:37
+msgid "Folders searched"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:39
+msgid "does not exist"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:39
+msgid "exists"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:45
+msgid "Files with errors (not registered)"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:55
+msgid "Declared types"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:57
+msgid ""
+"None. Add a JSON file to one of the folders above (see the example in "
+"modules/content-types/examples/)."
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:61
+msgid "copy"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:62
+msgid "translate"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:63
+msgid "ignore"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:69
+msgid "File:"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:70
+msgid "URL:"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:70
+msgid "WPML:"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:72
+msgid "Not registered (see the errors above)."
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:77
+msgid "Taxonomies:"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:80
+msgid "Field"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:80
+msgid "Meta key"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:80
+msgid "Required"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:80
+#: modules/redirects/includes/admin/class-page.php:268
+#: modules/redirects/includes/admin/class-tables.php:35
+msgid "Type"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:80
+msgid "WPML"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:87
+msgid "yes"
+msgstr ""
+
+#: modules/content-types/includes/class-fields-panel.php:56
+#: modules/site/includes/class-meta-panel.php:211
+msgid "Changed in the original language: it is copied to the translations."
+msgstr ""
+
+#. translators: %s: singular name of a content type, e.g. Restaurant
+#: modules/content-types/includes/class-fields-panel.php:70
+#, php-format
+msgid "%s details"
+msgstr ""
+
+#: modules/content-types/includes/class-fields-panel.php:72
+msgid ""
+"Fields that are the same in every language are copied to the translations "
+"when you save; the others are translated in each language."
+msgstr ""
+
+#: modules/content-types/includes/class-fields-panel.php:176
+#: modules/content-types/includes/class-fields-panel.php:182
+#: modules/site/includes/class-meta-panel.php:333
+msgid "— None —"
+msgstr ""
+
+#. translators: %s: the JSON parser's message
+#: modules/content-types/includes/class-loader.php:67
+#, php-format
+msgid "Not valid JSON: %s."
+msgstr ""
+
+#. translators: %s: post type name
+#: modules/content-types/includes/class-registrar.php:51
+#, php-format
+msgid ""
+"The type “%s” is already registered by other code: this file is ignored."
+msgstr ""
+
+#. translators: %s: taxonomy name
+#: modules/content-types/includes/class-registrar.php:83
+#, php-format
+msgid ""
+"The taxonomy “%s” is already registered by other code: it is not registered "
+"again."
+msgstr ""
+
+#. translators: %s: singular name of a taxonomy, e.g. Cuisine
+#. translators: %s: singular name of a content type, e.g. Restaurant
+#: modules/content-types/includes/class-registrar.php:98
+#: modules/content-types/includes/class-registrar.php:167
+#, php-format
+msgid "Add %s"
+msgstr ""
+
+#. translators: %s: singular name of a taxonomy
+#. translators: %s: singular name of a content type
+#: modules/content-types/includes/class-registrar.php:100
+#: modules/content-types/includes/class-registrar.php:169
+#, php-format
+msgid "Edit %s"
+msgstr ""
+
+#. translators: 1: field name, 2: post type name
+#: modules/content-types/includes/class-registrar.php:152
+#, php-format
+msgid ""
+"The relation “%1$s” points to the type “%2$s”, which is not registered: it "
+"can only store 0."
+msgstr ""
+
+#. translators: %s: singular name of a content type
+#: modules/content-types/includes/class-registrar.php:171
+#, php-format
+msgid "View %s"
+msgstr ""
+
+#. translators: %s: plural name of a content type, e.g. Restaurants
+#: modules/content-types/includes/class-registrar.php:173
+#, php-format
+msgid "Search %s"
+msgstr ""
+
+#: modules/content-types/includes/class-registrar.php:174
+msgid "Nothing found."
+msgstr ""
+
+#: modules/content-types/includes/class-registrar.php:175
+msgid "Nothing found in the trash."
+msgstr ""
+
+#. translators: %s: list of field names
+#: modules/content-types/includes/class-registrar.php:238
+#, php-format
+msgid "Fill in these fields before publishing: %s."
+msgstr ""
+
+#: modules/content-types/includes/class-schema.php:56
+msgid "The file is not a JSON object."
+msgstr ""
+
+#: modules/content-types/includes/class-schema.php:62
+msgid ""
+"“prefix” must be 2 to 9 lowercase letters or digits followed by “_” (e.g. "
+"“gmct_”)."
+msgstr ""
+
+#. translators: %s: a prefix such as eweb_
+#: modules/content-types/includes/class-schema.php:66
+#, php-format
+msgid ""
+"The prefix “%s” is reserved (Estrategia Web or WordPress). Choose the site’s "
+"own prefix."
+msgstr ""
+
+#: modules/content-types/includes/class-schema.php:74
+msgid "“description” must be a string or an object of locale → string."
+msgstr ""
+
+#: modules/content-types/includes/class-schema.php:77
+msgid "“icon” must be a Dashicons class such as “dashicons-food”."
+msgstr ""
+
+#: modules/content-types/includes/class-schema.php:81
+msgid "“supports” must be a list."
+msgstr ""
+
+#. translators: %s: a value from the JSON file
+#: modules/content-types/includes/class-schema.php:86
+#, php-format
+msgid "“supports”: unknown value “%s”."
+msgstr ""
+
+#. translators: %s: a key of the JSON file
+#: modules/content-types/includes/class-schema.php:94
+#, php-format
+msgid "“%s” must be true or false."
+msgstr ""
+
+#: modules/content-types/includes/class-schema.php:98
+msgid "“menu_position” must be a whole number from 0."
+msgstr ""
+
+#. translators: %s: list of allowed values
+#: modules/content-types/includes/class-schema.php:102
+#, php-format
+msgid "“wpml” must be one of: %s."
+msgstr ""
+
+#. translators: 1: type name, 2: another file name
+#: modules/content-types/includes/class-schema.php:124
+#, php-format
+msgid "The type “%1$s” is already declared in %2$s."
+msgstr ""
+
+#. translators: 1: taxonomy name, 2: another file name
+#: modules/content-types/includes/class-schema.php:131
+#, php-format
+msgid "The name “%1$s” is already declared in %2$s."
+msgstr ""
+
+#. translators: 1: field name, 2: WPML mode, 3: another file name, 4: WPML mode there
+#: modules/content-types/includes/class-schema.php:144
+#, php-format
+msgid ""
+"The field “%1$s” has wpml “%2$s” here and “%4$s” in %3$s: WPML keeps one "
+"mode per meta key."
+msgstr ""
+
+#. translators: %s: taxonomy name
+#: modules/content-types/includes/class-schema.php:153
+#, php-format
+msgid ""
+"The taxonomy “%s” is not declared in any file (declare it as an object in "
+"one of them)."
+msgstr ""
+
+#: modules/content-types/includes/class-schema.php:268
+msgid "“taxonomies” must be a list."
+msgstr ""
+
+#. translators: %d: position in the list, from 1
+#: modules/content-types/includes/class-schema.php:273
+#, php-format
+msgid "taxonomies[%d]"
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:277
+#, php-format
+msgid "%s: a reference must be a taxonomy name."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:283
+#, php-format
+msgid "%s: must be a taxonomy name or an object."
+msgstr ""
+
+#. translators: 1: where in the file, 2: a key
+#: modules/content-types/includes/class-schema.php:293
+#, php-format
+msgid "%1$s.%2$s must be true or false."
+msgstr ""
+
+#. translators: 1: where in the file, 2: allowed values
+#: modules/content-types/includes/class-schema.php:298
+#: modules/content-types/includes/class-schema.php:348
+#, php-format
+msgid "%1$s.wpml must be one of: %2$s."
+msgstr ""
+
+#: modules/content-types/includes/class-schema.php:306
+msgid "“fields” must be a list."
+msgstr ""
+
+#. translators: %d: position in the list, from 1
+#: modules/content-types/includes/class-schema.php:312
+#, php-format
+msgid "fields[%d]"
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:315
+#, php-format
+msgid "%s: must be an object."
+msgstr ""
+
+#. translators: %s: field name
+#: modules/content-types/includes/class-schema.php:324
+#, php-format
+msgid "The field “%s” is declared twice."
+msgstr ""
+
+#. translators: 1: where in the file, 2: allowed values
+#: modules/content-types/includes/class-schema.php:331
+#, php-format
+msgid "%1$s.type must be one of: %2$s."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:336
+#, php-format
+msgid "%s.label is required (a string or an object of locale → string)."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:340
+#, php-format
+msgid "%s.help must be a string or an object of locale → string."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:344
+#, php-format
+msgid "%s.required must be true or false."
+msgstr ""
+
+#. translators: 1: where in the file, 2: a key, 3: a field type
+#: modules/content-types/includes/class-schema.php:355
+#, php-format
+msgid "%1$s.%2$s is only for fields of type “%3$s”."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:373
+#, php-format
+msgid "%s: a select needs “options”, a non-empty list."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:380
+#, php-format
+msgid ""
+"%s.options: each option is a non-empty string or {\"value\": \"…\", "
+"\"label\": …}."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:387
+#, php-format
+msgid "%s.options: two options have the same value."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:391
+#, php-format
+msgid "%s.default must be the value of one of the options."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:399
+#, php-format
+msgid "%s: a relation needs “post_type”, a post type name or a list of them."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:403
+#, php-format
+msgid "%s: a relation cannot have a default (it is the ID of a post)."
+msgstr ""
+
+#. translators: 1: where in the file, 2: min or max
+#: modules/content-types/includes/class-schema.php:409
+#, php-format
+msgid "%1$s.%2$s must be a number."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:414
+#, php-format
+msgid "%s.integer must be true or false."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:418
+#, php-format
+msgid "%s: min is greater than max."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:423
+#, php-format
+msgid ""
+"%s.default must be a number within min and max (a whole number if “integer”)."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:428
+#, php-format
+msgid "%s: a boolean cannot be required (“no” is an answer)."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:432
+#, php-format
+msgid "%s.default must be true or false."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:437
+#, php-format
+msgid "%s: an image cannot have a default (it is the ID of an attachment)."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:441
+#, php-format
+msgid "%s.default must be a string."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:444
+#, php-format
+msgid "%s.default must be a date as YYYY-MM-DD."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:457
+#, php-format
+msgid "%s must be lowercase letters, digits and “_”, starting with a letter."
+msgstr ""
+
+#. translators: 1: where in the file, 2: the name, 3: max length, 4: its length
+#: modules/content-types/includes/class-schema.php:462
+#, php-format
+msgid ""
+"%1$s “%2$s” is longer than %3$d characters (%4$d): WordPress would cut it."
+msgstr ""
+
+#. translators: 1: where in the file, 2: the name, 3: the prefix
+#: modules/content-types/includes/class-schema.php:466
+#, php-format
+msgid "%1$s “%2$s” must start with the prefix “%3$s”."
+msgstr ""
+
+#. translators: 1: where in the file, 2: the name, 3: a reserved prefix
+#: modules/content-types/includes/class-schema.php:471
+#, php-format
+msgid "%1$s “%2$s” uses the reserved prefix “%3$s”."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:484
+#, php-format
+msgid ""
+"%s must be lowercase letters, digits, “-” and “/” (a URL path without "
+"slashes at the ends)."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:492
+#, php-format
+msgid "%s is required: {\"singular\": …, \"plural\": …}."
+msgstr ""
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:496
+#, php-format
+msgid "%s must be an object: {\"singular\": …, \"plural\": …}."
+msgstr ""
+
+#. translators: 1: where in the file, 2: singular or plural
+#: modules/content-types/includes/class-schema.php:502
+#, php-format
+msgid "%1$s.%2$s is required: a string or an object of locale → string."
+msgstr ""
+
+#. translators: 1: a key, 2: allowed keys
+#: modules/content-types/includes/class-schema.php:529
+#, php-format
+msgid "Unknown key “%1$s”. Allowed: %2$s."
+msgstr ""
+
+#: modules/content-types/module.php
+msgctxt "module name"
+msgid "Content types from JSON"
+msgstr ""
+
+#: modules/content-types/module.php
+msgctxt "module description"
+msgid ""
+"Each site declares its own content types, taxonomies and simple fields in "
+"JSON files of its repository, with the editor panel, Block Bindings and WPML "
+"generated."
+msgstr ""
+
 #: modules/external-links/module.php
 msgctxt "module name"
 msgid "External links in a new tab"
@@ -848,10 +1380,6 @@ msgid ""
 "numbers, - and _."
 msgstr ""
 
-#: modules/forms/assets/editor.js:168
-msgid "Required"
-msgstr ""
-
 #: modules/forms/assets/editor.js:179
 msgid "First option (empty value)"
 msgstr ""
@@ -920,10 +1448,6 @@ msgstr ""
 
 #: modules/forms/assets/editor.js:249
 msgid "Half"
-msgstr ""
-
-#: modules/forms/assets/editor.js:255
-msgid "Field"
 msgstr ""
 
 #: modules/forms/assets/editor.js:355
@@ -1662,11 +2186,6 @@ msgstr ""
 msgid "Choose from the media library"
 msgstr ""
 
-#: modules/map/blocks/map/edit.js:85 modules/map/blocks/map/edit.js:123
-#: modules/site/assets/meta-panel.js:47
-msgid "Replace image"
-msgstr ""
-
 #: modules/map/blocks/map/edit.js:93 modules/map/blocks/map/edit.js:135
 msgid "Remove image"
 msgstr ""
@@ -1685,10 +2204,6 @@ msgstr ""
 
 #: modules/map/blocks/map/edit.js:103
 msgid "Inside a Query Loop."
-msgstr ""
-
-#: modules/map/blocks/map/edit.js:123 modules/site/assets/meta-panel.js:47
-msgid "Choose image"
 msgstr ""
 
 #: modules/map/blocks/map/edit.js:138
@@ -1876,11 +2391,6 @@ msgid ""
 "The old path, without the domain. Upper case, a final slash and any extra ?"
 "parameters are ignored when matching; ?p=123 and ?page_id=123 are the same, "
 "and so are %3F and ?."
-msgstr ""
-
-#: modules/redirects/includes/admin/class-page.php:268
-#: modules/redirects/includes/admin/class-tables.php:35
-msgid "Type"
 msgstr ""
 
 #: modules/redirects/includes/admin/class-page.php:270
@@ -2115,27 +2625,27 @@ msgid "Company details"
 msgstr ""
 
 #: modules/site/includes/admin/class-admin.php:45
-#: modules/site/includes/class-content-types.php:72
+#: modules/site/includes/class-content-types.php:76
 msgid "Clients"
 msgstr ""
 
 #: modules/site/includes/admin/class-admin.php:46
-#: modules/site/includes/class-content-types.php:114
+#: modules/site/includes/class-content-types.php:118
 msgid "Testimonials"
 msgstr ""
 
 #: modules/site/includes/admin/class-admin.php:47
-#: modules/site/includes/class-content-types.php:140
+#: modules/site/includes/class-content-types.php:144
 msgid "Locations"
 msgstr ""
 
 #: modules/site/includes/admin/class-admin.php:48
-#: modules/site/includes/class-content-types.php:172
+#: modules/site/includes/class-content-types.php:176
 msgid "Projects"
 msgstr ""
 
 #: modules/site/includes/admin/class-admin.php:49
-#: modules/site/includes/class-content-types.php:204
+#: modules/site/includes/class-content-types.php:208
 msgid "Portfolio"
 msgstr ""
 
@@ -2179,10 +2689,6 @@ msgstr ""
 msgid "Social networks are edited in Estrategia Web › Social networks."
 msgstr ""
 
-#: modules/site/includes/admin/class-admin.php:122
-msgid "Content types"
-msgstr ""
-
 #: modules/site/includes/admin/class-admin.php:123
 msgid ""
 "Only the checked types appear in the menu and on the site. Unchecking a type "
@@ -2214,13 +2720,13 @@ msgid "Company registry"
 msgstr ""
 
 #: modules/site/includes/class-company.php:111
-#: modules/site/includes/class-content-types.php:157
+#: modules/site/includes/class-content-types.php:161
 #: modules/social/includes/class-icons.php:80
 msgid "Email"
 msgstr ""
 
 #: modules/site/includes/class-company.php:112
-#: modules/site/includes/class-content-types.php:156
+#: modules/site/includes/class-content-types.php:160
 msgid "Phone"
 msgstr ""
 
@@ -2237,12 +2743,12 @@ msgid "WhatsApp message"
 msgstr ""
 
 #: modules/site/includes/class-company.php:116
-#: modules/site/includes/class-content-types.php:155
+#: modules/site/includes/class-content-types.php:159
 msgid "Address"
 msgstr ""
 
 #: modules/site/includes/class-company.php:117
-#: modules/site/includes/class-content-types.php:158
+#: modules/site/includes/class-content-types.php:162
 msgid "Opening hours"
 msgstr ""
 
@@ -2275,7 +2781,7 @@ msgid "TikTok"
 msgstr ""
 
 #: modules/site/includes/class-company.php:125
-#: modules/site/includes/class-location.php:133
+#: modules/site/includes/class-location.php:134
 msgid "Phone (link)"
 msgstr ""
 
@@ -2284,7 +2790,7 @@ msgid "Secondary phone (link)"
 msgstr ""
 
 #: modules/site/includes/class-company.php:127
-#: modules/site/includes/class-location.php:134
+#: modules/site/includes/class-location.php:135
 msgid "Email (link)"
 msgstr ""
 
@@ -2292,451 +2798,443 @@ msgstr ""
 msgid "WhatsApp (link)"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:69
+#: modules/site/includes/class-content-types.php:73
 msgctxt "URL slug"
 msgid "clients"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:73
+#: modules/site/includes/class-content-types.php:77
 msgid "Client"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:74
+#: modules/site/includes/class-content-types.php:78
 msgid "Add client"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:75
+#: modules/site/includes/class-content-types.php:79
 msgid "Edit client"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:76
+#: modules/site/includes/class-content-types.php:80
 msgid "New client"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:77
+#: modules/site/includes/class-content-types.php:81
 msgid "View client"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:78
+#: modules/site/includes/class-content-types.php:82
 msgid "View clients"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:79
+#: modules/site/includes/class-content-types.php:83
 msgid "Search clients"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:80
+#: modules/site/includes/class-content-types.php:84
 msgid "No clients found."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:81
+#: modules/site/includes/class-content-types.php:85
 msgid "No clients found in Trash."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:82
+#: modules/site/includes/class-content-types.php:86
 msgid "All clients"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:83
+#: modules/site/includes/class-content-types.php:87
 msgid "Logo or photo"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:84
+#: modules/site/includes/class-content-types.php:88
 msgid "Set logo or photo"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:88
+#: modules/site/includes/class-content-types.php:92
 msgctxt "URL slug"
 msgid "client-sector"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:90
+#: modules/site/includes/class-content-types.php:94
 msgid "Sectors"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:91
+#: modules/site/includes/class-content-types.php:95
 msgid "Sector"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:92
+#: modules/site/includes/class-content-types.php:96
 msgid "Add sector"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:93
+#: modules/site/includes/class-content-types.php:97
 msgid "Edit sector"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:94
+#: modules/site/includes/class-content-types.php:98
 msgid "Search sectors"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:95
+#: modules/site/includes/class-content-types.php:99
 msgid "All sectors"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:96
+#: modules/site/includes/class-content-types.php:100
 msgid "No sectors found."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:100
+#: modules/site/includes/class-content-types.php:104
 msgid "Client website"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:102
+#: modules/site/includes/class-content-types.php:106
 msgid "Image fit (cover for a photo, contain for a logo)"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:106
+#: modules/site/includes/class-content-types.php:110
 msgid "Business type"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:111
+#: modules/site/includes/class-content-types.php:115
 msgctxt "URL slug"
 msgid "testimonials"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:115
+#: modules/site/includes/class-content-types.php:119
 msgid "Testimonial"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:116
+#: modules/site/includes/class-content-types.php:120
 msgid "Add testimonial"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:117
+#: modules/site/includes/class-content-types.php:121
 msgid "Edit testimonial"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:118
+#: modules/site/includes/class-content-types.php:122
 msgid "New testimonial"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:119
+#: modules/site/includes/class-content-types.php:123
 msgid "View testimonial"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:120
+#: modules/site/includes/class-content-types.php:124
 msgid "View testimonials"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:121
+#: modules/site/includes/class-content-types.php:125
 msgid "Search testimonials"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:122
+#: modules/site/includes/class-content-types.php:126
 msgid "No testimonials found."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:123
+#: modules/site/includes/class-content-types.php:127
 msgid "No testimonials found in Trash."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:124
+#: modules/site/includes/class-content-types.php:128
 msgid "All testimonials"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:125
+#: modules/site/includes/class-content-types.php:129
 msgid "Author photo"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:126
+#: modules/site/includes/class-content-types.php:130
 msgid "Set author photo"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:129
+#: modules/site/includes/class-content-types.php:133
 msgid "Author"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:130
+#: modules/site/includes/class-content-types.php:134
 msgid "Author role or company"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:131
+#: modules/site/includes/class-content-types.php:135
 msgid "Rating (1 to 5)"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:132
+#: modules/site/includes/class-content-types.php:136
 msgid "Related client"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:137
+#: modules/site/includes/class-content-types.php:141
 msgctxt "URL slug"
 msgid "locations"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:141
+#: modules/site/includes/class-content-types.php:145
 msgid "Location"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:142
+#: modules/site/includes/class-content-types.php:146
 msgid "Add location"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:143
+#: modules/site/includes/class-content-types.php:147
 msgid "Edit location"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:144
+#: modules/site/includes/class-content-types.php:148
 msgid "New location"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:145
+#: modules/site/includes/class-content-types.php:149
 msgid "View location"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:146
+#: modules/site/includes/class-content-types.php:150
 msgid "View locations"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:147
+#: modules/site/includes/class-content-types.php:151
 msgid "Search locations"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:148
+#: modules/site/includes/class-content-types.php:152
 msgid "No locations found."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:149
+#: modules/site/includes/class-content-types.php:153
 msgid "No locations found in Trash."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:150
+#: modules/site/includes/class-content-types.php:154
 msgid "All locations"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:151
+#: modules/site/includes/class-content-types.php:155
 msgid "Static map image"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:152
+#: modules/site/includes/class-content-types.php:156
 msgid "Set static map image"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:159
+#: modules/site/includes/class-content-types.php:163
 msgid "Google Maps link"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:161
+#: modules/site/includes/class-content-types.php:165
 msgid "Map embed URL"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:163
+#: modules/site/includes/class-content-types.php:167
 msgid "Static map image (theme path or URL of this site)"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:164
+#: modules/site/includes/class-content-types.php:168
 msgid "Static map image (media library ID)"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:169
+#: modules/site/includes/class-content-types.php:173
 msgctxt "URL slug"
 msgid "projects"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:173
+#: modules/site/includes/class-content-types.php:177
 msgid "Project"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:174
+#: modules/site/includes/class-content-types.php:178
 msgid "Add project"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:175
+#: modules/site/includes/class-content-types.php:179
 msgid "Edit project"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:176
+#: modules/site/includes/class-content-types.php:180
 msgid "New project"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:177
+#: modules/site/includes/class-content-types.php:181
 msgid "View project"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:178
+#: modules/site/includes/class-content-types.php:182
 msgid "View projects"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:179
+#: modules/site/includes/class-content-types.php:183
 msgid "Search projects"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:180
+#: modules/site/includes/class-content-types.php:184
 msgid "No projects found."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:181
+#: modules/site/includes/class-content-types.php:185
 msgid "No projects found in Trash."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:182
+#: modules/site/includes/class-content-types.php:186
 msgid "All projects"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:186
+#: modules/site/includes/class-content-types.php:190
 msgctxt "URL slug"
 msgid "project-category"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:188
+#: modules/site/includes/class-content-types.php:192
 msgid "Project categories"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:189
-msgid "Project category"
-msgstr ""
-
-#: modules/site/includes/class-content-types.php:190
-#: modules/site/includes/class-content-types.php:222
-msgid "Add category"
-msgstr ""
-
-#: modules/site/includes/class-content-types.php:191
-#: modules/site/includes/class-content-types.php:223
-msgid "Edit category"
-msgstr ""
-
-#: modules/site/includes/class-content-types.php:192
-#: modules/site/includes/class-content-types.php:224
-msgid "Search categories"
-msgstr ""
-
 #: modules/site/includes/class-content-types.php:193
-#: modules/site/includes/class-content-types.php:225
-msgid "All categories"
+msgid "Project category"
 msgstr ""
 
 #: modules/site/includes/class-content-types.php:194
 #: modules/site/includes/class-content-types.php:226
+msgid "Add category"
+msgstr ""
+
+#: modules/site/includes/class-content-types.php:195
+#: modules/site/includes/class-content-types.php:227
+msgid "Edit category"
+msgstr ""
+
+#: modules/site/includes/class-content-types.php:196
+#: modules/site/includes/class-content-types.php:228
+msgid "Search categories"
+msgstr ""
+
+#: modules/site/includes/class-content-types.php:197
+#: modules/site/includes/class-content-types.php:229
+msgid "All categories"
+msgstr ""
+
+#: modules/site/includes/class-content-types.php:198
+#: modules/site/includes/class-content-types.php:230
 msgid "No categories found."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:201
+#: modules/site/includes/class-content-types.php:205
 msgctxt "URL slug"
 msgid "portfolio"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:205
+#: modules/site/includes/class-content-types.php:209
 msgid "Portfolio item"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:206
+#: modules/site/includes/class-content-types.php:210
 msgid "Add portfolio item"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:207
+#: modules/site/includes/class-content-types.php:211
 msgid "Edit portfolio item"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:208
+#: modules/site/includes/class-content-types.php:212
 msgid "New portfolio item"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:209
+#: modules/site/includes/class-content-types.php:213
 msgid "View portfolio item"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:210
+#: modules/site/includes/class-content-types.php:214
 msgid "View portfolio"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:211
+#: modules/site/includes/class-content-types.php:215
 msgid "Search portfolio"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:212
+#: modules/site/includes/class-content-types.php:216
 msgid "No portfolio items found."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:213
+#: modules/site/includes/class-content-types.php:217
 msgid "No portfolio items found in Trash."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:214
+#: modules/site/includes/class-content-types.php:218
 msgid "All portfolio items"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:218
+#: modules/site/includes/class-content-types.php:222
 msgctxt "URL slug"
 msgid "portfolio-category"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:220
+#: modules/site/includes/class-content-types.php:224
 msgid "Portfolio categories"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:221
+#: modules/site/includes/class-content-types.php:225
 msgid "Portfolio category"
 msgstr ""
 
 #: modules/site/includes/class-legacy-names.php:110
-#: modules/site/includes/class-location.php:64
-#: modules/site/includes/class-meta-panel.php:171
+#: modules/site/includes/class-location.php:65
+#: modules/site/includes/class-meta-panel.php:175
 msgid "Location details"
 msgstr ""
 
-#: modules/site/includes/class-location.php:130
+#: modules/site/includes/class-location.php:131
 msgid "Location name"
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:172
+#: modules/site/includes/class-meta-panel.php:176
 msgid "Client details"
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:173
+#: modules/site/includes/class-meta-panel.php:177
 msgid "Testimonial details"
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:180
+#: modules/site/includes/class-meta-panel.php:184
 msgid "Google Maps › Share › Copy link."
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:181
+#: modules/site/includes/class-meta-panel.php:185
 msgid "Google Maps › Share › Embed a map. You can paste the whole iframe code."
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:182
+#: modules/site/includes/class-meta-panel.php:186
 msgid ""
 "Map picture shown before Google Maps loads (privacy: Google only loads after "
 "a click)."
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:183
+#: modules/site/includes/class-meta-panel.php:187
 msgid ""
 "Only if the picture is not in the media library: a theme path (assets/maps/"
 "place.webp) or a URL of this site. The picture above wins."
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:184
+#: modules/site/includes/class-meta-panel.php:188
 msgid ""
 "What the client does, e.g. “holiday rental agency”. It is translated; the "
 "name is not."
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:202
-msgid "Changed in the original language: it is copied to the translations."
-msgstr ""
-
-#: modules/site/includes/class-meta-panel.php:210
+#: modules/site/includes/class-meta-panel.php:221
 msgid ""
 "Phone, links and map are copied to the translations when you save; address "
 "and opening hours are translated in each language."
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:314
+#: modules/site/includes/class-meta-panel.php:325
 msgid "No rating"
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:318
+#: modules/site/includes/class-meta-panel.php:329
 msgid "Photo (fills the box, may be cropped)"
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:319
+#: modules/site/includes/class-meta-panel.php:330
 msgid "Logo (whole, never cropped)"
-msgstr ""
-
-#: modules/site/includes/class-meta-panel.php:322
-msgid "— None —"
 msgstr ""
 
 #: modules/site/includes/class-settings.php:145
