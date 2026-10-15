@@ -1,7 +1,7 @@
 <?php
 /**
- * Lo llama modules/uploads/tests/uploads-pure.test.mjs con el PHP de la
- * máquina (sin WordPress). Un caso nuevo es una clave nueva aquí y su assert allí.
+ * Called by modules/uploads/tests/uploads-pure.test.mjs with the machine's
+ * PHP (no WordPress). A new case is a new key here and its assert there.
  */
 
 define( 'ABSPATH', __DIR__ . '/' );
@@ -16,7 +16,7 @@ echo json_encode(
 		'partial'        => Uploads::sanitize( array( 'delete_original' => false ) ),
 		'clamped'        => Uploads::sanitize( array( 'max_mb' => -3, 'threshold' => 100 ) ),
 		'never'          => Uploads::sanitize( array( 'threshold' => 0 ) ),
-		'text'           => Uploads::sanitize( array( 'max_mb' => 'mucho', 'threshold' => '3000', 'delete_original' => '0' ) ),
+		'text'           => Uploads::sanitize( array( 'max_mb' => 'lots', 'threshold' => '3000', 'delete_original' => '0' ) ),
 		'form_unchecked' => Uploads::sanitize_form( array( '_form' => '1', 'max_mb' => '30', 'threshold' => '2560' ) ),
 		'form_checked'   => Uploads::sanitize_form( array( '_form' => '1', 'delete_original' => '1' ) ),
 		'limit_php_big'  => Uploads::limit_for( 256 * $mb, Uploads::DEFAULTS ) / $mb,
