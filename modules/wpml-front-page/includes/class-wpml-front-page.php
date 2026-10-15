@@ -1,30 +1,33 @@
 <?php
 /**
- * La portada traducida con WPML: /en/ enseña la portada en inglés (0.5.3).
+ * The front page translated with WPML: /en/ shows the English front page (0.5.3).
  *
- * Qué hace: en la parte pública, `page_on_front` (y `page_for_posts`) se
- * traducen al idioma de la petición con `wpml_object_id`. Es lo que WPML
- * debería hacer solo, y en el WordPress de pruebas lo hace; en el servidor de
- * Lavandería Mallorca (WPML 5.0.2, 06-10-2026) NO lo hacía: con el inglés
- * activo y la portada inglesa bien enlazada (mismo trid en icl_translations),
- * WordPress seguía viendo la castellana en /en/, `is_front_page()` daba falso
- * y `redirect_canonical` mandaba /en/ → /en/home/ (sin la redirección, 404).
- * Se midió con una cabecera de diagnóstico: page_on_front=6 con lang=en y
- * ningún filtro sobre option_page_on_front. No se averiguó por qué WPML no lo
- * engancha allí; este filtro lo cubre en cualquier caso.
+ * What it does: on the public side, `page_on_front` (and `page_for_posts`)
+ * are translated to the request's language with `wpml_object_id`. That is
+ * what WPML should do by itself, and in the test WordPress it does; on the
+ * Lavandería Mallorca server (WPML 5.0.2, 06-10-2026) it did NOT: with
+ * English active and the English front page properly linked (same trid in
+ * icl_translations), WordPress still saw the Spanish one on /en/,
+ * `is_front_page()` returned false and `redirect_canonical` sent /en/ →
+ * /en/home/ (without the redirect, a 404). Measured with a diagnostic
+ * header: page_on_front=6 with lang=en and no filter on
+ * option_page_on_front. Why WPML doesn't hook in there was never found out;
+ * this filter covers it either way.
  *
- * Cómo se mantiene:
- * - Si WPML ya ha traducido el valor, `wpml_object_id` devuelve el mismo id:
- *   el filtro no estorba cuando WPML sí funciona (por eso no se mira antes).
- * - Sin WPML no hace nada: el filtro `wpml_object_id` no existe y se devuelve
- *   el valor tal cual.
- * - Solo en la parte pública: en el escritorio, la opción tiene que ser la del
- *   idioma por defecto, que es la que se guarda.
- * - El caso frontera: una portada SIN traducción al idioma pedido. Se devuelve
- *   la original (return_original = true), que es lo que enseña WPML con
- *   «mostrar como traducido».
- * - La trampa: comprobarlo por WP-CLI no sirve, porque WPML no carga su parte
- *   pública allí; hay que pedir la página (curl a /en/ debe dar 200, no 301).
+ * How to maintain:
+ * - If WPML has already translated the value, `wpml_object_id` returns the
+ *   same id: the filter doesn't get in the way when WPML does work (which is
+ *   why it isn't checked beforehand).
+ * - Without WPML it does nothing: the `wpml_object_id` filter doesn't exist
+ *   and the value is returned as is.
+ * - Public side only: in the dashboard, the option must be the default
+ *   language's, which is the one that gets saved.
+ * - The edge case: a front page WITHOUT a translation into the requested
+ *   language. The original is returned (return_original = true), which is
+ *   what WPML shows with «display as translated».
+ * - The trap: checking it via WP-CLI doesn't work, because WPML doesn't load
+ *   its public side there; you have to request the page (curl to /en/ must
+ *   give 200, not 301).
  */
 
 namespace EstrategiaWeb\Site;

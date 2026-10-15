@@ -1,72 +1,75 @@
 <?php
 /**
- * estrategia-web/carousel — recorte para el móvil de las fotos (1.1.x).
+ * estrategia-web/carousel — mobile crop of the images (1.1.x).
  *
- * Qué resuelve (PageSpeed móvil de Lavandería, 14-10-2026): en el móvil la
- * caja de la diapositiva del hero es VERTICAL (370/460, CSS del hijo) y la
- * foto es horizontal; con object-fit: cover se ve una franja central, pero
- * el navegador baja la foto entera a 1536 px (163 KB de ahorro posible, LCP
- * 3,7 s). Aquí, por debajo de 782 px de ventana, se sirve un RECORTE vertical
- * de la misma foto, del tamaño de la caja:
+ * What it solves (Lavandería mobile PageSpeed, 14-10-2026): on mobile the
+ * hero slide box is VERTICAL (370/460, child theme CSS) and the image is
+ * horizontal; with object-fit: cover a central strip is shown, but the
+ * browser downloads the whole image at 1536 px (163 KB of possible savings,
+ * LCP 3.7 s). Here, below a 782 px window, a vertical CROP of the same image
+ * is served, at the size of the box:
  *
  *     <picture class="estrategia-web-carousel__picture">
  *       <source media="(max-width: 781px)" srcset="…-600x746.webp 600w, …" sizes="…">
- *       <img …la de siempre, con su srcset horizontal…>
+ *       <img …the usual one, with its horizontal srcset…>
  *     </picture>
  *
- * SOLO SI SE PIDE: el plugin no sabe qué forma le da el tema a la caja en el
- * móvil. Se pide con el atributo del bloque mobileRatio («370/460», «4/5»,
- * «0.8») o, para un estilo del tema que no está en el contenido (es el caso
- * de Lavandería: la forma la pone el CSS de is-style-hero-carousel), con el
- * filtro estrategia_web_carousel_mobile_crop( $crop, $attributes ), que
- * recibe null o el array de abajo y devuelve lo mismo.
+ * ONLY IF ASKED FOR: the plugin does not know what shape the theme gives the
+ * box on mobile. It is requested with the block attribute mobileRatio
+ * ("370/460", "4/5", "0.8") or, for a theme style that is not in the content
+ * (Lavandería's case: the shape comes from the is-style-hero-carousel CSS),
+ * with the filter estrategia_web_carousel_mobile_crop( $crop, $attributes ),
+ * which receives null or the array below and returns the same.
  *     $crop = array(
- *         'ratio'  => 370 / 460,              // ancho / alto de la caja
- *         'widths' => array( 480, 720, 960, 1200 ), // anchos del srcset
- *         'sizes'  => '…',                          // sizes del <source>
+ *         'ratio'  => 370 / 460,              // box width / height
+ *         'widths' => array( 480, 720, 960, 1200 ), // srcset widths
+ *         'sizes'  => '…',                          // <source> sizes
  *         'media'  => '(max-width: 781px)',
  *     );
- * mobileImageSizes (atributo) sustituye el sizes calculado (perViewMobile por
- * debajo de 480, perViewTablet hasta 781). Anchos 480 / 720 / 960 / 1200, por
- * la caja real: en el móvil mide 340-400 px CSS. 720 es el Moto G de
- * Lighthouse (379 px a 1,75x = 663); con 600 / 900 se iba al de 900 y
- * Lighthouse seguía marcando 45 KB de sobra en la LCP (medido en Lavandería
- * local, 14-10-2026). 960 cubre un 2x y 1200 un 3x; nunca más que el recorte
- * más grande que da la foto (sin ampliar).
+ * mobileImageSizes (attribute) replaces the computed sizes (perViewMobile
+ * below 480, perViewTablet up to 781). Widths 480 / 720 / 960 / 1200, from
+ * the real box: on mobile it measures 340-400 CSS px. 720 is Lighthouse's
+ * Moto G (379 px at 1.75x = 663); with 600 / 900 it picked the 900 one and
+ * Lighthouse still flagged 45 KB too many on the LCP (measured on local
+ * Lavandería, 14-10-2026). 960 covers 2x and 1200 3x; never more than the
+ * largest crop the image allows (no upscaling).
  *
- * PUNTO DE ENFOQUE: el recorte se centra donde la diapositiva ya lo dice:
- * object-position en el style del propio <img> (lo pone core/cover desde su
- * focalPoint, o cualquiera que se lo escriba), en %; si no hay, el centro
- * (50 % 50 %), que es lo que hace object-fit: cover sin object-position. El
- * filtro estrategia_web_carousel_mobile_focal( [x, y] (0-1), $attachment_id, $img )
- * lo cambia. OJO: un object-position puesto por CSS del tema (por
- * nth-child, como el de escritorio de Lavandería) NO se ve desde aquí; el de
- * su móvil es 50 % 50 %, que es el centro, así que cuadra.
+ * FOCAL POINT: the crop is centred where the slide already says:
+ * object-position in the <img>'s own style (core/cover sets it from its
+ * focalPoint, or anyone who writes it), in %; if there is none, the centre
+ * (50 % 50 %), which is what object-fit: cover does without object-position.
+ * The filter estrategia_web_carousel_mobile_focal( [x, y] (0-1), $attachment_id, $img )
+ * changes it. CAREFUL: an object-position set by theme CSS (by nth-child,
+ * like Lavandería's desktop one) is NOT visible from here; its mobile one is
+ * 50 % 50 %, the centre, so it matches.
  *
- * DÓNDE SE GUARDA: el recorte se genera con wp_get_image_editor la PRIMERA
- * vez que se pinta la página y se apunta como un tamaño más del adjunto en
- * sus metadatos (sizes['estrategia-web-crop-r804-f50x50-900'] …), así que:
- * - es idempotente: la segunda vez solo se mira el meta y que el fichero
- *   exista; si falta (alguien lo borró, `wp media regenerate`), se rehace;
- * - sale en el formato de los demás tamaños: WebP si el módulo webp está
- *   encendido o la foto ya lo era (lo decide image_editor_output_format, el
- *   mismo filtro que usan los tamaños de WordPress);
- * - al borrar el adjunto, WordPress borra también estos ficheros (están en
- *   sizes). Cambiar ratio, enfoque o anchos crea otros nombres; los viejos se
- *   quedan hasta que se regenere o se borre el adjunto.
+ * WHERE IT IS STORED: the crop is generated with wp_get_image_editor the
+ * FIRST time the page is rendered and recorded as one more size of the
+ * attachment in its metadata (sizes['estrategia-web-crop-r804-f50x50-900'] …),
+ * so:
+ * - it is idempotent: the second time only the meta and the file's existence
+ *   are checked; if the file is missing (someone deleted it,
+ *   `wp media regenerate`), it is rebuilt;
+ * - it comes out in the same format as the other sizes: WebP if the webp
+ *   module is on or the image already was WebP (decided by
+ *   image_editor_output_format, the same filter WordPress sizes use);
+ * - when the attachment is deleted, WordPress deletes these files too (they
+ *   are in sizes). Changing ratio, focal point or widths creates other names;
+ *   the old ones stay until the attachment is regenerated or deleted.
  *
- * Cómo se mantiene:
- * - Quién: quien toque el carrusel. Cuándo: si cambia el corte de 782 px de
- *   style.css, cambia el media por defecto (MEDIA).
- * - Caso frontera, con nombre: una diapositiva cuya foto YA tiene la forma de
- *   la caja (±1 %) no se recorta: no hay nada que ahorrar.
- * - Otro: las fotos de una Consulta (imagen destacada) no llevan la clase
- *   wp-image-ID y WordPress no le pasa su id a wp_content_img_tag: no se
- *   recortan. Hoy solo lo usa el hero, que son core/image.
- * - La trampa: la primera visita tras publicar paga el recorte (unos cientos
- *   de ms por foto y ancho). Tras desplegar, abrir la portada una vez.
- * - Prueba: tests/carousel-mobile-crop.test.mjs del tema (nivel 3) y
- *   modules/carousel/tests/mobile-crop-pure.test.mjs (nivel 1, la geometría).
+ * How to maintain:
+ * - Who: whoever touches the carousel. When: if the 782 px breakpoint of
+ *   style.css changes, change the default media (MEDIA).
+ * - Edge case, by name: a slide whose image ALREADY has the box's shape
+ *   (±1 %) is not cropped: there is nothing to save.
+ * - Another: images from a Query (featured image) do not have the
+ *   wp-image-ID class and WordPress does not pass their id to
+ *   wp_content_img_tag: they are not cropped. Today only the hero uses this,
+ *   and those are core/image.
+ * - The trap: the first visit after publishing pays for the crop (a few
+ *   hundred ms per image and width). After deploying, open the home page once.
+ * - Test: the theme's tests/carousel-mobile-crop.test.mjs (level 3) and
+ *   modules/carousel/tests/mobile-crop-pure.test.mjs (level 1, the geometry).
  */
 
 namespace EstrategiaWeb\Carousel;
@@ -207,7 +210,7 @@ function mobile_crops( int $id, float $ratio, float $fx, float $fy, array $width
 	$width  = (int) $meta['width'];
 	$height = (int) $meta['height'];
 	if ( abs( $width / $height - $ratio ) / $ratio < 0.01 ) {
-		return array(); // Ya tiene la forma de la caja.
+		return array(); // Already has the box's shape.
 	}
 	list( $cx, $cy, $cw, $ch ) = mobile_crop_box( $width, $height, $ratio, $fx, $fy );
 	$fxi    = (int) round( $fx * 100 );

@@ -1,8 +1,8 @@
 <?php
 /**
- * Dependencias de view.js, ESCRITAS A MANO (no hay build que las genere).
- * Si view.js importa un módulo nuevo, se añade aquí. La versión es la fecha
- * del fichero: cambia sola al editarlo y rompe la caché del navegador.
+ * view.js dependencies, WRITTEN BY HAND (there is no build that generates
+ * them). If view.js imports a new module, add it here. The version is the
+ * file's date: it changes by itself on edit and busts the browser cache.
  */
 return array(
 	'dependencies' => array( '@wordpress/interactivity' ),

@@ -1,14 +1,14 @@
 /*
- * estrategia-web/whatsapp — botón flotante. El verde es el de WhatsApp (no de un
- * cliente) y se cambia en el hijo con --estrategia-web-whatsapp-background.
+ * estrategia-web/whatsapp — floating button. The green is WhatsApp's (not a
+ * client's) and is changed in the child theme with --estrategia-web-whatsapp-background.
  *
- * Margen seguro (0.7.1): a la distancia de la esquina se le suma el margen
- * seguro del dispositivo (env(safe-area-inset-*): la barra de gestos o la
- * muesca de un móvil). Solo vale algo con viewport-fit=cover; sin eso es 0 y
- * el botón queda donde siempre. Un hijo cambia la distancia con
- * --estrategia-web-whatsapp-offset y el margen seguro se sigue sumando solo.
- * La trampa: no escribir inset-* en el hijo, o se pierde el margen seguro;
- * se cambia la variable.
+ * Safe area (0.7.1): the device's safe-area inset (env(safe-area-inset-*):
+ * a phone's gesture bar or notch) is added to the distance from the corner.
+ * It only has a value with viewport-fit=cover; without it it is 0 and the
+ * button stays where it always was. A child theme changes the distance with
+ * --estrategia-web-whatsapp-offset and the safe area is still added on its own.
+ * The trap: do not write inset-* in the child theme, or the safe area is
+ * lost; change the variable instead.
  */
 .estrategia-web-whatsapp {
 	--estrategia-web-whatsapp-background: #128c7e;

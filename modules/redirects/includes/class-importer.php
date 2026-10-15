@@ -1,23 +1,25 @@
 <?php
 /**
- * Guardar reglas: una desde la pantalla o muchas desde un CSV. Las dos pasan
- * por Rules::validate con TODAS las demás reglas delante (duplicados y
- * bucles), así que lo que no entra por la pantalla tampoco entra por el CSV.
+ * Saving rules: one from the screen or many from a CSV. Both go through
+ * Rules::validate with ALL the other rules in view (duplicates and loops),
+ * so whatever can't get in through the screen can't get in through the CSV
+ * either.
  *
- * Importar es IDEMPOTENTE: un origen que ya tiene regla se actualiza
- * (destino, tipo, nota, activa) y conserva su contador; importar dos veces
- * el mismo fichero deja lo mismo («sin cambios»). Por eso sirve para
- * desplegar: `wp estrategia-web redirects import fichero.csv` en cada
- * despliegue no duplica nada. Lo que NO hace es borrar las reglas que no
- * están en el fichero: el fichero añade y corrige, no sustituye.
+ * Importing is IDEMPOTENT: a source that already has a rule is updated
+ * (target, type, note, active) and keeps its counter; importing the same
+ * file twice leaves the same result («unchanged»). That is why it works for
+ * deploying: `wp estrategia-web redirects import file.csv` on every deploy
+ * duplicates nothing. What it does NOT do is delete rules that aren't in the
+ * file: the file adds and corrects, it doesn't replace.
  *
- * Todo se calcula primero en memoria y solo después se escribe: con
- * --dry-run (o $dry_run) el informe es exactamente el que saldría, sin tocar
- * la base. Una fila mala no para las demás; sale en el informe con su línea.
+ * Everything is computed in memory first and only written afterwards: with
+ * --dry-run (or $dry_run) the report is exactly what would happen, without
+ * touching the database. A bad row doesn't stop the others; it shows up in
+ * the report with its line.
  *
- * Caso frontera: dos filas del mismo fichero con el mismo origen. La segunda
- * es un error (duplicate) aunque diga lo mismo: en el fichero de Lavandería
- * no pasa, y si pasa es que alguien copió una fila de más.
+ * Edge case: two rows of the same file with the same source. The second is
+ * an error (duplicate) even if it says the same thing: it doesn't happen in
+ * Lavandería's file, and if it does, someone copied one row too many.
  */
 
 namespace EstrategiaWeb\Redirects;
@@ -83,10 +85,10 @@ final class Importer {
 	}
 
 	/**
-	 * Guarda una regla desde la pantalla.
+	 * Saves a rule from the screen.
 	 *
 	 * @param array{source: string, target: string, type: mixed, note?: string, active?: bool} $input
-	 * @return array{0: int, 1: string} [ id (0 si no se guardó), código de error ]
+	 * @return array{0: int, 1: string} [ id (0 if not saved), error code ]
 	 */
 	public static function save_one( array $input, int $id = 0 ): array {
 		list( $rule, $code ) = Rules::validate( $input, Store::all_by_key( $id ), Store::home(), Store::base() );
@@ -98,7 +100,7 @@ final class Importer {
 		return array( $id, '' );
 	}
 
-	/** CSV con todas las reglas, en el formato que lee import(). */
+	/** CSV with all rules, in the format import() reads. */
 	public static function export(): string {
 		list( $rows ) = Store::query( '', 0, 1, 'id', 'asc' );
 		$fh           = fopen( 'php://temp', 'r+' );
@@ -126,7 +128,7 @@ final class Importer {
 		return $csv;
 	}
 
-	/** El texto de un código de error de Rules::validate. */
+	/** The text for an error code from Rules::validate. */
 	public static function message( string $code ): string {
 		switch ( $code ) {
 			case 'empty_source':

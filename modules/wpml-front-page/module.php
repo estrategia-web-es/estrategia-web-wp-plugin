@@ -5,8 +5,8 @@
  * Default: on
  * Requires:
  *
- * Qué hace y por qué, en includes/class-wpml-front-page.php. El filtro
- * estrategia_web_site_wpml_front_page conserva su nombre de la 1.0.0.
+ * What it does and why, in includes/class-wpml-front-page.php. The filter
+ * estrategia_web_site_wpml_front_page keeps its name from 1.0.0.
  */
 
 namespace EstrategiaWeb\Site;

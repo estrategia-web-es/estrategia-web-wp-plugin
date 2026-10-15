@@ -1,8 +1,8 @@
 /*
- * estrategia-web/social-links — lo mínimo para que se vea bien en cualquier
- * tema. Color: el del texto (currentColor). Tamaño del icono:
- * --estrategia-web-social-size, que un tema puede cambiar. El porqué de cada
- * decisión, en la cabecera de render.php.
+ * estrategia-web/social-links — the minimum to look right in any theme.
+ * Colour: the text's (currentColor). Icon size: --estrategia-web-social-size,
+ * which a theme can change. The reason behind each decision is in the header
+ * of render.php.
  */
 .estrategia-web-social-links {
 	--estrategia-web-social-size: 1.5em;
@@ -16,7 +16,7 @@
 	list-style: none;
 }
 
-/* Con nombre, más aire entre una red y la siguiente que dentro de cada una. */
+/* With names, more space between one network and the next than within each one. */
 .estrategia-web-social-links.is-display-icons-names {
 	--estrategia-web-social-gap: 0.25em 1.25em;
 }
@@ -61,8 +61,8 @@
 	block-size: var(--estrategia-web-social-size);
 }
 
-/* Solo para lectores de pantalla. Propia: no se cuenta con el
-   .screen-reader-text del tema (el mismo criterio que el aviso de cookies). */
+/* Screen readers only. Our own: the theme's .screen-reader-text is not
+   relied on (same criterion as the cookie notice). */
 .estrategia-web-social-links__sr {
 	position: absolute;
 	inline-size: 1px;

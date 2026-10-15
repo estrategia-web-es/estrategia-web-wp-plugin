@@ -1,23 +1,23 @@
 <?php
 /**
- * SOLO PRUEBAS. Lo carga el mu-plugin que escribe tests/blueprint.json en el
- * WordPress de Playground; en una web real no lo carga nadie, y aun así no
- * hace nada sin ESTRATEGIA_WEB_REDIRECTS_TESTING (la doble llave de forms:
- * estas rutas abren la base a cualquiera).
+ * TESTS ONLY. Loaded by the mu-plugin that tests/blueprint.json writes into
+ * the Playground WordPress; on a real site nobody loads it, and even so it
+ * does nothing without ESTRATEGIA_WEB_REDIRECTS_TESTING (the double key from
+ * forms: these routes open the database to anyone).
  *
- * Qué da (estrategia-web-redirects-test/v1):
- * - setup {on}: enciende o apaga el módulo (los Default: on + redirects).
- * - reset: vacía las dos tablas y los ajustes, quita el Rank Math falso y
- *   borra las páginas «about» y «nosotros» que crean las pruebas.
+ * What it provides (estrategia-web-redirects-test/v1):
+ * - setup {on}: switches the module on or off (the Default: on ones + redirects).
+ * - reset: empties both tables and the settings, removes the fake Rank Math
+ *   and deletes the «about» and «nosotros» pages the tests create.
  * - import {csv, dry_run}, rule {source, target, type, active}, rules,
  *   settings {log_404, log_days}, log, log-backdate, purge.
- * - last: lo que pasó en la última petición PÚBLICA (no REST ni admin):
- *   cuántas consultas tocaron las tablas del módulo y cuántas hubo en total.
- *   Se cuenta con el filtro «query» y se apunta en shutdown.
- * - fake-rank-math {on}: hace de Rank Math con su módulo de redirecciones
- *   (define RANK_MATH_VERSION aquí, en un mu-plugin, antes que los plugins).
- * - bench {n, rules}: siembra reglas de relleno hasta tener «rules» y mide
- *   n búsquedas de Store::match (ms por búsqueda).
+ * - last: what happened on the last PUBLIC request (not REST or admin): how
+ *   many queries touched the module's tables and how many there were in
+ *   total. Counted with the «query» filter and recorded on shutdown.
+ * - fake-rank-math {on}: plays Rank Math with its redirects module (defines
+ *   RANK_MATH_VERSION here, in a mu-plugin, before the plugins).
+ * - bench {n, rules}: seeds filler rules up to «rules» and measures n
+ *   Store::match lookups (ms per lookup).
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -96,8 +96,8 @@ add_action(
 				delete_option( 'estrategia_web_redirects_test_rank_math' );
 				delete_option( 'rank_math_modules' );
 				delete_option( 'estrategia_web_redirects_test_last' );
-				// Las páginas que crean estas pruebas con un origen del CSV como
-				// slug: vivas, taparían la regla en la tanda siguiente.
+				// The pages these tests create with a CSV source as slug: if
+				// live, they would hide the rule in the next run.
 				foreach ( array( 'about', 'nosotros' ) as $slug ) {
 					$page = get_page_by_path( $slug );
 					if ( $page ) {

@@ -1,13 +1,13 @@
 <?php
 /**
- * Lo llama modules/redirects/tests/pure.test.mjs con el PHP de la máquina
- * (sin WordPress). Ejecuta includes/class-rules.php con casos fijos y con el
- * CSV de verdad de Lavandería (tests/fixtures/), y escribe el resultado en
- * JSON; las aserciones están en el .mjs.
+ * Called by modules/redirects/tests/pure.test.mjs with the machine's PHP
+ * (no WordPress). Runs includes/class-rules.php with fixed cases and with
+ * Lavandería's real CSV (tests/fixtures/), and writes the result as JSON;
+ * the assertions are in the .mjs.
  *
- * Cómo se mantiene: un caso nuevo es una clave nueva aquí y su assert allí.
- * El CSV de fixtures/ es una COPIA del de Lavandería del 07-10-2026: si allí
- * cambia y se quiere probar el nuevo, se copia otra vez (y se cambia el 83).
+ * How to maintain: a new case is a new key here and its assert there. The
+ * CSV in fixtures/ is a COPY of Lavandería's from 07-10-2026: if it changes
+ * there and you want to test the new one, copy it again (and change the 83).
  */
 
 define( 'ABSPATH', __DIR__ . '/' );
@@ -17,7 +17,7 @@ use EstrategiaWeb\Redirects\Rules;
 
 $out = array();
 
-// Normalizar.
+// Normalise.
 foreach ( array(
 	'/Contacto/',
 	'/contacto',
@@ -39,13 +39,13 @@ foreach ( array(
 }
 $out['key_base'] = Rules::key( '/blog/viejo/', '/blog' );
 
-// Candidatas de una petición.
+// Candidate keys for a request.
 $out['cand_utm']    = Rules::candidates( '/contacto/?utm_source=x&utm_medium=y' );
 $out['cand_p_lang'] = Rules::candidates( '/?p=6981&lang=es' );
 $out['cand_3f']     = Rules::candidates( '/index.html%3Fp=6981.html' );
 $out['cand_long']   = count( Rules::candidates( '/x?' . implode( '&', array_map( static fn( $i ) => "a$i=$i", range( 1, 200 ) ) ) ) );
 
-// El CSV real: se lee entero y se valida fila a fila contra lo anterior (como el importador).
+// The real CSV: read in full and validated row by row against the previous ones (like the importer).
 $csv    = Rules::parse_csv( (string) file_get_contents( dirname( __DIR__ ) . '/fixtures/lavanderia-2026-10-07.csv' ) );
 $all    = array();
 $errors = array();
@@ -59,7 +59,7 @@ foreach ( $csv['rows'] as $row ) {
 	}
 	$all[ $rule['key'] ] = $rule;
 	$types[ $rule['type'] ] = ( $types[ $rule['type'] ] ?? 0 ) + 1;
-	// La petición que pide ese origen tal cual (en el navegador) casa con su regla.
+	// A request for that source as is (in the browser) matches its rule.
 	if ( in_array( $rule['key'], Rules::candidates( $row['source'] ), true ) ) {
 		++$self;
 	}
@@ -73,11 +73,11 @@ $out['csv'] = array(
 	'self_match' => $self,
 	'inactive'   => count( array_filter( $all, static fn( $r ) => ! $r['active'] ) ),
 	'first'      => $csv['rows'][0],
-	'quoted'     => $csv['rows'][16]['note'], // La de las comillas con comas dentro.
+	'quoted'     => $csv['rows'][16]['note'], // The one with quotes containing commas.
 	'empty_410'  => $all['/lavanderia-santa-ponsa']['target'] ?? 'falta',
 );
 
-// Validar.
+// Validate.
 $r = static function ( string $s, string $t, $type = 301, bool $active = true ): array {
 	return array( 'source' => $s, 'target' => $t, 'type' => $type, 'active' => $active );
 };
@@ -111,7 +111,7 @@ $out['validate'] = array(
 	'gone_target'    => Rules::validate( $r( '/a/', '/b/', 410 ), array(), $home )[0]['target'],
 );
 
-// CSV con punto y coma, BOM, «revisar» y celda protegida.
+// CSV with semicolons, BOM, «revisar» and a protected cell.
 $semi              = Rules::parse_csv( "\xEF\xBB\xBForigen;destino;tipo;motivo;revisar\n/a/;/b/;302;'=SUMA(1);dudoso\n\n/c/;;410;;\n" );
 $out['semi']       = $semi['rows'];
 $out['noheader']   = Rules::parse_csv( "/a/,/b/,301,nota\n" )['rows'];

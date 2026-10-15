@@ -1,31 +1,31 @@
 <?php
 /**
- * Subidas de imágenes: límite, umbral de reducción y borrar el original.
+ * Image uploads: size limit, scale-down threshold and deleting the original.
  *
- * Los tres ajustes viven en UNA opción, estrategia_web_uploads:
+ * The three settings live in ONE option, estrategia_web_uploads:
  *   { max_mb: 20, threshold: 2560, delete_original: true }
- * Se editan en «Ajustes → Medios» (sección propia) y por REST
- * (/wp/v2/settings, show_in_rest). Si la opción no existe valen DEFAULTS.
+ * They are edited in "Settings → Media" (own section) and over REST
+ * (/wp/v2/settings, show_in_rest). If the option does not exist, DEFAULTS apply.
  *
- * - max_mb → filtro upload_size_limit. Es un TOPE: manda el menor entre esto
- *   y lo que deja el PHP del servidor (subir el valor por encima del PHP no
- *   sirve de nada y anunciarlo sería mentir). 0 = sin tope propio. Ojo: es lo
- *   que anuncian y comprueban la mediateca y el editor (plupload); la API
- *   REST de medios no lo vuelve a mirar (solo en multisitio), igual que con
- *   el MU-plugin de antes.
- * - threshold → filtro big_image_size_threshold. Una foto con el lado largo
- *   mayor se guarda reducida («-scaled»). 0 = no reducir nunca.
- * - delete_original → al terminar de generar los tamaños
- *   (wp_generate_attachment_metadata, prioridad 20, después de que WordPress
- *   haya escrito original_image), se borra el fichero original si es otro
- *   que el principal y se quita original_image del meta. La versión reducida
- *   pasa a ser la de referencia.
+ * - max_mb → upload_size_limit filter. It is a CAP: the lower of this and
+ *   what the server's PHP allows wins (raising it above PHP does nothing,
+ *   and announcing it would be a lie). 0 = no cap of our own. Note: this is
+ *   what the media library and the editor (plupload) announce and check; the
+ *   media REST API does not check it again (only on multisite), same as with
+ *   the old MU-plugin.
+ * - threshold → big_image_size_threshold filter. A photo whose longest side
+ *   is larger is stored scaled down ("-scaled"). 0 = never scale down.
+ * - delete_original → once the sizes have been generated
+ *   (wp_generate_attachment_metadata, priority 20, after WordPress has
+ *   written original_image), the original file is deleted if it differs
+ *   from the main one, and original_image is removed from the meta. The
+ *   scaled version becomes the reference.
  *
- * Trampas (heredadas del MU-plugin, siguen valiendo):
- * - Lo ya subido NO cambia: sus originales siguen en el disco.
- * - Sin original, «Editar imagen» y `wp media regenerate` trabajan sobre la
- *   reducida: es lo que se quiere, pero no hay vuelta atrás.
- * - Cambiar el umbral no reduce lo ya subido; solo lo que se suba después.
+ * Pitfalls (inherited from the MU-plugin, still valid):
+ * - What is already uploaded does NOT change: its originals stay on disk.
+ * - Without the original, "Edit image" and `wp media regenerate` work on the
+ *   scaled copy: that is intended, but there is no going back.
+ * - Changing the threshold does not scale down existing uploads; only later ones.
  */
 
 namespace EstrategiaWeb\Uploads;
@@ -36,7 +36,7 @@ final class Uploads {
 
 	public const OPTION = 'estrategia_web_uploads';
 
-	/** Los valores del MU-plugin de Lavandería (12-10-2026). 2560 = el de serie de WordPress. */
+	/** The values from Lavandería's MU-plugin (12-10-2026). 2560 = WordPress' default. */
 	public const DEFAULTS = array(
 		'max_mb'          => 20,
 		'threshold'       => 2560,
@@ -79,7 +79,7 @@ final class Uploads {
 		}
 		if ( isset( $value['threshold'] ) && is_numeric( $value['threshold'] ) ) {
 			$threshold = max( 0, (int) $value['threshold'] );
-			// Por debajo de 320 px no es reducir, es estropear: se queda en 320 (0 sigue siendo «nunca»).
+			// Below 320 px it is not scaling down, it is ruining: clamp to 320 (0 still means "never").
 			$out['threshold'] = 0 === $threshold ? 0 : max( 320, min( 20000, $threshold ) );
 		}
 		if ( array_key_exists( 'delete_original', $value ) ) {
@@ -136,7 +136,7 @@ final class Uploads {
 		}
 		/**
 		 * Whether to delete the original upload after WordPress scaled or converted it.
-		 * (Hasta la 1.1.0, en el MU-plugin de Lavandería: estrategia_web_subidas_borrar_original.)
+		 * (Up to 1.1.0, in Lavandería's MU-plugin: estrategia_web_subidas_borrar_original.)
 		 *
 		 * @param bool $delete        The «Delete the original» setting.
 		 * @param int  $attachment_id Attachment id.

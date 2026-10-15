@@ -1,13 +1,14 @@
 <?php
 /**
- * Al BORRAR el plugin (no al desactivarlo ni al apagar el módulo).
+ * On DELETING the plugin (not on deactivating it or switching the module off).
  *
- * Las reglas son trabajo del cliente (o de su SEO): por defecto NO se
- * borran, como los envíos de forms. Solo si la web lo pide en wp-config.php:
+ * The rules are the client's work (or their SEO's): by default they are NOT
+ * deleted, like forms submissions. Only if the site asks for it in
+ * wp-config.php:
  *
  *     define( 'ESTRATEGIA_WEB_REDIRECTS_REMOVE_DATA', true );
  *
- * La purga programada sí se quita siempre.
+ * The scheduled purge is always removed.
  */
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;

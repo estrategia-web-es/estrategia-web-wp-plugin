@@ -1,16 +1,17 @@
 /**
- * estrategia-web/carousel — editor. Script CLÁSICO, sin compilar.
+ * estrategia-web/carousel — editor. CLASSIC script, no build step.
  *
- * Por qué así: InnerBlocks necesita JavaScript en el editor y WordPress 7.1
- * no acepta módulos ES como editorScript. Se usan los globales wp.* (sus
- * handles están en edit.asset.php) y createElement en vez de JSX.
- * Los textos van con wp.i18n.__( ..., 'estrategia-web' ); las traducciones las
- * inyecta el núcleo del plugin (includes/class-blocks.php) desde
+ * Why: InnerBlocks needs JavaScript in the editor and WordPress 7.1 does not
+ * accept ES modules as editorScript. It uses the wp.* globals (their handles
+ * are in edit.asset.php) and createElement instead of JSX.
+ * Strings go through wp.i18n.__( ..., 'estrategia-web' ); the translations are
+ * injected by the plugin core (includes/class-blocks.php) from
  * languages/estrategia-web-<locale>.l10n.php.
  *
- * Cómo se mantiene: un control nuevo es un atributo nuevo en block.json con
- * default; save() devuelve solo InnerBlocks.Content y NO se toca: el marcado
- * lo pinta render.php, así que cambiarlo no invalida carruseles guardados.
+ * How to maintain: a new control is a new attribute in block.json with a
+ * default; save() returns only InnerBlocks.Content and is NOT touched: the
+ * markup is rendered by render.php, so changing it does not invalidate saved
+ * carousels.
  */
 ( function ( wp ) {
 	const { registerBlockType } = wp.blocks;

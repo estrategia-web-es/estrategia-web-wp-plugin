@@ -5,14 +5,14 @@
  * Default: on
  * Requires:
  *
- * Bloque estrategia-web/language-switcher. Hasta la 1.0.0 lo registraba el
- * tema padre (ver modules/carousel/module.php: el mismo traslado). Todo lo
- * que hace, en la cabecera de blocks/language-switcher/render.php.
+ * Block estrategia-web/language-switcher. Up to 1.0.0 the parent theme
+ * registered it (see modules/carousel/module.php: the same move). Everything
+ * it does, in the header of blocks/language-switcher/render.php.
  *
- * Pruebas: en el repo del tema no hay (WPML es de pago y no está en su
- * Playground); la de verdad es la de Lavandería,
- * lavanderia-mallorca/tests/language-switcher.test.mjs, con su copia local de
- * WPML.
+ * Tests: there are none in the theme repo (WPML is paid and not in its
+ * Playground); the real one is Lavandería's,
+ * lavanderia-mallorca/tests/language-switcher.test.mjs, with its local copy
+ * of WPML.
  */
 
 namespace EstrategiaWeb\LanguageSwitcher;

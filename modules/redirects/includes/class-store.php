@@ -1,27 +1,28 @@
 <?php
 /**
- * Las dos tablas del módulo y todo lo que las toca.
+ * The module's two tables and everything that touches them.
  *
- *   {prefijo}estrategia_web_redirects      una fila por regla
- *   {prefijo}estrategia_web_redirects_404  el registro de 404 (si se enciende)
+ *   {prefix}estrategia_web_redirects      one row per rule
+ *   {prefix}estrategia_web_redirects_404  the 404 log (if enabled)
  *
- * Se crean IDEMPOTENTES EN CADA CARGA (maybe_install en plugins_loaded),
- * porque encender el módulo en la pantalla no pasa por la activación del
- * plugin (la trampa de includes/class-modules.php).
+ * They are created IDEMPOTENTLY ON EVERY LOAD (maybe_install on
+ * plugins_loaded), because enabling the module from the screen does not go
+ * through plugin activation (the trap in includes/class-modules.php).
  *
- * Cómo se mantiene:
- * - Quién y cuándo: quien cambie la forma de una tabla, en el mismo commit
- *   que el código que la usa: se toca schema() y se sube DB_VERSION. dbDelta
- *   añade columnas e índices; no borra ni renombra (eso, a mano y aquí).
- * - Caso frontera: source_hash es md5 de la CLAVE normalizada
- *   (Rules::key), no del origen tal cual. Si un día cambia el criterio de
- *   normalizar, las claves guardadas quedan viejas: hay que recalcularlas
- *   (rehash()) en la misma subida de DB_VERSION.
- * - La trampa: dbDelta es quisquilloso (dos espacios tras PRIMARY KEY, una
- *   columna por línea, sin comillas invertidas). Si no le gusta, no avisa:
- *   no crea nada. Y en Playground la base es SQLite (el traductor de
- *   WordPress): las consultas de aquí se limitan a lo que traduce bien
- *   (nada de ON DUPLICATE KEY UPDATE: UPDATE y, si no tocó nada, INSERT).
+ * How to maintain:
+ * - Who and when: whoever changes a table's shape, in the same commit as the
+ *   code that uses it: edit schema() and bump DB_VERSION. dbDelta adds
+ *   columns and indexes; it does not drop or rename (that is done by hand,
+ *   here).
+ * - Edge case: source_hash is the md5 of the normalised KEY (Rules::key), not
+ *   of the raw source. If the normalisation criterion ever changes, the
+ *   stored keys go stale: they must be recomputed (rehash()) in the same
+ *   DB_VERSION bump.
+ * - The trap: dbDelta is fussy (two spaces after PRIMARY KEY, one column per
+ *   line, no backticks). If it doesn't like something, it doesn't warn: it
+ *   creates nothing. And in Playground the database is SQLite (WordPress's
+ *   translator): queries here are limited to what it translates well (no
+ *   ON DUPLICATE KEY UPDATE: UPDATE and, if nothing was touched, INSERT).
  */
 
 namespace EstrategiaWeb\Redirects;
@@ -33,7 +34,7 @@ final class Store {
 	public const DB_VERSION     = 1;
 	public const DB_VERSION_OPT = 'estrategia_web_redirects_db_version';
 
-	/** Tope del registro de 404: una ráfaga de bots no llena la base. Al llegar, solo se cuentan las que ya están. */
+	/** Cap on the 404 log: a burst of bots doesn't fill the database. Once reached, only existing rows are counted. */
 	public const LOG_MAX_ROWS = 2000;
 
 	public static function table(): string {
@@ -83,24 +84,24 @@ UNIQUE KEY path_hash (path_hash),
 KEY last_seen (last_seen)
 ) {$charset};"
 		);
-		// Autocargada A PROPÓSITO (forms no lo hace): se lee en cada petición,
-		// y sin autocarga es una consulta más en todas las páginas de la web.
+		// Autoloaded ON PURPOSE (forms doesn't do this): it is read on every
+		// request, and without autoload it is one more query on every page of the site.
 		update_option( self::DB_VERSION_OPT, self::DB_VERSION, true );
 	}
 
-	/** Ruta de la instalación («/blog» si WordPress vive en una subcarpeta; '' si no). */
+	/** Install path («/blog» if WordPress lives in a subfolder; '' otherwise). */
 	public static function base(): string {
 		return untrailingslashit( (string) wp_parse_url( (string) get_option( 'home' ), PHP_URL_PATH ) );
 	}
 
-	/** El dominio de la web, para saber si un destino absoluto es de casa. */
+	/** The site's domain, to tell whether an absolute target is internal. */
 	public static function home(): string {
 		return (string) get_option( 'home' );
 	}
 
 	/**
-	 * La regla activa que casa con una petición, o null. UNA consulta por el
-	 * índice único (source_hash IN (…), como mucho MAX_PARAMS+3 claves).
+	 * The active rule matching a request, or null. ONE query on the unique
+	 * index (source_hash IN (…), at most MAX_PARAMS+3 keys).
 	 *
 	 * @return array{id: int, source: string, target: string, type: int}|null
 	 */
@@ -114,7 +115,7 @@ KEY last_seen (last_seen)
 			return null;
 		}
 		$by_hash = array_column( $rows, null, 'source_hash' );
-		foreach ( $hashes as $hash ) { // El orden de candidates(): de más concreta a menos.
+		foreach ( $hashes as $hash ) { // candidates() order: most to least specific.
 			if ( isset( $by_hash[ $hash ] ) ) {
 				$row = $by_hash[ $hash ];
 				return array(
@@ -141,9 +142,9 @@ KEY last_seen (last_seen)
 	}
 
 	/**
-	 * Todas las reglas por clave, para validar (bucles, duplicados). Son pocas
-	 * (cientos): se traen enteras en vez de seguir la cadena con una consulta
-	 * por salto.
+	 * All rules by key, for validation (loops, duplicates). There are few
+	 * (hundreds): they are fetched whole instead of following the chain with
+	 * one query per hop.
 	 *
 	 * @return array<string, array{id: int, key: string, source: string, target: string, type: int, active: bool, note: string}>
 	 */
@@ -170,10 +171,10 @@ KEY last_seen (last_seen)
 	}
 
 	/**
-	 * Guarda una regla YA VALIDADA (Rules::validate). Con $id actualiza.
+	 * Saves an ALREADY VALIDATED rule (Rules::validate). With $id it updates.
 	 *
 	 * @param array{source: string, key: string, target: string, type: int, note: string, active: bool} $rule
-	 * @return int El id.
+	 * @return int The id.
 	 */
 	public static function save( array $rule, int $id = 0 ): int {
 		global $wpdb;
@@ -217,9 +218,9 @@ KEY last_seen (last_seen)
 	}
 
 	/**
-	 * Lista para la pantalla y el CLI.
+	 * List for the screen and the CLI.
 	 *
-	 * @return array{0: array<int, array<string, mixed>>, 1: int} [ filas, total ]
+	 * @return array{0: array<int, array<string, mixed>>, 1: int} [ rows, total ]
 	 */
 	public static function query( string $search = '', int $per_page = 0, int $page = 1, string $orderby = 'source', string $order = 'asc' ): array {
 		global $wpdb;
@@ -243,8 +244,8 @@ KEY last_seen (last_seen)
 	}
 
 	// ------------------------------------------------------------------
-	// Registro de 404. Solo la RUTA (y el p= de las URL viejas): nada de IP,
-	// navegador, referer ni el resto de la query, que puede llevar un correo.
+	// 404 log. Only the PATH (and the p= of old URLs): no IP, browser,
+	// referer or the rest of the query, which may contain an email address.
 	// ------------------------------------------------------------------
 
 	public static function log_404( string $request_uri ): void {
@@ -277,7 +278,7 @@ KEY last_seen (last_seen)
 		return array( (array) $rows, $total );
 	}
 
-	/** Borra del registro lo que no se ha visto en $days días. Con 0, todo. */
+	/** Deletes from the log whatever hasn't been seen in $days days. With 0, everything. */
 	public static function log_purge( int $days ): int {
 		global $wpdb;
 		$t = self::log_table();
@@ -294,7 +295,7 @@ KEY last_seen (last_seen)
 		return $ids ? (int) $wpdb->query( 'DELETE FROM ' . self::log_table() . ' WHERE id IN (' . implode( ',', $ids ) . ')' ) : 0; // phpcs:ignore WordPress.DB
 	}
 
-	/** Al crear una regla desde el registro, esa ruta sale de él. */
+	/** When a rule is created from the log, that path is removed from it. */
 	public static function log_forget( string $key ): void {
 		global $wpdb;
 		$wpdb->delete( self::log_table(), array( 'path_hash' => Rules::hash( $key ) ) ); // phpcs:ignore WordPress.DB

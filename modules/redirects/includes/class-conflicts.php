@@ -1,25 +1,24 @@
 <?php
 /**
- * ¿Hay otro sistema de redirecciones funcionando en la web? Si lo hay, la
- * pantalla lo avisa arriba: dos sistemas a la vez se pisan y nadie sabe cuál
- * mandó al visitante adónde.
+ * Is another redirect system running on the site? If so, the screen warns at
+ * the top: two systems at once step on each other and nobody knows which one
+ * sent the visitor where.
  *
- * Cómo se mantiene:
- * - Un plugin nuevo que detectar: una entrada más en detect(), mirando una
- *   constante o clase que el plugin define SIEMPRE que está activo (no su
- *   carpeta: puede estar subido y desactivado). Si es de terceros con un
- *   módulo que se apaga (Rank Math), mirar también que el módulo esté
- *   encendido, o el aviso saldrá en webs donde no pasa nada.
- * - Caso frontera con nombre: Rank Math en Lavandería. La empresa de SEO lo
- *   usa con su módulo de redirecciones, y por eso este módulo nace apagado
- *   (Default: off) y allí se queda apagado. Rank Math evalúa sus reglas en
- *   el gancho «wp», antes que este (template_redirect): si los dos tienen
- *   regla para lo mismo, gana Rank Math.
- * - La trampa: Rank Math guarda sus módulos encendidos en la opción
- *   rank_math_modules (lista de slugs); el de redirecciones es
- *   «redirections», con -ions. Con Rank Math instalado pero ese módulo
- *   apagado, no hay conflicto.
- * - Filtro estrategia_web_redirects_conflicts para que una web añada el suyo.
+ * How to maintain:
+ * - A new plugin to detect: one more entry in detect(), checking a constant
+ *   or class the plugin ALWAYS defines when active (not its folder: it may be
+ *   uploaded and deactivated). If it is third-party with a module that can be
+ *   switched off (Rank Math), also check that the module is on, or the
+ *   warning will show on sites where nothing is wrong.
+ * - Named edge case: Rank Math on Lavandería. The SEO agency uses it with its
+ *   redirects module, which is why this module ships disabled (Default: off)
+ *   and stays disabled there. Rank Math evaluates its rules on the «wp» hook,
+ *   before this one (template_redirect): if both have a rule for the same
+ *   thing, Rank Math wins.
+ * - The trap: Rank Math stores its enabled modules in the rank_math_modules
+ *   option (list of slugs); the redirects one is «redirections», with -ions.
+ *   With Rank Math installed but that module off, there is no conflict.
+ * - Filter estrategia_web_redirects_conflicts so a site can add its own.
  */
 
 namespace EstrategiaWeb\Redirects;
@@ -28,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
 
 final class Conflicts {
 
-	/** @return string[] Nombres de los sistemas de redirecciones activos además de este. */
+	/** @return string[] Names of the redirect systems active besides this one. */
 	public static function detect(): array {
 		$found = array();
 		if ( defined( 'RANK_MATH_VERSION' ) && in_array( 'redirections', (array) get_option( 'rank_math_modules', array() ), true ) ) {
@@ -47,9 +46,9 @@ final class Conflicts {
 			$found[] = 'All in One SEO Pro';
 		}
 		/**
-		 * Otros sistemas de redirecciones activos en la web.
+		 * Other redirect systems active on the site.
 		 *
-		 * @param string[] $found Nombres para el aviso.
+		 * @param string[] $found Names for the warning.
 		 */
 		return array_values( array_unique( (array) apply_filters( 'estrategia_web_redirects_conflicts', $found ) ) );
 	}

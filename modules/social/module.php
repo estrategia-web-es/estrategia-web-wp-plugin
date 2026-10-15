@@ -5,46 +5,45 @@
  * Default: on
  * Requires: site
  *
- * Tres piezas:
- * - La lista: opción estrategia_web_social_links (includes/class-links.php,
- *   ahí está su forma, el saneado, la migración de las webs que ya tenían
- *   redes en los campos fijos de «Datos de la empresa» y el alias
- *   `social.<red>` de Company::value() hasta la 2.0.0).
- * - La pantalla «Estrategia Web → Redes sociales» (includes/class-admin.php
- *   y assets/admin.js): una fila por red, ordenable con botones.
- * - El bloque estrategia-web/social-links (blocks/social-links/render.php):
- *   solo iconos o icono y nombre, tres tamaños, color del texto.
- * Los iconos: 17 de la colección (icons/, créditos en icons/CREDITS.txt:
- * Simple Icons, CC0, y Bootstrap Icons, MIT) o un SVG de la mediateca,
- * saneado otra vez al pintarlo (includes/class-icons.php).
+ * Three pieces:
+ * - The list: option estrategia_web_social_links (includes/class-links.php,
+ *   which holds its shape, the sanitizing, the migration for sites that
+ *   already had networks in the fixed fields of “Company details”, and the
+ *   `social.<network>` alias of Company::value() until 2.0.0).
+ * - The “Estrategia Web → Social networks” screen (includes/class-admin.php
+ *   and assets/admin.js): one row per network, reorderable with buttons.
+ * - The estrategia-web/social-links block (blocks/social-links/render.php):
+ *   icons only or icon and name, three sizes, text colour.
+ * Icons: 17 from the collection (icons/, credits in icons/CREDITS.txt:
+ * Simple Icons, CC0, and Bootstrap Icons, MIT) or an SVG from the media
+ * library, sanitized again when rendered (includes/class-icons.php).
  *
- * Por qué Default: on: no cambia nada visible por sí solo. El bloque no está
- * en ninguna página hasta que alguien lo pone, y la pantalla es una entrada
- * más en el menú. Al desplegarlo en una web que ya existe (Lavandería) se
- * enciende solo (ver el caso frontera de includes/class-modules.php) y no se
- * nota hasta que se use.
+ * Why Default: on: it changes nothing visible by itself. The block is on no
+ * page until someone adds it, and the screen is one more menu entry. When
+ * deployed to an existing site (Lavandería) it switches itself on (see the
+ * edge case in includes/class-modules.php) and goes unnoticed until used.
  *
- * Por qué Requires: site: el saneado de SVG (Svg_Sanitizer) y el nombre de
- * la empresa para «Instagram de <Empresa>» son de ese módulo.
+ * Why Requires: site: SVG sanitizing (Svg_Sanitizer) and the company name
+ * for “Instagram of <Company>” belong to that module.
  *
- * Con WPML: el nombre y el enlace de cada red se traducen como textos de
- * administración (wpml-config.xml, <admin-texts>). Sin probar con WPML.
+ * With WPML: each network's name and link are translated as admin texts
+ * (wpml-config.xml, <admin-texts>). Not tested with WPML.
  *
- * Cómo se mantiene:
- * - Quién y cuándo: quien añada una red a la colección (icons/ + CREDITS +
- *   Icons::labels() y HOSTS) o un campo por red (Links + pantalla + XML).
- * - Criterio para que una red entre en la colección: que la pida una web de
- *   verdad y que haya un icono con licencia compatible con GPL (CC0, MIT,
- *   GPL). Una red que solo usa un cliente va como SVG subido, no aquí.
- * - Caso frontera con nombre: Google. «Google Maps» (la ficha en el mapa) y
- *   «Google (Business Profile)» (las reseñas) son dos iconos; el enlace
- *   google.com/maps… adivina el de mapas, el resto de google.* el otro.
- * - La trampa al copiar iconos nuevos: los SVG de Simple Icons traen <title>
- *   y role="img"; dentro de un enlace con su nombre en texto oculto, un
- *   lector de pantalla puede leer el nombre dos veces. Se quitan al
- *   copiarlos (solo viewBox y <path>) y el <svg> sale con aria-hidden.
+ * How to maintain:
+ * - Who and when: whoever adds a network to the collection (icons/ + CREDITS +
+ *   Icons::labels() and HOSTS) or a per-network field (Links + screen + XML).
+ * - Criterion for a network to join the collection: a real site asks for it
+ *   and there is an icon with a GPL-compatible licence (CC0, MIT, GPL). A
+ *   network only one client uses goes in as an uploaded SVG, not here.
+ * - Named edge case: Google. “Google Maps” (the map listing) and
+ *   “Google (Business Profile)” (the reviews) are two icons; a
+ *   google.com/maps… link guesses the maps one, any other google.* the other.
+ * - The trap when copying new icons: Simple Icons SVGs come with <title>
+ *   and role="img"; inside a link whose name is in hidden text, a screen
+ *   reader may read the name twice. They are stripped when copied (only
+ *   viewBox and <path>) and the <svg> is output with aria-hidden.
  *
- * Pruebas: modules/social/tests/ (social: nivel 2; social-admin: nivel 3).
+ * Tests: modules/social/tests/ (social: level 2; social-admin: level 3).
  */
 
 namespace EstrategiaWeb\Social;
@@ -55,7 +54,7 @@ require_once __DIR__ . '/includes/class-icons.php';
 require_once __DIR__ . '/includes/class-links.php';
 
 add_action( 'init', array( Links::class, 'register' ) );
-// Después de register: los seis campos fijos de «Datos de la empresa» → la lista, una vez (ver Links).
+// After register: the six fixed fields of “Company details” → the list, once (see Links).
 add_action( 'init', array( Links::class, 'migrate' ), 11 );
 add_action( 'init', static fn() => register_block_type( __DIR__ . '/blocks/social-links' ) );
 

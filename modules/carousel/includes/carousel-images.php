@@ -1,66 +1,66 @@
 <?php
 /**
- * estrategia-web/carousel — prioridad, carga diferida y sizes de sus fotos (0.7.4).
+ * estrategia-web/carousel — priority, lazy loading and sizes of its images (0.7.4).
  *
- * Qué resuelve (auditoría de Lavandería, 06-10-2026): en escritorio el
- * elemento LCP del inicio era la diapositiva 2 del carrusel y solo la 1
- * llevaba fetchpriority="high"; y todas las fotos llevaban el sizes que
- * WordPress pone por defecto, «(max-width: 1920px) 100vw», así que en un
- * carrusel de tres a la vista el navegador bajaba una foto de 1536 para un
- * hueco de ~500.
+ * What it solves (Lavandería audit, 06-10-2026): on desktop the LCP element
+ * of the home page was slide 2 of the carousel and only slide 1 had
+ * fetchpriority="high"; and every image had WordPress' default sizes,
+ * "(max-width: 1920px) 100vw", so in a carousel with three in view the
+ * browser downloaded a 1536 image for a ~500 slot.
  *
- * Cómo funciona, en dos tiempos:
- * 1. render.php marca cada <img> con data-estrategia-web-carousel="<id>:<n>" (n =
- *    diapositiva, desde 0) y apunta aquí, por id, cuántas diapositivas se
- *    pueden ver al cargar y qué sizes les toca (images_register).
- * 2. El filtro wp_content_img_tag, que corre DESPUÉS de que WordPress haya
- *    puesto srcset, sizes, loading y fetchpriority a cada foto, lo corrige:
- *    - Diapositivas que se ven al cargar: si WordPress dio fetchpriority
- *      "high" a una de ellas (o sea, decidió que el carrusel es lo primero de
- *      la página), TODAS las visibles llevan "high" y ninguna loading="lazy".
- *      Si no se la dio (el carrusel está más abajo), se deja lo que decidió:
- *      la prioridad no se regala a un carrusel que no está a la vista.
- *    - Las que no se ven al cargar: loading="lazy", sin fetchpriority, y
- *      sizes="auto, …" (con lazy, Chrome usa el ancho pintado de verdad).
- *    - sizes: el del carrusel, a las que tienen srcset.
- *    Al final se quita la marca: no llega a la página.
+ * How it works, in two steps:
+ * 1. render.php marks each <img> with data-estrategia-web-carousel="<id>:<n>" (n =
+ *    slide, from 0) and records here, by id, how many slides can be visible
+ *    on load and which sizes they get (images_register).
+ * 2. The wp_content_img_tag filter, which runs AFTER WordPress has set
+ *    srcset, sizes, loading and fetchpriority on each image, corrects them:
+ *    - Slides visible on load: if WordPress gave fetchpriority "high" to one
+ *      of them (i.e. it decided the carousel is the first thing on the page),
+ *      ALL visible ones get "high" and none gets loading="lazy". If it did
+ *      not (the carousel is further down), its decision stays: priority is
+ *      not given away to a carousel that is out of view.
+ *    - Those not visible on load: loading="lazy", no fetchpriority, and
+ *      sizes="auto, …" (with lazy, Chrome uses the actual rendered width).
+ *    - sizes: the carousel's, on those that have a srcset.
+ *    Finally the mark is removed: it never reaches the page.
  *
- * Cuántas se ven al cargar: ceil( el mayor de perViewMobile/Tablet/Desktop ).
- * El servidor no sabe el ancho de la ventana, así que se cuenta el caso más
- * ancho. Medido en Lavandería (06-10-2026), carrusel de portada 1/2/3: a 402
- * se ve la 1 y a 1512 la 1, la 2 y la 3 (la 3, cortada). La última, en un
- * carrusel en bucle, queda a la IZQUIERDA de la primera (order de view.js) y
- * fuera de la vista: no cuenta. Se cambia con el filtro
+ * How many are visible on load: ceil( the largest of perViewMobile/Tablet/Desktop ).
+ * The server does not know the window width, so the widest case is counted.
+ * Measured on Lavandería (06-10-2026), home carousel 1/2/3: at 402 slide 1 is
+ * visible and at 1512 slides 1, 2 and 3 (3 cut off). The last one, in a
+ * looping carousel, sits to the LEFT of the first (view.js order) and out of
+ * view: it does not count. Changed with the filter
  * estrategia_web_carousel_eager_slides( $n, $attributes ).
  *
- * El sizes por defecto sale de perView y del ancho del carrusel: 100vw si es
- * align full; si no, el wideSize o el contentSize de theme.json cuando son px
- * (si no lo son, como si fuera full). Se ignora el hueco entre diapositivas,
- * que sobrestima unos píxeles: mejor un poco grande que borrosa. Con los
- * cortes de 480 y 782 (los de style.css), uno de 1/2/3 a todo el ancho da:
+ * The default sizes comes from perView and the carousel width: 100vw if it is
+ * align full; otherwise the wideSize or contentSize from theme.json when they
+ * are px (if not, as if it were full). The gap between slides is ignored,
+ * which overestimates by a few pixels: better slightly large than blurry.
+ * With the 480 and 782 breakpoints (those of style.css), a full-width 1/2/3
+ * gives:
  *     (max-width: 480px) 100vw, (max-width: 782px) calc(100vw / 2), calc(100vw / 3)
  *
- * Cómo se mantiene:
- * - Quién: quien toque el carrusel. Cuándo: si cambian los cortes de
- *   style.css (480/782) se cambian también en images_sizes().
- * - Caso frontera: un hijo que pinta las diapositivas a otro ancho que el de
- *   perView (Lavandería: la portada pone a cada foto su proporción, 442 / 629
- *   / 596 de ancho a 596 de alto) NO acierta con el cálculo: escribe su sizes
- *   en el atributo imageSizes del bloque. Es un AJUSTE, no un bloque nuevo.
- *   También existe el filtro estrategia_web_carousel_image_sizes( $sizes, $attributes ).
- * - La trampa: el filtro solo ve las fotos que pasan por
- *   wp_filter_content_tags (contenido de entradas y plantillas, que es donde
- *   vive un carrusel). Un carrusel pintado por otro camino (do_blocks en un
- *   shortcode propio) se queda con lo que ponga WordPress y con la marca en
- *   el HTML, que no hace nada.
- * - La otra trampa: WordPress solo da fetchpriority="high" a UNA foto por
- *   página, la primera grande (más de 50.000 px²) que encuentra. Si antes del
- *   carrusel hay otra foto grande, el carrusel no se trata como portada.
- * - Prueba: tests/carousel-images.test.mjs (nivel 3).
+ * How to maintain:
+ * - Who: whoever touches the carousel. When: if the style.css breakpoints
+ *   (480/782) change, change them in images_sizes() too.
+ * - Edge case: a child theme that renders the slides at a width other than
+ *   perView's (Lavandería: the home page gives each photo its own ratio, 442 /
+ *   629 / 596 wide at 596 high) does NOT match the calculation: it writes its
+ *   sizes in the block's imageSizes attribute. It is an ADJUSTMENT, not a new
+ *   block. There is also the filter estrategia_web_carousel_image_sizes( $sizes, $attributes ).
+ * - The trap: the filter only sees images that go through
+ *   wp_filter_content_tags (post and template content, which is where a
+ *   carousel lives). A carousel rendered some other way (do_blocks in a custom
+ *   shortcode) keeps whatever WordPress sets, with the mark left in the HTML,
+ *   where it does nothing.
+ * - The other trap: WordPress only gives fetchpriority="high" to ONE image per
+ *   page, the first large one (over 50,000 px²) it finds. If there is another
+ *   large image before the carousel, the carousel is not treated as the hero.
+ * - Test: tests/carousel-images.test.mjs (level 3).
  *
- * Desde la 1.1.0 del plugin vive aquí (antes, inc/carousel-images.php del
- * tema) y en el espacio de nombres EstrategiaWeb\Carousel: images_register(),
- * images_mark()… Los FILTROS conservan su nombre de siempre.
+ * Since plugin 1.1.0 it lives here (before, inc/carousel-images.php in the
+ * theme) and in the EstrategiaWeb\Carousel namespace: images_register(),
+ * images_mark()… The FILTERS keep their original names.
  */
 
 namespace EstrategiaWeb\Carousel;
@@ -103,7 +103,7 @@ function images_register( string $id, array $attributes ): void {
 		'eager' => max( 0, $eager ),
 		'sizes' => images_sizes( $attributes ),
 		'hero'  => false,
-		// 1.1.x: recorte para el móvil (null si no se pide). Ver carousel-mobile-crop.php.
+		// 1.1.x: mobile crop (null if not requested). See carousel-mobile-crop.php.
 		'crop'  => mobile_crop_config( $attributes ),
 	);
 }
@@ -251,11 +251,11 @@ function images_filter( $image, $context = '', $attachment_id = 0 ) {
 			$carousel['hero'] = true;
 		}
 		if ( $carousel['hero'] ) {
-			// Prioridad alta SOLO para la primera (0.7.9). Con las tres visibles
-			// en «high», en el móvil se pedían ~500 KB con prioridad y solo se ve
-			// una: bloqueando la 2 y la 3, el LCP local bajó de 6,6 a 4,6 s
-			// (Lavandería, 06-10-2026). Las demás visibles cargan ya (sin lazy),
-			// pero sin adelantarse a la primera.
+			// High priority ONLY for the first one (0.7.9). With all three visible
+			// ones at "high", on mobile ~500 KB were requested with priority while
+			// only one is visible: holding back 2 and 3, local LCP dropped from 6.6
+			// to 4.6 s (Lavandería, 06-10-2026). The other visible ones load right
+			// away (no lazy), but without getting ahead of the first.
 			if ( 0 === $slide ) {
 				$tag->set_attribute( 'fetchpriority', 'high' );
 			} else {
@@ -269,9 +269,9 @@ function images_filter( $image, $context = '', $attachment_id = 0 ) {
 	}
 
 	$sizes = (string) $tag->get_attribute( 'sizes' );
-	// Un sizes que ya es un ancho fijo («82px», lo pone el módulo
-	// featured-images a una imagen destacada de ancho fijo) es deliberado y
-	// más exacto que el de la diapositiva: se respeta (1.1.x).
+	// A sizes that is already a fixed width ("82px", set by the
+	// featured-images module on a fixed-width featured image) is deliberate and
+	// more accurate than the slide's: it is kept (1.1.x).
 	$fixed = (bool) preg_match( '/^\s*(?:auto\s*,\s*)?\d+(?:\.\d+)?px\s*$/i', $sizes );
 	if ( ! $fixed && null !== $tag->get_attribute( 'srcset' ) && '' !== $carousel['sizes'] ) {
 		$sizes = $carousel['sizes'];
@@ -282,7 +282,7 @@ function images_filter( $image, $context = '', $attachment_id = 0 ) {
 		$tag->set_attribute( 'sizes', ( $lazy ? 'auto, ' : '' ) . $sizes );
 	}
 	$html = $tag->get_updated_html();
-	// 1.1.x: en el móvil, un recorte de la foto con la forma de la caja (carousel-mobile-crop.php).
+	// 1.1.x: on mobile, a crop of the image shaped like the box (carousel-mobile-crop.php).
 	if ( ! empty( $carousel['crop'] ) && (int) $attachment_id > 0 ) {
 		$html = mobile_picture( $html, $carousel['crop'], (int) $attachment_id, (string) $tag->get_attribute( 'style' ) );
 	}

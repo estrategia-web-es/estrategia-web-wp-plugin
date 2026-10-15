@@ -1,75 +1,75 @@
 <?php
 /**
- * Enlaces externos en pestaña nueva (0.5.2): todo <a href> del FRONTAL cuyo
- * host no es el de la web sale con target="_blank", «noopener» en rel y el
- * aviso «(se abre en una pestaña nueva)» para lectores de pantalla.
+ * External links in a new tab (0.5.2): every FRONT-END <a href> whose host is
+ * not the site's gets target="_blank", «noopener» in rel and the notice
+ * «(opens in a new tab)» for screen readers.
  *
- * Por qué: lo pidió David el 06-10-2026 con un caso real, «Hablar con un
- * asesor» en /hosteleria/ de Lavandería, un botón a wa.me que sacaba al
- * visitante de la web. Lo mismo Google Maps, Facebook o un enlace del
- * contenido a otro dominio. Va en el plugin y no en el tema porque sirve a
- * cualquier web y no puede depender de que cada bloque lo marque a mano.
+ * Why: David asked for it on 2026-10-06 with a real case, «Hablar con un
+ * asesor» on Lavandería's /hosteleria/, a button to wa.me that took the
+ * visitor away from the site. Same for Google Maps, Facebook or a content
+ * link to another domain. It lives in the plugin and not in the theme because
+ * it serves any site and cannot depend on each block marking it by hand.
  *
- * Cómo:
- * - UN filtro sobre la página entera, no uno por bloque: el
- *   `wp_template_enhancement_output_buffer` del núcleo (6.9+; el plugin pide
- *   7.1). Pilla también lo que no es un bloque (el pie de un tema clásico, un
- *   shortcode, el aviso de cookies) y recorre el HTML UNA vez. El núcleo solo
- *   abre ese búfer en las plantillas del frontal y solo si es text/html: ni
- *   el escritorio, ni el editor, ni REST, ni los feeds pasan por aquí.
- * - Se engancha en `template_redirect`, cuando el functions.php del tema ya
- *   ha tenido ocasión de apagarlo; apagado, ni se abre el búfer (la página
- *   sigue saliendo en streaming).
- * - Con WP_HTML_Tag_Processor, nunca con expresiones regulares (lo pide el
- *   propio núcleo para ese filtro).
+ * How:
+ * - ONE filter over the whole page, not one per block: core's
+ *   `wp_template_enhancement_output_buffer` (6.9+; the plugin requires 7.1).
+ *   It also catches what is not a block (a classic theme's footer, a
+ *   shortcode, the cookie notice) and walks the HTML ONCE. Core only opens
+ *   that buffer for front-end templates and only for text/html: neither the
+ *   dashboard, nor the editor, nor REST, nor feeds go through here.
+ * - It hooks on `template_redirect`, when the theme's functions.php has
+ *   already had the chance to switch it off; when off, the buffer is not even
+ *   opened (the page keeps streaming).
+ * - With WP_HTML_Tag_Processor, never with regular expressions (core itself
+ *   asks for that in this filter).
  *
- * Qué cuenta como externo (is_external(), PURA, probada en el nivel 1):
- * - solo http(s) con host, o «//host/…»;
- * - host distinto del de home_url(), comparando SIN «www.» a los dos lados y
- *   aceptando los subdominios del de la web: con la web en x.es, www.x.es y
- *   tienda.x.es son internos. Sin lista de sufijos públicos a propósito: en
- *   el servidor de pruebas (lavanderamallorca.sg-host.com) otro.sg-host.com
- *   tiene que salir externo, y «el dominio registrable» lo haría interno.
+ * What counts as external (is_external(), PURE, tested at level 1):
+ * - only http(s) with a host, or «//host/…»;
+ * - a host different from home_url()'s, comparing WITHOUT «www.» on both sides
+ *   and accepting subdomains of the site's: with the site on x.es, www.x.es
+ *   and tienda.x.es are internal. No public suffix list, on purpose: on the
+ *   staging server (lavanderamallorca.sg-host.com) otro.sg-host.com has to
+ *   come out external, and «the registrable domain» would make it internal.
  *
- * Qué NO se toca:
- * - relativos, anclas (#), mailto:, tel:, sms:, javascript: y cualquier otro
- *   esquema que no sea http(s);
- * - los que YA traen target (cualquiera, también _self): quien lo puso
- *   decidió. Así el «Powered by» del aviso de cookies, que lleva su target,
- *   su rel y su aviso, no sale duplicado.
+ * What is NOT touched:
+ * - relative links, anchors (#), mailto:, tel:, sms:, javascript: and any
+ *   other scheme that is not http(s);
+ * - links that ALREADY have a target (any, _self included): whoever set it
+ *   decided. That way the cookie notice's «Powered by», which carries its own
+ *   target, rel and notice, does not come out duplicated.
  *
- * Accesibilidad: aria-label, no un <span> oculto. El Tag Processor no inserta
- *   HTML, solo atributos, así que el nombre accesible se rehace: el aria-label
- *   que ya tuviera, o el texto del enlace (más el alt de sus imágenes), y
- *   detrás «(opens in a new tab)», el MISMO msgid que el «Powered by» (en
- *   es_ES «(se abre en una pestaña nueva)»). Empieza por el texto visible, así
- *   que cumple «nombre en la etiqueta» (WCAG 2.5.3). Con aria-labelledby, o
- *   sin texto ninguno (un icono sin nombre, que ya está mal de antes), no se
- *   pone aria-label: taparía el nombre o diría solo «se abre en…».
+ * Accessibility: aria-label, not a hidden <span>. The Tag Processor does not
+ *   insert HTML, only attributes, so the accessible name is rebuilt: the
+ *   existing aria-label, or the link text (plus the alt of its images),
+ *   followed by «(opens in a new tab)», the SAME msgid as the «Powered by»
+ *   (in es_ES «(se abre en una pestaña nueva)»). It starts with the visible
+ *   text, so it meets «label in name» (WCAG 2.5.3). With aria-labelledby, or
+ *   with no text at all (an unnamed icon, already broken before), no
+ *   aria-label is set: it would hide the name or say only «opens in…».
  *
- * Apagar (por defecto, encendido), en el functions.php del tema:
+ * Switching it off (on by default), in the theme's functions.php:
  *     add_filter( 'estrategia_web_site_external_links', '__return_false' );
- * Filtro y no opción, como el WebP y el «Powered by»: decisión de quien hace
- * la web, no un dato del cliente. Un enlace suelto que deba abrirse en la
- * misma pestaña: ponerle target="_self" en el bloque (se respeta).
+ * A filter and not an option, like WebP and «Powered by»: a decision of
+ * whoever builds the site, not client data. A single link that must open in
+ * the same tab: give it target="_self" in the block (it is respected).
  *
- * Cómo se mantiene:
- * - Quién y cuándo: quien toque el plugin. Un esquema o un caso nuevo entra
- *   en is_external() y en tests/php/pure.php (nivel 1) con su assert en
- *   tests/pure.test.mjs; lo que dependa de pintar la página, en
- *   tests/external-links.test.mjs (nivel 2).
- * - EL CASO FRONTERA: el enlace a la web VIEJA del cliente en otro dominio
- *   (lavanderiamallorca.com desde lavanderamallorca.sg-host.com, o al revés
- *   tras el cambio de dominio) ES EXTERNO: lo que decide es el host de
- *   home_url(), no de quién es la web. Si una web tiene dos dominios propios
- *   de verdad, se pone target="_self" en esos enlaces; no se añade aquí una
- *   lista de dominios «de la casa».
- * - La trampa: el filtro corre DENTRO del callback del búfer de salida.
- *   Ahí no se puede imprimir nada ni abrir otro ob_start() (error fatal de
- *   PHP), y una excepción la recoge el núcleo y sirve la página sin tocar:
- *   un fallo aquí no rompe la web, pero deja los enlaces como estaban SIN
- *   avisar. Si un día «dejan de abrirse en pestaña nueva», mirar el log de
- *   PHP antes que el código.
+ * How to maintain:
+ * - Who and when: whoever touches the plugin. A new scheme or case goes into
+ *   is_external() and tests/php/pure.php (level 1) with its assert in
+ *   tests/pure.test.mjs; whatever depends on rendering the page goes in
+ *   tests/external-links.test.mjs (level 2).
+ * - THE EDGE CASE: a link to the client's OLD site on another domain
+ *   (lavanderiamallorca.com from lavanderamallorca.sg-host.com, or the other
+ *   way round after the domain switch) IS EXTERNAL: what decides is
+ *   home_url()'s host, not who owns the site. If a site really has two own
+ *   domains, put target="_self" on those links; do not add a list of «in-house»
+ *   domains here.
+ * - The pitfall: the filter runs INSIDE the output buffer callback. Nothing
+ *   can be printed there nor another ob_start() opened (PHP fatal error), and
+ *   an exception is caught by core, which serves the page untouched: a
+ *   failure here does not break the site, but leaves the links as they were
+ *   WITHOUT warning. If one day they «stop opening in a new tab», check the
+ *   PHP log before the code.
  */
 
 namespace EstrategiaWeb\Site;
@@ -82,7 +82,7 @@ final class External_Links {
 
 	public static function maybe_enable(): void {
 		/**
-		 * Si los enlaces a otro dominio se abren en pestaña nueva. Por defecto, sí.
+		 * Whether links to another domain open in a new tab. Yes by default.
 		 *
 		 * @param bool $enabled
 		 */
@@ -91,7 +91,7 @@ final class External_Links {
 		}
 	}
 
-	/** El filtro del búfer: la página entera, con el host de la web. */
+	/** The buffer filter: the whole page, with the site's host. */
 	public static function filter_output( $html ): string {
 		$html = (string) $html;
 		$home = (string) wp_parse_url( home_url(), PHP_URL_HOST );
@@ -102,8 +102,9 @@ final class External_Links {
 	}
 
 	/**
-	 * Recorre los <a href> y marca los externos. Sin funciones de WordPress
-	 * salvo WP_HTML_Tag_Processor: el texto del aviso llega ya traducido.
+	 * Walks the <a href> tags and marks the external ones. No WordPress
+	 * functions except WP_HTML_Tag_Processor: the notice text arrives already
+	 * translated.
 	 */
 	public static function rewrite( string $html, string $home_host, string $notice ): string {
 		$texts = self::link_texts( $html );
@@ -136,13 +137,13 @@ final class External_Links {
 	}
 
 	/**
-	 * Primera pasada: el texto de cada <a> (y el alt de sus imágenes), por su
-	 * orden en la página. En dos pasadas y no con set_bookmark()/seek() a
-	 * propósito: el Tag Processor limita los seek() por documento (1.000) y
-	 * una página con muchos enlaces se quedaría a medias. Los <a> no se
-	 * anidan: el siguiente A, abra o cierre, termina el anterior.
+	 * First pass: the text of each <a> (and the alt of its images), in page
+	 * order. Two passes and not set_bookmark()/seek() on purpose: the Tag
+	 * Processor limits seek() calls per document (1,000) and a page with many
+	 * links would be left half done. <a> tags do not nest: the next A, opener
+	 * or closer, ends the previous one.
 	 *
-	 * @return array<int, string> Índice del <a> (0, 1…) => texto.
+	 * @return array<int, string> Index of the <a> (0, 1…) => text.
 	 */
 	private static function link_texts( string $html ): array {
 		$p     = new \WP_HTML_Tag_Processor( $html );
@@ -176,13 +177,13 @@ final class External_Links {
 		return $texts;
 	}
 
-	/** Si el enlace sale de la web. PURA: tests/php/pure.php. */
+	/** Whether the link leaves the site. PURE: tests/php/pure.php. */
 	public static function is_external( string $href, string $home_host ): bool {
 		$href = trim( $href );
 		if ( str_starts_with( $href, '//' ) ) {
 			$href = 'https:' . $href;
 		}
-		$parts = parse_url( $href ); // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url -- clase pura.
+		$parts = parse_url( $href ); // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url -- pure class.
 		if ( ! is_array( $parts ) || empty( $parts['host'] ) || empty( $parts['scheme'] ) ) {
 			return false;
 		}
@@ -200,7 +201,7 @@ final class External_Links {
 		return str_starts_with( $host, 'www.' ) ? substr( $host, 4 ) : $host;
 	}
 
-	/** Añade un valor a rel sin quitar los que ya hay ni repetirlo. PURA. */
+	/** Adds a value to rel without removing existing ones or repeating it. PURE. */
 	public static function add_rel( string $rel, string $token ): string {
 		$tokens = preg_split( '/\s+/', trim( $rel ), -1, PREG_SPLIT_NO_EMPTY );
 		foreach ( $tokens as $t ) {

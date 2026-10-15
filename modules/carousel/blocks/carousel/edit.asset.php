@@ -1,7 +1,7 @@
 <?php
 /**
- * Dependencias de edit.js (script clásico), ESCRITAS A MANO. Cada global wp.*
- * que use edit.js tiene que estar aquí, o en el editor sale «wp.x is undefined».
+ * Dependencies of edit.js (classic script), WRITTEN BY HAND. Every wp.* global
+ * that edit.js uses must be listed here, or the editor shows "wp.x is undefined".
  */
 return array(
 	'dependencies' => array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n' ),

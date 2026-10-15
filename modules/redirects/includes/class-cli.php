@@ -1,19 +1,19 @@
 <?php
 /**
- * Redirecciones desde WP-CLI. Pensado para desplegar: el CSV vive en el repo
- * de la web y el desplegador lo importa (idempotente: ver Importer).
+ * Redirects from WP-CLI. Meant for deployment: the CSV lives in the site's
+ * repo and the deployer imports it (idempotent: see Importer).
  *
- *   wp estrategia-web redirects import fichero.csv [--dry-run]
- *   wp estrategia-web redirects list [--search=<texto>] [--format=table|csv|json|count]
- *   wp estrategia-web redirects export [<fichero>]
+ *   wp estrategia-web redirects import file.csv [--dry-run]
+ *   wp estrategia-web redirects list [--search=<text>] [--format=table|csv|json|count]
+ *   wp estrategia-web redirects export [<file>]
  *
- * Solo existe con el módulo encendido (un módulo apagado no carga nada). Si
- * `wp estrategia-web redirects` dice que no existe, es eso: encenderlo con
- * `wp option update estrategia_web_modules '[…,"redirects"]' --format=json`
- * o en la pantalla de Módulos.
+ * It only exists with the module enabled (a disabled module loads nothing).
+ * If `wp estrategia-web redirects` says it doesn't exist, that's why: enable
+ * it with `wp option update estrategia_web_modules '[…,"redirects"]' --format=json`
+ * or on the Modules screen.
  *
- * Sale con error (código 1) si alguna fila del CSV no entra: un despliegue
- * no puede dar por buena una importación a medias sin que nadie lo lea.
+ * Exits with an error (code 1) if any CSV row fails: a deployment cannot
+ * accept a half-done import without anyone reading it.
  */
 
 namespace EstrategiaWeb\Redirects;
@@ -23,15 +23,15 @@ defined( 'ABSPATH' ) || exit;
 final class Cli {
 
 	/**
-	 * Importa reglas de un CSV (origen,destino,tipo,motivo…). Actualiza las que ya existen.
+	 * Imports rules from a CSV (origen,destino,tipo,motivo…). Updates the ones that already exist.
 	 *
 	 * ## OPTIONS
 	 *
 	 * <file>
-	 * : Ruta del CSV.
+	 * : Path to the CSV.
 	 *
 	 * [--dry-run]
-	 * : Dice qué haría sin escribir nada.
+	 * : Reports what it would do without writing anything.
 	 *
 	 * @param string[]             $args
 	 * @param array<string, mixed> $assoc
@@ -39,14 +39,14 @@ final class Cli {
 	public function import( array $args, array $assoc ): void {
 		$file = (string) ( $args[0] ?? '' );
 		if ( ! is_readable( $file ) ) {
-			\WP_CLI::error( "No se puede leer $file" );
+			\WP_CLI::error( "Cannot read $file" );
 		}
 		$dry    = ! empty( $assoc['dry-run'] );
 		$report = Importer::import( (string) file_get_contents( $file ), $dry );
 		foreach ( $report['errors'] as $e ) {
-			\WP_CLI::warning( sprintf( 'línea %d (%s): %s', $e['line'], $e['source'], $e['message'] ) );
+			\WP_CLI::warning( sprintf( 'line %d (%s): %s', $e['line'], $e['source'], $e['message'] ) );
 		}
-		$summary = sprintf( '%s%d nuevas, %d actualizadas, %d sin cambios, %d con error.', $dry ? '[--dry-run] ' : '', $report['created'], $report['updated'], $report['unchanged'], count( $report['errors'] ) );
+		$summary = sprintf( '%s%d new, %d updated, %d unchanged, %d with errors.', $dry ? '[--dry-run] ' : '', $report['created'], $report['updated'], $report['unchanged'], count( $report['errors'] ) );
 		if ( $report['errors'] ) {
 			\WP_CLI::error( $summary );
 		}
@@ -54,15 +54,15 @@ final class Cli {
 	}
 
 	/**
-	 * Lista las reglas.
+	 * Lists the rules.
 	 *
 	 * ## OPTIONS
 	 *
 	 * [--search=<text>]
-	 * : Filtra por origen, destino o nota.
+	 * : Filters by source, target or note.
 	 *
 	 * [--format=<format>]
-	 * : table, csv, json o count.
+	 * : table, csv, json or count.
 	 * ---
 	 * default: table
 	 * ---
@@ -79,12 +79,12 @@ final class Cli {
 	}
 
 	/**
-	 * Exporta las reglas a CSV (a la salida, o a un fichero).
+	 * Exports the rules to CSV (to standard output, or to a file).
 	 *
 	 * ## OPTIONS
 	 *
 	 * [<file>]
-	 * : Fichero de salida. Sin él, a la salida estándar.
+	 * : Output file. Without it, standard output.
 	 *
 	 * @param string[] $args
 	 */
@@ -92,9 +92,9 @@ final class Cli {
 		$csv = Importer::export();
 		if ( isset( $args[0] ) ) {
 			file_put_contents( $args[0], $csv );
-			\WP_CLI::success( 'Exportado a ' . $args[0] );
+			\WP_CLI::success( 'Exported to ' . $args[0] );
 			return;
 		}
-		echo $csv; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSV a la consola.
+		echo $csv; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSV to the console.
 	}
 }

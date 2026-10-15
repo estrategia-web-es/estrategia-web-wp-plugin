@@ -1,14 +1,14 @@
 <?php
 /**
- * Pantalla «Estrategia Web → Google» (manage_options): los tres ids, la
- * etiqueta de conversión de formularios y el modo. Guarda por options.php
- * (Settings API): el saneado es Google_Tags::sanitize, el mismo que por REST.
+ * «Estrategia Web → Google» screen (manage_options): the three ids, the form
+ * conversion label and the mode. Saves through options.php (Settings API):
+ * sanitization is Google_Tags::sanitize, the same as over REST.
  *
- * Cómo se mantiene: un campo nuevo, su fila en render() con el name
- * estrategia_web_google_tags[clave] (y lo demás en la cabecera de
- * class-google-tags.php). La trampa: el grupo de settings_fields() tiene que
- * ser el de register_setting ('estrategia_web_google_tags'), o options.php
- * contesta «la opción no está en la lista permitida».
+ * How to maintain: a new field gets its row in render() with the name
+ * estrategia_web_google_tags[key] (the rest is in the header of
+ * class-google-tags.php). The pitfall: the settings_fields() group has to be
+ * the register_setting one ('estrategia_web_google_tags'), or options.php
+ * answers «the option is not in the allowed options list».
  */
 
 namespace EstrategiaWeb\GoogleTags;
@@ -22,7 +22,7 @@ final class Google_Tags_Page {
 	public const PAGE = 'estrategia-web-google';
 
 	public static function boot(): void {
-		add_action( 'admin_menu', array( self::class, 'menu' ), 20 ); // Después del menú «Estrategia Web» (10).
+		add_action( 'admin_menu', array( self::class, 'menu' ), 20 ); // After the «Estrategia Web» menu (10).
 	}
 
 	public static function menu(): void {

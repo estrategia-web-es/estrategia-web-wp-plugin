@@ -5,28 +5,28 @@
  * Default: on
  * Requires:
  *
- * Bloque estrategia-web/whatsapp. Hasta la 1.0.0 lo registraba el tema padre,
- * con sus dos opciones (ver modules/carousel/module.php: el mismo traslado).
- * Todo lo que hace, en la cabecera de blocks/whatsapp/render.php. El tema lo
- * pone en su pie (parts/footer.html): con este módulo apagado, el pie sale
- * sin botón y sin error.
+ * Block estrategia-web/whatsapp. Until 1.0.0 the parent theme registered it,
+ * with its two options (see modules/carousel/module.php: the same move).
+ * Everything it does, in the header of blocks/whatsapp/render.php. The theme
+ * puts it in its footer (parts/footer.html): with this module off, the
+ * footer renders without the button and without error.
  *
- * Opciones (los nombres de la 1.0.0): estrategia_web_whatsapp_phone y
- * estrategia_web_whatsapp_message. Sin pantalla propia (no se hace una página
- * de ajustes para dos campos):
+ * Options (the 1.0.0 names): estrategia_web_whatsapp_phone and
+ * estrategia_web_whatsapp_message. No screen of its own (a settings page is
+ * not built for two fields):
  *     wp option update estrategia_web_whatsapp_phone 34600111222
- *     wp option update estrategia_web_whatsapp_message "Hola, os escribo desde la web"
- * o por REST en /wp/v2/settings (por eso show_in_rest).
+ *     wp option update estrategia_web_whatsapp_message "Hi, I'm writing from the website"
+ * or via REST at /wp/v2/settings (hence show_in_rest).
  *
- * Alias: si las opciones nuevas no existen se leen las de «Armazón»
- * (armazon_whatsapp_*); nada se escribe aquí, migrar es del migrador. Se
- * quita en la 2.0.0, con el resto de alias.
+ * Alias: if the new options do not exist, the “Armazón” ones are read
+ * (armazon_whatsapp_*); nothing is written here, migrating is the migrator's
+ * job. Removed in 2.0.0, with the other aliases.
  *
- * Block Bindings: phone, message y label se pueden enlazar (el número de la
- * empresa, de la fuente del módulo site). Ver la explicación en
+ * Block Bindings: phone, message and label can be bound (the company's
+ * number, from the site module's source). See the explanation in
  * modules/map/module.php.
  *
- * Pruebas: en el repo del tema (armazon-wp-padre/tests/whatsapp.test.mjs).
+ * Tests: in the theme repo (armazon-wp-padre/tests/whatsapp.test.mjs).
  */
 
 namespace EstrategiaWeb\Whatsapp;

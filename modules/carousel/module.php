@@ -5,21 +5,21 @@
  * Default: on
  * Requires:
  *
- * Bloque estrategia-web/carousel. Hasta la 1.0.0 lo registraba el tema
- * padre; WordPress.org no deja que un tema registre bloques y se trajo aquí
- * tal cual (14-10-2026). Todo lo que hace, en la cabecera de
- * blocks/carousel/render.php; la prioridad, la carga diferida y el sizes de
- * sus fotos, en includes/carousel-images.php; el recorte para el móvil
- * (mobileRatio, 1.1.x), en includes/carousel-mobile-crop.php. WordPress
- * sirve blocks/carousel/view.min.js: tras editar view.js, `node tools/minify.mjs`.
+ * The estrategia-web/carousel block. Up to 1.0.0 the parent theme
+ * registered it; WordPress.org does not allow a theme to register blocks, so
+ * it was moved here as is (14-10-2026). Everything it does is in the header
+ * of blocks/carousel/render.php; the priority, lazy loading and sizes of its
+ * images, in includes/carousel-images.php; the mobile crop (mobileRatio,
+ * 1.1.x), in includes/carousel-mobile-crop.php. WordPress serves
+ * blocks/carousel/view.min.js: after editing view.js, run `node tools/minify.mjs`.
  *
- * Sin el plugin (o con este módulo apagado) las plantillas y patrones del
- * tema que lo usan no dan error: WordPress no pinta un bloque que no está
- * registrado.
+ * Without the plugin (or with this module off) the theme templates and
+ * patterns that use it do not error: WordPress does not render a block that
+ * is not registered.
  *
- * Pruebas: siguen en el repo del tema (armazon-wp-padre/tests/carousel*.test.mjs),
- * porque miden el carrusel con el CSS del tema y su sitio de pruebas; aquel
- * servidor monta este plugin. Moverlas aquí es un pendiente (PENDIENTES.md).
+ * Tests: they are still in the theme repo (armazon-wp-padre/tests/carousel*.test.mjs),
+ * because they measure the carousel with the theme CSS and its test site;
+ * that server mounts this plugin. Moving them here is pending (PENDIENTES.md).
  */
 
 namespace EstrategiaWeb\Carousel;

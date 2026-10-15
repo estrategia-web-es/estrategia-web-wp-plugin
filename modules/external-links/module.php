@@ -5,9 +5,9 @@
  * Default: on
  * Requires:
  *
- * Qué hace y cómo se mantiene, en includes/class-external-links.php. El
- * filtro estrategia_web_site_external_links conserva su nombre de la 1.0.0.
- * Prueba: modules/external-links/tests/ y el caso puro en
+ * What it does and how to maintain it: includes/class-external-links.php. The
+ * estrategia_web_site_external_links filter keeps its name from 1.0.0.
+ * Tests: modules/external-links/tests/ and the pure case in
  * modules/site/tests/php/pure.php.
  */
 

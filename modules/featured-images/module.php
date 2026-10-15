@@ -5,51 +5,51 @@
  * Default: on
  * Requires:
  *
- * Nació con las fichas de cliente de la portada de Lavandería (14-10-2026):
- * un core/post-featured-image dentro de una Consulta, a 82×54 px, servía
- * una imagen de 300×224 con sizes="auto, (max-width:1384px) 100vw, 1384px"
- * (PageSpeed: imágenes mal dimensionadas) y su alt repetía el nombre del
- * cliente que la ficha ya pinta al lado (Lighthouse, accesibilidad: «texto
- * alternativo redundante»). Tres arreglos, genéricos:
+ * Born with the client cards on Lavandería's home page (14-10-2026): a
+ * core/post-featured-image inside a Query, at 82×54 px, served a 300×224
+ * image with sizes="auto, (max-width:1384px) 100vw, 1384px" (PageSpeed:
+ * improperly sized images) and its alt repeated the client name the card
+ * already shows next to it (Lighthouse, accessibility: "redundant alt
+ * text"). Three generic fixes:
  *
- * 1. sizes: si el bloque tiene un ancho FIJO en px (atributo width «82px»),
- *    el <img> lleva sizes="82px" (con «auto, » delante si es diferida). Otras
- *    unidades (%, em, vw) o sin ancho: no se toca; ahí el sizes de WordPress
- *    o el del contenedor (el carrusel) es mejor que una suposición.
- *    El carrusel respeta un sizes que ya es un ancho fijo en px (ver
+ * 1. sizes: if the block has a FIXED width in px (width attribute "82px"),
+ *    the <img> gets sizes="82px" (with "auto, " in front if it is lazy).
+ *    Other units (%, em, vw) or no width: left alone; there WordPress' sizes
+ *    or the container's (the carousel) is better than a guess.
+ *    The carousel respects a sizes that is already a fixed px width (see
  *    modules/carousel/includes/carousel-images.php).
- * 2. Un tamaño pequeño, «estrategia-web-small»: 200 px de ancho, alto libre,
- *    sin recortar. Sin él, entre la miniatura (150×150, RECORTADA: no entra
- *    en el srcset de una imagen que no es cuadrada) y la mediana (300) no hay
- *    candidato para 82 px a 2x. Se genera en TODA subida nueva (un fichero
- *    de pocos KB más por foto). LO YA SUBIDO NO LO TIENE: en el servidor hay
- *    que pasar `wp media regenerate --only-missing --yes` una vez.
- * 3. alt="" (decorativa) cuando la imagen destacada está en la plantilla de
- *    una Consulta (core/post-template) que TAMBIÉN pinta el título de la
- *    entrada (core/post-title), y el alt de la imagen ES ese título (igual
- *    sin contar mayúsculas, espacios ni etiquetas). Criterio escrito: solo se
- *    quita lo que ya se lee al lado, palabra por palabra; un alt que describe
- *    la foto («Secadoras industriales…») no se toca nunca, aunque haya
- *    título. Y nunca si la imagen es un ENLACE (isLink): sin alt, el enlace
- *    se quedaría sin nombre.
+ * 2. A small size, "estrategia-web-small": 200 px wide, free height, not
+ *    cropped. Without it, between the thumbnail (150×150, CROPPED: it does
+ *    not go into the srcset of a non-square image) and medium (300) there is
+ *    no candidate for 82 px at 2x. It is generated on EVERY new upload (one
+ *    more file of a few KB per photo). EXISTING UPLOADS DO NOT HAVE IT: on
+ *    the server, run `wp media regenerate --only-missing --yes` once.
+ * 3. alt="" (decorative) when the featured image is in the template of a
+ *    Query (core/post-template) that ALSO shows the post title
+ *    (core/post-title), and the image's alt IS that title (equal ignoring
+ *    case, spaces and tags). Written criterion: only what is already read
+ *    next to it, word for word, is removed; an alt that describes the photo
+ *    ("Industrial dryers…") is never touched, even if there is a title. And
+ *    never if the image is a LINK (isLink): without alt, the link would have
+ *    no name.
  *
- * Por qué nace encendido: lo usa Lavandería, ya desplegada, y no cambia
- * nada visible (el alt solo lo oye un lector de pantalla, y ahí deja de
- * repetirse). Se enciende solo al desplegar.
+ * Why it ships on: Lavandería, already deployed, uses it, and it changes
+ * nothing visible (the alt is only heard by a screen reader, and there it
+ * stops repeating). It switches itself on when deployed.
  *
- * Cómo se mantiene:
- * - Quién: quien toque imágenes destacadas o el carrusel. Cuándo: si
- *   WordPress empieza a poner él un sizes al ancho fijo (lo mira en cada
- *   versión mayor: el día que lo haga, el punto 1 sobra).
- * - Caso frontera, con nombre: la ficha de cliente CON enlace a su web
- *   (featured image con isLink). Ahí el alt se queda aunque repita el
- *   título: es el nombre del enlace.
- * - Filtro: estrategia_web_featured_image_decorative( $decorative, $post_id, $alt )
- *   para decidir caso a caso.
- * - La trampa: el carrusel corre DESPUÉS (wp_content_img_tag, sobre toda la
- *   plantilla) y ponía su sizes a todas las fotos con srcset, también a
- *   estas. Por eso respeta ahora un sizes que ya es «Npx».
- * - Prueba: modules/featured-images/tests/ (nivel 2).
+ * How to maintain:
+ * - Who: whoever touches featured images or the carousel. When: if
+ *   WordPress starts setting a sizes for the fixed width itself (check on
+ *   every major version: the day it does, point 1 is redundant).
+ * - Edge case, by name: the client card WITH a link to its website
+ *   (featured image with isLink). There the alt stays even if it repeats the
+ *   title: it is the link's name.
+ * - Filter: estrategia_web_featured_image_decorative( $decorative, $post_id, $alt )
+ *   to decide case by case.
+ * - The pitfall: the carousel runs AFTER (wp_content_img_tag, over the whole
+ *   template) and used to set its sizes on every photo with a srcset, these
+ *   too. That is why it now respects a sizes that is already "Npx".
+ * - Test: modules/featured-images/tests/ (level 2).
  */
 
 namespace EstrategiaWeb\FeaturedImages;

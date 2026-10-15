@@ -1,17 +1,17 @@
 <?php
 /**
- * Ajustes del módulo (opción estrategia_web_redirects_settings) y la purga
- * diaria del registro de 404.
+ * Module settings (option estrategia_web_redirects_settings) and the daily
+ * purge of the 404 log.
  *
- * - log_404 (apagado de serie): apuntar las rutas que dan 404 sin regla.
- *   Apagado porque es una escritura por 404 y solo hace falta mientras se
- *   revisa una migración.
- * - log_days (90): lo que no se ve en ese tiempo sale del registro.
+ * - log_404 (off by default): record paths that give a 404 with no rule.
+ *   Off because it is one write per 404 and is only needed while a migration
+ *   is being reviewed.
+ * - log_days (90): whatever isn't seen in that time leaves the log.
  *
- * La purga es un cron diario programado de forma idempotente en init (como
- * forms): encender el módulo no pasa por la activación del plugin. Al
- * desactivar el PLUGIN se quita; al apagar solo el MÓDULO se queda
- * programado sin nadie que lo escuche y no hace nada.
+ * The purge is a daily cron scheduled idempotently on init (like forms):
+ * enabling the module doesn't go through plugin activation. Deactivating the
+ * PLUGIN removes it; switching off only the MODULE leaves it scheduled with
+ * nobody listening, and it does nothing.
  */
 
 namespace EstrategiaWeb\Redirects;
@@ -40,7 +40,7 @@ final class Settings {
 				'log_404'  => $log_404,
 				'log_days' => min( 3650, max( 1, $log_days ) ),
 			),
-			true // Se lee en cada 404: que venga con las autocargadas.
+			true // Read on every 404: load it with the autoloaded options.
 		);
 	}
 

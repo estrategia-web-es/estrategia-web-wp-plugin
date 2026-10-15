@@ -1,8 +1,8 @@
 <?php
 /**
- * Al BORRAR el plugin: se borra la opción de las subidas (tres números de
- * configuración, nada que el cliente haya escrito). Las fotos subidas y sus
- * tamaños no se tocan.
+ * When the plugin is DELETED: the uploads option is deleted (three
+ * configuration numbers, nothing the client wrote). Uploaded photos and
+ * their sizes are not touched.
  */
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;

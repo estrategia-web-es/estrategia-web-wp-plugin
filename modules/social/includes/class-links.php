@@ -1,48 +1,49 @@
 <?php
 /**
- * La lista de redes: la opción estrategia_web_social_links, su saneado y lo
- * que recibe el bloque ya resuelto (nombre, enlace, icono).
+ * The list of networks: option estrategia_web_social_links, its sanitizing
+ * and what the block receives already resolved (name, link, icon).
  *
- * Forma guardada: una lista ORDENADA de
+ * Stored shape: an ORDERED list of
  *     { "name": "Instagram", "url": "https://instagram.com/x", "icon": "instagram", "icon_id": 0 }
- * - icon: un slug de la colección (Icons::labels()) o '' = adivinarlo del
- *   enlace al pintar (Icons::guess: instagram.com → instagram; si no es de
- *   ninguna red, «website»).
- * - icon_id: un SVG de la mediateca; si vale, manda sobre icon.
- * - name: lo que se lee. Vacío = el nombre del icono («Instagram»).
- * Se escribe en la pantalla «Estrategia Web → Redes sociales» o por REST
- * (/wp/v2/settings, solo administradores):
+ * - icon: a collection slug (Icons::labels()) or '' = guess it from the
+ *   link when rendering (Icons::guess: instagram.com → instagram; if it is
+ *   no known network, “website”).
+ * - icon_id: an SVG from the media library; if valid, it overrides icon.
+ * - name: what is read out. Empty = the icon's name (“Instagram”).
+ * Written from the “Estrategia Web → Social networks” screen or via REST
+ * (/wp/v2/settings, administrators only):
  *     wp option update estrategia_web_social_links '[{"name":"Instagram","url":"https://instagram.com/x"}]' --format=json
  *
- * Cómo se mantiene:
- * - Quién y cuándo: quien añada un campo a cada red (p. ej. «solo en el
- *   pie»), aquí (FIELDS, sanitize_item, esquema de REST), en la pantalla y en
- *   wpml-config.xml si se lee.
- * - CASO FRONTERA con nombre: una web que ya tenía las redes en «Datos de la
- *   empresa» (los seis campos fijos social.instagram, etc., del módulo site,
- *   que desde el 15-10-2026 ya no salen en esa pantalla). migrate(), en
- *   `init`: si esta opción NO EXISTE y alguno de esos campos tiene valor, los
- *   copia aquí UNA vez, en su orden y con su icono, con add_option (si otra
- *   petición llega a la vez, la segunda no hace nada). Los valores viejos se
- *   quedan guardados en estrategia_web_site: no se borra ningún dato.
- *   Después manda SOLO la lista, también si se vacía: guardar [] no
- *   resucita los campos viejos. Sin campos con valor no se escribe nada, así
- *   que una carga de contenido que todavía mande `social` por REST a «Datos
- *   de la empresa» se migra en la petición siguiente, mientras la lista no se
- *   haya guardado; con la lista ya guardada, eso se ignora.
- * - Alias `social.<red>` (Company::value, la fuente de Block Bindings y el
- *   shortcode) HASTA LA 2.0.0: url_for() da el enlace de la primera red de
- *   la lista con ese icono (elegido o adivinado del enlace). En la 2.0.0 se
- *   quitan las claves social.<red> y el objeto `social` de la opción del
- *   módulo site (versión mayor: es contrato).
- * - Con WPML: name y url se traducen como textos de administración
- *   (wpml-config.xml, <admin-texts>), por POSICIÓN en la lista. La trampa:
- *   reordenar la lista desplaza las traducciones (la del 2º pasa a ser del
- *   que ahora es 2º). Tras reordenar, repasar la traducción. Sin probar con
- *   WPML (Playground no lo tiene).
- * - La trampa de la pantalla: con la lista VACÍA el navegador no manda el
- *   campo y options.php no guardaría nada. Va un oculto vacío delante, que
- *   sanitize() descarta (no es un array).
+ * How to maintain:
+ * - Who and when: whoever adds a per-network field (e.g. “footer only”),
+ *   here (FIELDS, sanitize_item, REST schema), on the screen and in
+ *   wpml-config.xml if it is read out.
+ * - Named EDGE CASE: a site that already had its networks in “Company
+ *   details” (the six fixed fields social.instagram, etc., of the site
+ *   module, which since 2026-10-15 no longer appear on that screen).
+ *   migrate(), on `init`: if this option does NOT EXIST and any of those
+ *   fields has a value, it copies them here ONCE, in their order and with
+ *   their icon, with add_option (if another request arrives at the same
+ *   time, the second does nothing). The old values stay stored in
+ *   estrategia_web_site: no data is deleted. From then on ONLY the list
+ *   rules, even if emptied: saving [] does not bring the old fields back.
+ *   With no fields holding a value nothing is written, so a content load
+ *   that still sends `social` via REST to “Company details” is migrated on
+ *   the next request, as long as the list has not been saved; once the list
+ *   is saved, that is ignored.
+ * - Alias `social.<network>` (Company::value, the Block Bindings source and
+ *   the shortcode) UNTIL 2.0.0: url_for() returns the link of the first
+ *   network in the list with that icon (chosen or guessed from the link).
+ *   In 2.0.0 the social.<network> keys and the `social` object of the site
+ *   module's option are removed (major version: it is a contract).
+ * - With WPML: name and url are translated as admin texts
+ *   (wpml-config.xml, <admin-texts>), by POSITION in the list. The trap:
+ *   reordering the list shifts the translations (the 2nd one's becomes the
+ *   one for whatever is now 2nd). After reordering, review the translation.
+ *   Not tested with WPML (Playground does not have it).
+ * - The screen's trap: with an EMPTY list the browser does not send the
+ *   field and options.php would save nothing. An empty hidden input goes
+ *   first, which sanitize() discards (it is not an array).
  */
 
 namespace EstrategiaWeb\Social;
@@ -56,16 +57,16 @@ final class Links {
 
 	public const OPTION = 'estrategia_web_social_links';
 
-	/** Grupo de la Settings API (el settings_fields() de la pantalla). */
+	/** Settings API group (the screen's settings_fields()). */
 	public const GROUP = 'estrategia_web_social';
 
-	/** Tope de redes: una lista que crece sin control es un error de quien la carga. */
+	/** Cap on networks: a list growing unchecked is a mistake by whoever loads it. */
 	public const MAX = 30;
 
-	/** Esquemas de enlace admitidos. Ni javascript: ni data:, claro. */
+	/** Allowed link schemes. No javascript: or data:, of course. */
 	public const PROTOCOLS = array( 'http', 'https', 'mailto', 'tel' );
 
-	/** Las redes que había en «Datos de la empresa» (Settings::SOCIAL del módulo site) → icono. */
+	/** The networks that lived in “Company details” (Settings::SOCIAL of the site module) → icon. */
 	private const COMPANY = array( 'instagram', 'facebook', 'linkedin', 'x', 'youtube', 'tiktok' );
 
 	public static function register(): void {
@@ -94,7 +95,7 @@ final class Links {
 		);
 	}
 
-	/** @param mixed $input Lo que llega del formulario o de REST. */
+	/** @param mixed $input What arrives from the form or from REST. */
 	public static function sanitize( $input ): array {
 		$out = array();
 		foreach ( is_array( $input ) ? $input : array() as $item ) {
@@ -109,7 +110,7 @@ final class Links {
 		return $out;
 	}
 
-	/** Una red saneada, o null si no tiene un enlace válido (una fila vacía de la pantalla). */
+	/** One sanitized network, or null if it has no valid link (an empty row on the screen). */
 	public static function sanitize_item( $item ): ?array {
 		if ( is_object( $item ) ) {
 			$item = (array) $item;
@@ -119,7 +120,7 @@ final class Links {
 		}
 		$url = trim( (string) ( $item['url'] ?? '' ) );
 		if ( is_email( $url ) ) {
-			$url = 'mailto:' . $url; // Quien escribe solo el correo quiere un mailto.
+			$url = 'mailto:' . $url; // Whoever types just the email address wants a mailto.
 		}
 		$url = '' === $url ? '' : esc_url_raw( $url, self::PROTOCOLS );
 		if ( '' === $url ) {
@@ -135,20 +136,20 @@ final class Links {
 		);
 	}
 
-	/** Si la lista se ha guardado alguna vez (la migración cuenta). */
+	/** Whether the list has ever been saved (the migration counts). */
 	public static function saved(): bool {
 		return null !== get_option( self::OPTION, null );
 	}
 
-	/** La lista guardada; vacía si no hay (la migración de `init` ya trajo las de la empresa). */
+	/** The saved list; empty if none (the `init` migration already brought the company ones). */
 	public static function items(): array {
 		return self::sanitize( get_option( self::OPTION, array() ) );
 	}
 
 	/**
-	 * La migración de los campos fijos de «Datos de la empresa» (ver el caso
-	 * frontera de la cabecera). Idempotente: con la lista ya guardada, o sin
-	 * campos con valor, no hace nada.
+	 * Migration of the fixed fields of “Company details” (see the edge case
+	 * in the header). Idempotent: with the list already saved, or with no
+	 * fields holding a value, it does nothing.
 	 */
 	public static function migrate(): void {
 		if ( self::saved() ) {
@@ -161,9 +162,9 @@ final class Links {
 	}
 
 	/**
-	 * El alias `social.<red>` hasta la 2.0.0: el enlace de la primera red de
-	 * la lista con ese icono (elegido, o adivinado del enlace si es automático).
-	 * Antes de migrar (una lectura anterior a `init`), el campo viejo.
+	 * The `social.<network>` alias until 2.0.0: the link of the first network
+	 * in the list with that icon (chosen, or guessed from the link if automatic).
+	 * Before migrating (a read earlier than `init`), the old field.
 	 */
 	public static function url_for( string $network ): string {
 		if ( ! self::saved() ) {
@@ -178,7 +179,7 @@ final class Links {
 		return '';
 	}
 
-	/** Las redes de los seis campos fijos de «Datos de la empresa», en su orden. */
+	/** The networks from the six fixed fields of “Company details”, in their order. */
 	private static function from_company(): array {
 		$legacy = self::legacy();
 		$out    = array();
@@ -192,8 +193,8 @@ final class Links {
 	}
 
 	/**
-	 * Lo guardado en los campos fijos, leído de Settings y NO de
-	 * Company::value(), que ahora llama a url_for(): sería un bucle.
+	 * What is stored in the fixed fields, read from Settings and NOT from
+	 * Company::value(), which now calls url_for(): that would be a loop.
 	 * @return array<string,string>
 	 */
 	private static function legacy(): array {
@@ -205,8 +206,9 @@ final class Links {
 	}
 
 	/**
-	 * Lo que pinta el bloque: cada red con su nombre ya decidido, su icono en
-	 * <svg> y si abre en pestaña nueva. Las que se quedan sin icono no salen.
+	 * What the block renders: each network with its name already decided, its
+	 * icon as <svg> and whether it opens in a new tab. Those left without an
+	 * icon are skipped.
 	 *
 	 * @return array<int,array{name:string,url:string,icon:string,svg:string,new_tab:bool}>
 	 */
@@ -227,14 +229,14 @@ final class Links {
 				'url'     => $item['url'],
 				'icon'    => $slug,
 				'svg'     => $svg,
-				// Pestaña nueva solo para las web: un mailto: o un tel: no abren página.
+				// New tab only for web links: a mailto: or a tel: opens no page.
 				'new_tab' => (bool) preg_match( '#^https?://#i', $item['url'] ),
 			);
 		}
 		return $out;
 	}
 
-	/** El nombre de la empresa para «Instagram de <Empresa>»: el de «Datos de la empresa» o el del sitio. */
+	/** The company name for “Instagram of <Company>”: the one in “Company details” or the site's. */
 	public static function owner(): string {
 		$name = class_exists( Company::class ) ? Company::value( 'company_name' ) : '';
 		return '' !== $name ? $name : (string) get_bloginfo( 'name' );

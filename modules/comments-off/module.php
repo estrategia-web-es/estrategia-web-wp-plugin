@@ -5,57 +5,57 @@
  * Default: off
  * Requires:
  *
- * Para las webs de negocio sin blog (Lavandería: los comentarios ya se
- * cerraron a mano con WP-CLI). Todo es en caliente, con filtros: NO escribe
- * nada en la base de datos. Apagar el módulo devuelve cada entrada a su
- * comment_status de siempre, y los comentarios que hubiera siguen ahí.
+ * For business sites without a blog (Lavandería: comments had already been
+ * closed by hand with WP-CLI). Everything happens on the fly, with filters:
+ * it writes NOTHING to the database. Switching the module off returns each
+ * post to its usual comment_status, and any existing comments are still there.
  *
- * Por qué nace apagado: cambia algo visible (desaparece un menú, se cierran
- * los comentarios de un blog que los tuviera abiertos). Con «on» se
- * encendería solo en todas las webs desplegadas que ya tienen la lista de
- * módulos guardada (caso frontera de includes/class-modules.php), y una web
- * con blog perdería sus comentarios sin que nadie lo hubiera decidido.
+ * Why it ships off: it changes something visible (a menu disappears, a blog
+ * that had comments open gets them closed). With "on" it would switch itself
+ * on in every deployed site that already has its module list saved (edge
+ * case in includes/class-modules.php), and a site with a blog would lose its
+ * comments without anyone deciding it.
  *
- * Qué quita, y con qué:
- * - Abiertos/cerrados: comments_open y pings_open a false, y los valores
- *   por defecto de las entradas nuevas (default_comment_status y
- *   default_ping_status) a «closed» sin tocar la opción guardada.
- * - Los comentarios existentes no se pintan (comments_array vacío, y 0 en
+ * What it removes, and how:
+ * - Open/closed: comments_open and pings_open to false, and the defaults
+ *   for new posts (default_comment_status and default_ping_status) to
+ *   "closed" without touching the saved option.
+ * - Existing comments are not rendered (empty comments_array, and 0 from
  *   get_comments_number).
- * - El soporte «comments» y «trackbacks» de TODOS los tipos (quita la
- *   columna y la caja del editor), en init tarde para pillar los tipos que
- *   registran el tema y los plugins.
- * - Escritorio: el menú Comentarios (y entrar a edit-comments.php lleva al
- *   Escritorio), los comentarios del widget Actividad y las cifras de
- *   «De un vistazo»; el globo de la barra de administración.
- * - Front: los bloques de comentarios (core/comments con todo lo que lleva
- *   dentro, el formulario, el contador y el enlace, Últimos comentarios) no
- *   se pintan aunque estén en una plantilla del tema.
- * - Feeds: sin enlace al feed de comentarios en el <head>, y pedirlo da 404.
- * - XML-RPC: fuera pingback.ping y la cabecera X-Pingback.
+ * - "comments" and "trackbacks" support on ALL post types (removes the
+ *   column and the editor panel), late on init to catch the types
+ *   registered by the theme and plugins.
+ * - Dashboard: the Comments menu (and visiting edit-comments.php leads to
+ *   the Dashboard), the comments in the Activity widget and the counts in
+ *   "At a Glance"; the bubble in the admin bar.
+ * - Front end: the comment blocks (core/comments with everything inside it,
+ *   the form, the count and the link, Latest Comments) are not rendered even
+ *   if they are in a theme template.
+ * - Feeds: no link to the comments feed in <head>, and requesting it gives 404.
+ * - XML-RPC: pingback.ping and the X-Pingback header are removed.
  *
- * Cómo se mantiene:
- * - Quién: quien toque el plugin. Cuándo: si WordPress añade un bloque de
- *   comentarios nuevo (los de hoy: los que empiezan por core/comment y
- *   core/post-comments, más core/latest-comments), entra en BLOCKS.
- * - Criterio: entra lo que deja ver o escribir un comentario. La pantalla
- *   «Ajustes → Comentarios» se queda: es de WordPress y no hace daño, y con
- *   el módulo encendido sus valores simplemente no mandan.
- * - Caso frontera, con nombre: la REST /wp/v2/comments sigue registrada
- *   (el editor la usa para las notas de bloque de WordPress 6.9, que son
- *   comentarios de tipo «note»), pero no se puede comentar porque
- *   comments_open es false. Por eso aquí NO se borran las rutas REST.
- * - La trampa: remove_post_type_support en init a prioridad 10 no ve los
- *   tipos que se registran después en init; por eso va a 100 y además en
- *   registered_post_type para los que lleguen todavía más tarde.
- * - Prueba: modules/comments-off/tests/comments-off.test.mjs (nivel 2).
+ * How to maintain:
+ * - Who: whoever touches the plugin. When: if WordPress adds a new comments
+ *   block (today's: those starting with core/comment and core/post-comments,
+ *   plus core/latest-comments), it goes into BLOCKS.
+ * - Criterion: anything that lets someone see or write a comment goes in.
+ *   The "Settings → Discussion" screen stays: it is WordPress' own and does
+ *   no harm, and with the module on its values simply do not apply.
+ * - Edge case, by name: the /wp/v2/comments REST route stays registered
+ *   (the editor uses it for WordPress 6.9 block notes, which are comments of
+ *   type "note"), but commenting is impossible because comments_open is
+ *   false. That is why REST routes are NOT removed here.
+ * - The pitfall: remove_post_type_support on init at priority 10 does not
+ *   see types registered later on init; that is why it runs at 100 and also
+ *   on registered_post_type for those arriving even later.
+ * - Test: modules/comments-off/tests/comments-off.test.mjs (level 2).
  */
 
 namespace EstrategiaWeb\CommentsOff;
 
 defined( 'ABSPATH' ) || exit;
 
-/** Bloques que no se pintan: por prefijo de nombre. */
+/** Blocks that are not rendered: by name prefix. */
 const BLOCKS = array( 'core/comment', 'core/post-comments', 'core/latest-comments' );
 
 add_filter( 'comments_open', '__return_false', 20 );
@@ -82,7 +82,7 @@ add_action(
 );
 add_action( 'registered_post_type', $estrategia_web_no_support );
 
-// Escritorio.
+// Dashboard.
 add_action(
 	'admin_menu',
 	static function (): void {
@@ -106,7 +106,7 @@ add_action(
 		remove_meta_box( 'dashboard_recent_comments', 'dashboard', 'normal' );
 	}
 );
-// El widget Actividad pinta los comentarios recientes solo si la consulta trae alguno.
+// The Activity widget only renders recent comments if the query returns any.
 add_filter( 'dashboard_recent_comments_query_args', static fn( $args ) => array_merge( (array) $args, array( 'comment__in' => array( 0 ) ) ) );
 add_action(
 	'admin_head-index.php',
@@ -122,7 +122,7 @@ add_action(
 	999
 );
 
-// Front: bloques y feeds.
+// Front end: blocks and feeds.
 add_filter(
 	'render_block',
 	static function ( $content, $block ) {

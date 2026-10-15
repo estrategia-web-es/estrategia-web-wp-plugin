@@ -1,66 +1,67 @@
 <?php
 /**
- * Etiquetas de Google (GA4, Ads, Tag Manager) detrás del aviso de cookies,
- * con Consent Mode v2.
+ * Google tags (GA4, Ads, Tag Manager) behind the cookie notice, with Consent
+ * Mode v2.
  *
- * Qué se imprime, y dónde: UN script en línea en el <head>, en wp_head con
- * prioridad 1 (antes que cualquier otra etiqueta, también la de Matomo, 20),
- * id «estrategia-web-google-tags». Nada si los tres campos están vacíos o si
- * la petición no se mide (escritorio, vistas previas, quien puede editar:
- * filtro estrategia_web_google_tags_track, como Matomo). El script:
- * 1. Crea dataLayer y gtag() y manda gtag('consent', 'default', …) con TODO
- *    «denied» (salvo security_storage) ANTES de que exista ninguna etiqueta.
- *    Es lo que pide Consent Mode v2: el «default» tiene que ir primero.
- * 2. Escucha al aviso (window.estrategiaWebConsent y los eventos
- *    «estrategia-web:consent» y «estrategia-web:consent-ready»: las dos vías,
- *    por la trampa del orden de carga que cuenta el aviso) y en cada elección
- *    manda gtag('consent', 'update', …) con lo aceptado:
- *       analytics_storage                          ← statistics (Analítica)
- *       ad_storage, ad_user_data, ad_personalization ← marketing (Publicidad)
+ * What is printed, and where: ONE inline script in the <head>, on wp_head with
+ * priority 1 (before any other tag, Matomo's at 20 included), id
+ * «estrategia-web-google-tags». Nothing if all three fields are empty or if
+ * the request is not measured (dashboard, previews, users who can edit:
+ * estrategia_web_google_tags_track filter, like Matomo). The script:
+ * 1. Creates dataLayer and gtag() and sends gtag('consent', 'default', …) with
+ *    EVERYTHING «denied» (except security_storage) BEFORE any tag exists.
+ *    That is what Consent Mode v2 requires: the «default» has to come first.
+ * 2. Listens to the notice (window.estrategiaWebConsent and the
+ *    «estrategia-web:consent» and «estrategia-web:consent-ready» events: both
+ *    channels, because of the load-order pitfall the notice describes) and on
+ *    every choice sends gtag('consent', 'update', …) with what was accepted:
+ *       analytics_storage                          ← statistics (Analytics)
+ *       ad_storage, ad_user_data, ad_personalization ← marketing (Advertising)
  *       functionality_storage, personalization_storage ← preferences
- * 3. Carga los scripts de Google (gtag/js?id=… con la config de GA4 y Ads,
- *    gtm.js?id=…) según el MODO:
- *    - «basic» (por defecto): SOLO cuando hay aceptada Analítica o
- *      Publicidad. Antes de eso no sale ni una petición a Google: ni la IP del
- *      visitante. Es lo que pide la AEPD (nada de terceros sin consentir).
- *    - «advanced» (opción): se cargan ya al abrir la página, con todo
- *      «denied»; Google no pone cookies y manda pings sin cookies que luego
- *      «modeliza». Se gana medición, pero esos pings SÍ salen antes de
- *      consentir, con la IP. La legalidad en España está discutida (la AEPD
- *      no lo ha avalado): solo si el cliente lo decide sabiéndolo.
- * 4. Si se retira Analítica o Publicidad con la página abierta: 'update' a
- *    denied y borra las cookies de primera parte de Google de esa categoría
- *    (_ga, _ga_*, _gid, _gat* / _gcl_*, _gac_*), en el dominio y sus padres.
- *    El script de Google ya cargado se queda hasta la siguiente página, pero
- *    con el consentimiento denegado no escribe.
- * 5. Conversión de formulario (opcional): con «Etiqueta de conversión»
- *    (AW-123/abc) y Publicidad aceptada, cada envío correcto de un
- *    formulario del módulo forms (evento «estrategia-web:form-sent», solo el
- *    envío con JavaScript) manda gtag('event', 'conversion', {send_to}).
+ * 3. Loads Google's scripts (gtag/js?id=… with the GA4 and Ads config,
+ *    gtm.js?id=…) depending on the MODE:
+ *    - «basic» (default): ONLY once Analytics or Advertising has been
+ *      accepted. Before that not a single request goes to Google: not even the
+ *      visitor's IP. That is what the AEPD requires (no third parties without
+ *      consent).
+ *    - «advanced» (opt-in): they load as soon as the page opens, with
+ *      everything «denied»; Google sets no cookies and sends cookieless pings
+ *      that it later «models». Measurement improves, but those pings DO go out
+ *      before consent, with the IP. Its legality in Spain is disputed (the
+ *      AEPD has not endorsed it): only if the client decides so knowingly.
+ * 4. If Analytics or Advertising is withdrawn with the page open: 'update' to
+ *    denied and delete Google's first-party cookies for that category
+ *    (_ga, _ga_*, _gid, _gat* / _gcl_*, _gac_*), on the domain and its
+ *    parents. The already loaded Google script stays until the next page, but
+ *    with consent denied it does not write.
+ * 5. Form conversion (optional): with a «Conversion label» (AW-123/abc) and
+ *    Advertising accepted, each successful submission of a form from the forms
+ *    module («estrategia-web:form-sent» event, JavaScript submissions only)
+ *    sends gtag('event', 'conversion', {send_to}).
  *
- * Categorías del aviso: el módulo DECLARA con el filtro
- * estrategia_web_consent_categories (prioridad 99, añadiendo, como Matomo)
- * statistics si hay GA4, marketing si hay Ads, y las dos con GTM. Depende
- * solo de la CONFIGURACIÓN, nunca de quién visita: la revisión del aviso
- * tiene que ser la misma para todos (con caché de página, más aún).
+ * Notice categories: the module DECLARES with the
+ * estrategia_web_consent_categories filter (priority 99, appending, like
+ * Matomo) statistics if there is GA4, marketing if there is Ads, and both with
+ * GTM. It depends only on the CONFIGURATION, never on who visits: the notice
+ * revision has to be the same for everyone (even more so with page cache).
  *
- * Sin <noscript> de GTM: un iframe a Google sin JavaScript no puede esperar
- * al consentimiento. Quien navega sin JS no se mide.
+ * No GTM <noscript>: an iframe to Google without JavaScript cannot wait for
+ * consent. Visitors browsing without JS are not measured.
  *
- * Cómo se mantiene:
- * - Quién y cuándo: quien toque la analítica. Pruebas en
- *   modules/google-tags/tests/ (google-tags.test.mjs nivel 2,
- *   google-tags-browser.test.mjs nivel 3).
- * - Un campo nuevo: FIELDS (patrón), defaults(), sanitize(), la pantalla y
- *   config_for_js(). Los patrones van también al esquema REST (400 si no
- *   casan).
- * - Caso frontera: el cliente ya tiene Site Kit u otro plugin que pinta
- *   gtag. Habría dos dataLayer/gtag y dos «default»: se usa UNO de los dos.
- *   Este no detecta al otro.
- * - La trampa: gtag() tiene que ser una función GLOBAL que empuja `arguments`
- *   (no un array): gtag.js solo entiende objetos Arguments en dataLayer. Un
- *   gtag = (...a) => dataLayer.push(a) parece igual y Google lo IGNORA sin
- *   error. Por eso el script es el de Google tal cual, en ES5.
+ * How to maintain:
+ * - Who and when: whoever touches analytics. Tests in
+ *   modules/google-tags/tests/ (google-tags.test.mjs level 2,
+ *   google-tags-browser.test.mjs level 3).
+ * - A new field: FIELDS (pattern), defaults(), sanitize(), the screen and
+ *   config_for_js(). The patterns also go into the REST schema (400 if they
+ *   do not match).
+ * - Edge case: the client already has Site Kit or another plugin that prints
+ *   gtag. There would be two dataLayer/gtag and two «default»: use ONE of the
+ *   two. This one does not detect the other.
+ * - The pitfall: gtag() has to be a GLOBAL function that pushes `arguments`
+ *   (not an array): gtag.js only understands Arguments objects in dataLayer.
+ *   A gtag = (...a) => dataLayer.push(a) looks the same and Google IGNORES it
+ *   without an error. That is why the script is Google's verbatim, in ES5.
  */
 
 namespace EstrategiaWeb\GoogleTags;
@@ -71,7 +72,7 @@ final class Google_Tags {
 
 	public const OPTION = 'estrategia_web_google_tags';
 
-	/** Campo => patrón (vacío siempre vale: «no cargar»). */
+	/** Field => pattern (empty is always valid: «do not load»). */
 	public const FIELDS = array(
 		'ga4'            => '^G-[A-Z0-9]{4,20}$',
 		'ads'            => '^AW-[0-9]{6,15}$',
@@ -128,13 +129,13 @@ final class Google_Tags {
 		);
 	}
 
-	/** Lo guardado, completo y limpio. */
+	/** The saved values, complete and clean. */
 	public static function settings(): array {
 		$saved = get_option( self::OPTION, array() );
 		return self::clean( is_array( $saved ) ? $saved : array() );
 	}
 
-	/** Fusiona con lo guardado y valida. Un id que no casa se descarta (y la pantalla lo dice). */
+	/** Merges with the saved values and validates. An id that does not match is discarded (and the screen says so). */
 	public static function sanitize( $value ): array {
 		$value = is_array( $value ) ? $value : array();
 		$saved = get_option( self::OPTION, array() );
@@ -142,7 +143,7 @@ final class Google_Tags {
 		foreach ( array_keys( self::FIELDS ) as $field ) {
 			$raw = strtoupper( trim( (string) ( $value[ $field ] ?? '' ) ) );
 			if ( 'ads_form_label' === $field ) {
-				$raw = trim( (string) ( $value[ $field ] ?? '' ) ); // La etiqueta distingue mayúsculas.
+				$raw = trim( (string) ( $value[ $field ] ?? '' ) ); // The label is case-sensitive.
 			}
 			if ( '' !== $raw && $out[ $field ] !== $raw && function_exists( 'add_settings_error' ) ) {
 				/* translators: %s: the value that was not saved. */
@@ -152,7 +153,7 @@ final class Google_Tags {
 		return $out;
 	}
 
-	/** Solo valores válidos: lo que no casa con su patrón, vacío. */
+	/** Valid values only: whatever does not match its pattern becomes empty. */
 	public static function clean( array $value ): array {
 		$out = self::defaults();
 		foreach ( self::FIELDS as $field => $pattern ) {
@@ -166,13 +167,13 @@ final class Google_Tags {
 		return $out;
 	}
 
-	/** Si hay algo que cargar. */
+	/** Whether there is anything to load. */
 	public static function configured( ?array $settings = null ): bool {
 		$s = $settings ?? self::settings();
 		return '' !== $s['ga4'] || '' !== $s['ads'] || '' !== $s['gtm'];
 	}
 
-	/** Categorías que pide cada etiqueta (ver la cabecera). Solo de la configuración. */
+	/** Categories each tag requires (see the header). From the configuration only. */
 	public static function consent_categories( mixed $categories ): array {
 		$categories = (array) $categories;
 		$s          = self::settings();
@@ -186,13 +187,13 @@ final class Google_Tags {
 		return array_values( array_unique( array_merge( $categories, $needed ) ) );
 	}
 
-	/** Si en esta petición se mide (como Matomo). */
+	/** Whether this request is measured (like Matomo). */
 	public static function should_track(): bool {
 		$track = ! is_admin() && ! is_preview() && ! is_customize_preview() && ! current_user_can( 'edit_posts' );
 		/**
-		 * Decide si esta petición carga las etiquetas de Google.
+		 * Decides whether this request loads the Google tags.
 		 *
-		 * @param bool $track Lo decidido por el plugin.
+		 * @param bool $track What the plugin decided.
 		 */
 		return (bool) apply_filters( 'estrategia_web_google_tags_track', $track );
 	}
@@ -205,7 +206,7 @@ final class Google_Tags {
 		wp_print_inline_script_tag( self::script( $s ), array( 'id' => 'estrategia-web-google-tags' ) );
 	}
 
-	/** Lo que necesita el script del navegador. */
+	/** What the browser script needs. */
 	public static function config_for_js( array $s ): array {
 		$form = '';
 		if ( '' !== $s['ads_form_label'] && '' !== $s['ads'] && str_starts_with( $s['ads_form_label'], $s['ads'] . '/' ) ) {
@@ -220,7 +221,7 @@ final class Google_Tags {
 		);
 	}
 
-	/** El JS (ES5, sin textos de pantalla). Ver la cabecera, puntos 1-5. */
+	/** The JS (ES5, no on-screen text). See the header, points 1-5. */
 	public static function script( array $s ): string {
 		$config = wp_json_encode( self::config_for_js( $s ) );
 		return <<<JS

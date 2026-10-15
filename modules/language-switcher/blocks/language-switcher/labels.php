@@ -1,8 +1,8 @@
 <?php
 /**
- * Etiquetas traducidas de los controles que genera autoRegister para este
- * bloque (block.json no traduce la clave «label» de un atributo).
- * Un atributo nuevo en block.json lleva su línea aquí.
+ * Translated labels for the controls autoRegister generates for this block
+ * (block.json doesn't translate an attribute's «label» key).
+ * A new attribute in block.json gets its line here.
  */
 return array(
 	'display' => __( 'Show the current language as (code: “ES”, name: “Español”)', 'estrategia-web' ),

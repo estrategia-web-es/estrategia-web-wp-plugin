@@ -1,17 +1,17 @@
-// NIVEL: 3 — navegador. NECESITA NAVEGADOR PORQUE: lo probado es qué pide el navegador a Google y cuándo, y lo que queda en dataLayer (Consent Mode) al pulsar los botones del aviso REAL.
+// NIVEL: 3 — browser. NEEDS A BROWSER BECAUSE: what is tested is what the browser requests from Google and when, and what ends up in dataLayer (Consent Mode) when the buttons of the REAL notice are clicked.
 //
-// Etiquetas de Google (1.1.0). Qué hace: cabecera de
-// modules/google-tags/includes/class-google-tags.php. Google NO se llama:
-// todo lo que va a googletagmanager.com se intercepta, se apunta y se
-// contesta con un script vacío. Se prueba NUESTRO lado (cuándo se pide y qué
-// órdenes de consentimiento se dan), no lo que haga gtag.js con ellas.
+// Google tags (1.1.0). What it does: header of
+// modules/google-tags/includes/class-google-tags.php. Google is NOT called:
+// everything going to googletagmanager.com is intercepted, logged and
+// answered with an empty script. OUR side is tested (when it is requested and
+// which consent commands are issued), not what gtag.js does with them.
 //
-// Vista fallar el 14-10-2026 con dos mutantes: load() llamado siempre (el
-// modo básico pedía Google antes de aceptar) y el «update» de analytics
-// atado a marketing.
+// Seen failing on 2026-10-14 with two mutants: load() always called (basic
+// mode requested Google before accepting) and the analytics «update» tied to
+// marketing.
 //
-// Cómo se mantiene: un caso por modo y por categoría; si cambia el reparto
-// de categorías (cabecera de la clase), cambia aquí.
+// How to maintain: one case per mode and per category; if the category
+// mapping changes (class header), it changes here.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, playwright, reset, seedPage, testApi, wp } from "../../../tests/lib.mjs";
@@ -46,7 +46,7 @@ async function open() {
   page.on("pageerror", (e) => page.errors.push(e.message));
   await ctx.route("https://www.googletagmanager.com/**", (route) => {
     page.google.push(route.request().url());
-    return route.fulfill({ status: 200, contentType: "text/javascript", body: "/* gtag de mentira */" });
+    return route.fulfill({ status: 200, contentType: "text/javascript", body: "/* fake gtag */" });
   });
   await page.goto(pageUrl, { waitUntil: "networkidle" });
   await page.waitForFunction(() => window.estrategiaWebConsent);
@@ -55,31 +55,31 @@ async function open() {
 const layer = (page) => page.evaluate(() => window.dataLayer.map((a) => (typeof a.length === "number" ? Array.from(a) : a)));
 const lastUpdate = async (page) => (await layer(page)).filter((e) => e[0] === "consent" && e[1] === "update").pop()?.[2];
 
-test("google-tags (básico): NADA a Google sin aceptar, ni rechazando, ni aceptando solo mapas", async () => {
+test("google-tags (basic): NOTHING to Google without accepting, nor when rejecting, nor accepting only maps", async () => {
   await save({ ga4: "G-TEST12345", ads: "", gtm: "", mode: "basic" });
   const { ctx, page } = await open();
   const first = (await layer(page))[0];
-  assert.deepEqual(first.slice(0, 2), ["consent", "default"], "el «default» es lo PRIMERO de dataLayer");
+  assert.deepEqual(first.slice(0, 2), ["consent", "default"], "the «default» is the FIRST thing in dataLayer");
   assert.equal(first[2].analytics_storage, "denied");
   assert.equal(first[2].ad_storage, "denied");
-  assert.deepEqual(page.google, [], "sin elegir");
+  assert.deepEqual(page.google, [], "no choice yet");
 
   await page.getByRole("button", { name: "Configurar", exact: true }).click();
   await page.getByRole("checkbox", { name: /Mapas y contenido de terceros/ }).check();
   await page.getByRole("button", { name: "Guardar la selección" }).click();
   await page.waitForTimeout(300);
-  assert.deepEqual(page.google, [], "solo mapas no es Analítica");
+  assert.deepEqual(page.google, [], "maps only is not Analytics");
   assert.equal((await lastUpdate(page))?.analytics_storage, "denied");
 
   await page.evaluate(() => window.estrategiaWebConsent.open());
   await page.getByRole("button", { name: "Rechazar todas" }).click();
   await page.reload({ waitUntil: "networkidle" });
-  assert.deepEqual(page.google, [], "rechazando");
+  assert.deepEqual(page.google, [], "rejecting");
   assert.deepEqual(page.errors, []);
   await ctx.close();
 });
 
-test("google-tags (básico): al aceptar Analítica se pide gtag.js con el id y se concede SOLO analytics_storage", async () => {
+test("google-tags (basic): accepting Analytics requests gtag.js with the id and grants ONLY analytics_storage", async () => {
   await save({ ga4: "G-TEST12345", ads: "", gtm: "", mode: "basic" });
   const { ctx, page } = await open();
   await page.getByRole("button", { name: "Aceptar todas" }).click();
@@ -87,10 +87,10 @@ test("google-tags (básico): al aceptar Analítica se pide gtag.js con el id y s
   assert.ok(page.google.some((u) => u.startsWith("https://www.googletagmanager.com/gtag/js?id=G-TEST12345")), page.google.join("\n"));
   const update = await lastUpdate(page);
   assert.equal(update.analytics_storage, "granted");
-  assert.equal(update.ad_storage, "denied", "la web no pregunta Publicidad: no se concede");
+  assert.equal(update.ad_storage, "denied", "the site does not ask about Advertising: it is not granted");
   assert.ok((await layer(page)).some((e) => e[0] === "config" && e[1] === "G-TEST12345"));
 
-  // Y al volver, con la elección guardada, se carga sin pulsar nada.
+  // And on returning, with the choice saved, it loads without clicking anything.
   page.google.length = 0;
   await page.reload({ waitUntil: "networkidle" });
   await page.waitForFunction(() => window.dataLayer.some((a) => a[0] === "config"));
@@ -98,7 +98,7 @@ test("google-tags (básico): al aceptar Analítica se pide gtag.js con el id y s
   await ctx.close();
 });
 
-test("google-tags: retirar Analítica deniega y borra _ga y _ga_*", async () => {
+test("google-tags: withdrawing Analytics denies and deletes _ga and _ga_*", async () => {
   await save({ ga4: "G-TEST12345", ads: "", gtm: "", mode: "basic" });
   const { ctx, page } = await open();
   await page.getByRole("button", { name: "Aceptar todas" }).click();
@@ -111,30 +111,30 @@ test("google-tags: retirar Analítica deniega y borra _ga y _ga_*", async () => 
   await page.waitForTimeout(200);
   assert.equal((await lastUpdate(page)).analytics_storage, "denied");
   const left = (await ctx.cookies()).map((c) => c.name).filter((n) => n.startsWith("_ga"));
-  assert.deepEqual(left, [], "quedan cookies de Google tras retirar el consentimiento");
+  assert.deepEqual(left, [], "Google cookies remain after withdrawing consent");
   await ctx.close();
 });
 
-test("google-tags: Ads + conversión de formulario solo con Publicidad aceptada", async () => {
+test("google-tags: Ads + form conversion only with Advertising accepted", async () => {
   await save({ ga4: "", ads: "AW-123456789", ads_form_label: "AW-123456789/AbCd_ef-12", gtm: "", mode: "basic" });
   const { ctx, page } = await open();
   const send = () => page.evaluate(() => document.dispatchEvent(new CustomEvent("estrategia-web:form-sent", { detail: { form: "contacto" } })));
   const conversions = async () => (await layer(page)).filter((e) => e[0] === "event" && e[1] === "conversion");
   await send();
-  assert.equal((await conversions()).length, 0, "sin consentimiento no hay conversión");
+  assert.equal((await conversions()).length, 0, "without consent there is no conversion");
   await page.getByRole("button", { name: "Aceptar todas" }).click();
   await page.waitForFunction(() => window.dataLayer.some((a) => a[0] === "config"));
   const update = await lastUpdate(page);
   assert.equal(update.ad_storage, "granted");
   assert.equal(update.ad_user_data, "granted");
   assert.equal(update.ad_personalization, "granted");
-  assert.equal(update.analytics_storage, "denied", "la web no pregunta Analítica");
+  assert.equal(update.analytics_storage, "denied", "the site does not ask about Analytics");
   await send();
   assert.deepEqual((await conversions())[0][2], { send_to: "AW-123456789/AbCd_ef-12" });
   await ctx.close();
 });
 
-test("google-tags (avanzado): Google se pide YA, con todo denied, antes de elegir", async () => {
+test("google-tags (advanced): Google is requested RIGHT AWAY, with everything denied, before choosing", async () => {
   await save({ ga4: "G-TEST12345", ads: "", ads_form_label: "", gtm: "GTM-ABCD123", mode: "advanced" });
   const { ctx, page } = await open();
   assert.ok(page.google.some((u) => u.includes("gtag/js?id=G-TEST12345")), "gtag.js");

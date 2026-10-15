@@ -1,13 +1,13 @@
-// NIVEL: 2 — WordPress de Playground, porque ESCRIBE: sube logos, crea entradas con imagen destacada y pinta una Consulta como las fichas de cliente de Lavandería.
+// NIVEL: 2 — Playground WordPress, because it WRITES: uploads logos, creates posts with a featured image and renders a Query like Lavandería's client cards.
 //
-// Módulo featured-images:
-// - un core/post-featured-image de ancho fijo (82px) lleva sizes="82px" (con
-//   «auto, » si es diferida), también dentro de un carrusel, que antes le
-//   ponía el suyo;
-// - el srcset tiene el candidato pequeño de 200 px (estrategia-web-small);
-// - alt="" cuando el alt repite el título que la ficha pinta al lado; se
-//   queda si describe otra cosa, si la plantilla no pinta el título o si la
-//   imagen es un enlace.
+// featured-images module:
+// - a fixed-width core/post-featured-image (82px) gets sizes="82px" (with
+//   "auto, " if it is lazy), also inside a carousel, which used to set its
+//   own;
+// - the srcset has the small 200 px candidate (estrategia-web-small);
+// - alt="" when the alt repeats the title the card shows next to it; it
+//   stays if it describes something else, if the template does not show the
+//   title or if the image is a link.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { reset, upload, png, seedPage, html, wp } from "../../../tests/lib.mjs";
@@ -33,7 +33,7 @@ const chip = (image = '{"width":"82px","height":"54px","sizeSlug":"medium"}', ti
 /** The <img class="wp-post-image"> of each list, by the wrapper class. */
 const imgs = (text, marker) => {
   const at = text.indexOf(marker);
-  assert.ok(at >= 0, "falta " + marker);
+  assert.ok(at >= 0, "missing " + marker);
   const end = text.indexOf("</ul>", at);
   return [...text.slice(at, end).matchAll(/<img [^>]*wp-post-image[^>]*>/g)].map((m) => m[0]);
 };
@@ -42,41 +42,41 @@ const attr = (tag, name) => tag.match(new RegExp(`\\s${name}="([^"]*)"`))?.[1];
 let page;
 before(async () => {
   await reset();
-  await makePost(`Hotel Uno ${RUN}`, `Hotel Uno ${RUN}`);
-  await makePost(`Hotel Dos ${RUN}`, `Fachada del hotel con palmeras`);
+  await makePost(`Hotel Beta ${RUN}`, `Hotel Beta ${RUN}`);
+  await makePost(`Hotel Alpha ${RUN}`, `Hotel facade with palm trees`);
   page = await seedPage(
     `<!-- wp:group {"className":"lista-a"} --><div class="wp-block-group lista-a">${query(chip(), 31)}</div><!-- /wp:group -->` +
       `<!-- wp:group {"className":"lista-b"} --><div class="wp-block-group lista-b">${query(chip(undefined, false), 32)}</div><!-- /wp:group -->` +
       `<!-- wp:group {"className":"lista-c"} --><div class="wp-block-group lista-c">${query(chip('{"isLink":true,"width":"82px"}'), 33)}</div><!-- /wp:group -->` +
-      `<!-- wp:estrategia-web/carousel {"label":"Clientes","className":"lista-d","perViewMobile":1,"perViewTablet":1,"perViewDesktop":1} -->${query(chip(), 34)}<!-- /wp:estrategia-web/carousel -->`,
-    `fichas-${RUN}`
+      `<!-- wp:estrategia-web/carousel {"label":"Clients","className":"lista-d","perViewMobile":1,"perViewTablet":1,"perViewDesktop":1} -->${query(chip(), 34)}<!-- /wp:estrategia-web/carousel -->`,
+    `cards-${RUN}`
   );
 });
 after(async () => {
   for (const id of posts) await wp(`/posts/${id}?force=true`, { method: "DELETE" });
 });
 
-test("featured-images: ancho fijo en px → sizes de ese ancho, con el candidato de 200 en el srcset", async () => {
+test("featured-images: fixed width in px → sizes of that width, with the 200 candidate in the srcset", async () => {
   const { text } = await html(page.url);
   for (const tag of imgs(text, "lista-a")) {
     assert.match(attr(tag, "sizes"), /^(auto, )?82px$/, tag);
-    assert.match(attr(tag, "srcset"), /-200x149\.\w+ 200w/, "falta el tamaño pequeño: " + tag);
+    assert.match(attr(tag, "srcset"), /-200x149\.\w+ 200w/, "the small size is missing: " + tag);
   }
 });
 
-test("featured-images: dentro del carrusel también (el carrusel respeta un sizes fijo)", async () => {
+test("featured-images: inside the carousel too (the carousel respects a fixed sizes)", async () => {
   const { text } = await html(page.url);
   const list = imgs(text, "lista-d");
   assert.equal(list.length, 2);
   for (const tag of list) assert.match(attr(tag, "sizes"), /^(auto, )?82px$/, tag);
 });
 
-test("featured-images: alt vacío SOLO si repite el título que la ficha pinta al lado", async () => {
+test("featured-images: empty alt ONLY if it repeats the title the card shows next to it", async () => {
   const { text } = await html(page.url);
-  // Orden por título: Dos (alt que describe la foto), Uno (alt = título).
+  // Ordered by title: Alpha (alt describing the photo), Beta (alt = title).
   const alts = (marker) => imgs(text, marker).map((tag) => attr(tag, "alt"));
-  assert.deepEqual(alts("lista-a"), ["Fachada del hotel con palmeras", ""], "solo pasa a decorativo el alt que repite el título; el que describe la foto no se toca");
-  assert.deepEqual(alts("lista-b"), ["Fachada del hotel con palmeras", `Hotel Uno ${RUN}`], "sin título en la plantilla, el alt es lo único que lo nombra");
-  // Con isLink el núcleo pone de alt el TÍTULO (es el nombre del enlace): se queda.
-  assert.deepEqual(alts("lista-c"), [`Hotel Dos ${RUN}`, `Hotel Uno ${RUN}`], "una imagen enlace conserva su alt (es el nombre del enlace)");
+  assert.deepEqual(alts("lista-a"), ["Hotel facade with palm trees", ""], "only an alt that repeats the title becomes decorative; one describing the photo is left alone");
+  assert.deepEqual(alts("lista-b"), ["Hotel facade with palm trees", `Hotel Beta ${RUN}`], "with no title in the template, the alt is the only thing naming it");
+  // With isLink, core sets the TITLE as alt (it is the link's name): it stays.
+  assert.deepEqual(alts("lista-c"), [`Hotel Alpha ${RUN}`, `Hotel Beta ${RUN}`], "a linked image keeps its alt (it is the link's name)");
 });

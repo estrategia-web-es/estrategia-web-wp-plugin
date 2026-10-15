@@ -1,6 +1,6 @@
 /**
- * estrategia-web/language-switcher — abrir, cerrar con Escape (el foco vuelve al
- * botón) y cerrar al pulsar fuera. Documentación en render.php.
+ * estrategia-web/language-switcher — open, close with Escape (focus returns to
+ * the button) and close on clicking outside. Documentation in render.php.
  */
 import { store, getContext, getElement } from '@wordpress/interactivity';
 

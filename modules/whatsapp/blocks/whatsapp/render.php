@@ -1,36 +1,36 @@
 <?php
 /**
- * estrategia-web/whatsapp — botón flotante de WhatsApp.
+ * estrategia-web/whatsapp — floating WhatsApp button.
  *
- * Qué es: un enlace fijo en una esquina a https://wa.me/<número>?text=<mensaje>.
- * Sin JavaScript: no hace falta. Pensado para la parte de pie (parts/footer.html
- * ya lo lleva): si no hay número, no pinta nada.
+ * What it is: a link fixed in a corner to https://wa.me/<number>?text=<message>.
+ * No JavaScript: none needed. Meant for the footer part (parts/footer.html
+ * already includes it): if there is no number, it renders nothing.
  *
- * De dónde salen los datos, por orden: atributos del bloque → opciones del
- * sitio estrategia_web_whatsapp_phone y estrategia_web_whatsapp_message (modules/whatsapp/module.php;
- * se cambian con WP-CLI o REST /wp/v2/settings). Así el número vive en un
- * sitio y no en cada página.
+ * Where the data comes from, in order: block attributes → site options
+ * estrategia_web_whatsapp_phone and estrategia_web_whatsapp_message (modules/whatsapp/module.php;
+ * changed with WP-CLI or REST /wp/v2/settings). That way the number lives in
+ * one place and not on every page.
  *
- * Decisiones:
- * - El número va en formato internacional sin «+» ni espacios (34600111222).
- *   Se quitan los caracteres que no son dígitos y un «00» inicial. NO se
- *   adivina el prefijo del país: un 600111222 sin 34 no funciona en wa.me, y
- *   suponer España sería meter una web concreta en el padre.
- * - Accesible: nombre en texto oculto visualmente (no solo aria-label, para
- *   que lo traduzcan los traductores automáticos) y aviso de pestaña nueva;
- *   el icono es decorativo (aria-hidden); 3.5rem de diana táctil.
- * - Color: el verde de WhatsApp (#128C7E, contraste 4.1:1 con el icono blanco; para
- *   un gráfico WCAG pide 3:1) en la
- *   propiedad --estrategia-web-whatsapp-background. Es la marca de WhatsApp, no la
- *   de ningún cliente; un hijo puede cambiarlo.
+ * Decisions:
+ * - The number is in international format without “+” or spaces (34600111222).
+ *   Non-digit characters and a leading “00” are stripped. The country code
+ *   is NOT guessed: a 600111222 without 34 does not work on wa.me, and
+ *   assuming Spain would put one specific site into the parent.
+ * - Accessible: name in visually hidden text (not just aria-label, so that
+ *   automatic translators translate it) and a new-tab notice; the icon is
+ *   decorative (aria-hidden); 3.5rem touch target.
+ * - Colour: WhatsApp green (#128C7E, 4.1:1 contrast with the white icon; for
+ *   a graphic WCAG asks for 3:1) in the
+ *   --estrategia-web-whatsapp-background property. It is WhatsApp's brand, not
+ *   any client's; a child theme can change it.
  *
- * Cómo se mantiene:
- * - Caso frontera: «que salga solo en horario de oficina» es OTRA COSA (lógica
- *   de un negocio): bloque o filtro en el hijo. «Que vaya a la izquierda» es
- *   un AJUSTE: atributo position.
- * - La trampa: supports.multiple=false impide dos en una página desde el
- *   editor, pero no si uno está en la parte de pie y otro en el contenido de
- *   la página: el del pie ya cubre todas, no se pone en páginas.
+ * How to maintain:
+ * - Edge case: “show it only during office hours” is SOMETHING ELSE (business
+ *   logic): a block or filter in the child theme. “Put it on the left” is a
+ *   SETTING: the position attribute.
+ * - The trap: supports.multiple=false prevents two on one page from the
+ *   editor, but not if one is in the footer part and another in the page
+ *   content: the footer one already covers every page, it is not added to pages.
  *
  * @package estrategia-web
  *
