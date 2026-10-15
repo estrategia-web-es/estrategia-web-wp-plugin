@@ -1,8 +1,8 @@
 <?php
 /**
- * Al BORRAR el plugin (lo llama el uninstall.php de la raíz): los ids de
- * Google son del cliente, como los datos de la empresa; solo se borran con
- * ESTRATEGIA_WEB_SITE_REMOVE_DATA en wp-config.php.
+ * When the plugin is DELETED (called by the root uninstall.php): the Google
+ * ids belong to the client, like the company details; they are only deleted
+ * with ESTRATEGIA_WEB_SITE_REMOVE_DATA in wp-config.php.
  */
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;

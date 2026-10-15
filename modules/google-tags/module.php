@@ -5,44 +5,44 @@
  * Default: off
  * Requires: consent
  *
- * Qué hace, entero, en la cabecera de includes/class-google-tags.php. En
- * corto: tres campos (G-…, AW-…, GTM-…) en «Estrategia Web → Google»; campo
- * vacío = no se carga nada de eso. En el <head>, ANTES de cualquier otra
- * cosa, Consent Mode v2 con todo «denied»; y los scripts de Google NO se
- * piden hasta que el visitante acepta Analítica o Publicidad en el aviso
- * (modo básico, el de por defecto).
+ * What it does, in full, in the header of includes/class-google-tags.php. In
+ * short: three fields (G-…, AW-…, GTM-…) under «Estrategia Web → Google»; an
+ * empty field = none of that is loaded. In the <head>, BEFORE anything else,
+ * Consent Mode v2 with everything «denied»; and Google's scripts are NOT
+ * requested until the visitor accepts Analytics or Advertising in the notice
+ * (basic mode, the default).
  *
- * Por qué Default: off: cambia lo que pide la web (Google) y declara
- * categorías en el aviso, que hacen que vuelva a salir a todos. Eso se decide
- * web a web encendiéndolo, nunca al desplegar (caso frontera de
+ * Why Default: off: it changes what the site requests (Google) and declares
+ * categories in the notice, which makes it show again to everyone. That is
+ * decided site by site by switching it on, never on deploy (edge case in
  * includes/class-modules.php).
  *
- * Por qué Requires: consent: sin aviso no hay consentimiento y, en modo
- * básico, nunca se cargaría nada; con el módulo encendido y el aviso apagado
- * la pantalla de Módulos dice qué le falta en vez de fingir que mide. Habla
- * con el aviso SOLO por su API JS (window.estrategiaWebConsent y los eventos),
- * como Matomo, no llamando a sus clases.
+ * Why Requires: consent: without the notice there is no consent and, in basic
+ * mode, nothing would ever load; with the module on and the notice off the
+ * Modules screen says what is missing instead of pretending to measure. It
+ * talks to the notice ONLY through its JS API (window.estrategiaWebConsent and
+ * the events), like Matomo, not by calling its classes.
  *
- * Opción: estrategia_web_google_tags (también por /wp/v2/settings).
- * Pantalla: includes/admin/class-google-tags-page.php.
- * Pruebas: modules/google-tags/tests/ (nivel 2 lo que se imprime; nivel 3
- * qué pide el navegador antes y después de aceptar, con Google interceptado).
+ * Option: estrategia_web_google_tags (also via /wp/v2/settings).
+ * Screen: includes/admin/class-google-tags-page.php.
+ * Tests: modules/google-tags/tests/ (level 2 what is printed; level 3 what the
+ * browser requests before and after accepting, with Google intercepted).
  *
- * Cómo se mantiene:
- * - Quién y cuándo: quien toque la analítica. Una etiqueta nueva de Google
- *   (p. ej. Floodlight) es un campo más con su validación en Google_Tags::FIELDS
- *   y su línea en script(); otra marca (Meta, LinkedIn) es OTRO módulo con el
- *   mismo patrón.
- * - Criterio de categorías: analytics_storage ← Analítica (statistics);
- *   ad_storage, ad_user_data y ad_personalization ← Publicidad (marketing);
- *   functionality_storage y personalization_storage ← Preferencias;
- *   security_storage, siempre concedido.
- * - Caso frontera: solo Tag Manager. GTM puede llevar cualquier cosa dentro,
- *   así que declara Analítica Y Publicidad, y se carga con cualquiera de las
- *   dos; lo que haga cada etiqueta dentro de GTM lo decide Consent Mode.
- * - La trampa: «cargar Google con todo denied» (modo avanzado) también manda
- *   datos a Google antes de consentir (pings sin cookies, con IP). Por eso no
- *   es el de por defecto. Ver la cabecera de la clase.
+ * How to maintain:
+ * - Who and when: whoever touches analytics. A new Google tag (e.g.
+ *   Floodlight) is one more field with its validation in Google_Tags::FIELDS
+ *   and its line in script(); another vendor (Meta, LinkedIn) is ANOTHER
+ *   module following the same pattern.
+ * - Category criterion: analytics_storage ← Analytics (statistics);
+ *   ad_storage, ad_user_data and ad_personalization ← Advertising (marketing);
+ *   functionality_storage and personalization_storage ← Preferences;
+ *   security_storage, always granted.
+ * - Edge case: Tag Manager only. GTM can carry anything inside, so it declares
+ *   Analytics AND Advertising, and loads with either of the two; what each tag
+ *   inside GTM does is decided by Consent Mode.
+ * - The pitfall: «loading Google with everything denied» (advanced mode) also
+ *   sends data to Google before consent (cookieless pings, with the IP). That
+ *   is why it is not the default. See the class header.
  */
 
 namespace EstrategiaWeb\GoogleTags;

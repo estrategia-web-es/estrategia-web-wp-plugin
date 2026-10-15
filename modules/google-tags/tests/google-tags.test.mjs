@@ -1,12 +1,12 @@
-// NIVEL: 2 — WordPress de Playground, porque lo probado es lo que IMPRIME la web (el <head> y las categorías del aviso) según la opción guardada por REST y los módulos encendidos.
+// NIVEL: 2 — Playground WordPress, because what is tested is what the site PRINTS (the <head> and the notice categories) depending on the option saved over REST and the active modules.
 //
-// Etiquetas de Google (1.1.0). Qué hace y por qué: cabecera de
-// modules/google-tags/includes/class-google-tags.php. Lo del navegador (qué
-// se pide a Google antes y después de aceptar, Consent Mode) está en
-// google-tags-browser.test.mjs (nivel 3).
+// Google tags (1.1.0). What it does and why: header of
+// modules/google-tags/includes/class-google-tags.php. The browser side (what
+// is requested from Google before and after accepting, Consent Mode) is in
+// google-tags-browser.test.mjs (level 3).
 //
-// Cómo se mantiene: un campo nuevo, su caso de «vacío = nada» y su caso de
-// validación aquí.
+// How to maintain: a new field gets its «empty = nothing» case and its
+// validation case here.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, html, reset, testApi, wp } from "../../../tests/lib.mjs";
@@ -19,7 +19,7 @@ const cleanAll = async () => {
   await fetch(BASE + "/wp-json/estrategia-web-cookies-test/v1/reset", { method: "POST" });
 };
 
-/** Enciende google-tags además de lo que ya carga la web por defecto. */
+/** Switches google-tags on in addition to what the site loads by default. */
 async function enable(extra = ["google-tags"], without = []) {
   await testApi("/modules", { method: "POST", body: { active: null } });
   const { loaded } = await testApi("/modules");
@@ -30,17 +30,17 @@ const save = (value) => wp("/settings", { method: "POST", body: { estrategia_web
 before(cleanAll);
 after(cleanAll);
 
-test("google-tags: APAGADO por defecto; encendido y con los campos vacíos no imprime nada", async () => {
+test("google-tags: OFF by default; switched on with empty fields it prints nothing", async () => {
   const { loaded } = await testApi("/modules");
   assert.ok(!loaded.includes("google-tags"), "Default: off");
   await enable();
   assert.ok((await testApi("/modules")).loaded.includes("google-tags"));
   const page = await front();
-  assert.ok(!page.includes(TAG) && !page.includes("googletagmanager"), "sin ids no hay nada de Google");
-  assert.deepEqual(offered(page), [], "ni categorías en el aviso");
+  assert.ok(!page.includes(TAG) && !page.includes("googletagmanager"), "without ids there is nothing from Google");
+  assert.deepEqual(offered(page), [], "and no categories in the notice");
 });
 
-test("google-tags: con GA4, consent «default» denied ANTES que nada y ningún <script src> de Google en el HTML", async () => {
+test("google-tags: with GA4, consent «default» denied BEFORE anything else and no Google <script src> in the HTML", async () => {
   await enable();
   const r = await save({ ga4: "G-TEST12345" });
   assert.equal(r.status, 200, r.text);
@@ -49,17 +49,17 @@ test("google-tags: con GA4, consent «default» denied ANTES que nada y ningún 
   const head = page.slice(0, page.indexOf("</head>"));
   const ours = head.indexOf(TAG);
   const firstScript = head.search(/<script\b/);
-  assert.ok(ours >= 0 && head.lastIndexOf("<script", ours) === firstScript, "es el PRIMER script del <head>");
+  assert.ok(ours >= 0 && head.lastIndexOf("<script", ours) === firstScript, "it is the FIRST script in the <head>");
   const defaults = head.match(/gtag\('consent', 'default', \{([\s\S]*?)\}\);/)?.[1] || "";
   for (const key of ["ad_storage", "ad_user_data", "ad_personalization", "analytics_storage"]) {
-    assert.match(defaults, new RegExp(`${key}: 'denied'`), `${key} no empieza denied`);
+    assert.match(defaults, new RegExp(`${key}: 'denied'`), `${key} does not start denied`);
   }
-  assert.ok(!/<script[^>]+src="[^"]*googletagmanager/.test(page), "el script de Google no va en el HTML: lo pide el navegador tras aceptar");
+  assert.ok(!/<script[^>]+src="[^"]*googletagmanager/.test(page), "the Google script is not in the HTML: the browser requests it after accepting");
   assert.match(page, /"ga4":"G-TEST12345"/);
-  assert.deepEqual(offered(page), ["statistics"], "GA4 pide Analítica");
+  assert.deepEqual(offered(page), ["statistics"], "GA4 requires Analytics");
 });
 
-test("google-tags: Ads pide Publicidad; Tag Manager, las dos; la etiqueta de conversión solo con su cuenta de Ads", async () => {
+test("google-tags: Ads requires Advertising; Tag Manager, both; the conversion label only with its Ads account", async () => {
   await enable();
   await save({ ga4: "", ads: "AW-123456789", ads_form_label: "AW-123456789/AbCd_ef-12", gtm: "" });
   let page = await front();
@@ -69,10 +69,10 @@ test("google-tags: Ads pide Publicidad; Tag Manager, las dos; la etiqueta de con
   await save({ ads: "", gtm: "GTM-ABCD123" });
   page = await front();
   assert.deepEqual(offered(page), ["statistics", "marketing"]);
-  assert.match(page, /"form":""/, "sin cuenta de Ads, la conversión no se manda");
+  assert.match(page, /"form":""/, "without an Ads account, the conversion is not sent");
 });
 
-test("google-tags: ids mal escritos → 400 por REST; minúsculas por la pantalla se arreglan solas (clean)", async () => {
+test("google-tags: mistyped ids → 400 over REST; lowercase from the screen is fixed automatically (clean)", async () => {
   await enable();
   assert.equal((await save({ ga4: "UA-1234-1" })).status, 400);
   assert.equal((await save({ gtm: "GTM-<script>" })).status, 400);
@@ -83,7 +83,7 @@ test("google-tags: ids mal escritos → 400 por REST; minúsculas por la pantall
   assert.match(await front(), /"advanced":true/);
 });
 
-test("google-tags: Requires consent — con el aviso apagado no se carga (y la pantalla de módulos dice por qué)", async () => {
+test("google-tags: Requires consent — with the notice off it does not load (and the modules screen says why)", async () => {
   await enable(["google-tags"], ["consent"]);
   await save({ ga4: "G-TEST12345" });
   const mods = await testApi("/modules");
