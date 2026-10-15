@@ -1,34 +1,34 @@
-// NIVEL: 2 — WordPress de Playground, porque ESCRIBE: activa el tipo `location`, crea sedes y sube una imagen por REST; lo que se mira es el saneado que devuelve REST y el HTML que pinta el servidor, sin navegador.
+// NIVEL: 2 — Playground WordPress, because it WRITES: enables the `location` type, creates locations and uploads an image via REST; what is checked is the sanitizing REST returns and the HTML the server renders, no browser.
 //
-// Mapa estático de una sede (0.4.0): los campos `estrategia_web_location_static_map` (URL de
-// la imagen, servida por el propio sitio) y `estrategia_web_location_static_map_id` (la
-// misma imagen en la mediateca). Los lee el bloque estrategia-web/map del tema padre
-// (atributo staticMapUrl) con core/post-meta dentro de una Consulta de sedes;
-// aquí no está el tema, así que se mira con un párrafo y una imagen enlazados
-// a ese mismo campo, que es lo que recibe el bloque.
+// A location's static map (0.4.0): the fields `estrategia_web_location_static_map` (URL of
+// the image, served by the site itself) and `estrategia_web_location_static_map_id` (the
+// same image in the media library). The parent theme's estrategia-web/map block reads them
+// (staticMapUrl attribute) with core/post-meta inside a Query of locations;
+// the theme is not here, so it is checked with a paragraph and an image bound
+// to that same field, which is what the block receives.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, reset, wp, saveCompany, seedPage, html, upload, png, type } from "../../../tests/lib.mjs";
 
-let sede, imageId;
+let loc, imageId;
 before(async () => {
   await reset();
   await saveCompany({ enabled_types: ["location"] });
-  const r = await wp(`/${type("location")}`, { method: "POST", body: { title: "Sede Palma", slug: "palma", status: "publish" } });
+  const r = await wp(`/${type("location")}`, { method: "POST", body: { title: "Palma location", slug: "palma", status: "publish" } });
   assert.equal(r.status, 201, r.text);
-  sede = r.json;
+  loc = r.json;
   const img = await upload("mapa-palma.png", "image/png", png(8, 4, [40, 120, 200]));
   assert.equal(img.status, 201, img.text);
   imageId = img.json.id;
 });
 
 const saveMeta = async (meta) => {
-  const r = await wp(`/${type("location")}/${sede.id}`, { method: "POST", body: { meta } });
+  const r = await wp(`/${type("location")}/${loc.id}`, { method: "POST", body: { meta } });
   assert.equal(r.status, 200, r.text);
   return r.json.meta;
 };
 
-test("estrategia_web_location_static_map (0.4.0): se guardan la ruta del tema, la del sitio y una URL del mismo dominio", async () => {
+test("estrategia_web_location_static_map (0.4.0): the theme path, the site path and a same-domain URL are saved", async () => {
   for (const [value, expected] of [
     ["assets/maps/sede.webp", "assets/maps/sede.webp"],
     ["  ./assets/maps/sede.png ", "assets/maps/sede.png"],
@@ -40,7 +40,7 @@ test("estrategia_web_location_static_map (0.4.0): se guardan la ruta del tema, l
   }
 });
 
-test("estrategia_web_location_static_map (0.4.0): fuera otro dominio, //dominio, javascript:, «..» y lo que no es una imagen", async () => {
+test("estrategia_web_location_static_map (0.4.0): rejects another domain, //domain, javascript:, «..» and what is not an image", async () => {
   for (const value of [
     "https://tile.openstreetmap.org/16/33248/24911.png",
     "//otro.test/mapa.png",
@@ -56,17 +56,17 @@ test("estrategia_web_location_static_map (0.4.0): fuera otro dominio, //dominio,
   }
 });
 
-test("estrategia_web_location_static_map_id (0.4.0): un adjunto de imagen se guarda; un id que no es un adjunto de imagen, 0", async () => {
+test("estrategia_web_location_static_map_id (0.4.0): an image attachment is saved; an id that is not an image attachment, 0", async () => {
   assert.equal((await saveMeta({ estrategia_web_location_static_map_id: imageId })).estrategia_web_location_static_map_id, imageId);
-  assert.equal((await saveMeta({ estrategia_web_location_static_map_id: sede.id })).estrategia_web_location_static_map_id, 0, "la propia sede no es una imagen");
+  assert.equal((await saveMeta({ estrategia_web_location_static_map_id: loc.id })).estrategia_web_location_static_map_id, 0, "the location itself is not an image");
   assert.equal((await saveMeta({ estrategia_web_location_static_map_id: 999999 })).estrategia_web_location_static_map_id, 0);
   assert.equal((await saveMeta({ estrategia_web_location_static_map_id: -3 })).estrategia_web_location_static_map_id, 0);
 });
 
-test("en una Consulta de sedes, core/post-meta da a cada sede SU mapa estático (lo que recibe staticMapUrl de estrategia-web/map)", async () => {
+test("in a Query of locations, core/post-meta gives each location ITS static map (what staticMapUrl of estrategia-web/map receives)", async () => {
   await saveMeta({ estrategia_web_location_static_map: "/wp-content/uploads/mapa-palma.webp" });
-  const otra = await wp(`/${type("location")}`, { method: "POST", body: { title: "Sede Inca", slug: "inca", status: "publish", meta: { estrategia_web_location_static_map: "/wp-content/uploads/mapa-inca.webp" } } });
-  assert.equal(otra.status, 201, otra.text);
+  const other = await wp(`/${type("location")}`, { method: "POST", body: { title: "Inca location", slug: "inca", status: "publish", meta: { estrategia_web_location_static_map: "/wp-content/uploads/mapa-inca.webp" } } });
+  assert.equal(other.status, 201, other.text);
 
   const pm = (attr) => ({ [attr]: { source: "core/post-meta", args: { key: "estrategia_web_location_static_map" } } });
   const query = JSON.stringify({ queryId: 7, query: { perPage: 10, pages: 0, offset: 0, postType: type("location"), order: "asc", orderBy: "title", inherit: false } });
@@ -87,12 +87,12 @@ test("en una Consulta de sedes, core/post-meta da a cada sede SU mapa estático 
   assert.equal(status, 200);
   const items = [...(text.match(/<ul[^>]*wp-block-post-template[\s\S]*?<\/ul>/)?.[0] ?? "").matchAll(/<li[\s\S]*?<\/li>/g)].map((m) => m[0]);
   assert.equal(items.length, 2);
-  assert.match(items[0], /<p class="t-static[^"]*">\/wp-content\/uploads\/mapa-inca\.webp<\/p>/, "Inca va primero por título");
+  assert.match(items[0], /<p class="t-static[^"]*">\/wp-content\/uploads\/mapa-inca\.webp<\/p>/, "Inca comes first by title");
   assert.match(items[0], /<img[^>]*src="\/wp-content\/uploads\/mapa-inca\.webp"/);
   assert.match(items[1], /<p class="t-static[^"]*">\/wp-content\/uploads\/mapa-palma\.webp<\/p>/);
 });
 
-test("el campo también sale por la fuente estrategia-web-site/location, por slug", async () => {
+test("the field also comes out through the estrategia-web-site/location source, by slug", async () => {
   await saveMeta({ estrategia_web_location_static_map: "/wp-content/uploads/mapa-palma.webp" });
   const page = await seedPage(
     `<!-- wp:paragraph ${JSON.stringify({ className: "t-src", metadata: { bindings: { content: { source: "estrategia-web-site/location", args: { slug: "palma", key: "estrategia_web_location_static_map" } } } } })} -->

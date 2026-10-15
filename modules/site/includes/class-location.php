@@ -1,48 +1,49 @@
 <?php
 /**
- * Fuente de Block Bindings `estrategia-web-site/location`: un bloque enlazado a un
- * dato de UNA sede (tipo `location`). Entró en 0.2.0.
+ * Block Bindings source `estrategia-web-site/location`: a block bound to a
+ * detail of ONE location (`location` type). Added in 0.2.0.
  *
- * Dos formas de decir qué sede, por los args del enlace:
+ * Two ways of saying which location, through the binding args:
  *
- *   {"slug": "maioris", "key": "estrategia_web_location_phone"}   esa sede, desde cualquier página
- *   {"key": "estrategia_web_location_address"}                    la sede del CONTEXTO: dentro de
- *                                                  una Consulta de sedes, la de cada fila
+ *   {"slug": "maioris", "key": "estrategia_web_location_phone"}   that location, from any page
+ *   {"key": "estrategia_web_location_address"}                    the location in CONTEXT: inside
+ *                                                  a Query of locations, the one of each row
  *
  *   <!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"estrategia-web-site/location","args":{"slug":"maioris","key":"estrategia_web_location_address"}}}}} -->
  *   <p></p>
  *   <!-- /wp:paragraph -->
  *
- * Claves: `title`, los campos location_* del tipo (Content_Types) y las
- * derivadas `estrategia_web_location_phone_href` (tel:) y `estrategia_web_location_email_href` (mailto:).
- * El texto y las URL se pintan igual que en la fuente de la empresa
- * (Bindings::format): saltos a <br> en texto, esc_url_raw con tel/mailto/http(s)
- * en url/href.
+ * Keys: `title`, the type's location_* fields (Content_Types) and the derived
+ * `estrategia_web_location_phone_href` (tel:) and `estrategia_web_location_email_href` (mailto:).
+ * Text and URLs are rendered the same as in the company source
+ * (Bindings::format): line breaks to <br> in text, esc_url_raw with
+ * tel/mailto/http(s) in url/href.
  *
- * Por qué existe: una página enseña el teléfono y el mapa de UNA sede concreta
- * (la de Maioris en la página de Autoservicio). Antes solo se podía con una
- * Consulta buscando por título, que se rompe al renombrar la sede.
+ * Why it exists: a page shows the phone and map of ONE specific location (the
+ * Maioris one on the Self-service page). Before, that could only be done with
+ * a Query searching by title, which breaks when the location is renamed.
  *
- * Cómo se mantiene:
- * - Quién y cuándo: quien añada un campo a `location` en Content_Types, en el
- *   mismo commit. Los campos meta entran SOLOS (salen de
- *   Content_Types::meta_fields()); una derivada nueva va en DERIVED, value() y
- *   labels(), con su fila en el README y su caso en tests/location.test.mjs.
- * - El identificador estable es el SLUG de la entrada (post_name), no el
- *   título ni el id: el título cambia y el id cambia al migrar de servidor.
- *   Caso frontera: renombrar la sede en el editor NO cambia el slug, pero
- *   editar a mano su «enlace permanente» sí, y los bloques que la nombran se
- *   quedan vacíos. Es lo que hay que mirar si una página pierde el teléfono.
- * - Solo sedes PUBLICADAS. Una en borrador, privada o en la papelera devuelve
- *   '' (en la web no se ve nada; en el editor sale el nombre del dato entre
- *   corchetes). Y si el tipo `location` no está activado, también ''.
- * - La trampa: el contexto postId existe SIEMPRE, también fuera de una
- *   Consulta (es la página que se pinta). Por eso sin slug se comprueba que
- *   ese post sea de verdad una `location`: si no, un párrafo suelto con
- *   {"key":"title"} enseñaría el título de la página.
- * - Y la otra: uses_context (postId, postType) tiene que estar en el registro
- *   de PHP Y en el de assets/editor.js; si falta en el de JS, el núcleo lo
- *   deja en [null] al fusionar y en el editor no llega el contexto.
+ * How to maintain:
+ * - Who and when: whoever adds a field to `location` in Content_Types, in the
+ *   same commit. Meta fields come in ON THEIR OWN (they come from
+ *   Content_Types::meta_fields()); a new derived key goes in DERIVED, value()
+ *   and labels(), with its README row and its case in tests/location.test.mjs.
+ * - The stable identifier is the post SLUG (post_name), not the title or the
+ *   id: the title changes, and the id changes when migrating servers.
+ *   Edge case: renaming the location in the editor does NOT change the slug,
+ *   but editing its «permalink» by hand does, and the blocks that name it go
+ *   empty. That is what to check if a page loses the phone number.
+ * - PUBLISHED locations only. One in draft, private or in the trash returns ''
+ *   (nothing shows on the site; in the editor the detail name shows in
+ *   brackets). And if the `location` type is not enabled, also ''.
+ * - The trap: the postId context ALWAYS exists, also outside a Query (it is
+ *   the page being rendered). That is why, without a slug, it is checked that
+ *   the post really is a `location`: otherwise a standalone paragraph with
+ *   {"key":"title"} would show the page title.
+ * - And the other one: uses_context (postId, postType) has to be in the PHP
+ *   registration AND in the assets/editor.js one; if it is missing in the JS
+ *   one, core leaves it as [null] when merging and the context never reaches
+ *   the editor.
  */
 
 namespace EstrategiaWeb\Site;
@@ -53,7 +54,7 @@ final class Location {
 
 	public const SOURCE = 'estrategia-web-site/location';
 
-	/** La CLAVE del tipo; en wp_posts se llama Type_Names::name( TYPE ) (1.2.0). */
+	/** The type's KEY; in wp_posts it is called Type_Names::name( TYPE ) (1.2.0). */
 	public const TYPE = 'location';
 
 	public const DERIVED = array( 'estrategia_web_location_phone_href', 'estrategia_web_location_email_href' );
@@ -70,9 +71,9 @@ final class Location {
 	}
 
 	/**
-	 * @param array     $args           {"key": "…"} o {"slug": "…", "key": "…"}.
-	 * @param \WP_Block $block_instance El bloque que se pinta (de aquí sale el contexto).
-	 * @param string    $attribute_name El atributo enlazado (content, url…).
+	 * @param array     $args           {"key": "…"} or {"slug": "…", "key": "…"}.
+	 * @param \WP_Block $block_instance The block being rendered (the context comes from here).
+	 * @param string    $attribute_name The bound attribute (content, url…).
 	 */
 	public static function get_value( array $args, $block_instance, string $attribute_name ): ?string {
 		$key = isset( $args['key'] ) ? (string) $args['key'] : '';
@@ -85,7 +86,7 @@ final class Location {
 		return Bindings::format( $post ? self::value( $post, $key ) : '', $attribute_name );
 	}
 
-	/** La sede publicada con ese slug, o null. */
+	/** The published location with that slug, or null. */
 	public static function by_slug( string $slug ): ?\WP_Post {
 		if ( ! self::enabled() ) {
 			return null;
@@ -103,7 +104,7 @@ final class Location {
 		return $found ? $found[0] : null;
 	}
 
-	/** La sede con ese id si es una `location` publicada; si no (una página, un borrador), null. */
+	/** The location with that id if it is a published `location`; otherwise (a page, a draft), null. */
 	public static function by_id( int $id ): ?\WP_Post {
 		if ( $id <= 0 || ! self::enabled() ) {
 			return null;
@@ -112,7 +113,7 @@ final class Location {
 		return ( $post && Type_Names::name( self::TYPE ) === $post->post_type && 'publish' === $post->post_status ) ? $post : null;
 	}
 
-	/** El valor en texto plano (sin escapar). '' si la clave no existe o está vacía. */
+	/** The value as plain text (unescaped). '' if the key does not exist or is empty. */
 	public static function value( \WP_Post $post, string $key ): string {
 		$meta = static fn( string $k ): string => (string) get_post_meta( $post->ID, $k, true );
 		switch ( $key ) {
@@ -126,7 +127,7 @@ final class Location {
 		return in_array( $key, Content_Types::meta_keys( self::TYPE ), true ) ? $meta( $key ) : '';
 	}
 
-	/** @return array<string,string> Nombre legible de cada clave, en orden: el editor hace la lista con esto. */
+	/** @return array<string,string> Human-readable name of each key, in order: the editor builds the list from this. */
 	public static function labels(): array {
 		return array( 'title' => __( 'Location name', 'estrategia-web' ) )
 			+ Content_Types::meta_fields( self::TYPE )
@@ -137,9 +138,10 @@ final class Location {
 	}
 
 	/**
-	 * Lo que recibe assets/editor.js: las sedes PUBLICADAS con sus valores, por
-	 * id (para el contexto) y con su slug (para los args). Una web tiene pocas
-	 * sedes; si alguna vez fueran cientos, esto se pasaría a pedirlas por REST.
+	 * What assets/editor.js receives: the PUBLISHED locations with their values,
+	 * by id (for the context) and with their slug (for the args). A site has few
+	 * locations; if they ever were hundreds, this would switch to fetching them
+	 * over REST.
 	 */
 	public static function editor_data(): array {
 		$locations = array();

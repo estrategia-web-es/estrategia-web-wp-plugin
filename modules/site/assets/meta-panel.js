@@ -1,18 +1,18 @@
 /**
- * El panel «Datos de la sede» / «Datos del cliente» / «Datos de la opinión»
- * de la barra lateral del documento. La explicación entera (por qué, WPML,
- * cómo se mantiene) está en includes/class-meta-panel.php.
+ * The «Location details» / «Client details» / «Testimonial details» panel in
+ * the document sidebar. The full explanation (why, WPML, how to maintain) is
+ * in includes/class-meta-panel.php.
  *
- * SIN PASO DE COMPILACIÓN, como assets/editor.js: script clásico que lee los
- * globales wp.*. Las dependencias están en Meta_Panel::enqueue(); un wp.x
- * nuevo aquí va también allí, o en el editor sale «wp.x is undefined».
- * Los campos (clave, nombre, control, ayuda) los manda PHP en
- * window.estrategiaWebMetaPanel; los textos propios de aquí usan wp.i18n con
- * el dominio estrategia-web (class-blocks.php les pasa las traducciones).
+ * NO BUILD STEP, like assets/editor.js: a classic script that reads the wp.*
+ * globals. The dependencies are in Meta_Panel::enqueue(); a new wp.x here
+ * goes there too, or the editor shows «wp.x is undefined».
+ * The fields (key, name, control, help) are sent by PHP in
+ * window.estrategiaWebMetaPanel; the texts of this script use wp.i18n with
+ * the estrategia-web domain (class-blocks.php passes them the translations).
  *
- * La trampa: las metas enteras (valoración, ids) tienen que viajar como
- * número. Un "3" de texto lo rechaza la API REST por el tipo del esquema
- * («no es de tipo integer») y el guardado entero falla.
+ * The trap: integer metas (rating, ids) have to travel as a number. A text
+ * "3" is rejected by the REST API because of the schema type («is not of type
+ * integer») and the whole save fails.
  */
 ( function ( wp, config ) {
 	if ( ! wp || ! wp.plugins || ! config ) {
@@ -125,10 +125,10 @@
 
 	wp.plugins.registerPlugin( 'estrategia-web-meta-panel', { render: MetaPanel } );
 
-	// Abierto al entrar. Un panel de plugin nace CERRADO (solo se ve su
-	// título), y estos campos son el dato principal de una sede: cerrado es
-	// justo lo que pasó el 07-10-2026, no encontrarlo. Se abre una vez por
-	// carga; si alguien lo cierra, sigue cerrado hasta recargar.
-	// Va en el primer pintado (MetaPanel), no aquí suelto: al cargar este
-	// script las preferencias del usuario aún no están y lo cerrarían.
+	// Open on entry. A plugin panel is born CLOSED (only its title shows), and
+	// these fields are a location's main data: closed is exactly what happened
+	// on 07-10-2026, not finding it. It is opened once per load; if someone
+	// closes it, it stays closed until reload.
+	// It goes in the first render (MetaPanel), not loose here: when this script
+	// loads, the user's preferences are not there yet and would close it.
 } )( window.wp, window.estrategiaWebMetaPanel );

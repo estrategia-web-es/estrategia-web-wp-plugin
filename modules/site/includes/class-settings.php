@@ -1,68 +1,70 @@
 <?php
 /**
- * Los datos de la empresa: UNA opción, `estrategia_web_site` (array), registrada con
- * la Settings API y expuesta en REST (/wp/v2/settings) con su esquema.
+ * The company data: ONE option, `estrategia_web_site` (array), registered with
+ * the Settings API and exposed over REST (/wp/v2/settings) with its schema.
  *
- * Es CONTRATO: el tema padre, los temas hijos y la carga de contenido leen y
- * escriben estos nombres (README, «El contrato»). Renombrar una clave es
- * versión mayor.
+ * It is CONTRACT: the parent theme, the child themes and the content load read
+ * and write these names (README, «El contrato»). Renaming a key is a major
+ * version.
  *
- * Cómo se guarda (y por qué así):
- * - Se FUSIONA con lo que ya hay: un PUT por REST con solo {"phone": "…"}
- *   cambia el teléfono y deja lo demás. Es lo que necesita la carga de
- *   contenido (rellenar por partes). La pantalla de ajustes manda siempre
- *   todas las claves (con campos ocultos para las casillas), así que una
- *   casilla desmarcada sí se guarda como «no».
- * - Lo que no valida NO se guarda y se queda el valor anterior: un correo mal
- *   escrito no borra el bueno. En la pantalla sale un aviso; por REST la
- *   respuesta devuelve el valor que quedó, que es la forma de notarlo.
+ * How it is saved (and why this way):
+ * - It is MERGED with what is already there: a REST PUT with only
+ *   {"phone": "…"} changes the phone and leaves the rest. It is what the
+ *   content load needs (filling in parts). The settings screen always sends
+ *   every key (with hidden fields for the checkboxes), so an unchecked box
+ *   does get saved as «no».
+ * - Whatever fails validation is NOT saved and the previous value stays: a
+ *   mistyped email does not wipe out the good one. The screen shows a notice;
+ *   over REST the response returns the value that stayed, which is how you
+ *   notice.
  *
- * Cómo se mantiene:
- * - Una clave nueva entra en DEFAULTS, en schema(), en sanitize(), en la
- *   pantalla (Admin), en la lista del editor (assets/editor.js) y en el
- *   README, en el mismo commit. Si una prueba la necesita, también en
- *   tests/lib.mjs. Si es una OPCIÓN y no un dato que se enseña (como las de
- *   Matomo), también en Company::NOT_DATA.
- * - Caso frontera: un dato que solo tiene UNA web (el número de registro
- *   sanitario de una clínica). No entra: va al tema hijo. Entra lo que tendría
- *   cualquier web corporativa.
- * - Los objetos (`social`, `rewrite_slugs` desde 0.2.0) se fusionan también
- *   POR CLAVE: mandar {"rewrite_slugs":{"client":"cliente"}} no borra el slug
- *   fijado de `client_sector`. Y se guardan siempre con todas sus claves (las
- *   no fijadas, ''), para que REST devuelva un objeto y no un [] vacío.
- * - `social` (los seis campos fijos de redes) NO sale en la pantalla desde el
- *   15-10-2026: las redes son la lista del módulo social, que copia estos
- *   valores una vez (Social\Links::migrate). Se sigue aceptando y guardando
- *   por REST para no perder datos ni romper cargas de contenido viejas, y
- *   Company::value('social.<red>') es un alias hasta la 2.0.0, en la que
- *   sale del contrato (ver class-company.php).
- * - `rewrite_slugs` NO sale en la pantalla, a propósito: cambia URL
- *   publicadas y lo fija quien monta la web (REST, carga de contenido). La
- *   pantalla no lo manda, y la fusión lo conserva al guardarla.
- * - Caso frontera de `rewrite_slugs`: un nombre que no es del plugin
- *   («services») da 400 por REST (additionalProperties); por
- *   `wp option update` se ignora en silencio.
- * - Datos legales (0.4.0): `legal_name` (razón social), `tax_id` (NIF/CIF),
- *   `address` (domicilio) y `registry`. `registry` es UN texto libre y no
- *   tomo/folio/hoja/inscripción por separado, a propósito: el aviso legal lo
- *   escribe como una frase, y no toda empresa está en el Mercantil (un
- *   autónomo no tiene; una cooperativa va a otro registro). Se escribe sin
- *   «Inscrita en», que lo pone la frase. Caso frontera: el domicilio social
- *   distinto de la dirección de la tienda. Hoy no tiene clave propia; si
- *   varias webs lo piden, entra `legal_address` (versión menor).
- * - Matomo (0.3.0): `matomo_url` se guarda SIEMPRE acabada en «/» y sin el
- *   «matomo.php»/«matomo.js» que se pega a veces del código de seguimiento;
- *   `matomo_site_id` es entero (0 = sin configurar); `matomo_mode` es uno de
- *   MATOMO_MODES (otro valor por REST → 400; por la pantalla, se queda el
- *   anterior). Qué hace cada modo, en la cabecera de
- *   modules/matomo/includes/class-matomo.php (1.1.0: Matomo es su propio
- *   módulo, pero sus claves y su saneado siguen AQUÍ, en esta opción, para
- *   no migrar datos).
- * - La trampa: el controlador REST de ajustes devuelve null para TODA la
- *   opción si lo guardado no cumple el esquema (un tipo distinto, una clave de
- *   enabled_types que ya no está en el enum). Por eso sanitize() deja siempre
- *   los tipos exactos del esquema (el id de Matomo, int; nunca "3"), y quitar
- *   un valor del enum de enabled_types o de matomo_mode es versión mayor.
+ * How to maintain:
+ * - A new key goes into DEFAULTS, schema(), sanitize(), the screen (Admin),
+ *   the editor list (assets/editor.js) and the README, in the same commit. If
+ *   a test needs it, also into tests/lib.mjs. If it is an OPTION and not a
+ *   detail that is shown (like the Matomo ones), also into Company::NOT_DATA.
+ * - Edge case: a detail only ONE site has (a clinic's health registration
+ *   number). It does not go in: it goes to the child theme. What goes in is
+ *   what any corporate site would have.
+ * - Objects (`social`, `rewrite_slugs` since 0.2.0) are also merged BY KEY:
+ *   sending {"rewrite_slugs":{"client":"cliente"}} does not wipe the slug set
+ *   for `client_sector`. And they are always saved with all their keys (the
+ *   unset ones, ''), so that REST returns an object and not an empty [].
+ * - `social` (the six fixed social network fields) is NOT on the screen since
+ *   15-10-2026: the networks are the social module's list, which copies these
+ *   values once (Social\Links::migrate). It is still accepted and saved over
+ *   REST so as not to lose data or break old content loads, and
+ *   Company::value('social.<network>') is an alias until 2.0.0, when it leaves
+ *   the contract (see class-company.php).
+ * - `rewrite_slugs` is NOT on the screen, on purpose: it changes published
+ *   URLs and is set by whoever builds the site (REST, content load). The
+ *   screen does not send it, and the merge keeps it when the screen is saved.
+ * - `rewrite_slugs` edge case: a name that does not belong to the plugin
+ *   («services») gives a 400 over REST (additionalProperties); through
+ *   `wp option update` it is silently ignored.
+ * - Legal data (0.4.0): `legal_name` (registered company name), `tax_id`
+ *   (Spanish NIF/CIF), `address` (registered address) and `registry`.
+ *   `registry` is ONE free text and not volume/folio/sheet/entry separately,
+ *   on purpose: the legal notice writes it as a sentence, and not every
+ *   company is in the Mercantile Registry (a sole trader has none; a
+ *   cooperative goes to another registry). It is written without «Registered
+ *   in», which the sentence adds. Edge case: a registered office different
+ *   from the shop address. Today it has no key of its own; if several sites
+ *   ask for it, `legal_address` goes in (minor version).
+ * - Matomo (0.3.0): `matomo_url` is ALWAYS saved ending in «/» and without the
+ *   «matomo.php»/«matomo.js» that sometimes gets pasted from the tracking
+ *   code; `matomo_site_id` is an integer (0 = not configured); `matomo_mode`
+ *   is one of MATOMO_MODES (another value over REST → 400; from the screen,
+ *   the previous one stays). What each mode does, in the header of
+ *   modules/matomo/includes/class-matomo.php (1.1.0: Matomo is its own
+ *   module, but its keys and their sanitising stay HERE, in this option, so as
+ *   not to migrate data).
+ * - The trap: the REST settings controller returns null for the WHOLE option
+ *   if what is saved does not match the schema (a different type, an
+ *   enabled_types key that is no longer in the enum). That is why sanitize()
+ *   always leaves the exact schema types (the Matomo id, int; never "3"), and
+ *   removing a value from the enabled_types or matomo_mode enum is a major
+ *   version.
  */
 
 namespace EstrategiaWeb\Site;
@@ -73,32 +75,32 @@ final class Settings {
 
 	public const OPTION = 'estrategia_web_site';
 
-	/** Los tipos de contenido que se pueden activar. Orden = orden del menú. */
+	/** The content types that can be enabled. Order = menu order. */
 	public const TYPES = array( 'client', 'testimonial', 'location', 'project', 'portfolio' );
 
 	public const SOCIAL = array( 'facebook', 'instagram', 'linkedin', 'x', 'youtube', 'tiktok' );
 
-	/** Modos de Matomo (0.3.0). El primero es el de por defecto. Ver class-matomo.php. */
+	/** Matomo modes (0.3.0). The first one is the default. See class-matomo.php. */
 	public const MATOMO_MODES = array( 'cookieless', 'hybrid' );
 
 	/**
-	 * Los nombres que admite `rewrite_slugs` (0.2.0): los tipos y las
-	 * taxonomías del plugin. Una taxonomía nueva en Content_Types entra aquí
-	 * también, o su slug no se podrá fijar.
+	 * The names `rewrite_slugs` accepts (0.2.0): the plugin's types and
+	 * taxonomies. A new taxonomy in Content_Types goes in here too, or its slug
+	 * cannot be set.
 	 */
 	public const REWRITE_NAMES = array( 'client', 'client_sector', 'testimonial', 'location', 'project', 'project_category', 'portfolio', 'portfolio_category' );
 
-	/** Campos de texto de una línea. */
+	/** Single-line text fields. */
 	private const TEXT = array( 'company_name', 'legal_name', 'tax_id', 'registry', 'phone', 'phone_secondary', 'whatsapp_message' );
 
-	/** Campos de varias líneas (los saltos se conservan y se pintan como <br>). */
+	/** Multi-line fields (line breaks are kept and rendered as <br>). */
 	private const TEXTAREA = array( 'address', 'schedule' );
 
 	public const DEFAULTS = array(
 		'company_name'     => '',
 		'legal_name'       => '',
 		'tax_id'           => '',
-		// 0.4.0. La inscripción tal como se escribe en el aviso legal (ver «Datos legales»).
+		// 0.4.0. The registration as written in the legal notice (see «Legal data»).
 		'registry'         => '',
 		'email'            => '',
 		'phone'            => '',
@@ -118,7 +120,7 @@ final class Settings {
 		),
 		'enabled_types'    => array(),
 		'allow_svg'        => false,
-		// 0.2.0. Vacío = el slug traducido de siempre. Ver Content_Types::slug().
+		// 0.2.0. Empty = the usual translated slug. See Content_Types::slug().
 		'rewrite_slugs'    => array(
 			'client'             => '',
 			'client_sector'      => '',
@@ -129,7 +131,7 @@ final class Settings {
 			'portfolio'          => '',
 			'portfolio_category' => '',
 		),
-		// 0.3.0. Sin URL o sin id no se imprime nada (Matomo::config()).
+		// 0.3.0. Without URL or without id nothing is printed (Matomo::config()).
 		'matomo_url'       => '',
 		'matomo_site_id'   => 0,
 		'matomo_mode'      => 'cookieless',
@@ -150,7 +152,7 @@ final class Settings {
 		);
 	}
 
-	/** Esquema REST. Sin `format: email` a propósito: ver «Cómo se guarda». */
+	/** REST schema. No `format: email` on purpose: see «How it is saved». */
 	public static function schema(): array {
 		$string = array( 'type' => 'string' );
 		$social = array();
@@ -209,7 +211,7 @@ final class Settings {
 		);
 	}
 
-	/** @return array<string, mixed> Siempre con todas las claves de DEFAULTS. */
+	/** @return array<string, mixed> Always with every key of DEFAULTS. */
 	public static function all(): array {
 		$stored = get_option( self::OPTION, array() );
 		$stored = is_array( $stored ) ? $stored : array();
@@ -217,10 +219,10 @@ final class Settings {
 		$all['social'] = array_merge( self::DEFAULTS['social'], is_array( $all['social'] ) ? $all['social'] : array() );
 		$all['rewrite_slugs'] = array_merge( self::DEFAULTS['rewrite_slugs'], is_array( $all['rewrite_slugs'] ) ? $all['rewrite_slugs'] : array() );
 		/**
-		 * Permite a una web fijar datos por código (por ejemplo, un entorno de
-		 * pruebas con otro teléfono).
+		 * Lets a site set data from code (for example, a staging environment
+		 * with another phone number).
 		 *
-		 * @param array $all Datos ya mezclados con los valores por defecto.
+		 * @param array $all Data already merged with the defaults.
 		 */
 		return (array) apply_filters( 'estrategia_web_site_settings', $all );
 	}
@@ -235,8 +237,9 @@ final class Settings {
 	}
 
 	/**
-	 * Fusiona lo recibido con lo guardado y valida cada clave. Se llama desde
-	 * la pantalla, desde REST y desde `wp option update` (sanitize_option).
+	 * Merges what was received with what is saved and validates each key.
+	 * Called from the screen, from REST and from `wp option update`
+	 * (sanitize_option).
 	 */
 	public static function sanitize( mixed $input ): array {
 		$current = get_option( self::OPTION, array() );
@@ -294,7 +297,7 @@ final class Settings {
 		}
 
 		if ( array_key_exists( 'enabled_types', $input ) ) {
-			// La pantalla manda un '' oculto para que «ninguno» llegue: se descarta aquí.
+			// The screen sends a hidden '' so that «none» arrives: it is discarded here.
 			$out['enabled_types'] = array_values( array_intersect( self::TYPES, array_map( 'strval', (array) $input['enabled_types'] ) ) );
 		}
 
@@ -302,8 +305,8 @@ final class Settings {
 			$out['allow_svg'] = rest_sanitize_boolean( $input['allow_svg'] );
 		}
 
-		// Por clave, como social: mandar un slug no borra los demás. Fuera de
-		// REST (que ya da 400) un nombre desconocido se ignora.
+		// By key, like social: sending one slug does not wipe the others. Outside
+		// REST (which already gives a 400) an unknown name is ignored.
 		if ( isset( $input['rewrite_slugs'] ) && ( is_array( $input['rewrite_slugs'] ) || is_object( $input['rewrite_slugs'] ) ) ) {
 			foreach ( (array) $input['rewrite_slugs'] as $name => $slug ) {
 				if ( in_array( $name, self::REWRITE_NAMES, true ) ) {
@@ -313,7 +316,7 @@ final class Settings {
 		}
 
 		if ( array_key_exists( 'matomo_url', $input ) ) {
-			// Se acepta lo que se pega del código de seguimiento («…/matomo.php»).
+			// What gets pasted from the tracking code («…/matomo.php») is accepted.
 			$raw = preg_replace( '#(matomo|piwik)\.(php|js)$#i', '', trim( (string) $input['matomo_url'] ) );
 			$url = self::url( (string) $raw, 'matomo_url' );
 			if ( null !== $url ) {
@@ -329,7 +332,7 @@ final class Settings {
 			$out['matomo_mode'] = $input['matomo_mode'];
 		}
 
-		// Solo las claves del contrato, con sus tipos exactos (ver «La trampa»).
+		// Only the contract keys, with their exact types (see «The trap»).
 		$out                  = array_intersect_key( $out, self::DEFAULTS );
 		$out['social']        = array_map( 'strval', array_intersect_key( $out['social'], self::DEFAULTS['social'] ) );
 		$out['rewrite_slugs'] = array_map( 'strval', array_intersect_key( $out['rewrite_slugs'], self::DEFAULTS['rewrite_slugs'] ) );
@@ -340,14 +343,14 @@ final class Settings {
 		return $out;
 	}
 
-	/** URL http(s) limpia, '' si viene vacía, o null si no vale (se queda la anterior). */
+	/** Clean http(s) URL, '' if it comes empty, or null if it is not valid (the previous one stays). */
 	private static function url( string $raw, string $field ): ?string {
 		$raw = trim( $raw );
 		if ( '' === $raw ) {
 			return '';
 		}
 		$url = esc_url_raw( $raw, array( 'http', 'https' ) );
-		// filter_var y no wp_http_validate_url(): esa resuelve el DNS del dominio.
+		// filter_var and not wp_http_validate_url(): that one resolves the domain's DNS.
 		if ( '' === $url || ! filter_var( $url, FILTER_VALIDATE_URL ) || ! preg_match( '#^https?://[^/]+\.[^/]+#i', $url ) ) {
 			/* translators: %s: the field name. */
 			self::error( $field, sprintf( __( 'The address in «%s» is not a valid web address. The previous one has been kept.', 'estrategia-web' ), $field ) );

@@ -1,17 +1,17 @@
 <?php
 /**
- * Lo llama tests/pure.test.mjs con el PHP de la máquina (sin WordPress).
- * Ejecuta las clases puras con casos fijos y escribe el resultado en JSON;
- * las aserciones están en el .mjs.
+ * Called by tests/pure.test.mjs with the machine's PHP (no WordPress).
+ * Runs the pure classes with fixed cases and writes the result as JSON;
+ * the assertions live in the .mjs.
  *
- * Cómo se mantiene: un caso nuevo es una clave nueva aquí y su assert allí.
+ * How to maintain: a new case is a new key here and its assert there.
  */
 
 require __DIR__ . '/../../includes/class-links.php';
 require __DIR__ . '/../../includes/class-svg-sanitizer.php';
 require __DIR__ . '/../../../external-links/includes/class-external-links.php';
 
-// class-webp.php (0.5.4) lleva la guarda de ABSPATH y usa apply_filters: lo mínimo para cargarla sin WordPress.
+// class-webp.php (0.5.4) has the ABSPATH guard and uses apply_filters: the bare minimum to load it without WordPress.
 define( 'ABSPATH', __DIR__ . '/' );
 $GLOBALS['pure_filters'] = array();
 function apply_filters( string $hook, $value ) {
@@ -25,11 +25,11 @@ $webp_quality = array(
 	'png'   => Webp::quality( 90, 'image/png' ),
 );
 $GLOBALS['pure_filters']['estrategia_web_site_webp_quality'] = 60;
-$webp_quality['filtro'] = Webp::quality( 82, 'image/webp' );
+$webp_quality['filter'] = Webp::quality( 82, 'image/webp' );
 $GLOBALS['pure_filters']['estrategia_web_site_webp_quality'] = 0;
-$webp_quality['cero'] = Webp::quality( 82, 'image/webp' );
+$webp_quality['zero'] = Webp::quality( 82, 'image/webp' );
 $GLOBALS['pure_filters']['estrategia_web_site_webp_quality'] = 140;
-$webp_quality['tope'] = Webp::quality( 82, 'image/webp' );
+$webp_quality['cap'] = Webp::quality( 82, 'image/webp' );
 $GLOBALS['pure_filters'] = array();
 
 use EstrategiaWeb\Site\External_Links;
@@ -40,14 +40,14 @@ $hostile = <<<'SVG'
 <?xml version="1.0"?>
 <?xml-stylesheet href="https://evil.test/x.css"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" width="120" height="60" viewBox="0 0 120 60" onload="alert(1)">
-  <!-- comentario -->
+  <!-- comment -->
   <script>alert(1)</script>
   <sodipodi:namedview id="nv"/>
   <style>@import url(https://evil.test/a.css); .a{fill:red}</style>
   <style>.b{fill:url(#grad);background:url(https://evil.test/t.png)}</style>
   <defs><linearGradient id="grad"><stop offset="0" stop-color="#fff"/></linearGradient></defs>
   <a href="javascript:alert(1)"><rect width="10" height="10"/></a>
-  <foreignObject><div xmlns="http://www.w3.org/1999/xhtml">hola</div></foreignObject>
+  <foreignObject><div xmlns="http://www.w3.org/1999/xhtml">hello</div></foreignObject>
   <path d="M0 0h10" fill="url(#grad)" onclick="alert(1)" style="fill:red;behavior:url(x.htc)"/>
   <rect width="5" height="5" fill="url(https://evil.test/p)"/>
   <use xlink:href="#grad"/>
@@ -75,14 +75,14 @@ echo json_encode(
 		'wa_empty'           => Links::whatsapp( '', 'x' ),
 		'clean'              => $clean,
 		'xxe'                => Svg_Sanitizer::sanitize( $xxe ),
-		'not_svg'            => Svg_Sanitizer::sanitize( '<html><body>hola</body></html>' ),
-		'not_xml'            => Svg_Sanitizer::sanitize( 'no es xml <' ),
+		'not_svg'            => Svg_Sanitizer::sanitize( '<html><body>hello</body></html>' ),
+		'not_xml'            => Svg_Sanitizer::sanitize( 'not xml <' ),
 		'dims_attrs'         => Svg_Sanitizer::dimensions( '<svg xmlns="http://www.w3.org/2000/svg" width="120px" height="60" viewBox="0 0 10 10"/>' ),
 		'dims_viewbox'       => Svg_Sanitizer::dimensions( '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300.5 150"/>' ),
 		'dims_one_side'      => Svg_Sanitizer::dimensions( '<svg xmlns="http://www.w3.org/2000/svg" width="200" viewBox="0 0 100 50"/>' ),
 		'dims_percent'       => Svg_Sanitizer::dimensions( '<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 40 20"/>' ),
 		'dims_none'          => Svg_Sanitizer::dimensions( '<svg xmlns="http://www.w3.org/2000/svg"/>' ),
-		// 0.5.2. Enlaces externos: href => ¿externo?, con la web en www.web.test.
+		// 0.5.2. External links: href => external?, with the site at www.web.test.
 		'external'           => array_combine(
 			$hrefs = array(
 				'https://wa.me/34600111222',

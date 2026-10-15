@@ -1,39 +1,40 @@
 <?php
 /**
- * Subir SVG a la mediateca, si `allow_svg` está activado, SOLO para quien ya
- * puede meter HTML sin filtrar (unfiltered_html) o administra la web
- * (manage_options), y SIEMPRE saneado (Svg_Sanitizer) antes de guardarlo.
+ * Upload SVG to the media library, if `allow_svg` is enabled, ONLY for whoever
+ * can already insert unfiltered HTML (unfiltered_html) or manages the site
+ * (manage_options), and ALWAYS sanitised (Svg_Sanitizer) before saving it.
  *
- * Por qué esas capacidades: un SVG es código que el navegador ejecuta. Quien
- * tiene unfiltered_html ya puede meter un <script> en una página, así que
- * subir un SVG no le da nada nuevo; un autor o un colaborador, sí. Y aun así
- * se sanea: el SVG puede venir de un tercero (el logo que manda un cliente) y
- * quien lo sube no lo ha leído.
+ * Why those capabilities: an SVG is code the browser runs. Whoever has
+ * unfiltered_html can already put a <script> in a page, so uploading an SVG
+ * gives them nothing new; an author or a contributor, it does. And even so it
+ * is sanitised: the SVG may come from a third party (the logo a client sends)
+ * and whoever uploads it has not read it.
  *
- * Qué toca de WordPress:
- * - upload_mimes: añade svg solo para quien puede.
- * - wp_check_filetype_and_ext: finfo dice «image/svg+xml», «text/plain» o
- *   «text/html» según lleve o no la declaración XML; sin esto WordPress lo
- *   rechaza «por seguridad» aunque esté en upload_mimes.
- * - wp_handle_upload_prefilter / wp_handle_sideload_prefilter: aquí se
- *   comprueba el permiso OTRA VEZ (no fiarse solo de upload_mimes) y se
- *   reescribe el fichero temporal ya saneado. Sideload es el camino de la API
- *   REST cuando el fichero llega como cuerpo crudo.
- * - wp_generate_attachment_metadata: ancho y alto (del width/height o del
- *   viewBox) y un tamaño «full», que es lo que hace que wp_get_attachment_image()
- *   y la imagen destacada funcionen con un SVG.
- * - wp_prepare_attachment_for_js: las medidas y el tamaño en la mediateca.
+ * What it touches in WordPress:
+ * - upload_mimes: adds svg only for those who are allowed.
+ * - wp_check_filetype_and_ext: finfo says «image/svg+xml», «text/plain» or
+ *   «text/html» depending on whether it carries the XML declaration; without
+ *   this WordPress rejects it «for security reasons» even if it is in upload_mimes.
+ * - wp_handle_upload_prefilter / wp_handle_sideload_prefilter: here the
+ *   permission is checked AGAIN (do not rely on upload_mimes alone) and the
+ *   temporary file is rewritten already sanitised. Sideload is the REST API
+ *   path when the file arrives as a raw body.
+ * - wp_generate_attachment_metadata: width and height (from width/height or
+ *   from the viewBox) and a «full» size, which is what makes
+ *   wp_get_attachment_image() and the featured image work with an SVG.
+ * - wp_prepare_attachment_for_js: the dimensions and size in the media library.
  *
- * Cómo se mantiene:
- * - Quién y cuándo: quien vea un SVG legítimo roto tras subirlo. Lo que se
- *   ajusta es la lista blanca de Svg_Sanitizer, nunca se desactiva el saneado.
- * - Caso frontera: un .svgz (comprimido). NO se admite: habría que
- *   descomprimir para sanear, y ningún logo lo necesita.
- * - La trampa: el tema hijo viejo de Lavandería permitía SVG con solo
- *   upload_mimes, sin sanear y para cualquiera con upload_files. No copiar eso
- *   en ningún tema: con este plugin activo sobra, y si un tema añade svg a
- *   upload_mimes por su cuenta, este prefilter sigue saneando y sigue
- *   negándoselo a un autor.
+ * How to maintain:
+ * - Who and when: whoever sees a legitimate SVG broken after uploading it.
+ *   What gets adjusted is Svg_Sanitizer's allowlist; sanitising is never
+ *   switched off.
+ * - Edge case: an .svgz (compressed). NOT accepted: it would have to be
+ *   decompressed to sanitise it, and no logo needs it.
+ * - The trap: the old Lavandería child theme allowed SVG with upload_mimes
+ *   alone, unsanitised and for anyone with upload_files. Do not copy that into
+ *   any theme: with this plugin active it is unnecessary, and if a theme adds
+ *   svg to upload_mimes on its own, this prefilter keeps sanitising and keeps
+ *   refusing it to an author.
  */
 
 namespace EstrategiaWeb\Site;
@@ -65,7 +66,7 @@ final class Svg {
 		if ( self::enabled() && self::user_can() ) {
 			$mimes['svg'] = self::MIME;
 		} else {
-			// Si otro (un tema) lo añadió, quien no puede tampoco lo ve aquí.
+			// If someone else (a theme) added it, whoever is not allowed does not see it here either.
 			unset( $mimes['svg'], $mimes['svgz'] );
 		}
 		return $mimes;
@@ -79,7 +80,7 @@ final class Svg {
 		return $data;
 	}
 
-	/** @param array $file Elemento de $_FILES (name, tmp_name, type, size, error). */
+	/** @param array $file Element of $_FILES (name, tmp_name, type, size, error). */
 	public static function prefilter( $file ) {
 		$name = (string) ( $file['name'] ?? '' );
 		$ext  = strtolower( pathinfo( $name, PATHINFO_EXTENSION ) );

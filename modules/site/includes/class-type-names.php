@@ -1,19 +1,19 @@
 <?php
 /**
- * LOS NOMBRES REGISTRADOS de los tipos de contenido y sus taxonomías: la
- * clave del plugin («client») con el prefijo delante («eweb_client»). Sin
- * publicar (1.2.0): hasta la 1.1.0 se registraban sin prefijo, y WordPress.org
- * lo exige (un «client» de otro plugin chocaría con el nuestro).
+ * THE REGISTERED NAMES of the content types and their taxonomies: the plugin
+ * key («client») with the prefix in front («eweb_client»). Unpublished
+ * (1.2.0): up to 1.1.0 they were registered without a prefix, and WordPress.org
+ * requires one (another plugin's «client» would clash with ours).
  *
- * DOS PREFIJOS, A PROPÓSITO: estrategia_web_ / estrategia-web para opciones,
- * metas, tablas, bloques, ganchos…, y «eweb_» solo para tipos y taxonomías,
- * porque WordPress corta un tipo en 20 caracteres y «estrategia_web_testimonial»
- * son 26. Por qué «eweb_» (David, 15-10-2026), medido en el código de todos los
- * plugins de WordPress.org (veloria.dev): «eweb_» no lo usa ninguno; «ew_» lo
- * usan 13 (Easy Watermark, Essential Widgets…) y «ewp_» 9 (ElasticPress), así
- * que se descartaron; «estweb_» no gustó.
+ * TWO PREFIXES, ON PURPOSE: estrategia_web_ / estrategia-web for options,
+ * metas, tables, blocks, hooks…, and «eweb_» only for types and taxonomies,
+ * because WordPress cuts a type at 20 characters and «estrategia_web_testimonial»
+ * is 26. Why «eweb_» (David, 15-10-2026), measured on the code of every
+ * WordPress.org plugin (veloria.dev): no plugin uses «eweb_»; «ew_» is used by
+ * 13 (Easy Watermark, Essential Widgets…) and «ewp_» by 9 (ElasticPress), so
+ * they were ruled out; «estweb_» was not liked.
  *
- *   clave               nombre registrado (= ruta REST /wp/v2/<nombre>)
+ *   key                 registered name (= REST route /wp/v2/<name>)
  *   client              eweb_client
  *   client_sector       eweb_client_sector
  *   testimonial         eweb_testimonial
@@ -23,42 +23,44 @@
  *   portfolio           eweb_portfolio
  *   portfolio_category  eweb_portfolio_category
  *
- * LA CLAVE y EL NOMBRE son dos cosas, a propósito:
- * - La CLAVE es el vocabulario del plugin: la opción estrategia_web_site
- *   (enabled_types, rewrite_slugs), el filtro estrategia_web_site_rewrite_slug,
- *   las etiquetas, el panel de campos. No cambia: la opción ya va dentro de un
- *   nombre con prefijo y renombrar sus valores sería migrar ajustes del
- *   cliente por nada.
- * - El NOMBRE es lo que ve WordPress (y los demás plugins): wp_posts.post_type,
- *   wp_term_taxonomy.taxonomy, el «postType» de una Consulta, la ruta REST,
- *   el element_type de WPML («post_eweb_client»), las opciones de Rank Math
- *   («pt_eweb_client_title»), las plantillas («single-eweb_client»).
- * Las URL públicas NO llevan ni lo uno ni lo otro: salen del slug traducido
- * (/clientes/), como siempre.
+ * THE KEY and THE NAME are two different things, on purpose:
+ * - The KEY is the plugin's vocabulary: the estrategia_web_site option
+ *   (enabled_types, rewrite_slugs), the estrategia_web_site_rewrite_slug
+ *   filter, the labels, the fields panel. It does not change: the option
+ *   already lives inside a prefixed name, and renaming its values would mean
+ *   migrating the client's settings for nothing.
+ * - The NAME is what WordPress (and other plugins) see: wp_posts.post_type,
+ *   wp_term_taxonomy.taxonomy, a Query's «postType», the REST route, WPML's
+ *   element_type («post_eweb_client»), Rank Math's options
+ *   («pt_eweb_client_title»), the templates («single-eweb_client»).
+ * Public URLs carry NEITHER of the two: they come from the translated slug
+ * (/clientes/), as always.
  *
- * Cómo se mantiene:
- * - EL PREFIJO VIVE SOLO AQUÍ (PREFIX). Todo lo demás lo pide con name():
- *   Content_Types, Location, Meta_Panel, el alias de Unprefixed_Names, el
- *   migrador (includes/class-prefix-migration.php) y la función pública
- *   estrategia_web_type_name() que usan los patrones de los temas.
- *   Fuera del plugin hay UNA copia, y se comprueba sola: content/semilla/
- *   tipos.mjs de cada web (la carga para si /wp/v2/types no tiene el nombre).
- * - El límite que manda: WordPress corta un tipo en 20 caracteres y una
- *   taxonomía en 32. El tipo más largo es «testimonial» (11), así que el
- *   prefijo no puede pasar de 9, guion bajo incluido. Lo mira la prueba de
- *   nivel 1 (modules/site/tests/type-names.test.mjs).
- * - Un tipo o taxonomía nuevo: su clave en KEYS (y en Settings::TYPES /
- *   REWRITE_NAMES; la misma prueba compara las listas). Nace ya con prefijo
- *   y no entra en el migrador ni en el alias: esos son para lo que existió
- *   sin él.
- * - CAMBIAR EL PREFIJO en una web ya publicada es otra migración entera
- *   (la de la 1.2.0 con otro mapa): no se toca después de publicar la 1.2.0.
- * - Caso frontera, con nombre: «location». Es también una palabra corriente
- *   (cabecera HTTP, keywords del bloque de mapa); por eso nada se busca a
- *   mano por la palabra: siempre por clave y name().
- * - La trampa: este fichero lo lleva también el migrador por stdin al
- *   servidor (desplegar.mjs), donde aún corre el plugin viejo. No puede usar
- *   nada que no esté en la 1.1.0: solo PHP y WordPress.
+ * How to maintain:
+ * - THE PREFIX LIVES ONLY HERE (PREFIX). Everything else asks for it with
+ *   name(): Content_Types, Location, Meta_Panel, the Unprefixed_Names alias,
+ *   the migrator (includes/class-prefix-migration.php) and the public function
+ *   estrategia_web_type_name() used by the themes' patterns.
+ *   Outside the plugin there is ONE copy, and it checks itself:
+ *   content/semilla/tipos.mjs of each site (the load stops if /wp/v2/types does
+ *   not have the name).
+ * - The limit that rules: WordPress cuts a type at 20 characters and a
+ *   taxonomy at 32. The longest type is «testimonial» (11), so the prefix
+ *   cannot exceed 9, underscore included. The level 1 test checks it
+ *   (modules/site/tests/type-names.test.mjs).
+ * - A new type or taxonomy: its key in KEYS (and in Settings::TYPES /
+ *   REWRITE_NAMES; the same test compares the lists). It is born already
+ *   prefixed and does not go into the migrator or the alias: those are for
+ *   what existed without it.
+ * - CHANGING THE PREFIX on an already published site is a whole new migration
+ *   (the 1.2.0 one with another map): it is not touched after 1.2.0 is
+ *   published.
+ * - Edge case, by name: «location». It is also a common word (HTTP header,
+ *   keywords of the map block); that is why nothing is searched by hand for
+ *   the word: always by key and name().
+ * - The trap: the migrator also carries this file over stdin to the server
+ *   (desplegar.mjs), where the old plugin is still running. It cannot use
+ *   anything that is not in 1.1.0: only PHP and WordPress.
  */
 
 namespace EstrategiaWeb\Site;
@@ -67,21 +69,21 @@ defined( 'ABSPATH' ) || exit;
 
 final class Type_Names {
 
-	/** EL prefijo. Cambiarlo es esta línea (y content/semilla/tipos.mjs de cada web). */
+	/** THE prefix. Changing it is this line (and content/semilla/tipos.mjs of each site). */
 	public const PREFIX = 'eweb_';
 
-	/** Las claves: los cinco tipos y las tres taxonomías (= Settings::REWRITE_NAMES). */
+	/** The keys: the five types and the three taxonomies (= Settings::REWRITE_NAMES). */
 	public const KEYS = array( 'client', 'client_sector', 'testimonial', 'location', 'project', 'project_category', 'portfolio', 'portfolio_category' );
 
-	/** Las que son taxonomías (el resto, tipos). */
+	/** The ones that are taxonomies (the rest, types). */
 	public const TAXONOMIES = array( 'client_sector', 'project_category', 'portfolio_category' );
 
-	/** «client» → «eweb_client». Una clave que no es nuestra sale tal cual. */
+	/** «client» → «eweb_client». A key that is not ours comes out unchanged. */
 	public static function name( string $key ): string {
 		return in_array( $key, self::KEYS, true ) ? self::PREFIX . $key : $key;
 	}
 
-	/** «eweb_client» → «client»; '' si no es uno de los nuestros. */
+	/** «eweb_client» → «client»; '' if it is not one of ours. */
 	public static function key( string $name ): string {
 		if ( ! str_starts_with( $name, self::PREFIX ) ) {
 			return '';
@@ -90,7 +92,7 @@ final class Type_Names {
 		return in_array( $key, self::KEYS, true ) ? $key : '';
 	}
 
-	/** @return array<string,string> Nombre de antes de 1.2.0 (sin prefijo) → nombre de ahora. */
+	/** @return array<string,string> Pre-1.2.0 name (unprefixed) → current name. */
 	public static function renamed(): array {
 		$out = array();
 		foreach ( self::KEYS as $key ) {
@@ -99,12 +101,12 @@ final class Type_Names {
 		return $out;
 	}
 
-	/** @return array<string,string> Solo los tipos. */
+	/** @return array<string,string> Types only. */
 	public static function renamed_types(): array {
 		return array_diff_key( self::renamed(), array_flip( self::TAXONOMIES ) );
 	}
 
-	/** @return array<string,string> Solo las taxonomías. */
+	/** @return array<string,string> Taxonomies only. */
 	public static function renamed_taxonomies(): array {
 		return array_intersect_key( self::renamed(), array_flip( self::TAXONOMIES ) );
 	}

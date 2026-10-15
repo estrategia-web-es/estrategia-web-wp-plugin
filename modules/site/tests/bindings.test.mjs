@@ -1,4 +1,4 @@
-// NIVEL: 2 — WordPress de Playground, porque ESCRIBE los datos de la empresa y una página; lo que se mira es el HTML que pinta el servidor, sin navegador.
+// NIVEL: 2 — Playground WordPress, because it WRITES the company data and a page; what is checked is the HTML the server renders, no browser.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { reset, saveCompany, seedPage, html } from "../../../tests/lib.mjs";
@@ -6,7 +6,7 @@ import { reset, saveCompany, seedPage, html } from "../../../tests/lib.mjs";
 const bind = (attr, key) => JSON.stringify({ metadata: { bindings: { [attr]: { source: "estrategia-web-site/company", args: { key } } } } });
 
 const PAGE = `<!-- wp:paragraph ${bind("content", "phone")} -->
-<p class="t-phone">Teléfono de relleno</p>
+<p class="t-phone">Placeholder phone</p>
 <!-- /wp:paragraph -->
 <!-- wp:paragraph ${bind("content", "address")} -->
 <p class="t-address">x</p>
@@ -22,13 +22,13 @@ const PAGE = `<!-- wp:paragraph ${bind("content", "phone")} -->
 <div class="wp-block-button t-wa"><a class="wp-block-button__link wp-element-button" href="#">WhatsApp</a></div>
 <!-- /wp:button -->
 <!-- wp:button {"className":"t-tel",${bind("url", "phone_href").slice(1, -1)}} -->
-<div class="wp-block-button t-tel"><a class="wp-block-button__link wp-element-button" href="#">Llamar</a></div>
+<div class="wp-block-button t-tel"><a class="wp-block-button__link wp-element-button" href="#">Call</a></div>
 <!-- /wp:button -->
 <!-- wp:button {"className":"t-mail",${bind("url", "email_href").slice(1, -1)}} -->
-<div class="wp-block-button t-mail"><a class="wp-block-button__link wp-element-button" href="#">Correo</a></div>
+<div class="wp-block-button t-mail"><a class="wp-block-button__link wp-element-button" href="#">Email</a></div>
 <!-- /wp:button -->
 <!-- wp:button {"className":"t-tel2",${bind("url", "phone_secondary_href").slice(1, -1)}} -->
-<div class="wp-block-button t-tel2"><a class="wp-block-button__link wp-element-button" href="#">Llamar al otro</a></div>
+<div class="wp-block-button t-tel2"><a class="wp-block-button__link wp-element-button" href="#">Call the other one</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons -->`;
 
@@ -50,14 +50,14 @@ before(async () => {
 
 const between = (text, cls, tag) => text.match(new RegExp(`<${tag}[^>]*${cls}[^>]*>([\\s\\S]*?)</${tag}>`))?.[1];
 
-test("un párrafo enlazado a estrategia-web-site/company:phone muestra el teléfono, no el texto de relleno", async () => {
+test("a paragraph bound to estrategia-web-site/company:phone shows the phone, not the placeholder text", async () => {
   const { status, text } = await html(page.url);
   assert.equal(status, 200);
   assert.equal(between(text, "t-phone", "p"), "971 12 34 56");
-  assert.ok(!text.includes("Teléfono de relleno"));
+  assert.ok(!text.includes("Placeholder phone"));
 });
 
-test("el botón con whatsapp_href lleva el wa.me correcto; phone_href y email_href también", async () => {
+test("the button with whatsapp_href carries the correct wa.me; phone_href and email_href too", async () => {
   const { text } = await html(page.url);
   const href = (cls) => text.match(new RegExp(`${cls}[^"]*"><a[^>]*href="([^"]*)"`))?.[1];
   assert.equal(href("t-wa"), "https://wa.me/34600111222?text=Hola%2C%20quer%C3%ADa%20informaci%C3%B3n");
@@ -65,15 +65,15 @@ test("el botón con whatsapp_href lleva el wa.me correcto; phone_href y email_hr
   assert.equal(href("t-mail"), "mailto:hola@ejemplo.test");
 });
 
-test("phone_secondary_href (0.2.0): el tel: del segundo teléfono", async () => {
+test("phone_secondary_href (0.2.0): the tel: of the second phone", async () => {
   const { text } = await html(page.url);
   assert.equal(text.match(/t-tel2[^"]*"><a[^>]*href="([^"]*)"/)?.[1], "tel:+34600998877");
 });
 
-test("texto: varias líneas salen con <br>, el HTML del dato se escapa, social.<red> con punto funciona", async () => {
+test("text: multiple lines come out with <br>, the data HTML is escaped, social.<network> with a dot works", async () => {
   const { text } = await html(page.url);
   assert.equal(between(text, "t-address", "p").replace(/\n/g, ""), "Calle Mayor 1<br>07001 Palma");
-  // sanitize_text_field quita «<SL>»; lo que quede con & se escapa.
+  // sanitize_text_field strips «<SL>»; whatever remains with & is escaped.
   assert.match(between(text, "t-name", "h2"), /^Tom &amp; Jerry/);
   assert.equal(between(text, "t-social", "p"), "https://instagram.com/prueba");
 });

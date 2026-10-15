@@ -1,15 +1,15 @@
 <?php
 /**
- * Al BORRAR el plugin (no al desactivarlo).
+ * On plugin DELETION (not on deactivation).
  *
- * No se borra NADA salvo que la web lo pida definiendo en wp-config.php
+ * NOTHING is deleted unless the site asks for it by defining in wp-config.php
  *   define( 'ESTRATEGIA_WEB_SITE_REMOVE_DATA', true );
- * y aun así solo se borra la opción `estrategia_web_site` (los datos de la empresa).
+ * and even then only the `estrategia_web_site` option (the company data) is deleted.
  *
- * El CONTENIDO (clientes, opiniones, sedes, proyectos, portfolio) no se borra
- * nunca desde aquí: es contenido de la web, no del plugin, y volver a
- * instalar el plugin lo recupera tal cual. Si una web quiere borrarlo, se
- * hace a mano y sabiendo lo que se hace.
+ * The CONTENT (clients, testimonials, locations, projects, portfolio) is never
+ * deleted from here: it is the site's content, not the plugin's, and
+ * reinstalling the plugin brings it back as it was. If a site wants it gone,
+ * it is done by hand, knowing what is being done.
  */
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;

@@ -1,7 +1,7 @@
-// NIVEL: 3 — navegador. NECESITA NAVEGADOR PORQUE: el panel «Datos de la sede» solo existe cuando el editor de bloques (JS) lo pinta, y lo que se prueba es que lo escrito AHÍ acabe guardado en la meta.
+// NIVEL: 3 — browser. NEEDS A BROWSER BECAUSE: the «Datos de la sede» panel only exists once the block editor (JS) renders it, and what is tested is that what is typed THERE ends up saved in the meta.
 //
-// El caso real (07-10-2026): cambiar el teléfono de la sede Maioris desde su
-// pantalla de edición, sin WP-CLI.
+// The real case (07-10-2026): changing the phone of the Maioris location from its
+// edit screen, without WP-CLI.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, playwright, reset, saveCompany, wp, type } from "../../../tests/lib.mjs";
@@ -27,7 +27,7 @@ after(() => browser?.close());
 async function openEditor(id) {
   await p.goto(`${BASE}/wp-admin/post.php?post=${id}&action=edit`);
   await p.waitForFunction(() => window.wp?.data?.select("core/editor")?.getCurrentPostId(), null, { timeout: 60000 });
-  // El editor puede abrir con la guía de bienvenida encima.
+  // The editor may open with the welcome guide on top.
   await p.evaluate(() => window.wp.data.dispatch("core/preferences")?.set("core/edit-post", "welcomeGuide", false));
   await p.evaluate(() => window.wp.data.dispatch("core/edit-post")?.openGeneralSidebar?.("edit-post/document"));
   await p.locator(".estrategia-web-meta-panel").waitFor({ timeout: 15000 });
@@ -41,18 +41,18 @@ async function save() {
   }, null, { timeout: 30000 });
 }
 
-test("sede: el panel «Datos de la sede» enseña los campos con sus valores, y cambiar el teléfono ahí lo guarda en la meta", async () => {
-  const sede = await wp(`/${type("location")}`, { method: "POST", body: { title: "Maioris", slug: "maioris", status: "publish", meta: { estrategia_web_location_phone: "971 00 00 00", estrategia_web_location_address: "Nave 14" } } });
-  assert.equal(sede.status, 201, sede.text);
-  await openEditor(sede.json.id);
+test("location: the «Datos de la sede» panel shows the fields with their values, and changing the phone there saves it to the meta", async () => {
+  const loc = await wp(`/${type("location")}`, { method: "POST", body: { title: "Maioris", slug: "maioris", status: "publish", meta: { estrategia_web_location_phone: "971 00 00 00", estrategia_web_location_address: "Unit 14" } } });
+  assert.equal(loc.status, 201, loc.text);
+  await openEditor(loc.json.id);
 
   const panel = p.locator(".estrategia-web-meta-panel");
   assert.match(await panel.locator(".components-panel__body-title").first().textContent(), /Datos de la sede/);
   const phone = panel.locator('[data-meta-key="estrategia_web_location_phone"] input');
   assert.equal(await phone.inputValue(), "971 00 00 00");
-  assert.equal(await panel.locator('[data-meta-key="estrategia_web_location_address"] textarea').inputValue(), "Nave 14");
+  assert.equal(await panel.locator('[data-meta-key="estrategia_web_location_address"] textarea').inputValue(), "Unit 14");
   for (const key of ["schedule", "map_url", "map_embed", "static_map_id", "email"]) {
-    assert.equal(await panel.locator(`[data-meta-key="estrategia_web_location_${key}"]`).count(), 1, `falta ${key}`);
+    assert.equal(await panel.locator(`[data-meta-key="estrategia_web_location_${key}"]`).count(), 1, `missing ${key}`);
   }
   assert.equal(await panel.locator('[data-meta-key="estrategia_web_location_static_map_id"] button').first().textContent(), "Elegir imagen");
 
@@ -60,51 +60,51 @@ test("sede: el panel «Datos de la sede» enseña los campos con sus valores, y 
   await panel.locator('[data-meta-key="estrategia_web_location_map_embed"] textarea').fill('<iframe src="https://www.google.com/maps/embed?pb=abc" width="600"></iframe>');
   await save();
 
-  const saved = (await wp(`/${type("location")}/${sede.json.id}?context=edit`)).json.meta;
+  const saved = (await wp(`/${type("location")}/${loc.json.id}?context=edit`)).json.meta;
   assert.equal(saved.estrategia_web_location_phone, "971 99 88 77");
-  assert.equal(saved.estrategia_web_location_map_embed, "https://www.google.com/maps/embed?pb=abc", "del iframe pegado, solo el src");
-  assert.equal(saved.estrategia_web_location_address, "Nave 14", "lo que no se tocó sigue igual");
-  assert.deepEqual(errors, [], "sin errores de JavaScript en el editor");
+  assert.equal(saved.estrategia_web_location_map_embed, "https://www.google.com/maps/embed?pb=abc", "from the pasted iframe, only the src");
+  assert.equal(saved.estrategia_web_location_address, "Unit 14", "what was not touched stays the same");
+  assert.deepEqual(errors, [], "no JavaScript errors in the editor");
 });
 
-test("cliente (pantalla CLÁSICA: no tiene 'editor'): la meta box «Datos del cliente» guarda tipo de negocio y ajuste de imagen", async () => {
-  const cliente = await wp(`/${type("client")}`, { method: "POST", body: { title: "Portic Villas", status: "publish", meta: { client_url: "https://portic.test" } } });
-  await p.goto(`${BASE}/wp-admin/post.php?post=${cliente.json.id}&action=edit`);
+test("client (CLASSIC screen: it has no 'editor'): the «Datos del cliente» meta box saves business type and image fit", async () => {
+  const client = await wp(`/${type("client")}`, { method: "POST", body: { title: "Portic Villas", status: "publish", meta: { client_url: "https://portic.test" } } });
+  await p.goto(`${BASE}/wp-admin/post.php?post=${client.json.id}&action=edit`);
   const box = p.locator("#estrategia-web-meta");
   assert.match(await box.locator("h2").first().textContent(), /Datos del cliente/);
   assert.equal(await box.locator('[data-meta-key="client_url"] input').inputValue(), "https://portic.test");
   await box.locator('[data-meta-key="estrategia_web_client_business_type"] input').fill("Agencia de <b>alquiler</b> vacacional");
   await box.locator('[data-meta-key="estrategia_web_client_image_fit"] select').selectOption("contain");
   await Promise.all([p.waitForURL(/message=/), p.click("#publish")]);
-  const saved = (await wp(`/${type("client")}/${cliente.json.id}?context=edit`)).json.meta;
-  assert.equal(saved.estrategia_web_client_business_type, "Agencia de alquiler vacacional", "saneado como por REST");
+  const saved = (await wp(`/${type("client")}/${client.json.id}?context=edit`)).json.meta;
+  assert.equal(saved.estrategia_web_client_business_type, "Agencia de alquiler vacacional", "sanitized as via REST");
   assert.equal(saved.estrategia_web_client_image_fit, "contain");
-  assert.equal(saved.client_url, "https://portic.test", "lo que no se tocó sigue igual");
-  assert.deepEqual(errors, [], "sin errores de JavaScript");
+  assert.equal(saved.client_url, "https://portic.test", "what was not touched stays the same");
+  assert.deepEqual(errors, [], "no JavaScript errors");
 });
 
-test("opinión: su panel con autor, valoración y cliente relacionado (las enteras viajan como número)", async () => {
-  const cliente = (await wp(`/${type("client")}?search=Portic`)).json[0];
-  assert.ok(cliente, "el cliente de la prueba anterior");
-  const opinion = await wp(`/${type("testimonial")}`, { method: "POST", body: { title: "Muy bien", status: "publish" } });
-  await openEditor(opinion.json.id);
+test("testimonial: its panel with author, rating and related client (integers travel as numbers)", async () => {
+  const client = (await wp(`/${type("client")}?search=Portic`)).json[0];
+  assert.ok(client, "the client from the previous test");
+  const testimonial = await wp(`/${type("testimonial")}`, { method: "POST", body: { title: "Very good", status: "publish" } });
+  await openEditor(testimonial.json.id);
   const panel = p.locator(".estrategia-web-meta-panel");
   assert.match(await panel.locator(".components-panel__body-title").first().textContent(), /Datos de la opinión/);
   await panel.locator('[data-meta-key="estrategia_web_testimonial_author"] input').fill("Marta G.");
   await panel.locator('[data-meta-key="estrategia_web_testimonial_rating"] select').selectOption("4");
   const related = panel.locator('[data-meta-key="testimonial_client"] select');
-  await related.locator(`option[value="${cliente.id}"]`).waitFor({ state: "attached", timeout: 15000 });
-  await related.selectOption(String(cliente.id));
+  await related.locator(`option[value="${client.id}"]`).waitFor({ state: "attached", timeout: 15000 });
+  await related.selectOption(String(client.id));
   await save();
-  const saved = (await wp(`/${type("testimonial")}/${opinion.json.id}?context=edit`)).json.meta;
+  const saved = (await wp(`/${type("testimonial")}/${testimonial.json.id}?context=edit`)).json.meta;
   assert.equal(saved.estrategia_web_testimonial_author, "Marta G.");
   assert.equal(saved.estrategia_web_testimonial_rating, 4);
-  assert.equal(saved.testimonial_client, cliente.id);
-  assert.deepEqual(errors, [], "sin errores de JavaScript en el editor");
+  assert.equal(saved.testimonial_client, client.id);
+  assert.deepEqual(errors, [], "no JavaScript errors in the editor");
 });
 
-test("una página no lleva el panel (solo sede, cliente y opinión)", async () => {
-  const page = await wp("/pages", { method: "POST", body: { title: "Una página", status: "publish" } });
+test("a page does not get the panel (only location, client and testimonial)", async () => {
+  const page = await wp("/pages", { method: "POST", body: { title: "A page", status: "publish" } });
   await p.goto(`${BASE}/wp-admin/post.php?post=${page.json.id}&action=edit`);
   await p.waitForFunction(() => window.wp?.data?.select("core/editor")?.getCurrentPostId(), null, { timeout: 60000 });
   assert.equal(await p.evaluate(() => typeof window.estrategiaWebMetaPanel), "undefined");

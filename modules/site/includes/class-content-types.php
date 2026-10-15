@@ -1,62 +1,64 @@
 <?php
 /**
- * Los tipos de contenido habituales de una web corporativa, cada uno
- * registrado SOLO si está activado en «Datos de la empresa» (enabled_types).
+ * The usual content types of a corporate site, each one registered ONLY if it
+ * is enabled in «Company details» (enabled_types).
  *
- *   clave        registrado    qué        URL          taxonomía
- *   client       eweb_client     Clientes   /clientes/   eweb_client_sector
- *   testimonial  eweb_testimonial Opiniones /opiniones/
- *   location     eweb_location   Sedes      /sedes/
- *   project      eweb_project    Proyectos  /proyectos/  eweb_project_category
- *   portfolio    eweb_portfolio  Portfolio  /portfolio/  eweb_portfolio_category
+ *   key          registered       what          URL (es_ES)  taxonomy
+ *   client       eweb_client      Clients       /clientes/   eweb_client_sector
+ *   testimonial  eweb_testimonial Testimonials  /opiniones/
+ *   location     eweb_location    Locations     /sedes/
+ *   project      eweb_project     Projects      /proyectos/  eweb_project_category
+ *   portfolio    eweb_portfolio   Portfolio     /portfolio/  eweb_portfolio_category
  *
- * Los nombres (tipo, taxonomía, meta) son CONTRATO: el tema y la carga de
- * contenido los usan en bloques Consulta y en Block Bindings (core/post-meta).
- * Aquí todo va por CLAVE («client») y se registra con Type_Names::name()
- * («eweb_client», 1.2.0): el prefijo vive solo en class-type-names.php, y su
- * cabecera explica por qué la opción sigue hablando en claves.
+ * The names (type, taxonomy, meta) are CONTRACT: the theme and the content
+ * load use them in Query blocks and in Block Bindings (core/post-meta).
+ * Here everything goes by KEY («client») and is registered with
+ * Type_Names::name() («eweb_client», 1.2.0): the prefix lives only in
+ * class-type-names.php, and its header explains why the option still speaks
+ * in keys.
  *
- * Desactivar un tipo NO borra nada: sus entradas siguen en wp_posts con su
- * post_type, simplemente WordPress no las conoce mientras no esté registrado
- * (ni en el menú, ni en REST, ni en la web). Al volver a activarlo aparecen
- * tal cual. Ni aquí ni en uninstall.php se borra contenido.
+ * Disabling a type deletes NOTHING: its posts stay in wp_posts with their
+ * post_type, WordPress simply does not know them while it is not registered
+ * (not in the menu, not in REST, not on the site). When it is enabled again
+ * they come back as they were. No content is deleted here or in uninstall.php.
  *
- * Cómo se mantiene:
- * - Un tipo nuevo: TYPES de Settings (es el enum del esquema), definitions()
- *   aquí, sus etiquetas, el README y una prueba. Es versión MENOR (añade).
- *   Quitar o renombrar uno es MAYOR. Él y su taxonomía, también en
- *   Settings::REWRITE_NAMES y DEFAULTS['rewrite_slugs'].
- * - Slugs públicos (0.2.0, slug()): traducido ← `rewrite_slugs` de la opción
- *   ← filtro `estrategia_web_site_rewrite_slug`. Las rutas son del PLUGIN: una web
- *   las fija en la opción (por REST o en la carga de contenido), no en su
- *   tema. El filtro se queda para lo que no cabe ahí. Caso frontera: una web
- *   con una PÁGINA /clientes/ y el tipo `client` activado; el archivo del tipo
- *   la pisa, y se arregla con {"rewrite_slugs":{"client":"cliente"}}.
- * - Un campo nuevo: en META de su tipo, con tipo y saneado. Si no empieza por
- *   el nombre del tipo (`client_…`), no entra: así no choca con el meta de
- *   otro plugin. Un campo nuevo de `location` entra SOLO en la fuente
- *   `estrategia-web-site/location` (Location lee meta_fields()): añade su fila en la
- *   tabla de esa fuente en el README.
- * - Un campo con valor por defecto distinto de ''/0 lleva 'default' en META
- *   (el primero, `estrategia_web_client_image_fit` = 'cover', 0.2.0).
- * - Clases de entrada (post_class): el plugin añade clases que DESCRIBEN el
- *   dato (`has-image-fit-contain` en un cliente que es un logo) y nunca CSS.
- *   Son contrato con los temas (README, tabla de clases). Caso frontera: un
- *   cliente sin el campo guardado (de 0.1.0) vale 'cover' y no lleva clase,
- *   así que un tema que no conozca la clase se ve igual que antes.
- * - Caso frontera: «servicios». No está, a propósito: en estas webs un
- *   servicio es una PÁGINA (con su diseño propio), no una ficha repetida. Si
- *   una web necesita fichas de servicio, se valora aquí como tipo nuevo.
- * - La trampa: el slug público se traduce con gettext (msgid en inglés,
- *   «clients» → «clientes» en es_ES). Cambiar el idioma de la web CAMBIA las
- *   URL. En una web ya publicada, fijarlo en `rewrite_slugs` antes de cambiar
- *   de idioma.
- * - Y la otra: tras activar o desactivar un tipo, o cambiar un slug fijado,
- *   hay que regenerar las reglas de URL. Se hace solo (maybe_flush borra
- *   `rewrite_rules` y WordPress las rehace en la siguiente carga), pero una
- *   caché de página puede servir un 404 viejo un rato. Un slug cambiado por
- *   el FILTRO no lo ve maybe_flush: quien cambie el filtro, que guarde los
- *   enlaces permanentes.
+ * How to maintain:
+ * - A new type: Settings TYPES (it is the schema enum), definitions() here,
+ *   its labels, the README and a test. It is a MINOR version (it adds).
+ *   Removing or renaming one is MAJOR. It and its taxonomy also go into
+ *   Settings::REWRITE_NAMES and DEFAULTS['rewrite_slugs'].
+ * - Public slugs (0.2.0, slug()): translated ← the option's `rewrite_slugs`
+ *   ← the `estrategia_web_site_rewrite_slug` filter. The routes belong to the
+ *   PLUGIN: a site sets them in the option (over REST or in the content load),
+ *   not in its theme. The filter stays for whatever does not fit there. Edge
+ *   case: a site with a PAGE /clientes/ and the `client` type enabled; the
+ *   type archive overrides it, and it is fixed with
+ *   {"rewrite_slugs":{"client":"cliente"}}.
+ * - A new field: in its type's META, with type and sanitiser. If it does not
+ *   start with the type name (`client_…`), it does not go in: that way it does
+ *   not clash with another plugin's meta. A new `location` field goes ON ITS
+ *   OWN into the `estrategia-web-site/location` source (Location reads
+ *   meta_fields()): add its row to that source's table in the README.
+ * - A field with a default other than ''/0 carries 'default' in META
+ *   (the first one, `estrategia_web_client_image_fit` = 'cover', 0.2.0).
+ * - Post classes (post_class): the plugin adds classes that DESCRIBE the data
+ *   (`has-image-fit-contain` on a client that is a logo) and never CSS. They
+ *   are contract with the themes (README, classes table). Edge case: a client
+ *   without the field saved (from 0.1.0) counts as 'cover' and carries no
+ *   class, so a theme that does not know the class looks the same as before.
+ * - Edge case: «services». Not here, on purpose: on these sites a service is
+ *   a PAGE (with its own design), not a repeated entry. If a site needs
+ *   service entries, it is considered here as a new type.
+ * - The trap: the public slug is translated with gettext (msgid in English,
+ *   «clients» → «clientes» in es_ES). Changing the site language CHANGES the
+ *   URLs. On an already published site, set it in `rewrite_slugs` before
+ *   changing the language.
+ * - And the other one: after enabling or disabling a type, or changing a set
+ *   slug, the URL rules have to be regenerated. It happens on its own
+ *   (maybe_flush deletes `rewrite_rules` and WordPress rebuilds them on the
+ *   next load), but a page cache may serve an old 404 for a while. A slug
+ *   changed by the FILTER is not seen by maybe_flush: whoever changes the
+ *   filter should save the permalinks.
  */
 
 namespace EstrategiaWeb\Site;
@@ -65,7 +67,7 @@ defined( 'ABSPATH' ) || exit;
 
 final class Content_Types {
 
-	/** @return array<string, array> Definición de cada tipo, solo lo que cambia entre ellos. */
+	/** @return array<string, array> Definition of each type, only what differs between them. */
 	private static function definitions(): array {
 		return array(
 			'client'      => array(
@@ -102,11 +104,11 @@ final class Content_Types {
 				),
 				'meta'     => array(
 					'client_url'       => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Client website', 'estrategia-web' ) ),
-					// 0.2.0. 'contain' = la imagen es un LOGO (no se recorta); ver post_class().
+					// 0.2.0. 'contain' = the image is a LOGO (not cropped); see post_class().
 					'estrategia_web_client_image_fit' => array( 'type' => 'string', 'sanitize' => 'fit', 'default' => 'cover', 'label' => __( 'Image fit (cover for a photo, contain for a logo)', 'estrategia-web' ) ),
-					// Sin publicar. Lo que iba entre paréntesis en el título («Portic
-					// Villas (agencia de alquiler vacacional)»): el nombre no se
-					// traduce y esto sí (wpml-config.xml, «translate»).
+					// Unpublished. What used to go in brackets in the title («Portic
+					// Villas (agencia de alquiler vacacional)»): the name is not
+					// translated and this is (wpml-config.xml, «translate»).
 					'estrategia_web_client_business_type' => array( 'type' => 'string', 'sanitize' => 'text', 'label' => __( 'Business type', 'estrategia-web' ) ),
 				),
 			),
@@ -161,9 +163,9 @@ final class Content_Types {
 					'estrategia_web_location_email'     => array( 'type' => 'string', 'sanitize' => 'email', 'label' => __( 'Email', 'estrategia-web' ) ),
 					'estrategia_web_location_schedule'  => array( 'type' => 'string', 'sanitize' => 'textarea', 'label' => __( 'Opening hours', 'estrategia-web' ) ),
 					'estrategia_web_location_map_url'   => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Google Maps link', 'estrategia-web' ) ),
-					// 'embed' (sin publicar; antes 'url'): admite pegar el <iframe> entero y se queda con su src.
+					// 'embed' (unpublished; formerly 'url'): accepts pasting the whole <iframe> and keeps its src.
 					'estrategia_web_location_map_embed' => array( 'type' => 'string', 'sanitize' => 'embed', 'label' => __( 'Map embed URL', 'estrategia-web' ) ),
-					// 0.4.0. Para staticMapUrl / staticMapId de estrategia-web/map (tema padre). Ver local_image_url().
+					// 0.4.0. For staticMapUrl / staticMapId of estrategia-web/map (parent theme). See local_image_url().
 					'estrategia_web_location_static_map'    => array( 'type' => 'string', 'sanitize' => 'local_image', 'label' => __( 'Static map image (theme path or URL of this site)', 'estrategia-web' ) ),
 					'estrategia_web_location_static_map_id' => array( 'type' => 'integer', 'sanitize' => 'image_id', 'label' => __( 'Static map image (media library ID)', 'estrategia-web' ) ),
 				),
@@ -235,7 +237,7 @@ final class Content_Types {
 		);
 	}
 
-	/** Registra los tipos activados, con su taxonomía y sus campos. En init. */
+	/** Registers the enabled types, with their taxonomy and their fields. On init. */
 	public static function register(): void {
 		$definitions = self::definitions();
 		$position    = 21;
@@ -293,35 +295,35 @@ final class Content_Types {
 	}
 
 	/**
-	 * El slug público de un tipo o taxonomía, por orden: el traducido
-	 * («clientes») ← el fijado en la opción (`rewrite_slugs`, 0.2.0) ← el filtro,
-	 * que sigue mandando sobre los dos.
+	 * The public slug of a type or taxonomy, in order: the translated one
+	 * («clientes») ← the one set in the option (`rewrite_slugs`, 0.2.0) ← the
+	 * filter, which still overrides both.
 	 */
 	private static function slug( string $translated, string $name ): string {
 		$fixed = (string) ( ( (array) Settings::get( 'rewrite_slugs' ) )[ $name ] ?? '' );
 		/**
-		 * Cambia el slug público de un tipo (o de su taxonomía) en una web.
+		 * Changes the public slug of a type (or of its taxonomy) on a site.
 		 *
-		 * @param string $slug El slug de `rewrite_slugs` si lo hay; si no, el traducido («clientes»).
-		 * @param string $name La CLAVE del tipo o la taxonomía («client», «client_sector»), sin
-		 *                     el prefijo del nombre registrado (ver Type_Names): así era antes de 1.2.0.
+		 * @param string $slug The `rewrite_slugs` slug if there is one; otherwise, the translated one («clientes»).
+		 * @param string $name The KEY of the type or taxonomy («client», «client_sector»), without
+		 *                     the prefix of the registered name (see Type_Names): that is how it was before 1.2.0.
 		 */
 		return (string) apply_filters( 'estrategia_web_site_rewrite_slug', '' !== $fixed ? $fixed : $translated, $name );
 	}
 
-	/** @return string[] Las claves de meta de un tipo (para la prueba y el README). */
+	/** @return string[] The meta keys of a type (for the test and the README). */
 	public static function meta_keys( string $type ): array {
 		return array_keys( self::definitions()[ $type ]['meta'] ?? array() );
 	}
 
-	/** @return array<string,string> Clave de meta => nombre legible (la fuente de sedes los enseña en el editor). */
+	/** @return array<string,string> Meta key => human-readable name (the locations source shows them in the editor). */
 	public static function meta_fields( string $type ): array {
 		return array_map( static fn( $meta ) => $meta['label'], self::definitions()[ $type ]['meta'] ?? array() );
 	}
 
 	/**
-	 * @return array<string,array{label:string,type:string,sanitize:string}> Los campos de un tipo
-	 * con su clase de saneado: el panel del editor (Meta_Panel) elige el control con ella.
+	 * @return array<string,array{label:string,type:string,sanitize:string}> A type's fields
+	 * with their sanitiser kind: the editor panel (Meta_Panel) picks the control with it.
 	 */
 	public static function meta_definitions( string $type ): array {
 		return array_map(
@@ -333,18 +335,18 @@ final class Content_Types {
 	private static function sanitizer( string $kind ): callable {
 		return match ( $kind ) {
 			'url'      => static fn( $v ) => esc_url_raw( trim( (string) $v ), array( 'http', 'https' ) ),
-			// El código que da Google Maps (Compartir › Insertar un mapa) es un <iframe>:
-			// se guarda solo su src. Una URL suelta pasa igual que con 'url'.
+			// The code Google Maps gives (Share › Embed a map) is an <iframe>:
+			// only its src is saved. A bare URL goes through the same as with 'url'.
 			'embed'    => static fn( $v ) => esc_url_raw( trim( html_entity_decode( preg_match( '/src\s*=\s*["\']([^"\']+)["\']/i', (string) $v, $m ) ? $m[1] : (string) $v ) ), array( 'http', 'https' ) ),
 			'email'    => static fn( $v ) => is_email( trim( (string) $v ) ) ? sanitize_email( (string) $v ) : '',
 			'textarea' => static fn( $v ) => sanitize_textarea_field( (string) $v ),
-			// 0 = sin valoración; cualquier otra cosa se lleva al intervalo 1-5.
+			// 0 = no rating; anything else is clamped to the 1-5 range.
 			'rating'   => static fn( $v ) => (int) $v <= 0 ? 0 : min( 5, (int) $v ),
-			// Solo un id que sea de verdad un cliente; si no, 0.
+			// Only an id that really is a client; otherwise, 0.
 			'client'   => static fn( $v ) => ( (int) $v > 0 && Type_Names::name( 'client' ) === get_post_type( (int) $v ) ) ? (int) $v : 0,
-			// Solo dos valores; cualquier otro (o vacío) es el de por defecto.
+			// Only two values; anything else (or empty) is the default one.
 			'fit'      => static fn( $v ) => 'contain' === trim( (string) $v ) ? 'contain' : 'cover',
-			// 0.4.0, mapa estático de una sede.
+			// 0.4.0, static map of a location.
 			'local_image' => static fn( $v ) => self::local_image_url( (string) $v ),
 			'image_id'    => static fn( $v ) => ( (int) $v > 0 && wp_attachment_is_image( (int) $v ) ) ? (int) $v : 0,
 			default    => static fn( $v ) => sanitize_text_field( (string) $v ),
@@ -352,20 +354,20 @@ final class Content_Types {
 	}
 
 	/**
-	 * URL de una imagen servida por ESTE sitio, o '' (0.4.0, `estrategia_web_location_static_map`).
-	 * Las mismas tres formas que acepta staticMapUrl de estrategia-web/map en el tema
-	 * padre (estrategia_web_map_static_url), que vuelve a comprobarlo al pintar:
+	 * URL of an image served by THIS site, or '' (0.4.0, `estrategia_web_location_static_map`).
+	 * The same three forms accepted by staticMapUrl of estrategia-web/map in the
+	 * parent theme (estrategia_web_map_static_url), which checks it again at render time:
 	 *
-	 *   assets/maps/sede.webp            ruta del TEMA (hijo, luego padre); se guarda sin «./»
-	 *   /wp-content/uploads/mapa.webp    ruta del sitio
-	 *   https://este-dominio/…/mapa.webp URL absoluta del MISMO host que home_url()
+	 *   assets/maps/sede.webp            THEME path (child, then parent); saved without «./»
+	 *   /wp-content/uploads/mapa.webp    site path
+	 *   https://this-domain/…/mapa.webp  absolute URL on the SAME host as home_url()
 	 *
-	 * Por qué tan estricto: un mapa de otro dominio es una petición a un tercero
-	 * sin consentimiento al cargar la página (con la IP del visitante); el
-	 * tema lo descartaría igual, pero aquí se nota al guardar y no en la web.
-	 * Caso frontera: «//otro.test/a.png» tiene host aunque no lleve esquema; se
-	 * trata como otro dominio. La trampa: esc_url_raw() a una ruta sin «/»
-	 * delante le pone «http://»; por eso las rutas se validan a mano.
+	 * Why so strict: a map from another domain is a request to a third party
+	 * without consent on page load (with the visitor's IP); the theme would
+	 * discard it anyway, but here it is noticed on save and not on the site.
+	 * Edge case: «//otro.test/a.png» has a host even though it has no scheme; it
+	 * is treated as another domain. The trap: esc_url_raw() prepends «http://»
+	 * to a path without a leading «/»; that is why paths are validated by hand.
 	 */
 	public static function local_image_url( string $value ): string {
 		$value = trim( $value );
@@ -387,7 +389,7 @@ final class Content_Types {
 				&& strtolower( $parts['host'] ) === strtolower( $site['host'] );
 			return $ok ? esc_url_raw( $value, array( 'http', 'https' ) ) : '';
 		}
-		// Ruta: solo caracteres de URL que no hay que escapar (sin espacios, comillas ni «<»).
+		// Path: only URL characters that need no escaping (no spaces, quotes or «<»).
 		if ( ! preg_match( '#^[A-Za-z0-9._~/\-]+(\?[A-Za-z0-9._~=&%\-]*)?$#', $value ) ) {
 			return '';
 		}
@@ -395,13 +397,14 @@ final class Content_Types {
 	}
 
 	/**
-	 * Filtro post_class: un cliente con estrategia_web_client_image_fit = 'contain' lleva la
-	 * clase `has-image-fit-contain` (en su <li> de una Consulta, en su ficha).
-	 * El plugin NO pone CSS: cómo se pinta un logo es del tema (README).
+	 * post_class filter: a client with estrategia_web_client_image_fit = 'contain' carries the
+	 * `has-image-fit-contain` class (on its <li> in a Query, on its single page).
+	 * The plugin does NOT add CSS: how a logo is rendered is the theme's job (README).
 	 *
-	 * La trampa: es PHP, así que solo sale en la web. La vista previa de una
-	 * Consulta en el editor la pinta JS y no lleva esta clase: ahí los logos
-	 * se ven recortados aunque en la web no (deducido del núcleo, no probado).
+	 * The trap: it is PHP, so it only shows on the site. The preview of a Query
+	 * in the editor is rendered by JS and does not carry this class: there the
+	 * logos look cropped even though on the site they do not (deduced from core,
+	 * not tested).
 	 *
 	 * @param string[] $classes
 	 */
@@ -415,10 +418,10 @@ final class Content_Types {
 	}
 
 	/**
-	 * Si cambian los tipos activados o un slug fijado (rewrite_slugs), se
-	 * tiran las reglas de URL para que WordPress las rehaga en la siguiente
-	 * carga, ya con lo nuevo. (flush_rewrite_rules() aquí las rehará con lo
-	 * VIEJO: esta carga registró los tipos de antes del cambio.)
+	 * If the enabled types or a set slug (rewrite_slugs) change, the URL rules
+	 * are dropped so that WordPress rebuilds them on the next load, already
+	 * with the new values. (flush_rewrite_rules() here would rebuild them with
+	 * the OLD ones: this load registered the types from before the change.)
 	 */
 	public static function maybe_flush( $old, $new ): void {
 		$types = static function ( $o ): array {
@@ -426,7 +429,7 @@ final class Content_Types {
 			sort( $t );
 			return $t;
 		};
-		// Sin ninguno fijado da lo mismo array() que todos vacíos (una opción de 0.1.0).
+		// With none set, array() and all-empty are the same (an option from 0.1.0).
 		$slugs = static fn( $o ): array => array_filter( is_array( $o ) ? (array) ( $o['rewrite_slugs'] ?? array() ) : array(), 'strlen' );
 		$a     = $slugs( $old );
 		$b     = $slugs( $new );
