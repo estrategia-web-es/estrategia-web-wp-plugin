@@ -1,19 +1,20 @@
 <?php
 /**
- * EL CARGADOR DE MÓDULOS. Decide qué carpeta de modules/ se carga en cada
- * petición. Si vas a añadir un módulo, esto es lo único que tienes que leer.
+ * THE MODULE LOADER. Decides which folder of modules/ is loaded on each
+ * request. If you are going to add a module, this is the only thing you need
+ * to read.
  *
  * =========================================================================
- * CÓMO SE AÑADE UN MÓDULO
+ * HOW TO ADD A MODULE
  * =========================================================================
  *
- * 1. Una carpeta modules/<slug>/ con un fichero modules/<slug>/module.php.
- *    El <slug> es el nombre de la carpeta: minúsculas, cifras y guiones
- *    (`redirects`, `social-links`). Es el identificador que se GUARDA en la
- *    base de datos (opción estrategia_web_modules): no se renombra nunca.
+ * 1. A folder modules/<slug>/ with a file modules/<slug>/module.php.
+ *    The <slug> is the folder name: lowercase letters, digits and hyphens
+ *    (`redirects`, `social-links`). It is the identifier STORED in the
+ *    database (option estrategia_web_modules): it is never renamed.
  *
- * 2. module.php empieza por una cabecera como la de un plugin. El cargador
- *    la lee con get_file_data() SIN EJECUTAR el fichero:
+ * 2. module.php starts with a header like a plugin's. The loader reads it
+ *    with get_file_data() WITHOUT EXECUTING the file:
  *
  *        <?php
  *        /**
@@ -22,119 +23,122 @@
  *         * Default:     off
  *         * Requires:    site
  *         *
- *         * (aquí, en castellano, qué hace y cómo se mantiene)
+ *         * (here: what it does and how to maintain it)
  *         *\/
  *
- *    - Module Name (obligatorio): nombre en INGLÉS. Es el msgid: la pantalla
- *      lo pinta traducido (contexto «module name») y tools/i18n.mjs lo
- *      extrae solo al .pot. Sin Module Name la carpeta se IGNORA.
- *    - Description: una frase en inglés, igual (contexto «module description»).
- *    - Default: `on` u `off`. Cualquier otra cosa cuenta como off. Ver abajo
- *      el caso frontera: decide qué pasa en las webs que YA existen.
- *    - Requires: slugs de otros módulos, separados por comas. Si falta uno
- *      (apagado o inexistente), este no se carga y la pantalla dice por qué.
+ *    - Module Name (required): name in ENGLISH. It is the msgid: the screen
+ *      shows it translated (context «module name») and tools/i18n.mjs
+ *      extracts it to the .pot by itself. Without Module Name the folder is
+ *      IGNORED.
+ *    - Description: one sentence in English, same thing (context «module
+ *      description»).
+ *    - Default: `on` or `off`. Anything else counts as off. See the edge
+ *      case below: it decides what happens on sites that ALREADY exist.
+ *    - Requires: slugs of other modules, comma separated. If one is missing
+ *      (off or nonexistent), this one is not loaded and the screen says why.
  *
- * 3. Debajo de la cabecera, el código del módulo: constantes propias si las
- *    necesita (ESTRATEGIA_WEB_<SLUG>_DIR = __DIR__ . '/'), require_once de
- *    sus ficheros (en modules/<slug>/includes/) y sus add_action/add_filter.
- *    Namespace propio: EstrategiaWeb\<Modulo>. Se ejecuta MIENTRAS SE CARGA EL
- *    PLUGIN (antes de plugins_loaded, init y after_setup_theme), así que
- *    todo lo que dependa de WordPress va DENTRO de un gancho, nunca suelto.
+ * 3. Below the header, the module's code: its own constants if it needs
+ *    them (ESTRATEGIA_WEB_<SLUG>_DIR = __DIR__ . '/'), require_once of its
+ *    files (in modules/<slug>/includes/) and its add_action/add_filter.
+ *    Its own namespace: EstrategiaWeb\<Module>. It runs WHILE THE PLUGIN IS
+ *    LOADING (before plugins_loaded, init and after_setup_theme), so
+ *    everything that depends on WordPress goes INSIDE a hook, never loose.
  *
- * 4. Lo suyo, dentro de su carpeta:
- *    - bloques en modules/<slug>/blocks/<bloque>/block.json, registrados en
- *      init con register_block_type( __DIR__ . '/blocks/<bloque>' ). Los
- *      textos de editor (edit.js con wp.i18n y dominio estrategia-web) se
- *      traducen solos: includes/class-blocks.php les pasa las traducciones.
- *      Si el bloque usa supports.autoRegister, las etiquetas de sus
- *      atributos van en blocks/<bloque>/labels.php (ver class-blocks.php).
- *    - pruebas en modules/<slug>/tests/*.test.mjs, con «// NIVEL: n — …» en
- *      la primera línea: tests/run.mjs las encuentra solo (no hay lista).
- *      Las del nivel 2/3 hablan con el WordPress de pruebas (puerto 9404);
- *      sus ayudantes comunes están en tests/lib.mjs.
- *    - si al BORRAR el plugin hay que limpiar algo: modules/<slug>/uninstall.php
- *      (lo llama el uninstall.php de la raíz, esté el módulo encendido o no).
- *    - textos: __( 'English text', 'estrategia-web' ). Un solo dominio para
- *      todo el plugin. Después, `node tools/i18n.mjs` y traducir en
+ * 4. Its own things, inside its folder:
+ *    - blocks in modules/<slug>/blocks/<block>/block.json, registered on
+ *      init with register_block_type( __DIR__ . '/blocks/<block>' ). The
+ *      editor texts (edit.js with wp.i18n and the estrategia-web domain) are
+ *      translated automatically: includes/class-blocks.php passes them the
+ *      translations. If the block uses supports.autoRegister, the labels of
+ *      its attributes go in blocks/<block>/labels.php (see class-blocks.php).
+ *    - tests in modules/<slug>/tests/*.test.mjs, with «// NIVEL: n — …» on
+ *      the first line: tests/run.mjs finds them by itself (there is no list).
+ *      Level 2/3 ones talk to the test WordPress (port 9404); their shared
+ *      helpers are in tests/lib.mjs.
+ *    - if something must be cleaned up when the plugin is DELETED:
+ *      modules/<slug>/uninstall.php (called by the root uninstall.php,
+ *      whether the module is on or not).
+ *    - texts: __( 'English text', 'estrategia-web' ). A single domain for
+ *      the whole plugin. Then `node tools/i18n.mjs` and translate in
  *      languages/estrategia-web-es_ES.po.
  *
- * 5. NO hay registro central que editar. Ni este fichero, ni el principal,
- *    ni la pantalla: el módulo aparece en «Estrategia Web → Módulos» en
- *    cuanto existe la carpeta. Dos personas que añaden dos módulos no tocan
- *    el mismo fichero... salvo tres sitios compartidos que no se pueden
- *    partir y que hay que tocar con cuidado (en el mismo commit que el
- *    módulo): languages/ (el .po, que regenera la herramienta),
- *    wpml-config.xml (WPML solo lee el de la raíz del plugin) y el
- *    CHANGELOG.md.
+ * 5. There is NO central registry to edit. Not this file, not the main one,
+ *    not the screen: the module shows up in «Estrategia Web → Modules» as
+ *    soon as the folder exists. Two people adding two modules do not touch
+ *    the same file... except for three shared places that cannot be split
+ *    and must be touched with care (in the same commit as the module):
+ *    languages/ (the .po, regenerated by the tool), wpml-config.xml (WPML
+ *    only reads the one at the plugin root) and CHANGELOG.md.
  *
- * Ejemplo mínimo que funciona: modules/webp/module.php.
- * Ejemplo con bloques, pruebas y desinstalación: modules/forms/module.php.
- *
- * =========================================================================
- * QUÉ SE CARGA, Y DÓNDE SE GUARDA
- * =========================================================================
- *
- * - estrategia_web_modules: array con los slugs ENCENDIDOS. Lo escribe la
- *   pantalla (o `wp option update estrategia_web_modules '["site","forms"]'
- *   --format=json`). Si no existe, valen los «Default» de cada cabecera: una
- *   web nueva no escribe nada hasta que alguien toca la pantalla.
- * - estrategia_web_modules_known: los slugs que existían la última vez que se
- *   guardó la anterior. Se escribe SOLA al guardarla (gancho de abajo).
- * - Un módulo apagado no carga NADA: ni su module.php (solo se lee su
- *   cabecera como texto), ni sus clases, ni sus bloques, ni sus assets.
- *   Lo que tenga guardado (opciones, tablas, entradas) se queda donde está:
- *   apagar no borra; volver a encenderlo lo recupera tal cual.
- *
- * CASO FRONTERA, con nombre: llega un módulo NUEVO a una web que ya había
- * guardado su lista. Ejemplo real que va a pasar: «uploads» (las subidas de
- * imágenes, hoy un MU-plugin en Lavandería) con Default: on, desplegado a
- * Lavandería, que ya tiene estrategia_web_modules guardada sin él.
- *   - Si el slug NO está en _known (la web no lo ha visto nunca), se aplica
- *     su Default: con «on» se enciende solo al desplegar. Es lo que se quiere
- *     para algo que sustituye a lo que ya hacía la web.
- *   - Si está en _known y no en la lista, alguien lo APAGÓ: se respeta.
- *   - Por eso Default: on es una decisión sobre TODAS las webs desplegadas,
- *     no solo las nuevas. Lo que cambia algo visible (un aviso, un bloque que
- *     se pinta solo, redirecciones) nace con Default: off.
- *
- * Dependencias: se resuelven en cada carga, no al guardar. Se quita de la
- * lista todo módulo con un Requires que no esté, y se repite hasta que no
- * cambie nada (A necesita B, B necesita C apagado: caen B y A). Se cargan en
- * orden de dependencias y, entre iguales, alfabético.
+ * Minimal working example: modules/webp/module.php.
+ * Example with blocks, tests and uninstall: modules/forms/module.php.
  *
  * =========================================================================
- * LAS TRAMPAS (las que mordieron al montarlo)
+ * WHAT GETS LOADED, AND WHERE IT IS STORED
  * =========================================================================
  *
- * - El gancho de ACTIVACIÓN del plugin (estrategia_web_activate) solo salta
- *   al activar el PLUGIN en «Plugins», no al encender un módulo en la
- *   pantalla: cuando se guarda la pantalla, el módulo recién encendido
- *   todavía no está cargado en esa petición. Así que lo que un módulo
- *   necesita para funcionar (crear tablas, programar un cron) se hace
- *   IDEMPOTENTE EN CADA CARGA, como forms: Migrations::maybe_run en
- *   plugins_loaded y Cron::schedule en init. estrategia_web_activate queda
- *   para lo que solo tiene sentido al activar el plugin entero.
- * - Al guardar la lista se borran las reglas de reescritura (rewrite_rules):
- *   un módulo que registra tipos de contenido o rutas cambia las URL, y
- *   WordPress las regenera solo en la petición siguiente. No hace falta que
- *   cada módulo lo haga.
- * - get_file_data() solo lee los primeros 8 KB del fichero y busca la clave
- *   como «Clave:» al principio de una línea de comentario (sin distinguir
- *   mayúsculas). Una cabecera detrás de 8 KB de código, o una clave mal
- *   escrita («Modul Name:», «Module-Name:»), no se ve: la carpeta se ignora
- *   SIN AVISAR, y en la pantalla simplemente no sale. Por eso la cabecera va
- *   la primera y tests/modules.test.mjs comprueba que TODAS las carpetas de
- *   modules/ se leen con nombre (vista en rojo con «Modul Name:»). Ojo
- *   también con lo que escribas debajo: una línea de la documentación que
- *   empiece por «Default:» o «Requires:» antes que la de la cabecera la
- *   sustituye (gana la primera).
- * - Un módulo NO llama a clases de otro módulo sin declararlo en Requires:
- *   si el otro está apagado, la clase no existe y es un error fatal. Si la
- *   relación es opcional, class_exists() antes (ver modules/site, que no sabe
- *   si consent está).
+ * - estrategia_web_modules: array with the slugs that are ON. Written by the
+ *   screen (or `wp option update estrategia_web_modules '["site","forms"]'
+ *   --format=json`). If it does not exist, each header's «Default» applies:
+ *   a new site writes nothing until someone touches the screen.
+ * - estrategia_web_modules_known: the slugs that existed the last time the
+ *   previous one was saved. It is written AUTOMATICALLY when that one is
+ *   saved (hook below).
+ * - A module that is off loads NOTHING: not its module.php (only its header
+ *   is read as text), not its classes, not its blocks, not its assets.
+ *   Whatever it has stored (options, tables, posts) stays where it is:
+ *   turning it off deletes nothing; turning it on again restores it as it was.
  *
- * Prueba: tests/modules.test.mjs (nivel 1: cabeceras y resolución) y
- * tests/modules-page.test.mjs (nivel 2: apagar un módulo quita su bloque).
+ * EDGE CASE, by name: a NEW module arrives at a site that had already saved
+ * its list. Real example that is going to happen: «uploads» (image uploads,
+ * today an MU-plugin on Lavandería) with Default: on, deployed to
+ * Lavandería, which already has estrategia_web_modules saved without it.
+ *   - If the slug is NOT in _known (the site has never seen it), its
+ *     Default applies: with «on» it turns itself on when deployed. That is
+ *     what is wanted for something that replaces what the site already did.
+ *   - If it is in _known and not in the list, someone turned it OFF: that is
+ *     respected.
+ *   - That is why Default: on is a decision about ALL deployed sites, not
+ *     just new ones. Anything that changes something visible (a notice, a
+ *     block that renders by itself, redirects) starts with Default: off.
+ *
+ * Dependencies: resolved on every load, not on save. Every module with a
+ * Requires that is not present is removed from the list, and this repeats
+ * until nothing changes (A needs B, B needs C which is off: B and A drop).
+ * They are loaded in dependency order and, among equals, alphabetically.
+ *
+ * =========================================================================
+ * THE TRAPS (the ones that bit while building it)
+ * =========================================================================
+ *
+ * - The plugin's ACTIVATION hook (estrategia_web_activate) only fires when
+ *   the PLUGIN is activated in «Plugins», not when a module is turned on in
+ *   the screen: when the screen is saved, the newly enabled module is not
+ *   loaded yet in that request. So whatever a module needs in order to work
+ *   (creating tables, scheduling a cron) is done IDEMPOTENTLY ON EVERY LOAD,
+ *   like forms: Migrations::maybe_run on plugins_loaded and Cron::schedule on
+ *   init. estrategia_web_activate is left for what only makes sense when the
+ *   whole plugin is activated.
+ * - When the list is saved, the rewrite rules (rewrite_rules) are deleted:
+ *   a module that registers post types or routes changes the URLs, and
+ *   WordPress regenerates them by itself on the next request. Each module
+ *   does not need to do it.
+ * - get_file_data() only reads the first 8 KB of the file and looks for the
+ *   key as «Key:» at the start of a comment line (case-insensitive). A
+ *   header after 8 KB of code, or a misspelled key («Modul Name:»,
+ *   «Module-Name:»), is not seen: the folder is ignored WITHOUT WARNING, and
+ *   it simply does not show up on the screen. That is why the header goes
+ *   first and tests/modules.test.mjs checks that ALL folders in modules/ are
+ *   read with a name (seen in red with «Modul Name:»). Also watch what you
+ *   write below it: a documentation line starting with «Default:» or
+ *   «Requires:» before the header's one replaces it (the first one wins).
+ * - A module does NOT call classes of another module without declaring it
+ *   in Requires: if the other one is off, the class does not exist and it
+ *   is a fatal error. If the relationship is optional, class_exists() first
+ *   (see modules/site, which does not know whether consent is there).
+ *
+ * Tests: tests/modules.test.mjs (level 1: headers and resolution) and
+ * tests/modules-page.test.mjs (level 2: turning a module off removes its block).
  */
 
 namespace EstrategiaWeb;
@@ -143,13 +147,13 @@ defined( 'ABSPATH' ) || exit;
 
 final class Modules {
 
-	/** Slugs encendidos (lo que guarda la pantalla). */
+	/** Slugs that are on (what the screen saves). */
 	public const OPTION = 'estrategia_web_modules';
 
-	/** Slugs que existían la última vez que se guardó OPTION (ver el caso frontera). */
+	/** Slugs that existed the last time OPTION was saved (see the edge case). */
 	public const KNOWN_OPTION = 'estrategia_web_modules_known';
 
-	/** Cabecera de module.php → clave interna. */
+	/** module.php header → internal key. */
 	public const HEADERS = array(
 		'name'        => 'Module Name',
 		'description' => 'Description',
@@ -160,19 +164,19 @@ final class Modules {
 	/** @var array<string, array{name: string, description: string, default: bool, requires: string[], file: string}>|null */
 	private static ?array $available = null;
 
-	/** @var string[] Los que se cargaron en esta petición, en orden. */
+	/** @var string[] The ones loaded in this request, in order. */
 	private static array $loaded = array();
 
-	/** @var array<string, string[]> slug => requisitos que faltan (para la pantalla). */
+	/** @var array<string, string[]> slug => missing requirements (for the screen). */
 	private static array $blocked = array();
 
-	/** Carpeta de los módulos. */
+	/** Modules folder. */
 	public static function dir(): string {
 		return ESTRATEGIA_WEB_DIR . 'modules/';
 	}
 
 	/**
-	 * Los módulos que hay en disco, leídos de su cabecera.
+	 * The modules on disk, read from their header.
 	 *
 	 * @return array<string, array{name: string, description: string, default: bool, requires: string[], file: string}>
 	 */
@@ -191,8 +195,8 @@ final class Modules {
 	}
 
 	/**
-	 * Lee la cabecera de un module.php. null si la carpeta no es un módulo
-	 * válido (slug con caracteres raros o sin Module Name).
+	 * Reads the header of a module.php. null if the folder is not a valid
+	 * module (slug with odd characters or no Module Name).
 	 *
 	 * @return array{name: string, description: string, default: bool, requires: string[], file: string}|null
 	 */
@@ -215,13 +219,13 @@ final class Modules {
 	}
 
 	/**
-	 * Lo que la web quiere encendido, antes de mirar dependencias.
+	 * What the site wants on, before looking at dependencies.
 	 *
-	 * Función pura (sin WordPress) para poder probarla en el nivel 1.
+	 * Pure function (no WordPress) so it can be tested at level 1.
 	 *
-	 * @param array<string, array{default: bool}> $available Módulos en disco.
-	 * @param mixed                               $saved     La opción OPTION (null si no existe).
-	 * @param mixed                               $known     La opción KNOWN_OPTION (null si no existe).
+	 * @param array<string, array{default: bool}> $available Modules on disk.
+	 * @param mixed                               $saved     The OPTION option (null if it does not exist).
+	 * @param mixed                               $known     The KNOWN_OPTION option (null if it does not exist).
 	 * @return string[]
 	 */
 	public static function wanted( array $available, $saved, $known ): array {
@@ -229,25 +233,25 @@ final class Modules {
 		if ( ! is_array( $saved ) ) {
 			return $defaults;
 		}
-		// Sin _known (la lista se escribió a mano en la base de datos), la lista manda entera.
+		// Without _known (the list was written by hand in the database), the list rules entirely.
 		$known  = is_array( $known ) ? $known : array_keys( $available );
 		$wanted = array_intersect( array_map( 'strval', $saved ), array_keys( $available ) );
 		foreach ( $defaults as $slug ) {
 			if ( ! in_array( $slug, $known, true ) ) {
-				$wanted[] = $slug; // Nuevo para esta web y encendido por defecto: el caso frontera.
+				$wanted[] = $slug; // New to this site and on by default: the edge case.
 			}
 		}
 		return array_values( array_unique( $wanted ) );
 	}
 
 	/**
-	 * Quita los que no tienen sus requisitos y ordena por dependencias.
+	 * Removes those missing their requirements and sorts by dependencies.
 	 *
-	 * Función pura, como wanted().
+	 * Pure function, like wanted().
 	 *
-	 * @param array<string, array{requires: string[]}> $available Módulos en disco.
-	 * @param string[]                                 $wanted    Lo que la web quiere.
-	 * @return array{0: string[], 1: array<string, string[]>} [ cargables en orden, bloqueados => lo que les falta ]
+	 * @param array<string, array{requires: string[]}> $available Modules on disk.
+	 * @param string[]                                 $wanted    What the site wants.
+	 * @return array{0: string[], 1: array<string, string[]>} [ loadable in order, blocked => what they are missing ]
 	 */
 	public static function resolve( array $available, array $wanted ): array {
 		$active  = array_values( array_intersect( array_keys( $available ), $wanted ) );
@@ -265,16 +269,16 @@ final class Modules {
 			$active = array_values( $active );
 		} while ( $changed );
 
-		// Orden: cada uno después de lo que necesita; entre iguales, alfabético.
+		// Order: each one after what it needs; among equals, alphabetical.
 		$ordered = array();
-		$seen    = array(); // Visitados: un ciclo A↔B no da vueltas sin fin.
+		$seen    = array(); // Visited: an A↔B cycle does not loop forever.
 		$visit   = static function ( string $slug ) use ( &$visit, &$ordered, &$seen, $available ): void {
 			if ( isset( $seen[ $slug ] ) ) {
 				return;
 			}
 			$seen[ $slug ] = true;
 			foreach ( $available[ $slug ]['requires'] as $required ) {
-				$visit( $required ); // Todos están en $active: si no, ya estaría bloqueado.
+				$visit( $required ); // All of them are in $active: otherwise it would already be blocked.
 			}
 			$ordered[] = $slug;
 		};
@@ -285,7 +289,7 @@ final class Modules {
 		return array( $ordered, $blocked );
 	}
 
-	/** Carga los módulos encendidos. La llama Plugin::boot(), una vez. */
+	/** Loads the enabled modules. Called by Plugin::boot(), once. */
 	public static function load(): void {
 		$available = self::available();
 		list( $active, self::$blocked ) = self::resolve(
@@ -301,14 +305,14 @@ final class Modules {
 		add_action( 'update_option_' . self::OPTION, array( self::class, 'saved' ) );
 
 		/**
-		 * Los módulos ya están cargados (antes de plugins_loaded).
+		 * The modules are already loaded (before plugins_loaded).
 		 *
-		 * @param string[] $loaded Slugs cargados, en orden.
+		 * @param string[] $loaded Loaded slugs, in order.
 		 */
 		do_action( 'estrategia_web_modules_loaded', self::$loaded );
 	}
 
-	/** Si un módulo se cargó en esta petición. */
+	/** Whether a module was loaded in this request. */
 	public static function is_active( string $slug ): bool {
 		return in_array( $slug, self::$loaded, true );
 	}
@@ -323,13 +327,13 @@ final class Modules {
 		return self::$blocked;
 	}
 
-	/** Limpia lo que llega a la opción: solo slugs que existen. */
+	/** Cleans what reaches the option: only slugs that exist. */
 	public static function sanitize( $value ): array {
 		$value = is_array( $value ) ? $value : array();
 		return array_values( array_intersect( array_keys( self::available() ), array_map( 'strval', $value ) ) );
 	}
 
-	/** Al guardar la lista: apunta qué módulos había y que se regeneren las URL. */
+	/** When the list is saved: records which modules existed and has the URLs regenerated. */
 	public static function saved(): void {
 		update_option( self::KNOWN_OPTION, array_keys( self::available() ), false );
 		delete_option( 'rewrite_rules' );

@@ -1,83 +1,90 @@
 <?php
 /**
- * EL MIGRADOR DEL PREFIJO (1.2.0): los tipos y taxonomías del módulo site
- * pasan de «client», «client_sector»… a «eweb_client», «eweb_client_sector»…
- * (el mapa entero sale de Type_Names, modules/site/includes/class-type-names.php:
- * el prefijo vive SOLO allí). EN SITIO y sin volver a cargar contenido.
- * Las URL públicas no cambian (salen del slug, no del nombre).
+ * THE PREFIX MIGRATOR (1.2.0): the post types and taxonomies of the site
+ * module go from «client», «client_sector»… to «eweb_client»,
+ * «eweb_client_sector»… (the whole map comes from Type_Names,
+ * modules/site/includes/class-type-names.php: the prefix lives ONLY there).
+ * IN PLACE and without reloading content. Public URLs do not change (they
+ * come from the slug, not the name).
  *
- * Qué hace, en este orden (cada paso dice qué cambiaría y cuántos):
- *   1. tipos       wp_posts.post_type, todas las filas (también borradores y
- *                  papelera; las revisiones son «revision» y no se tocan).
- *   2. taxonomías  wp_term_taxonomy.taxonomy. Los term_id NO cambian.
- *   3. contenido   post_content de todo menos revisiones y adjuntos, SOLO
- *                  dentro del comentario de un bloque: core/query
- *                  ("postType" y las claves de "taxQuery", con o sin
- *                  "include"/"exclude"), core/post-terms ("term") y
- *                  core/navigation-link/-submenu ("type"). Directo a la tabla,
- *                  sin revisión ni ganchos de guardado. Por cada entrada
- *                  cambiada dispara estrategia_web_prefix_migration_post
- *                  (id, antes, después, seco): así una web que guarde huellas
- *                  de su carga (Lavandería: despliegue/prefijo-tipos.php) las
- *                  renueva y el cambio NO cuenta como edición del cliente.
- *   4. plantillas  wp_template / wp_template_part llamadas single-client,
+ * What it does, in this order (each step says what it would change and how
+ * many):
+ *   1. types       wp_posts.post_type, every row (drafts and trash too;
+ *                  revisions are «revision» and are not touched).
+ *   2. taxonomies  wp_term_taxonomy.taxonomy. The term_ids do NOT change.
+ *   3. content     post_content of everything except revisions and
+ *                  attachments, ONLY inside a block's comment: core/query
+ *                  ("postType" and the "taxQuery" keys, with or without
+ *                  "include"/"exclude"), core/post-terms ("term") and
+ *                  core/navigation-link/-submenu ("type"). Straight to the
+ *                  table, with no revision or save hooks. For each changed
+ *                  post it fires estrategia_web_prefix_migration_post
+ *                  (id, before, after, dry): that way a site that stores
+ *                  fingerprints of its content load (Lavandería:
+ *                  despliegue/prefijo-tipos.php) refreshes them and the
+ *                  change does NOT count as a client edit.
+ *   4. templates   wp_template / wp_template_part named single-client,
  *                  archive-client, taxonomy-client_sector(-slug)…
- *   5. menús       los elementos de menú clásico que apuntan a un tipo, a su
- *                  archivo o a una taxonomía (_menu_item_object).
+ *   5. menus       classic menu items pointing to a post type, its archive
+ *                  or a taxonomy (_menu_item_object).
  *   6. wpml        icl_translations (element_type post_client → post_eweb_client,
- *                  tax_client_sector → tax_eweb_client_sector), los ajustes de
- *                  tipos y taxonomías traducibles (SETTINGS_SECTIONS, solo
- *                  CLAVES y solo en esas secciones) en los TRES sitios donde
- *                  WPML 5.1 los guarda: icl_sitepress_settings entero, sus
- *                  copias partidas icl_sitepress_settings#<sección> y
- *                  WPML(setup…) (WPML_OPTIONS); y las cadenas de traducción
- *                  de slugs («URL slug: client»).
- *   7. rank math   las opciones rank-math-options-* por tipo y taxonomía
- *                  (pt_client_… / tax_client_sector_… y el valor de
- *                  pt_…_primary_taxonomy), rank_math_known_post_types y la
- *                  meta rank_math_primary_<tax>.
- *   8. pantallas   las preferencias por tipo de cada usuario (columnas
- *                  ocultas, entradas por página, cajas cerradas): cosmético.
- *   9. avisos      lo que NO sabe migrar y nombra un tipo viejo: opciones con
- *                  el nombre como cadena serializada. Se listan para mirarlas
- *                  a mano; no se tocan.
- *  10. permalinks  las reglas de URL se rehacen en la misma pasada (ver la
- *                  trampa de /en/ en run()) y se vacía la caché.
- * La opción estrategia_web_site NO cambia: enabled_types y rewrite_slugs
- * hablan en CLAVES (ver la cabecera de Type_Names).
+ *                  tax_client_sector → tax_eweb_client_sector), the settings
+ *                  for translatable post types and taxonomies
+ *                  (SETTINGS_SECTIONS, only KEYS and only in those sections)
+ *                  in the THREE places where WPML 5.1 stores them: the whole
+ *                  icl_sitepress_settings, its split copies
+ *                  icl_sitepress_settings#<section> and WPML(setup…)
+ *                  (WPML_OPTIONS); and the slug translation strings
+ *                  («URL slug: client»).
+ *   7. rank math   the rank-math-options-* options per post type and taxonomy
+ *                  (pt_client_… / tax_client_sector_… and the value of
+ *                  pt_…_primary_taxonomy), rank_math_known_post_types and the
+ *                  rank_math_primary_<tax> meta.
+ *   8. screens     each user's per-type preferences (hidden columns, items
+ *                  per page, closed boxes): cosmetic.
+ *   9. warnings    what it CANNOT migrate and names an old type: options with
+ *                  the name as a serialized string. They are listed to be
+ *                  checked by hand; they are not touched.
+ *  10. permalinks  the URL rules are rebuilt in the same run (see the /en/
+ *                  trap in run()) and the cache is flushed.
+ * The estrategia_web_site option does NOT change: enabled_types and
+ * rewrite_slugs speak in KEYS (see the header of Type_Names).
  *
- * Cómo se usa:
- *   - WP-CLI, con el plugin 1.2.0 activo: wp estrategia-web migrate-prefix [--dry-run]
- *   - Sin WP-CLI propio (Lavandería): incluir este fichero y class-type-names.php
- *     desde «wp eval-file» y llamar a Prefix_Migration::run( $seco ). Ver
- *     lavanderia-mallorca/despliegue/prefijo-tipos.php, que además renueva
- *     las huellas de la carga.
- *   NO corre solo al activar ni al actualizar: se pasa con copia de
- *   seguridad y habiendo mirado antes el seco. Mientras no se pasa, la web
- *   con el plugin 1.2.0 no encuentra sus clientes, opiniones ni sedes (el
- *   desplegador lo pasa justo después de subir el plugin).
+ * How to use it:
+ *   - WP-CLI, with plugin 1.2.0 active: wp estrategia-web migrate-prefix [--dry-run]
+ *   - Without its own WP-CLI command (Lavandería): include this file and
+ *     class-type-names.php from «wp eval-file» and call
+ *     Prefix_Migration::run( $dry ). See
+ *     lavanderia-mallorca/despliegue/prefijo-tipos.php, which also refreshes
+ *     the content-load fingerprints.
+ *   It does NOT run by itself on activation or update: it is run with a
+ *   backup and after having looked at the dry run first. Until it runs, the
+ *   site with plugin 1.2.0 cannot find its clients, testimonials or
+ *   locations (the deployer runs it right after uploading the plugin).
  *
- * IDEMPOTENTE: cada paso busca lo viejo; la segunda pasada no cambia nada.
- * En seco no escribe nada.
+ * IDEMPOTENT: each step looks for the old names; the second run changes
+ * nothing. A dry run writes nothing.
  *
- * Cómo se mantiene:
- * - Quién: quien toque los tipos. Cuándo: si aparece otro sitio donde se
- *   guarda un nombre de tipo (lo dirá el paso 9 en el seco de una web), se
- *   añade como paso y a su prueba (modules/site/tests/prefix-migration.test.mjs).
- * - Se quita en 2.0.0, con Unprefixed_Names, cuando todas las webs lo hayan
- *   pasado (15-10-2026: solo Lavandería Mallorca).
- * - Caso frontera, con nombre: OTRO PLUGIN CON UN TIPO «client». Si al migrar
- *   de verdad el nombre viejo sigue registrado (no por nosotros: el plugin
- *   1.2.0 ya no lo registra), sus filas son de ese plugin: el tipo o la
- *   taxonomía se salta y sale un aviso. En seco no se mira, porque allí corre
- *   aún el plugin viejo, que sí lo registra.
- * - Caso frontera: el contenido de una entrada que diga «client» en el texto.
- *   No se toca: solo se cambia dentro del JSON del comentario de los cuatro
- *   bloques, y solo en las claves dichas.
- * - La trampa: WPML guarda sus ajustes como un array grande con claves que
- *   pueden llamarse igual que un tipo en otra sección (p. ej. «location» en
- *   la del selector de idioma). Por eso solo se renombran claves dentro de
- *   SETTINGS_SECTIONS, y nunca valores.
+ * How to maintain:
+ * - Who: whoever touches the post types. When: if another place where a
+ *   type name is stored turns up (step 9 will say so in a site's dry run),
+ *   it is added as a step and to its test
+ *   (modules/site/tests/prefix-migration.test.mjs).
+ * - It is removed in 2.0.0, along with Unprefixed_Names, once every site has
+ *   gone through it (15-10-2026: only Lavandería Mallorca).
+ * - Edge case, by name: ANOTHER PLUGIN WITH A «client» POST TYPE. If, when
+ *   migrating for real, the old name is still registered (not by us: plugin
+ *   1.2.0 no longer registers it), its rows belong to that plugin: the type
+ *   or taxonomy is skipped and a warning is emitted. On a dry run this is not
+ *   checked, because there the old plugin is still running, and it does
+ *   register it.
+ * - Edge case: a post whose content says «client» in the text. It is not
+ *   touched: changes are made only inside the JSON of the comment of the four
+ *   blocks, and only in the keys listed.
+ * - The trap: WPML stores its settings as a big array with keys that may be
+ *   named the same as a post type in another section (e.g. «location» in the
+ *   language switcher one). That is why keys are only renamed inside
+ *   SETTINGS_SECTIONS, and never values.
  */
 
 namespace EstrategiaWeb\Site;
@@ -90,7 +97,7 @@ if ( ! class_exists( Type_Names::class ) ) {
 
 final class Prefix_Migration {
 
-	/** Secciones de icl_sitepress_settings cuyas CLAVES son tipos o taxonomías. */
+	/** Sections of icl_sitepress_settings whose KEYS are post types or taxonomies. */
 	public const SETTINGS_SECTIONS = array(
 		'custom_posts_sync_option',
 		'custom_posts_unlocked_option',
@@ -99,11 +106,12 @@ final class Prefix_Migration {
 	);
 
 	/**
-	 * Otras opciones de WPML 5 con tipos o taxonomías como CLAVES: opción =>
-	 * [ ruta dentro del valor => 'types' | 'taxes' ]. Medido en Lavandería el
-	 * 15-10-2026: WPML 5.1 guarda sus ajustes DOS veces, en icl_sitepress_settings
-	 * entero y partidos en icl_sitepress_settings#<sección> ({"v": …}); y lo de
-	 * «traducir todo» en WPML(setup) y WPML(setup/…). Se migran todos.
+	 * Other WPML 5 options with post types or taxonomies as KEYS: option =>
+	 * [ path inside the value => 'types' | 'taxes' ]. Measured on Lavandería on
+	 * 15-10-2026: WPML 5.1 stores its settings TWICE, whole in
+	 * icl_sitepress_settings and split in icl_sitepress_settings#<section>
+	 * ({"v": …}); and the «translate everything» settings in WPML(setup) and
+	 * WPML(setup/…). All of them are migrated.
 	 */
 	private const WPML_OPTIONS = array(
 		'WPML(setup)'                                  => array( 'translate-everything-taxonomies' => 'taxes', 'translate-everything-posts' => 'types' ),
@@ -111,7 +119,7 @@ final class Prefix_Migration {
 		'WPML(setup/translate-everything-posts)'      => array( 'v' => 'types' ),
 	);
 
-	/** @return array<string, array<string,string>> Opción de WPML => [ ruta => types|taxes ]. */
+	/** @return array<string, array<string,string>> WPML option => [ path => types|taxes ]. */
 	private static function wpml_targets(): array {
 		$out = array( 'icl_sitepress_settings' => array() );
 		foreach ( self::SETTINGS_SECTIONS as $section ) {
@@ -123,16 +131,16 @@ final class Prefix_Migration {
 	}
 
 	/**
-	 * Renombra las CLAVES que son nombres viejos dentro de una opción, en las
-	 * rutas dadas. Lee y escribe la fila tal cual (sin get_option/update_option:
-	 * WPML filtra los suyos). Idempotente; si están la vieja y la nueva, se
-	 * queda la nueva y sale un aviso.
+	 * Renames the KEYS that are old names inside an option, at the given
+	 * paths. Reads and writes the row as is (no get_option/update_option:
+	 * WPML filters its own). Idempotent; if both the old and the new one are
+	 * there, the new one stays and a warning is emitted.
 	 *
-	 * @param array<string,string> $paths Ruta (clave de primer nivel) => 'types' | 'taxes'.
+	 * @param array<string,string> $paths Path (top-level key) => 'types' | 'taxes'.
 	 * @param array<string,string> $types
 	 * @param array<string,string> $taxes
-	 * @param string               $step  Dónde sale en el informe.
-	 * @param bool                 $values También los VALORES iguales a la clave (rank_math_known_post_types: «client» => «client»).
+	 * @param string               $step  Where it shows up in the report.
+	 * @param bool                 $values Also the VALUES equal to the key (rank_math_known_post_types: «client» => «client»).
 	 */
 	private static function rename_keys_in_option( string $option, array $paths, array $types, array $taxes, string $step, bool $values = false ): void {
 		global $wpdb;
@@ -155,7 +163,7 @@ final class Prefix_Migration {
 			foreach ( $list as $key => $item ) {
 				if ( is_string( $key ) && isset( $map[ $key ] ) ) {
 					if ( array_key_exists( $map[ $key ], $list ) ) {
-						self::$report['avisos'][] = "$option" . ( '' === $path ? '' : "[$path]" ) . ": están «{$key}» y «{$map[ $key ]}»; se queda el nuevo";
+						self::$report['avisos'][] = "$option" . ( '' === $path ? '' : "[$path]" ) . ": both «{$key}» and «{$map[ $key ]}» are present; the new one stays";
 						continue;
 					}
 					self::$report[ $step ][]   = "$option" . ( '' === $path ? '' : "[$path]" ) . ": $key → {$map[ $key ]}";
@@ -177,7 +185,7 @@ final class Prefix_Migration {
 		}
 	}
 
-	/** Bloques y atributos de su JSON que guardan un nombre de tipo o taxonomía. */
+	/** Blocks, and attributes of their JSON, that store a post type or taxonomy name. */
 	private const BLOCK_KEYS = array(
 		'query'              => array( 'postType' ),
 		'post-terms'         => array( 'term' ),
@@ -185,7 +193,7 @@ final class Prefix_Migration {
 		'navigation-submenu' => array( 'type' ),
 	);
 
-	/** Preferencias de pantalla por tipo (usermeta); %s = el tipo. */
+	/** Per-type screen preferences (usermeta); %s = the post type. */
 	private const USER_META = array( 'edit_%s_per_page', 'manageedit-%scolumnshidden', 'meta-box-order_%s', 'closedpostboxes_%s', 'metaboxhidden_%s', 'screen_layout_%s' );
 
 	private static bool $dry = true;
@@ -194,7 +202,7 @@ final class Prefix_Migration {
 	private static array $report = array();
 
 	/**
-	 * Corre la migración. Devuelve lo hecho (o lo que haría, en seco).
+	 * Runs the migration. Returns what was done (or what it would do, on a dry run).
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -223,11 +231,12 @@ final class Prefix_Migration {
 		self::screens( $types );
 		self::leftovers( $types + $taxes );
 		if ( ! self::$dry ) {
-			// Las reglas se REHACEN aquí, no se borran: si se borran, las rehace la
-			// siguiente petición, y si es una de /en/ (WPML cambia el idioma) los
-			// slugs traducidos salen en inglés (/locations/) y /sedes/ da 404 para
-			// todos. Medido en el ensayo de Lavandería del 15-10-2026. Aquí corren
-			// con el idioma del sitio (WP-CLI) y con los tipos nuevos ya registrados.
+			// The rules are REBUILT here, not deleted: if they are deleted, the next
+			// request rebuilds them, and if it is an /en/ one (WPML switches the
+			// language) the translated slugs come out in English (/locations/) and
+			// /sedes/ gives a 404 for everyone. Measured in the Lavandería rehearsal
+			// of 15-10-2026. Here they run with the site language (WP-CLI) and with
+			// the new post types already registered.
 			flush_rewrite_rules( false );
 			wp_cache_flush();
 			if ( function_exists( 'sg_cachepress_purge_cache' ) ) {
@@ -237,14 +246,14 @@ final class Prefix_Migration {
 		return self::$report;
 	}
 
-	// ------------------------------------------------------------ el renombrado
+	// ------------------------------------------------------------ the renaming
 
 	/**
-	 * Un marcado de bloques con los nombres nuevos, solo dentro del JSON de
-	 * los bloques de BLOCK_KEYS.
+	 * Block markup with the new names, only inside the JSON of the blocks in
+	 * BLOCK_KEYS.
 	 *
-	 * @param array<string,string> $map   Viejo → nuevo.
-	 * @param int|null             $count Cambios hechos, por referencia.
+	 * @param array<string,string> $map   Old → new.
+	 * @param int|null             $count Changes made, by reference.
 	 */
 	public static function rename_markup( string $html, array $map, ?int &$count = null ): string {
 		$count = 0;
@@ -267,7 +276,7 @@ final class Prefix_Migration {
 					);
 				}
 				if ( 'query' === $m[1] ) {
-					// Las claves de taxQuery: "client_sector":[…] (también dentro de "include"/"exclude").
+					// The taxQuery keys: "client_sector":[…] (also inside "include"/"exclude").
 					$json = preg_replace_callback(
 						'#("taxQuery"\s*:\s*\{)(.*?)(\}\s*[,}])#s',
 						static function ( $t ) use ( $map, $names, &$count ) {
@@ -290,20 +299,20 @@ final class Prefix_Migration {
 		);
 	}
 
-	// ------------------------------------------------------------------- pasos
+	// ------------------------------------------------------------------- steps
 
-	/** @return array<string,string> Los tipos que se migran (viejo → nuevo). */
+	/** @return array<string,string> The post types being migrated (old → new). */
 	private static function types(): array {
 		global $wpdb;
 		$done = array();
 		foreach ( Type_Names::renamed_types() as $old => $new ) {
 			$n = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type = %s", $old ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			if ( ! $n ) {
-				$done[ $old ] = $new; // Nada en wp_posts, pero puede quedar en ajustes (WPML, Rank Math).
+				$done[ $old ] = $new; // Nothing in wp_posts, but it may remain in settings (WPML, Rank Math).
 				continue;
 			}
 			if ( ! self::$dry && post_type_exists( $old ) ) {
-				self::$report['avisos'][] = "tipo $old: hay $n entradas pero «$old» lo registra otro plugin; no se toca";
+				self::$report['avisos'][] = "post type $old: there are $n posts but «$old» is registered by another plugin; not touched";
 				continue;
 			}
 			self::$report['tipos'][] = "$old → $new: $n entradas";
@@ -315,7 +324,7 @@ final class Prefix_Migration {
 		return $done;
 	}
 
-	/** @return array<string,string> Las taxonomías que se migran (viejo → nuevo). */
+	/** @return array<string,string> The taxonomies being migrated (old → new). */
 	private static function taxonomies(): array {
 		global $wpdb;
 		$done = array();
@@ -326,7 +335,7 @@ final class Prefix_Migration {
 				continue;
 			}
 			if ( ! self::$dry && taxonomy_exists( $old ) ) {
-				self::$report['avisos'][] = "taxonomía $old: hay $n términos pero «$old» la registra otro plugin; no se toca";
+				self::$report['avisos'][] = "taxonomy $old: there are $n terms but «$old» is registered by another plugin; not touched";
 				continue;
 			}
 			self::$report['taxonomias'][] = "$old → $new: $n términos";
@@ -365,13 +374,14 @@ final class Prefix_Migration {
 				clean_post_cache( (int) $row['ID'] );
 			}
 			/**
-			 * Una entrada cuyo contenido cambia el migrador (también en seco, sin
-			 * escribir). Lo que devuelva el gancho en 'nota' sale en el informe.
+			 * A post whose content the migrator changes (also on a dry run,
+			 * without writing). Whatever the hook returns in 'nota' shows up in
+			 * the report.
 			 *
-			 * @param array  $entry Lo que sale en el informe (id, tipo, slug…).
-			 * @param string $old   El contenido de antes.
-			 * @param string $new   El de después.
-			 * @param bool   $dry   Seco.
+			 * @param array  $entry What shows up in the report (id, tipo, slug…).
+			 * @param string $old   The content before.
+			 * @param string $new   The content after.
+			 * @param bool   $dry   Dry run.
 			 */
 			self::$report['contenido'][] = apply_filters( 'estrategia_web_prefix_migration_post', $entry, $row['post_content'], $new, self::$dry );
 		}
@@ -412,7 +422,7 @@ final class Prefix_Migration {
 			if ( ! $ids ) {
 				continue;
 			}
-			self::$report['menus'][] = "_menu_item_object $old → $new: " . count( $ids ) . ' elementos de menú';
+			self::$report['menus'][] = "_menu_item_object $old → $new: " . count( $ids ) . ' menu items';
 			if ( ! self::$dry ) {
 				$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->postmeta} SET meta_value = %s WHERE meta_key = '_menu_item_object' AND meta_value = %s", $new, $old ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 				wp_cache_flush_group( 'post_meta' );
@@ -434,19 +444,19 @@ final class Prefix_Migration {
 					if ( ! $n ) {
 						continue;
 					}
-					self::$report['wpml'][] = "icl_translations {$kind}{$old} → {$kind}{$new}: $n filas";
+					self::$report['wpml'][] = "icl_translations {$kind}{$old} → {$kind}{$new}: $n rows";
 					if ( ! self::$dry ) {
 						$wpdb->update( $table, array( 'element_type' => $kind . $new ), array( 'element_type' => $kind . $old ) ); // phpcs:ignore
 					}
 				}
 			}
 		}
-		// Los ajustes de WPML: claves que son tipos o taxonomías, en cada sitio
-		// donde WPML 5 las guarda (ver WPML_OPTIONS).
+		// WPML settings: keys that are post types or taxonomies, in every place
+		// where WPML 5 stores them (see WPML_OPTIONS).
 		foreach ( self::wpml_targets() as $option => $paths ) {
 			self::rename_keys_in_option( $option, $paths, $types, $taxes, 'wpml' );
 		}
-		// Traducción de slugs de WPML: cadenas «URL slug: client» del contexto WordPress.
+		// WPML slug translation: «URL slug: client» strings in the WordPress context.
 		$strings = $wpdb->prefix . 'icl_strings';
 		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $strings ) ) === $strings ) {
 			foreach ( $types + $taxes as $old => $new ) {
@@ -491,7 +501,7 @@ final class Prefix_Migration {
 				}
 				if ( $new_key !== $key ) {
 					if ( array_key_exists( $new_key, $value ) ) {
-						continue; // El nuevo ya está: se queda el nuevo.
+						continue; // The new one is already there: the new one stays.
 					}
 					++$n;
 				}
@@ -500,13 +510,13 @@ final class Prefix_Migration {
 			if ( ! $n ) {
 				continue;
 			}
-			self::$report['rankmath'][] = "$option: $n ajustes por tipo o taxonomía";
+			self::$report['rankmath'][] = "$option: $n per-type or per-taxonomy settings";
 			if ( ! self::$dry ) {
 				update_option( $option, $out );
 			}
 		}
-		// Los tipos que Rank Math ya conoce («client» => «client»): sin esto vería
-		// los nuevos como recién llegados y les pondría sus valores por defecto.
+		// The post types Rank Math already knows («client» => «client»): without this
+		// it would see the new ones as newcomers and give them its default values.
 		self::rename_keys_in_option( 'rank_math_known_post_types', array( '' => 'types' ), $types, $taxes, 'rankmath', true );
 		foreach ( $taxes as $old => $new ) {
 			$n = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key = %s", 'rank_math_primary_' . $old ) ); // phpcs:ignore
@@ -532,7 +542,7 @@ final class Prefix_Migration {
 				if ( ! $n ) {
 					continue;
 				}
-				self::$report['pantallas'][] = "$from → $to: $n usuarios";
+				self::$report['pantallas'][] = "$from → $to: $n users";
 				if ( ! self::$dry ) {
 					$wpdb->update( $wpdb->usermeta, array( 'meta_key' => $to ), array( 'meta_key' => $from ) ); // phpcs:ignore
 					wp_cache_flush_group( 'user_meta' );
@@ -542,15 +552,15 @@ final class Prefix_Migration {
 	}
 
 	/**
-	 * Opciones que nombran un tipo viejo como cadena serializada y que este
-	 * migrador NO sabe migrar: solo se listan (paso 9).
+	 * Options that name an old post type as a serialized string and that this
+	 * migrator CANNOT migrate: they are only listed (step 9).
 	 *
 	 * @param array<string,string> $map
 	 */
 	private static function leftovers( array $map ): void {
 		global $wpdb;
-		// estrategia_web_site habla en claves a propósito (Type_Names): no es un resto.
-		// Y las que migran los pasos 6 y 7: en seco aún los nombran.
+		// estrategia_web_site speaks in keys on purpose (Type_Names): it is not a leftover.
+		// Nor are the ones migrated by steps 6 and 7: on a dry run they still name them.
 		$skip  = array_merge( array( 'rewrite_rules', 'estrategia_web_site', 'rank_math_known_post_types' ), array_keys( self::wpml_targets() ) );
 		$like  = array();
 		$regex = array();
@@ -567,7 +577,7 @@ final class Prefix_Migration {
 				continue;
 			}
 			if ( preg_match_all( '#s:\d+:"(' . implode( '|', $regex ) . ')";#', $row['option_value'], $m ) ) {
-				self::$report['avisos'][] = "opción {$row['option_name']}: nombra " . implode( ', ', array_unique( $m[1] ) ) . ' (no se migra; mirarla)';
+				self::$report['avisos'][] = "option {$row['option_name']}: names " . implode( ', ', array_unique( $m[1] ) ) . ' (not migrated; check it)';
 			}
 		}
 	}
@@ -580,6 +590,6 @@ if ( defined( 'WP_CLI' ) && WP_CLI && class_exists( '\WP_CLI' ) ) {
 			$report = Prefix_Migration::run( ! empty( $assoc['dry-run'] ) );
 			\WP_CLI::line( wp_json_encode( $report, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
 		},
-		array( 'shortdesc' => 'Pasa los tipos y taxonomías del módulo site a los nombres con prefijo de la 1.2.0 (wp_posts, términos, contenido, plantillas, menús, WPML, Rank Math). Con --dry-run solo lo cuenta.' )
+		array( 'shortdesc' => 'Moves the post types and taxonomies of the site module to the 1.2.0 prefixed names (wp_posts, terms, content, templates, menus, WPML, Rank Math). With --dry-run it only counts.' )
 	);
 }

@@ -1,44 +1,46 @@
 <?php
 /**
- * Ayudas comunes para los bloques de cualquier módulo. Nada aquí registra un
- * bloque: cada módulo registra los suyos (register_block_type en init).
+ * Shared helpers for the blocks of any module. Nothing here registers a
+ * block: each module registers its own (register_block_type on init).
  *
- * Tres cosas, que antes vivían en el tema (inc/blocks.php e
- * inc/legacy-names.php del tema 1.0.0) y en estrategia-web-forms:
+ * Three things, which used to live in the theme (inc/blocks.php and
+ * inc/legacy-names.php of theme 1.0.0) and in estrategia-web-forms:
  *
- * 1. ETIQUETAS de los controles autogenerados (supports.autoRegister,
- *    WordPress 7.0). block.json no traduce la clave «label» de un atributo
- *    (no está en block-i18n.json), así que se ponen desde
- *    blocks/<bloque>/labels.php, que devuelve atributo => texto traducido.
- *    Vale para cualquier bloque cuyo nombre empiece por «estrategia-web»
+ * 1. LABELS of the auto-generated controls (supports.autoRegister,
+ *    WordPress 7.0). block.json does not translate the «label» key of an
+ *    attribute (it is not in block-i18n.json), so they are set from
+ *    blocks/<block>/labels.php, which returns attribute => translated text.
+ *    It applies to any block whose name starts with «estrategia-web»
  *    (estrategia-web/…, estrategia-web-site/…, estrategia-web-forms/…).
- * 2. TRADUCCIONES de los scripts de editor (edit.js, editor.js). WordPress
- *    espera un JSON por script con el md5 de su RUTA en el nombre, que pide
- *    un paso de build y se rompe al mover el fichero. En vez de eso, las
- *    mismas traducciones PHP que usa el servidor (languages/*.l10n.php) se
- *    le pasan a wp.i18n.setLocaleData en línea, una vez por script. Una sola
- *    fuente y sin build. Requisito: el script usa el dominio estrategia-web.
- * 3. ALIAS de los bloques del tema «Armazón» (armazon/carousel, armazon/map,
- *    armazon/whatsapp, armazon/language-switcher → estrategia-web/…). Un alias
- *    copia el tipo nuevo y, al pintar, renombra el bloque y sus hijos (y las
- *    clases de su marcado) y lo pinta con render_block(): sale lo mismo que
- *    con el nombre nuevo. Oculto del insertador. Solo se registra el alias de
- *    un bloque cuyo módulo está encendido. Quien reescribe el contenido de
- *    verdad es el migrador (includes/class-armazon-migration.php); esto es
- *    la red para el marcado que quede.
+ * 2. TRANSLATIONS of the editor scripts (edit.js, editor.js). WordPress
+ *    expects one JSON per script with the md5 of its PATH in the name, which
+ *    needs a build step and breaks when the file moves. Instead, the same
+ *    PHP translations the server uses (languages/*.l10n.php) are passed
+ *    inline to wp.i18n.setLocaleData, once per script. A single source and
+ *    no build. Requirement: the script uses the estrategia-web domain.
+ * 3. ALIASES of the blocks of the «Armazón» theme (armazon/carousel,
+ *    armazon/map, armazon/whatsapp, armazon/language-switcher →
+ *    estrategia-web/…). An alias copies the new type and, when rendering,
+ *    renames the block and its children (and the classes in its markup) and
+ *    renders it with render_block(): the output is the same as with the new
+ *    name. Hidden from the inserter. An alias is only registered for a block
+ *    whose module is on. What actually rewrites the content is the migrator
+ *    (includes/class-armazon-migration.php); this is the safety net for any
+ *    markup left behind.
  *
- * Cómo se mantiene:
- * - Un bloque nuevo de un módulo no toca este fichero: si usa autoRegister,
- *   pone su labels.php; si tiene editor, usa el dominio estrategia-web.
- * - LEGACY_THEME_BLOCKS es la lista de la 1.0.0, FIJA: un bloque nuevo no
- *   entra. Se quita en la 2.0.0, con el resto de alias, cuando todas las
- *   webs que usaron Armazón hayan pasado el migrador (07-10-2026: solo
+ * How to maintain:
+ * - A new block of a module does not touch this file: if it uses
+ *   autoRegister, it ships its labels.php; if it has an editor, it uses the
+ *   estrategia-web domain.
+ * - LEGACY_THEME_BLOCKS is the 1.0.0 list, FIXED: a new block does not go in.
+ *   It is removed in 2.0.0, along with the rest of the aliases, once every
+ *   site that used Armazón has gone through the migrator (07-10-2026: only
  *   Lavandería Mallorca).
- * - La trampa de 2: si el script se encola pero no es el de un bloque
- *   (editorScript de block.json), no se entera. Para esos está el filtro
- *   estrategia_web_editor_script_handles.
- * - La trampa de 3: el alias necesita el tipo nuevo ya registrado; por eso
- *   corre en init con prioridad 99 (los bloques se registran en init, 10).
+ * - The trap of 2: if the script is enqueued but is not a block's
+ *   (editorScript in block.json), it is not picked up. Those use the
+ *   estrategia_web_editor_script_handles filter.
+ * - The trap of 3: the alias needs the new type already registered; that is
+ *   why it runs on init with priority 99 (blocks are registered on init, 10).
  */
 
 namespace EstrategiaWeb;
@@ -47,7 +49,7 @@ defined( 'ABSPATH' ) || exit;
 
 final class Blocks {
 
-	/** Los bloques del tema en la 1.0.0: los únicos con alias armazon/…. */
+	/** The theme's blocks in 1.0.0: the only ones with an armazon/… alias. */
 	public const LEGACY_THEME_BLOCKS = array( 'carousel', 'map', 'whatsapp', 'language-switcher' );
 
 	public static function boot(): void {
@@ -56,15 +58,15 @@ final class Blocks {
 		add_action( 'init', array( self::class, 'register_legacy_theme_blocks' ), 99 );
 	}
 
-	/** Si un nombre de bloque es de este plugin. */
+	/** Whether a block name belongs to this plugin. */
 	public static function is_ours( string $name ): bool {
 		return (bool) preg_match( '#^estrategia-web(-[a-z0-9-]+)?/#', $name );
 	}
 
 	/**
-	 * Pone las etiquetas traducidas de labels.php a los atributos (1).
+	 * Applies the translated labels from labels.php to the attributes (1).
 	 *
-	 * @param array $metadata block.json leído.
+	 * @param array $metadata block.json as read.
 	 */
 	public static function attribute_labels( array $metadata ): array {
 		if ( empty( $metadata['name'] ) || ! self::is_ours( (string) $metadata['name'] ) || empty( $metadata['file'] ) ) {
@@ -83,7 +85,7 @@ final class Blocks {
 		return $metadata;
 	}
 
-	/** Pasa las traducciones a wp.i18n para los scripts de editor (2). */
+	/** Passes the translations to wp.i18n for the editor scripts (2). */
 	public static function editor_script_translations(): void {
 		$handles = array();
 		foreach ( \WP_Block_Type_Registry::get_instance()->get_all_registered() as $name => $block_type ) {
@@ -92,7 +94,7 @@ final class Blocks {
 			}
 		}
 		/**
-		 * Scripts de editor que no son de un bloque y también usan el dominio estrategia-web.
+		 * Editor scripts that do not belong to a block and also use the estrategia-web domain.
 		 *
 		 * @param string[] $handles
 		 */
@@ -117,15 +119,15 @@ final class Blocks {
 		}
 		$script = sprintf( 'wp.i18n.setLocaleData( %s, "estrategia-web" );', wp_json_encode( $locale_data ) );
 		foreach ( $handles as $handle ) {
-			// Una vez por script: forms tiene un solo editor.js para nueve bloques.
+			// Once per script: forms has a single editor.js for nine blocks.
 			wp_add_inline_script( $handle, $script, 'before' );
 		}
 	}
 
 	/**
-	 * Un bloque leído con nombres viejos, con los nuevos (él y sus hijos) (3).
+	 * A block read with old names, returned with the new ones (itself and its children) (3).
 	 *
-	 * @param array $parsed Bloque de parse_blocks().
+	 * @param array $parsed Block from parse_blocks().
 	 */
 	public static function legacy_rename( array $parsed ): array {
 		$name = (string) ( $parsed['blockName'] ?? '' );
@@ -139,7 +141,7 @@ final class Blocks {
 		return $parsed;
 	}
 
-	/** Registra armazon/<bloque> como alias de estrategia-web/<bloque> (3). */
+	/** Registers armazon/<block> as an alias of estrategia-web/<block> (3). */
 	public static function register_legacy_theme_blocks(): void {
 		$registry = \WP_Block_Type_Registry::get_instance();
 		foreach ( self::LEGACY_THEME_BLOCKS as $slug ) {

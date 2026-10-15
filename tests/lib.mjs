@@ -1,25 +1,25 @@
-// NIVEL: BANCO DE TRABAJO — no es una prueba. Ayudantes comunes de las pruebas de nivel 2 y 3.
+// NIVEL: BANCO DE TRABAJO — not a test. Shared helpers for the level 2 and 3 tests.
 //
-// Habla con el WordPress de Playground que arranca tests/run.mjs (puerto
-// 9404): con la API REST de verdad (/wp/v2/*) como administrador o como autor
-// (contraseñas de aplicación que crea tests/wp/estrategia-web-site-test.php), y con
-// las rutas de prueba solo para lo que no es lo probado (resetear, sembrar
-// una página, mirar la fila cruda de la base de datos).
+// Talks to the Playground WordPress started by tests/run.mjs (port 9404):
+// with the real REST API (/wp/v2/*) as administrator or as author
+// (application passwords created by tests/wp/estrategia-web-site-test.php),
+// and with the test routes only for what is not under test (resetting,
+// seeding a page, looking at the raw database row).
 import { createRequire } from "node:module";
 import zlib from "node:zlib";
 import fs from "node:fs";
 
 export const BASE = process.env.AS_BASE || "http://127.0.0.1:9404";
 
-// El nombre REGISTRADO de un tipo o taxonomía del módulo site (1.2.0):
-// type("client") → "eweb_client" (también su ruta REST). El prefijo se lee de
-// Type_Names para no escribirlo a fuego en ninguna prueba.
+// The REGISTERED name of a post type or taxonomy of the site module (1.2.0):
+// type("client") → "eweb_client" (also its REST route). The prefix is read
+// from Type_Names so that no test hard-codes it.
 export const PREFIX = fs
   .readFileSync(new URL("../modules/site/includes/class-type-names.php", import.meta.url), "utf8")
   .match(/const PREFIX = '([^']*)'/)[1];
 export const type = (key) => PREFIX + key;
 
-// Playwright sin node_modules propio: el de portal-hs (CLAUDE.md, 3.9).
+// Playwright without its own node_modules: portal-hs's (CLAUDE.md, 3.9).
 export const playwright = () => createRequire("E:/Repositories/portal-hs/package.json")("playwright");
 
 export async function testApi(path, { method = "GET", body } = {}) {
@@ -37,15 +37,15 @@ export const seedPage = (content, slug = "prueba") => testApi("/page", { method:
 export const rawPost = (id) => testApi(`/raw-post/${id}`);
 
 let users;
-/** { administrator: {user, password}, author: {user, password} } — se crean una vez por proceso. */
+/** { administrator: {user, password}, author: {user, password} } — created once per process. */
 export async function credentials() {
   users ??= await testApi("/users", { method: "POST" });
   return users;
 }
 
 /**
- * Petición a /wp/v2 como un rol. Devuelve { status, json }. No lanza en 4xx:
- * hay pruebas que esperan un «no».
+ * Request to /wp/v2 as a role. Returns { status, json }. Does not throw on
+ * 4xx: some tests expect a «no».
  */
 export async function wp(path, { as = "administrator", method = "GET", body, raw, headers = {} } = {}) {
   const who = (await credentials())[as];
@@ -63,14 +63,14 @@ export async function wp(path, { as = "administrator", method = "GET", body, raw
   return { status: res.status, json, text };
 }
 
-/** Guarda datos de la empresa por REST (fusiona con lo que haya) y devuelve lo que quedó. */
+/** Saves company details through REST (merging with what is there) and returns what was stored. */
 export async function saveCompany(data) {
   const r = await wp("/settings", { method: "POST", body: { estrategia_web_site: data } });
-  if (r.status !== 200) throw new Error("guardar ajustes -> " + r.status + " " + r.text);
+  if (r.status !== 200) throw new Error("save settings -> " + r.status + " " + r.text);
   return r.json.estrategia_web_site;
 }
 
-/** Sube un fichero a la mediateca como multipart (el camino del editor). */
+/** Uploads a file to the media library as multipart (the editor's path). */
 export async function upload(name, type, content, as = "administrator") {
   const form = new FormData();
   form.append("file", new Blob([content], { type }), name);
@@ -78,7 +78,7 @@ export async function upload(name, type, content, as = "administrator") {
   return wp("/media", { as, method: "POST", raw: form });
 }
 
-/** PNG válido de w×h de un color (para imágenes destacadas). Hecho aquí: sin ficheros binarios en el repo. */
+/** Valid w×h PNG of one color (for featured images). Built here: no binary files in the repo. */
 export function png(w = 4, h = 2, [r, g, b] = [200, 30, 30]) {
   const chunk = (type, data) => {
     const len = Buffer.alloc(4);

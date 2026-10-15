@@ -1,27 +1,27 @@
 <?php
 /**
- * La pantalla «Estrategia Web → Módulos»: un interruptor por módulo, con su
- * descripción y, si no se puede cargar, qué le falta.
+ * The «Estrategia Web → Modules» screen: one switch per module, with its
+ * description and, if it cannot be loaded, what it is missing.
  *
- * La lista sale del disco (Modules::available()): no hay nada que añadir
- * aquí para que salga un módulo nuevo. Guarda la opción estrategia_web_modules
- * por options.php (Settings API), así que pide manage_options y lleva su
- * nonce sin código propio.
+ * The list comes from disk (Modules::available()): nothing needs to be added
+ * here for a new module to show up. It saves the estrategia_web_modules
+ * option through options.php (Settings API), so it requires manage_options
+ * and carries its nonce with no code of its own.
  *
- * Cómo se mantiene:
- * - Una pantalla de ajustes DE UN MÓDULO no va aquí: va en su carpeta, como
- *   submenú de este menú (add_submenu_page( Modules_Page::MENU, … )) o donde
- *   ya estuviera (la de «Datos de la empresa» y la de formularios tienen su
- *   menú propio desde antes y no se han movido para no cambiarle la web a
- *   nadie).
- * - Caso frontera: con TODOS los interruptores apagados el navegador no
- *   manda el campo y options.php no guardaría nada (se quedaría lo de antes).
- *   Por eso va un campo oculto vacío: llega un array con '' y sanitize() lo
- *   deja en array().
- * - La trampa: el estado que se pinta es lo que la web QUIERE (guardado o
- *   por defecto), no lo cargado en esta petición. Justo después de guardar
- *   coinciden; si no coinciden es que a uno le falta un requisito, y eso es
- *   lo que dice la columna «Estado».
+ * How to maintain:
+ * - A settings screen OF A MODULE does not go here: it goes in its folder, as
+ *   a submenu of this menu (add_submenu_page( Modules_Page::MENU, … )) or
+ *   wherever it already was (the «Company details» screen and the forms one
+ *   have had their own menu since before and were not moved so as not to
+ *   change anyone's site).
+ * - Edge case: with ALL switches off the browser does not send the field and
+ *   options.php would not save anything (the previous value would remain).
+ *   That is why there is an empty hidden field: an array with '' arrives and
+ *   sanitize() turns it into array().
+ * - The trap: the state shown is what the site WANTS (saved or default), not
+ *   what was loaded in this request. Right after saving they match; if they
+ *   do not, one of them is missing a requirement, and that is what the
+ *   «Status» column says.
  */
 
 namespace EstrategiaWeb\Admin;
@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
 
 final class Modules_Page {
 
-	/** Slug del menú «Estrategia Web» (y de su primera página, Módulos). */
+	/** Slug of the «Estrategia Web» menu (and of its first page, Modules). */
 	public const MENU = 'estrategia-web';
 
 	public static function boot(): void {
@@ -74,7 +74,7 @@ final class Modules_Page {
 		$wanted    = Modules::wanted( $available, get_option( Modules::OPTION, null ), get_option( Modules::KNOWN_OPTION, null ) );
 		list( , $blocked ) = Modules::resolve( $available, $wanted );
 		$name = static fn( string $slug ): string => isset( $available[ $slug ] )
-			? _x( $available[ $slug ]['name'], 'module name', 'estrategia-web' ) // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- sale de la cabecera del módulo; tools/i18n.mjs la extrae.
+			? _x( $available[ $slug ]['name'], 'module name', 'estrategia-web' ) // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- comes from the module header; tools/i18n.mjs extracts it.
 			: $slug;
 		?>
 		<div class="wrap estrategia-web-modules">
@@ -117,7 +117,7 @@ final class Modules_Page {
 								<p class="description" id="<?php echo esc_attr( $id ); ?>-description">
 									<?php
 									if ( '' !== $module['description'] ) {
-										echo esc_html( _x( $module['description'], 'module description', 'estrategia-web' ) ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- ver $name.
+										echo esc_html( _x( $module['description'], 'module description', 'estrategia-web' ) ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- see $name.
 									}
 									if ( $module['requires'] ) {
 										echo ' ';

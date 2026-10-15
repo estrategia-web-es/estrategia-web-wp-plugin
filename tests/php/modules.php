@@ -1,20 +1,19 @@
 <?php
 /**
- * Lo llama tests/modules.test.mjs con el PHP de la máquina (sin WordPress).
- * Carga el cargador de módulos con un get_file_data() copiado del núcleo,
- * lee las cabeceras de VERDAD de modules/ y ejecuta wanted() y resolve()
- * con casos fijos. Escribe el resultado en JSON; las aserciones están en el
- * .mjs.
+ * Called by tests/modules.test.mjs with the machine's PHP (no WordPress).
+ * Loads the module loader with a get_file_data() copied from core, reads
+ * the REAL headers of modules/ and runs wanted() and resolve() with fixed
+ * cases. Writes the result as JSON; the assertions are in the .mjs.
  *
- * Cómo se mantiene: un caso nuevo es una clave nueva aquí y su assert allí.
- * Si WordPress cambia get_file_data() (wp-includes/functions.php), se copia
- * otra vez: la prueba de cabeceras solo vale si lee como lee WordPress.
+ * How to maintain: a new case is a new key here and its assert there.
+ * If WordPress changes get_file_data() (wp-includes/functions.php), copy it
+ * again: the header test is only valid if it reads the way WordPress reads.
  */
 
 define( 'ABSPATH', __DIR__ . '/' );
 define( 'ESTRATEGIA_WEB_DIR', dirname( __DIR__, 2 ) . '/' );
 
-/** Copia de get_file_data() de WordPress 7.1 (sin el filtro extra_*_headers). */
+/** Copy of get_file_data() from WordPress 7.1 (without the extra_*_headers filter). */
 function get_file_data( $file, $default_headers ) {
 	$file_data = file_get_contents( $file, false, null, 0, 8 * 1024 );
 	if ( false === $file_data ) {
@@ -39,7 +38,7 @@ use EstrategiaWeb\Modules;
 $available = Modules::available();
 $folders   = array_map( 'basename', glob( ESTRATEGIA_WEB_DIR . 'modules/*', GLOB_ONLYDIR ) ?: array() );
 
-// Un catálogo inventado para los casos: a y b encendidos por defecto, c no.
+// A made-up catalog for the cases: a and b on by default, c not.
 $fake = array(
 	'a' => array( 'default' => true, 'requires' => array() ),
 	'b' => array( 'default' => true, 'requires' => array( 'a' ) ),

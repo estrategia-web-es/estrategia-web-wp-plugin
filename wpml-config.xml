@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	Qué atributos de los bloques traduce WPML al traducir una página.
+	Which block attributes WPML translates when a page is translated.
 
-	WPML lee este fichero solo, de la raíz del plugin; sin WPML no hace nada.
-	Por eso es UNO para todos los módulos (1.1.0; hasta entonces era del
-	plugin de formularios): un módulo con atributos que traducir añade aquí
-	sus <gutenberg-block>, en el mismo commit que el módulo. Es uno de los
-	tres ficheros compartidos (ver includes/class-modules.php). Lo de abajo
-	es del módulo forms.
+	WPML reads this file by itself, from the plugin root; without WPML it does
+	nothing. That is why there is ONE for all modules (1.1.0; until then it
+	belonged to the forms plugin): a module with attributes to translate adds
+	its <gutenberg-block> entries here, in the same commit as the module. It is
+	one of the three shared files (see includes/class-modules.php). What
+	follows belongs to the forms module.
 
-	Cómo se mantiene:
-	- Un atributo nuevo que lea una persona (visitante o destinatario de un
-	  correo) entra aquí en el mismo commit que en block.json.
-	- Caso frontera: el destinatario de un aviso («to») NO se traduce, para que
-	  el traductor no pueda desviar los correos. Si una web necesita otro
-	  destinatario por idioma, lo pone a mano en la página traducida.
-	  «name» y «formId» tampoco: son claves, y traducirlas partiría el
-	  registro y los marcadores. «defaultOption» del desplegable tampoco: es
-	  la POSICIÓN de la opción, y como «options» se traduce línea a línea sin
-	  cambiar el orden, la página traducida preselecciona la misma opción sola
-	  (ver includes/class-preselect.php). Un traductor que reordene las
-	  opciones la desplaza.
-	- La trampa: los textos que valen por defecto cuando el atributo está vacío
-	  (el botón «Enviar», el consentimiento) NO pasan por aquí, salen del .po.
-	  Si en la web original se rellenan, entonces sí hay que traducirlos aquí.
+	How to maintain:
+	- A new attribute that a person reads (visitor or recipient of an email)
+	  goes in here in the same commit as in block.json.
+	- Edge case: the recipient of a notification («to») is NOT translated, so
+	  the translator cannot redirect the emails. If a site needs a different
+	  recipient per language, it is set by hand on the translated page.
+	  «name» and «formId» are not translated either: they are keys, and
+	  translating them would split the submissions log and the placeholders.
+	  The dropdown's «defaultOption» is not either: it is the POSITION of the
+	  option, and since «options» is translated line by line without changing
+	  the order, the translated page preselects the same option on its own
+	  (see includes/class-preselect.php). A translator who reorders the
+	  options shifts it.
+	- The trap: the texts used by default when the attribute is empty (the
+	  «Enviar» button, the consent) do NOT go through here, they come from the
+	  .po. If they are filled in on the original site, then they do have to be
+	  translated here.
 -->
 <wpml-config>
 	<gutenberg-blocks>
@@ -65,11 +67,12 @@
 		</gutenberg-block>
 	</gutenberg-blocks>
 	<!--
-		Módulo site (sin publicar): las metas de sede, cliente y opinión. El
-		criterio (copy = igual en todos los idiomas; translate = texto que se
-		lee) y el caso frontera están en modules/site/includes/class-meta-panel.php;
-		Meta_Panel::WPML_COPY / WPML_TRANSLATE dicen lo mismo y la prueba
-		modules/site/tests/meta-panel.test.mjs falla si no coinciden.
+		Site module (unpublished): the location, client and testimonial metas.
+		The criterion (copy = the same in every language; translate = text
+		that is read) and the edge case are in
+		modules/site/includes/class-meta-panel.php; Meta_Panel::WPML_COPY /
+		WPML_TRANSLATE say the same, and the test
+		modules/site/tests/meta-panel.test.mjs fails if they do not match.
 	-->
 	<custom-fields>
 		<custom-field action="copy">estrategia_web_location_phone</custom-field>
@@ -89,10 +92,11 @@
 		<custom-field action="copy">testimonial_client</custom-field>
 	</custom-fields>
 	<!--
-		Módulo social (sin publicar): nombre y enlace de cada red, por POSICIÓN
-		en la lista («*» es el índice). Reordenar la lista desplaza las
-		traducciones; ver modules/social/includes/class-links.php. icon e
-		icon_id no se traducen: son el mismo dibujo en todos los idiomas.
+		Social module (unpublished): name and link of each network, by
+		POSITION in the list («*» is the index). Reordering the list shifts the
+		translations; see modules/social/includes/class-links.php. icon and
+		icon_id are not translated: they are the same drawing in every
+		language.
 	-->
 	<admin-texts>
 		<key name="estrategia_web_social_links">
