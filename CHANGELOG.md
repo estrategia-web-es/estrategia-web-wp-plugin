@@ -9,6 +9,11 @@ historia de los formularios hasta su 1.0.0 está en
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), y la de los cuatro
 bloques, en el README del tema (armazon-wp-padre, «Versiones»).
 
+## 1.3.0 — 15-10-2026
+
+- **Code in English** (Armazón row 8, 15-10-2026): comments, tests, tool output and the plugin header. Checked token by token that no logic changed.
+- **New module `content-types`** (off by default): each site declares its own content types, taxonomies and simple fields in JSON files of its repository (`<child theme>/content-types/*.json` or a folder added with `estrategia_web_content_types_dirs`). Generates the post types, taxonomies and typed, sanitized post meta (show_in_rest, labelled for Block Bindings / `core/post-meta`), the «<Singular> details» panel in the block editor (meta box on the classic screen), a 400 on publish when a required field is empty, the WPML configuration through `wpml_config_array` plus the copy of «copy» fields on REST saves, and a rewrite flush only when the definitions change. Field types: text, textarea, number, url, email, tel, image, date, select, relation, boolean (no repeaters or groups). Validated by `content-types.schema.json` and the PHP validator; invalid files are not registered and are listed in «Estrategia Web → Content types» (read-only).
+
 ## 1.2.0 — 15-10-2026
 
 ### Tipos y taxonomías con prefijo `eweb_` (15-10-2026) — versión propuesta 1.2.0
