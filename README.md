@@ -63,6 +63,7 @@ es [modules/webp/module.php](modules/webp/module.php); el completo,
       class-plugin.php            traducciones y ganchos estrategia_web_activate / _deactivate
       class-blocks.php            etiquetas de autoRegister, traducciones del editor, alias armazon/…
       class-armazon-migration.php el migrador de «Armazón» (para todas las piezas)
+      class-prefix-migration.php  el migrador del prefijo de los tipos (1.2.0)
       admin/class-modules-page.php  la pantalla «Estrategia Web → Módulos»
     modules/<slug>/             module.php (cabecera + arranque), includes/, blocks/, assets/, tests/, uninstall.php
     languages/                  estrategia-web.pot · estrategia-web-es_ES.po · .l10n.php (uno para todo)
@@ -78,6 +79,40 @@ es [modules/webp/module.php](modules/webp/module.php); el completo,
 
 Es lo que leen el tema padre, los temas hijos y la carga de contenido. **Estos
 nombres no cambian en una versión menor** (ver «Versiones»).
+
+### 0. Nombres públicos, con su prefijo (15-10-2026)
+
+Todo lo que este plugin deja en el espacio común de WordPress (la base de
+datos, el registro de bloques y tipos, la API REST, el navegador) lleva
+prefijo, para que no choque con otro plugin y para WordPress.org. **Esta
+tabla es el contrato**: un nombre nuevo entra aquí en el mismo commit que el
+código, con el prefijo de su fila.
+
+| Qué | Prefijo | Nombres de hoy |
+|---|---|---|
+| Tipos de contenido | `ew_` (≤ 20 caracteres en total) | `ew_client`, `ew_testimonial`, `ew_location`, `ew_project`, `ew_portfolio` (sin publicar, 1.2.0; hasta la 1.1.0 sin prefijo) |
+| Taxonomías | `ew_` | `ew_client_sector`, `ew_project_category`, `ew_portfolio_category` (ídem) |
+| Bloques | `estrategia-web/`, `estrategia-web-site/`, `estrategia-web-forms/` | `estrategia-web/carousel`, `/map`, `/whatsapp`, `/language-switcher`, `/social-links`, `/cookie-table`; `estrategia-web-site/consent`; `estrategia-web-forms/form`, `/text`, `/email`, `/tel`, `/textarea`, `/select`, `/checkbox`, `/submit`, `/notification` |
+| Opciones | `estrategia_web_` | `estrategia_web_site`, `estrategia_web_modules`, `estrategia_web_modules_known`, `estrategia_web_forms_settings`, `estrategia_web_forms_db_version`, `estrategia_web_forms_last_purge`, `estrategia_web_forms_migrations_log`, `estrategia_web_cookies`, `estrategia_web_cookies_settings`, `estrategia_web_google_tags`, `estrategia_web_redirects_settings`, `estrategia_web_redirects_db_version`, `estrategia_web_social_links`, `estrategia_web_uploads`, `estrategia_web_whatsapp_phone`, `estrategia_web_whatsapp_message` |
+| Metas de entrada | `estrategia_web_` | las de la sección 3; **tres sin prefijo**, de antes de la 1.0.0: `client_url`, `testimonial_role`, `testimonial_client` (ver PENDIENTES) |
+| Tablas | `{prefijo}estrategia_web_` | `estrategia_web_forms_submissions`, `estrategia_web_forms_definitions`, `estrategia_web_redirects` |
+| Transitorios y cron | `estrategia_web_` | `estrategia_web_redirects_report_*`, `estrategia_web_cs_*` (límite del detector); eventos `estrategia_web_forms_purge`, `estrategia_web_redirects_purge` |
+| Cookies | `estrategia_web_` | `estrategia_web_consent` (la vieja `armazon_consent` se lee y se pasa) |
+| Ganchos (filtros y acciones) | `estrategia_web_` | los de cada sección; la lista viva: `grep -rhoE "(apply_filters\|do_action)\( *'estrategia_web[a-z_]*'" modules includes` |
+| Rutas REST | `estrategia-web/v1`, `estrategia-web-forms/v1` | `estrategia-web/v1/cookies`, `/cookies/seen`; `estrategia-web-forms/v1/submit`, `/token`; las de los tipos son las del núcleo, `/wp/v2/ew_client`… (alias de `/wp/v2/client`… hasta la 2.0.0) |
+| Fuentes de Block Bindings | `estrategia-web-site/` | `estrategia-web-site/company`, `estrategia-web-site/location` |
+| Shortcodes | `estrategia_web_` | `[estrategia_web_company]`, `[estrategia_web_consent_settings]`, `[estrategia_web_cookie_table]` |
+| Funciones globales (para temas) | `estrategia_web_` | `estrategia_web_type_name()` (1.2.0) |
+| PHP | namespace `EstrategiaWeb\` | `EstrategiaWeb\Site\…`, `EstrategiaWeb\Forms\…`… |
+| JS y eventos | `estrategiaWeb…`, `estrategia-web:` | `window.estrategiaWebConsent`, `estrategia-web:consent`, `estrategia-web:consent-ready`, `estrategia-web:form-sent` |
+| WP-CLI | `estrategia-web` | `wp estrategia-web redirects …`, `migrate-armazon`, `migrate-prefix` |
+| Text domain, carpeta | `estrategia-web` | — |
+
+**Por qué los tipos llevan un prefijo distinto (`ew_`)**: WordPress corta el
+nombre de un tipo en **20 caracteres**; `estrategia_web_testimonial` son 26.
+El prefijo de los tipos vive en un solo sitio
+([class-type-names.php](modules/site/includes/class-type-names.php)) y no
+cambia una vez publicado en una web (sería otra migración entera).
 
 ### 1. Datos de la empresa — opción `estrategia_web_site`
 
@@ -236,10 +271,22 @@ La dirección de cada sede dentro de una Consulta (`"postType":"location"`):
 
 Cada uno se registra **solo si está en `enabled_types`**. Desactivarlo **no
 borra nada**: sus entradas siguen en la base de datos y vuelven tal cual al
-reactivarlo. Todos `public`, `show_in_rest` (ruta REST = nombre del tipo:
-`/wp/v2/client`…), con archivo, icono y etiquetas en castellano en es_ES.
+reactivarlo. Todos `public`, `show_in_rest` (ruta REST = nombre registrado:
+`/wp/v2/ew_client`…), con archivo, icono y etiquetas en castellano en es_ES.
 
-| Tipo | Menú | Slug (es_ES) | Usa | Campos (`register_post_meta`, `single`, `show_in_rest`) | Taxonomía |
+**Clave y nombre registrado (sin publicar, 1.2.0).** En la tabla, la
+**clave** del tipo (`client`): es lo que se marca en `enabled_types`, lo que
+lleva `rewrite_slugs` y lo que recibe el filtro
+`estrategia_web_site_rewrite_slug`. WordPress lo registra con el **prefijo**
+delante: `ew_client`, `ew_client_sector`… (el prefijo vive solo en
+[modules/site/includes/class-type-names.php](modules/site/includes/class-type-names.php),
+`Type_Names::PREFIX`; pendiente de confirmar por David a 15-10-2026). Ese
+nombre es el de `wp_posts.post_type`, el `"postType"` de una Consulta, la
+ruta REST y WPML. Un tema lo pide con `estrategia_web_type_name( 'client' )`.
+Las URL públicas (`/clientes/`) no cambian. Lo guardado antes con los
+nombres sin prefijo se pasa con el migrador del prefijo (sección «Nombres»).
+
+| Clave (registrado: `ew_` + clave) | Menú | Slug (es_ES) | Usa | Campos (`register_post_meta`, `single`, `show_in_rest`) | Taxonomía |
 |---|---|---|---|---|---|
 | `client` | Clientes | `/clientes/` | título = nombre, imagen destacada = logo/foto, extracto, orden manual | `client_url` (URL), `estrategia_web_client_image_fit` (`cover` por defecto o `contain`; otro valor → `cover`; 0.2.0), `estrategia_web_client_business_type` (texto: «agencia de alquiler vacacional», lo que antes iba entre paréntesis en el título; se traduce con WPML; sin publicar) | `client_sector` (jerárquica, slug `/sector/`) |
 | `testimonial` | Opiniones | `/opiniones/` | título (interno), contenido = la opinión, imagen = foto del autor, orden | `estrategia_web_testimonial_author`, `testimonial_role` (texto), `estrategia_web_testimonial_rating` (entero 0-5; **0 = sin valoración**), `testimonial_client` (id de un `client`, o 0) | — |
@@ -263,7 +310,7 @@ ficha de un cliente: un párrafo con
 de un sector (id 3) con logo y nombre:
 
 ```html
-<!-- wp:query {"queryId":1,"query":{"perPage":12,"pages":0,"offset":0,"postType":"client","order":"asc","orderBy":"title","inherit":false,"taxQuery":{"client_sector":[3]}}} -->
+<!-- wp:query {"queryId":1,"query":{"perPage":12,"pages":0,"offset":0,"postType":"ew_client","order":"asc","orderBy":"title","inherit":false,"taxQuery":{"ew_client_sector":[3]}}} -->
 <div class="wp-block-query"><!-- wp:post-template -->
 <!-- wp:post-featured-image /-->
 <!-- wp:post-title /-->
@@ -672,6 +719,10 @@ las traducciones a `wp.i18n` en línea (`includes/class-blocks.php`).
 
 ## Instalar en una web
 
+**Una web nueva entera** (tema padre, hijo, plugin, módulos, panel, WPML,
+semilla y lista de antes de publicar): [docs/web-nueva.md](docs/web-nueva.md).
+Aquí, solo el plugin:
+
 Copiar la carpeta a `wp-content/plugins/estrategia-web/` **sin `tests/`, sin
 `modules/*/tests/` ni `tools/`**, activar, y en **Estrategia Web → Módulos**
 apagar lo que esa web no use (por defecto, todo encendido). Después, en
@@ -714,9 +765,9 @@ entradas 0.x del CHANGELOG son del nombre viejo; el repo sigue en
 | Clases CSS | `.armazon-consent__…` | `.estrategia-web-consent__…` |
 
 Los **tipos** (`client`, `testimonial`, `location`, `project`, `portfolio`) y
-sus **taxonomías** NO cambian: cambiarlos cambia las URL y la API REST de
-cada web. Está en [PENDIENTES.md](PENDIENTES.md) para decidir antes de
-mandarlo a WordPress.org.
+sus **taxonomías** no cambiaron en la 1.0.0. **Ganan el prefijo en la 1.2.0**
+(sin publicar, decisión de David del 15-10-2026: `ew_client`…; sección
+siguiente).
 
 **Los nombres viejos siguen funcionando** durante la 1.x
 ([modules/site/includes/class-legacy-names.php](modules/site/includes/class-legacy-names.php)): bloques,
@@ -732,6 +783,40 @@ formularios, cadenas de WPML, tema y plugins activos. Idempotente, con seco,
 y no corre solo: `wp estrategia-web-site migrate-armazon --dry-run`, o
 incluido desde `wp eval-file` como hace Lavandería
 (`despliegue/migrar-a-estrategia-web.mjs`). Antes, copia de la base de datos.
+
+## Tipos con prefijo (sin publicar, 1.2.0)
+
+| Antes (≤ 1.1.0) | Ahora |
+|---|---|
+| tipos `client`, `testimonial`, `location`, `project`, `portfolio` | `ew_client`, `ew_testimonial`, `ew_location`, `ew_project`, `ew_portfolio` |
+| taxonomías `client_sector`, `project_category`, `portfolio_category` | `ew_client_sector`, `ew_project_category`, `ew_portfolio_category` |
+| rutas REST `/wp/v2/client`… | `/wp/v2/ew_client`… |
+| WPML `post_client`, `tax_client_sector` | `post_ew_client`, `tax_ew_client_sector` |
+| Rank Math `pt_client_…`, `tax_client_sector_…` | `pt_ew_client_…`, `tax_ew_client_sector_…` |
+
+**No cambian**: las URL públicas (salen del slug), la opción
+`estrategia_web_site` (`enabled_types` y `rewrite_slugs` siguen en claves:
+`client`), el filtro `estrategia_web_site_rewrite_slug` (recibe la clave),
+las metas, los bloques y las tablas.
+
+**Lo viejo sigue funcionando hasta la 2.0.0**
+([modules/site/includes/class-unprefixed-names.php](modules/site/includes/class-unprefixed-names.php)):
+una Consulta o un `post-terms` guardados con `"postType":"client"` pintan lo
+nuevo en la web, y `/wp/v2/client…` contesta como `/wp/v2/ew_client…` si
+ningún otro plugin tiene esa ruta. **No** en el editor (la Consulta vieja sale
+vacía) ni para un `get_posts( 'post_type' => 'client' )` de un tema.
+
+**EL MIGRADOR DEL PREFIJO**
+([includes/class-prefix-migration.php](includes/class-prefix-migration.php)):
+`wp_posts`, términos, el contenido de bloques (Consultas, `post-terms`,
+enlaces de navegación), plantillas `single-client`…, menús clásicos, WPML
+(traducciones, tipos traducibles, slugs), Rank Math y preferencias de
+pantalla; lista como aviso lo que nombra un tipo viejo y no sabe migrar.
+Idempotente, con seco, y no corre solo: `wp estrategia-web migrate-prefix
+--dry-run`, o desde `wp eval-file` como Lavandería
+(`despliegue/prefijo-tipos.mjs`, que además renueva las huellas de su
+carga). Se pasa **justo después de subir el plugin 1.2.0**: entre medias la
+web no encuentra sus clientes ni sus sedes. Antes, copia de la base de datos.
 
 ## Si cambias de proveedor
 
