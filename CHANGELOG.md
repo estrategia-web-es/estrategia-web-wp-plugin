@@ -9,7 +9,7 @@ historia de los formularios hasta su 1.0.0 está en
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), y la de los cuatro
 bloques, en el README del tema (armazon-wp-padre, «Versiones»).
 
-## Sin publicar
+## 1.2.0 — 15-10-2026
 
 ### Tipos y taxonomías con prefijo `eweb_` (15-10-2026) — versión propuesta 1.2.0
 

@@ -3,7 +3,7 @@
  * Plugin Name:       Estrategia Web
  * Plugin URI:        https://estrategiaweb.es/
  * Description:       Todo lo que no es diseño en una web de Estrategia Web, por módulos que se encienden y se apagan en «Estrategia Web → Módulos»: datos de la empresa y tipos de contenido, aviso de cookies, formularios, carrusel, mapa, WhatsApp, selector de idioma, WebP y enlaces externos.
- * Version:           1.1.0
+ * Version:           1.2.0
  * Requires at least: 7.1
  * Requires PHP:      8.1
  * Author:            Estrategia Web
@@ -33,7 +33,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const ESTRATEGIA_WEB_VERSION = '1.1.0';
+const ESTRATEGIA_WEB_VERSION = '1.2.0';
 const ESTRATEGIA_WEB_FILE    = __FILE__;
 define( 'ESTRATEGIA_WEB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'ESTRATEGIA_WEB_URL', plugin_dir_url( __FILE__ ) );
