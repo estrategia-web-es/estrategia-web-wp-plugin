@@ -39,9 +39,10 @@ test("the valid files are registered; the broken ones are not, and their errors 
   assert.deepEqual(state.registered.sort(), ["gmct_cuisine", "gmct_restaurant", "gmct_wine"]);
   assert.deepEqual(state.taxonomy.sort(), ["gmct_restaurant", "gmct_wine"], "the cuisine taxonomy is shared by reference");
   const long = state.errors["gmct_too_long.json"].join(" | ");
-  assert.match(long, /name “gmct_restaurant_menus” is longer than 20 characters \(21\)/);
-  assert.match(long, /Unknown key “fields\[1\]\.requird”/);
-  assert.match(state.errors["gmct_not_json.json"].join(" "), /Not valid JSON/);
+  // In Spanish: the site under test speaks es_ES, and the errors are translated (languages/).
+  assert.match(long, /name «gmct_restaurant_menus» pasa de 20 caracteres \(21\)/);
+  assert.match(long, /Clave desconocida «fields\[1\]\.requird»/);
+  assert.match(state.errors["gmct_not_json.json"].join(" "), /No es un JSON válido/);
   assert.equal(state.errors["gmct_restaurant.json"], undefined);
 });
 
