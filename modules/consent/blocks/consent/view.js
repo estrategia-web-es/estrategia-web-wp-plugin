@@ -1,61 +1,62 @@
 /**
- * Aviso de cookies — comportamiento (Interactivity API, store «estrategia-web/consent»).
+ * Cookie notice — behaviour (Interactivity API, store «estrategia-web/consent»).
  *
- * La documentación del módulo (categorías, API, WP Consent API, trampas) está
- * en la cabecera de includes/class-consent.php. Aquí, lo que solo afecta a
- * este fichero:
+ * The module documentation (categories, API, WP Consent API, traps) is in
+ * the header of includes/class-consent.php. Here, only what concerns this
+ * file:
  *
- * - Vino del tema padre (armazon-wp-padre ≤ 0.6.0, blocks/consent/view.js) en
- *   estrategia-web-site 0.5.0 SIN cambiar el contrato: mismo store, misma cookie,
- *   mismo formato, misma API y mismo evento. Un visitante que ya eligió con
- *   el aviso del padre no vuelve a ver el aviso.
- * - La elección se guarda en la cookie técnica «estrategia_web_consent» con el
- *   formato "<revisión>.<cat~cat>.<unix>". El mismo formato lo lee PHP
- *   (Consent::choice): si se cambia aquí, se cambia allí.
- * - 1.0.0 (cambio de nombre): si no hay cookie nueva y la vieja
- *   («armazon_consent», state.legacyCookie) vale para la revisión, se toma
- *   esa, se escribe la nueva (con la fecha de hoy: el año de vida vuelve a
- *   contar) y se borra la vieja. Se quita en 2.0.0.
- * - API pública, para el tema, Matomo (modules/matomo), Google
- *   (modules/google-tags) y otros bloques (estrategia-web/map la usa):
- *     window.estrategiaWebConsent.categories     → categorías que pregunta el aviso
- *     window.estrategiaWebConsent.has( 'maps' )  → boolean («necessary», siempre true)
- *     window.estrategiaWebConsent.get()          → string[] | null (null = sin elegir)
- *     window.estrategiaWebConsent.open()         → reabre el aviso
- *     window.estrategiaWebConsent.grant( 'maps' ) → añade UNA categoría a la
- *       elección (la usa «Ver mapa»). Si la web no la declara, no hace nada.
- *       No cierra el aviso si estaba abierto: el visitante sigue eligiendo el
- *       resto; si luego pulsa «Rechazar todas», la retira.
+ * - It came from the parent theme (armazon-wp-padre ≤ 0.6.0, blocks/consent/view.js)
+ *   in estrategia-web-site 0.5.0 WITHOUT changing the contract: same store,
+ *   same cookie, same format, same API and same event. A visitor who already
+ *   chose with the parent's notice does not see the notice again.
+ * - The choice is stored in the technical cookie «estrategia_web_consent»
+ *   with the format "<revision>.<cat~cat>.<unix>". PHP reads the same format
+ *   (Consent::choice): if it changes here, it changes there.
+ * - 1.0.0 (rename): if there is no new cookie and the old one
+ *   («armazon_consent», state.legacyCookie) is valid for the revision, that
+ *   one is taken, the new one is written (with today's date: the year of life
+ *   starts counting again) and the old one is deleted. Removed in 2.0.0.
+ * - Public API, for the theme, Matomo (modules/matomo), Google
+ *   (modules/google-tags) and other blocks (estrategia-web/map uses it):
+ *     window.estrategiaWebConsent.categories     → categories the notice asks about
+ *     window.estrategiaWebConsent.has( 'maps' )  → boolean («necessary», always true)
+ *     window.estrategiaWebConsent.get()          → string[] | null (null = no choice yet)
+ *     window.estrategiaWebConsent.open()         → reopens the notice
+ *     window.estrategiaWebConsent.grant( 'maps' ) → adds ONE category to the
+ *       choice («Show map» uses it). If the site does not declare it, it does
+ *       nothing. It does not close the notice if it was open: the visitor
+ *       keeps choosing the rest; if they then press «Reject all», it is
+ *       withdrawn.
  *     document.addEventListener( 'estrategia-web:consent', ( e ) => e.detail.accepted )
- *   El evento se lanza al arrancar (si ya había elección) y en cada cambio.
+ *   The event fires on boot (if there was already a choice) and on every change.
  *     document.addEventListener( 'estrategia-web:consent-ready', ( e ) => e.detail.accepted )
- *   (0.5.0, nuevo) se lanza UNA vez al arrancar, haya elección o no
- *   (accepted = null si no la hay), justo después de crear window.estrategiaWebConsent.
- *   Es para quien necesita enterarse de «sin elegir» (Matomo, trampa 1).
- *   1.1.0: has() y grant() admiten los alias (state.aliases: analytics →
- *   statistics, advertising/ads → marketing). get() y el evento devuelven
- *   siempre los slugs de verdad.
- *   La receta para quien espere al consentimiento (las dos vías, ver la trampa):
- *     const sync = ( accepted ) => { … accepted puede ser null … };
+ *   (0.5.0, new) fires ONCE on boot, whether there is a choice or not
+ *   (accepted = null if there is none), right after creating window.estrategiaWebConsent.
+ *   It is for whoever needs to learn about «no choice yet» (Matomo, trap 1).
+ *   1.1.0: has() and grant() accept aliases (state.aliases: analytics →
+ *   statistics, advertising/ads → marketing). get() and the event always
+ *   return the real slugs.
+ *   The recipe for whoever waits for consent (both paths, see the trap):
+ *     const sync = ( accepted ) => { … accepted may be null … };
  *     document.addEventListener( 'estrategia-web:consent', ( e ) => sync( e.detail.accepted ) );
  *     document.addEventListener( 'estrategia-web:consent-ready', ( e ) => sync( e.detail.accepted ) );
  *     if ( window.estrategiaWebConsent ) sync( window.estrategiaWebConsent.get() );
- * - 1.1.0, REABRIR desde cualquier enlace: un clic en a[href="#estrategia-web-consent"]
- *   o en algo con la clase estrategia-web-consent-open (o el atributo
- *   data-estrategia-web-consent-open) abre el panel (delegado en document,
- *   así vale para menús que se pintan después).
- * - 1.1.0, el DETECTOR (cabecera de includes/class-cookie-rest.php): cuando
- *   la elección acepta ALGO, pasados state.detector.delay ms (para que los
- *   scripts recién activados pongan sus cookies) se leen los NOMBRES de
- *   document.cookie y se mandan a state.detector.url. Solo si la LISTA DE
- *   NOMBRES cambió desde el último envío o pasaron state.detector.days días
- *   (localStorage «estrategia-web-cookie-scan»). No se usa una versión de la
- *   lista del servidor: ver el porqué en Consent::state(). Los valores no salen nunca del navegador:
- *   se corta cada par por el primer «=» y se queda solo la izquierda.
- * - La trampa: los módulos ES se ejecutan en diferido y en orden de llegada;
- *   otro módulo (o el script de Matomo) puede arrancar ANTES que este. Quien
- *   consulte el consentimiento tiene que mirar window.estrategiaWebConsent si existe
- *   Y escuchar el evento, nunca solo una de las dos cosas.
+ * - 1.1.0, REOPEN from any link: a click on a[href="#estrategia-web-consent"]
+ *   or on something with the estrategia-web-consent-open class (or the
+ *   data-estrategia-web-consent-open attribute) opens the panel (delegated on
+ *   document, so it works for menus rendered later).
+ * - 1.1.0, the DETECTOR (header of includes/class-cookie-rest.php): when the
+ *   choice accepts ANYTHING, after state.detector.delay ms (so that the
+ *   freshly activated scripts set their cookies) the NAMES are read from
+ *   document.cookie and sent to state.detector.url. Only if the LIST OF NAMES
+ *   changed since the last send or state.detector.days days have passed
+ *   (localStorage «estrategia-web-cookie-scan»). No server list version is
+ *   used: see why in Consent::state(). Values never leave the browser: each
+ *   pair is cut at the first «=» and only the left side is kept.
+ * - The trap: ES modules run deferred and in arrival order; another module
+ *   (or the Matomo script) may boot BEFORE this one. Whoever checks consent
+ *   must look at window.estrategiaWebConsent if it exists AND listen to the
+ *   event, never just one of the two.
  */
 import { store, getContext, getElement, withSyncEvent } from '@wordpress/interactivity';
 
@@ -259,8 +260,8 @@ const { state, actions } = store( 'estrategia-web/consent', {
 		},
 		init() {
 			choice = parseChoice( readCookie( state.cookieName ), state.revision, state.categories );
-			// 1.0.0: la cookie de antes del cambio de nombre (armazon_consent). Si
-			// vale, se pasa a la nueva y se borra: no se vuelve a preguntar.
+			// 1.0.0: the cookie from before the rename (armazon_consent). If it
+			// is valid, it is moved to the new one and deleted: no asking again.
 			if ( choice === null && state.legacyCookie ) {
 				const legacy = parseChoice( readCookie( state.legacyCookie ), state.revision, state.categories );
 				if ( legacy !== null ) {
@@ -285,7 +286,7 @@ const { state, actions } = store( 'estrategia-web/consent', {
 					apply( choice );
 				},
 			};
-			// 1.1.0: reabrir desde cualquier enlace o botón marcado (ver la cabecera).
+			// 1.1.0: reopen from any marked link or button (see the header).
 			document.addEventListener( 'click', ( event ) => {
 				const trigger = event.target instanceof Element ? event.target.closest( OPEN_SELECTOR ) : null;
 				if ( trigger ) {
@@ -293,9 +294,9 @@ const { state, actions } = store( 'estrategia-web/consent', {
 					actions.open();
 				}
 			} );
-			// 0.5.0: «ya estoy», también SIN elección (null), que no lanza estrategia-web:consent.
-			// Matomo lo necesita para olvidar un consentimiento caducado: la hidratación
-			// puede llegar DESPUÉS de window.load (medido: 1 de cada 3 cargas).
+			// 0.5.0: «I am ready», also WITHOUT a choice (null), which does not fire estrategia-web:consent.
+			// Matomo needs it to forget an expired consent: hydration may arrive
+			// AFTER window.load (measured: 1 in 3 loads).
 			document.dispatchEvent( new CustomEvent( 'estrategia-web:consent-ready', { detail: { accepted: choice ? [ ...choice ] : null } } ) );
 			if ( choice === null ) {
 				state.draft = [];

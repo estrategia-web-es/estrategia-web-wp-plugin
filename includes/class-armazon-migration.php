@@ -1,88 +1,92 @@
 <?php
 /**
- * EL MIGRADOR de «Armazón» a «Estrategia Web»: pasa una web hecha con el tema
- * padre Armazón y los plugins armazon-site / armazon-forms a la estructura de
- * la 1.1.0 (tema padre estrategia-web + el plugin ÚNICO estrategia-web), EN
- * SITIO, sin volver a cargar contenido. Los nombres públicos (bloques,
- * opciones, metas, tablas) son los de la 1.0.0; lo que cambió en la 1.1.0 es
- * solo la carpeta del plugin, así que una web que ya estaba en la 1.0.0
- * (estrategia-web-site + estrategia-web-forms) también pasa por aquí: solo
- * le toca el paso 7.
+ * THE MIGRATOR from «Armazón» to «Estrategia Web»: moves a site built with the
+ * Armazón parent theme and the armazon-site / armazon-forms plugins to the
+ * 1.1.0 structure (estrategia-web parent theme + the SINGLE estrategia-web
+ * plugin), IN PLACE, without reloading content. The public names (blocks,
+ * options, metas, tables) are those of 1.0.0; what changed in 1.1.0 is only
+ * the plugin folder, so a site that was already on 1.0.0
+ * (estrategia-web-site + estrategia-web-forms) also goes through here: only
+ * step 7 applies to it.
  *
- * Qué hace, en este orden (cada paso dice qué cambiaría y cuántos):
- *   1. contenido  post_content de todas las entradas (páginas, entradas,
- *                 patrones sincronizados wp_block, wp_template,
- *                 wp_template_part, wp_navigation, wp_global_styles, los tipos
- *                 del plugin y sus traducciones de WPML, que son entradas):
- *                 bloques armazon/…, armazon-site/… y armazon-forms/… (y
- *                 armazon/consent → estrategia-web-site/consent), sus clases,
- *                 fuentes de bindings, shortcodes, atributos data-armazon-…,
- *                 "theme":"armazon" de las partes y las claves de metas
- *                 renombradas en los bindings core/post-meta. Las revisiones
- *                 NO: son historia (si se restaura una, pintan los alias).
- *   2. metas      las de los tipos client, testimonial y location
+ * What it does, in this order (each step says what it would change and how
+ * many):
+ *   1. content    post_content of every post (pages, posts, synced patterns
+ *                 wp_block, wp_template, wp_template_part, wp_navigation,
+ *                 wp_global_styles, the plugin's post types and their WPML
+ *                 translations, which are posts): armazon/…, armazon-site/…
+ *                 and armazon-forms/… blocks (and armazon/consent →
+ *                 estrategia-web-site/consent), their classes, binding
+ *                 sources, shortcodes, data-armazon-… attributes,
+ *                 "theme":"armazon" of the template parts and the renamed meta
+ *                 keys in core/post-meta bindings. Revisions are NOT touched:
+ *                 they are history (if one is restored, the aliases render it).
+ *   2. metas      those of the client, testimonial and location post types
  *                 (location_static_map… → estrategia_web_location_static_map…).
- *   3. opciones   armazon_* → estrategia_web_* (datos de la empresa,
- *                 formularios, WhatsApp…), theme_mods_armazon →
- *                 theme_mods_estrategia-web, y dentro de cualquier otra opción
- *                 que nombre algo viejo (WPML guarda ajustes por tema y por
- *                 plugin) los textos y claves que son nombres viejos. Los
- *                 transitorios viejos se borran (son caché).
- *   4. tablas     {prefijo}armazon_forms_submissions y …_definitions →
- *                 estrategia_web_forms_…: ALTER TABLE … RENAME TO, los envíos no
- *                 se tocan. (No «RENAME TABLE»: el SQLite de Playground no lo
- *                 entiende y fallaba EN SILENCIO; ALTER TABLE vale en los dos.
- *                 Después se mira que la nueva exista: si no, aviso.)
- *                 Si la nueva ya existe (alguien activó el plugin nuevo antes)
- *                 y está vacía, se copian las filas y la vieja se deja.
- *   5. wpml       cadenas de String Translation con contexto o nombre viejo
- *                 (armazon-forms, [armazon_forms_settings]…), recalculando su
- *                 domain_name_context_md5; sus traducciones cuelgan del id y
- *                 no se pierden.
- *   6. tema       template/stylesheet armazon → estrategia-web y el término
- *                 wp_theme «armazon» de las plantillas personalizadas.
+ *   3. options    armazon_* → estrategia_web_* (company details, forms,
+ *                 WhatsApp…), theme_mods_armazon →
+ *                 theme_mods_estrategia-web, and inside any other option that
+ *                 names something old (WPML stores settings per theme and per
+ *                 plugin) the texts and keys that are old names. Old
+ *                 transients are deleted (they are cache).
+ *   4. tables     {prefix}armazon_forms_submissions and …_definitions →
+ *                 estrategia_web_forms_…: ALTER TABLE … RENAME TO, submissions
+ *                 are not touched. (Not «RENAME TABLE»: Playground's SQLite
+ *                 does not understand it and it failed SILENTLY; ALTER TABLE
+ *                 works on both. Afterwards it checks that the new one exists:
+ *                 if not, a warning.)
+ *                 If the new one already exists (someone activated the new
+ *                 plugin first) and is empty, the rows are copied and the old
+ *                 one is left.
+ *   5. wpml       String Translation strings with an old context or name
+ *                 (armazon-forms, [armazon_forms_settings]…), recomputing
+ *                 their domain_name_context_md5; their translations hang from
+ *                 the id and are not lost.
+ *   6. theme      template/stylesheet armazon → estrategia-web and the
+ *                 wp_theme term «armazon» of the custom templates.
  *   7. plugins    active_plugins: armazon-site/armazon-site.php,
- *                 armazon-forms/armazon-forms.php (y los dos de la 1.0.0,
- *                 estrategia-web-site/… y estrategia-web-forms/…) salen de la
- *                 lista y entra UNO: estrategia-web/estrategia-web.php. Sin
- *                 llamar a ganchos de activación ni de desactivación (las
- *                 opciones y tablas ya están migradas; las tablas de
- *                 formularios y su cron los rehace el módulo forms en cada
- *                 carga si faltan); el evento de cron viejo se quita. Las
- *                 CARPETAS viejas no se tocan: se borran a mano (o con el
- *                 desplegador) cuando la web ya responde con el plugin nuevo.
- *                 La lista de módulos (estrategia_web_modules) NO se escribe:
- *                 sin ella valen los «Default» de cada módulo.
- *   8. caché      la de objetos y, si está, la de SiteGround.
- *   La cookie del consentimiento NO se migra aquí (vive en el navegador): la
- *   pasa blocks/consent/view.js la primera vez que vuelve cada visitante.
+ *                 armazon-forms/armazon-forms.php (and the two from 1.0.0,
+ *                 estrategia-web-site/… and estrategia-web-forms/…) leave the
+ *                 list and ONE comes in: estrategia-web/estrategia-web.php.
+ *                 Without calling activation or deactivation hooks (options
+ *                 and tables are already migrated; the forms tables and their
+ *                 cron are recreated by the forms module on every load if
+ *                 missing); the old cron event is removed. The old FOLDERS are
+ *                 not touched: they are deleted by hand (or with the deployer)
+ *                 once the site is already responding with the new plugin.
+ *                 The module list (estrategia_web_modules) is NOT written:
+ *                 without it, each module's «Default» applies.
+ *   8. cache      the object cache and, if present, SiteGround's.
+ *   The consent cookie is NOT migrated here (it lives in the browser):
+ *   blocks/consent/view.js migrates it the first time each visitor returns.
  *
- * Cómo se usa:
- *   - WP-CLI, con el plugin nuevo activo: wp estrategia-web migrate-armazon [--dry-run]
- *   - Sin activar nada (lo que hace Lavandería): incluir este fichero desde
- *     «wp eval-file» y llamar a Armazon_Migration::run( $seco ). Ver
+ * How to use it:
+ *   - WP-CLI, with the new plugin active: wp estrategia-web migrate-armazon [--dry-run]
+ *   - Without activating anything (what Lavandería does): include this file
+ *     from «wp eval-file» and call Armazon_Migration::run( $dry ). See
  *     lavanderia-mallorca/despliegue/migrar-a-estrategia-web.mjs.
- *   NO corre solo al activar el plugin, a propósito: renombra tablas y
- *   reescribe todo el contenido, y eso se hace con copia de seguridad y
- *   habiendo mirado antes el seco.
+ *   It does NOT run by itself when the plugin is activated, on purpose: it
+ *   renames tables and rewrites all the content, and that is done with a
+ *   backup and after having looked at the dry run first.
  *
- * IDEMPOTENTE: cada paso busca lo viejo; pasarlo dos veces no cambia nada la
- * segunda (lo comprueba la prueba de Lavandería). En seco no escribe nada.
- * Los pasos 6 y 7 se saltan si las carpetas nuevas (themes/estrategia-web,
- * plugins/estrategia-web) no están en el servidor: primero se suben los
- * paquetes.
+ * IDEMPOTENT: each step looks for the old names; running it twice changes
+ * nothing the second time (Lavandería's test checks it). A dry run writes
+ * nothing. Steps 6 and 7 are skipped if the new folders (themes/estrategia-web,
+ * plugins/estrategia-web) are not on the server: the packages are uploaded
+ * first.
  *
- * Cómo se mantiene:
- * - Quién: quien toque el cambio de nombre. Cuándo: si aparece otro sitio
- *   donde se guardaba un nombre viejo, se añade aquí y a su prueba.
- * - Se quita en 2.0.0, con Legacy_Names, cuando todas las webs que usaron
- *   Armazón lo hayan pasado (07-10-2026: solo Lavandería Mallorca).
- * - Caso frontera: un texto de la web que diga «armazon-» (no «armazón»).
- *   Se renombraría. Solo se tocan tokens pegados a «-», «_» o «/», que en
- *   texto normal no aparecen; el seco los lista por entrada para mirarlos.
- * - La trampa: WordPress guarda los theme_mods POR CARPETA del tema. Si el
- *   padre estaba activo él solo (sin hijo), sus ajustes viven en
- *   theme_mods_armazon y sin el paso 3 se perderían al cambiar de carpeta.
+ * How to maintain:
+ * - Who: whoever touches the renaming. When: if another place where an old
+ *   name was stored turns up, it is added here and to its test.
+ * - It is removed in 2.0.0, along with Legacy_Names, once every site that
+ *   used Armazón has gone through it (07-10-2026: only Lavandería Mallorca).
+ * - Edge case: a site text that says «armazon-» (not «armazón»). It would
+ *   be renamed. Only tokens attached to «-», «_» or «/» are touched, which
+ *   do not appear in normal text; the dry run lists them per post so they
+ *   can be checked.
+ * - The trap: WordPress stores theme_mods PER theme FOLDER. If the parent was
+ *   active on its own (no child), its settings live in theme_mods_armazon
+ *   and without step 3 they would be lost when the folder changes.
  */
 
 namespace EstrategiaWeb\Site;
@@ -93,7 +97,7 @@ final class Armazon_Migration {
 
 	public const THEME = array( 'armazon' => 'estrategia-web' );
 
-	/** El plugin único (1.1.0). Todos los de antes acaban en él. */
+	/** The single plugin (1.1.0). All the previous ones end up in it. */
 	public const PLUGIN = 'estrategia-web/estrategia-web.php';
 
 	public const PLUGINS = array(
@@ -103,10 +107,10 @@ final class Armazon_Migration {
 		'estrategia-web-forms/estrategia-web-forms.php' => self::PLUGIN,
 	);
 
-	/** Metas de los tipos del plugin que ganaron prefijo en 1.0.0. */
+	/** Metas of the plugin's post types that gained a prefix in 1.0.0. */
 	public const META = array( 'client_image_fit', 'testimonial_author', 'testimonial_rating', 'location_address', 'location_phone', 'location_email', 'location_schedule', 'location_map_url', 'location_map_embed', 'location_static_map', 'location_static_map_id' );
 
-	/** Claves que solo existen en los bindings (derivadas, no metas). */
+	/** Keys that only exist in the bindings (derived, not metas). */
 	public const BINDING_KEYS = array( 'location_phone_href', 'location_email_href' );
 
 	public const META_TYPES = array( 'client', 'testimonial', 'location' );
@@ -115,7 +119,7 @@ final class Armazon_Migration {
 
 	public const OLD_CRON = array( 'armazon_forms_purge' );
 
-	/** Opciones que no pasan por el renombrado genérico (tienen paso propio). */
+	/** Options that skip the generic renaming (they have their own step). */
 	private const OWN_STEP = array( 'active_plugins', 'template', 'stylesheet', 'theme_mods_armazon', 'rewrite_rules', 'cron' );
 
 	private static bool $dry = true;
@@ -124,7 +128,7 @@ final class Armazon_Migration {
 	private static array $report = array();
 
 	/**
-	 * Corre la migración. Devuelve lo hecho (o lo que haría, en seco).
+	 * Runs the migration. Returns what was done (or what it would do, on a dry run).
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -152,16 +156,16 @@ final class Armazon_Migration {
 		return self::$report;
 	}
 
-	// ------------------------------------------------------------ el renombrado
+	// ------------------------------------------------------------ the renaming
 
 	/**
-	 * Un marcado con los nombres nuevos.
+	 * A piece of markup with the new names.
 	 *
-	 * @param array{bloques: int, otros: int} $count Cuenta, por referencia.
+	 * @param array{bloques: int, otros: int} $count Count, by reference.
 	 */
 	public static function rename_markup( string $html, ?array &$count = null ): string {
 		$count = array( 'bloques' => 0, 'otros' => 0 );
-		// 1. Nombres de bloque en los comentarios (los de apertura cuentan como bloques).
+		// 1. Block names in the comments (opening ones count as blocks).
 		$html = preg_replace_callback(
 			'#<!--(\s+)(/?)wp:(armazon(?:-site|-forms)?)/([a-z0-9-]+)#',
 			static function ( $m ) use ( &$count ) {
@@ -172,14 +176,14 @@ final class Armazon_Migration {
 			},
 			$html
 		);
-		// 2. La clase que WordPress deriva del alias viejo del enlace de cookies.
+		// 2. The class WordPress derives from the old alias of the cookies link.
 		$html = str_replace( 'wp-block-armazon-consent', 'wp-block-estrategia-web-site-consent', $html, $n );
 		$count['otros'] += $n;
-		// 3. Claves de metas renombradas, solo como clave de un binding.
+		// 3. Renamed meta keys, only as the key of a binding.
 		$keys = implode( '|', array_merge( self::META, self::BINDING_KEYS ) );
 		$html = preg_replace( '#("key"\s*:\s*")(' . $keys . ')"#', '$1estrategia_web_$2"', $html, -1, $n );
 		$count['otros'] += $n;
-		// 4. Lo demás: tokens pegados a «-», «_» o «/» y el tema de las partes.
+		// 4. Everything else: tokens attached to «-», «_» or «/» and the theme of the template parts.
 		$html = preg_replace( '#"theme"\s*:\s*"armazon"#', '"theme":"estrategia-web"', $html, -1, $n );
 		$count['otros'] += $n;
 		$html = preg_replace_callback(
@@ -193,7 +197,7 @@ final class Armazon_Migration {
 		return $html;
 	}
 
-	/** Nombre de bloque viejo → nuevo. */
+	/** Old block name → new. */
 	public static function block_name( string $old ): string {
 		if ( 'armazon/consent' === $old ) {
 			return 'estrategia-web-site/consent';
@@ -202,9 +206,9 @@ final class Armazon_Migration {
 	}
 
 	/**
-	 * Cualquier valor (opción deserializada) con los nombres nuevos, claves incluidas.
+	 * Any value (unserialized option) with the new names, keys included.
 	 *
-	 * @param mixed $value Valor.
+	 * @param mixed $value Value.
 	 * @return mixed
 	 */
 	public static function rename_value( $value ) {
@@ -232,7 +236,7 @@ final class Armazon_Migration {
 		return $value;
 	}
 
-	// ------------------------------------------------------------------- pasos
+	// ------------------------------------------------------------------- steps
 
 	private static function content(): void {
 		global $wpdb;
@@ -253,8 +257,8 @@ final class Armazon_Migration {
 				'otros'   => $count['otros'],
 			);
 			if ( ! self::$dry ) {
-				// Directo a la tabla: wp_update_post() crearía una revisión y pasaría
-				// por kses y por los ganchos de guardado (WPML, Rank Math) por nada.
+				// Straight to the table: wp_update_post() would create a revision and go
+				// through kses and the save hooks (WPML, Rank Math) for nothing.
 				$wpdb->update( $wpdb->posts, array( 'post_content' => $new ), array( 'ID' => (int) $row['ID'] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 				clean_post_cache( (int) $row['ID'] );
 			}
@@ -263,7 +267,7 @@ final class Armazon_Migration {
 
 	private static function metas(): void {
 		global $wpdb;
-		// Con y sin el prefijo de la 1.2.0 (Type_Names): da igual cuál de los dos migradores pase antes.
+		// With and without the 1.2.0 prefix (Type_Names): it does not matter which of the two migrators runs first.
 		$all   = self::META_TYPES;
 		if ( class_exists( Type_Names::class ) ) {
 			$all = array_merge( $all, array_map( array( Type_Names::class, 'name' ), self::META_TYPES ) );
@@ -292,11 +296,11 @@ final class Armazon_Migration {
 			if ( in_array( $name, self::OWN_STEP, true ) || str_ends_with( $name, 'theme_roots' ) ) {
 				continue;
 			}
-			// theme_roots no: lista las carpetas de themes/, y la vieja sigue allí hasta borrarla a mano.
+			// Not theme_roots: it lists the folders in themes/, and the old one stays there until deleted by hand.
 			if ( preg_match( '#^_(site_)?transient_#', $name ) && ! str_ends_with( $name, 'theme_roots' ) ) {
-				// Cachés (de WPML, de los patrones del tema…) que nombran algo viejo:
-				// se borran y quien las hizo las rehace con los nombres nuevos.
-				self::$report['opciones'][] = "$name: se borra (caché)";
+				// Caches (WPML's, the theme's patterns…) that name something old:
+				// they are deleted and whoever made them rebuilds them with the new names.
+				self::$report['opciones'][] = "$name: deleted (cache)";
 				if ( ! self::$dry ) {
 					$wpdb->delete( $wpdb->options, array( 'option_name' => $name ) ); // phpcs:ignore
 				}
@@ -307,7 +311,7 @@ final class Armazon_Migration {
 			$new      = self::rename_value( $value );
 			if ( $new_name !== $name ) {
 				if ( null !== $wpdb->get_var( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name = %s", $new_name ) ) ) { // phpcs:ignore
-					self::$report['avisos'][] = "$name: ya existe $new_name; no se pisa (la vieja se queda)";
+					self::$report['avisos'][] = "$name: $new_name already exists; not overwritten (the old one stays)";
 					continue;
 				}
 				self::$report['opciones'][] = "$name → $new_name";
@@ -317,17 +321,17 @@ final class Armazon_Migration {
 				continue;
 			}
 			if ( $new !== $value ) {
-				self::$report['opciones'][] = "$name: nombres viejos dentro del valor";
+				self::$report['opciones'][] = "$name: old names inside the value";
 				if ( ! self::$dry ) {
 					$wpdb->update( $wpdb->options, array( 'option_value' => maybe_serialize( $new ) ), array( 'option_name' => $name ) ); // phpcs:ignore
 				}
 			}
 		}
-		// theme_mods: se guardan por carpeta del tema (ver la trampa de la cabecera).
+		// theme_mods: stored per theme folder (see the trap in the header).
 		$mods = get_option( 'theme_mods_armazon', null );
 		if ( null !== $mods ) {
 			if ( null !== get_option( 'theme_mods_estrategia-web', null ) ) {
-				self::$report['avisos'][] = 'theme_mods_armazon: ya existe theme_mods_estrategia-web; no se pisa';
+				self::$report['avisos'][] = 'theme_mods_armazon: theme_mods_estrategia-web already exists; not overwritten';
 			} else {
 				self::$report['opciones'][] = 'theme_mods_armazon → theme_mods_estrategia-web';
 				if ( ! self::$dry ) {
@@ -352,39 +356,39 @@ final class Armazon_Migration {
 			}
 			$rows = (int) $wpdb->get_var( "SELECT COUNT(*) FROM `$old_t`" ); // phpcs:ignore
 			if ( ! $has( $new_t ) ) {
-				self::$report['tablas'][] = "$old_t → $new_t (se renombra, $rows filas)";
+				self::$report['tablas'][] = "$old_t → $new_t (renamed, $rows rows)";
 				if ( ! self::$dry ) {
 					$wpdb->query( "ALTER TABLE `$old_t` RENAME TO `$new_t`" ); // phpcs:ignore
 					if ( ! $has( $new_t ) && self::create_forms_tables() && $has( $new_t ) ) {
-						// Plan B (el SQLite de Playground no renombra tablas): crearlas con
-						// la migración del plugin nuevo y copiar las filas. La vieja se queda.
+						// Plan B (Playground's SQLite does not rename tables): create them with
+						// the new plugin's migration and copy the rows. The old one stays.
 						$wpdb->query( "INSERT INTO `$new_t` SELECT * FROM `$old_t`" ); // phpcs:ignore
-						self::$report['avisos'][] = "$old_t: no se pudo renombrar; se ha creado $new_t y se han COPIADO las filas (la vieja se queda: bórrala a mano cuando se haya comprobado)";
+						self::$report['avisos'][] = "$old_t: could not be renamed; $new_t has been created and the rows COPIED (the old one stays: delete it by hand once checked)";
 					}
 					if ( ! $has( $new_t ) || $rows !== (int) $wpdb->get_var( "SELECT COUNT(*) FROM `$new_t`" ) ) { // phpcs:ignore
-						self::$report['avisos'][] = "$old_t: NO se ha renombrado ni copiado ({$wpdb->last_error})";
+						self::$report['avisos'][] = "$old_t: NOT renamed or copied ({$wpdb->last_error})";
 					}
 				}
 				continue;
 			}
 			$present = (int) $wpdb->get_var( "SELECT COUNT(*) FROM `$new_t`" ); // phpcs:ignore
 			if ( $present === $rows ) {
-				// Ya copiada (el plan B de una pasada anterior deja la vieja): nada que hacer.
-				// Idempotencia; la vieja se borra a mano, como dice el aviso de aquella pasada.
+				// Already copied (plan B on a previous run leaves the old one): nothing to do.
+				// Idempotence; the old one is deleted by hand, as that run's warning says.
 				continue;
 			}
 			if ( $present ) {
-				self::$report['avisos'][] = "$old_t ($rows filas) y $new_t ($present filas) existen las dos y la nueva no está vacía: no se toca ninguna, se mira a mano";
+				self::$report['avisos'][] = "$old_t ($rows rows) and $new_t ($present rows) both exist and the new one is not empty: neither is touched, check by hand";
 				continue;
 			}
-			self::$report['tablas'][] = "$old_t → $new_t (la nueva existía vacía: se copian $rows filas; la vieja se queda)";
+			self::$report['tablas'][] = "$old_t → $new_t (the new one existed empty: $rows rows copied; the old one stays)";
 			if ( ! self::$dry ) {
 				$wpdb->query( "INSERT INTO `$new_t` SELECT * FROM `$old_t`" ); // phpcs:ignore
 			}
 		}
 	}
 
-	/** Crea las tablas nuevas con la migración del plugin de formularios nuevo (plan B de tables()). */
+	/** Creates the new tables with the new forms plugin's migration (plan B of tables()). */
 	private static function create_forms_tables(): bool {
 		$dir = WP_PLUGIN_DIR . '/' . dirname( self::PLUGIN ) . '/modules/forms/includes/';
 		if ( ! is_file( $dir . 'migrations/0001-create-tables.php' ) ) {
@@ -435,14 +439,14 @@ final class Armazon_Migration {
 			if ( 'armazon' !== get_option( $option ) ) {
 				continue;
 			}
-			self::$report['tema'][] = "$option: armazon → estrategia-web" . ( $ready ? '' : ' (FALTA themes/estrategia-web: no se cambia)' );
+			self::$report['tema'][] = "$option: armazon → estrategia-web" . ( $ready ? '' : ' (themes/estrategia-web MISSING: not changed)' );
 			if ( ! self::$dry && $ready ) {
 				update_option( $option, 'estrategia-web' );
 			}
 		}
 		$term = get_term_by( 'slug', 'armazon', 'wp_theme' );
 		if ( $term ) {
-			self::$report['tema'][] = "término wp_theme armazon (#{$term->term_id}) → estrategia-web";
+			self::$report['tema'][] = "wp_theme term armazon (#{$term->term_id}) → estrategia-web";
 			if ( ! self::$dry ) {
 				$wpdb->update( $wpdb->terms, array( 'slug' => 'estrategia-web', 'name' => 'estrategia-web' ), array( 'term_id' => $term->term_id ) ); // phpcs:ignore
 				clean_term_cache( $term->term_id, 'wp_theme' );
@@ -459,14 +463,14 @@ final class Armazon_Migration {
 				continue;
 			}
 			$ready = is_file( WP_PLUGIN_DIR . '/' . $new );
-			self::$report['plugins'][] = "$old → $new" . ( $ready ? '' : ' (FALTA el plugin nuevo: no se cambia)' );
+			self::$report['plugins'][] = "$old → $new" . ( $ready ? '' : ' (new plugin MISSING: not changed)' );
 			if ( $ready ) {
 				$changed[ $at ] = $new;
 			}
 		}
 		foreach ( self::OLD_CRON as $hook ) {
 			if ( wp_next_scheduled( $hook ) ) {
-				self::$report['plugins'][] = "cron $hook: se quita (el plugin nuevo programa el suyo)";
+				self::$report['plugins'][] = "cron $hook: removed (the new plugin schedules its own)";
 				if ( ! self::$dry ) {
 					wp_clear_scheduled_hook( $hook );
 				}
@@ -474,7 +478,7 @@ final class Armazon_Migration {
 		}
 		if ( ! self::$dry && $changed !== $active ) {
 			update_option( 'active_plugins', array_values( array_unique( $changed ) ) );
-			delete_option( 'rewrite_rules' ); // los tipos del plugin se vuelven a registrar
+			delete_option( 'rewrite_rules' ); // the plugin's post types get registered again
 		}
 	}
 
@@ -496,6 +500,6 @@ if ( defined( 'WP_CLI' ) && WP_CLI && class_exists( '\WP_CLI' ) ) {
 			$report = Armazon_Migration::run( ! empty( $assoc['dry-run'] ) );
 			\WP_CLI::line( wp_json_encode( $report, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
 		},
-		array( 'shortdesc' => 'Pasa una web de Armazón (o de la 1.0.0) a Estrategia Web 1.1.0 (contenido, metas, opciones, tablas, WPML, tema y el plugin único). Con --dry-run solo lo cuenta.' )
+		array( 'shortdesc' => 'Moves an Armazón (or 1.0.0) site to Estrategia Web 1.1.0 (content, metas, options, tables, WPML, theme and the single plugin). With --dry-run it only counts.' )
 	);
 }

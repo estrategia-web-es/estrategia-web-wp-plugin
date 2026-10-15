@@ -1,4 +1,4 @@
-// NIVEL: 3 — navegador. NECESITA NAVEGADOR PORQUE: las pantallas de administración y el editor de bloques solo existen pintados y con sesión de administrador; el CSV es una descarga del navegador.
+// NIVEL: 3 — browser. NEEDS A BROWSER BECAUSE: the admin screens and the block editor only exist rendered and with an administrator session; the CSV is a browser download.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -29,7 +29,7 @@ before(async () => {
   const second = await loadForm(other.url);
   await waitMinTime();
   await submit(second.hidden, { empresa: "Acme" });
-  assert.equal((await submissions()).length, 3, "siembra: tres envíos de dos formularios");
+  assert.equal((await submissions()).length, 3, "seed: three submissions from two forms");
 
   browser = await playwright().chromium.launch();
   ctx = await browser.newContext({ acceptDownloads: true });
@@ -40,7 +40,7 @@ after(() => browser?.close());
 
 const LIST = BASE + "/wp-admin/admin.php?page=estrategia-web-forms";
 
-test("lista, filtro por formulario y ficha de un envío con el resultado de cada aviso", async () => {
+test("list, filter by form and a submission's detail with each notification's result", async () => {
   await p.goto(LIST);
   assert.equal(await p.locator("table.wp-list-table tbody tr").count(), 3);
   await p.selectOption("#af-filter-form", "presupuesto");
@@ -57,35 +57,35 @@ test("lista, filtro por formulario y ficha de un envío con el resultado de cada
   assert.match(notes, /fail@ejemplo\.test/);
 });
 
-test("exportar CSV: cabecera, filas y celdas peligrosas neutralizadas", async () => {
+test("CSV export: header, rows and dangerous cells neutralized", async () => {
   await p.goto(LIST + "&form_id=contacto");
   const [download] = await Promise.all([p.waitForEvent("download"), p.click("a.page-title-action")]);
   const csv = fs.readFileSync(await download.path(), "utf8").replace(/^﻿/, "");
-  // Un mensaje de varias líneas es UNA celda entre comillas con saltos dentro:
-  // los registros se cuentan por su id al principio de línea, no por líneas.
+  // A multi-line message is ONE quoted cell with line breaks inside:
+  // records are counted by their id at the start of a line, not by lines.
   const lines = csv.split("\n");
-  assert.equal(csv.match(/^\d+;/gm).length, 2, "2 envíos de «contacto», no el de «presupuesto»");
+  assert.equal(csv.match(/^\d+;/gm).length, 2, "2 submissions from «contacto», not the one from «presupuesto»");
   assert.match(lines[0], /^id;date_utc;form_id;form;page;language;status;notifications;ip;user_agent;Nombre;Correo/);
-  assert.ok(csv.includes("'=cmd@ejemplo.test"), "una celda que empieza por = no llega a Excel como fórmula");
+  assert.ok(csv.includes("'=cmd@ejemplo.test"), "a cell starting with = does not reach Excel as a formula");
   assert.ok(!csv.includes("Acme"));
 });
 
-test("exportar o borrar sin nonce: denegado", async () => {
+test("export or delete without nonce: denied", async () => {
   const res = await p.request.get(BASE + "/wp-admin/admin-post.php?action=estrategia_web_forms_export");
-  assert.notEqual(res.status(), 200, "sin nonce no hay CSV");
+  assert.notEqual(res.status(), 200, "no nonce, no CSV");
   const del = await p.request.post(BASE + "/wp-admin/admin-post.php", { form: { action: "estrategia_web_forms_delete", "ids[]": "1" } });
   assert.notEqual(del.status(), 302);
-  assert.equal((await submissions()).length, 3, "no se borró nada");
+  assert.equal((await submissions()).length, 3, "nothing was deleted");
 });
 
-test("borrar pide confirmación y solo borra al confirmar", async () => {
+test("delete asks for confirmation and only deletes on confirm", async () => {
   await p.goto(LIST + "&form_id=presupuesto");
   await p.hover("table.wp-list-table tbody tr");
   await p.click("table.wp-list-table tbody tr .row-actions .delete a");
   assert.match(await p.textContent(".wrap"), /cannot be undone|no se puede deshacer/i);
-  assert.equal((await submissions()).length, 3, "llegar a la confirmación no borra");
+  assert.equal((await submissions()).length, 3, "reaching the confirmation does not delete");
   await p.click(".wrap a.button:not(.button-primary)");
-  assert.equal((await submissions()).length, 3, "cancelar no borra");
+  assert.equal((await submissions()).length, 3, "cancelling does not delete");
 
   await p.goto(LIST + "&form_id=presupuesto");
   await p.check("table.wp-list-table tbody tr input[name='ids[]']");
@@ -97,7 +97,7 @@ test("borrar pide confirmación y solo borra al confirmar", async () => {
   assert.ok(left.every((r) => r.form_id === "contacto"));
 });
 
-test("editor: los bloques se registran y el formulario nuevo trae su plantilla con dos avisos", async () => {
+test("editor: the blocks are registered and a new form comes with its template with two notifications", async () => {
   const errors = [];
   p.on("pageerror", (e) => errors.push(e.message));
   await p.goto(BASE + "/wp-admin/post-new.php?post_type=page");
@@ -111,12 +111,12 @@ test("editor: los bloques se registran y el formulario nuevo trae su plantilla c
     const b = wp.data.select("core/block-editor").getBlocks()[0];
     return { formId: b.attributes.formId, inner: b.innerBlocks.map((i) => i.name.replace("estrategia-web-forms/", "")) };
   });
-  assert.match(form.formId, /^form-[a-z0-9]+$/, "el identificador se genera solo");
+  assert.match(form.formId, /^form-[a-z0-9]+$/, "the identifier is generated automatically");
   assert.deepEqual(form.inner, ["text", "email", "textarea", "checkbox", "submit", "notification", "notification"]);
-  assert.deepEqual(errors, [], "sin errores de JavaScript en el editor");
+  assert.deepEqual(errors, [], "no JavaScript errors in the editor");
 });
 
-test("editor: la opción preseleccionada sigue a su TEXTO cuando se reordenan o quitan opciones", async () => {
+test("editor: the preselected option follows its TEXT when options are reordered or removed", async () => {
   const errors = [];
   p.on("pageerror", (e) => errors.push(e.message));
   await p.goto(BASE + "/wp-admin/post-new.php?post_type=page");
@@ -132,21 +132,21 @@ test("editor: la opción preseleccionada sigue a su TEXTO cuando se reordenan o 
   const attr = () => p.evaluate((id) => wp.data.select("core/block-editor").getBlockAttributes(id).defaultOption, clientId);
   const preselected = p.getByLabel("Preselected option");
   await preselected.waitFor();
-  assert.equal(await preselected.inputValue(), "2", "el panel enseña la opción guardada");
+  assert.equal(await preselected.inputValue(), "2", "the panel shows the saved option");
 
-  // getByRole y no getByLabel: «Options» es también el menú de la barra de arriba y el de la barra del bloque.
+  // getByRole and not getByLabel: «Options» is also the top toolbar's menu and the block toolbar's.
   const options = p.getByRole("textbox", { name: "Options" });
   await options.fill("Barcos\nHoteles\nRestaurantes");
   await p.waitForFunction((id) => wp.data.select("core/block-editor").getBlockAttributes(id).options.startsWith("Barcos"), clientId);
-  assert.equal(await attr(), 3, "«Restaurantes» pasó a la tercera posición y la preselección con ella");
+  assert.equal(await attr(), 3, "«Restaurantes» moved to the third position and the preselection with it");
 
   await options.fill("Barcos\nHoteles");
   await p.waitForFunction((id) => !wp.data.select("core/block-editor").getBlockAttributes(id).options.includes("Restaurantes"), clientId);
-  assert.equal(await attr(), 0, "si la opción desaparece, no se preselecciona otra por accidente");
-  assert.deepEqual(errors, [], "sin errores de JavaScript en el editor");
+  assert.equal(await attr(), 0, "if the option disappears, no other one is preselected by accident");
+  assert.deepEqual(errors, [], "no JavaScript errors in the editor");
 });
 
-test("editor: abrir y guardar una página con el formulario sincronizado conserva su preselección", async () => {
+test("editor: opening and saving a page with the synced form keeps its preselection", async () => {
   const OPTIONS = "Hoteles\\nRestaurantes\\nBarcos";
   const pattern = await testApi("/page", {
     method: "POST",
@@ -156,11 +156,11 @@ test("editor: abrir y guardar una página con el formulario sincronizado conserv
   await p.goto(`${BASE}/wp-admin/post.php?post=${page.id}&action=edit`);
   await p.waitForFunction(() => window.wp?.data?.select("core/block-editor").getBlocks().length > 0);
   await p.evaluate(() => {
-    wp.data.dispatch("core/editor").editPost({ title: "Barcos (guardada en el editor)" });
+    wp.data.dispatch("core/editor").editPost({ title: "Barcos (saved in the editor)" });
     return wp.data.dispatch("core/editor").savePost();
   });
   await p.waitForFunction(() => !wp.data.select("core/editor").isSavingPost() && !wp.data.select("core/editor").isEditedPostDirty());
   const { content } = await testApi(`/post/${page.id}`);
-  assert.match(content, /"content":\{"servicio":\{"defaultOption":3\}\}/, "el editor no tira el content que no sabe pintar: " + content);
-  assert.equal(/<option value="Barcos" selected>/.test(await (await fetch(page.url)).text()), true, "y la página sigue preseleccionando");
+  assert.match(content, /"content":\{"servicio":\{"defaultOption":3\}\}/, "the editor does not drop the content it cannot render: " + content);
+  assert.equal(/<option value="Barcos" selected>/.test(await (await fetch(page.url)).text()), true, "and the page still preselects");
 });

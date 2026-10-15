@@ -1,7 +1,7 @@
 /*
- * estrategia-web/cookie-table — lo mínimo para que la tabla se lea en móvil:
- * desplazamiento horizontal DENTRO de la tabla (no de la página) y el nombre
- * de la cookie sin partir. El resto (bordes, colores, letra) es del tema, vía
+ * estrategia-web/cookie-table — the bare minimum for the table to read on
+ * mobile: horizontal scrolling INSIDE the table (not the page) and the cookie
+ * name unbroken. The rest (borders, colours, font) comes from the theme, via
  * .wp-block-table.
  */
 .estrategia-web-cookie-table__figure {

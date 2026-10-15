@@ -1,20 +1,21 @@
 <?php
 /**
- * Ajustes globales del plugin (una sola opción, 'estrategia_web_forms_settings').
+ * Global plugin settings (a single option, 'estrategia_web_forms_settings').
  *
- * Aquí va SOLO lo que es igual para todos los formularios de la web: la
- * retención del registro, el antispam y los textos por defecto. Lo de cada
- * formulario (campos, avisos, mensajes propios) vive en sus bloques.
+ * ONLY what is the same for every form on the site goes here: the log
+ * retention, the antispam and the default texts. What belongs to each form
+ * (fields, notifications, its own messages) lives in its blocks.
  *
- * Cómo se mantiene:
- * - Un ajuste nuevo entra en DEFAULTS, en sanitize() y en la pantalla
- *   (Admin::render_settings), en el mismo commit. Si es un texto que lee el
- *   visitante, entra además en TRANSLATABLE para que WPML lo vea.
- * - Caso frontera: un texto que solo un formulario necesita distinto NO es un
- *   ajuste: es un atributo del bloque del formulario.
- * - La trampa: un texto vacío significa «el de por defecto, traducido con
- *   gettext». Si se rellena, deja de traducirse con el .po y pasa a
- *   traducirse con WPML (Cadenas). Las dos vías no se mezclan.
+ * How to maintain:
+ * - A new setting goes into DEFAULTS, into sanitize() and into the screen
+ *   (Admin::render_settings), in the same commit. If it is a text the
+ *   visitor reads, it also goes into TRANSLATABLE so that WPML sees it.
+ * - Edge case: a text that only one form needs different is NOT a setting:
+ *   it is an attribute of the form block.
+ * - The trap: an empty text means «the default one, translated with
+ *   gettext». If it is filled in, it stops being translated with the .po
+ *   and is translated with WPML (String Translation) instead. The two paths
+ *   do not mix.
  */
 
 namespace EstrategiaWeb\Forms;
@@ -25,7 +26,7 @@ final class Settings {
 
 	public const OPTION = 'estrategia_web_forms_settings';
 
-	/** Segundos que vale un token: más que cualquier caché de página razonable. */
+	/** Seconds a token is valid: longer than any reasonable page cache. */
 	public const TOKEN_MAX_AGE = 7 * DAY_IN_SECONDS;
 
 	public const DEFAULTS = array(
@@ -38,7 +39,7 @@ final class Settings {
 		'email_footer'    => '',
 	);
 
-	/** Nombre de la cadena en WPML => clave del ajuste. */
+	/** String name in WPML => setting key. */
 	public const TRANSLATABLE = array(
 		'Default success message' => 'success_message',
 		'Default error message'   => 'error_message',
@@ -50,9 +51,9 @@ final class Settings {
 		$stored = get_option( self::OPTION, array() );
 		$all    = array_merge( self::DEFAULTS, is_array( $stored ) ? $stored : array() );
 		/**
-		 * Permite a una web (o a las pruebas) fijar ajustes por código.
+		 * Lets a site (or the tests) set settings in code.
 		 *
-		 * @param array $all Ajustes ya mezclados con los valores por defecto.
+		 * @param array $all Settings already merged with the defaults.
 		 */
 		return (array) apply_filters( 'estrategia_web_forms_settings', $all );
 	}
@@ -79,7 +80,7 @@ final class Settings {
 		return $clean;
 	}
 
-	/** Registra en WPML los textos rellenados. Se llama al guardar los ajustes. */
+	/** Registers the filled-in texts in WPML. Called when the settings are saved. */
 	public static function register_strings(): void {
 		$all = self::all();
 		foreach ( self::TRANSLATABLE as $name => $key ) {
@@ -90,8 +91,9 @@ final class Settings {
 	}
 
 	/**
-	 * Un texto global en el idioma $lang. Hay que llamarlo con el locale ya
-	 * cambiado (Language::switch_to) para que el de por defecto salga traducido.
+	 * A global text in language $lang. It must be called with the locale
+	 * already switched (Language::switch_to) so that the default comes out
+	 * translated.
 	 */
 	public static function text( string $key, string $lang ): string {
 		$value = (string) self::get( $key );

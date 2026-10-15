@@ -1,46 +1,46 @@
 /**
- * La mitad de EDITOR de las dos fuentes de Block Bindings del plugin (la
- * mitad de la web está en PHP):
+ * The EDITOR half of the plugin's two Block Bindings sources (the site half
+ * is in PHP):
  *
- *   estrategia-web-site/company   datos de la empresa   includes/class-bindings.php
- *   estrategia-web-site/location  datos de UNA sede     includes/class-location.php  (0.2.0)
+ *   estrategia-web-site/company   company details       includes/class-bindings.php
+ *   estrategia-web-site/location  details of ONE location  includes/class-location.php  (0.2.0)
  *
- * Qué hace: que un bloque enlazado ENSEÑE el valor en el editor (getValues)
- * y que la fuente aparezca en el panel «Atributos» del bloque con la lista
- * de datos (getFieldsList). Los valores y sus nombres los pone PHP en
- * window.estrategiaWebSiteCompany y window.estrategiaWebSiteLocation antes de este script.
+ * What it does: makes a bound block SHOW the value in the editor (getValues)
+ * and makes the source appear in the block's «Attributes» panel with the list
+ * of details (getFieldsList). The values and their names are set by PHP in
+ * window.estrategiaWebSiteCompany and window.estrategiaWebSiteLocation before this script.
  *
- * SIN PASO DE COMPILACIÓN, como el plugin de formularios: script clásico que
- * lee los globales wp.* del editor. No lleva textos propios (el nombre de la
- * fuente y de cada dato vienen de PHP ya traducidos), así que no necesita
- * JSON de traducciones.
+ * NO BUILD STEP, like the forms plugin: a classic script that reads the
+ * editor's wp.* globals. It has no texts of its own (the name of the source
+ * and of each detail come from PHP already translated), so it needs no
+ * translations JSON.
  *
- * Cómo se mantiene:
- * - Quién y cuándo: quien toque una de las dos fuentes en PHP, en el mismo
- *   commit, y con la prueba de nivel 3 (tests/editor.test.mjs) en verde.
- * - Una clave nueva no se toca aquí: sale de Company::keys()/labels() y de
- *   Location::labels().
- * - Caso frontera: el dato está vacío, o la sede no existe o está en
- *   borrador. Se enseña «[Nombre del dato]» en el editor para que se vea qué
- *   está enlazado; en la web sale vacío. Una sede creada DESPUÉS de abrir el
- *   editor no está en window.estrategiaWebSiteLocation hasta recargar: sale entre
- *   corchetes y en la web sí se ve.
- * - La trampa: no hay setValues y canUserEditValue es false a propósito. Si
- *   fuera editable, el editor dejaría escribir en el párrafo enlazado y lo
- *   guardaría… en ninguna parte: los datos se cambian en «Datos de la
- *   empresa» o en la sede. (Medido en WP 7.1: sin setValues el núcleo ni
- *   siquiera guarda canUserEditValue; se deja por claridad.)
- * - Y la otra: usesContext tiene que repetir lo que dice PHP. Sin él el
- *   núcleo lo deja en [null] al fusionar con el registro de PHP, y la fuente
- *   de sedes no recibiría el postId de la Consulta.
+ * How to maintain:
+ * - Who and when: whoever touches one of the two sources in PHP, in the same
+ *   commit, and with the level 3 test (tests/editor.test.mjs) green.
+ * - A new key is not touched here: it comes from Company::keys()/labels() and
+ *   from Location::labels().
+ * - Edge case: the detail is empty, or the location does not exist or is a
+ *   draft. «[Detail name]» is shown in the editor so you can see what is
+ *   bound; on the site it comes out empty. A location created AFTER opening
+ *   the editor is not in window.estrategiaWebSiteLocation until reload: it
+ *   shows in brackets, and on the site it does show.
+ * - The trap: there is no setValues and canUserEditValue is false on purpose.
+ *   If it were editable, the editor would let you type in the bound paragraph
+ *   and would save it… nowhere: the data is changed in «Company details» or in
+ *   the location. (Measured on WP 7.1: without setValues core does not even
+ *   keep canUserEditValue; it is left for clarity.)
+ * - And the other one: usesContext has to repeat what PHP says. Without it
+ *   core leaves it as [null] when merging with the PHP registration, and the
+ *   locations source would not receive the Query's postId.
  */
 ( function ( wp, company, location ) {
 	if ( ! wp || ! wp.blocks || ! wp.blocks.registerBlockBindingsSource ) {
 		return;
 	}
 
-	// Un valor para el atributo: en una URL no se enseña el marcador entre
-	// corchetes (sería un enlace roto); en un texto sí, para ver qué está enlazado.
+	// A value for the attribute: in a URL the bracketed placeholder is not shown
+	// (it would be a broken link); in a text it is, to see what is bound.
 	const show = ( attribute, value, labels, key ) => {
 		if ( attribute === 'url' ) {
 			return value || '';
@@ -77,7 +77,7 @@
 	}
 
 	if ( location ) {
-		// Con slug, esa sede; sin slug, la del contexto (la fila de una Consulta).
+		// With a slug, that location; without one, the one in context (a Query row).
 		const find = ( args, context ) => {
 			if ( args.slug ) {
 				return location.locations.find( ( l ) => l.slug === args.slug );
@@ -92,8 +92,8 @@
 				const out = {};
 				for ( const [ attribute, binding ] of Object.entries( bindings || {} ) ) {
 					const args = ( binding && binding.args ) || {};
-					const sede = find( args, context );
-					out[ attribute ] = show( attribute, sede ? sede.values[ args.key ] : '', location.labels, args.key );
+					const place = find( args, context );
+					out[ attribute ] = show( attribute, place ? place.values[ args.key ] : '', location.labels, args.key );
 				}
 				return out;
 			},

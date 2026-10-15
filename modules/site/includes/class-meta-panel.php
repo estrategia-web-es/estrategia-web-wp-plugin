@@ -1,86 +1,88 @@
 <?php
 /**
- * El panel «Datos de la sede» (y «Datos del cliente», «Datos de la opinión»)
- * en la barra lateral del DOCUMENTO del editor de bloques: los campos de
- * Content_Types de ese tipo, con un control para cada uno.
+ * The «Location details» panel (and «Client details», «Testimonial details»)
+ * in the block editor's DOCUMENT sidebar: the Content_Types fields of that
+ * type, with a control for each.
  *
- * Por qué existe (07-10-2026): David quiso cambiar el teléfono de la sede
- * Maioris y no encontró dónde. El editor de bloques no enseña las metas, y
- * el panel «Campos personalizados» no sale con estos tipos. Se cambió por
- * WP-CLI.
+ * Why it exists (07-10-2026): David wanted to change the phone number of the
+ * Maioris location and could not find where. The block editor does not show
+ * metas, and the «Custom fields» panel does not appear with these types. It
+ * was changed through WP-CLI.
  *
- * Cómo está hecho: assets/meta-panel.js (script clásico, SIN COMPILAR, como
- * assets/editor.js) registra un PluginDocumentSettingPanel que lee y escribe
- * `meta` de la entrada con core/editor. Guarda con el botón «Guardar» de la
- * entrada, por /wp/v2/<tipo> (show_in_rest de register_post_meta), con el
- * mismo saneado y el mismo permiso (edit_post) que cualquier otra vía. Aquí
- * no se guarda nada: solo se le dice al script qué campos hay.
+ * How it is built: assets/meta-panel.js (classic script, UNCOMPILED, like
+ * assets/editor.js) registers a PluginDocumentSettingPanel that reads and
+ * writes the post's `meta` with core/editor. It saves with the post's «Save»
+ * button, through /wp/v2/<type> (show_in_rest of register_post_meta), with the
+ * same sanitising and the same permission (edit_post) as any other path.
+ * Nothing is saved here: the script is only told which fields there are.
  *
- * CASO FRONTERA con nombre: el CLIENTE. No tiene 'editor' en supports, así
- * que WordPress le da la pantalla CLÁSICA y el panel de arriba no existe.
- * Para él (y para cualquier tipo que no use el editor de bloques) los
- * mismos campos salen en una meta box (add_meta_box / save_meta_box), con
- * nonce, edit_post y el mismo saneado (update_post_meta pasa por
- * register_post_meta). Se vio en la primera prueba de navegador: el panel
- * del cliente no aparecía nunca. Para sede y opinión, que sí abren el
- * editor de bloques, la meta box no se registra: el panel es lo nativo y
- * una meta box ahí obliga a recargar la página al guardar.
+ * EDGE CASE by name: the CLIENT. It has no 'editor' in supports, so WordPress
+ * gives it the CLASSIC screen and the panel above does not exist. For it (and
+ * for any type that does not use the block editor) the same fields show in a
+ * meta box (add_meta_box / save_meta_box), with nonce, edit_post and the same
+ * sanitising (update_post_meta goes through register_post_meta). It showed up
+ * in the first browser test: the client panel never appeared. For location
+ * and testimonial, which do open the block editor, the meta box is not
+ * registered: the panel is the native way, and a meta box there forces a page
+ * reload on save.
  *
- * WPML (wpml-config.xml, <custom-fields>). EL CRITERIO, campo a campo:
- * - «copy» (WPML lo copia del original a cada traducción al guardar el
- *   original): lo que es IGUAL en todos los idiomas. Números, correos,
- *   enlaces, códigos de mapa, ids de imagen, valoraciones, el ajuste de
- *   imagen. Así un teléfono se cambia una vez y vale para los dos idiomas.
- * - «translate»: el texto que lee una persona y cambia con el idioma.
- *   Dirección («Nave 14» / «Unit 14»), horario («Lunes a viernes»), tipo de
- *   negocio, cargo del autor de una opinión.
- * - Caso frontera con nombre: el AUTOR de una opinión. Es un nombre propio
- *   («Marta G.»), así que «copy»; si alguna web firma como «Cliente de
- *   Palma», tendría que pasar a «translate». Y la web del cliente (client_url):
- *   «copy», aunque haya webs con /en/; quien la quiera por idioma lo cambia
- *   aquí y en el XML.
- * WPML::COPY y WPML::TRANSLATE de abajo son la lista; wpml-config.xml tiene
- * que decir lo mismo, y modules/site/tests/meta-panel.test.mjs (nivel 1)
- * falla si no.
+ * WPML (wpml-config.xml, <custom-fields>). THE CRITERION, field by field:
+ * - «copy» (WPML copies it from the original to each translation when the
+ *   original is saved): whatever is THE SAME in every language. Numbers,
+ *   emails, links, map codes, image ids, ratings, the image fit. That way a
+ *   phone number is changed once and is valid for both languages.
+ * - «translate»: the text a person reads that changes with the language.
+ *   Address («Nave 14» / «Unit 14»), opening hours («Lunes a viernes» /
+ *   «Monday to Friday»), business type, role of a testimonial's author.
+ * - Edge case by name: the AUTHOR of a testimonial. It is a proper name
+ *   («Marta G.»), so «copy»; if a site ever signs as «Client from Palma», it
+ *   would have to switch to «translate». And the client website (client_url):
+ *   «copy», even though there are sites with /en/; whoever wants it per
+ *   language changes it here and in the XML.
+ * WPML::COPY and WPML::TRANSLATE below are the list; wpml-config.xml has to
+ * say the same, and modules/site/tests/meta-panel.test.mjs (level 1) fails if
+ * it does not.
  *
- * Con WPML, en una TRADUCCIÓN los campos «copy» salen bloqueados con la
- * nota «se cambia en el idioma original»: WPML los pisaría en la siguiente
- * copia desde el original.
+ * With WPML, in a TRANSLATION the «copy» fields show locked with the note
+ * «changed in the original language»: WPML would overwrite them on the next
+ * copy from the original.
  *
- * LA COPIA LA PIDE ESTE MÓDULO (sync_copy_field), no se deja a WPML. Medido
- * el 14-10-2026 con WPML 5.1 en Lavandería local: cambiar el teléfono en el
- * panel y guardar dejaba la sede inglesa con el teléfono VIEJO. La causa,
- * leída en WPML (inc/post-translation/wpml-post-translation.class.php):
- * copia en save_post (prioridad 100, after_save_post) SOLO las metas que ha
- * visto cambiar antes en esa misma petición, y olvida la lista al acabar
- * save_post. La API REST (el editor de bloques) hace wp_update_post — y con
- * él save_post — y DESPUÉS guarda las metas: llegan tarde. Un
- * update_post_meta suelto (WP-CLI, la semilla) no pasa ni por save_post.
- * Por eso, cada vez que se añade, cambia o borra un campo «copy» en el
- * ORIGINAL de uno de estos tipos, se llama a wpml_sync_custom_field (la API
- * pública de WPML). Al escribir en la traducción WPML vuelve a disparar
- * updated_post_meta, pero esa entrada es traducción y se descarta; la guarda
- * $syncing corta cualquier otra vuelta. La meta box del cliente pasa por
- * aquí también (y WPML copia otra vez en su save_post: inofensivo).
- * Prueba: tests/wpml-sync.test.mjs (nivel 1, doble de WPML).
- * La trampa al probarlo con WPML de verdad: WPML no lee wpml-config.xml hasta
- * que se abre una pantalla de su lista (Plugins, Idiomas…; WPML_Config::
- * load_config). En un Playground recién sembrado la lista «copy» está VACÍA
- * y wpml_sync_custom_field no hace nada: parece que el arreglo falla. Abrir
- * /wp-admin/plugins.php antes de medir.
+ * THE COPY IS REQUESTED BY THIS MODULE (sync_copy_field), it is not left to
+ * WPML. Measured on 14-10-2026 with WPML 5.1 on local Lavandería: changing the
+ * phone in the panel and saving left the English location with the OLD phone.
+ * The cause, read in WPML (inc/post-translation/wpml-post-translation.class.php):
+ * on save_post (priority 100, after_save_post) it copies ONLY the metas it has
+ * seen change earlier in that same request, and forgets the list when
+ * save_post ends. The REST API (the block editor) runs wp_update_post — and
+ * with it save_post — and AFTERWARDS saves the metas: they arrive too late. A
+ * standalone update_post_meta (WP-CLI, the seed) does not even go through
+ * save_post. That is why, every time a «copy» field is added, changed or
+ * deleted on the ORIGINAL of one of these types, wpml_sync_custom_field
+ * (WPML's public API) is called. When writing to the translation WPML fires
+ * updated_post_meta again, but that post is a translation and is discarded;
+ * the $syncing guard cuts any other round. The client meta box goes through
+ * here too (and WPML copies again on its save_post: harmless).
+ * Test: tests/wpml-sync.test.mjs (level 1, WPML double).
+ * The trap when testing it with real WPML: WPML does not read wpml-config.xml
+ * until one of the screens on its list is opened (Plugins, Languages…;
+ * WPML_Config::load_config). In a freshly seeded Playground the «copy» list is
+ * EMPTY and wpml_sync_custom_field does nothing: it looks like the fix fails.
+ * Open /wp-admin/plugins.php before measuring.
  *
- * Cómo se mantiene:
- * - Quién y cuándo: quien añada un campo a un tipo en Content_Types. El
- *   campo sale SOLO en el panel (el control se elige por su 'sanitize', ver
- *   KINDS); en el mismo commit, su línea en COPY o TRANSLATE y en
- *   wpml-config.xml, y su ayuda en help() si no se entiende solo.
- * - Un saneado nuevo en Content_Types::sanitizer() necesita su control aquí
- *   (KINDS) y en meta-panel.js; sin él sale como texto de una línea.
- * - La trampa: un tipo sin 'custom-fields' en supports no expone `meta` en
- *   REST y el panel guardaría en ninguna parte sin error. Los tres lo llevan.
- * - Y la otra: si a `client` se le añade 'editor' un día, pasa solo al
- *   panel (la meta box deja de registrarse); la prueba de navegador
- *   (tests/meta-panel-editor.test.mjs) tendrá que cambiar de pantalla.
+ * How to maintain:
+ * - Who and when: whoever adds a field to a type in Content_Types. The field
+ *   shows up ON ITS OWN in the panel (the control is chosen by its
+ *   'sanitize', see KINDS); in the same commit, its line in COPY or TRANSLATE
+ *   and in wpml-config.xml, and its help in help() if it is not
+ *   self-explanatory.
+ * - A new sanitiser in Content_Types::sanitizer() needs its control here
+ *   (KINDS) and in meta-panel.js; without it, it shows as a single-line text.
+ * - The trap: a type without 'custom-fields' in supports does not expose
+ *   `meta` over REST and the panel would save nowhere without an error. All
+ *   three carry it.
+ * - And the other one: if `client` gets 'editor' one day, it moves to the
+ *   panel on its own (the meta box stops being registered); the browser test
+ *   (tests/meta-panel-editor.test.mjs) will have to change screen.
  */
 
 namespace EstrategiaWeb\Site;
@@ -90,13 +92,13 @@ defined( 'ABSPATH' ) || exit;
 final class Meta_Panel {
 
 	/**
-	 * Tipos con panel, por CLAVE. Proyecto y portfolio no tienen campos. Lo
-	 * que llega de WordPress (la pantalla, la entrada) es el nombre registrado
-	 * («eweb_location», 1.2.0) y se pasa a clave con Type_Names::key().
+	 * Types with a panel, by KEY. Project and portfolio have no fields. What
+	 * comes from WordPress (the screen, the post) is the registered name
+	 * («eweb_location», 1.2.0) and is turned into a key with Type_Names::key().
 	 */
 	public const TYPES = array( 'location', 'client', 'testimonial' );
 
-	/** Clase de saneado (Content_Types) → control del panel. Lo que no está, texto. */
+	/** Sanitiser kind (Content_Types) → panel control. Anything not listed, text. */
 	private const KINDS = array(
 		'text'        => 'text',
 		'email'       => 'email',
@@ -110,7 +112,7 @@ final class Meta_Panel {
 		'image_id'    => 'image',
 	);
 
-	/** Campos que WPML copia del original (ver la cabecera). Iguales en wpml-config.xml. */
+	/** Fields WPML copies from the original (see the header). The same in wpml-config.xml. */
 	public const WPML_COPY = array(
 		'estrategia_web_location_phone',
 		'estrategia_web_location_email',
@@ -125,7 +127,7 @@ final class Meta_Panel {
 		'testimonial_client',
 	);
 
-	/** Campos que se traducen en cada idioma. Iguales en wpml-config.xml. */
+	/** Fields translated in each language. The same in wpml-config.xml. */
 	public const WPML_TRANSLATE = array(
 		'estrategia_web_location_address',
 		'estrategia_web_location_schedule',
@@ -145,14 +147,14 @@ final class Meta_Panel {
 		}
 	}
 
-	/** Evita que la copia se llame a sí misma (ver la cabecera). */
+	/** Keeps the copy from calling itself (see the header). */
 	private static bool $syncing = false;
 
 	/**
-	 * Con WPML: un campo «copy» que cambia en el ORIGINAL se copia ya a sus
-	 * traducciones. Ver en la cabecera por qué no basta con WPML.
+	 * With WPML: a «copy» field that changes on the ORIGINAL is copied straight
+	 * away to its translations. See the header for why WPML alone is not enough.
 	 *
-	 * @param int|int[] $meta_id Id de la meta (un array en deleted_post_meta). No se usa.
+	 * @param int|int[] $meta_id Meta id (an array on deleted_post_meta). Unused.
 	 */
 	public static function sync_copy_field( $meta_id, $post_id, $meta_key ): void {
 		if ( self::$syncing || ! self::wpml_active() || ! in_array( $meta_key, self::WPML_COPY, true ) ) {
@@ -178,7 +180,7 @@ final class Meta_Panel {
 		);
 	}
 
-	/** Ayuda bajo el campo, solo donde no se entiende solo. */
+	/** Help under the field, only where it is not self-explanatory. */
 	private static function help(): array {
 		return array(
 			'estrategia_web_location_map_url'       => __( 'Google Maps › Share › Copy link.', 'estrategia-web' ),
@@ -190,9 +192,9 @@ final class Meta_Panel {
 	}
 
 	/**
-	 * Lo que recibe assets/meta-panel.js para un tipo, o null si ese tipo no lleva panel.
+	 * What assets/meta-panel.js receives for a type, or null if that type has no panel.
 	 *
-	 * @param string $type El nombre REGISTRADO («eweb_location»), el de la pantalla o la entrada.
+	 * @param string $type The REGISTERED name («eweb_location»), the one from the screen or the post.
 	 */
 	public static function config( string $type, int $post_id = 0 ): ?array {
 		$type_key = Type_Names::key( $type );
@@ -214,7 +216,7 @@ final class Meta_Panel {
 		}
 		return array(
 			'postType'   => $type,
-			// El desplegable «Cliente relacionado» de una opinión pide los clientes por este nombre.
+			// A testimonial's «Related client» dropdown asks for the clients by this name.
 			'clientType' => Type_Names::name( 'client' ),
 			'title'      => self::titles()[ $type_key ],
 			'fields'   => $fields,
@@ -225,7 +227,7 @@ final class Meta_Panel {
 	public static function enqueue(): void {
 		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		if ( ! $screen || 'post' !== $screen->base ) {
-			return; // Solo el editor de una entrada; no el del sitio ni el de widgets.
+			return; // Only a post's editor; not the site editor or the widgets one.
 		}
 		$post   = get_post();
 		$config = self::config( (string) $screen->post_type, $post ? (int) $post->ID : 0 );
@@ -243,9 +245,9 @@ final class Meta_Panel {
 	}
 
 	/**
-	 * La misma lista en una META BOX clásica, para los tipos que NO abren el
-	 * editor de bloques: el cliente no tiene 'editor' en supports, y
-	 * WordPress le da la pantalla clásica (use_block_editor_for_post_type).
+	 * The same list in a classic META BOX, for the types that do NOT open the
+	 * block editor: the client has no 'editor' in supports, and WordPress gives
+	 * it the classic screen (use_block_editor_for_post_type).
 	 */
 	public static function add_meta_box( string $type ): void {
 		if ( use_block_editor_for_post_type( $type ) ) {
@@ -259,7 +261,7 @@ final class Meta_Panel {
 		add_meta_box( 'estrategia-web-meta', $config['title'], array( self::class, 'render_meta_box' ), $type, 'normal', 'high', array( 'config' => $config ) );
 	}
 
-	/** @param array $box add_meta_box() con args.config. */
+	/** @param array $box add_meta_box() with args.config. */
 	public static function render_meta_box( \WP_Post $post, array $box ): void {
 		$config = $box['args']['config'];
 		wp_nonce_field( 'estrategia_web_meta_' . $post->ID, 'estrategia_web_meta_nonce' );
@@ -288,7 +290,7 @@ final class Meta_Panel {
 					echo '</select>';
 					break;
 				case 'image':
-					// En la pantalla clásica, el número del adjunto (Medios › la imagen › su id). No hay tipo así hoy.
+					// On the classic screen, the attachment number (Media › the image › its id). No such type exists today.
 					printf( '<input type="number" min="0" class="small-text" id="%s" name="%s" value="%d"%s>', esc_attr( $id ), esc_attr( $name ), (int) $value, $off ); // phpcs:ignore WordPress.Security.EscapeOutput
 					break;
 				default:
@@ -303,23 +305,23 @@ final class Meta_Panel {
 		echo '</table>';
 	}
 
-	/** Guarda la meta box. El saneado es el de register_post_meta (update_post_meta → sanitize_meta). */
+	/** Saves the meta box. Sanitising is register_post_meta's (update_post_meta → sanitize_meta). */
 	public static function save_meta_box( int $post_id, \WP_Post $post ): void {
 		$nonce = isset( $_POST['estrategia_web_meta_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['estrategia_web_meta_nonce'] ) ) : '';
 		if ( '' === $nonce || ! wp_verify_nonce( $nonce, 'estrategia_web_meta_' . $post_id ) || wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) || ! current_user_can( 'edit_post', $post_id ) ) {
 			return;
 		}
 		$config = self::config( $post->post_type, $post_id );
-		$input  = isset( $_POST['estrategia_web_meta'] ) && is_array( $_POST['estrategia_web_meta'] ) ? wp_unslash( $_POST['estrategia_web_meta'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- se sanea al guardar (sanitize_meta).
+		$input  = isset( $_POST['estrategia_web_meta'] ) && is_array( $_POST['estrategia_web_meta'] ) ? wp_unslash( $_POST['estrategia_web_meta'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- sanitised on save (sanitize_meta).
 		foreach ( $config ? $config['fields'] : array() as $field ) {
 			if ( $field['disabled'] || ! array_key_exists( $field['key'], $input ) ) {
-				continue; // Bloqueado (WPML) o no enviado: no se toca.
+				continue; // Locked (WPML) or not sent: left untouched.
 			}
 			update_post_meta( $post_id, $field['key'], is_scalar( $input[ $field['key'] ] ) ? $input[ $field['key'] ] : '' );
 		}
 	}
 
-	/** Opciones de los desplegables de la meta box (las mismas que en meta-panel.js). */
+	/** Options of the meta box dropdowns (the same as in meta-panel.js). */
 	private static function options( string $kind ): array {
 		if ( 'rating' === $kind ) {
 			return array( 0 => __( 'No rating', 'estrategia-web' ), 1 => '★ (1)', 2 => '★★ (2)', 3 => '★★★ (3)', 4 => '★★★★ (4)', 5 => '★★★★★ (5)' );
@@ -341,7 +343,7 @@ final class Meta_Panel {
 		return defined( 'ICL_SITEPRESS_VERSION' );
 	}
 
-	/** Con WPML: si esta entrada es la traducción de otra (no el original). */
+	/** With WPML: whether this post is the translation of another one (not the original). */
 	private static function is_translation( string $type, int $post_id ): bool {
 		if ( ! self::wpml_active() || $post_id <= 0 ) {
 			return false;

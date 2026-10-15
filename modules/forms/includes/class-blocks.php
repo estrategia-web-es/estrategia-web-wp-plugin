@@ -1,25 +1,25 @@
 <?php
 /**
- * Registro de los bloques y su HTML público.
+ * Block registration and their public HTML.
  *
- * Todos los bloques son DINÁMICOS: el HTML lo pinta PHP en cada visita (los
- * de campo no guardan nada en post_content salvo sus atributos). Así un
- * cambio de marcado del plugin llega a todas las webs sin «revalidar» bloques
- * en el editor, y el HTML público solo contiene lo que este fichero decide
- * pintar: NUNCA los atributos de los avisos.
+ * All blocks are DYNAMIC: PHP renders the HTML on every visit (the field
+ * blocks store nothing in post_content but their attributes). That way a
+ * markup change in the plugin reaches every site without «revalidating»
+ * blocks in the editor, and the public HTML only contains what this file
+ * decides to render: NEVER the notification attributes.
  *
- * El estilo es del tema. Aquí solo se ponen clases: las del plugin
- * (estrategia-web-forms__*) para la rejilla mínima de assets/style.css, y las
- * estándar de WordPress (wp-element-button, wp-block-button__link) para que
- * theme.json vista el botón como cualquier otro.
+ * Styling belongs to the theme. Only classes are set here: the plugin's
+ * (estrategia-web-forms__*) for the minimal grid in assets/style.css, and
+ * the standard WordPress ones (wp-element-button, wp-block-button__link) so
+ * that theme.json dresses the button like any other.
  *
- * Cómo se mantiene:
- * - Un bloque nuevo: su carpeta en blocks/, su entrada en BLOCKS, su edit en
- *   assets/editor.js, sus textos en wpml-config.xml y, si es un campo, en
- *   Definitions::FIELD_BLOCKS y en Validator. En el mismo commit.
- * - La trampa: los bloques interiores se pintan ANTES que el formulario, así
- *   que no pueden leer nada que ponga render_form(). Lo que necesitan del
- *   formulario les llega por contexto de bloque (estrategia-web-forms/formId).
+ * How to maintain:
+ * - A new block: its folder in blocks/, its entry in BLOCKS, its edit in
+ *   assets/editor.js, its texts in wpml-config.xml and, if it is a field, in
+ *   Definitions::FIELD_BLOCKS and in Validator. In the same commit.
+ * - The trap: inner blocks are rendered BEFORE the form, so they cannot
+ *   read anything render_form() sets. What they need from the form reaches
+ *   them through block context (estrategia-web-forms/formId).
  */
 
 namespace EstrategiaWeb\Forms;
@@ -53,9 +53,9 @@ final class Blocks {
 			ESTRATEGIA_WEB_FORMS_VERSION,
 			true
 		);
-		// Sus traducciones (dominio estrategia-web) se las pasa el núcleo en
-		// línea: es el editorScript de los nueve bloques (includes/class-blocks.php
-		// de la raíz). Ya no hay JSON con el md5 de la ruta.
+		// Its translations (estrategia-web domain) are passed inline by core:
+		// it is the editorScript of the nine blocks (includes/class-blocks.php
+		// at the root). There is no longer a JSON with the md5 of the path.
 		wp_register_style( 'estrategia-web-forms', ESTRATEGIA_WEB_FORMS_URL . 'assets/style.css', array(), ESTRATEGIA_WEB_FORMS_VERSION );
 		wp_register_style( 'estrategia-web-forms-editor', ESTRATEGIA_WEB_FORMS_URL . 'assets/editor.css', array(), ESTRATEGIA_WEB_FORMS_VERSION );
 
@@ -91,7 +91,7 @@ final class Blocks {
 
 		ob_start();
 		?>
-		<form <?php echo $wrapper; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escapado por get_block_wrapper_attributes. ?>
+		<form <?php echo $wrapper; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes. ?>
 			data-wp-interactive="estrategia-web-forms"
 			<?php echo wp_interactivity_data_wp_context( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			data-wp-on--submit="actions.submit"
@@ -105,7 +105,7 @@ final class Blocks {
 				</label>
 			</div>
 			<div class="estrategia-web-forms__fields">
-				<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML de los bloques interiores, ya escapado por cada uno. ?>
+				<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML of the inner blocks, already escaped by each one. ?>
 			</div>
 			<div id="<?php echo esc_attr( $dom_id ); ?>-status" class="estrategia-web-forms__status" role="status" aria-live="polite" tabindex="-1"
 				data-wp-text="context.message" data-wp-class--is-error="context.isError"><?php echo esc_html( $context['message'] ); ?></div>
@@ -199,21 +199,21 @@ final class Blocks {
 	}
 
 	/**
-	 * El autocomplete de un campo (0.2.2, WCAG 1.3.5): el atributo del bloque
-	 * o, si está vacío, «email» en el de correo y «tel» en el de teléfono.
+	 * A field's autocomplete (0.2.2, WCAG 1.3.5): the block attribute or, if
+	 * it is empty, «email» on the email field and «tel» on the phone field.
 	 *
-	 * - Un campo de texto sin el atributo NO lleva autocomplete: no se adivina
-	 *   por su nombre («nombre» puede ser el de una mascota). Quien hace el
-	 *   formulario pone name, organization, given-name… (los valores son los
-	 *   de la especificación HTML, «autofill detail tokens»).
-	 * - Se acepta cualquier lista de palabras en minúscula, cifras y guiones
-	 *   («work tel», «shipping street-address», «off»). Lo demás se descarta
-	 *   entero: así no hace falta copiar aquí la lista de la especificación,
-	 *   que crece, y no se cuela nada en el HTML.
-	 * - Caso frontera: «off» en un correo quita el email por defecto.
-	 * La trampa: el atributo vive en post_content; un formulario sincronizado
-	 * (core/block) lo lleva en su propio bloque, no en cada página.
-	 * Prueba: tests/autocomplete.test.mjs.
+	 * - A text field without the attribute gets NO autocomplete: it is not
+	 *   guessed from its name («nombre» may be a pet's name). Whoever builds
+	 *   the form sets name, organization, given-name… (the values are those of
+	 *   the HTML spec, «autofill detail tokens»).
+	 * - Any list of lowercase words, digits and hyphens is accepted («work
+	 *   tel», «shipping street-address», «off»). Anything else is discarded
+	 *   entirely: that way there is no need to copy the spec's list here,
+	 *   which keeps growing, and nothing slips into the HTML.
+	 * - Edge case: «off» on an email field removes the default email.
+	 * The trap: the attribute lives in post_content; a synced form
+	 * (core/block) carries it in its own block, not in each page.
+	 * Test: tests/autocomplete.test.mjs.
 	 */
 	public static function autocomplete( string $type, array $attributes ): string {
 		$value = strtolower( trim( (string) preg_replace( '/\s+/', ' ', (string) ( $attributes['autocomplete'] ?? '' ) ) ) );
@@ -229,40 +229,42 @@ final class Blocks {
 		return $value;
 	}
 
-	/** Los avisos no se pintan nunca: son configuración, no contenido. */
+	/** Notifications are never rendered: they are configuration, not content. */
 	public static function render_nothing(): string {
 		return '';
 	}
 
-	/** La etiqueta en texto plano. Vacía = el texto por defecto, traducido. */
+	/** The label in plain text. Empty = the default text, translated. */
 	public static function field_label( string $type, array $attributes ): string {
 		$label = trim( (string) ( $attributes['label'] ?? '' ) );
 		if ( '' === $label && 'checkbox' === $type && ! empty( $attributes['consent'] ) ) {
-			/* translators: lo que va entre llaves se convierte en el enlace a la política de privacidad. */
+			/* translators: the text between braces becomes the link to the privacy policy. */
 			$label = __( 'I have read and accept the {privacy policy}.', 'estrategia-web' );
 		}
 		return str_replace( array( '{', '}' ), '', $label );
 	}
 
 	/**
-	 * La etiqueta del consentimiento con sus enlaces dentro: así la frase se
-	 * traduce entera, sin trozos.
+	 * The consent label with its links inside: that way the sentence is
+	 * translated whole, not in pieces.
 	 *
-	 * - {texto}      enlaza a la política de privacidad (privacyUrl del bloque
-	 *                o, si no hay, la página de privacidad del sitio).
-	 * - {texto|url}  enlaza a esa url. Puede haber varios en la misma frase:
-	 *                «la {protección de datos|/proteccion/} y {Sus datos
-	 *                seguros|/sus-datos/}». Nació el 06-10-2026 en Lavandería,
-	 *                que nombraba dos páginas y salía un solo enlace con las dos.
+	 * - {text}       links to the privacy policy (the block's privacyUrl or,
+	 *                if there is none, the site's privacy page).
+	 * - {text|url}   links to that url. There can be several in the same
+	 *                sentence: «la {protección de datos|/proteccion/} y {Sus
+	 *                datos seguros|/sus-datos/}». Born on 06-10-2026 at
+	 *                Lavandería, which named two pages and got a single link
+	 *                spanning both.
 	 *
-	 * Una url que esc_url() deja vacía (javascript:, data:…) no se enlaza: queda
-	 * el texto. La trampa: esc_url() se aplica a la url YA escapada por
-	 * esc_html(); con «&» en la url sale «&amp;» en el href, que es lo correcto.
+	 * A url that esc_url() leaves empty (javascript:, data:…) is not linked:
+	 * the text remains. The trap: esc_url() is applied to the url ALREADY
+	 * escaped by esc_html(); with «&» in the url the href gets «&amp;», which
+	 * is correct.
 	 */
 	private static function consent_label_html( array $attributes ): string {
 		$label = trim( (string) ( $attributes['label'] ?? '' ) );
 		if ( '' === $label ) {
-			/* translators: lo que va entre llaves se convierte en el enlace a la política de privacidad; {texto|url} enlaza a esa url. */
+			/* translators: the text between braces becomes the link to the privacy policy; {text|url} links to that url. */
 			$label = __( 'I have read and accept the {privacy policy}.', 'estrategia-web' );
 		}
 		$privacy = trim( (string) ( $attributes['privacyUrl'] ?? '' ) );
@@ -285,14 +287,15 @@ final class Blocks {
 	}
 
 	/**
-	 * La opción que viene marcada cuando no hay vuelta de un envío. El orden
-	 * de las fuentes y su porqué, en includes/class-preselect.php.
+	 * The option that comes selected when there is no submission return. The
+	 * order of the sources and the reason for it, in
+	 * includes/class-preselect.php.
 	 *
 	 * @param string[] $options
 	 */
 	private static function preselected( string $name, array $options, array $attributes, \WP_Block $block ): string {
 		$param = Preselect::URL_PREFIX . $name;
-		$url   = isset( $_GET[ $param ] ) && is_string( $_GET[ $param ] ) ? sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- solo elige entre opciones que ya existen.
+		$url   = isset( $_GET[ $param ] ) && is_string( $_GET[ $param ] ) ? sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only chooses among options that already exist.
 		$page  = $block->context['pattern/overrides'][ $name ]['defaultOption'] ?? null;
 		return Preselect::pick(
 			$options,
@@ -305,15 +308,15 @@ final class Blocks {
 		);
 	}
 
-	/** @return string[] Una opción por línea, sin vacías ni repetidas. */
+	/** @return string[] One option per line, without empty or repeated ones. */
 	public static function options( string $raw ): array {
 		$lines = array_map( 'trim', preg_split( '/\r\n|\r|\n/', $raw ) );
 		return array_values( array_unique( array_filter( array_map( 'sanitize_text_field', $lines ), 'strlen' ) ) );
 	}
 
 	/**
-	 * El resultado de un envío sin JavaScript, para volver a pintar el
-	 * formulario con su mensaje, sus errores y lo que se había escrito.
+	 * The result of a submission without JavaScript, to render the form
+	 * again with its message, its errors and what had been typed.
 	 */
 	public static function result( string $form_id ): ?array {
 		if ( ! isset( $_GET[ self::RESULT_PARAM ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended

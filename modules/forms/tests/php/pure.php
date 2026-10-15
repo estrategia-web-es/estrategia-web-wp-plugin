@@ -1,9 +1,9 @@
 <?php
 /**
- * Ayudante de tests/pure.test.mjs (nivel 1): carga las clases PURAS del
- * plugin —las que no llaman a WordPress— con el PHP de la máquina, ejecuta
- * los casos y escribe los resultados en JSON. Quien comprueba es la prueba
- * de Node; esto solo calcula.
+ * Helper for tests/pure.test.mjs (level 1): loads the plugin's PURE classes
+ * —the ones that do not call WordPress— with the machine's PHP, runs
+ * the cases and writes the results as JSON. The Node test is the one that
+ * checks; this only computes.
  */
 
 define( 'ABSPATH', __DIR__ . '/' );
@@ -17,7 +17,7 @@ use EstrategiaWeb\Forms\Markers;
 use EstrategiaWeb\Forms\Preselect;
 use EstrategiaWeb\Forms\Token;
 
-// Un sanitize_title() de bolsillo: en el plugin se pasa el de WordPress.
+// A pocket sanitize_title(): in the plugin WordPress's own is passed.
 $slug    = static fn( $s ) => trim( (string) preg_replace( '/[^a-z0-9]+/', '-', strtolower( strtr( (string) $s, array( 'í' => 'i', 'á' => 'a', 'é' => 'e', 'ó' => 'o', 'ú' => 'u', 'ñ' => 'n' ) ) ) ), '-' );
 $options = array( 'Lavandería para hoteles', 'Lavandería para restaurantes', 'Lavandería para barcos y yates' );
 
@@ -27,7 +27,7 @@ $values = array(
 	'todos_los_campos' => '<table>',
 );
 $esc    = static fn( $v ) => htmlspecialchars( $v, ENT_QUOTES );
-$secret = 'secreto-de-prueba';
+$secret = 'test-secret';
 $now    = 1790000000;
 $token  = Token::create( 'abc', $now, $secret );
 
@@ -42,13 +42,13 @@ echo json_encode(
 		'single_line'    => Markers::single_line( "Asunto\r\nBcc: x@y.z" ),
 		'ipv4'           => Ip::truncate( '203.0.113.77' ),
 		'ipv6'           => Ip::truncate( '2001:db8:85a3:8d3:1319:8a2e:370:7348' ),
-		'ip_bad'         => Ip::truncate( 'no-es-ip' ),
+		'ip_bad'         => Ip::truncate( 'not-an-ip' ),
 		'token_ok'       => Token::verify( $token, 'abc', $now + 10, $secret, 3, 3600 ),
 		'token_fast'     => Token::verify( $token, 'abc', $now + 1, $secret, 3, 3600 ),
 		'token_expired'  => Token::verify( $token, 'abc', $now + 7200, $secret, 3, 3600 ),
 		'token_other_def' => Token::verify( $token, 'xyz', $now + 10, $secret, 3, 3600 ),
 		'token_tampered' => Token::verify( ( $now - 100 ) . substr( $token, 10 ), 'abc', $now + 10, $secret, 3, 3600 ),
-		'token_garbage'  => Token::verify( 'hola', 'abc', $now, $secret, 3, 3600 ),
+		'token_garbage'  => Token::verify( 'hello', 'abc', $now, $secret, 3, 3600 ),
 		'pre_position'      => Preselect::pick( $options, array( 3 ), $slug ),
 		'pre_position_str'  => Preselect::pick( $options, array( '3' ), $slug ),
 		'pre_text'          => Preselect::pick( $options, array( 'Lavandería para restaurantes' ), $slug ),

@@ -1,26 +1,28 @@
 <?php
 /**
- * Los avisos por correo: monta cada uno desde su plantilla y lo manda con
- * wp_mail(). Devuelve el resultado de cada aviso para el registro.
+ * The email notifications: builds each one from its template and sends it
+ * with wp_mail(). Returns the result of each notification for the log.
  *
- * Cada aviso sale en HTML (templates/email.php, que el tema puede sustituir
- * con su propio estrategia-web-forms/email.php) y con la versión en texto como
- * AltBody, la misma plantilla sin etiquetas.
+ * Each notification goes out as HTML (templates/email.php, which the theme
+ * can replace with its own estrategia-web-forms/email.php) with the text
+ * version as AltBody, the same template without tags.
  *
- * Se llama con el idioma del envío ya puesto (Language::switch_to), así que
- * los textos fijos —«Sí», la fecha, la tabla de campos— salen en el idioma
- * del visitante. Los textos de la plantilla ya vienen traducidos: son los de
- * la página que vio, traducida por WPML.
+ * It is called with the submission's language already set
+ * (Language::switch_to), so the fixed texts —«Yes», the date, the fields
+ * table— come out in the visitor's language. The template texts arrive
+ * already translated: they are the ones from the page the visitor saw,
+ * translated by WPML.
  *
- * Cómo se mantiene:
- * - Un marcador nuevo: entra en marker_values() y en el README («Marcadores»)
- *   y en la ayuda del editor (assets/editor.js), en el mismo commit.
- * - Caso frontera: si el destinatario sale de un campo y el visitante lo dejó
- *   vacío o mal, ese aviso consta como FALLO en el registro, con el motivo, y
- *   los demás avisos salen igual.
- * - La trampa: wp_mail() devuelve true si el correo se ENTREGÓ AL SERVIDOR
- *   de correo, no si llegó. «Enviado» en el registro significa eso. Si una web
- *   necesita saber más, es cosa de su SMTP, no de este plugin.
+ * How to maintain:
+ * - A new marker: it goes into marker_values(), into the README
+ *   («Marcadores») and into the editor help (assets/editor.js), in the same
+ *   commit.
+ * - Edge case: if the recipient comes from a field and the visitor left it
+ *   empty or wrong, that notification is recorded as FAILED in the log, with
+ *   the reason, and the other notifications go out anyway.
+ * - The trap: wp_mail() returns true if the email was HANDED TO THE mail
+ *   SERVER, not if it arrived. «Sent» in the log means that. If a site needs
+ *   to know more, that is up to its SMTP, not this plugin.
  */
 
 namespace EstrategiaWeb\Forms;
@@ -30,8 +32,8 @@ defined( 'ABSPATH' ) || exit;
 final class Notifier {
 
 	/**
-	 * @param array                 $definition La definición del formulario.
-	 * @param array<string, string> $values     Valores ya validados.
+	 * @param array                 $definition The form definition.
+	 * @param array<string, string> $values     Values already validated.
 	 * @param array{page_url: string, lang: string} $meta
 	 * @return array<int, array{label: string, to: string, status: string, error: string}>
 	 */
@@ -81,11 +83,11 @@ final class Notifier {
 			'headers' => $headers,
 		);
 		/**
-		 * Último retoque de un aviso antes de enviarlo.
+		 * Last touch to a notification before sending it.
 		 *
 		 * @param array $mail       to, subject, html, text, headers.
-		 * @param array $n          La configuración del aviso.
-		 * @param array $definition La definición del formulario.
+		 * @param array $n          The notification configuration.
+		 * @param array $definition The form definition.
 		 */
 		$mail = (array) apply_filters( 'estrategia_web_forms_email', $mail, $n, $definition );
 

@@ -1,36 +1,36 @@
 <?php
 /**
- * Leer un dato de la empresa por su CLAVE de contrato: la que usan la fuente
- * de Block Bindings `estrategia-web-site/company`, el editor y cualquier tema.
+ * Read a company detail by its contract KEY: the one used by the Block
+ * Bindings source `estrategia-web-site/company`, the editor and any theme.
  *
- * Claves: las de Settings::DEFAULTS (menos enabled_types, allow_svg y
- * rewrite_slugs, que son opciones y no datos: NOT_DATA), `social.<red>` con punto, y las DERIVADAS de abajo.
+ * Keys: those of Settings::DEFAULTS (minus enabled_types, allow_svg and
+ * rewrite_slugs, which are options and not data: NOT_DATA), `social.<network>` with a dot, and the DERIVED ones below.
  *
- * Cómo se mantiene:
- * - Quién y cuándo: quien añada una clave, en el mismo commit que su prueba
- *   (tests/bindings.test.mjs) y su fila en el README.
- * - Una clave derivada nueva: DERIVED + value() + labels() (+ Links si es un
- *   enlace de un tipo nuevo) + README. assets/editor.js NO se toca: lee las
- *   claves de keys() y labels(). Es contrato: no se renombra. La última que
- *   entró, `phone_secondary_href` (0.2.0), es el ejemplo.
- * - Una clave nueva sale SOLA también en el shortcode `[estrategia_web_company]`
- *   (0.4.0, includes/class-shortcode.php), que lee value().
- * - Los datos de UNA sede no van aquí: son de la fuente `estrategia-web-site/location`
- *   (includes/class-location.php).
- * - Caso frontera: una clave que no existe («phone_mobile») devuelve '' y no
- *   un error: un bloque mal enlazado se ve vacío en la web y en el editor
- *   enseña el nombre de la clave, que es donde se nota.
- * - `social.<red>` es un ALIAS HASTA LA 2.0.0 (15-10-2026): los seis campos
- *   fijos ya no se editan en «Datos de la empresa»; las redes son la lista
- *   libre del módulo social (estrategia_web_social_links). Con ese módulo
- *   encendido, value('social.facebook') es el enlace de la PRIMERA red de la
- *   lista con el icono de Facebook (Social\Links::url_for); apagado, el valor
- *   viejo que siga guardado. Lo mantiene vivo para no romper temas que lo
- *   enlazan. En la 2.0.0 sale de keys(), labels() y de aquí. Un tema nuevo
- *   no lo usa: pone el bloque estrategia-web/social-links.
- * - La trampa: para un tema, `Company::value()` es la API pública en PHP;
- *   leer `get_option('estrategia_web_site')` directamente se salta el filtro
- *   `estrategia_web_site_settings` y las derivadas.
+ * How to maintain:
+ * - Who and when: whoever adds a key, in the same commit as its test
+ *   (tests/bindings.test.mjs) and its row in the README.
+ * - A new derived key: DERIVED + value() + labels() (+ Links if it is a link
+ *   of a new kind) + README. assets/editor.js is NOT touched: it reads the
+ *   keys from keys() and labels(). It is contract: it is not renamed. The last
+ *   one in, `phone_secondary_href` (0.2.0), is the example.
+ * - A new key also shows up ON ITS OWN in the `[estrategia_web_company]` shortcode
+ *   (0.4.0, includes/class-shortcode.php), which reads value().
+ * - The data of ONE location does not go here: it belongs to the `estrategia-web-site/location`
+ *   source (includes/class-location.php).
+ * - Edge case: a key that does not exist («phone_mobile») returns '' and not
+ *   an error: a wrongly bound block shows empty on the site and in the editor
+ *   shows the key name, which is where it gets noticed.
+ * - `social.<network>` is an ALIAS UNTIL 2.0.0 (15-10-2026): the six fixed
+ *   fields are no longer edited in «Company data»; the networks are the free
+ *   list of the social module (estrategia_web_social_links). With that module
+ *   on, value('social.facebook') is the link of the FIRST network in the list
+ *   with the Facebook icon (Social\Links::url_for); with it off, the old value
+ *   still saved. It is kept alive so as not to break themes that bind it. In
+ *   2.0.0 it leaves keys(), labels() and this class. A new theme does not use
+ *   it: it places the estrategia-web/social-links block.
+ * - The trap: for a theme, `Company::value()` is the public PHP API; reading
+ *   `get_option('estrategia_web_site')` directly skips the
+ *   `estrategia_web_site_settings` filter and the derived keys.
  */
 
 namespace EstrategiaWeb\Site;
@@ -42,18 +42,18 @@ final class Company {
 	public const DERIVED = array( 'phone_href', 'phone_secondary_href', 'email_href', 'whatsapp_href' );
 
 	/**
-	 * Claves que son opciones del plugin, no datos que se enseñan. Una opción
-	 * nueva en Settings::DEFAULTS entra aquí, o aparece como dato enlazable en
-	 * el editor (las de Matomo, 0.3.0, son el ejemplo).
+	 * Keys that are plugin options, not data that is shown. A new option in
+	 * Settings::DEFAULTS goes in here, or it shows up as bindable data in the
+	 * editor (the Matomo ones, 0.3.0, are the example).
 	 */
 	private const NOT_DATA = array( 'enabled_types', 'allow_svg', 'social', 'rewrite_slugs', 'matomo_url', 'matomo_site_id', 'matomo_mode' );
 
-	/** Prefijo de país para teléfonos escritos sin él. */
+	/** Country code for phone numbers written without one. */
 	public static function country_code(): string {
 		return (string) apply_filters( 'estrategia_web_site_default_country_code', '34' );
 	}
 
-	/** @return string[] Todas las claves válidas, en orden de pantalla. */
+	/** @return string[] All valid keys, in screen order. */
 	public static function keys(): array {
 		$keys = array();
 		foreach ( array_keys( Settings::DEFAULTS ) as $key ) {
@@ -68,7 +68,7 @@ final class Company {
 		return array_merge( $keys, self::DERIVED );
 	}
 
-	/** El valor en texto plano (sin escapar). '' si la clave no existe o está vacía. */
+	/** The value as plain text (unescaped). '' if the key does not exist or is empty. */
 	public static function value( string $key ): string {
 		$data = Settings::all();
 		switch ( $key ) {
@@ -86,7 +86,7 @@ final class Company {
 			if ( ! in_array( $network, Settings::SOCIAL, true ) ) {
 				return '';
 			}
-			// Alias hasta la 2.0.0 (ver la cabecera): de la lista del módulo social si está encendido.
+			// Alias until 2.0.0 (see the header): from the social module's list if it is on.
 			if ( class_exists( \EstrategiaWeb\Social\Links::class ) ) {
 				return \EstrategiaWeb\Social\Links::url_for( $network );
 			}
@@ -99,8 +99,8 @@ final class Company {
 	}
 
 	/**
-	 * Nombre legible de cada clave: lo usan la pantalla de ajustes y la lista
-	 * de campos de la fuente en el editor. @return array<string,string>
+	 * Human-readable name of each key: used by the settings screen and by the
+	 * source's field list in the editor. @return array<string,string>
 	 */
 	public static function labels(): array {
 		return array(
@@ -129,7 +129,7 @@ final class Company {
 		);
 	}
 
-	/** Todos los datos por clave: lo que recibe el editor. @return array<string,string> */
+	/** All the data by key: what the editor receives. @return array<string,string> */
 	public static function values(): array {
 		$out = array();
 		foreach ( self::keys() as $key ) {

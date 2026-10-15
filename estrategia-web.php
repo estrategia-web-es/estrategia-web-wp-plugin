@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Estrategia Web
  * Plugin URI:        https://estrategiaweb.es/
- * Description:       Todo lo que no es diseño en una web de Estrategia Web, por módulos que se encienden y se apagan en «Estrategia Web → Módulos»: datos de la empresa y tipos de contenido, aviso de cookies, formularios, carrusel, mapa, WhatsApp, selector de idioma, WebP y enlaces externos.
+ * Description:       Everything but the design in an Estrategia Web site, as modules you switch on and off in "Estrategia Web → Modules": company details and content types, cookie notice, forms, carousel, map, WhatsApp, language switcher, WebP and external links.
  * Version:           1.2.0
  * Requires at least: 7.1
  * Requires PHP:      8.1
@@ -13,22 +13,22 @@
  * Text Domain:       estrategia-web
  * Domain Path:       /languages
  *
- * Punto de entrada. Define las constantes del plugin, carga el NÚCLEO
- * (includes/) y le pasa el mando al cargador de módulos
- * (includes/class-modules.php), que es quien decide qué carpeta de modules/
- * se carga. Aquí no se añade nada de un módulo: un módulo nuevo es una
- * carpeta nueva, ver la cabecera de class-modules.php.
+ * Entry point. Defines the plugin constants, loads the CORE (includes/) and
+ * hands control to the module loader (includes/class-modules.php), which
+ * decides which folder of modules/ gets loaded. Nothing module-specific is
+ * added here: a new module is a new folder, see the header of
+ * class-modules.php.
  *
- * Nació el 14-10-2026 juntando tres piezas que hasta la 1.0.0 iban por
- * separado: el plugin «Estrategia Web Site», el plugin «Estrategia Web
- * Forms» y los cuatro bloques que registraba el tema (WordPress.org no deja
- * que un tema registre bloques). Los nombres públicos (bloques, opciones,
- * metas, tablas, rutas REST) son los de la 1.0.0 y NO cambian: lo que cambió
- * es dónde vive el código.
+ * Born on 14-10-2026 by merging three pieces that were separate up to 1.0.0:
+ * the «Estrategia Web Site» plugin, the «Estrategia Web Forms» plugin and the
+ * four blocks the theme used to register (WordPress.org does not allow a
+ * theme to register blocks). The public names (blocks, options, metas,
+ * tables, REST routes) are those of 1.0.0 and do NOT change: what changed is
+ * where the code lives.
  *
- * Cómo se mantiene: la versión de aquí, la de ESTRATEGIA_WEB_VERSION y la
- * entrada nueva de CHANGELOG.md se cambian en el MISMO commit. Los módulos no
- * llevan versión propia: la del plugin vale para todos.
+ * How to maintain: the version here, the one in ESTRATEGIA_WEB_VERSION and the
+ * new CHANGELOG.md entry change in the SAME commit. Modules have no version of
+ * their own: the plugin's version applies to all of them.
  */
 
 defined( 'ABSPATH' ) || exit;

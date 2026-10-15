@@ -1,14 +1,15 @@
 <?php
 /**
- * 0001 — Crea las dos tablas: los envíos y las definiciones de formulario.
+ * 0001 — Creates the two tables: submissions and form definitions.
  *
- * estrategia_web_forms_submissions: un envío por fila. data y notifications son
- * JSON; format_version dice con qué forma se escribió cada fila (fila 14:
- * cada documento sabe su versión), hoy 1.
+ * estrategia_web_forms_submissions: one submission per row. data and
+ * notifications are JSON; format_version says with which shape each row was
+ * written (row 14: every document knows its version), currently 1.
  *
- * estrategia_web_forms_definitions: la foto, tomada en el servidor al pintar el
- * formulario, de sus campos y sus avisos. El visitante solo manda el hash; el
- * servidor valida y avisa con lo que hay aquí (ver class-definitions.php).
+ * estrategia_web_forms_definitions: the snapshot, taken on the server when
+ * the form is rendered, of its fields and its notifications. The visitor
+ * only sends the hash; the server validates and notifies with what is here
+ * (see class-definitions.php).
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -57,5 +58,5 @@ KEY form_id (form_id)
 	foreach ( array( $submissions, $definitions ) as $table ) {
 		$exists += (int) ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) === $table );
 	}
-	return sprintf( 'dbDelta: %d cambios; tablas presentes: %d de 2', count( $result ), $exists );
+	return sprintf( 'dbDelta: %d changes; tables present: %d of 2', count( $result ), $exists );
 };

@@ -1,19 +1,20 @@
 <?php
 /**
- * Pantalla «Datos de la empresa» (menú propio, manage_options). Guarda por
- * options.php con la Settings API: el saneado es el mismo que por REST
- * (Settings::sanitize), así que aquí no se valida nada.
+ * «Company details» screen (own menu, manage_options). It saves through
+ * options.php with the Settings API: the sanitising is the same as through
+ * REST (Settings::sanitize), so nothing is validated here.
  *
- * Cómo se mantiene:
- * - Un dato nuevo: su fila en render() con el name `estrategia_web_site[clave]`.
- *   Las casillas llevan un campo oculto delante para que «desmarcado» llegue
- *   (Settings::sanitize fusiona con lo guardado: lo que no llega, no cambia).
- * - Caso frontera: enabled_types vacío. Llega como [''] gracias al oculto, y
- *   sanitize lo deja en []. Sin el oculto no llegaría y no se podría
- *   desactivar el último tipo.
- * - La trampa: el grupo de settings_fields() tiene que ser el mismo que el
- *   primer argumento de register_setting ('estrategia_web_site'), o options.php
- *   contesta «la opción no está en la lista permitida».
+ * How to maintain:
+ * - A new detail: its row in render() with the name `estrategia_web_site[key]`.
+ *   Checkboxes carry a hidden field in front so that «unchecked» arrives
+ *   (Settings::sanitize merges with what is saved: whatever does not arrive
+ *   does not change).
+ * - Edge case: empty enabled_types. It arrives as [''] thanks to the hidden
+ *   field, and sanitize turns it into []. Without the hidden field it would not
+ *   arrive and the last type could not be disabled.
+ * - The trap: the settings_fields() group has to be the same as the first
+ *   argument of register_setting ('estrategia_web_site'), or options.php
+ *   answers «the option is not in the allowed list».
  */
 
 namespace EstrategiaWeb\Site;
@@ -111,8 +112,8 @@ final class Admin {
 				</table>
 
 				<?php
-				// Las redes ya no van aquí (15-10-2026): son la lista del módulo social.
-				// La pantalla no manda `social` y sanitize() conserva lo guardado.
+				// The social networks no longer go here (15-10-2026): they are the social module's list.
+				// The screen does not send `social` and sanitize() keeps what is saved.
 				if ( class_exists( \EstrategiaWeb\Social\Admin::class ) ) :
 					?>
 					<h2><?php esc_html_e( 'Social networks', 'estrategia-web' ); ?></h2>
@@ -140,13 +141,13 @@ final class Admin {
 
 				<?php
 				/**
-				 * Secciones de OTROS módulos que guardan en esta misma opción
+				 * Sections of OTHER modules that save into this same option
 				 * (1.1.0: Matomo, modules/matomo/includes/class-admin-fields.php).
-				 * Van dentro del formulario, antes de Guardar; sus campos se
-				 * llaman estrategia_web_site[clave] y los sanea Settings.
+				 * They go inside the form, before Save; their fields are named
+				 * estrategia_web_site[key] and Settings sanitises them.
 				 *
 				 * @param array    $data Settings::all().
-				 * @param callable $name Clave → name del campo.
+				 * @param callable $name Key → field name.
 				 */
 				do_action( 'estrategia_web_site_settings_sections', $data, $name );
 				?>

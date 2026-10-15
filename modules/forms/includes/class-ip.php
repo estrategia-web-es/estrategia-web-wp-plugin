@@ -1,17 +1,17 @@
 <?php
 /**
- * La IP del remitente, recortada antes de guardarla (RGPD).
+ * The sender's IP, truncated before storing it (GDPR).
  *
- * Clase PURA (nivel 1). En el registro se guarda la IP TRUNCADA —IPv4 sin el
- * último octeto, IPv6 sin los últimos 80 bits—, que basta para ver «vienen
- * todos de la misma red» sin identificar a una persona. Para el límite de
- * envíos se usa un hash con sal del servidor (Submission handler), que no se
- * guarda en ningún sitio más que en un transitorio que caduca.
+ * PURE class (level 1). The log stores the TRUNCATED IP —IPv4 without the
+ * last octet, IPv6 without the last 80 bits—, which is enough to see «they
+ * all come from the same network» without identifying a person. The
+ * submission limit uses a hash salted with a server secret (Submission
+ * handler), which is stored nowhere but in a transient that expires.
  *
- * La trampa: detrás de un proxy o de la caché de SiteGround REMOTE_ADDR puede
- * ser la del proxy. No se leen cabeceras X-Forwarded-For por defecto porque
- * las escribe el cliente y se falsifican; la web que esté detrás de un proxy
- * de confianza lo declara con el filtro 'estrategia_web_forms_client_ip'.
+ * The trap: behind a proxy or the SiteGround cache, REMOTE_ADDR may be the
+ * proxy's. X-Forwarded-For headers are not read by default because the
+ * client writes them and they can be forged; a site behind a trusted proxy
+ * declares it with the 'estrategia_web_forms_client_ip' filter.
  */
 
 namespace EstrategiaWeb\Forms;
@@ -28,7 +28,7 @@ final class Ip {
 		}
 		if ( filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 ) ) {
 			$bin = inet_pton( $ip );
-			// Se conservan los primeros 48 bits (6 bytes): la red del proveedor.
+			// Keep the first 48 bits (6 bytes): the provider's network.
 			$bin = substr( $bin, 0, 6 ) . str_repeat( "\0", 10 );
 			return (string) inet_ntop( $bin );
 		}

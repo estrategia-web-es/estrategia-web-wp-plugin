@@ -1,26 +1,26 @@
 <?php
 /**
- * Al BORRAR el plugin desde «Plugins» (no al desactivarlo).
+ * Runs when the plugin is DELETED from «Plugins» (not when it is deactivated).
  *
- * Llama al modules/<slug>/uninstall.php de CADA módulo que lo tenga, esté
- * encendido o no: un módulo apagado hoy pudo guardar datos ayer. Cada uno
- * decide qué borra; la regla de todos es la misma: por defecto NO se borran
- * los datos del cliente (envíos de formularios, datos de la empresa), solo si
- * la web lo pide con su constante en wp-config.php
+ * Calls the modules/<slug>/uninstall.php of EVERY module that has one,
+ * whether it is on or not: a module that is off today may have stored data
+ * yesterday. Each one decides what it deletes; the rule is the same for all:
+ * by default the client's data (form submissions, company details) is NOT
+ * deleted, only if the site asks for it with its constant in wp-config.php
  * (ESTRATEGIA_WEB_SITE_REMOVE_DATA, ESTRATEGIA_WEB_FORMS_REMOVE_DATA).
  *
- * Lo del núcleo sí se borra siempre: la lista de módulos encendidos.
+ * The core's own data is always deleted: the list of enabled modules.
  *
- * Cómo se mantiene: un módulo que guarda algo que no sea contenido de la web
- * pone su uninstall.php en su carpeta, con la guarda
- * defined( 'WP_UNINSTALL_PLUGIN' ) || exit; arriba. Aquí no se toca nada.
+ * How to maintain: a module that stores anything other than site content
+ * puts its uninstall.php in its folder, with the guard
+ * defined( 'WP_UNINSTALL_PLUGIN' ) || exit; at the top. Nothing is touched here.
  */
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
 foreach ( glob( __DIR__ . '/modules/*/uninstall.php' ) ?: array() as $estrategia_web_uninstall ) {
 	( static function ( string $file ): void {
-		require $file; // En su propio ámbito: un «return» suyo no corta a los demás.
+		require $file; // In its own scope: a «return» inside it does not stop the others.
 	} )( $estrategia_web_uninstall );
 }
 

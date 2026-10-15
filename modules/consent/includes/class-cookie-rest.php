@@ -1,47 +1,51 @@
 <?php
 /**
- * Rutas REST del registro de cookies (espacio estrategia-web/v1).
+ * REST routes of the cookie registry (estrategia-web/v1 namespace).
  *
- * PÚBLICA — POST /cookies/seen  {"names": ["_ga", "_ga_ABC123", …]}
- *   La llama el navegador de un visitante que ACEPTÓ alguna categoría
- *   (blocks/consent/view.js), con los NOMBRES de las cookies que ve por
- *   document.cookie. Nunca valores. Contesta 202 sin contar nada de la lista.
+ * PUBLIC — POST /cookies/seen  {"names": ["_ga", "_ga_ABC123", …]}
+ *   Called by the browser of a visitor who ACCEPTED some category
+ *   (blocks/consent/view.js), with the NAMES of the cookies it sees through
+ *   document.cookie. Never values. Replies 202 without revealing anything
+ *   about the list.
  *
- *   Por qué SIN nonce: la página puede venir de una caché (SiteGround, etc.)
- *   y el nonce de la caché caduca a las 12-24 h; con nonce el detector se
- *   apagaría solo en las webs con caché, que son casi todas. En su lugar:
- *   - Ritmo por cliente: una petición cada REPORT_INTERVAL segundos por IP.
- *     La IP NO se guarda: solo un hash con sal del día, en un transitorio que
- *     caduca con el intervalo. (Es la IP de REMOTE_ADDR: detrás de un proxy
- *     todos comparten una, y eso solo hace el límite más estricto.)
- *   - Ritmo global: HOURLY_CAP peticiones por hora para toda la web.
- *   - Tamaño: MAX_NAMES nombres por petición, cada uno con los caracteres de
- *     RFC 6265 y ≤ 128; el registro no pasa de Cookie_Registry::MAX_ENTRIES.
- *   - Origen: si llega cabecera Origin, tiene que ser la de la web.
- *   - Con el detector apagado (pantalla Cookies) contesta 403 y no apunta nada.
- *   Lo peor que puede hacer alguien que la ataque: llenar la lista de
- *   pendientes con nombres inventados (como mucho MAX_ENTRIES), que no salen
- *   en la política hasta que alguien los confirma, y se borran en la pantalla.
+ *   Why WITHOUT a nonce: the page may come from a cache (SiteGround, etc.)
+ *   and the cached nonce expires after 12-24 h; with a nonce the detector
+ *   would switch itself off on sites with a cache, which is nearly all of
+ *   them. Instead:
+ *   - Per-client rate: one request every REPORT_INTERVAL seconds per IP.
+ *     The IP is NOT stored: only a hash salted with the day, in a transient
+ *     that expires with the interval. (It is the REMOTE_ADDR IP: behind a
+ *     proxy everyone shares one, and that only makes the limit stricter.)
+ *   - Global rate: HOURLY_CAP requests per hour for the whole site.
+ *   - Size: MAX_NAMES names per request, each with RFC 6265 characters and
+ *     ≤ 128; the registry does not go beyond Cookie_Registry::MAX_ENTRIES.
+ *   - Origin: if an Origin header arrives, it must be the site's.
+ *   - With the detector off (Cookies screen) it replies 403 and records nothing.
+ *   The worst an attacker can do: fill the pending list with made-up names
+ *   (at most MAX_ENTRIES), which do not show in the policy until someone
+ *   confirms them, and can be deleted on the screen.
  *
- * DE ADMINISTRACIÓN (manage_options) — GET/POST/DELETE /cookies
- *   Lo mismo que la pantalla, para scripts y pruebas: GET lista todo (con la
- *   versión y la atribución de la base), POST {name, provider, category,
- *   purpose, duration, status} crea o cambia, DELETE ?name= borra.
+ * ADMIN (manage_options) — GET/POST/DELETE /cookies
+ *   The same as the screen, for scripts and tests: GET lists everything (with
+ *   the version and the database attribution), POST {name, provider,
+ *   category, purpose, duration, status} creates or changes, DELETE ?name=
+ *   deletes.
  *
- * Cómo se mantiene:
- * - Quién y cuándo: quien toque el detector. Prueba:
- *   modules/consent/tests/cookies.test.mjs (nivel 2: límites, origen, valores
- *   que no se guardan) y cookies-browser.test.mjs (nivel 3: lo que manda un
- *   navegador de verdad al aceptar).
- * - Los límites se afinan con los filtros estrategia_web_cookies_report_interval
- *   y estrategia_web_cookies_hourly_cap (segundos y peticiones/hora).
- * - Caso frontera: dos visitantes detrás de la misma IP (una oficina). El
- *   segundo recibe 429 durante el intervalo; no pasa nada: el primero ya
- *   mandó lo mismo, y el navegador lo vuelve a intentar al cambiar la lista o
- *   al acabar el periodo.
- * - La trampa: el transitorio de ritmo es un option en la base de datos si no
- *   hay caché de objetos. Por eso la clave lleva un hash corto y caduca sola,
- *   y las pruebas borran estrategia_web_cs_* (la ruta de reset de su mu-plugin).
+ * How to maintain:
+ * - Who and when: whoever touches the detector. Tests:
+ *   modules/consent/tests/cookies.test.mjs (level 2: limits, origin, values
+ *   that are not stored) and cookies-browser.test.mjs (level 3: what a real
+ *   browser sends on accepting).
+ * - The limits are tuned with the filters estrategia_web_cookies_report_interval
+ *   and estrategia_web_cookies_hourly_cap (seconds and requests/hour).
+ * - Edge case: two visitors behind the same IP (an office). The second one
+ *   gets 429 during the interval; nothing is lost: the first one already sent
+ *   the same, and the browser retries when the list changes or when the
+ *   period ends.
+ * - The trap: the rate transient is an option in the database if there is no
+ *   object cache. That is why the key carries a short hash and expires by
+ *   itself, and the tests delete estrategia_web_cs_* (the reset route of
+ *   their mu-plugin).
  */
 
 namespace EstrategiaWeb\Site;
@@ -52,10 +56,10 @@ final class Cookie_Rest {
 
 	public const NAMESPACE = 'estrategia-web/v1';
 
-	/** Nombres como mucho por petición. */
+	/** Maximum names per request. */
 	public const MAX_NAMES = 60;
 
-	/** Prefijo de los transitorios de ritmo (las pruebas los borran). */
+	/** Prefix of the rate transients (the tests delete them). */
 	public const RATE_PREFIX = 'estrategia_web_cs_';
 
 	public static function register(): void {
@@ -112,17 +116,17 @@ final class Cookie_Rest {
 		);
 	}
 
-	/** Segundos entre dos informes del mismo cliente. */
+	/** Seconds between two reports from the same client. */
 	public static function interval(): int {
 		return max( 0, (int) apply_filters( 'estrategia_web_cookies_report_interval', 10 * MINUTE_IN_SECONDS ) );
 	}
 
-	/** Informes por hora para toda la web. */
+	/** Reports per hour for the whole site. */
 	public static function hourly_cap(): int {
 		return max( 0, (int) apply_filters( 'estrategia_web_cookies_hourly_cap', 100 ) );
 	}
 
-	/** El informe del detector. Ver la cabecera. */
+	/** The detector's report. See the header. */
 	public static function seen( \WP_REST_Request $request ) {
 		if ( ! Consent::active() || ! Cookie_Registry::settings()['detector'] ) {
 			return new \WP_Error( 'estrategia_web_detector_off', 'Detector off.', array( 'status' => 403 ) );

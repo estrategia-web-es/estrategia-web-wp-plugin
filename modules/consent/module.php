@@ -5,34 +5,35 @@
  * Default: on
  * Requires:
  *
- * Era parte de «Estrategia Web Site» (desde su 0.5.0; antes, del tema).
- * Todo lo que hace y cómo se mantiene, en la cabecera de
- * includes/class-consent.php. Bloque: estrategia-web-site/consent (el nombre
- * de la 1.0.0, que no cambia). Pruebas: modules/consent/tests/.
+ * It was part of «Estrategia Web Site» (since its 0.5.0; before that, of the
+ * theme). Everything it does and how to maintain it, in the header of
+ * includes/class-consent.php. Block: estrategia-web-site/consent (the 1.0.0
+ * name, which does not change). Tests: modules/consent/tests/.
  *
- * Quién depende de él sin declararlo: Matomo en modo híbrido (módulo site)
- * escucha el evento «estrategia-web:consent» en el navegador. Con este
- * módulo apagado, ese evento no llega nunca y Matomo se queda sin cookies,
- * que es lo seguro. Y la API PHP (estrategia_web_consent_has()) deja de
- * existir: quien la llame, function_exists() antes.
+ * Who depends on it without declaring it: Matomo in hybrid mode (site module)
+ * listens to the «estrategia-web:consent» event in the browser. With this
+ * module off, that event never arrives and Matomo stays without cookies,
+ * which is the safe side. And the PHP API (estrategia_web_consent_has())
+ * stops existing: callers must check function_exists() first.
  *
- * 1.1.0: además del aviso, el REGISTRO de cookies con su DETECTOR (los
- * navegadores que aceptan mandan los nombres de las cookies que ven), la
- * pantalla «Estrategia Web → Cookies» y la TABLA para la política de cookies
- * (bloque estrategia-web/cookie-table y shortcode). Se quedan aquí y no en
- * un módulo aparte porque son el mismo aviso: las categorías que pregunta, y
- * lo que hay que contar en la política, salen de lo mismo. Las etiquetas de
- * Google (Consent Mode v2) sí son módulo aparte (google-tags), como Matomo:
- * se enteran del consentimiento por la API JS, sin llamar a estas clases.
+ * 1.1.0: besides the notice, the cookie REGISTRY with its DETECTOR (browsers
+ * that accept send the names of the cookies they see), the
+ * «Estrategia Web → Cookies» screen and the TABLE for the cookie policy
+ * (estrategia-web/cookie-table block and shortcode). They stay here and not
+ * in a separate module because they are the same notice: the categories it
+ * asks about, and what the policy has to tell, come from the same source.
+ * The Google tags (Consent Mode v2) are a separate module (google-tags), like
+ * Matomo: they learn about consent through the JS API, without calling these
+ * classes.
  *
- * Datos de terceros: data/open-cookie-database.json, extracto de la Open
- * Cookie Database (Apache 2.0; atribución en el JSON y en data/NOTICE),
- * regenerado con tools/open-cookie-database.mjs.
+ * Third-party data: data/open-cookie-database.json, an extract of the Open
+ * Cookie Database (Apache 2.0; attribution in the JSON and in data/NOTICE),
+ * regenerated with tools/open-cookie-database.mjs.
  *
- * Cómo se mantiene: lo que tenga que ver con QUÉ cookies hay y QUÉ se
- * pregunta va aquí; una etiqueta o un servicio que ESPERA al consentimiento
- * (Matomo, Google, un chat) es su propio módulo y habla por la API JS. Cada
- * pieza documenta lo suyo en su cabecera (includes/class-*.php).
+ * How to maintain: anything about WHICH cookies exist and WHAT is asked goes
+ * here; a tag or a service that WAITS for consent (Matomo, Google, a chat) is
+ * its own module and talks through the JS API. Each piece documents its own
+ * part in its header (includes/class-*.php).
  */
 
 namespace EstrategiaWeb\Site;
@@ -46,4 +47,4 @@ require_once __DIR__ . '/includes/class-cookie-registry.php';
 require_once __DIR__ . '/includes/class-cookie-table.php';
 require_once __DIR__ . '/includes/class-cookie-rest.php';
 
-Consent::boot(); // Arranca en after_setup_theme: ver su cabecera («Convivencia»).
+Consent::boot(); // Boots on after_setup_theme: see its header («Coexistence»).

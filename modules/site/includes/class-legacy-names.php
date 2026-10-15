@@ -1,40 +1,40 @@
 <?php
 /**
- * Los nombres de antes de 1.0.0 (cuando el plugin se llamaba «Armazón Site»),
- * como ALIAS que pintan lo mismo que los nuevos.
+ * The names from before 1.0.0 (when the plugin was called «Armazón Site»),
+ * as ALIASES that render the same as the new ones.
  *
- * Qué cubre, y por qué cada cosa:
- * - BLOQUES armazon-site/consent y armazon/consent → estrategia-web-site/consent.
- *   Un alias se registra copiando el tipo nuevo (atributos, supports) y, al
- *   pintar, renombra el bloque (y las clases de su marcado guardado) y lo
- *   pinta con render_block(): sale EXACTAMENTE lo que saldría con el nombre
- *   nuevo. Oculto del insertador.
- * - FUENTES DE BLOCK BINDINGS armazon-site/company y armazon-site/location:
- *   las mismas funciones con el nombre viejo.
- * - SHORTCODES [armazon_company] y [armazon_consent_settings].
- * - La OPCIÓN: si estrategia_web_site no existe todavía y armazon_site sí, se
- *   lee la vieja (default_option_…). Nada se escribe aquí: migrar es cosa
- *   del migrador (class-armazon-migration.php).
- * La cookie del consentimiento tiene su propio respaldo en Consent::choice()
- * y blocks/consent/view.js.
+ * What it covers, and why each thing:
+ * - BLOCKS armazon-site/consent and armazon/consent → estrategia-web-site/consent.
+ *   An alias is registered by copying the new type (attributes, supports) and,
+ *   at render time, it renames the block (and the classes of its saved markup)
+ *   and renders it with render_block(): the output is EXACTLY what the new name
+ *   would produce. Hidden from the inserter.
+ * - BLOCK BINDINGS SOURCES armazon-site/company and armazon-site/location:
+ *   the same functions under the old name.
+ * - SHORTCODES [armazon_company] and [armazon_consent_settings].
+ * - The OPTION: if estrategia_web_site does not exist yet and armazon_site
+ *   does, the old one is read (default_option_…). Nothing is written here:
+ *   migrating is the migrator's job (class-armazon-migration.php).
+ * The consent cookie has its own fallback in Consent::choice() and
+ * blocks/consent/view.js.
  *
- * Para qué: el MIGRADOR reescribe el contenido con los nombres nuevos, pero
- * puede quedar marcado viejo donde no mira (una revisión que se restaura, una
- * página pegada de otra web, un patrón importado). Con el alias se sigue
- * viendo igual en la web; en el editor, el bloque viejo sale como «no
- * admitido» hasta que se pase el migrador o se cambie a mano.
+ * What for: the MIGRATOR rewrites the content with the new names, but old
+ * markup may remain where it does not look (a restored revision, a page pasted
+ * from another site, an imported pattern). With the alias it still looks the
+ * same on the site; in the editor, the old block shows as «unsupported» until
+ * the migrator is run or it is changed by hand.
  *
- * Cómo se mantiene:
- * - Quién: quien toque el plugin. CUÁNDO SE QUITA: en la 2.0.0, una vez
- *   pasado el migrador en todas las webs que usaron Armazón (07-10-2026: solo
- *   Lavandería Mallorca). Quitarlo antes es versión mayor igualmente.
- * - Un bloque, fuente o shortcode nuevo NO entra aquí: aquí solo están los
- *   nombres que existieron con «armazon».
- * - Caso frontera: un bloque viejo DENTRO de un bloque viejo. El de fuera se
- *   renombra entero (también sus hijos) y se pinta una vez; el de dentro no
- *   llega a pasar por su alias.
- * - La trampa: el alias necesita que el tipo nuevo ya esté registrado, por
- *   eso corre en init con prioridad 99 (los bloques se registran en init, 10).
+ * How to maintain:
+ * - Who: whoever touches the plugin. WHEN IT GOES: in 2.0.0, once the migrator
+ *   has run on every site that used Armazón (07-10-2026: only Lavandería
+ *   Mallorca). Removing it earlier is a major version anyway.
+ * - A new block, source or shortcode does NOT go in here: only the names that
+ *   existed with «armazon» are here.
+ * - Edge case: an old block INSIDE an old block. The outer one is renamed
+ *   whole (its children too) and rendered once; the inner one never goes
+ *   through its alias.
+ * - The trap: the alias needs the new type to be registered already, that is
+ *   why it runs on init with priority 99 (blocks are registered on init, 10).
  */
 
 namespace EstrategiaWeb\Site;
@@ -43,26 +43,26 @@ defined( 'ABSPATH' ) || exit;
 
 final class Legacy_Names {
 
-	/** Bloque viejo → bloque nuevo. */
+	/** Old block → new block. */
 	public const BLOCKS = array(
 		'armazon-site/consent' => 'estrategia-web-site/consent',
 		'armazon/consent'      => 'estrategia-web-site/consent',
 	);
 
-	/** Clases del marcado guardado: viejo → nuevo (lo más largo primero). */
+	/** Classes of the saved markup: old → new (longest first). */
 	public const CLASSES = array(
 		'wp-block-armazon-site-' => 'wp-block-estrategia-web-site-',
 		'wp-block-armazon-'      => 'wp-block-estrategia-web-site-',
 		'armazon-consent'        => 'estrategia-web-consent',
 	);
 
-	/** Fuente de Block Bindings vieja → nueva. */
+	/** Old Block Bindings source → new. */
 	public const SOURCES = array(
 		'armazon-site/company'  => 'estrategia-web-site/company',
 		'armazon-site/location' => 'estrategia-web-site/location',
 	);
 
-	/** Shortcode viejo → nuevo. */
+	/** Old shortcode → new. */
 	public const SHORTCODES = array(
 		'armazon_company'           => 'estrategia_web_company',
 		'armazon_consent_settings'  => 'estrategia_web_consent_settings',
@@ -95,9 +95,9 @@ final class Legacy_Names {
 				)
 			);
 		}
-		// Las fuentes viejas llaman a las mismas funciones (WP_Block_Bindings_Source
-		// no deja leer su callback: es privado). La de sedes recibe además las
-		// claves de antes de 1.0.0 (location_phone…) y las pasa a las nuevas.
+		// The old sources call the same functions (WP_Block_Bindings_Source does
+		// not let you read its callback: it is private). The locations one also
+		// receives the pre-1.0.0 keys (location_phone…) and maps them to the new ones.
 		$legacy_key = static function ( array $args ): array {
 			$key = (string) ( $args['key'] ?? '' );
 			if ( '' !== $key && ! str_starts_with( $key, 'estrategia_web_' ) && in_array( 'estrategia_web_' . $key, array_merge( Content_Types::meta_keys( Location::TYPE ), Location::DERIVED ), true ) ) {
@@ -131,9 +131,9 @@ final class Legacy_Names {
 	}
 
 	/**
-	 * Un bloque leído con nombres viejos, con los nuevos (él y sus hijos).
+	 * A block read with old names, with the new ones (itself and its children).
 	 *
-	 * @param array $parsed Bloque de parse_blocks().
+	 * @param array $parsed Block from parse_blocks().
 	 */
 	public static function rename( array $parsed ): array {
 		if ( isset( self::BLOCKS[ $parsed['blockName'] ?? '' ] ) ) {
@@ -147,9 +147,9 @@ final class Legacy_Names {
 	}
 
 	/**
-	 * La opción vieja mientras no exista la nueva.
+	 * The old option while the new one does not exist.
 	 *
-	 * @param mixed $default Valor por defecto de get_option().
+	 * @param mixed $default get_option() default value.
 	 */
 	public static function legacy_option( $default ) {
 		$legacy = get_option( self::LEGACY_OPTION, null );

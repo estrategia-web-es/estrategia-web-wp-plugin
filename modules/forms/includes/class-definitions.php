@@ -1,32 +1,33 @@
 <?php
 /**
- * La definición de un formulario: qué campos tiene y qué avisos manda.
+ * A form's definition: which fields it has and which notifications it sends.
  *
- * EL PUNTO DE SEGURIDAD DEL PLUGIN. La configuración vive en los bloques
- * (post_content), y el navegador del visitante NO la recibe: al pintar el
- * formulario, el servidor saca de los bloques los campos y los avisos, los
- * guarda aquí con su hash y en el HTML solo pone ese hash. Al recibir un
- * envío, el servidor carga la definición por el hash y valida y avisa con
- * ella. El visitante no puede añadir campos, quitar un obligatorio ni cambiar
- * un destinatario: solo puede señalar una definición que el servidor pintó.
+ * THE PLUGIN'S SECURITY POINT. The configuration lives in the blocks
+ * (post_content), and the visitor's browser does NOT receive it: when the
+ * form is rendered, the server extracts the fields and notifications from
+ * the blocks, stores them here with their hash and puts only that hash in
+ * the HTML. When a submission arrives, the server loads the definition by
+ * the hash and validates and notifies with it. The visitor cannot add
+ * fields, drop a required one or change a recipient: they can only point to
+ * a definition the server rendered.
  *
- * Por qué una foto y no volver a leer la página al recibir el envío: un
- * formulario puede estar en una página, en un patrón sincronizado, en una
- * parte de plantilla o en un fichero del tema. La foto funciona en todos esos
- * sitios sin saber dónde está, y valida contra lo que el visitante VIO.
+ * Why a snapshot and not re-reading the page when the submission arrives: a
+ * form can be in a page, a synced pattern, a template part or a theme file.
+ * The snapshot works in all those places without knowing where it is, and
+ * validates against what the visitor SAW.
  *
- * Cómo se mantiene:
- * - Un atributo nuevo de un bloque de campo que afecte a la validación o al
- *   correo entra en field_from_block(), o el servidor no se enterará de él.
- * - Cambiar el formato de la definición es cambiar FORMAT: las fotos viejas
- *   siguen sirviendo a las páginas en caché, así que load() tiene que seguir
- *   entendiendo las anteriores.
- * - Caso frontera: dos copias del mismo patrón en dos páginas comparten
- *   formId. Es a propósito: el registro las agrupa como «el mismo formulario».
- *   Si deben contarse aparte, se les cambia el identificador en el editor.
- * - La trampa: las fotos no se purgan. Una página en caché sigue apuntando a
- *   la suya aunque el formulario se haya editado después, y borrarla rompería
- *   ese envío. Son unos pocos KB por versión del formulario.
+ * How to maintain:
+ * - A new attribute of a field block that affects validation or the email
+ *   goes into field_from_block(), or the server will never know about it.
+ * - Changing the definition format means changing FORMAT: old snapshots
+ *   still serve cached pages, so load() must keep understanding the
+ *   previous ones.
+ * - Edge case: two copies of the same pattern on two pages share a formId.
+ *   This is on purpose: the log groups them as «the same form». If they
+ *   must be counted separately, change their identifier in the editor.
+ * - The trap: snapshots are not purged. A cached page keeps pointing to its
+ *   own even if the form has been edited since, and deleting it would break
+ *   that submission. They are a few KB per form version.
  */
 
 namespace EstrategiaWeb\Forms;
@@ -46,13 +47,13 @@ final class Definitions {
 		'estrategia-web-forms/checkbox' => 'checkbox',
 	);
 
-	/** @var array<string, bool> Hashes ya guardados en esta petición. */
+	/** @var array<string, bool> Hashes already stored in this request. */
 	private static array $stored = array();
 
 	/**
-	 * Construye la definición a partir del bloque del formulario ya analizado.
+	 * Builds the definition from the already parsed form block.
 	 *
-	 * @param array<string, mixed> $attributes Atributos del bloque formulario.
+	 * @param array<string, mixed> $attributes Attributes of the form block.
 	 * @param array<int, array>    $inner      parsed_block['innerBlocks'].
 	 */
 	public static function build( array $attributes, array $inner ): array {
@@ -77,7 +78,7 @@ final class Definitions {
 		return md5( (string) wp_json_encode( $definition ) );
 	}
 
-	/** Guarda la foto si no existe y devuelve su hash. */
+	/** Stores the snapshot if it does not exist and returns its hash. */
 	public static function store( array $definition ): string {
 		$hash = self::hash( $definition );
 		if ( isset( self::$stored[ $hash ] ) ) {
@@ -115,14 +116,14 @@ final class Definitions {
 		return is_array( $def ) ? $def : null;
 	}
 
-	/** Identificadores: minúsculas, números, guion y guion bajo. */
+	/** Identifiers: lowercase letters, digits, hyphen and underscore. */
 	public static function clean_id( string $value ): string {
 		return substr( (string) preg_replace( '/[^a-z0-9_-]/', '', strtolower( $value ) ), 0, 64 );
 	}
 
 	/**
-	 * Recorre los bloques interiores, también dentro de grupos y columnas: el
-	 * formulario se maqueta como cualquier bloque.
+	 * Walks the inner blocks, also inside groups and columns: the form is
+	 * laid out like any other block.
 	 */
 	private static function collect( array $blocks, array &$fields, array &$notifications ): void {
 		$registry = \WP_Block_Type_Registry::get_instance();

@@ -1,4 +1,4 @@
-// NIVEL: 2 — WordPress de Playground, porque ESCRIBE: guarda la opción estrategia_web_site por la API REST de verdad, con usuario y permisos.
+// NIVEL: 2 — Playground WordPress, because it WRITES: saves the estrategia_web_site option through the real REST API, with user and permissions.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { reset, wp, saveCompany } from "../../../tests/lib.mjs";
@@ -21,64 +21,64 @@ const GOOD = {
   allow_svg: true,
 };
 
-test("guardar por REST y leerlo: todas las claves, WhatsApp solo dígitos, saltos de línea conservados", async () => {
+test("save via REST and read it back: all keys, WhatsApp digits only, line breaks preserved", async () => {
   const saved = await saveCompany(GOOD);
   assert.equal(saved.company_name, GOOD.company_name);
   assert.equal(saved.email, GOOD.email);
-  assert.equal(saved.whatsapp, "34600111222", "wa.me necesita solo dígitos con el prefijo");
+  assert.equal(saved.whatsapp, "34600111222", "wa.me needs digits only, with the country code");
   assert.equal(saved.address, GOOD.address);
   assert.equal(saved.social.instagram, GOOD.social.instagram);
-  assert.equal(saved.social.facebook, "", "las redes no enviadas existen, vacías");
+  assert.equal(saved.social.facebook, "", "networks not sent exist, empty");
   assert.deepEqual(saved.enabled_types, ["client", "location"]);
   assert.equal(saved.allow_svg, true);
 
   const read = await wp("/settings");
   assert.equal(read.status, 200);
-  assert.deepEqual(read.json.estrategia_web_site, saved, "lo leído es lo guardado");
+  assert.deepEqual(read.json.estrategia_web_site, saved, "what is read is what was saved");
 });
 
-test("guardar por partes: un PUT con una clave no borra las demás", async () => {
+test("partial save: a PUT with one key does not erase the others", async () => {
   const saved = await saveCompany({ phone: "971 99 99 99" });
   assert.equal(saved.phone, "971 99 99 99");
   assert.equal(saved.company_name, GOOD.company_name);
   assert.deepEqual(saved.enabled_types, ["client", "location"]);
 });
 
-test("saneado: un correo, una URL y un WhatsApp inválidos NO se guardan y se queda el valor anterior", async () => {
-  const saved = await saveCompany({ email: "no-es-correo", map_url: "javascript:alert(1)", whatsapp: "12", company_name: "<b>Acme</b> SL" });
+test("sanitizing: an invalid email, URL and WhatsApp are NOT saved and the previous value stays", async () => {
+  const saved = await saveCompany({ email: "not-an-email", map_url: "javascript:alert(1)", whatsapp: "12", company_name: "<b>Acme</b> SL" });
   assert.equal(saved.email, GOOD.email);
   assert.equal(saved.map_url, GOOD.map_url);
   assert.equal(saved.whatsapp, "34600111222");
-  assert.equal(saved.company_name, "Acme SL", "sin etiquetas HTML");
+  assert.equal(saved.company_name, "Acme SL", "no HTML tags");
 });
 
-test("esquema: un tipo de contenido que no existe se rechaza entero (400)", async () => {
+test("schema: a content type that does not exist is rejected entirely (400)", async () => {
   const r = await wp("/settings", { method: "POST", body: { estrategia_web_site: { enabled_types: ["client", "services"] } } });
   assert.equal(r.status, 400);
 });
 
-test("rewrite_slugs (0.2.0): sanitize_title, vacío por defecto, fusión por clave, nombre desconocido → 400", async () => {
-  const a = await saveCompany({ rewrite_slugs: { client: "Mi Cliente!" } });
-  assert.equal(a.rewrite_slugs.client, "mi-cliente");
-  assert.equal(a.rewrite_slugs.client_sector, "", "los no enviados existen, vacíos");
+test("rewrite_slugs (0.2.0): sanitize_title, empty by default, merge by key, unknown name → 400", async () => {
+  const a = await saveCompany({ rewrite_slugs: { client: "My Client!" } });
+  assert.equal(a.rewrite_slugs.client, "my-client");
+  assert.equal(a.rewrite_slugs.client_sector, "", "the ones not sent exist, empty");
   assert.equal(a.rewrite_slugs.portfolio_category, "");
 
   const b = await saveCompany({ rewrite_slugs: { client_sector: "sector-x" } });
-  assert.equal(b.rewrite_slugs.client, "mi-cliente", "guardar una no borra las demás");
+  assert.equal(b.rewrite_slugs.client, "my-client", "saving one does not erase the others");
   assert.equal(b.rewrite_slugs.client_sector, "sector-x");
 
   const c = await saveCompany({ phone: "971 55 55 55" });
-  assert.deepEqual(c.rewrite_slugs, b.rewrite_slugs, "guardar otra clave no las toca");
+  assert.deepEqual(c.rewrite_slugs, b.rewrite_slugs, "saving another key does not touch them");
 
-  const bad = await wp("/settings", { method: "POST", body: { estrategia_web_site: { rewrite_slugs: { services: "servicios" } } } });
-  assert.equal(bad.status, 400, "solo tipos y taxonomías del plugin");
+  const bad = await wp("/settings", { method: "POST", body: { estrategia_web_site: { rewrite_slugs: { services: "services-slug" } } } });
+  assert.equal(bad.status, 400, "only the plugin's types and taxonomies");
 
   const read = await wp("/settings");
   assert.deepEqual(read.json.estrategia_web_site.rewrite_slugs, b.rewrite_slugs);
   await saveCompany({ rewrite_slugs: { client: "", client_sector: "" } });
 });
 
-test("permisos: un autor no puede leer ni cambiar los datos por /wp/v2/settings", async () => {
+test("permissions: an author cannot read or change the data via /wp/v2/settings", async () => {
   const r = await wp("/settings", { as: "author", method: "POST", body: { estrategia_web_site: { phone: "000" } } });
   assert.equal(r.status, 403);
   const read = await wp("/settings");

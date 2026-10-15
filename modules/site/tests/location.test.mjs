@@ -1,4 +1,4 @@
-// NIVEL: 2 — WordPress de Playground, porque ESCRIBE: activa el tipo `location`, crea sedes por REST y una página; lo que se mira es el HTML que pinta el servidor, sin navegador.
+// NIVEL: 2 — Playground WordPress, because it WRITES: enables the `location` type, creates locations via REST and a page; what is checked is the HTML the server renders, no browser.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { reset, wp, saveCompany, seedPage, html, type } from "../../../tests/lib.mjs";
@@ -23,24 +23,24 @@ before(async () => {
     estrategia_web_location_schedule: "L-V 8-20",
     estrategia_web_location_map_url: "https://maps.google.com/?q=Maioris",
   });
-  await make("Sede Palma", "palma", "publish", { estrategia_web_location_address: "Carrer de Palma 1\n07001 Palma", estrategia_web_location_phone: "971 44 55 66" });
-  await make("Sede en borrador", "borrador", "draft", { estrategia_web_location_phone: "971 99 99 99", estrategia_web_location_address: "No debe salir" });
+  await make("Palma location", "palma", "publish", { estrategia_web_location_address: "Carrer de Palma 1\n07001 Palma", estrategia_web_location_phone: "971 44 55 66" });
+  await make("Draft location", "borrador", "draft", { estrategia_web_location_phone: "971 99 99 99", estrategia_web_location_address: "Must not appear" });
 });
 
 const between = (text, cls, tag) => text.match(new RegExp(`<${tag}[^>]*${cls}[^>]*>([\\s\\S]*?)</${tag}>`))?.[1];
 const href = (text, cls) => text.match(new RegExp(`${cls}[^"]*"><a[^>]*href="([^"]*)"`))?.[1];
 
-test("por slug, desde cualquier página: botón con texto y url al teléfono de la sede «maioris»; título, dirección con <br>, correo y mapa", async () => {
+test("by slug, from any page: button with text and url to the phone of the «maioris» location; title, address with <br>, email and map", async () => {
   const page = await seedPage(
     `<!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button ${attrs("t-tel", { text: { source: SRC, args: { slug: "maioris", key: "estrategia_web_location_phone" } }, url: { source: SRC, args: { slug: "maioris", key: "estrategia_web_location_phone_href" } } })} -->
-<div class="wp-block-button t-tel"><a class="wp-block-button__link wp-element-button" href="#">relleno</a></div>
+<div class="wp-block-button t-tel"><a class="wp-block-button__link wp-element-button" href="#">placeholder</a></div>
 <!-- /wp:button -->
 <!-- wp:button ${attrs("t-mail", { url: { source: SRC, args: { slug: "maioris", key: "estrategia_web_location_email_href" } } })} -->
-<div class="wp-block-button t-mail"><a class="wp-block-button__link wp-element-button" href="#">Correo</a></div>
+<div class="wp-block-button t-mail"><a class="wp-block-button__link wp-element-button" href="#">Email</a></div>
 <!-- /wp:button -->
 <!-- wp:button ${attrs("t-map", { url: { source: SRC, args: { slug: "maioris", key: "estrategia_web_location_map_url" } } })} -->
-<div class="wp-block-button t-map"><a class="wp-block-button__link wp-element-button" href="#">Mapa</a></div>
+<div class="wp-block-button t-map"><a class="wp-block-button__link wp-element-button" href="#">Map</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons -->
 <!-- wp:heading ${JSON.stringify({ className: "t-title", ...meta({ slug: "maioris", key: "title" }) })} -->
@@ -54,37 +54,37 @@ test("por slug, desde cualquier página: botón con texto y url al teléfono de 
   const { status, text } = await html(page.url);
   assert.equal(status, 200);
   assert.equal(href(text, "t-tel"), "tel:+34971112233");
-  assert.match(text, /t-tel[^"]*"><a[^>]*>971 11 22 33<\/a>/, "el texto del botón es el teléfono");
+  assert.match(text, /t-tel[^"]*"><a[^>]*>971 11 22 33<\/a>/, "the button text is the phone");
   assert.equal(href(text, "t-mail"), "mailto:maioris@ejemplo.test");
   assert.equal(href(text, "t-map"), "https://maps.google.com/?q=Maioris");
-  assert.equal(between(text, "t-title", "h2"), "Maioris &amp; Llucmajor", "el título, escapado");
+  assert.equal(between(text, "t-title", "h2"), "Maioris &amp; Llucmajor", "the title, escaped");
   assert.equal(between(text, "t-address", "p").replace(/\n/g, ""), "Carrer de Maioris 3<br>07620 Llucmajor");
 });
 
-test("una sede inexistente, en borrador o sin clave sale vacía; fuera de una sede, una clave sin slug también", async () => {
+test("a non-existent, draft or keyless location comes out empty; outside a location, a key without slug too", async () => {
   const page = await seedPage(
     `<!-- wp:paragraph ${JSON.stringify({ className: "t-none", ...meta({ slug: "no-existe", key: "estrategia_web_location_phone" }) })} -->
-<p class="t-none">relleno-none</p>
+<p class="t-none">placeholder-none</p>
 <!-- /wp:paragraph -->
 <!-- wp:paragraph ${JSON.stringify({ className: "t-draft", ...meta({ slug: "borrador", key: "estrategia_web_location_phone" }) })} -->
-<p class="t-draft">relleno-draft</p>
+<p class="t-draft">placeholder-draft</p>
 <!-- /wp:paragraph -->
 <!-- wp:paragraph ${JSON.stringify({ className: "t-nokey", ...meta({ slug: "maioris", key: "phone" }) })} -->
-<p class="t-nokey">relleno-nokey</p>
+<p class="t-nokey">placeholder-nokey</p>
 <!-- /wp:paragraph -->
 <!-- wp:paragraph ${JSON.stringify({ className: "t-ctx", ...meta({ key: "estrategia_web_location_phone" }) })} -->
-<p class="t-ctx">relleno-ctx</p>
+<p class="t-ctx">placeholder-ctx</p>
 <!-- /wp:paragraph -->`,
     "sedes-vacias"
   );
   const { text } = await html(page.url);
   for (const cls of ["t-none", "t-draft", "t-nokey", "t-ctx"]) {
-    assert.equal(between(text, cls, "p"), "", `${cls} vacío`);
+    assert.equal(between(text, cls, "p"), "", `${cls} empty`);
   }
-  assert.ok(!text.includes("971 99 99 99") && !text.includes("No debe salir"), "nada del borrador");
+  assert.ok(!text.includes("971 99 99 99") && !text.includes("Must not appear"), "nothing from the draft");
 });
 
-test("sin slug, dentro de una Consulta de sedes: cada <li> enseña la dirección de SU sede (contexto postId)", async () => {
+test("without slug, inside a Query of locations: each <li> shows the address of ITS location (postId context)", async () => {
   const query = JSON.stringify({ queryId: 3, query: { perPage: 10, pages: 0, offset: 0, postType: type("location"), order: "asc", orderBy: "title", inherit: false } });
   const page = await seedPage(
     `<!-- wp:query ${query} -->
@@ -102,7 +102,7 @@ test("sin slug, dentro de una Consulta de sedes: cada <li> enseña la dirección
   );
   const { text } = await html(page.url);
   const items = [...(text.match(/<ul[^>]*wp-block-post-template[\s\S]*?<\/ul>/)?.[0] ?? "").matchAll(/<li[\s\S]*?<\/li>/g)].map((m) => m[0]);
-  assert.equal(items.length, 2, "las dos publicadas");
+  assert.equal(items.length, 2, "the two published ones");
   assert.match(items[0], /Maioris/);
   assert.equal(between(items[0], "t-addr", "p").replace(/\n/g, ""), "Carrer de Maioris 3<br>07620 Llucmajor");
   assert.equal(between(items[0], "t-phone", "p"), "tel:+34971112233");

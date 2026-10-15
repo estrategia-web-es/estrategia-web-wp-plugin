@@ -1,21 +1,22 @@
 <?php
 /**
- * Plantilla HTML de los avisos. Sencilla a propósito: tablas y estilos en
- * línea, que es lo único que respetan todos los clientes de correo.
+ * HTML template for the notifications. Simple on purpose: tables and inline
+ * styles, which is the only thing every email client respects.
  *
- * Una web la sustituye sin tocar el plugin copiándola a
- * <tema>/estrategia-web-forms/email.php (vale en el hijo o en el padre).
+ * A site replaces it without touching the plugin by copying it to
+ * <theme>/estrategia-web-forms/email.php (works in the child or the parent).
  *
- * Variables disponibles:
- * @var string $content_html Cuerpo del aviso ya convertido a HTML y escapado.
- * @var string $subject      Asunto, texto plano.
- * @var string $site_name    Nombre del sitio, texto plano.
- * @var string $footer       Pie configurado en Ajustes (texto plano, puede estar vacío).
- * @var string $lang         Idioma del envío.
+ * Available variables:
+ * @var string $content_html Notification body already converted to HTML and escaped.
+ * @var string $subject      Subject, plain text.
+ * @var string $site_name    Site name, plain text.
+ * @var string $footer       Footer configured in Settings (plain text, may be empty).
+ * @var string $lang         Language of the submission.
  *
- * La trampa: lo que se escriba aquí sale en TODOS los avisos de la web, en
- * todos los idiomas. Un texto fijo nuevo va con esc_html__() y su entrada en
- * el .pot, o el acuse en inglés llevará un pie en castellano.
+ * The trap: whatever is written here goes out in ALL the site's
+ * notifications, in every language. A new fixed text goes with esc_html__()
+ * and its entry in the .pot, or the English acknowledgement will carry a
+ * Spanish footer.
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -34,7 +35,7 @@ defined( 'ABSPATH' ) || exit;
 			<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:6px;">
 				<tr>
 					<td style="padding:24px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;color:#1e1e1e;">
-						<?php echo $content_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- montado y escapado en Notifier. ?>
+						<?php echo $content_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built and escaped in Notifier. ?>
 					</td>
 				</tr>
 				<tr>

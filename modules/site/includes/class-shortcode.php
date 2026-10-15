@@ -1,37 +1,39 @@
 <?php
 /**
- * Shortcode `[estrategia_web_company key="…"]` (0.4.0): un dato de la empresa DENTRO
- * de una frase. Es lo que necesita el aviso legal (LSSI, art. 10):
+ * Shortcode `[estrategia_web_company key="…"]` (0.4.0): a company detail INSIDE
+ * a sentence. It is what the legal notice needs (Spanish LSSI, art. 10):
  *
  *   <!-- wp:paragraph -->
- *   <p>Titular: [estrategia_web_company key="legal_name"], NIF [estrategia_web_company key="tax_id"],
- *   con domicilio en [estrategia_web_company key="address"]. Teléfono [estrategia_web_company key="phone"],
- *   correo [estrategia_web_company key="email"]. Inscrita en el [estrategia_web_company key="registry"].</p>
+ *   <p>Owner: [estrategia_web_company key="legal_name"], tax ID [estrategia_web_company key="tax_id"],
+ *   registered address [estrategia_web_company key="address"]. Phone [estrategia_web_company key="phone"],
+ *   email [estrategia_web_company key="email"]. Registered in the [estrategia_web_company key="registry"].</p>
  *   <!-- /wp:paragraph -->
  *
- * Por qué un shortcode y no un binding ni un bloque: un binding de WP 7.1
- * sustituye el contenido ENTERO del párrafo (no hay bindings en línea), así que
- * una frase con seis datos serían seis párrafos. Un bloque propio en línea
- * (format type) necesita JS compilado y guarda marcado que el editor tiene que
- * conocer; el shortcode es una línea de PHP, se escribe a mano o en la carga
- * de contenido, y funciona dentro de cualquier bloque de texto.
+ * Why a shortcode and not a binding or a block: a WP 7.1 binding replaces the
+ * WHOLE content of the paragraph (there are no inline bindings), so a sentence
+ * with six details would be six paragraphs. A custom inline block (format
+ * type) needs compiled JS and saves markup the editor has to know about; the
+ * shortcode is one line of PHP, it is written by hand or in the content load,
+ * and it works inside any text block.
  *
- * Cómo pinta: el mismo valor que Company::value() (todas sus claves, también
- * `social.<red>` y las derivadas), escapado con esc_html y en UNA línea: las
- * claves de varias líneas (dirección, horario) salen unidas con «, », porque
- * van dentro de una frase. Una clave que no existe o vacía no pinta nada.
+ * How it renders: the same value as Company::value() (all its keys, including
+ * `social.<network>` and the derived ones), escaped with esc_html and on ONE
+ * line: multi-line keys (address, opening hours) are joined with «, », because
+ * they sit inside a sentence. A key that does not exist or is empty renders
+ * nothing.
  *
- * Cómo se mantiene:
- * - Quién y cuándo: nadie, al añadir una clave: sale sola de Company::value().
- *   Si cambia cómo se escapa un valor en Bindings::format, mirar si aquí
- *   también toca (aquí no hay <br> a propósito).
- * - Caso frontera: en el EDITOR el shortcode se ve tal cual, entre corchetes;
- *   el valor solo sale en la web. Es lo que se acepta a cambio de no compilar
- *   nada. Para un dato SOLO en su párrafo, mejor el binding, que sí se ve.
- * - La trampa: do_shortcode corre en `the_content` (prioridad 11) y en las
- *   plantillas de bloques, pero NO en un atributo de bloque ni en el título.
- *   Y nada de shortcode dentro de un enlace: la url no se pinta escapada para
- *   atributo; para `href`, el binding de botón o enlace.
+ * How to maintain:
+ * - Who and when: nobody, when adding a key: it comes out of Company::value()
+ *   on its own. If the way a value is escaped changes in Bindings::format,
+ *   check whether it applies here too (no <br> here, on purpose).
+ * - Edge case: in the EDITOR the shortcode shows as is, in brackets; the value
+ *   only appears on the site. That is the accepted price for not compiling
+ *   anything. For a detail ALONE in its paragraph, the binding is better, since
+ *   it does show.
+ * - The trap: do_shortcode runs on `the_content` (priority 11) and in block
+ *   templates, but NOT in a block attribute or in the title. And no shortcode
+ *   inside a link: the url is not printed escaped for an attribute; for `href`,
+ *   use the button or link binding.
  */
 
 namespace EstrategiaWeb\Site;
@@ -55,9 +57,9 @@ final class Shortcode {
 		return esc_html( self::inline( Company::value( $key ) ) );
 	}
 
-	/** Varias líneas a una: «Calle Mayor 1\n07001 Palma» → «Calle Mayor 1, 07001 Palma». */
+	/** Several lines into one: «Calle Mayor 1\n07001 Palma» → «Calle Mayor 1, 07001 Palma». */
 	public static function inline( string $value ): string {
-		// Sin la coma final que alguien ya escribió («Calle Mayor 1,»): no sale «,,».
+		// Without the trailing comma someone already wrote («Calle Mayor 1,»): no «,,» comes out.
 		$lines = array_filter( array_map( static fn( $l ) => rtrim( trim( $l ), ',' ), preg_split( '/\R/', $value ) ), 'strlen' );
 		return implode( ', ', $lines );
 	}

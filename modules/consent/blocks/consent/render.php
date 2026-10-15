@@ -1,10 +1,10 @@
 <?php
 /**
- * estrategia-web-site/consent — botón para reabrir el aviso de cookies (para el pie).
+ * estrategia-web-site/consent — button to reopen the cookie notice (for the footer).
  *
- * El HTML lo pinta Consent::render_link() (includes/class-consent.php), que
- * comparte con el alias estrategia-web/consent y con el shortcode
- * [estrategia_web_consent_settings]: un solo sitio para el marcado.
+ * The HTML is printed by Consent::render_link() (includes/class-consent.php),
+ * shared with the estrategia-web/consent alias and with the
+ * [estrategia_web_consent_settings] shortcode: a single place for the markup.
  *
  * @package estrategia-web-site
  *

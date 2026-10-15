@@ -1,16 +1,16 @@
-// NIVEL: 2 — WordPress de Playground, porque lo probado es la ruta REST del detector (límites, origen, lo que guarda), la ruta de administración y el HTML que pinta la web (aviso y tabla de la política) según lo guardado.
+// NIVEL: 2 — Playground WordPress, because what is tested is the detector REST route (limits, origin, what it stores), the admin route and the HTML the site prints (notice and policy table) according to what is stored.
 //
-// Registro de cookies, detector y tabla de la política (1.1.0). Qué es y por
-// qué: cabeceras de includes/class-cookie-registry.php, class-cookie-rest.php
-// y class-cookie-table.php. Lo del navegador (que al aceptar se manden solo
-// los nombres, la pantalla) está en cookies-browser.test.mjs (nivel 3).
+// Cookie registry, detector and policy table (1.1.0). What it is and why:
+// headers of includes/class-cookie-registry.php, class-cookie-rest.php and
+// class-cookie-table.php. The browser side (that accepting sends only the
+// names, the screen) is in cookies-browser.test.mjs (level 3).
 //
-// Rutas de apoyo: /consent-setup (tests/wp/, hace de tema que declara
-// categorías) y las de modules/consent/tests/wp/estrategia-web-cookies-test.php
-// (reset, límites del detector, la opción cruda).
+// Helper routes: /consent-setup (tests/wp/, plays a theme that declares
+// categories) and those of modules/consent/tests/wp/estrategia-web-cookies-test.php
+// (reset, detector limits, the raw option).
 //
-// Cómo se mantiene: un límite nuevo del detector, su caso aquí con el filtro
-// puesto por /setup; nunca bajar los límites de verdad para que pase.
+// How to maintain: a new detector limit gets its case here with the filter
+// set through /setup; never lower the real limits to make it pass.
 import { test, beforeEach, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, credentials, html, reset, seedPage, testApi, wp } from "../../../tests/lib.mjs";
@@ -27,7 +27,7 @@ const cookiesTest = async (path, body) => {
 const setupConsent = (body) => testApi("/consent-setup", { method: "POST", body });
 const front = async (path = "/") => (await html(BASE + path + (path.includes("?") ? "&" : "?") + "nocache=" + Date.now())).text;
 
-/** POST del detector como lo haría un navegador. */
+/** Detector POST as a browser would send it. */
 const report = (names, headers = {}) =>
   fetch(BASE + "/wp-json/estrategia-web/v1/cookies/seen", {
     method: "POST",
@@ -35,7 +35,7 @@ const report = (names, headers = {}) =>
     body: JSON.stringify({ names }),
   });
 
-/** La ruta de administración, como administrador (o sin credenciales con as = null). */
+/** The admin route, as administrator (or without credentials with as = null). */
 async function admin(method, body, as = "administrator", query = "") {
   const who = as ? (await credentials())[as] : null;
   const res = await fetch(BASE + "/wp-json/estrategia-web/v1/cookies" + query, {
@@ -56,66 +56,68 @@ const clean = async () => {
   await cookiesTest("/reset", {});
 };
 beforeEach(clean);
-after(clean); // Las demás pruebas comparten este WordPress: nada de «ask» ni filas que se queden.
+after(clean); // The other tests share this WordPress: no «ask» or rows left behind.
 
-test("detector: guarda solo NOMBRES, contesta 202 y con la misma IP en el intervalo da 429", async () => {
+test("detector: stores only NAMES, replies 202 and with the same IP within the interval gives 429", async () => {
   await setupConsent({ categories: ["maps"] });
-  const r = await report(["_ga", "_ga_ABC123", "wp-wpml_current_language", "x=secreto", "<b>"]);
+  const r = await report(["_ga", "_ga_ABC123", "wp-wpml_current_language", "x=secret", "<b>"]);
   assert.equal(r.status, 202, await r.text());
   const raw = (await cookiesTest("/raw")).raw;
   assert.deepEqual(Object.keys(raw).sort(), ["_ga", "_ga_*", "wp-wpml_current_language"]);
-  assert.ok(!JSON.stringify(raw).includes("secreto") && !JSON.stringify(raw).includes("<b>"), "ni valores ni HTML");
+  assert.ok(!JSON.stringify(raw).includes("secret") && !JSON.stringify(raw).includes("<b>"), "no values and no HTML");
   assert.equal(raw["wp-wpml_current_language"].category, "necessary");
   assert.equal(raw["_ga"].status, "pending");
 
-  const again = await report(["otra"]);
-  assert.equal(again.status, 429, "el mismo cliente dentro de los 10 minutos");
-  assert.ok(!("otra" in (await cookiesTest("/raw")).raw));
+  const again = await report(["another"]);
+  assert.equal(again.status, 429, "the same client within the 10 minutes");
+  assert.ok(!("another" in (await cookiesTest("/raw")).raw));
 });
 
-test("detector: tope por hora para toda la web, más de 60 nombres = 400, origen ajeno = 403, apagado = 403", async () => {
+test("detector: hourly cap for the whole site, more than 60 names = 400, foreign origin = 403, off = 403", async () => {
   await setupConsent({ categories: ["maps"] });
   await cookiesTest("/setup", { interval: 0, cap: 2 });
   assert.equal((await report(["a1"])).status, 202);
   assert.equal((await report(["a2"])).status, 202);
-  assert.equal((await report(["a3"])).status, 429, "tercera en la hora con tope 2");
+  assert.equal((await report(["a3"])).status, 429, "third in the hour with cap 2");
 
   await cookiesTest("/reset", {});
   await setupConsent({ categories: ["maps"] });
   await cookiesTest("/setup", { interval: 0 });
   assert.equal((await report(Array.from({ length: 61 }, (_, i) => "n" + i))).status, 400);
-  assert.equal((await report(["b1"], { Origin: "https://malo.example" })).status, 403);
-  assert.equal((await report(["b2"], { Origin: BASE })).status, 202, "el propio origen sí");
+  assert.equal((await report(["b1"], { Origin: "https://evil.example" })).status, 403);
+  assert.equal((await report(["b2"], { Origin: BASE })).status, 202, "the site's own origin is allowed");
 
   const off = await wp("/settings", { method: "POST", body: { estrategia_web_cookies_settings: { detector: false, ask: [] } } });
   assert.equal(off.status, 200, off.text);
   assert.equal((await report(["b3"])).status, 403);
-  assert.ok(!(await front()).includes('"detector":{'), "apagado, la página no lleva la configuración del detector");
+  assert.ok(!(await front()).includes('"detector":{'), "when off, the page does not carry the detector configuration");
 });
 
-test("detector: la página con aviso lleva la URL del detector, el periodo y el retraso", async () => {
+test("detector: the page with the notice carries the detector URL, the period and the delay", async () => {
   await setupConsent({ categories: ["maps"] });
   const config = (await front()).match(/"detector":\{"url":"([^"]+)","days":(\d+),"delay":(\d+)\}/);
-  assert.ok(config, "falta la configuración del detector en el estado del aviso");
+  assert.ok(config, "the detector configuration is missing from the notice state");
   assert.match(config[1].replace(/\\\//g, "/"), /\/wp-json\/estrategia-web\/v1\/cookies\/seen$/);
   assert.equal(config[2], "7");
 });
 
-test("administración: solo manage_options; crea, confirma y borra", async () => {
+test("admin: manage_options only; creates, confirms and deletes", async () => {
   assert.equal((await admin("GET", null, null)).status, 401);
   assert.equal((await admin("GET", null, "author")).status, 403);
-  const made = await admin("POST", { name: "NID", category: "maps", purpose: "Google Maps la pone al cargar el mapa." });
+  const made = await admin("POST", { name: "NID", category: "maps", purpose: "Google Maps sets it when the map loads." });
   assert.equal(made.status, 200, JSON.stringify(made.json));
-  assert.equal(made.json.entry.provider, "Google", "proveedor de la propuesta");
+  assert.equal(made.json.entry.provider, "Google", "provider from the suggestion");
   assert.equal(made.json.entry.source, "manual");
-  assert.equal((await admin("POST", { name: "mal nombre" })).status, 400);
+  assert.equal((await admin("POST", { name: "bad name" })).status, 400);
   const list = await admin("GET");
   assert.ok(list.json.cookies.NID);
   assert.equal(list.json.attribution.license, "Apache-2.0");
   assert.equal((await admin("DELETE", null, "administrator", "?name=NID")).json.deleted, true);
 });
 
-test("tabla de la política: solo lo CONFIRMADO, por categoría, en castellano; bloque y shortcode", async () => {
+// The purpose and the free duration below stay in Spanish on purpose: they
+// stand for what the client writes on a Spanish site, and they come out as is.
+test("policy table: only what is CONFIRMED, by category, in Spanish; block and shortcode", async () => {
   await admin("POST", { name: "estrategia_web_consent", status: "confirmed" });
   await admin("POST", { name: "_ga", status: "confirmed" });
   await admin("POST", { name: "_ga_*", status: "confirmed", purpose: "Distingue visitantes para las estadísticas." });
@@ -123,41 +125,41 @@ test("tabla de la política: solo lo CONFIRMADO, por categoría, en castellano; 
   await admin("POST", { name: "NID", category: "maps", duration: "Hasta cerrar el navegador", status: "confirmed" });
   const { url } = await seedPage(
     "<!-- wp:estrategia-web/cookie-table /-->" + '<!-- wp:shortcode -->[estrategia_web_cookie_table category="statistics" heading_level="4"]<!-- /wp:shortcode -->',
-    "prueba-tabla-cookies"
+    "test-cookie-table"
   );
   const page = await front(new URL(url).pathname);
   const block = page.match(/<div [^>]*wp-block-estrategia-web-cookie-table[\s\S]*?<\/figure><\/div>/)?.[0] || "";
-  assert.ok(block, "el bloque no pinta la tabla");
+  assert.ok(block, "the block does not print the table");
   const titles = [...block.matchAll(/<h3 class="estrategia-web-cookie-table__title">([^<]+)<\/h3>/g)].map((m) => m[1]);
-  assert.deepEqual(titles, ["Necesarias", "Analítica", "Mapas y contenido de terceros"], "categorías en orden y traducidas");
+  assert.deepEqual(titles, ["Necesarias", "Analítica", "Mapas y contenido de terceros"], "categories in order and translated");
   assert.match(block, /<code>_ga_\*<\/code><\/td><td>Google Analytics<\/td><td>Distingue visitantes para las estadísticas\.<\/td><td>2 años<\/td>/);
   assert.match(block, /<code>estrategia_web_consent<\/code><\/td><td>Este sitio web<\/td>/);
-  assert.match(block, /<td>Hasta cerrar el navegador<\/td>/, "duración libre tal cual");
-  assert.ok(!block.includes("_gcl_au"), "lo pendiente no sale en la política");
-  assert.match(page, /<h4 class="estrategia-web-cookie-table__title">Analítica<\/h4>/, "el shortcode con su categoría y su nivel");
+  assert.match(block, /<td>Hasta cerrar el navegador<\/td>/, "free duration as is");
+  assert.ok(!block.includes("_gcl_au"), "pending items do not show in the policy");
+  assert.match(page, /<h4 class="estrategia-web-cookie-table__title">Analítica<\/h4>/, "the shortcode with its category and its level");
 });
 
-test("tabla de la política: sin nada confirmado no pinta NADA en la web", async () => {
+test("policy table: with nothing confirmed it prints NOTHING on the site", async () => {
   await report(["_ga"]);
-  const { url } = await seedPage("<!-- wp:estrategia-web/cookie-table /-->", "prueba-tabla-vacia");
+  const { url } = await seedPage("<!-- wp:estrategia-web/cookie-table /-->", "test-empty-table");
   assert.ok(!(await front(new URL(url).pathname)).includes("estrategia-web-cookie-table"));
 });
 
-test("aviso 1.1.0: el administrador añade «Preferencias»; los alias valen al declarar; la revisión de siempre no cambia", async () => {
+test("notice 1.1.0: the administrator adds «Preferences»; aliases work when declaring; the usual revision does not change", async () => {
   const base = await setupConsent({ categories: ["maps"] });
   assert.deepEqual(offered(await front()), ["maps"]);
   const r = await wp("/settings", { method: "POST", body: { estrategia_web_cookies_settings: { detector: true, ask: ["preferences"] } } });
   assert.equal(r.status, 200, r.text);
   const page = await front();
-  assert.deepEqual(offered(page), ["preferences", "maps"], "preferencias primero al enseñar");
+  assert.deepEqual(offered(page), ["preferences", "maps"], "preferences first when displayed");
   assert.match(page, /Preferencias<\/strong>/);
   const after = await setupConsent({ categories: ["maps"] });
-  assert.notEqual(after.revision, base.revision, "preguntar algo nuevo cambia la revisión");
+  assert.notEqual(after.revision, base.revision, "asking about something new changes the revision");
 
   await wp("/settings", { method: "POST", body: { estrategia_web_cookies_settings: { detector: true, ask: [] } } });
   const aliased = await setupConsent({ categories: ["analytics", "advertising"] });
   assert.deepEqual(aliased.categories, ["statistics", "marketing"]);
   assert.deepEqual(offered(await front()), ["statistics", "marketing"]);
   assert.match(await front(), /Analítica<\/strong>[\s\S]*Publicidad<\/strong>/);
-  assert.equal((await setupConsent({ categories: ["maps"] })).revision, base.revision, "sin «ask», la revisión es la de antes de 1.1.0");
+  assert.equal((await setupConsent({ categories: ["maps"] })).revision, base.revision, "without «ask», the revision is the pre-1.1.0 one");
 });

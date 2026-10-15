@@ -1,15 +1,15 @@
 <?php
 /**
- * Al BORRAR el plugin desde Plugins (no al desactivarlo).
+ * When the plugin is DELETED from Plugins (not when it is deactivated).
  *
- * Por defecto NO se borra el registro de envíos: borrar un plugin para
- * reinstalarlo es habitual, y llevarse por delante los datos de los clientes
- * por eso no tiene vuelta atrás. Solo se borra todo si la web lo pide en
+ * By default the submissions log is NOT deleted: deleting a plugin to
+ * reinstall it is common, and wiping out the clients' data because of that
+ * cannot be undone. Everything is deleted only if the site asks for it in
  * wp-config.php:
  *
  *     define( 'ESTRATEGIA_WEB_FORMS_REMOVE_DATA', true );
  *
- * Las opciones de programación (cron) sí se quitan siempre.
+ * The scheduling (cron) options are always removed.
  */
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;

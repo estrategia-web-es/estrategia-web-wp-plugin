@@ -1,42 +1,44 @@
 <?php
 /**
- * SOLO PRUEBAS. Lo carga un mu-plugin que escribe tests/blueprint.json en el
- * WordPress de Playground; en una web real no lo carga nadie.
+ * TESTS ONLY. Loaded by a mu-plugin that tests/blueprint.json writes into the
+ * Playground WordPress; on a real site nobody loads it.
  *
- * Y aun así no hace nada si no está definida ESTRATEGIA_WEB_SITE_TESTING, que solo
- * define ese cargador. Doble llave a propósito: estas rutas REST abren la
- * base de datos a cualquiera (permission_callback __return_true) y crean
- * usuarios con contraseña de aplicación. Al desplegar en una web, la carpeta
- * tests/ NO se sube (README, «Instalar en una web»).
+ * And even then it does nothing unless ESTRATEGIA_WEB_SITE_TESTING is
+ * defined, which only that loader defines. Double lock on purpose: these REST
+ * routes open the database to anyone (permission_callback __return_true) and
+ * create users with application passwords. When deploying to a site, the
+ * tests/ folder is NOT uploaded (README, «Instalar en una web»).
  *
- * Qué da:
- * - El idioma del sitio en es_ES (filtro locale): los slugs públicos y las
- *   etiquetas se prueban en castellano, que es como salen en las webs.
- * - Contraseñas de aplicación sin HTTPS (Playground va por http): así las
- *   pruebas hablan con la API REST de verdad como admin y como autor.
- * - Rutas estrategia-web-site-test/v1/*: ping, reset, users, page, raw-post,
- *   consent-categories (0.3.0, solo lee un filtro), consent-setup (0.5.0),
- *   modules (1.1.0: GET qué módulos cargó la petición; POST guarda la lista
- *   como la pantalla, o la borra con «active»: null), legacy-types y
- *   prefix-migration (1.2.0: siembra por SQL una web con los tipos sin
- *   prefijo y pasa el migrador; modules/site/tests/prefix-migration.test.mjs).
- * - Desde la 1.1.0 es el mu-plugin de pruebas del NÚCLEO y de los módulos
- *   que vienen de Estrategia Web Site; forms trae el suyo
- *   (modules/forms/tests/wp/). Los dos los carga tests/blueprint.json.
- * - consent-setup (0.5.0) hace de TEMA para el aviso de cookies: guarda en la
- *   opción estrategia_web_site_test_consent qué categorías declara «la web», qué
- *   devuelve el filtro del «Powered by» y si hay un
- *   <script type="text/plain" data-estrategia-web-consent="statistics"> en el pie.
- *   Es lo que en una web pone el functions.php del tema; aquí no hay tema
- *   propio (Playground usa el de por defecto). reset la borra.
- * - WebP (0.5.1): webp-support, jpeg (un JPEG hecho con GD), webp-setup (hace
- *   de tema con el filtro estrategia_web_site_webp; reset lo borra) y regenerate,
- *   que imita `wp media regenerate` (WP-CLI no está en Playground).
- * - Enlaces externos (0.5.2): external-links-setup hace de tema con el filtro
- *   estrategia_web_site_external_links (reset lo borra).
+ * What it provides:
+ * - The site language set to es_ES (locale filter): public slugs and labels
+ *   are tested in Spanish, which is how they appear on the sites.
+ * - Application passwords without HTTPS (Playground runs over http): that
+ *   way the tests talk to the real REST API as admin and as author.
+ * - Routes estrategia-web-site-test/v1/*: ping, reset, users, page, raw-post,
+ *   consent-categories (0.3.0, only reads a filter), consent-setup (0.5.0),
+ *   modules (1.1.0: GET which modules the request loaded; POST saves the list
+ *   like the screen does, or deletes it with «active»: null), legacy-types
+ *   and prefix-migration (1.2.0: seeds via SQL a site with unprefixed post
+ *   types and runs the migrator; modules/site/tests/prefix-migration.test.mjs).
+ * - Since 1.1.0 it is the test mu-plugin of the CORE and of the modules
+ *   that come from Estrategia Web Site; forms brings its own
+ *   (modules/forms/tests/wp/). Both are loaded by tests/blueprint.json.
+ * - consent-setup (0.5.0) acts as the THEME for the cookie notice: it stores
+ *   in the estrategia_web_site_test_consent option which categories «the
+ *   site» declares, what the «Powered by» filter returns and whether there is
+ *   a <script type="text/plain" data-estrategia-web-consent="statistics"> in
+ *   the footer. On a site that is done by the theme's functions.php; here
+ *   there is no theme of our own (Playground uses the default one). reset
+ *   deletes it.
+ * - WebP (0.5.1): webp-support, jpeg (a JPEG made with GD), webp-setup (acts
+ *   as the theme with the estrategia_web_site_webp filter; reset deletes it)
+ *   and regenerate, which imitates `wp media regenerate` (WP-CLI is not
+ *   available in Playground).
+ * - External links (0.5.2): external-links-setup acts as the theme with the
+ *   estrategia_web_site_external_links filter (reset deletes it).
  *
- * Lo que NO hace: guardar ajustes ni crear contenido por la puerta de atrás.
- * Eso va por /wp/v2/* con usuario, que es lo que se prueba.
+ * What it does NOT do: save settings or create content through the back
+ * door. That goes through /wp/v2/* with a user, which is what is under test.
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -45,11 +47,11 @@ if ( ! defined( 'ESTRATEGIA_WEB_SITE_TESTING' ) || true !== ESTRATEGIA_WEB_SITE_
 	return;
 }
 
-// No vale WPLANG: sanitize_option() la rechaza si el idioma del núcleo no está descargado.
+// WPLANG does not work: sanitize_option() rejects it if the core language pack is not downloaded.
 add_filter( 'locale', static fn() => 'es_ES' );
 add_filter( 'wp_is_application_passwords_available', '__return_true' );
 
-// 0.5.0: lo que haría el tema con el aviso de cookies (ver la cabecera, consent-setup).
+// 0.5.0: what the theme would do with the cookie notice (see the header, consent-setup).
 add_filter(
 	'estrategia_web_consent_categories',
 	static function ( $categories ) {
@@ -67,9 +69,9 @@ add_filter(
 		return false === $setup['powered_by'] ? false : array_merge( (array) $powered, (array) $setup['powered_by'] );
 	}
 );
-// 0.5.1: CSS que pondría el tema (consent-setup «theme_css»). Para el hueco
-// del aviso: Lavandería emite desde su theme.json «:root :where(p) { margin: 0 }»,
-// que empata en especificidad con .estrategia-web-consent__text y, cargado después, gana.
+// 0.5.1: CSS the theme would add (consent-setup «theme_css»). For the notice's
+// spacing: Lavandería emits from its theme.json «:root :where(p) { margin: 0 }»,
+// which ties in specificity with .estrategia-web-consent__text and, loaded later, wins.
 add_action(
 	'wp_head',
 	static function () {
@@ -80,7 +82,7 @@ add_action(
 	},
 	100
 );
-// 0.5.1: lo que haría un tema que apaga el WebP (opción que pone /webp-setup).
+// 0.5.1: what a theme that turns WebP off would do (option set by /webp-setup).
 add_filter(
 	'estrategia_web_site_webp',
 	static function ( $enabled ) {
@@ -88,8 +90,8 @@ add_filter(
 		return null === $setup ? $enabled : (bool) $setup;
 	}
 );
-// 0.5.2: lo que haría un tema que apaga los enlaces externos en pestaña nueva
-// (opción que pone /external-links-setup; reset la borra).
+// 0.5.2: what a theme that turns off external links in a new tab would do
+// (option set by /external-links-setup; reset deletes it).
 add_filter(
 	'estrategia_web_site_external_links',
 	static function ( $enabled ) {
@@ -117,10 +119,10 @@ add_action(
 
 		$route( '/ping', 'GET', static fn() => array( 'ok' => true ) );
 
-		// 1.1.0, módulos: lo que se cargó en ESTA petición y lo guardado.
-		// POST guarda la lista con update_option (como la pantalla), así que
-		// pasa por el gancho que escribe _known; la siguiente petición ya
-		// carga lo nuevo. Con «null», borra las dos opciones (por defecto).
+		// 1.1.0, modules: what was loaded in THIS request and what is saved.
+		// POST saves the list with update_option (like the screen), so it goes
+		// through the hook that writes _known; the next request already loads
+		// the new ones. With «null», it deletes both options (defaults).
 		$route(
 			'/modules',
 			'GET',
@@ -129,7 +131,7 @@ add_action(
 				'blocked' => (object) \EstrategiaWeb\Modules::blocked(),
 				'saved'   => get_option( \EstrategiaWeb\Modules::OPTION, null ),
 				'known'   => get_option( \EstrategiaWeb\Modules::KNOWN_OPTION, null ),
-				// Los que hay en disco, encendidos o no (los Default: off no salen en «loaded»).
+				// The ones on disk, on or not (Default: off ones do not show up in «loaded»).
 				'available' => array_keys( \EstrategiaWeb\Modules::available() ),
 			)
 		);
@@ -148,9 +150,9 @@ add_action(
 			}
 		);
 
-		// 0.5.1. WebP: si el editor de imágenes de este PHP sabe escribir WebP
-		// (si no, la prueba no probaría nada), y un JPEG de verdad hecho con GD
-		// (sin ficheros binarios en el repo), en base64.
+		// 0.5.1. WebP: whether this PHP's image editor can write WebP (if not,
+		// the test would test nothing), and a real JPEG made with GD (no binary
+		// files in the repo), in base64.
 		$route( '/webp-support', 'GET', static fn() => array( 'webp' => (bool) wp_image_editor_supports( array( 'mime_type' => 'image/webp' ) ) ) );
 		$route(
 			'/jpeg',
@@ -167,7 +169,7 @@ add_action(
 				return array( 'base64' => base64_encode( (string) ob_get_clean() ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions
 			}
 		);
-		// 0.5.1. Hace de tema para el WebP: {"enabled": false} lo apaga con el filtro, null lo deja por defecto.
+		// 0.5.1. Acts as the theme for WebP: {"enabled": false} turns it off with the filter, null leaves the default.
 		$route(
 			'/webp-setup',
 			'POST',
@@ -177,7 +179,7 @@ add_action(
 				return array( 'ok' => true );
 			}
 		);
-		// 0.5.2. Hace de tema para los enlaces externos: {"enabled": false} los apaga, null deja el por defecto.
+		// 0.5.2. Acts as the theme for external links: {"enabled": false} turns them off, null leaves the default.
 		$route(
 			'/external-links-setup',
 			'POST',
@@ -187,11 +189,11 @@ add_action(
 				return array( 'ok' => true );
 			}
 		);
-		// 0.5.1. Lo que hace `wp media regenerate` (WP-CLI, Media_Command):
-		// borra los tamaños intermedios que dice el meta y vuelve a generar el
-		// meta desde el ORIGINAL. WP-CLI no está en Playground: esto lo imita
-		// para ver qué pasa con las URL que el contenido ya tiene guardadas.
-		// Con skip_delete: true, como --skip-delete (no borra los viejos).
+		// 0.5.1. What `wp media regenerate` does (WP-CLI, Media_Command):
+		// deletes the intermediate sizes listed in the meta and regenerates the
+		// meta from the ORIGINAL. WP-CLI is not available in Playground: this
+		// imitates it to see what happens to the URLs the content already has
+		// stored. With skip_delete: true, like --skip-delete (old ones are kept).
 		$route(
 			'/regenerate/(?P<id>\d+)',
 			'POST',
@@ -212,12 +214,12 @@ add_action(
 			}
 		);
 
-		// 0.3.0. Lo que vería el aviso del tema padre (que aquí no está): las
-		// categorías tras el filtro estrategia_web_consent_categories, partiendo de
-		// la de un hijo que declara solo «maps».
+		// 0.3.0. What the parent theme's notice would see (it is not here): the
+		// categories after the estrategia_web_consent_categories filter, starting
+		// from those of a child theme that only declares «maps».
 		$route( '/consent-categories', 'GET', static fn() => array_values( (array) apply_filters( 'estrategia_web_consent_categories', array( 'maps' ) ) ) );
 
-		// 0.5.0. Hace de tema para el aviso de cookies (ver la cabecera).
+		// 0.5.0. Acts as the theme for the cookie notice (see the header).
 		$route(
 			'/consent-setup',
 			'POST',
@@ -232,7 +234,7 @@ add_action(
 			}
 		);
 
-		// Deja la web como recién instalada para este plugin: sin datos, sin contenido de sus tipos.
+		// Leaves the site as freshly installed for this plugin: no data, no content of its post types.
 		$route(
 			'/reset',
 			'POST',
@@ -242,15 +244,15 @@ add_action(
 				delete_option( 'estrategia_web_site_test_consent' );
 				delete_option( 'estrategia_web_site_test_webp' );
 				delete_option( 'estrategia_web_site_test_external_links' );
-				delete_option( 'estrategia_web_test_suite' ); // La marca de las pruebas de forms (vuelve el es_ES).
-				delete_option( 'estrategia_web_social_links' ); // Sin lista: la migración de los campos fijos vuelve a correr.
-				delete_option( 'estrategia_web_modules' ); // 1.1.0: todos los módulos, como recién instalado.
+				delete_option( 'estrategia_web_test_suite' ); // The forms tests' marker (es_ES comes back).
+				delete_option( 'estrategia_web_social_links' ); // No list: the migration of the fixed fields runs again.
+				delete_option( 'estrategia_web_modules' ); // 1.1.0: all modules, as freshly installed.
 				delete_option( 'estrategia_web_modules_known' );
 				delete_option( 'rewrite_rules' );
-				delete_option( 'icl_sitepress_settings#custom_posts_sync_option' ); // Los de legacy-types (1.2.0).
+				delete_option( 'icl_sitepress_settings#custom_posts_sync_option' ); // Those from legacy-types (1.2.0).
 				delete_option( 'WPML(setup/translate-everything-taxonomies)' );
 				delete_option( 'rank_math_known_post_types' );
-				// Con y sin prefijo (1.2.0): la prueba del migrador siembra filas con los nombres viejos.
+				// With and without prefix (1.2.0): the migrator test seeds rows with the old names.
 				$renamed = \EstrategiaWeb\Site\Type_Names::renamed();
 				$names   = array_merge( array_keys( $renamed ), array_values( $renamed ) );
 				$types   = "'" . implode( "','", array_diff( $names, \EstrategiaWeb\Site\Type_Names::TAXONOMIES, array_map( array( \EstrategiaWeb\Site\Type_Names::class, 'name' ), \EstrategiaWeb\Site\Type_Names::TAXONOMIES ) ) ) . "'";
@@ -259,7 +261,7 @@ add_action(
 				foreach ( $ids as $id ) {
 					wp_delete_post( (int) $id, true );
 				}
-				// Las taxonomías pueden no estar registradas: se borra a mano.
+				// The taxonomies may not be registered: deleted by hand.
 				$tt = $wpdb->get_col( "SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE taxonomy IN ($taxes)" ); // phpcs:ignore
 				if ( $tt ) {
 					$in = implode( ',', array_map( 'intval', $tt ) );
@@ -271,7 +273,7 @@ add_action(
 			}
 		);
 
-		// Un administrador y un autor, cada uno con su contraseña de aplicación nueva.
+		// An administrator and an author, each with a new application password.
 		$route(
 			'/users',
 			'POST',
@@ -320,20 +322,20 @@ add_action(
 			}
 		);
 
-		// La fila tal cual está en la base de datos, esté o no registrado su tipo.
+		// The row exactly as it is in the database, whether its post type is registered or not.
 		$route(
 			'/raw-post/(?P<id>\d+)',
 			'GET',
 			static function ( WP_REST_Request $r ) {
 				global $wpdb;
 				$row = $wpdb->get_row( $wpdb->prepare( "SELECT ID, post_type, post_status, post_title FROM {$wpdb->posts} WHERE ID = %d", (int) $r['id'] ), ARRAY_A ); // phpcs:ignore
-				return $row ? $row : new WP_Error( 'not_found', 'no existe', array( 'status' => 404 ) );
+				return $row ? $row : new WP_Error( 'not_found', 'does not exist', array( 'status' => 404 ) );
 			}
 		);
 
-		// 1.2.0: una web de ANTES del prefijo, sembrada por SQL (con el plugin
-		// nuevo no se puede crear un «client» por REST): un cliente con su
-		// sector, una sede con teléfono, y una página con la Consulta vieja.
+		// 1.2.0: a site from BEFORE the prefix, seeded via SQL (with the new
+		// plugin a «client» cannot be created through REST): a client with its
+		// sector, a location with a phone number, and a page with the old Query.
 		$route(
 			'/legacy-types',
 			'POST',
@@ -354,7 +356,7 @@ add_action(
 				$query = '<!-- wp:query {"queryId":5,"query":{"perPage":10,"pages":0,"offset":0,"postType":"client","order":"asc","orderBy":"title","inherit":false,"taxQuery":{"client_sector":[' . $term . ']}}} -->'
 					. '<div class="wp-block-query"><!-- wp:post-template --><!-- wp:post-title /--><!-- wp:post-terms {"term":"client_sector"} /--><!-- /wp:post-template --></div><!-- /wp:query -->';
 				$page = $insert( 'page', 'Clientes de antes', 'clientes-de-antes', $query );
-				// Como los guardan WPML 5.1 y Rank Math en Lavandería (sin esos plugins aquí: solo las filas).
+				// The way WPML 5.1 and Rank Math store them on Lavandería (without those plugins here: just the rows).
 				update_option( 'icl_sitepress_settings#custom_posts_sync_option', array( 'v' => array( 'page' => 1, 'client' => 2, 'location' => 2 ) ) );
 				update_option( 'WPML(setup/translate-everything-taxonomies)', array( 'v' => array( 'client_sector' => array() ) ) );
 				update_option( 'rank_math_known_post_types', array( 'post' => 'post', 'client' => 'client' ) );
@@ -363,14 +365,14 @@ add_action(
 			}
 		);
 
-		// Unas opciones tal cual están (solo lee): lo que dejó el migrador.
+		// Some options exactly as they are (read only): what the migrator left.
 		$route(
 			'/options',
 			'POST',
 			static fn( WP_REST_Request $r ) => array_combine( (array) $r->get_param( 'names' ), array_map( static fn( $n ) => get_option( (string) $n, null ), (array) $r->get_param( 'names' ) ) )
 		);
 
-		// El migrador del prefijo (includes/class-prefix-migration.php), en seco o de verdad.
+		// The prefix migrator (includes/class-prefix-migration.php), dry or for real.
 		$route(
 			'/prefix-migration',
 			'POST',

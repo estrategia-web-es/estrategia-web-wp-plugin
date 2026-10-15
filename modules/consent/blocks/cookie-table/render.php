@@ -1,10 +1,10 @@
 <?php
 /**
- * estrategia-web/cookie-table — la tabla de cookies de la política.
+ * estrategia-web/cookie-table — the cookie table of the cookie policy.
  *
- * El HTML lo pinta Cookie_Table::render() (includes/class-cookie-table.php),
- * que comparte con el shortcode [estrategia_web_cookie_table]. Su cabecera es
- * la documentación.
+ * The HTML is printed by Cookie_Table::render() (includes/class-cookie-table.php),
+ * shared with the [estrategia_web_cookie_table] shortcode. Its header is the
+ * documentation.
  *
  * @var array $attributes Block attributes.
  */

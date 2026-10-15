@@ -1,44 +1,45 @@
 <?php
 /**
- * Los nombres de tipo y taxonomía SIN PREFIJO de antes de 1.2.0 («client»,
- * «client_sector»…), como ALIAS de los de ahora («eweb_client»; ver
- * Type_Names). Hasta la 2.0.0.
+ * The UNPREFIXED type and taxonomy names from before 1.2.0 («client»,
+ * «client_sector»…), as ALIASES of the current ones («eweb_client»; see
+ * Type_Names). Until 2.0.0.
  *
- * Qué cubre, y por qué cada cosa:
- * - CONSULTAS (core/query) guardadas con "postType":"client" o con
- *   "taxQuery":{"client_sector":[…]}: al pintar (render_block_data) se les
- *   cambia el nombre, y sale lo mismo que con el nuevo. Tiene que ser ahí y
- *   no en query_loop_block_query_vars: el núcleo DESCARTA antes una taxonomía
- *   que no existe (is_taxonomy_viewable), y el filtro ya no la ve.
- * - TÉRMINOS (core/post-terms) con "term":"client_sector": igual.
- * - RUTAS REST /wp/v2/client, /wp/v2/client/12, /wp/v2/client_sector…: se
- *   contestan como /wp/v2/eweb_client… (rest_pre_dispatch), SOLO si nadie
- *   más ha registrado esa ruta vieja (un plugin con su propio «client» manda).
- *   Para scripts de carga que no se hayan puesto al día; los nuestros
- *   (cargar.mjs, bajar-contenido) ya usan los nombres nuevos.
+ * What it covers, and why each thing:
+ * - QUERIES (core/query) saved with "postType":"client" or with
+ *   "taxQuery":{"client_sector":[…]}: at render time (render_block_data) the
+ *   name is swapped, and the output is the same as with the new one. It has
+ *   to be there and not in query_loop_block_query_vars: core DISCARDS a
+ *   taxonomy that does not exist earlier (is_taxonomy_viewable), and the
+ *   filter no longer sees it.
+ * - TERMS (core/post-terms) with "term":"client_sector": the same.
+ * - REST ROUTES /wp/v2/client, /wp/v2/client/12, /wp/v2/client_sector…: they
+ *   are answered as /wp/v2/eweb_client… (rest_pre_dispatch), ONLY if nobody
+ *   else has registered that old route (a plugin with its own «client» wins).
+ *   For load scripts that have not been brought up to date; ours (cargar.mjs,
+ *   bajar-contenido) already use the new names.
  *
- * Qué NO cubre, a propósito:
- * - El EDITOR. Una Consulta vieja abierta en el editor pide los registros de
- *   «client», que no existe, y sale vacía; al guardar se queda vieja. El
- *   migrador (includes/class-prefix-migration.php) reescribe el contenido,
- *   así que esto solo pasa con marcado que él no vio: una revisión
- *   restaurada, un patrón pegado de otra web.
- * - get_posts( array( 'post_type' => 'client' ) ) desde el código de un tema:
- *   devuelve vacío. Un tema que pida nuestros tipos usa
+ * What it does NOT cover, on purpose:
+ * - The EDITOR. An old Query opened in the editor asks for «client» records,
+ *   which does not exist, and comes out empty; on save it stays old. The
+ *   migrator (includes/class-prefix-migration.php) rewrites the content, so
+ *   this only happens with markup it did not see: a restored revision, a
+ *   pattern pasted from another site.
+ * - get_posts( array( 'post_type' => 'client' ) ) from a theme's code: returns
+ *   empty. A theme that asks for our types uses
  *   estrategia_web_type_name( 'client' ) (modules/site/includes/functions.php).
- * - ?post_type=client en una URL: no se usa en estas webs.
+ * - ?post_type=client in a URL: not used on these sites.
  *
- * Cómo se mantiene:
- * - Quién: quien toque el plugin. CUÁNDO SE QUITA: en la 2.0.0, con
- *   Legacy_Names, cuando todas las webs hayan pasado el migrador de la 1.2.0
- *   (15-10-2026: solo Lavandería Mallorca).
- * - Un tipo nuevo NO entra aquí: nace con prefijo (Type_Names).
- * - Caso frontera, con nombre: una Consulta con "postType":"post" o "page"
- *   no se toca (no es una clave nuestra); una con "eweb_client" tampoco (ya
- *   es nueva). Solo las ocho claves de Type_Names::KEYS.
- * - La trampa: el alias REST reenvía con rest_do_request(), que vuelve a
- *   pasar por rest_pre_dispatch; por eso solo actúa si la ruta es vieja, y la
- *   nueva no lo es: no hay bucle.
+ * How to maintain:
+ * - Who: whoever touches the plugin. WHEN IT GOES: in 2.0.0, together with
+ *   Legacy_Names, once every site has run the 1.2.0 migrator (15-10-2026: only
+ *   Lavandería Mallorca).
+ * - A new type does NOT go in here: it is born prefixed (Type_Names).
+ * - Edge case, by name: a Query with "postType":"post" or "page" is not
+ *   touched (not one of our keys); one with "eweb_client" neither (it is
+ *   already new). Only the eight keys of Type_Names::KEYS.
+ * - The trap: the REST alias forwards with rest_do_request(), which goes
+ *   through rest_pre_dispatch again; that is why it only acts if the route is
+ *   old, and the new one is not: there is no loop.
  */
 
 namespace EstrategiaWeb\Site;
@@ -53,9 +54,9 @@ final class Unprefixed_Names {
 	}
 
 	/**
-	 * Los atributos de una Consulta o de unos términos con los nombres nuevos.
+	 * The attributes of a Query or of a terms block with the new names.
 	 *
-	 * @param array $block Bloque analizado (blockName, attrs, innerBlocks…).
+	 * @param array $block Parsed block (blockName, attrs, innerBlocks…).
 	 */
 	public static function block_data( $block ): array {
 		$block = (array) $block;
@@ -68,7 +69,7 @@ final class Unprefixed_Names {
 		return $block;
 	}
 
-	/** El atributo «query» de una Consulta con los nombres nuevos (postType y las claves de taxQuery). */
+	/** A Query's «query» attribute with the new names (postType and the taxQuery keys). */
 	public static function query( array $query ): array {
 		if ( isset( $query['postType'] ) && is_string( $query['postType'] ) ) {
 			$query['postType'] = self::renamed( $query['postType'] );
@@ -79,7 +80,7 @@ final class Unprefixed_Names {
 		return $query;
 	}
 
-	/** taxQuery: {"client_sector":[3]} o, desde WordPress 6.8, {"include":{"client_sector":[3]}}. */
+	/** taxQuery: {"client_sector":[3]} or, since WordPress 6.8, {"include":{"client_sector":[3]}}. */
 	private static function tax_query( array $tax ): array {
 		$out = array();
 		foreach ( $tax as $key => $value ) {
@@ -92,17 +93,17 @@ final class Unprefixed_Names {
 		return $out;
 	}
 
-	/** Un nombre viejo («client») → el nuevo; cualquier otro, igual. */
+	/** An old name («client») → the new one; anything else, unchanged. */
 	public static function renamed( string $name ): string {
 		return Type_Names::renamed()[ $name ] ?? $name;
 	}
 
 	/**
-	 * /wp/v2/client… contestado como /wp/v2/eweb_client…
+	 * /wp/v2/client… answered as /wp/v2/eweb_client…
 	 *
-	 * @param mixed            $result  Null si nadie ha contestado aún.
-	 * @param \WP_REST_Server  $server  El servidor.
-	 * @param \WP_REST_Request $request La petición.
+	 * @param mixed            $result  Null if nobody has answered yet.
+	 * @param \WP_REST_Server  $server  The server.
+	 * @param \WP_REST_Request $request The request.
 	 * @return mixed
 	 */
 	public static function rest( $result, $server, $request ) {
@@ -115,7 +116,7 @@ final class Unprefixed_Names {
 		}
 		$routes = $server->get_routes();
 		if ( isset( $routes[ '/wp/v2/' . $m[1] ] ) ) {
-			return $result; // Alguien más tiene ese nombre registrado: es suyo.
+			return $result; // Someone else has that name registered: it is theirs.
 		}
 		$new = new \WP_REST_Request( $request->get_method(), '/wp/v2/' . Type_Names::renamed()[ $m[1] ] . ( $m[2] ?? '' ) );
 		$new->set_query_params( (array) $request->get_query_params() );

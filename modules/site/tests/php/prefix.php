@@ -1,11 +1,11 @@
 <?php
 /**
- * Lo llama tests/type-names.test.mjs con el PHP de la máquina (sin WordPress):
- * los nombres con prefijo (Type_Names), el renombrado del contenido del
- * migrador (Prefix_Migration::rename_markup) y el alias de las Consultas
- * viejas (Unprefixed_Names). Escribe JSON; las aserciones están en el .mjs.
+ * Called by tests/type-names.test.mjs with the machine's PHP (no WordPress):
+ * the prefixed names (Type_Names), the migrator's content renaming
+ * (Prefix_Migration::rename_markup) and the alias for old Queries
+ * (Unprefixed_Names). Writes JSON; the assertions live in the .mjs.
  *
- * Cómo se mantiene: un caso nuevo es una clave nueva en $out y su assert allí.
+ * How to maintain: a new case is a new key in $out and its assert there.
  */
 
 define( 'ABSPATH', __DIR__ . '/' );
@@ -23,11 +23,11 @@ use EstrategiaWeb\Site\Unprefixed_Names;
 $map = Type_Names::renamed();
 
 $query_old = '<!-- wp:query {"queryId":61,"query":{"perPage":50,"postType":"client","taxQuery":{"client_sector":[12]},"inherit":false}} -->'
-	. "\n<div class=\"wp-block-query\"><p>Nuestros clientes: client, location</p></div>\n<!-- /wp:query -->";
+	. "\n<div class=\"wp-block-query\"><p>Our clients: client, location</p></div>\n<!-- /wp:query -->";
 $query_include = '<!-- wp:query {"queryId":11,"query":{"postType":"client","taxQuery":{"include":{"client_sector":[3,4]}},"inherit":false}} --><!-- /wp:query -->';
 $others        = '<!-- wp:query {"queryId":1,"query":{"postType":"post"}} --><!-- /wp:query -->'
 	. '<!-- wp:post-terms {"term":"client_sector"} /-->'
-	. '<!-- wp:navigation-link {"label":"Sedes","type":"location","id":7,"kind":"post-type"} /-->'
+	. '<!-- wp:navigation-link {"label":"Locations","type":"location","id":7,"kind":"post-type"} /-->'
 	. '<!-- wp:paragraph --><p>"postType":"client"</p><!-- /wp:paragraph -->';
 
 $once  = Prefix_Migration::rename_markup( $query_old, $map, $n1 );

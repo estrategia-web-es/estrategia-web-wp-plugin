@@ -1,4 +1,4 @@
-// NIVEL: 3 — navegador. NECESITA NAVEGADOR PORQUE: lo que enseña el editor de bloques de un párrafo enlazado solo existe cuando el editor (JS) lo pinta, y la pantalla de ajustes es un formulario con sesión de administrador.
+// NIVEL: 3 — browser. NEEDS A BROWSER BECAUSE: what the block editor shows for a bound paragraph only exists once the editor (JS) renders it, and the settings screen is a form with an administrator session.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, playwright, reset, saveCompany, seedPage, wp, type } from "../../../tests/lib.mjs";
@@ -26,10 +26,10 @@ before(async () => {
 });
 after(() => browser?.close());
 
-test("editor: un párrafo enlazado a estrategia-web-site/company:phone ENSEÑA el teléfono, y la fuente ofrece la lista de datos", async () => {
+test("editor: a paragraph bound to estrategia-web-site/company:phone SHOWS the phone, and the source offers the list of fields", async () => {
   const page = await seedPage(
     `<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"estrategia-web-site/company","args":{"key":"phone"}}}}} -->
-<p>Texto de relleno</p>
+<p>Placeholder text</p>
 <!-- /wp:paragraph -->
 <!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"estrategia-web-site/company","args":{"key":"tax_id"}}}}} -->
 <p>x</p>
@@ -42,48 +42,48 @@ test("editor: un párrafo enlazado a estrategia-web-site/company:phone ENSEÑA e
   const canvas = p.frameLocator('iframe[name="editor-canvas"]');
   const first = canvas.locator("p.wp-block-paragraph").first();
   await first.waitFor();
-  // Espera al hecho: que el párrafo enseñe el valor (el editor lo pinta tras registrar la fuente).
+  // Wait for the fact: the paragraph shows the value (the editor renders it after registering the source).
   await canvas.locator("p.wp-block-paragraph", { hasText: "971 12 34 56" }).waitFor({ timeout: 15000 });
   assert.equal((await first.textContent()).trim(), "971 12 34 56");
-  assert.match(await canvas.locator("p.wp-block-paragraph").nth(1).textContent(), /\[(NIF\/CIF|Tax ID)\]/, "un dato vacío enseña su nombre entre corchetes");
+  assert.match(await canvas.locator("p.wp-block-paragraph").nth(1).textContent(), /\[(NIF\/CIF|Tax ID)\]/, "an empty field shows its name in brackets");
 
   const source = await p.evaluate(() => {
     const s = wp.blocks.getBlockBindingsSource("estrategia-web-site/company");
-    // Sin setValues el núcleo ni guarda canUserEditValue: ausente = no editable.
+    // Without setValues core does not even store canUserEditValue: absent = not editable.
     return s && { label: s.label, fields: s.getFieldsList?.({}).map((f) => f.args.key), editable: Boolean(s.setValues || s.canUserEditValue?.({})) };
   });
-  assert.ok(source, "la fuente está registrada en el editor");
+  assert.ok(source, "the source is registered in the editor");
   assert.equal(source.label, "Datos de la empresa");
   assert.ok(source.fields.includes("phone") && source.fields.includes("whatsapp_href") && source.fields.includes("social.instagram"));
-  assert.equal(source.editable, false, "el dato no se edita desde el párrafo");
-  assert.deepEqual(errors, [], "sin errores de JavaScript en el editor");
+  assert.equal(source.editable, false, "the field is not edited from the paragraph");
+  assert.deepEqual(errors, [], "no JavaScript errors in the editor");
 });
 
-test("pantalla «Datos de la empresa»: guarda, avisa del correo mal escrito y desmarcar el último tipo lo desactiva", async () => {
+test("«Datos de la empresa» screen: saves, warns about the mistyped email, and unticking the last type disables it", async () => {
   await p.goto(`${BASE}/wp-admin/admin.php?page=estrategia-web-site`);
   assert.equal(await p.locator("h1").first().textContent(), "Datos de la empresa");
-  await p.fill("#estrategia-web-site-company_name", "Empresa desde la pantalla");
-  await p.fill("#estrategia-web-site-email", "esto-no-es-correo");
-  // type=email: el navegador frenaría el envío; se quita para probar el servidor.
+  await p.fill("#estrategia-web-site-company_name", "Company from the screen");
+  await p.fill("#estrategia-web-site-email", "this-is-not-an-email");
+  // type=email: the browser would block the submit; it is removed to test the server.
   await p.evaluate(() => (document.getElementById("estrategia-web-site-email").type = "text"));
   await p.uncheck('input[name="estrategia_web_site[enabled_types][]"][value="client"]');
   await Promise.all([p.waitForURL(/settings-updated/), p.click("#submit")]);
 
   assert.match(await p.locator(".notice, .error, .updated").allTextContents().then((t) => t.join(" ")), /correo electrónico no es válido/);
   const saved = (await wp("/settings")).json.estrategia_web_site;
-  assert.equal(saved.company_name, "Empresa desde la pantalla");
-  assert.equal(saved.email, "hola@ejemplo.test", "se quedó el correo bueno");
-  assert.deepEqual(saved.enabled_types, [], "el oculto hace que «ninguno» llegue");
-  assert.equal(saved.phone, "971 12 34 56", "lo que no se tocó sigue igual");
+  assert.equal(saved.company_name, "Company from the screen");
+  assert.equal(saved.email, "hola@ejemplo.test", "the good email was kept");
+  assert.deepEqual(saved.enabled_types, [], "the hidden input makes «none» arrive");
+  assert.equal(saved.phone, "971 12 34 56", "what was not touched stays the same");
 });
 
-test("editor (0.2.0): un párrafo enlazado a estrategia-web-site/location con slug ENSEÑA el dato de esa sede, y la fuente lista sus claves", async () => {
+test("editor (0.2.0): a paragraph bound to estrategia-web-site/location with slug SHOWS that location's field, and the source lists its keys", async () => {
   await saveCompany({ enabled_types: ["location"] });
-  const sede = await wp(`/${type("location")}`, { method: "POST", body: { title: "Maioris", slug: "maioris", status: "publish", meta: { estrategia_web_location_phone: "971 11 22 33" } } });
-  assert.equal(sede.status, 201, sede.text);
+  const loc = await wp(`/${type("location")}`, { method: "POST", body: { title: "Maioris", slug: "maioris", status: "publish", meta: { estrategia_web_location_phone: "971 11 22 33" } } });
+  assert.equal(loc.status, 201, loc.text);
   const page = await seedPage(
     `<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"estrategia-web-site/location","args":{"slug":"maioris","key":"estrategia_web_location_phone"}}}}} -->
-<p>Texto de relleno</p>
+<p>Placeholder text</p>
 <!-- /wp:paragraph -->
 <!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"estrategia-web-site/location","args":{"slug":"maioris","key":"estrategia_web_location_email"}}}}} -->
 <p>x</p>
@@ -94,15 +94,15 @@ test("editor (0.2.0): un párrafo enlazado a estrategia-web-site/location con sl
   await p.waitForFunction(() => window.wp?.data?.select("core/block-editor")?.getBlocks().length === 2, null, { timeout: 60000 });
   const canvas = p.frameLocator('iframe[name="editor-canvas"]');
   await canvas.locator("p.wp-block-paragraph", { hasText: "971 11 22 33" }).waitFor({ timeout: 15000 });
-  assert.match(await canvas.locator("p.wp-block-paragraph").nth(1).textContent(), /\[(Correo electrónico|Email)\]/, "un dato vacío enseña su nombre");
+  assert.match(await canvas.locator("p.wp-block-paragraph").nth(1).textContent(), /\[(Correo electrónico|Email)\]/, "an empty field shows its name");
 
   const source = await p.evaluate(() => {
     const s = wp.blocks.getBlockBindingsSource("estrategia-web-site/location");
     return s && { label: s.label, fields: s.getFieldsList?.({}).map((f) => f.args.key), context: s.usesContext };
   });
-  assert.ok(source, "la fuente de sedes está registrada en el editor");
+  assert.ok(source, "the locations source is registered in the editor");
   assert.equal(source.label, "Datos de la sede");
   assert.ok(source.fields.includes("title") && source.fields.includes("estrategia_web_location_address") && source.fields.includes("estrategia_web_location_phone_href"));
-  assert.ok(source.context.includes("postId"), "usa el contexto de la Consulta");
-  assert.deepEqual(errors, [], "sin errores de JavaScript en el editor");
+  assert.ok(source.context.includes("postId"), "uses the Query context");
+  assert.deepEqual(errors, [], "no JavaScript errors in the editor");
 });

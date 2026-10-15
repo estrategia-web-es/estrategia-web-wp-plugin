@@ -1,6 +1,6 @@
 /*
- * Solo para el editor: la rejilla del formulario (los bloques del editor van
- * envueltos de otra manera que en la web) y la tarjeta de los avisos.
+ * Editor only: the form grid (editor blocks are wrapped differently than
+ * on the site) and the notifications card.
  */
 
 .estrategia-web-forms--editor {

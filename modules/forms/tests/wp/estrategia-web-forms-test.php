@@ -1,20 +1,20 @@
 <?php
 /**
- * SOLO PRUEBAS. Lo carga un mu-plugin que escribe tests/blueprint.json en el
- * WordPress de Playground; en una web real no lo carga nadie.
+ * TESTS ONLY. Loaded by a mu-plugin that tests/blueprint.json writes into the
+ * Playground WordPress; on a real site nobody loads it.
  *
- * Y aun así no hace nada si no está definida ESTRATEGIA_WEB_FORMS_TESTING, que solo
- * define ese cargador. Es la doble llave a propósito: estas rutas REST abren
- * la base de datos a cualquiera (permission_callback __return_true), y este
- * fichero viaja dentro de la carpeta del plugin. Al desplegar en una web, la
- * carpeta tests/ NO se sube (README, «Instalar en una web»).
+ * And even then it does nothing unless ESTRATEGIA_WEB_FORMS_TESTING is defined, which only
+ * that loader defines. The double lock is deliberate: these REST routes open
+ * the database to anyone (permission_callback __return_true), and this
+ * file travels inside the plugin folder. When deploying to a site, the
+ * tests/ folder is NOT uploaded (README, «Instalar en una web»).
  *
- * Qué da:
- * - Intercepta wp_mail (filtro pre_wp_mail): no sale ningún correo y cada uno
- *   queda guardado en la opción estrategia_web_forms_test_mails para que la prueba
- *   lo lea. Un destinatario que contenga «fail@» simula un fallo de envío.
- * - Rutas estrategia-web-forms-test/v1/*: reset, settings, page (también un bloque
- *   sincronizado con type=wp_block), post/<id> (el post_content guardado),
+ * What it provides:
+ * - Intercepts wp_mail (pre_wp_mail filter): no email goes out and each one
+ *   is stored in the estrategia_web_forms_test_mails option for the test to
+ *   read. A recipient containing «fail@» simulates a sending failure.
+ * - Routes estrategia-web-forms-test/v1/*: reset, settings, page (also a synced
+ *   block with type=wp_block), post/<id> (the saved post_content),
  *   mails, submissions, locale, backdate, purge.
  */
 
@@ -26,14 +26,14 @@ if ( ! defined( 'ESTRATEGIA_WEB_FORMS_TESTING' ) || true !== ESTRATEGIA_WEB_FORM
 
 const ESTRATEGIA_WEB_FORMS_TEST_MAILS = 'estrategia_web_forms_test_mails';
 
-// El idioma del sitio para las pruebas. No vale WPLANG: sanitize_option() la
-// rechaza si el idioma del núcleo no está descargado, y Playground no lo tiene.
+// The site language for the tests. WPLANG does not work: sanitize_option()
+// rejects it if the core language pack is not downloaded, and Playground does not have it.
 //
-// Desde la 1.1.0 comparte WordPress con las pruebas del resto de módulos, y
-// el mu-plugin de pruebas del núcleo (tests/wp/) pone es_ES para TODO. Estas
-// pruebas esperan inglés salvo que pidan otro idioma por /locale, así que su
-// reset() marca «estrategia_web_test_suite = forms» y aquí, con prioridad 20
-// (después del es_ES), se vuelve a en_US. El reset del núcleo quita la marca.
+// Since 1.1.0 it shares WordPress with the other modules' tests, and
+// the core test mu-plugin (tests/wp/) sets es_ES for EVERYTHING. These
+// tests expect English unless they ask for another language via /locale, so their
+// reset() sets «estrategia_web_test_suite = forms» and here, with priority 20
+// (after the es_ES), it goes back to en_US. The core reset removes the mark.
 add_filter(
 	'locale',
 	static function ( $locale ) {
@@ -46,7 +46,7 @@ add_filter(
 	20
 );
 
-// El texto plano de cada aviso no llega a pre_wp_mail (va como AltBody): se recoge aquí.
+// Each notification's plain text does not reach pre_wp_mail (it goes as AltBody): it is collected here.
 $GLOBALS['estrategia_web_forms_test_text'] = '';
 add_filter(
 	'estrategia_web_forms_email',
@@ -97,7 +97,7 @@ add_action(
 				delete_option( ESTRATEGIA_WEB_FORMS_TEST_MAILS );
 				update_option( 'estrategia_web_forms_settings', array_merge( \EstrategiaWeb\Forms\Settings::DEFAULTS, array( 'min_seconds' => 1, 'rate_limit' => 0 ) ) );
 				delete_option( 'estrategia_web_forms_test_locale' );
-				update_option( 'estrategia_web_test_suite', 'forms' ); // Ver el filtro «locale» de arriba.
+				update_option( 'estrategia_web_test_suite', 'forms' ); // See the «locale» filter above.
 				return array( 'ok' => true );
 			}
 		);
@@ -119,7 +119,7 @@ add_action(
 				kses_remove_filters();
 				$p    = $r->get_json_params();
 				$type = 'wp_block' === ( $p['type'] ?? '' ) ? 'wp_block' : 'page';
-				$slug = sanitize_title( $p['slug'] ?? 'formulario' );
+				$slug = sanitize_title( $p['slug'] ?? 'form' );
 				$old  = get_page_by_path( $slug, OBJECT, $type );
 				$id   = wp_insert_post(
 					wp_slash(
@@ -127,7 +127,7 @@ add_action(
 							'ID'           => $old ? $old->ID : 0,
 							'post_type'    => $type,
 							'post_status'  => 'publish',
-							'post_title'   => $p['title'] ?? 'Formulario',
+							'post_title'   => $p['title'] ?? 'Form',
 							'post_name'    => $slug,
 							'post_content' => (string) $p['content'],
 						)

@@ -1,35 +1,36 @@
 <?php
 /**
- * Fuente de Block Bindings `estrategia-web-site/company`: un párrafo, un encabezado,
- * un botón o una imagen enlazados a un dato de la empresa.
+ * Block Bindings source `estrategia-web-site/company`: a paragraph, a heading,
+ * a button or an image bound to a company detail.
  *
  *   <!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"estrategia-web-site/company","args":{"key":"phone"}}}}} -->
  *   <p></p>
  *   <!-- /wp:paragraph -->
  *
- * Dos mitades, y hacen falta las dos:
- * - AQUÍ (PHP) se pinta en la web: get_value() devuelve el valor para el
- *   atributo enlazado.
- * - assets/editor.js (JS, sin compilar) hace que el EDITOR enseñe el valor y
- *   que la fuente salga en el panel «Atributos» de los bloques. Sin ella, el
- *   editor enseña el texto de relleno del bloque y no deja elegir la fuente.
- *   Los valores le llegan por wp_add_inline_script (enqueue_editor), no por
- *   REST: /wp/v2/settings solo lo puede leer un administrador, y un editor
- *   también tiene que ver el teléfono que está enlazando.
+ * Two halves, and both are needed:
+ * - HERE (PHP) it is rendered on the site: get_value() returns the value for
+ *   the bound attribute.
+ * - assets/editor.js (JS, uncompiled) makes the EDITOR show the value and the
+ *   source appear in the blocks' «Attributes» panel. Without it, the editor
+ *   shows the block's placeholder text and does not let you pick the source.
+ *   The values reach it through wp_add_inline_script (enqueue_editor), not
+ *   through REST: /wp/v2/settings can only be read by an administrator, and an
+ *   editor also has to see the phone number they are binding.
  *
- * Cómo se mantiene:
- * - Una clave nueva se añade en Company (no aquí): esta clase no tiene lista.
- * - Desde 0.2.0 hay una segunda fuente, `estrategia-web-site/location` (los datos de
- *   UNA sede), en includes/class-location.php. Comparte format() con esta y
- *   el mismo script de editor; sus datos le llegan en window.estrategiaWebSiteLocation.
- *   Si cambias cómo se pinta un texto o una URL, cambia en las dos: es lo que
- *   se quiere.
- * - Caso frontera: dirección y horario tienen varias líneas. En atributos de
- *   TEXTO (content, text, alt…) los saltos salen como <br>; en atributos de
- *   URL (url, href) el valor va tal cual. Por eso se mira $attribute_name.
- * - La trampa: el núcleo escapa por su cuenta lo que se pone en un atributo
- *   HTML (url), pero en el contenido enriquecido solo pasa wp_kses_post. Si
- *   aquí no se escapara, un «<» en el nombre de la empresa sería HTML.
+ * How to maintain:
+ * - A new key is added in Company (not here): this class has no list.
+ * - Since 0.2.0 there is a second source, `estrategia-web-site/location` (the data of
+ *   ONE location), in includes/class-location.php. It shares format() with this one
+ *   and the same editor script; its data reaches it in window.estrategiaWebSiteLocation.
+ *   If you change how a text or a URL is rendered, it changes in both: that is
+ *   what we want.
+ * - Edge case: address and opening hours have several lines. In TEXT
+ *   attributes (content, text, alt…) line breaks come out as <br>; in URL
+ *   attributes (url, href) the value goes as is. That is why $attribute_name
+ *   is checked.
+ * - The trap: core escapes on its own whatever goes into an HTML attribute
+ *   (url), but rich content only goes through wp_kses_post. If it were not
+ *   escaped here, a «<» in the company name would be HTML.
  */
 
 namespace EstrategiaWeb\Site;
@@ -40,7 +41,7 @@ final class Bindings {
 
 	public const SOURCE = 'estrategia-web-site/company';
 
-	/** Atributos de bloque que llevan una URL (el resto se trata como texto). */
+	/** Block attributes that carry a URL (the rest are treated as text). */
 	private const URL_ATTRIBUTES = array( 'url', 'href' );
 
 	public static function register(): void {
@@ -54,9 +55,9 @@ final class Bindings {
 	}
 
 	/**
-	 * @param array     $args           args del enlace: {"key": "phone"}.
-	 * @param \WP_Block $block_instance El bloque que se pinta.
-	 * @param string    $attribute_name El atributo enlazado (content, url…).
+	 * @param array     $args           Binding args: {"key": "phone"}.
+	 * @param \WP_Block $block_instance The block being rendered.
+	 * @param string    $attribute_name The bound attribute (content, url…).
 	 */
 	public static function get_value( array $args, $block_instance, string $attribute_name ): ?string {
 		$key = isset( $args['key'] ) ? (string) $args['key'] : '';
@@ -67,9 +68,9 @@ final class Bindings {
 	}
 
 	/**
-	 * Un valor en texto plano, listo para el atributo enlazado. Lo comparten
-	 * esta fuente y `estrategia-web-site/location` (Location): el mismo tratamiento
-	 * en las dos, a propósito.
+	 * A plain-text value, ready for the bound attribute. Shared by this source
+	 * and `estrategia-web-site/location` (Location): the same treatment in both,
+	 * on purpose.
 	 */
 	public static function format( string $value, string $attribute_name ): string {
 		if ( in_array( $attribute_name, self::URL_ATTRIBUTES, true ) ) {
@@ -78,7 +79,7 @@ final class Bindings {
 		return nl2br( esc_html( $value ), false );
 	}
 
-	/** Valores y nombres para el editor (assets/editor.js). */
+	/** Values and names for the editor (assets/editor.js). */
 	public static function enqueue_editor(): void {
 		wp_enqueue_script(
 			'estrategia-web-site-editor',

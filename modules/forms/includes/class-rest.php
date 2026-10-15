@@ -1,30 +1,30 @@
 <?php
 /**
- * El endpoint de envío: POST /wp-json/estrategia-web-forms/v1/submit
+ * The submission endpoint: POST /wp-json/estrategia-web-forms/v1/submit
  *
- * Es el MISMO destino con JavaScript y sin él:
- * - Con JS (view.js), la petición lleva _af_js=1 y la respuesta es JSON.
- * - Sin JS, el navegador manda el formulario tal cual (action del <form>) y
- *   la respuesta es una redirección 303 a la página, con ?af_result=<clave>.
- *   La clave apunta a un transitorio de 10 minutos con el mensaje, los
- *   errores y lo escrito, y el formulario se vuelve a pintar con eso.
+ * It is the SAME target with JavaScript and without it:
+ * - With JS (view.js), the request carries _af_js=1 and the response is JSON.
+ * - Without JS, the browser posts the form as is (the <form> action) and the
+ *   response is a 303 redirect to the page, with ?af_result=<key>. The key
+ *   points to a 10-minute transient with the message, the errors and what
+ *   was typed, and the form is rendered again with that.
  *
- * El orden de las comprobaciones importa y es este, de lo más barato a lo
- * más caro: definición → honeypot → token (nonce + tiempo mínimo) → límite
- * por IP → validación → registro → avisos.
+ * The order of the checks matters and is this one, from cheapest to most
+ * expensive: definition → honeypot → token (nonce + minimum time) → per-IP
+ * limit → validation → log → notifications.
  *
- * permission_callback es __return_true A PROPÓSITO y se declara (fila 17):
- * un formulario de contacto es público por definición. Lo que protege no es
- * quién llama sino qué puede hacer: solo enviar a una definición que el
- * servidor pintó, con su token, dentro del límite.
+ * permission_callback is __return_true ON PURPOSE and is declared (row 17):
+ * a contact form is public by definition. What protects it is not who calls
+ * but what they can do: only submit to a definition the server rendered,
+ * with its token, within the limit.
  *
- * Cómo se mantiene:
- * - Caso frontera: el honeypot relleno CONTESTA ÉXITO y no guarda nada. Es a
- *   propósito: decirle al robot que ha fallado le enseña a no rellenarlo.
- * - La trampa: con un formulario en una página cacheada, el token es el de
- *   la caché. Por eso caduca a los 7 días (Settings::TOKEN_MAX_AGE) y por
- *   eso view.js pide uno nuevo al primer foco. Sin JS y con una caché de más
- *   de 7 días, el envío falla con «el formulario ha caducado».
+ * How to maintain:
+ * - Edge case: a filled-in honeypot ANSWERS SUCCESS and stores nothing. This
+ *   is on purpose: telling the bot it failed teaches it not to fill it in.
+ * - The trap: with a form on a cached page, the token is the cached one.
+ *   That is why it expires after 7 days (Settings::TOKEN_MAX_AGE) and why
+ *   view.js asks for a new one on first focus. Without JS and with a cache
+ *   older than 7 days, the submission fails with «the form has expired».
  */
 
 namespace EstrategiaWeb\Forms;
@@ -97,13 +97,13 @@ final class Rest {
 		$success = '' !== $definition['success_message'] ? $definition['success_message'] : Settings::text( 'success_message', $lang );
 		$failure = '' !== $definition['error_message'] ? $definition['error_message'] : Settings::text( 'error_message', $lang );
 
-		// 1. Honeypot: éxito falso, nada guardado.
+		// 1. Honeypot: fake success, nothing stored.
 		if ( '' !== trim( (string) ( $params['af_website'] ?? '' ) ) ) {
 			do_action( 'estrategia_web_forms_rejected', 'honeypot', $definition );
 			return self::respond( $is_js, $page_url, $form_id, 200, 'ok', $success );
 		}
 
-		// 2. Token: firmado por este servidor, para esta definición, ni muy pronto ni caducado.
+		// 2. Token: signed by this server, for this definition, neither too early nor expired.
 		$check = Token::verify(
 			(string) ( $params['_af_token'] ?? '' ),
 			Definitions::hash( $definition ),
@@ -120,21 +120,21 @@ final class Rest {
 			return self::respond( $is_js, $page_url, $form_id, 403, 'token_' . $check, $message );
 		}
 
-		// 3. Límite de envíos por IP en una ventana fija.
+		// 3. Per-IP submission limit in a fixed window.
 		$ip = self::client_ip();
 		if ( ! self::within_rate_limit( $ip ) ) {
 			do_action( 'estrategia_web_forms_rejected', 'rate_limit', $definition );
 			return self::respond( $is_js, $page_url, $form_id, 429, 'rate_limit', __( 'Too many messages from your connection. Please try again later.', 'estrategia-web' ) );
 		}
 
-		// 4. Validación en servidor, campo a campo, según la definición.
+		// 4. Server-side validation, field by field, according to the definition.
 		$input  = isset( $params['fields'] ) && is_array( $params['fields'] ) ? $params['fields'] : array();
 		$result = Validator::validate( $definition, $input );
 		if ( $result['errors'] ) {
 			return self::respond( $is_js, $page_url, $form_id, 422, 'invalid', $failure, $result['errors'], $result['values'] );
 		}
 
-		// 5. Registro primero: si los avisos fallan, el envío no se pierde.
+		// 5. Log first: if the notifications fail, the submission is not lost.
 		$data = array();
 		foreach ( (array) $definition['fields'] as $field ) {
 			$data[] = array(
@@ -160,7 +160,7 @@ final class Rest {
 			)
 		);
 
-		// 6. Avisos.
+		// 6. Notifications.
 		$notifications = Notifier::send_all( $definition, $result['values'], array( 'page_url' => $page_url, 'lang' => $lang ) );
 		$failed        = count( array_filter( $notifications, static fn( $n ) => 'sent' !== $n['status'] ) );
 		$status        = 0 === $failed ? 'sent' : ( $failed === count( $notifications ) ? 'failed' : 'partial' );
@@ -174,8 +174,8 @@ final class Rest {
 	private static function client_ip(): string {
 		$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
 		/**
-		 * La IP del visitante. Solo una web detrás de un proxy DE CONFIANZA la
-		 * cambia (p. ej. leyendo X-Forwarded-For de su CDN).
+		 * The visitor's IP. Only a site behind a TRUSTED proxy changes it
+		 * (e.g. by reading X-Forwarded-For from its CDN).
 		 */
 		return (string) apply_filters( 'estrategia_web_forms_client_ip', $ip );
 	}

@@ -1,27 +1,28 @@
 /**
- * El editor de los bloques: edit() de cada uno y su panel lateral.
+ * The block editor side: each block's edit() and its sidebar panel.
  *
- * SIN PASO DE COMPILACIÓN, a propósito (ver README, «Por qué el editor no se
- * compila»): ni JSX, ni @wordpress/scripts, ni node_modules. Se escribe con
- * h() = wp.element.createElement y se lee de los globales wp.* que el editor
- * ya carga; las dependencias van declaradas en Blocks::register().
+ * NO BUILD STEP, on purpose (see README, «Por qué el editor no se
+ * compila»): no JSX, no @wordpress/scripts, no node_modules. It is written
+ * with h() = wp.element.createElement and reads from the wp.* globals the
+ * editor already loads; the dependencies are declared in Blocks::register().
  *
- * No es un módulo ES (import/export) sino un script clásico: el editor de
- * bloques registra sus bloques con scripts clásicos que corren ANTES de que
- * arranque, y un módulo es diferido. El lado público sí es módulo
- * (blocks/form/view.js), porque la Interactivity API se sirve así.
+ * It is not an ES module (import/export) but a classic script: the block
+ * editor registers its blocks with classic scripts that run BEFORE it
+ * starts, and a module is deferred. The public side is a module
+ * (blocks/form/view.js), because the Interactivity API is served that way.
  *
- * Los metadatos (atributos, icono, título) vienen de block.json vía PHP;
- * aquí solo se añaden edit y save.
+ * The metadata (attributes, icon, title) comes from block.json via PHP;
+ * only edit and save are added here.
  *
- * Cómo se mantiene:
- * - Un atributo nuevo: block.json + su control aquí + Definitions (si afecta
- *   al envío) + wpml-config.xml (si es un texto que lee alguien).
- * - Un marcador nuevo en los correos: Notifier::marker_values() y la lista
- *   FIXED_MARKERS de aquí, para que la ayuda del editor no mienta.
- * - La trampa: los textos van con __( '…', 'estrategia-web' ) y se traducen con
- *   el JSON de languages/ (tools/i18n.mjs). Si cambias este fichero, ese JSON
- *   sigue valiendo: su nombre lleva el md5 de la RUTA, no del contenido.
+ * How to maintain:
+ * - A new attribute: block.json + its control here + Definitions (if it
+ *   affects the submission) + wpml-config.xml (if it is a text someone reads).
+ * - A new marker in the emails: Notifier::marker_values() and the
+ *   FIXED_MARKERS list here, so that the editor help does not lie.
+ * - The trap: texts go with __( '…', 'estrategia-web' ) and are translated
+ *   with the JSON in languages/ (tools/i18n.mjs). If you change this file,
+ *   that JSON still applies: its name carries the md5 of the PATH, not of
+ *   the content.
  */
 ( function ( wp ) {
 	const { registerBlockType } = wp.blocks;
@@ -45,7 +46,7 @@
 			.slice( 0, 40 );
 
 	/* ------------------------------------------------------------------ */
-	/* Formulario                                                          */
+	/* Form                                                                */
 	/* ------------------------------------------------------------------ */
 
 	const TEMPLATE = [
@@ -59,9 +60,9 @@
 			{
 				label: __( 'Notice to the site', 'estrategia-web' ),
 				replyTo: '{{email}}',
-				/* translators: {{name}} es un marcador: no se traduce. */
+				/* translators: {{name}} is a marker: do not translate it. */
 				subject: __( 'New message from {{name}}', 'estrategia-web' ),
-				/* translators: lo que va entre {{ }} son marcadores: no se traducen. */
+				/* translators: what goes between {{ }} are markers: do not translate them. */
 				body: __( 'New message sent from {{url_pagina}} on {{fecha}}:\n\n{{todos_los_campos}}', 'estrategia-web' ),
 			},
 		],
@@ -71,7 +72,7 @@
 				label: __( 'Acknowledgement to the sender', 'estrategia-web' ),
 				to: '{{email}}',
 				subject: __( 'We have received your message', 'estrategia-web' ),
-				/* translators: lo que va entre {{ }} son marcadores: no se traducen. */
+				/* translators: what goes between {{ }} are markers: do not translate them. */
 				body: __( 'Hello {{name}},\n\nThank you for writing to us. We have received your message and will reply soon.\n\n{{todos_los_campos}}\n\n{{nombre_sitio}}', 'estrategia-web' ),
 			},
 		],
@@ -136,7 +137,7 @@
 	} );
 
 	/* ------------------------------------------------------------------ */
-	/* Campos                                                              */
+	/* Fields                                                              */
 	/* ------------------------------------------------------------------ */
 
 	function fieldInspector( type, attributes, setAttributes ) {
@@ -181,7 +182,7 @@
 					onChange: ( placeholder ) => setAttributes( { placeholder } ),
 					__nextHasNoMarginBottom: true,
 				} ),
-				// 0.2.2: el autocomplete (WCAG 1.3.5). Reglas en Blocks::autocomplete().
+				// 0.2.2: autocomplete (WCAG 1.3.5). Rules in Blocks::autocomplete().
 				h( TextControl, {
 					key: 'autocomplete',
 					label: __( 'Autocomplete', 'estrategia-web' ),
@@ -255,17 +256,17 @@
 		return h( InspectorControls, { key: 'inspector' }, h( PanelBody, { title: __( 'Field', 'estrategia-web' ) }, controls ) );
 	}
 
-	/** Las opciones como las ve PHP (Blocks::options): sin vacías ni repetidas. */
+	/** The options as PHP sees them (Blocks::options): no empty or repeated ones. */
 	function optionList( raw ) {
 		return [ ...new Set( String( raw || '' ).split( '\n' ).map( ( o ) => o.trim() ).filter( Boolean ) ) ];
 	}
 
 	/**
-	 * La preselección se guarda como POSICIÓN (por WPML, ver
-	 * includes/class-preselect.php), así que al editar las opciones se
-	 * recoloca por su TEXTO: si «Restaurantes» pasa de la 2.ª a la 3.ª, la
-	 * preselección va con ella; si desaparece, queda en «ninguna» en vez de
-	 * caer en la opción que ocupe su sitio.
+	 * The preselection is stored as a POSITION (because of WPML, see
+	 * includes/class-preselect.php), so when the options are edited it is
+	 * relocated by its TEXT: if «Restaurantes» moves from 2nd to 3rd, the
+	 * preselection goes with it; if it disappears, it falls back to «none»
+	 * instead of landing on whatever option takes its place.
 	 */
 	function followOption( oldRaw, newRaw, position ) {
 		const chosen = optionList( oldRaw )[ ( position || 0 ) - 1 ];
@@ -336,7 +337,7 @@
 	} );
 
 	/* ------------------------------------------------------------------ */
-	/* Botón                                                               */
+	/* Button                                                              */
 	/* ------------------------------------------------------------------ */
 
 	registerBlockType( 'estrategia-web-forms/submit', {
@@ -361,7 +362,7 @@
 	} );
 
 	/* ------------------------------------------------------------------ */
-	/* Avisos por correo                                                   */
+	/* Email notifications                                                 */
 	/* ------------------------------------------------------------------ */
 
 	function collectNames( blocks, out ) {

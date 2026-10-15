@@ -1,27 +1,28 @@
-// NIVEL: 3 — navegador. NECESITA NAVEGADOR PORQUE: el aviso se decide en el navegador (cookie, módulo ES de Interactivity), la API y el evento son JS, y el peso visual y el contraste son estilo calculado.
+// NIVEL: 3 — browser. NEEDS A BROWSER BECAUSE: the notice is decided in the browser (cookie, Interactivity ES module), the API and the event are JS, and visual weight and contrast are computed style.
 //
-// Aviso de cookies (0.5.0, vino del tema padre con su contrato). Qué es, en la
-// cabecera de includes/class-consent.php. Aquí:
-// - sale; Aceptar y Rechazar pesan igual (AEPD); rechazar guarda la cookie
-//   con el formato del padre y persiste; no ejecuta lo rechazado;
-// - el enlace «Configurar cookies» (nombre nuevo y alias viejo) lo reabre;
-// - contrato JS: window.estrategiaWebConsent (categories, has, get, open, grant) y
-//   el evento «estrategia-web:consent» con detail.accepted; aceptar activa los
-//   <script type="text/plain" data-estrategia-web-consent>;
-// - «estrategia-web:consent-ready» (0.5.0) sale una vez al arrancar, también sin
-//   elección: Matomo lo necesita (ver la trampa 1 de class-matomo.php);
-// - una cookie guardada por el aviso del PADRE (mismo formato y revisión)
-//   vale: el aviso no vuelve a salir;
-// - la línea «Powered by»: se ve, es más pequeña que los botones, y su
-//   contraste con el fondo del aviso es AA (≥ 4,5:1), MEDIDO;
-// - y Matomo híbrido contra este aviso REAL está en tests/matomo-browser.test.mjs.
+// Cookie notice (0.5.0, came from the parent theme with its contract). What
+// it is, in the header of includes/class-consent.php. Here:
+// - it shows; Accept and Reject weigh the same (AEPD); rejecting stores the
+//   cookie in the parent's format and persists; it does not run what was
+//   rejected;
+// - the «Cookie settings» link (new name and old alias) reopens it;
+// - JS contract: window.estrategiaWebConsent (categories, has, get, open, grant) and
+//   the «estrategia-web:consent» event with detail.accepted; accepting
+//   activates the <script type="text/plain" data-estrategia-web-consent>;
+// - «estrategia-web:consent-ready» (0.5.0) fires once on boot, also without a
+//   choice: Matomo needs it (see trap 1 in class-matomo.php);
+// - a cookie stored by the PARENT's notice (same format and revision) is
+//   valid: the notice does not show again;
+// - the «Powered by» line: it is visible, smaller than the buttons, and its
+//   contrast with the notice background is AA (≥ 4.5:1), MEASURED;
+// - and hybrid Matomo against this REAL notice is in tests/matomo-browser.test.mjs.
 //
-// El tema es el de por defecto de Playground: el aviso no depende del tema.
+// The theme is Playground's default: the notice does not depend on the theme.
 //
-// Vista fallar el 05-10-2026 con seis mutantes, cada uno pillado: rel con
-// nofollow, revisión distinta (la cookie del padre deja de valer), alias sin
-// registrar, sin el evento estrategia-web:consent, sin estrategia-web:consent-ready y el
-// «Powered by» en #aaa (contraste 2,3:1).
+// Seen failing on 05-10-2026 with six mutants, each one caught: rel with
+// nofollow, a different revision (the parent's cookie stops being valid),
+// alias not registered, without the estrategia-web:consent event, without
+// estrategia-web:consent-ready and the «Powered by» in #aaa (contrast 2.3:1).
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import crypto from "node:crypto";
@@ -35,9 +36,9 @@ let pageUrl;
 before(async () => {
   browser = await playwright().chromium.launch();
   await reset();
-  // theme_css: lo que emite el theme.json de Lavandería (ver la prueba del hueco).
+  // theme_css: what the Lavandería theme.json emits (see the gap test).
   await setup({ categories: ["statistics", "maps"], script: true, powered_by: { show: true }, theme_css: ":root :where(p){margin-top:0;margin-bottom:0}" });
-  ({ url: pageUrl } = await seedPage('<!-- wp:paragraph --><p>Pie</p><!-- /wp:paragraph --><!-- wp:estrategia-web-site/consent /--><!-- wp:armazon/consent {"label":"Alias viejo"} /-->', "prueba-aviso"));
+  ({ url: pageUrl } = await seedPage('<!-- wp:paragraph --><p>Footer</p><!-- /wp:paragraph --><!-- wp:estrategia-web-site/consent /--><!-- wp:armazon/consent {"label":"Old alias"} /-->', "test-notice"));
 });
 after(() => browser?.close());
 
@@ -53,7 +54,7 @@ async function open(cookies = []) {
 
 const notice = (page) => page.locator("#estrategia-web-consent");
 
-test("consent (0.5.0): sale, aceptar y rechazar pesan igual, rechazar guarda la cookie del padre y persiste", async () => {
+test("consent (0.5.0): it shows, accept and reject weigh the same, rejecting stores the parent's cookie and persists", async () => {
   const { ctx, page } = await open();
   await notice(page).waitFor({ state: "visible" });
   const look = (name) =>
@@ -61,27 +62,27 @@ test("consent (0.5.0): sale, aceptar y rechazar pesan igual, rechazar guarda la 
       const s = getComputedStyle(el);
       return [s.backgroundColor, s.color, s.fontSize, s.fontWeight, s.paddingTop, s.paddingLeft, s.borderTopWidth, el.offsetHeight].join("|");
     });
-  assert.equal(await look("Aceptar todas"), await look("Rechazar todas"), "aceptar y rechazar no pesan igual");
+  assert.equal(await look("Aceptar todas"), await look("Rechazar todas"), "accept and reject do not weigh the same");
 
   await page.getByRole("button", { name: "Rechazar todas" }).click();
   await notice(page).waitFor({ state: "hidden" });
   const cookie = (await ctx.cookies()).find((c) => c.name === "estrategia_web_consent");
-  assert.ok(cookie, "no se guardó la cookie estrategia_web_consent");
-  assert.match(decodeURIComponent(cookie.value), /^[0-9a-f]{8}\.\.\d+$/, `formato de cookie inesperado: ${cookie.value}`);
+  assert.ok(cookie, "the estrategia_web_consent cookie was not stored");
+  assert.match(decodeURIComponent(cookie.value), /^[0-9a-f]{8}\.\.\d+$/, `unexpected cookie format: ${cookie.value}`);
   await page.reload({ waitUntil: "networkidle" });
   await page.waitForFunction(() => window.estrategiaWebConsent);
-  assert.ok(await notice(page).isHidden(), "el aviso vuelve a salir tras rechazar");
+  assert.ok(await notice(page).isHidden(), "the notice shows again after rejecting");
   assert.deepEqual(await page.evaluate(() => window.estrategiaWebConsent.get()), []);
-  assert.equal(await page.evaluate(() => window.estrategiaWebTestStatistics), undefined, "se ejecutó un script de estadísticas rechazado");
+  assert.equal(await page.evaluate(() => window.estrategiaWebTestStatistics), undefined, "a rejected statistics script ran");
   assert.deepEqual(page.errors, []);
   await ctx.close();
 });
 
-test("consent (0.5.0): el enlace del pie lo reabre (nombre nuevo y alias armazon/consent), con el foco dentro, y Escape lo cierra", async () => {
+test("consent (0.5.0): the footer link reopens it (new name and armazon/consent alias), with focus inside, and Escape closes it", async () => {
   const { ctx, page } = await open();
   await page.getByRole("button", { name: "Rechazar todas" }).click();
   await notice(page).waitFor({ state: "hidden" });
-  for (const name of ["Configurar cookies", "Alias viejo"]) {
+  for (const name of ["Configurar cookies", "Old alias"]) {
     await page.getByRole("button", { name, exact: true }).click();
     await notice(page).waitFor({ state: "visible" });
     await page.waitForFunction(() => document.activeElement?.id === "estrategia-web-consent-title");
@@ -91,14 +92,14 @@ test("consent (0.5.0): el enlace del pie lo reabre (nombre nuevo y alias armazon
   await ctx.close();
 });
 
-test("consent (0.5.0): contrato JS — evento estrategia-web:consent con detail.accepted, has/get/categories, scripts diferidos, grant y open", async () => {
+test("consent (0.5.0): JS contract — estrategia-web:consent event with detail.accepted, has/get/categories, deferred scripts, grant and open", async () => {
   const { ctx, page } = await open();
   await notice(page).waitFor({ state: "visible" });
   assert.deepEqual(await page.evaluate(() => window.estrategiaWebConsent.categories), ["statistics", "maps"]);
-  assert.equal(await page.evaluate(() => window.estrategiaWebConsent.get()), null, "sin elegir, get() es null");
+  assert.equal(await page.evaluate(() => window.estrategiaWebConsent.get()), null, "with no choice, get() is null");
   assert.equal(await page.evaluate(() => window.estrategiaWebConsent.has("necessary")), true);
 
-  // grant: añade UNA categoría, guarda y lanza el evento; el aviso sigue abierto.
+  // grant: adds ONE category, stores it and fires the event; the notice stays open.
   await page.evaluate(() => {
     window.seen = [];
     document.addEventListener("estrategia-web:consent", (e) => window.seen.push(e.detail.accepted));
@@ -106,45 +107,45 @@ test("consent (0.5.0): contrato JS — evento estrategia-web:consent con detail.
   await page.evaluate(() => window.estrategiaWebConsent.grant("maps"));
   assert.deepEqual(await page.evaluate(() => window.seen), [["maps"]]);
   assert.deepEqual(await page.evaluate(() => window.estrategiaWebConsent.get()), ["maps"]);
-  assert.ok(await notice(page).isVisible(), "grant no cierra el aviso");
+  assert.ok(await notice(page).isVisible(), "grant does not close the notice");
   await page.evaluate(() => window.estrategiaWebConsent.grant("chat"));
-  assert.deepEqual(await page.evaluate(() => window.estrategiaWebConsent.get()), ["maps"], "una categoría no declarada no se concede");
+  assert.deepEqual(await page.evaluate(() => window.estrategiaWebConsent.get()), ["maps"], "an undeclared category is not granted");
 
-  // Aceptar todas: evento con las dos, script diferido activado.
+  // Accept all: event with both, deferred script activated.
   await page.getByRole("button", { name: "Aceptar todas" }).click();
   await page.waitForFunction(() => window.estrategiaWebTestStatistics === true);
   assert.deepEqual(await page.evaluate(() => window.seen.at(-1)), ["statistics", "maps"]);
   assert.equal(await page.evaluate(() => window.estrategiaWebConsent.has("statistics")), true);
 
-  // Al recargar: sin aviso, evento al arrancar con la elección guardada.
+  // On reload: no notice, event on boot with the stored choice.
   await page.addInitScript(() => {
     window.seen = [];
     document.addEventListener("estrategia-web:consent", (e) => window.seen.push(e.detail.accepted));
   });
   await page.reload({ waitUntil: "networkidle" });
   await page.waitForFunction(() => window.estrategiaWebTestStatistics === true);
-  assert.ok(await notice(page).isHidden(), "el aviso vuelve a salir tras aceptar");
-  assert.deepEqual(await page.evaluate(() => window.seen), [["statistics", "maps"]], "el evento se lanza al arrancar si ya había elección");
+  assert.ok(await notice(page).isHidden(), "the notice shows again after accepting");
+  assert.deepEqual(await page.evaluate(() => window.seen), [["statistics", "maps"]], "the event fires on boot if there was already a choice");
 
-  // open() lo reabre con lo elegido marcado.
+  // open() reopens it with the choices ticked.
   await page.evaluate(() => window.estrategiaWebConsent.open());
   await notice(page).waitFor({ state: "visible" });
-  assert.equal(await page.getByRole("checkbox", { name: /Analítica/ }).isChecked(), true, "1.1.0: «statistics» se rotula «Analítica»");
+  assert.equal(await page.getByRole("checkbox", { name: /Analítica/ }).isChecked(), true, "1.1.0: «statistics» is labelled «Analítica» in es_ES");
   assert.deepEqual(page.errors, []);
   await ctx.close();
 });
 
-test("consent (0.5.0): una elección guardada por el aviso del PADRE (≤ 0.6.0) sigue valiendo: no vuelve a salir", async () => {
-  // La cookie tal como la escribía armazon-wp-padre/blocks/consent/view.js.
+test("consent (0.5.0): a choice stored by the PARENT's notice (≤ 0.6.0) is still valid: it does not show again", async () => {
+  // The cookie as armazon-wp-padre/blocks/consent/view.js wrote it.
   const value = `${md5("statistics,maps|1")}.maps.${Math.floor(Date.now() / 1000)}`;
   const { ctx, page } = await open([{ name: "estrategia_web_consent", value: encodeURIComponent(value), url: BASE + "/" }]);
   await page.waitForFunction(() => window.estrategiaWebConsent);
-  assert.ok(await notice(page).isHidden(), "el aviso vuelve a salir a quien ya eligió con el padre");
+  assert.ok(await notice(page).isHidden(), "the notice shows again to someone who already chose with the parent");
   assert.deepEqual(await page.evaluate(() => window.estrategiaWebConsent.get()), ["maps"]);
   await ctx.close();
 });
 
-test("consent (0.5.0): «estrategia-web:consent-ready» se lanza UNA vez al arrancar, también sin elección (null), con la API ya puesta", async () => {
+test("consent (0.5.0): «estrategia-web:consent-ready» fires ONCE on boot, also without a choice (null), with the API already set", async () => {
   const ctx = await browser.newContext();
   await ctx.addInitScript(() => {
     window.ready = [];
@@ -161,30 +162,30 @@ test("consent (0.5.0): «estrategia-web:consent-ready» se lanza UNA vez al arra
   await ctx.close();
 });
 
-test("consent (0.5.1): abierto, es lo PRIMERO al tabular; se sale con Tab (sin trampa) y Escape no lo cierra sin elegir", async () => {
+test("consent (0.5.1): when open, it is the FIRST thing when tabbing; Tab leaves it (no trap) and Escape does not close it without choosing", async () => {
   const { ctx, page } = await open();
   await notice(page).waitFor({ state: "visible" });
   await page.keyboard.press("Tab");
   const inside = () => page.evaluate(() => !!document.activeElement?.closest("#estrategia-web-consent"));
-  assert.ok(await inside(), `el primer Tab va a ${await page.evaluate(() => document.activeElement?.outerHTML.slice(0, 80))}, no al aviso`);
-  // Sin trampa: se sale con Tab en, como mucho, tantos pasos como enfocables tiene.
+  assert.ok(await inside(), `the first Tab goes to ${await page.evaluate(() => document.activeElement?.outerHTML.slice(0, 80))}, not to the notice`);
+  // No trap: Tab leaves it in at most as many steps as it has focusable elements.
   const stops = await page.evaluate(() => document.querySelectorAll("#estrategia-web-consent a[href], #estrategia-web-consent button:not([disabled])").length);
   let left = false;
   for (let i = 0; i <= stops && !left; i++) {
     await page.keyboard.press("Tab");
     left = !(await inside());
   }
-  assert.ok(left, `tras ${stops + 1} tabuladores el foco sigue dentro del aviso: trampa de foco`);
-  assert.ok(await notice(page).isVisible(), "salir con Tab no debe cerrar el aviso");
+  assert.ok(left, `after ${stops + 1} Tab presses focus is still inside the notice: focus trap`);
+  assert.ok(await notice(page).isVisible(), "leaving with Tab must not close the notice");
   await page.keyboard.press("Shift+Tab");
-  assert.ok(await inside(), "Mayús+Tab no vuelve al aviso");
+  assert.ok(await inside(), "Shift+Tab does not go back to the notice");
   await page.keyboard.press("Escape");
-  assert.ok(await notice(page).isVisible(), "la primera vez, Escape no lo cierra: hay que elegir");
+  assert.ok(await notice(page).isVisible(), "the first time, Escape does not close it: a choice is required");
   assert.deepEqual(page.errors, []);
   await ctx.close();
 });
 
-test("consent (0.5.1): entre el texto y los botones hay al menos 16 px, a 402 y a 1512", async () => {
+test("consent (0.5.1): between the text and the buttons there are at least 16 px, at 402 and at 1512", async () => {
   for (const width of [402, 1512]) {
     const ctx = await browser.newContext({ viewport: { width, height: 900 } });
     const page = await ctx.newPage();
@@ -199,14 +200,14 @@ test("consent (0.5.1): entre el texto y los botones hay al menos 16 px, a 402 y 
       const button = document.querySelector(".estrategia-web-consent__actions").getBoundingClientRect().top;
       return { gap: button - lastLine, titleGap: text.getBoundingClientRect().top - title.getBoundingClientRect().bottom };
     });
-    assert.ok(m.gap >= 16, `${width}: entre la última línea del texto y los botones hay ${m.gap.toFixed(1)} px`);
-    assert.ok(m.titleGap >= 4, `${width}: título y texto pegados (${m.titleGap.toFixed(1)} px)`);
-    console.log(`# ${width}: texto → botones ${m.gap.toFixed(1)} px; título → texto ${m.titleGap.toFixed(1)} px`);
+    assert.ok(m.gap >= 16, `${width}: between the last line of text and the buttons there are ${m.gap.toFixed(1)} px`);
+    assert.ok(m.titleGap >= 4, `${width}: title and text stuck together (${m.titleGap.toFixed(1)} px)`);
+    console.log(`# ${width}: text → buttons ${m.gap.toFixed(1)} px; title → text ${m.titleGap.toFixed(1)} px`);
     await ctx.close();
   }
 });
 
-/** Contraste WCAG entre dos colores rgb()/rgba() (el de delante sin alfa). */
+/** WCAG contrast between two rgb()/rgba() colours (the foreground without alpha). */
 function contrast(fg, bg) {
   const parse = (s) => s.match(/[\d.]+/g).slice(0, 3).map(Number);
   const lum = ([r, g, b]) => {
@@ -220,11 +221,11 @@ function contrast(fg, bg) {
   return (a + 0.05) / (b + 0.05);
 }
 
-test("consent (0.5.0): «Powered by» visible, pequeño (no compite con los botones) y con contraste AA MEDIDO", async () => {
+test("consent (0.5.0): «Powered by» visible, small (does not compete with the buttons) and with MEASURED AA contrast", async () => {
   const { ctx, page } = await open();
   await notice(page).waitFor({ state: "visible" });
   const link = page.getByRole("link", { name: /Powered by Estrategia Web/ });
-  assert.ok(await link.isVisible(), "no se ve el enlace «Powered by»");
+  assert.ok(await link.isVisible(), "the «Powered by» link is not visible");
   assert.equal(await link.getAttribute("rel"), "noopener");
   assert.equal(await link.getAttribute("target"), "_blank");
   const m = await link.evaluate((el) => {
@@ -240,11 +241,11 @@ test("consent (0.5.0): «Powered by» visible, pequeño (no compite con los boto
     const button = getComputedStyle(document.querySelector(".estrategia-web-consent__button"));
     return { color: s.color, bg, opacity: s.opacity, size: parseFloat(s.fontSize), buttonSize: parseFloat(button.fontSize) };
   });
-  assert.equal(m.opacity, "1", "la línea no debe ir con opacidad (el contraste medido dejaría de valer)");
-  assert.ok(!/rgba\(.*,\s*0?\.\d+\)$/.test(m.color), `color con transparencia: ${m.color}`);
+  assert.equal(m.opacity, "1", "the line must not have opacity (the measured contrast would no longer hold)");
+  assert.ok(!/rgba\(.*,\s*0?\.\d+\)$/.test(m.color), `colour with transparency: ${m.color}`);
   const ratio = contrast(m.color, m.bg);
-  assert.ok(ratio >= 4.5, `contraste ${ratio.toFixed(2)}:1 (${m.color} sobre ${m.bg}); AA pide 4,5:1`);
-  assert.ok(m.size < m.buttonSize, `la línea (${m.size}px) no es más pequeña que los botones (${m.buttonSize}px)`);
-  console.log(`# Powered by: ${m.color} sobre ${m.bg} = ${ratio.toFixed(2)}:1, ${m.size}px (botones ${m.buttonSize}px)`);
+  assert.ok(ratio >= 4.5, `contrast ${ratio.toFixed(2)}:1 (${m.color} on ${m.bg}); AA requires 4.5:1`);
+  assert.ok(m.size < m.buttonSize, `the line (${m.size}px) is not smaller than the buttons (${m.buttonSize}px)`);
+  console.log(`# Powered by: ${m.color} on ${m.bg} = ${ratio.toFixed(2)}:1, ${m.size}px (buttons ${m.buttonSize}px)`);
   await ctx.close();
 });

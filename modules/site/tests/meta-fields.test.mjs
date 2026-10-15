@@ -1,7 +1,7 @@
-// NIVEL: 2 — WordPress de Playground, porque ESCRIBE: crea clientes y sedes por REST y pinta una Consulta con core/post-meta.
+// NIVEL: 2 — Playground WordPress, because it WRITES: creates clients and locations via REST and renders a Query with core/post-meta.
 //
-// Lo nuevo sin publicar de los campos: «Tipo de negocio» del cliente y el
-// embed del mapa de la sede, que admite el <iframe> entero.
+// The unreleased field additions: the client's «Business type» and the
+// location's map embed, which accepts the whole <iframe>.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { reset, wp, saveCompany, seedPage, html, type } from "../../../tests/lib.mjs";
@@ -11,14 +11,14 @@ before(async () => {
   await saveCompany({ enabled_types: ["client", "location"] });
 });
 
-test("cliente: estrategia_web_client_business_type se guarda saneado por REST", async () => {
+test("client: estrategia_web_client_business_type is saved sanitized via REST", async () => {
   const c = await wp(`/${type("client")}`, { method: "POST", body: { title: "Portic Villas", status: "publish", meta: { estrategia_web_client_business_type: "  Agencia de <b>alquiler</b> vacacional " } } });
   assert.equal(c.status, 201, c.text);
   assert.equal(c.json.meta.estrategia_web_client_business_type, "Agencia de alquiler vacacional");
-  assert.equal(c.json.title.raw ?? c.json.title.rendered, "Portic Villas", "el título va sin paréntesis");
+  assert.equal(c.json.title.raw ?? c.json.title.rendered, "Portic Villas", "the title has no parentheses");
 });
 
-test("cliente: en una Consulta de clientes, core/post-meta pinta el tipo de negocio de cada uno (las fichas)", async () => {
+test("client: in a Query of clients, core/post-meta renders each one's business type (the cards)", async () => {
   await wp(`/${type("client")}`, { method: "POST", body: { title: "Hotel Bahía", status: "publish", meta: { estrategia_web_client_business_type: "Hotel" } } });
   const bind = { content: { source: "core/post-meta", args: { key: "estrategia_web_client_business_type" } } };
   const query = JSON.stringify({ queryId: 9, query: { perPage: 10, pages: 0, offset: 0, postType: type("client"), order: "asc", orderBy: "title", inherit: false } });
@@ -41,7 +41,7 @@ test("cliente: en una Consulta de clientes, core/post-meta pinta el tipo de nego
   assert.match(items[1], /Portic Villas[\s\S]*<p class="t-tipo[^"]*">Agencia de alquiler vacacional<\/p>/);
 });
 
-test("sede: el embed del mapa acepta el <iframe> entero de Google y guarda solo su src; una URL suelta pasa igual", async () => {
+test("location: the map embed accepts Google's whole <iframe> and stores only its src; a bare URL passes too", async () => {
   const iframe = '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>';
   const s = await wp(`/${type("location")}`, { method: "POST", body: { title: "Maioris", slug: "maioris", status: "publish", meta: { estrategia_web_location_map_embed: iframe } } });
   assert.equal(s.status, 201, s.text);
@@ -49,5 +49,5 @@ test("sede: el embed del mapa acepta el <iframe> entero de Google y guarda solo 
   const u = await wp(`/${type("location")}/${s.json.id}`, { method: "POST", body: { meta: { estrategia_web_location_map_embed: "https://www.google.com/maps/embed?pb=x" } } });
   assert.equal(u.json.meta.estrategia_web_location_map_embed, "https://www.google.com/maps/embed?pb=x");
   const bad = await wp(`/${type("location")}/${s.json.id}`, { method: "POST", body: { meta: { estrategia_web_location_map_embed: '<iframe src="javascript:alert(1)"></iframe>' } } });
-  assert.equal(bad.json.meta.estrategia_web_location_map_embed, "", "javascript: no");
+  assert.equal(bad.json.meta.estrategia_web_location_map_embed, "", "javascript: rejected");
 });

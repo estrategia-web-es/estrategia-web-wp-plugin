@@ -1,17 +1,18 @@
 <?php
 /**
- * Funciones globales del aviso de cookies: el contrato PHP que tenía el tema
- * padre (≤ 0.6.0, inc/consent.php), con los mismos nombres, para que un tema
- * o un plugin que las llame siga funcionando. Por dentro, Consent.
+ * Global functions of the cookie notice: the PHP contract the parent theme
+ * had (≤ 0.6.0, inc/consent.php), with the same names, so that a theme or a
+ * plugin that calls them keeps working. Inside, Consent.
  *
- * NO se carga con el plugin: la carga Consent::take_over() en
- * after_setup_theme, y solo si el tema no las ha definido ya (un padre viejo
- * que aún trae el aviso). Cargarla antes haría que ese padre reventara al
- * redeclararlas. Ver la cabecera de includes/class-consent.php.
+ * NOT loaded with the plugin: Consent::take_over() loads it on
+ * after_setup_theme, and only if the theme has not defined them already (an
+ * old parent that still ships the notice). Loading it earlier would make that
+ * parent crash when redeclaring them. See the header of
+ * includes/class-consent.php.
  *
- * Cómo se mantiene: una función pública nueva de Consent que tenga sentido
- * llamar desde un tema lleva aquí su envoltorio estrategia_web_consent_*. Quitar
- * una es versión MAYOR.
+ * How to maintain: a new public function of Consent that makes sense to call
+ * from a theme gets its estrategia_web_consent_* wrapper here. Removing one
+ * is a MAJOR version.
  *
  * @package estrategia-web-site
  */
@@ -25,7 +26,7 @@ if ( ! defined( 'ESTRATEGIA_WEB_CONSENT_COOKIE' ) ) {
 }
 
 /**
- * Categorías opcionales que se saben describir.
+ * Optional categories that can be described.
  *
  * @return array<string, array{label: string, description: string}>
  */
@@ -34,7 +35,7 @@ function estrategia_web_consent_known_categories(): array {
 }
 
 /**
- * Categorías opcionales declaradas por la web.
+ * Optional categories declared by the site.
  *
  * @return string[]
  */
@@ -42,18 +43,18 @@ function estrategia_web_consent_categories(): array {
 	return Consent::categories();
 }
 
-/** Revisión de las categorías declaradas. */
+/** Revision of the declared categories. */
 function estrategia_web_consent_revision(): string {
 	return Consent::revision();
 }
 
-/** Vida de la elección, en segundos. */
+/** Lifetime of the choice, in seconds. */
 function estrategia_web_consent_max_age(): int {
 	return Consent::max_age();
 }
 
 /**
- * La elección guardada, o null.
+ * The stored choice, or null.
  *
  * @return string[]|null
  */
@@ -62,10 +63,10 @@ function estrategia_web_consent_choice(): ?array {
 }
 
 /**
- * Si una categoría está aceptada (lee la cookie en el servidor: cuidado con
- * la caché de página).
+ * Whether a category is accepted (reads the cookie on the server: beware of
+ * page caching).
  *
- * @param string $category Slug de la categoría.
+ * @param string $category Category slug.
  */
 function estrategia_web_consent_has( string $category ): bool {
 	return Consent::has( $category );

@@ -1,53 +1,55 @@
 <?php
 /**
- * Qué opción de un desplegable viene marcada al pintar el formulario.
+ * Which option of a dropdown comes preselected when the form is rendered.
  *
- * Caso que lo motivó: el mismo formulario de presupuesto en las páginas de
- * hostelería, restauración y barcos, y en cada una el «¿Qué servicio
- * necesitas?» tiene que llegar ya con el suyo. Clase PURA (no llama a
- * WordPress): la prueba de nivel 1 la ejecuta con el PHP de la máquina.
+ * The case that prompted it: the same quote form on the hospitality,
+ * restaurant and boat pages, and on each one the «What service do you
+ * need?» field has to arrive with its own already chosen. PURE class (does
+ * not call WordPress): the level 1 test runs it with the machine's PHP.
  *
- * Las fuentes, de más fuerte a más débil (Blocks::render_field las ordena):
- * 1. Lo que eligió el visitante, en la vuelta de un envío sin JS con errores.
- *    Si hay vuelta, manda solo ella: ni siquiera se aplica el valor de la
- *    página si el visitante dejó el campo vacío.
- * 2. El parámetro de URL af_<nombre del campo> (?af_servicio=2 o
- *    ?af_servicio=lavanderia-para-barcos-y-yates): para enlazar desde otra
- *    página. Con prefijo a propósito: un campo llamado «name», «p» o «s»
- *    chocaría con las variables de consulta de WordPress y cambiaría la
- *    página que se sirve.
- * 3. El «content» del bloque sincronizado que contiene el formulario
- *    (contexto pattern/overrides): {"servicio":{"defaultOption":3}}. Es lo
- *    que hace falta cuando el formulario es un patrón sincronizado, porque
- *    los atributos de dentro son los mismos en todas las páginas.
- * 4. El atributo defaultOption del propio bloque.
+ * The sources, from strongest to weakest (Blocks::render_field orders them):
+ * 1. What the visitor chose, on the return of a no-JS submission with
+ *    errors. If there is a return, only it counts: not even the page's value
+ *    is applied if the visitor left the field empty.
+ * 2. The URL parameter af_<field name> (?af_servicio=2 or
+ *    ?af_servicio=lavanderia-para-barcos-y-yates): for linking from another
+ *    page. Prefixed on purpose: a field called «name», «p» or «s» would
+ *    clash with WordPress query vars and change the page being served.
+ * 3. The «content» of the synced block that contains the form
+ *    (pattern/overrides context): {"servicio":{"defaultOption":3}}. This is
+ *    what is needed when the form is a synced pattern, because the
+ *    attributes inside are the same on every page.
+ * 4. The block's own defaultOption attribute.
  *
- * Una fuente es una POSICIÓN (1 = la primera opción; 0 = ninguna) o, solo
- * desde la URL, el texto exacto de la opción o su slug. Se guarda la posición
- * y no el texto por WPML: las opciones se traducen línea a línea y conservan
- * el orden, así que la página traducida preselecciona la misma opción sin que
- * el traductor tenga que copiar el texto al carácter (si no casa, el fallo
- * es silencioso: el select sale sin marcar).
+ * A source is a POSITION (1 = the first option; 0 = none) or, only from the
+ * URL, the exact text of the option or its slug. The position is stored
+ * rather than the text because of WPML: options are translated line by line
+ * and keep their order, so the translated page preselects the same option
+ * without the translator having to copy the text character for character
+ * (if it does not match, the failure is silent: the select comes out
+ * unselected).
  *
- * Seguridad: solo se devuelve una opción que EXISTE en la lista. Lo que no
- * casa se ignora y cede a la fuente siguiente; nunca llega al HTML.
+ * Security: only an option that EXISTS in the list is returned. Anything
+ * that does not match is ignored and falls through to the next source; it
+ * never reaches the HTML.
  *
- * Cómo se mantiene:
- * - Una fuente nueva (p. ej. un filtro del tema) entra en el array de
- *   candidatos de Blocks::render_field en su sitio del orden, y su caso en
+ * How to maintain:
+ * - A new source (e.g. a theme filter) goes into the candidates array of
+ *   Blocks::render_field at its place in the order, and its case into
  *   tests/preselect.test.mjs.
- * - Caso frontera: reordenar las opciones en el editor NO desplaza la
- *   preselección del atributo (el editor la recoloca por su texto, ver
- *   assets/editor.js), pero SÍ la del «content» de un bloque sincronizado y la
- *   de los enlaces con posición: esas viven fuera del bloque y nadie las ve al
- *   reordenar. Si una web enlaza con ?af_campo=, mejor el slug.
- * - La trampa: el «content» de un bloque sincronizado solo llega si el bloque
- *   del campo declara "usesContext": ["pattern/overrides"] en su block.json;
- *   sin eso WordPress no se lo pasa y la fuente 3 calla sin error. Y si el
- *   editor ofrece «Restablecer» en el bloque sincronizado (lo hace cuando el
- *   patrón tiene bloques core con anulaciones), borra el «content» entero,
- *   preselección incluida. Abrir y guardar la página NO lo borra: lo
- *   comprueba tests/admin.test.mjs.
+ * - Edge case: reordering the options in the editor does NOT shift the
+ *   attribute's preselection (the editor relocates it by its text, see
+ *   assets/editor.js), but it DOES shift the one in a synced block's
+ *   «content» and in links by position: those live outside the block and
+ *   nobody sees them when reordering. If a site links with ?af_field=, the
+ *   slug is better.
+ * - The trap: a synced block's «content» only arrives if the field block
+ *   declares "usesContext": ["pattern/overrides"] in its block.json; without
+ *   it WordPress does not pass it and source 3 stays silent without error.
+ *   And if the editor offers «Reset» on the synced block (it does when the
+ *   pattern has core blocks with overrides), it wipes the whole «content»,
+ *   preselection included. Opening and saving the page does NOT wipe it:
+ *   tests/admin.test.mjs checks that.
  */
 
 namespace EstrategiaWeb\Forms;
@@ -56,14 +58,14 @@ defined( 'ABSPATH' ) || exit;
 
 final class Preselect {
 
-	/** Prefijo del parámetro de URL: af_<nombre del campo>. */
+	/** URL parameter prefix: af_<field name>. */
 	public const URL_PREFIX = 'af_';
 
 	/**
-	 * @param string[]                  $options    Las opciones del desplegable, ya limpias.
-	 * @param array<int|string|null>    $candidates Las fuentes, de la más fuerte a la más débil.
-	 * @param callable(string): string  $slug       sanitize_title() en el plugin.
-	 * @return string La opción preseleccionada, o '' si ninguna fuente casa.
+	 * @param string[]                  $options    The dropdown options, already clean.
+	 * @param array<int|string|null>    $candidates The sources, from strongest to weakest.
+	 * @param callable(string): string  $slug       sanitize_title() in the plugin.
+	 * @return string The preselected option, or '' if no source matches.
 	 */
 	public static function pick( array $options, array $candidates, callable $slug ): string {
 		foreach ( $candidates as $candidate ) {
