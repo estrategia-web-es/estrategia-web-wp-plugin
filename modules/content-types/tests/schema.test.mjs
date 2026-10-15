@@ -19,7 +19,7 @@ const php = (mode, input) => {
   assert.equal(r.status, 0, "php did not run: " + (r.error?.message || r.stderr || r.stdout));
   return JSON.parse(r.stdout);
 };
-const example = JSON.parse(fs.readFileSync(path.join(MODULE, "examples", "gmct_restaurant.json"), "utf8"));
+const example = JSON.parse(fs.readFileSync(path.join(MODULE, "examples", "gment_restaurant.json"), "utf8"));
 const schema = JSON.parse(fs.readFileSync(path.join(MODULE, "content-types.schema.json"), "utf8"));
 const base = () => structuredClone(example);
 const errors = (def) => php("validate", def);
@@ -28,26 +28,27 @@ const hasError = (def, re) => {
   assert.ok(found.some((e) => re.test(e)), `expected an error matching ${re}, got: ${JSON.stringify(found)}`);
 };
 
-test("the Gastronòmicament example (gmct_restaurant) is valid", () => {
+test("the Gastronòmicament example (gment_restaurant) is valid", () => {
   assert.deepEqual(errors(example), []);
 });
 
 test("type name: 20 characters pass, 21 are refused (WordPress would cut it)", () => {
   const ok = base();
-  ok.name = "gmct_" + "r".repeat(15);
+  ok.name = "gment_" + "r".repeat(14);
   assert.equal(ok.name.length, 20);
   assert.deepEqual(errors(ok), []);
   const long = base();
-  long.name = "gmct_" + "r".repeat(16);
+  long.name = "gment_" + "r".repeat(15);
   hasError(long, /longer than 20 characters \(21\)/);
 });
 
 test("taxonomy name: 32 characters pass, 33 are refused", () => {
   const ok = base();
-  ok.taxonomies[0].name = "gmct_" + "c".repeat(27);
+  ok.taxonomies[0].name = "gment_" + "c".repeat(26);
+  assert.equal(ok.taxonomies[0].name.length, 32);
   assert.deepEqual(errors(ok), []);
   const long = base();
-  long.taxonomies[0].name = "gmct_" + "c".repeat(28);
+  long.taxonomies[0].name = "gment_" + "c".repeat(27);
   hasError(long, /longer than 32 characters \(33\)/);
 });
 
@@ -63,7 +64,7 @@ test("prefix: Estrategia Web's eweb_ and WordPress's wp_ are refused; every name
   hasError(own, /reserved/);
   const noPrefix = base();
   noPrefix.name = "restaurant";
-  hasError(noPrefix, /must start with the prefix “gmct_”/);
+  hasError(noPrefix, /must start with the prefix “gment_”/);
   const field = base();
   field.fields[0].name = "phone";
   hasError(field, /fields\[1\]\.name “phone” must start with the prefix/);
@@ -71,7 +72,7 @@ test("prefix: Estrategia Web's eweb_ and WordPress's wp_ are refused; every name
   tax.taxonomies[0].name = "cuisine";
   hasError(tax, /taxonomies\[1\]\.name “cuisine” must start with the prefix/);
   const bare = base();
-  bare.name = "gmct_";
+  bare.name = "gment_";
   hasError(bare, /must start with the prefix/);
 });
 
@@ -89,15 +90,15 @@ test("field rules: select, relation, number, date, boolean, image, duplicates, w
     [(d) => delete d.fields[2].options, /a select needs “options”/],
     [(d) => (d.fields[2].default = "€€€€"), /default must be the value of one of the options/],
     [(d) => d.fields[2].options.push("€"), /two options have the same value/],
-    [(d) => d.fields.push({ name: "gmct_chef", type: "relation", label: "Chef" }), /a relation needs “post_type”/],
-    [(d) => d.fields.push({ name: "gmct_chef", type: "relation", label: "Chef", post_type: "gmct_chef", default: 3 }), /a relation cannot have a default/],
-    [(d) => d.fields.push({ name: "gmct_seats", type: "number", label: "Seats", min: 10, max: 5 }), /min is greater than max/],
-    [(d) => d.fields.push({ name: "gmct_seats", type: "number", label: "Seats", integer: true, default: 2.5 }), /default must be a number/],
-    [(d) => d.fields.push({ name: "gmct_seats", type: "number", label: "Seats", max: 100, default: 101 }), /default must be a number within min and max/],
-    [(d) => d.fields.push({ name: "gmct_opened", type: "date", label: "Opened", default: "2026-02-30" }), /YYYY-MM-DD/],
-    [(d) => d.fields.push({ name: "gmct_terrace", type: "boolean", label: "Terrace", required: true }), /a boolean cannot be required/],
-    [(d) => d.fields.push({ name: "gmct_logo", type: "image", label: "Logo", default: 5 }), /an image cannot have a default/],
-    [(d) => d.fields.push({ name: "gmct_phone", type: "text", label: "Again" }), /declared twice/],
+    [(d) => d.fields.push({ name: "gment_chef", type: "relation", label: "Chef" }), /a relation needs “post_type”/],
+    [(d) => d.fields.push({ name: "gment_chef", type: "relation", label: "Chef", post_type: "gment_chef", default: 3 }), /a relation cannot have a default/],
+    [(d) => d.fields.push({ name: "gment_seats", type: "number", label: "Seats", min: 10, max: 5 }), /min is greater than max/],
+    [(d) => d.fields.push({ name: "gment_seats", type: "number", label: "Seats", integer: true, default: 2.5 }), /default must be a number/],
+    [(d) => d.fields.push({ name: "gment_seats", type: "number", label: "Seats", max: 100, default: 101 }), /default must be a number within min and max/],
+    [(d) => d.fields.push({ name: "gment_opened", type: "date", label: "Opened", default: "2026-02-30" }), /YYYY-MM-DD/],
+    [(d) => d.fields.push({ name: "gment_terrace", type: "boolean", label: "Terrace", required: true }), /a boolean cannot be required/],
+    [(d) => d.fields.push({ name: "gment_logo", type: "image", label: "Logo", default: 5 }), /an image cannot have a default/],
+    [(d) => d.fields.push({ name: "gment_phone", type: "text", label: "Again" }), /declared twice/],
     [(d) => (d.fields[0].wpml = "duplicate"), /wpml must be one of: copy, translate, ignore/],
     [(d) => (d.fields[0].type = "repeater"), /type must be one of/],
     [(d) => (d.fields[0].options = ["a"]), /options is only for fields of type “select”/],
@@ -115,9 +116,9 @@ test("field rules: select, relation, number, date, boolean, image, duplicates, w
   // And what IS allowed: a nested slug, a number within range, a relation to two types.
   const ok = base();
   ok.slug = "carta/restaurants";
-  ok.fields.push({ name: "gmct_seats", type: "number", label: "Seats", integer: true, min: 0, max: 500, default: 40 });
-  ok.fields.push({ name: "gmct_related", type: "relation", label: "Related", post_type: ["gmct_restaurant", "post"] });
-  ok.fields.push({ name: "gmct_terrace", type: "boolean", label: "Terrace", default: true });
+  ok.fields.push({ name: "gment_seats", type: "number", label: "Seats", integer: true, min: 0, max: 500, default: 40 });
+  ok.fields.push({ name: "gment_related", type: "relation", label: "Related", post_type: ["gment_restaurant", "post"] });
+  ok.fields.push({ name: "gment_terrace", type: "boolean", label: "Terrace", default: true });
   assert.deepEqual(errors(ok), []);
 });
 
@@ -126,27 +127,27 @@ test("not a JSON object: one clear error", () => {
 });
 
 test("across files: the same type twice, the same taxonomy twice, a reference to an undeclared taxonomy", () => {
-  const recipe = { prefix: "gmct_", name: "gmct_recipe", labels: { singular: "Recipe", plural: "Recipes" }, taxonomies: ["gmct_cuisine", "category"] };
+  const recipe = { prefix: "gment_", name: "gment_recipe", labels: { singular: "Recipe", plural: "Recipes" }, taxonomies: ["gment_cuisine", "category"] };
   assert.deepEqual(php("check-all", { "a.json": example, "b.json": recipe }), {}, "a reference to a taxonomy declared in another file, and category, are fine");
-  const out = php("check-all", { "a.json": example, "b.json": example, "c.json": { ...recipe, taxonomies: ["gmct_wine_region"] } });
-  assert.match(out["b.json"].join(" "), /type “gmct_restaurant” is already declared in a\.json/);
-  assert.match(out["b.json"].join(" "), /name “gmct_cuisine” is already declared in a\.json/);
-  assert.match(out["c.json"].join(" "), /taxonomy “gmct_wine_region” is not declared/);
+  const out = php("check-all", { "a.json": example, "b.json": example, "c.json": { ...recipe, taxonomies: ["gment_wine_region"] } });
+  assert.match(out["b.json"].join(" "), /type “gment_restaurant” is already declared in a\.json/);
+  assert.match(out["b.json"].join(" "), /name “gment_cuisine” is already declared in a\.json/);
+  assert.match(out["c.json"].join(" "), /taxonomy “gment_wine_region” is not declared/);
   assert.equal(out["a.json"], undefined, "the first one keeps its name");
-  const clash = php("check-all", { "a.json": example, "b.json": { ...recipe, fields: [{ name: "gmct_phone", type: "tel", label: "Phone", wpml: "translate" }] } });
-  assert.match(clash["b.json"].join(" "), /“gmct_phone” has wpml “translate” here and “copy” in a\.json/);
+  const clash = php("check-all", { "a.json": example, "b.json": { ...recipe, fields: [{ name: "gment_phone", type: "tel", label: "Phone", wpml: "translate" }] } });
+  assert.match(clash["b.json"].join(" "), /“gment_phone” has wpml “translate” here and “copy” in a\.json/);
 });
 
 test("normalize: the defaults, WPML per field type, and custom-fields added when there are fields", () => {
-  const n = php("normalize", { prefix: "gmct_", name: "gmct_wine_cellar", labels: { singular: "Winery", plural: "Wineries" }, supports: ["title"], fields: [{ name: "gmct_notes", type: "textarea", label: "Notes" }, { name: "gmct_founded", type: "number", label: "Founded", integer: true }, { name: "gmct_logo", type: "image", label: "Logo" }] });
+  const n = php("normalize", { prefix: "gment_", name: "gment_wine_cellar", labels: { singular: "Winery", plural: "Wineries" }, supports: ["title"], fields: [{ name: "gment_notes", type: "textarea", label: "Notes" }, { name: "gment_founded", type: "number", label: "Founded", integer: true }, { name: "gment_logo", type: "image", label: "Logo" }] });
   assert.equal(n.slug, "wine-cellar");
   assert.deepEqual(n.supports, ["title", "custom-fields"]);
   assert.equal(n.wpml, "translate");
   assert.equal(n.has_archive, true);
   assert.deepEqual(n.fields.map((f) => [f.name, f.meta_type, f.wpml, f.default]), [
-    ["gmct_notes", "string", "translate", ""],
-    ["gmct_founded", "integer", "copy", 0],
-    ["gmct_logo", "integer", "copy", 0],
+    ["gment_notes", "string", "translate", ""],
+    ["gment_founded", "integer", "copy", 0],
+    ["gment_logo", "integer", "copy", 0],
   ]);
   const ex = php("normalize", example);
   assert.equal(ex.taxonomies[0].hierarchical, true);

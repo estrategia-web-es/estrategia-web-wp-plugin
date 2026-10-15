@@ -27,7 +27,7 @@ if ( 'wpml' === ( $argv[1] ?? '' ) ) {
 $GLOBALS['hooks']    = array();
 $GLOBALS['syncs']    = array();
 $GLOBALS['meta']     = array();
-$GLOBALS['posts']    = array( 10 => 'gmct_restaurant', 11 => 'gmct_restaurant', 40 => 'page', 50 => 'gmct_restaurant' );
+$GLOBALS['posts']    = array( 10 => 'gment_restaurant', 11 => 'gment_restaurant', 40 => 'page', 50 => 'gment_restaurant' );
 $GLOBALS['original'] = array( 11 => 10 ); // 50: a restaurant not translated yet.
 
 function __( $text, $domain = 'default' ) {
@@ -121,15 +121,15 @@ if ( 'config' === ( $argv[1] ?? '' ) ) {
 		),
 	);
 	$types              = Loader::types();
-	$types['gmct_wine'] = array(
-		'name'       => 'gmct_wine',
+	$types['gment_wine'] = array(
+		'name'       => 'gment_wine',
 		'wpml'       => 'display-as-translated',
-		'taxonomies' => array( 'gmct_cuisine' ),
+		'taxonomies' => array( 'gment_cuisine' ),
 		'fields'     => array(
-			array( 'name' => 'gmct_winery', 'type' => 'relation', 'wpml' => 'copy', 'post_type' => array( 'gmct_restaurant' ) ),
-			array( 'name' => 'gmct_label', 'type' => 'image', 'wpml' => 'copy', 'post_type' => array() ),
-			array( 'name' => 'gmct_pairs', 'type' => 'relation', 'wpml' => 'translate', 'post_type' => array( 'post', 'page' ) ),
-			array( 'name' => 'gmct_phone', 'type' => 'tel', 'wpml' => 'ignore', 'post_type' => array() ),
+			array( 'name' => 'gment_winery', 'type' => 'relation', 'wpml' => 'copy', 'post_type' => array( 'gment_restaurant' ) ),
+			array( 'name' => 'gment_label', 'type' => 'image', 'wpml' => 'copy', 'post_type' => array() ),
+			array( 'name' => 'gment_pairs', 'type' => 'relation', 'wpml' => 'translate', 'post_type' => array( 'post', 'page' ) ),
+			array( 'name' => 'gment_phone', 'type' => 'tel', 'wpml' => 'ignore', 'post_type' => array() ),
 		),
 	);
 	echo json_encode(
@@ -144,16 +144,16 @@ if ( 'config' === ( $argv[1] ?? '' ) ) {
 }
 
 $out                       = array();
-$out['phone_new']          = syncs( static fn() => update_post_meta( 10, 'gmct_phone', '971 00 00 01' ) );
-$out['phone_changed']      = syncs( static fn() => update_post_meta( 10, 'gmct_phone', '971 00 00 02' ) );
-$out['phone_in_ca']        = $GLOBALS['meta'][11]['gmct_phone'] ?? null;
-$out['price']              = syncs( static fn() => update_post_meta( 10, 'gmct_price_range', '€€€' ) );
-$out['website']            = syncs( static fn() => update_post_meta( 10, 'gmct_website', 'https://example.test' ) );
-$out['address_translate']  = syncs( static fn() => update_post_meta( 10, 'gmct_address', 'Carrer Major 1' ) );
-$out['on_translation']     = syncs( static fn() => update_post_meta( 11, 'gmct_phone', '000' ) );
-$out['phone_after_trans']  = $GLOBALS['meta'][10]['gmct_phone'] ?? null;
-$out['page_same_key']      = syncs( static fn() => update_post_meta( 40, 'gmct_phone', '1' ) );
-$out['untranslated']       = syncs( static fn() => update_post_meta( 50, 'gmct_phone', '1' ) );
-$out['phone_deleted']      = syncs( static fn() => delete_post_meta( 10, 'gmct_phone' ) );
-$out['phone_ca_deleted']   = isset( $GLOBALS['meta'][11]['gmct_phone'] );
+$out['phone_new']          = syncs( static fn() => update_post_meta( 10, 'gment_phone', '971 00 00 01' ) );
+$out['phone_changed']      = syncs( static fn() => update_post_meta( 10, 'gment_phone', '971 00 00 02' ) );
+$out['phone_in_ca']        = $GLOBALS['meta'][11]['gment_phone'] ?? null;
+$out['price']              = syncs( static fn() => update_post_meta( 10, 'gment_price_range', '€€€' ) );
+$out['website']            = syncs( static fn() => update_post_meta( 10, 'gment_website', 'https://example.test' ) );
+$out['address_translate']  = syncs( static fn() => update_post_meta( 10, 'gment_address', 'Carrer Major 1' ) );
+$out['on_translation']     = syncs( static fn() => update_post_meta( 11, 'gment_phone', '000' ) );
+$out['phone_after_trans']  = $GLOBALS['meta'][10]['gment_phone'] ?? null;
+$out['page_same_key']      = syncs( static fn() => update_post_meta( 40, 'gment_phone', '1' ) );
+$out['untranslated']       = syncs( static fn() => update_post_meta( 50, 'gment_phone', '1' ) );
+$out['phone_deleted']      = syncs( static fn() => delete_post_meta( 10, 'gment_phone' ) );
+$out['phone_ca_deleted']   = isset( $GLOBALS['meta'][11]['gment_phone'] );
 echo json_encode( $out, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );

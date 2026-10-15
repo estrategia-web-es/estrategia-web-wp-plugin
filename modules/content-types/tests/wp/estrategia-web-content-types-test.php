@@ -13,7 +13,7 @@
  *   the estrategia_web_content_types_dirs filter. Off: no folder, so the
  *   other modules' tests never see these types.
  * - estrategia-web-ct-test/v1/setup (POST {on}) turns it on or off, and off
- *   deletes the gmct_ posts and terms.
+ *   deletes the gment_ posts and terms.
  * - estrategia-web-ct-test/v1/state (GET): what this request registered,
  *   the errors per file, the hash option, the rewrite rules for the slugs,
  *   and the registered meta of each type.
@@ -56,10 +56,10 @@ add_action(
 					}
 					global $wpdb;
 					delete_option( 'estrategia_web_ct_test' );
-					foreach ( $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type LIKE 'gmct\\_%'" ) as $id ) { // phpcs:ignore
+					foreach ( $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type LIKE 'gment\\_%'" ) as $id ) { // phpcs:ignore
 						wp_delete_post( (int) $id, true );
 					}
-					$tt = $wpdb->get_col( "SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE taxonomy LIKE 'gmct\\_%'" ); // phpcs:ignore
+					$tt = $wpdb->get_col( "SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE taxonomy LIKE 'gment\\_%'" ); // phpcs:ignore
 					if ( $tt ) {
 						$in = implode( ',', array_map( 'intval', $tt ) );
 						$wpdb->query( "DELETE FROM {$wpdb->term_relationships} WHERE term_taxonomy_id IN ($in)" ); // phpcs:ignore
@@ -99,7 +99,7 @@ add_action(
 						'hash'       => get_option( \EstrategiaWeb\ContentTypes\Registrar::HASH_OPTION ),
 						'rules'      => array_values( array_filter( array_keys( $rules ), static fn( $r ) => str_starts_with( $r, 'restaurants' ) || str_starts_with( $r, 'wines' ) || str_starts_with( $r, 'cuisine' ) ) ),
 						'meta'       => $meta,
-						'taxonomy'   => taxonomy_exists( 'gmct_cuisine' ) ? get_taxonomy( 'gmct_cuisine' )->object_type : null,
+						'taxonomy'   => taxonomy_exists( 'gment_cuisine' ) ? get_taxonomy( 'gment_cuisine' )->object_type : null,
 					);
 				},
 			)

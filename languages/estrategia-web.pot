@@ -947,7 +947,7 @@ msgstr ""
 #: modules/content-types/includes/class-schema.php:62
 msgid ""
 "“prefix” must be 2 to 9 lowercase letters or digits followed by “_” (e.g. "
-"“gmct_”)."
+"“gment_”)."
 msgstr ""
 
 #. translators: %s: a prefix such as eweb_

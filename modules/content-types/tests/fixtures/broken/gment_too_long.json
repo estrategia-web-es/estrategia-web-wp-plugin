@@ -1,0 +1,6 @@
+{
+  "prefix": "gment_",
+  "name": "gment_restaurant_menu",
+  "labels": { "singular": "Menu", "plural": "Menus" },
+  "fields": [{ "name": "gment_price", "type": "number", "label": "Price", "requird": true }]
+}

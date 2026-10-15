@@ -2,7 +2,7 @@
 # Copyright (C) 2026 THE estrategia-web'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the estrategia-web package.
 # Automatically generated, 2026.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: estrategia-web\n"
@@ -259,7 +259,7 @@ msgctxt "block keyword"
 msgid "privacy"
 msgstr "privacidad"
 
-# 
+#
 #: modules/consent/blocks/cookie-table/block.json
 msgctxt "block title"
 msgid "Cookie table"
@@ -296,7 +296,7 @@ msgstr "Nivel del título de cada categoría"
 msgid "Cookies"
 msgstr "Cookies"
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:65
 msgid "Sorry, you are not allowed to do that."
 msgstr "No tienes permiso para hacer esto."
@@ -306,7 +306,7 @@ msgstr "No tienes permiso para hacer esto."
 msgid "Pending"
 msgstr "Pendiente"
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:126
 msgid "Confirmed"
 msgstr "Confirmada"
@@ -319,7 +319,7 @@ msgstr "Ignorada"
 msgid "Changes saved."
 msgstr "Cambios guardados."
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:152
 msgid "Cookie deleted."
 msgstr "Cookie borrada."
@@ -340,7 +340,7 @@ msgstr ""
 "El tema activo trae su propio aviso de cookies: estos ajustes no se le "
 "aplican."
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:160
 msgid "Cookie notice"
 msgstr "Aviso de cookies"
@@ -362,7 +362,7 @@ msgstr ""
 "Cambiar las categorías vuelve a enseñar el aviso a todos los visitantes: se "
 "les pregunta por algo nuevo. Sin ninguna categoría, el aviso no sale."
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:183
 msgid "Cookie detector"
 msgstr "Detector de cookies"
@@ -378,7 +378,7 @@ msgstr ""
 "semana o cuando cambia la lista. Los nombres nuevos salen abajo como "
 "pendientes."
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:192
 msgid "Save notice settings"
 msgstr "Guardar los ajustes del aviso"
@@ -395,7 +395,7 @@ msgstr ""
 "categoría: %2$s. O el aviso pregunta por ella (arriba), o esas cookies no se "
 "deberían poner."
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:216
 msgid "Cookies of this site"
 msgstr "Cookies de esta web"
@@ -416,13 +416,13 @@ msgstr ""
 msgid "Confirm all pending proposals"
 msgstr "Confirmar todas las propuestas pendientes"
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:227
 #: modules/consent/includes/class-cookie-table.php:163
 msgid "Cookie"
 msgstr "Cookie"
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:229
 #: modules/consent/includes/admin/class-cookies-page.php:293
 msgid "Category"
@@ -440,7 +440,7 @@ msgstr "Proveedor"
 msgid "Purpose"
 msgstr "Finalidad"
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:232
 #: modules/consent/includes/admin/class-cookies-page.php:296
 #: modules/consent/includes/class-cookie-table.php:166
@@ -451,7 +451,7 @@ msgstr "Duración"
 msgid "Seen"
 msgstr "Vista"
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:234
 msgid "Actions"
 msgstr "Acciones"
@@ -478,7 +478,7 @@ msgstr "Añadida a mano"
 msgid "Proposal: Open Cookie Database"
 msgstr "Propuesta: Open Cookie Database"
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:270
 msgid "Proposal: Estrategia Web"
 msgstr "Propuesta: Estrategia Web"
@@ -524,7 +524,7 @@ msgstr ""
 "Como «2 years», «30 minutes» o «session» para que se traduzca sola; "
 "cualquier otra cosa sale tal cual se escribe."
 
-# 
+#
 #: modules/consent/includes/admin/class-cookies-page.php:298
 msgid "Add cookie"
 msgstr "Añadir cookie"
@@ -662,7 +662,7 @@ msgstr ""
 msgid "Cookie settings"
 msgstr "Configurar cookies"
 
-# 
+#
 #: modules/consent/includes/class-cookie-registry.php:134
 msgid "This website"
 msgstr "Este sitio web"
@@ -741,7 +741,7 @@ msgstr ""
 msgid "The cookie list is full. Delete the cookies you do not need."
 msgstr "La lista de cookies está llena. Borra las que no necesites."
 
-# 
+#
 #: modules/consent/includes/class-cookie-table.php:103
 msgid "Session"
 msgstr "Sesión"
@@ -815,7 +815,7 @@ msgctxt "module name"
 msgid "Cookie notice"
 msgstr "Aviso de cookies"
 
-# 
+#
 #: modules/consent/module.php
 msgctxt "module description"
 msgid ""
@@ -889,12 +889,12 @@ msgstr ""
 msgid "copy"
 msgstr "copiar"
 
-# 
+#
 #: modules/content-types/includes/admin/class-page.php:62
 msgid "translate"
 msgstr "traducir"
 
-# 
+#
 #: modules/content-types/includes/admin/class-page.php:63
 msgid "ignore"
 msgstr "ignorar"
@@ -941,7 +941,7 @@ msgstr "Tipo"
 msgid "WPML"
 msgstr "WPML"
 
-# 
+#
 #: modules/content-types/includes/admin/class-page.php:87
 msgid "yes"
 msgstr "sí"
@@ -957,7 +957,7 @@ msgstr "Se cambia en el idioma original: se copia a las traducciones."
 msgid "%s details"
 msgstr "%s: datos"
 
-# 
+#
 #: modules/content-types/includes/class-fields-panel.php:72
 msgid ""
 "Fields that are the same in every language are copied to the translations "
@@ -1032,12 +1032,12 @@ msgstr "Ver %s"
 msgid "Search %s"
 msgstr "Buscar %s"
 
-# 
+#
 #: modules/content-types/includes/class-registrar.php:174
 msgid "Nothing found."
 msgstr "No se ha encontrado nada."
 
-# 
+#
 #: modules/content-types/includes/class-registrar.php:175
 msgid "Nothing found in the trash."
 msgstr "No hay nada en la papelera."
@@ -1055,10 +1055,10 @@ msgstr "El fichero no es un objeto JSON."
 #: modules/content-types/includes/class-schema.php:62
 msgid ""
 "“prefix” must be 2 to 9 lowercase letters or digits followed by “_” (e.g. "
-"“gmct_”)."
+"“gment_”)."
 msgstr ""
 "«prefix» tiene que ser de 2 a 9 letras minúsculas o cifras seguidas de "
-"«_» (por ejemplo, «gmct_»)."
+"«_» (por ejemplo, «gment_»)."
 
 #. translators: %s: a prefix such as eweb_
 #: modules/content-types/includes/class-schema.php:66
@@ -1385,7 +1385,7 @@ msgstr "%1$s.%2$s es obligatorio: un texto o un objeto idioma → texto."
 msgid "Unknown key “%1$s”. Allowed: %2$s."
 msgstr "Clave desconocida «%1$s». Se admiten: %2$s."
 
-# 
+#
 #: modules/content-types/module.php
 msgctxt "module name"
 msgid "Content types from JSON"
@@ -2157,7 +2157,7 @@ msgstr "Formularios"
 msgid "Google"
 msgstr "Google"
 
-# 
+#
 #: modules/google-tags/includes/admin/class-google-tags-page.php:29
 #: modules/google-tags/includes/admin/class-google-tags-page.php:51
 msgid "Google tags"
@@ -2185,7 +2185,7 @@ msgstr "ID de medición del flujo web de GA4."
 msgid "Conversion ID of the Google Ads account."
 msgstr "ID de conversión de la cuenta de Google Ads."
 
-# 
+#
 #: modules/google-tags/includes/admin/class-google-tags-page.php:59
 msgid "Google Ads"
 msgstr "Google Ads"
@@ -2217,7 +2217,7 @@ msgstr "Google Tag Manager"
 msgid "Loading"
 msgstr "Carga"
 
-# 
+#
 #: modules/google-tags/includes/admin/class-google-tags-page.php:69
 msgid ""
 "Basic (recommended): nothing is requested from Google until the visitor "
@@ -2257,7 +2257,7 @@ msgstr ""
 "formulario) y Google Tag Manager detrás del aviso de cookies, con Consent "
 "Mode v2. Un campo vacío no carga nada."
 
-# 
+#
 #: modules/google-tags/module.php
 msgctxt "module name"
 msgid "Google tags"
@@ -2515,7 +2515,7 @@ msgstr "ID del sitio"
 msgid "Without cookies (recommended): nothing to ask the visitor."
 msgstr "Sin cookies (recomendado): no hay nada que preguntar al visitante."
 
-# 
+#
 #: modules/matomo/includes/class-admin-fields.php:50
 msgid ""
 "Hybrid: without cookies until the visitor accepts «Analytics» in the cookie "
@@ -2524,13 +2524,13 @@ msgstr ""
 "Híbrido: sin cookies hasta que el visitante acepta «Analítica» en el aviso "
 "de cookies."
 
-# 
+#
 #: modules/matomo/module.php
 msgctxt "module name"
 msgid "Matomo"
 msgstr "Matomo"
 
-# 
+#
 #: modules/matomo/module.php
 msgctxt "module description"
 msgid ""
@@ -3548,7 +3548,7 @@ msgctxt "module name"
 msgid "Company data and content types"
 msgstr "Datos de la empresa y tipos de contenido"
 
-# 
+#
 #: modules/site/module.php
 msgctxt "module description"
 msgid ""

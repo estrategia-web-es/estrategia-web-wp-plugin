@@ -42,8 +42,8 @@
  * translation and is skipped, and $syncing cuts any other loop.
  *
  * MEASURED WITH REAL WPML (15-10-2026, WPML 5.0.2 in Lavandería local, the
- * example in the theme's content-types/): the filter made gmct_restaurant
- * and gmct_cuisine translatable (custom_posts_sync_option = 1) and the four
+ * example in the theme's content-types/): the filter made gment_restaurant
+ * and gment_cuisine translatable (custom_posts_sync_option = 1) and the four
  * fields read-only copy/translate in WPML's settings; changing phone and
  * price of the Spanish original by REST put them in the English translation,
  * address untouched; in the translation's editor the three «copy» fields are

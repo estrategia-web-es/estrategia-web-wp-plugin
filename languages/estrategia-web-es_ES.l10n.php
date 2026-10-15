@@ -183,7 +183,7 @@ return array(
 		'Nothing found in the trash.' => 'No hay nada en la papelera.',
 		'Fill in these fields before publishing: %s.' => 'Rellena estos campos antes de publicar: %s.',
 		'The file is not a JSON object.' => 'El fichero no es un objeto JSON.',
-		'“prefix” must be 2 to 9 lowercase letters or digits followed by “_” (e.g. “gmct_”).' => '«prefix» tiene que ser de 2 a 9 letras minúsculas o cifras seguidas de «_» (por ejemplo, «gmct_»).',
+		'“prefix” must be 2 to 9 lowercase letters or digits followed by “_” (e.g. “gment_”).' => '«prefix» tiene que ser de 2 a 9 letras minúsculas o cifras seguidas de «_» (por ejemplo, «gment_»).',
 		'The prefix “%s” is reserved (Estrategia Web or WordPress). Choose the site’s own prefix.' => 'El prefijo «%s» está reservado (Estrategia Web o WordPress). Elige el prefijo propio de la web.',
 		'“description” must be a string or an object of locale → string.' => '«description» tiene que ser un texto o un objeto idioma → texto.',
 		'“icon” must be a Dashicons class such as “dashicons-food”.' => '«icon» tiene que ser una clase de Dashicons, como «dashicons-food».',
