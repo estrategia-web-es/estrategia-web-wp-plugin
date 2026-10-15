@@ -13,10 +13,10 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * El nombre REGISTRADO de un tipo o taxonomía del plugin a partir de su clave
- * (1.2.0): estrategia_web_type_name( 'client' ) → 'ew_client'. Para el
+ * (1.2.0): estrategia_web_type_name( 'client' ) → 'eweb_client'. Para el
  * "postType" de una Consulta en un patrón:
  *
- *     "postType":"<?php echo esc_attr( function_exists( 'estrategia_web_type_name' ) ? estrategia_web_type_name( 'client' ) : 'ew_client' ); ?>"
+ *     "postType":"<?php echo esc_attr( function_exists( 'estrategia_web_type_name' ) ? estrategia_web_type_name( 'client' ) : 'eweb_client' ); ?>"
  *
  * Una clave que no es del plugin («page») sale tal cual.
  */

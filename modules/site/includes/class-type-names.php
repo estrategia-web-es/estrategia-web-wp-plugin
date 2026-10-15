@@ -1,19 +1,27 @@
 <?php
 /**
  * LOS NOMBRES REGISTRADOS de los tipos de contenido y sus taxonomías: la
- * clave del plugin («client») con el prefijo delante («ew_client»). Sin
+ * clave del plugin («client») con el prefijo delante («eweb_client»). Sin
  * publicar (1.2.0): hasta la 1.1.0 se registraban sin prefijo, y WordPress.org
  * lo exige (un «client» de otro plugin chocaría con el nuestro).
  *
+ * DOS PREFIJOS, A PROPÓSITO: estrategia_web_ / estrategia-web para opciones,
+ * metas, tablas, bloques, ganchos…, y «eweb_» solo para tipos y taxonomías,
+ * porque WordPress corta un tipo en 20 caracteres y «estrategia_web_testimonial»
+ * son 26. Por qué «eweb_» (David, 15-10-2026), medido en el código de todos los
+ * plugins de WordPress.org (veloria.dev): «eweb_» no lo usa ninguno; «ew_» lo
+ * usan 13 (Easy Watermark, Essential Widgets…) y «ewp_» 9 (ElasticPress), así
+ * que se descartaron; «estweb_» no gustó.
+ *
  *   clave               nombre registrado (= ruta REST /wp/v2/<nombre>)
- *   client              ew_client
- *   client_sector       ew_client_sector
- *   testimonial         ew_testimonial
- *   location            ew_location
- *   project             ew_project
- *   project_category    ew_project_category
- *   portfolio           ew_portfolio
- *   portfolio_category  ew_portfolio_category
+ *   client              eweb_client
+ *   client_sector       eweb_client_sector
+ *   testimonial         eweb_testimonial
+ *   location            eweb_location
+ *   project             eweb_project
+ *   project_category    eweb_project_category
+ *   portfolio           eweb_portfolio
+ *   portfolio_category  eweb_portfolio_category
  *
  * LA CLAVE y EL NOMBRE son dos cosas, a propósito:
  * - La CLAVE es el vocabulario del plugin: la opción estrategia_web_site
@@ -23,8 +31,8 @@
  *   cliente por nada.
  * - El NOMBRE es lo que ve WordPress (y los demás plugins): wp_posts.post_type,
  *   wp_term_taxonomy.taxonomy, el «postType» de una Consulta, la ruta REST,
- *   el element_type de WPML («post_ew_client»), las opciones de Rank Math
- *   («pt_ew_client_title»), las plantillas («single-ew_client»).
+ *   el element_type de WPML («post_eweb_client»), las opciones de Rank Math
+ *   («pt_eweb_client_title»), las plantillas («single-eweb_client»).
  * Las URL públicas NO llevan ni lo uno ni lo otro: salen del slug traducido
  * (/clientes/), como siempre.
  *
@@ -60,7 +68,7 @@ defined( 'ABSPATH' ) || exit;
 final class Type_Names {
 
 	/** EL prefijo. Cambiarlo es esta línea (y content/semilla/tipos.mjs de cada web). */
-	public const PREFIX = 'ew_';
+	public const PREFIX = 'eweb_';
 
 	/** Las claves: los cinco tipos y las tres taxonomías (= Settings::REWRITE_NAMES). */
 	public const KEYS = array( 'client', 'client_sector', 'testimonial', 'location', 'project', 'project_category', 'portfolio', 'portfolio_category' );
@@ -68,12 +76,12 @@ final class Type_Names {
 	/** Las que son taxonomías (el resto, tipos). */
 	public const TAXONOMIES = array( 'client_sector', 'project_category', 'portfolio_category' );
 
-	/** «client» → «ew_client». Una clave que no es nuestra sale tal cual. */
+	/** «client» → «eweb_client». Una clave que no es nuestra sale tal cual. */
 	public static function name( string $key ): string {
 		return in_array( $key, self::KEYS, true ) ? self::PREFIX . $key : $key;
 	}
 
-	/** «ew_client» → «client»; '' si no es uno de los nuestros. */
+	/** «eweb_client» → «client»; '' si no es uno de los nuestros. */
 	public static function key( string $name ): string {
 		if ( ! str_starts_with( $name, self::PREFIX ) ) {
 			return '';

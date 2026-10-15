@@ -4,16 +4,16 @@
  * registrado SOLO si está activado en «Datos de la empresa» (enabled_types).
  *
  *   clave        registrado    qué        URL          taxonomía
- *   client       ew_client     Clientes   /clientes/   ew_client_sector
- *   testimonial  ew_testimonial Opiniones /opiniones/
- *   location     ew_location   Sedes      /sedes/
- *   project      ew_project    Proyectos  /proyectos/  ew_project_category
- *   portfolio    ew_portfolio  Portfolio  /portfolio/  ew_portfolio_category
+ *   client       eweb_client     Clientes   /clientes/   eweb_client_sector
+ *   testimonial  eweb_testimonial Opiniones /opiniones/
+ *   location     eweb_location   Sedes      /sedes/
+ *   project      eweb_project    Proyectos  /proyectos/  eweb_project_category
+ *   portfolio    eweb_portfolio  Portfolio  /portfolio/  eweb_portfolio_category
  *
  * Los nombres (tipo, taxonomía, meta) son CONTRATO: el tema y la carga de
  * contenido los usan en bloques Consulta y en Block Bindings (core/post-meta).
  * Aquí todo va por CLAVE («client») y se registra con Type_Names::name()
- * («ew_client», 1.2.0): el prefijo vive solo en class-type-names.php, y su
+ * («eweb_client», 1.2.0): el prefijo vive solo en class-type-names.php, y su
  * cabecera explica por qué la opción sigue hablando en claves.
  *
  * Desactivar un tipo NO borra nada: sus entradas siguen en wp_posts con su

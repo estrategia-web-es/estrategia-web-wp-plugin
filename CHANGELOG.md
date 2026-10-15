@@ -11,24 +11,28 @@ bloques, en el README del tema (armazon-wp-padre, «Versiones»).
 
 ## Sin publicar
 
-### Tipos y taxonomías con prefijo `ew_` (15-10-2026) — versión propuesta 1.2.0
+### Tipos y taxonomías con prefijo `eweb_` (15-10-2026) — versión propuesta 1.2.0
 
 **Obliga a pasar un migrador en cada web que ya tenga clientes, opiniones o
 sedes**, justo después de subir el plugin (Lavandería: lo hace
 `desplegar.mjs`, una vez). Sin él, la web no encuentra sus tipos.
 
 - **`site`: los tipos y taxonomías se registran con prefijo**:
-  `client` → `ew_client`, `client_sector` → `ew_client_sector`, y así los
+  `client` → `eweb_client`, `client_sector` → `eweb_client_sector`, y así los
   ocho (tabla en el README, «Tipos con prefijo»). WordPress.org lo exige y
-  `estrategia_web_` no cabe en los 20 caracteres de un tipo. El prefijo vive
-  solo en `Type_Names::PREFIX` (modules/site/includes/class-type-names.php).
+  `estrategia_web_` no cabe en los 20 caracteres de un tipo. `eweb_` lo
+  decidió David: ningún plugin de WordPress.org lo usa (`ew_`, 13; `ewp_`,
+  9). El prefijo vive solo en `Type_Names::PREFIX`
+  (modules/site/includes/class-type-names.php).
+- **Rehace las reglas de URL al migrar**: el ensayo enseñó que si se
+  borraban y las rehacía una petición de /en/, /sedes/ daba 404.
   **No cambian** las URL públicas, la opción `estrategia_web_site` (sigue en
   claves), el filtro `estrategia_web_site_rewrite_slug` (recibe la clave),
   las metas, los bloques ni las tablas. Las rutas REST pasan a
-  `/wp/v2/ew_client`….
+  `/wp/v2/eweb_client`….
 - **Alias hasta la 2.0.0** (`Unprefixed_Names`): Consultas y `post-terms`
   guardados con el nombre viejo pintan lo nuevo; `/wp/v2/client…` contesta
-  como `/wp/v2/ew_client…` si nadie más tiene esa ruta. En el editor, no.
+  como `/wp/v2/eweb_client…` si nadie más tiene esa ruta. En el editor, no.
 - **Migrador** `Prefix_Migration` (`wp estrategia-web migrate-prefix
   [--dry-run]`): wp_posts, términos, contenido de bloques, plantillas, menús,
   WPML, Rank Math y preferencias de pantalla; idempotente; filtro

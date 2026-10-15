@@ -12,7 +12,7 @@ import fs from "node:fs";
 export const BASE = process.env.AS_BASE || "http://127.0.0.1:9404";
 
 // El nombre REGISTRADO de un tipo o taxonomía del módulo site (1.2.0):
-// type("client") → "ew_client" (también su ruta REST). El prefijo se lee de
+// type("client") → "eweb_client" (también su ruta REST). El prefijo se lee de
 // Type_Names para no escribirlo a fuego en ninguna prueba.
 export const PREFIX = fs
   .readFileSync(new URL("../modules/site/includes/class-type-names.php", import.meta.url), "utf8")

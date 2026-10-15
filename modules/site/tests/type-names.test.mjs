@@ -1,9 +1,9 @@
 // NIVEL: 1 — sin navegador ni emulador. Los nombres con prefijo de los tipos y taxonomías (1.2.0), el renombrado del contenido del migrador y el alias de las Consultas viejas, con el PHP de la máquina.
 //
 // Por qué existe (15-10-2026): WordPress.org exige prefijo y WordPress corta
-// un tipo en 20 caracteres. El prefijo vive en UN sitio (Type_Names::PREFIX)
-// y aún no está decidido del todo: por eso aquí nada dice «ew_» a fuego; se
-// lee el prefijo y se compara contra él.
+// un tipo en 20 caracteres. El prefijo vive en UN sitio (Type_Names::PREFIX,
+// «eweb_» desde el 15-10-2026); aquí nada lo escribe a fuego: se lee y se
+// compara contra él, así que la prueba vale igual si un día cambiara.
 //
 // Vista en rojo (15-10-2026): con Unprefixed_Names::tax_query() sin entrar
 // en «include»/«exclude» (el formato de WordPress 6.8, que ya usa la semilla

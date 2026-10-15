@@ -70,7 +70,7 @@ cookies, en `consent`).
   14-10-2026): CSV de Lavandería entero, `%3F` y `?p=`/`?page_id=`, solo en
   los 404, registro de 404, aviso de Rank Math, WP-CLI. En Lavandería se
   queda APAGADO (las lleva Rank Math).
-- **Tipos y taxonomías con prefijo `ew_`** (15-10-2026, rama
+- **Tipos y taxonomías con prefijo `eweb_`** (15-10-2026, rama
   prefijo-tipos, versión propuesta 1.2.0): `Type_Names`, alias
   `Unprefixed_Names` hasta 2.0.0, migrador `Prefix_Migration` (y en
   Lavandería `despliegue/prefijo-tipos.mjs`, que el desplegador pasa una
@@ -118,24 +118,14 @@ Módulos».
 ## Tres metas sin prefijo, antes de WordPress.org
 **Fecha:** 15-10-2026 · **Vence:** antes de mandarlo a WordPress.org
 
-Los tipos ganaron prefijo en la 1.2.0 (`ew_client`…; rama prefijo-tipos).
+Los tipos ganaron prefijo en la 1.2.0 (`eweb_client`…; rama prefijo-tipos).
 Quedan tres METAS de antes de la 1.0.0 sin prefijo: `client_url`,
 `testimonial_role` y `testimonial_client` (las demás son
 `estrategia_web_…`). Mismo problema que tenían los tipos: otro plugin puede
 usar `client_url`. Arreglo: un paso más en `Prefix_Migration` (metas de los
-tipos `ew_*`), `wpml-config.xml`, `Meta_Panel::WPML_*`, los bindings
+tipos `eweb_*`), `wpml-config.xml`, `Meta_Panel::WPML_*`, los bindings
 `core/post-meta` del contenido y las pruebas. No se hizo con los tipos
 porque el encargo del 15-10-2026 decía «metas no cambian». Lo decide David.
-
-## Prefijo de los tipos: confirmar `ew_`
-**Fecha:** 15-10-2026 · **Vence:** antes de fusionar prefijo-tipos
-
-David dudaba de `ew_` (riesgo de colisión). Cambiarlo ANTES de publicar es
-una línea: `Type_Names::PREFIX` (modules/site/includes/class-type-names.php)
-y `PREFIJO` en content/semilla/tipos.mjs de Lavandería (su prueba de nivel 1
-compara los dos), más los ejemplos del README y de docs/web-nueva.md, que
-dicen `ew_`. Máximo 9 caracteres con el guion bajo (lo mira
-modules/site/tests/type-names.test.mjs). DESPUÉS de publicar, no se cambia.
 
 ## Remoto del repo (fila 24)
 **Fecha:** 02-10-2026 · **Vence:** antes de instalarlo en la primera web

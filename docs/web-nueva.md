@@ -30,7 +30,7 @@ Las tres piezas y qué lleva cada una:
    ESTE. Si ya había un tema con la misma carpeta, ver la trampa de
    `switch_theme` en la cabecera de `lavanderia-mallorca/despliegue/desplegar.mjs`.
 5. **WPML** (si la web es bilingüe; sección 5) y **Rank Math** (SEO; sus
-   ajustes por tipo usan los nombres registrados, `pt_ew_client_…`).
+   ajustes por tipo usan los nombres registrados, `pt_eweb_client_…`).
 
 En una web publicada esto lo hace el desplegador (sección 6); a mano solo en
 la primera instalación o en un servidor sin SSH.
@@ -124,7 +124,7 @@ En este orden (lo de después usa lo de antes):
    píxeles y si se borra el original.
 9. **Estrategia Web › Redirecciones** (si `redirects`): importar el CSV de
    las URL viejas.
-10. **Rank Math**: títulos y sitemap por tipo (salen como `ew_client`…).
+10. **Rank Math**: títulos y sitemap por tipo (salen como `eweb_client`…).
 
 **HUECO — los datos los da el cliente.** No hay un formulario de alta que
 el cliente rellene: hoy David los pide por correo. Lista mínima que hay que
@@ -140,8 +140,8 @@ plantilla común con los huecos marcados.
 - **No** (monolingüe): no se instala; los módulos `language-switcher` y
   `wpml-front-page` no hacen nada sin él.
 - **Sí**: idioma por defecto castellano, segundo idioma por directorio
-  (`/en/`). Los tipos `ew_location`, `ew_client`, `ew_testimonial` y la
-  taxonomía `ew_client_sector` traducibles «mostrando el original si falta»
+  (`/en/`). Los tipos `eweb_location`, `eweb_client`, `eweb_testimonial` y la
+  taxonomía `eweb_client_sector` traducibles «mostrando el original si falta»
   (modo 2); las páginas, traducibles (modo 1). Qué campos de una sede se
   copian y cuáles se traducen lo dice `wpml-config.xml` del plugin. **La
   trampa** (medida en Lavandería): WPML no lee el `wpml-config.xml` de un

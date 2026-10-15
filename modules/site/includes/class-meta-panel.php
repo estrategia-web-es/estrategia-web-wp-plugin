@@ -92,7 +92,7 @@ final class Meta_Panel {
 	/**
 	 * Tipos con panel, por CLAVE. Proyecto y portfolio no tienen campos. Lo
 	 * que llega de WordPress (la pantalla, la entrada) es el nombre registrado
-	 * («ew_location», 1.2.0) y se pasa a clave con Type_Names::key().
+	 * («eweb_location», 1.2.0) y se pasa a clave con Type_Names::key().
 	 */
 	public const TYPES = array( 'location', 'client', 'testimonial' );
 
@@ -192,7 +192,7 @@ final class Meta_Panel {
 	/**
 	 * Lo que recibe assets/meta-panel.js para un tipo, o null si ese tipo no lleva panel.
 	 *
-	 * @param string $type El nombre REGISTRADO («ew_location»), el de la pantalla o la entrada.
+	 * @param string $type El nombre REGISTRADO («eweb_location»), el de la pantalla o la entrada.
 	 */
 	public static function config( string $type, int $post_id = 0 ): ?array {
 		$type_key = Type_Names::key( $type );

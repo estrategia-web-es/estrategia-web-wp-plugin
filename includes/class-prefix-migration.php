@@ -1,7 +1,7 @@
 <?php
 /**
  * EL MIGRADOR DEL PREFIJO (1.2.0): los tipos y taxonomías del módulo site
- * pasan de «client», «client_sector»… a «ew_client», «ew_client_sector»…
+ * pasan de «client», «client_sector»… a «eweb_client», «eweb_client_sector»…
  * (el mapa entero sale de Type_Names, modules/site/includes/class-type-names.php:
  * el prefijo vive SOLO allí). EN SITIO y sin volver a cargar contenido.
  * Las URL públicas no cambian (salen del slug, no del nombre).
@@ -24,8 +24,8 @@
  *                  archive-client, taxonomy-client_sector(-slug)…
  *   5. menús       los elementos de menú clásico que apuntan a un tipo, a su
  *                  archivo o a una taxonomía (_menu_item_object).
- *   6. wpml        icl_translations (element_type post_client → post_ew_client,
- *                  tax_client_sector → tax_ew_client_sector), los ajustes de
+ *   6. wpml        icl_translations (element_type post_client → post_eweb_client,
+ *                  tax_client_sector → tax_eweb_client_sector), los ajustes de
  *                  tipos y taxonomías traducibles (SETTINGS_SECTIONS, solo
  *                  CLAVES y solo en esas secciones) en los TRES sitios donde
  *                  WPML 5.1 los guarda: icl_sitepress_settings entero, sus

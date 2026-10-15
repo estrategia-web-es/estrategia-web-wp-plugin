@@ -1,7 +1,7 @@
 <?php
 /**
  * Los nombres de tipo y taxonomía SIN PREFIJO de antes de 1.2.0 («client»,
- * «client_sector»…), como ALIAS de los de ahora («ew_client»; ver
+ * «client_sector»…), como ALIAS de los de ahora («eweb_client»; ver
  * Type_Names). Hasta la 2.0.0.
  *
  * Qué cubre, y por qué cada cosa:
@@ -12,7 +12,7 @@
  *   que no existe (is_taxonomy_viewable), y el filtro ya no la ve.
  * - TÉRMINOS (core/post-terms) con "term":"client_sector": igual.
  * - RUTAS REST /wp/v2/client, /wp/v2/client/12, /wp/v2/client_sector…: se
- *   contestan como /wp/v2/ew_client… (rest_pre_dispatch), SOLO si nadie
+ *   contestan como /wp/v2/eweb_client… (rest_pre_dispatch), SOLO si nadie
  *   más ha registrado esa ruta vieja (un plugin con su propio «client» manda).
  *   Para scripts de carga que no se hayan puesto al día; los nuestros
  *   (cargar.mjs, bajar-contenido) ya usan los nombres nuevos.
@@ -34,7 +34,7 @@
  *   (15-10-2026: solo Lavandería Mallorca).
  * - Un tipo nuevo NO entra aquí: nace con prefijo (Type_Names).
  * - Caso frontera, con nombre: una Consulta con "postType":"post" o "page"
- *   no se toca (no es una clave nuestra); una con "ew_client" tampoco (ya
+ *   no se toca (no es una clave nuestra); una con "eweb_client" tampoco (ya
  *   es nueva). Solo las ocho claves de Type_Names::KEYS.
  * - La trampa: el alias REST reenvía con rest_do_request(), que vuelve a
  *   pasar por rest_pre_dispatch; por eso solo actúa si la ruta es vieja, y la
@@ -98,7 +98,7 @@ final class Unprefixed_Names {
 	}
 
 	/**
-	 * /wp/v2/client… contestado como /wp/v2/ew_client…
+	 * /wp/v2/client… contestado como /wp/v2/eweb_client…
 	 *
 	 * @param mixed            $result  Null si nadie ha contestado aún.
 	 * @param \WP_REST_Server  $server  El servidor.
