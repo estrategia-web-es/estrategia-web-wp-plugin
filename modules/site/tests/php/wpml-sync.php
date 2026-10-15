@@ -26,7 +26,10 @@ if ( 'wpml' === ( $argv[1] ?? '' ) ) {
 $GLOBALS['hooks']    = array();
 $GLOBALS['syncs']    = array();
 $GLOBALS['meta']     = array();
-$GLOBALS['posts']    = array( 10 => 'location', 11 => 'location', 20 => 'client', 21 => 'client', 30 => 'testimonial', 31 => 'testimonial', 40 => 'page', 50 => 'location' );
+// Los tipos con su nombre REGISTRADO (con prefijo, 1.2.0), como los ve get_post_type().
+require __DIR__ . '/../../includes/class-type-names.php';
+$ew_type             = array( \EstrategiaWeb\Site\Type_Names::class, 'name' );
+$GLOBALS['posts']    = array( 10 => $ew_type( 'location' ), 11 => $ew_type( 'location' ), 20 => $ew_type( 'client' ), 21 => $ew_type( 'client' ), 30 => $ew_type( 'testimonial' ), 31 => $ew_type( 'testimonial' ), 40 => 'page', 50 => $ew_type( 'location' ) );
 $GLOBALS['original'] = array( 11 => 10, 21 => 20, 31 => 30 ); // 50: sede sin traducir.
 
 function add_action( string $hook, $callback, int $priority = 10, int $args = 1 ): void {

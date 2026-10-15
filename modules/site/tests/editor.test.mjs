@@ -1,7 +1,7 @@
 // NIVEL: 3 — navegador. NECESITA NAVEGADOR PORQUE: lo que enseña el editor de bloques de un párrafo enlazado solo existe cuando el editor (JS) lo pinta, y la pantalla de ajustes es un formulario con sesión de administrador.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { BASE, playwright, reset, saveCompany, seedPage, wp } from "../../../tests/lib.mjs";
+import { BASE, playwright, reset, saveCompany, seedPage, wp, type } from "../../../tests/lib.mjs";
 
 let browser, p;
 const errors = [];
@@ -79,7 +79,7 @@ test("pantalla «Datos de la empresa»: guarda, avisa del correo mal escrito y d
 
 test("editor (0.2.0): un párrafo enlazado a estrategia-web-site/location con slug ENSEÑA el dato de esa sede, y la fuente lista sus claves", async () => {
   await saveCompany({ enabled_types: ["location"] });
-  const sede = await wp("/location", { method: "POST", body: { title: "Maioris", slug: "maioris", status: "publish", meta: { estrategia_web_location_phone: "971 11 22 33" } } });
+  const sede = await wp(`/${type("location")}`, { method: "POST", body: { title: "Maioris", slug: "maioris", status: "publish", meta: { estrategia_web_location_phone: "971 11 22 33" } } });
   assert.equal(sede.status, 201, sede.text);
   const page = await seedPage(
     `<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"estrategia-web-site/location","args":{"slug":"maioris","key":"estrategia_web_location_phone"}}}}} -->

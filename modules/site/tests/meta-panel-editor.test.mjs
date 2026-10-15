@@ -4,7 +4,7 @@
 // pantalla de edición, sin WP-CLI.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { BASE, playwright, reset, saveCompany, wp } from "../../../tests/lib.mjs";
+import { BASE, playwright, reset, saveCompany, wp, type } from "../../../tests/lib.mjs";
 
 let browser, p;
 const errors = [];
@@ -42,7 +42,7 @@ async function save() {
 }
 
 test("sede: el panel «Datos de la sede» enseña los campos con sus valores, y cambiar el teléfono ahí lo guarda en la meta", async () => {
-  const sede = await wp("/location", { method: "POST", body: { title: "Maioris", slug: "maioris", status: "publish", meta: { estrategia_web_location_phone: "971 00 00 00", estrategia_web_location_address: "Nave 14" } } });
+  const sede = await wp(`/${type("location")}`, { method: "POST", body: { title: "Maioris", slug: "maioris", status: "publish", meta: { estrategia_web_location_phone: "971 00 00 00", estrategia_web_location_address: "Nave 14" } } });
   assert.equal(sede.status, 201, sede.text);
   await openEditor(sede.json.id);
 
@@ -60,7 +60,7 @@ test("sede: el panel «Datos de la sede» enseña los campos con sus valores, y 
   await panel.locator('[data-meta-key="estrategia_web_location_map_embed"] textarea').fill('<iframe src="https://www.google.com/maps/embed?pb=abc" width="600"></iframe>');
   await save();
 
-  const saved = (await wp(`/location/${sede.json.id}?context=edit`)).json.meta;
+  const saved = (await wp(`/${type("location")}/${sede.json.id}?context=edit`)).json.meta;
   assert.equal(saved.estrategia_web_location_phone, "971 99 88 77");
   assert.equal(saved.estrategia_web_location_map_embed, "https://www.google.com/maps/embed?pb=abc", "del iframe pegado, solo el src");
   assert.equal(saved.estrategia_web_location_address, "Nave 14", "lo que no se tocó sigue igual");
@@ -68,7 +68,7 @@ test("sede: el panel «Datos de la sede» enseña los campos con sus valores, y 
 });
 
 test("cliente (pantalla CLÁSICA: no tiene 'editor'): la meta box «Datos del cliente» guarda tipo de negocio y ajuste de imagen", async () => {
-  const cliente = await wp("/client", { method: "POST", body: { title: "Portic Villas", status: "publish", meta: { client_url: "https://portic.test" } } });
+  const cliente = await wp(`/${type("client")}`, { method: "POST", body: { title: "Portic Villas", status: "publish", meta: { client_url: "https://portic.test" } } });
   await p.goto(`${BASE}/wp-admin/post.php?post=${cliente.json.id}&action=edit`);
   const box = p.locator("#estrategia-web-meta");
   assert.match(await box.locator("h2").first().textContent(), /Datos del cliente/);
@@ -76,7 +76,7 @@ test("cliente (pantalla CLÁSICA: no tiene 'editor'): la meta box «Datos del cl
   await box.locator('[data-meta-key="estrategia_web_client_business_type"] input').fill("Agencia de <b>alquiler</b> vacacional");
   await box.locator('[data-meta-key="estrategia_web_client_image_fit"] select').selectOption("contain");
   await Promise.all([p.waitForURL(/message=/), p.click("#publish")]);
-  const saved = (await wp(`/client/${cliente.json.id}?context=edit`)).json.meta;
+  const saved = (await wp(`/${type("client")}/${cliente.json.id}?context=edit`)).json.meta;
   assert.equal(saved.estrategia_web_client_business_type, "Agencia de alquiler vacacional", "saneado como por REST");
   assert.equal(saved.estrategia_web_client_image_fit, "contain");
   assert.equal(saved.client_url, "https://portic.test", "lo que no se tocó sigue igual");
@@ -84,9 +84,9 @@ test("cliente (pantalla CLÁSICA: no tiene 'editor'): la meta box «Datos del cl
 });
 
 test("opinión: su panel con autor, valoración y cliente relacionado (las enteras viajan como número)", async () => {
-  const cliente = (await wp("/client?search=Portic")).json[0];
+  const cliente = (await wp(`/${type("client")}?search=Portic`)).json[0];
   assert.ok(cliente, "el cliente de la prueba anterior");
-  const opinion = await wp("/testimonial", { method: "POST", body: { title: "Muy bien", status: "publish" } });
+  const opinion = await wp(`/${type("testimonial")}`, { method: "POST", body: { title: "Muy bien", status: "publish" } });
   await openEditor(opinion.json.id);
   const panel = p.locator(".estrategia-web-meta-panel");
   assert.match(await panel.locator(".components-panel__body-title").first().textContent(), /Datos de la opinión/);
@@ -96,7 +96,7 @@ test("opinión: su panel con autor, valoración y cliente relacionado (las enter
   await related.locator(`option[value="${cliente.id}"]`).waitFor({ state: "attached", timeout: 15000 });
   await related.selectOption(String(cliente.id));
   await save();
-  const saved = (await wp(`/testimonial/${opinion.json.id}?context=edit`)).json.meta;
+  const saved = (await wp(`/${type("testimonial")}/${opinion.json.id}?context=edit`)).json.meta;
   assert.equal(saved.estrategia_web_testimonial_author, "Marta G.");
   assert.equal(saved.estrategia_web_testimonial_rating, 4);
   assert.equal(saved.testimonial_client, cliente.id);

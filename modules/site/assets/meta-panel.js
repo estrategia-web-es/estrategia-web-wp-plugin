@@ -52,7 +52,7 @@
 	}
 
 	function ClientField( { field, value, onChange } ) {
-		const clients = useSelect( ( select ) => select( 'core' ).getEntityRecords( 'postType', 'client', { per_page: 100, orderby: 'title', order: 'asc', _fields: 'id,title' } ), [] );
+		const clients = useSelect( ( select ) => select( 'core' ).getEntityRecords( 'postType', config.clientType, { per_page: 100, orderby: 'title', order: 'asc', _fields: 'id,title' } ), [] );
 		const options = [ { value: '0', label: __( '— None —', 'estrategia-web' ) } ].concat(
 			( clients || [] ).map( ( c ) => ( { value: String( c.id ), label: ( c.title && c.title.rendered ) || '#' + c.id } ) )
 		);

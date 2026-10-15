@@ -3,14 +3,18 @@
  * Los tipos de contenido habituales de una web corporativa, cada uno
  * registrado SOLO si está activado en «Datos de la empresa» (enabled_types).
  *
- *   client       Clientes   /clientes/   taxonomía client_sector
- *   testimonial  Opiniones  /opiniones/
- *   location     Sedes      /sedes/
- *   project      Proyectos  /proyectos/  taxonomía project_category
- *   portfolio    Portfolio  /portfolio/  taxonomía portfolio_category
+ *   clave        registrado    qué        URL          taxonomía
+ *   client       ew_client     Clientes   /clientes/   ew_client_sector
+ *   testimonial  ew_testimonial Opiniones /opiniones/
+ *   location     ew_location   Sedes      /sedes/
+ *   project      ew_project    Proyectos  /proyectos/  ew_project_category
+ *   portfolio    ew_portfolio  Portfolio  /portfolio/  ew_portfolio_category
  *
  * Los nombres (tipo, taxonomía, meta) son CONTRATO: el tema y la carga de
  * contenido los usan en bloques Consulta y en Block Bindings (core/post-meta).
+ * Aquí todo va por CLAVE («client») y se registra con Type_Names::name()
+ * («ew_client», 1.2.0): el prefijo vive solo en class-type-names.php, y su
+ * cabecera explica por qué la opción sigue hablando en claves.
  *
  * Desactivar un tipo NO borra nada: sus entradas siguen en wp_posts con su
  * post_type, simplemente WordPress no las conoce mientras no esté registrado
@@ -238,9 +242,10 @@ final class Content_Types {
 		foreach ( Settings::enabled_types() as $type ) {
 			$def  = $definitions[ $type ];
 			$slug = self::slug( $def['slug'], $type );
+			$name = Type_Names::name( $type );
 
 			register_post_type(
-				$type,
+				$name,
 				array(
 					'labels'        => $def['labels'] + array( 'menu_name' => $def['labels']['name'] ),
 					'public'        => true,
@@ -256,8 +261,8 @@ final class Content_Types {
 			if ( isset( $def['taxonomy'] ) ) {
 				$tax = $def['taxonomy'];
 				register_taxonomy(
-					$tax['name'],
-					$type,
+					Type_Names::name( $tax['name'] ),
+					$name,
 					array(
 						'labels'            => $tax['labels'] + array( 'menu_name' => $tax['labels']['name'] ),
 						'hierarchical'      => true,
@@ -271,7 +276,7 @@ final class Content_Types {
 
 			foreach ( $def['meta'] as $key => $meta ) {
 				register_post_meta(
-					$type,
+					$name,
 					$key,
 					array(
 						'type'              => $meta['type'],
@@ -298,7 +303,8 @@ final class Content_Types {
 		 * Cambia el slug público de un tipo (o de su taxonomía) en una web.
 		 *
 		 * @param string $slug El slug de `rewrite_slugs` si lo hay; si no, el traducido («clientes»).
-		 * @param string $name El tipo o la taxonomía («client», «client_sector»).
+		 * @param string $name La CLAVE del tipo o la taxonomía («client», «client_sector»), sin
+		 *                     el prefijo del nombre registrado (ver Type_Names): así era antes de 1.2.0.
 		 */
 		return (string) apply_filters( 'estrategia_web_site_rewrite_slug', '' !== $fixed ? $fixed : $translated, $name );
 	}
@@ -335,7 +341,7 @@ final class Content_Types {
 			// 0 = sin valoración; cualquier otra cosa se lleva al intervalo 1-5.
 			'rating'   => static fn( $v ) => (int) $v <= 0 ? 0 : min( 5, (int) $v ),
 			// Solo un id que sea de verdad un cliente; si no, 0.
-			'client'   => static fn( $v ) => ( (int) $v > 0 && 'client' === get_post_type( (int) $v ) ) ? (int) $v : 0,
+			'client'   => static fn( $v ) => ( (int) $v > 0 && Type_Names::name( 'client' ) === get_post_type( (int) $v ) ) ? (int) $v : 0,
 			// Solo dos valores; cualquier otro (o vacío) es el de por defecto.
 			'fit'      => static fn( $v ) => 'contain' === trim( (string) $v ) ? 'contain' : 'cover',
 			// 0.4.0, mapa estático de una sede.
@@ -402,7 +408,7 @@ final class Content_Types {
 	public static function post_class( $classes, $css_class = '', $post_id = 0 ): array {
 		$classes = (array) $classes;
 		$post_id = (int) $post_id;
-		if ( $post_id > 0 && 'client' === get_post_type( $post_id ) && 'contain' === get_post_meta( $post_id, 'estrategia_web_client_image_fit', true ) ) {
+		if ( $post_id > 0 && Type_Names::name( 'client' ) === get_post_type( $post_id ) && 'contain' === get_post_meta( $post_id, 'estrategia_web_client_image_fit', true ) ) {
 			$classes[] = 'has-image-fit-contain';
 		}
 		return $classes;

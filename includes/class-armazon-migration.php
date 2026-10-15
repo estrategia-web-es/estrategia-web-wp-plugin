@@ -263,7 +263,12 @@ final class Armazon_Migration {
 
 	private static function metas(): void {
 		global $wpdb;
-		$types = "'" . implode( "','", self::META_TYPES ) . "'";
+		// Con y sin el prefijo de la 1.2.0 (Type_Names): da igual cuál de los dos migradores pase antes.
+		$all   = self::META_TYPES;
+		if ( class_exists( Type_Names::class ) ) {
+			$all = array_merge( $all, array_map( array( Type_Names::class, 'name' ), self::META_TYPES ) );
+		}
+		$types = "'" . implode( "','", $all ) . "'";
 		foreach ( self::META as $key ) {
 			$n = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->postmeta} m JOIN {$wpdb->posts} p ON p.ID = m.post_id WHERE m.meta_key = %s AND p.post_type IN ($types)", $key ) ); // phpcs:ignore
 			if ( ! $n ) {

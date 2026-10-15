@@ -89,7 +89,11 @@ defined( 'ABSPATH' ) || exit;
 
 final class Meta_Panel {
 
-	/** Tipos con panel. Proyecto y portfolio no tienen campos. */
+	/**
+	 * Tipos con panel, por CLAVE. Proyecto y portfolio no tienen campos. Lo
+	 * que llega de WordPress (la pantalla, la entrada) es el nombre registrado
+	 * («ew_location», 1.2.0) y se pasa a clave con Type_Names::key().
+	 */
 	public const TYPES = array( 'location', 'client', 'testimonial' );
 
 	/** Clase de saneado (Content_Types) → control del panel. Lo que no está, texto. */
@@ -133,7 +137,7 @@ final class Meta_Panel {
 		add_action( 'enqueue_block_editor_assets', array( self::class, 'enqueue' ) );
 		add_action( 'add_meta_boxes', array( self::class, 'add_meta_box' ) );
 		foreach ( self::TYPES as $type ) {
-			add_action( 'save_post_' . $type, array( self::class, 'save_meta_box' ), 10, 2 );
+			add_action( 'save_post_' . Type_Names::name( $type ), array( self::class, 'save_meta_box' ), 10, 2 );
 		}
 		add_filter( 'estrategia_web_editor_script_handles', static fn( $handles ) => array_merge( (array) $handles, array( 'estrategia-web-site-meta-panel' ) ) );
 		foreach ( array( 'added_post_meta', 'updated_post_meta', 'deleted_post_meta' ) as $hook ) {
@@ -155,7 +159,7 @@ final class Meta_Panel {
 			return;
 		}
 		$type = (string) get_post_type( (int) $post_id );
-		if ( ! in_array( $type, self::TYPES, true ) || self::is_translation( $type, (int) $post_id ) ) {
+		if ( ! in_array( Type_Names::key( $type ), self::TYPES, true ) || self::is_translation( $type, (int) $post_id ) ) {
 			return;
 		}
 		self::$syncing = true;
@@ -185,15 +189,20 @@ final class Meta_Panel {
 		);
 	}
 
-	/** Lo que recibe assets/meta-panel.js para un tipo, o null si ese tipo no lleva panel. */
+	/**
+	 * Lo que recibe assets/meta-panel.js para un tipo, o null si ese tipo no lleva panel.
+	 *
+	 * @param string $type El nombre REGISTRADO («ew_location»), el de la pantalla o la entrada.
+	 */
 	public static function config( string $type, int $post_id = 0 ): ?array {
-		if ( ! in_array( $type, self::TYPES, true ) || ! in_array( $type, Settings::enabled_types(), true ) ) {
+		$type_key = Type_Names::key( $type );
+		if ( ! in_array( $type_key, self::TYPES, true ) || ! in_array( $type_key, Settings::enabled_types(), true ) ) {
 			return null;
 		}
 		$locked = self::is_translation( $type, $post_id );
 		$help   = self::help();
 		$fields = array();
-		foreach ( Content_Types::meta_definitions( $type ) as $key => $def ) {
+		foreach ( Content_Types::meta_definitions( $type_key ) as $key => $def ) {
 			$copy     = in_array( $key, self::WPML_COPY, true );
 			$fields[] = array(
 				'key'      => $key,
@@ -204,8 +213,10 @@ final class Meta_Panel {
 			);
 		}
 		return array(
-			'postType' => $type,
-			'title'    => self::titles()[ $type ],
+			'postType'   => $type,
+			// El desplegable «Cliente relacionado» de una opinión pide los clientes por este nombre.
+			'clientType' => Type_Names::name( 'client' ),
+			'title'      => self::titles()[ $type_key ],
 			'fields'   => $fields,
 			'note'     => self::wpml_active() && ! $locked ? __( 'Phone, links and map are copied to the translations when you save; address and opening hours are translated in each language.', 'estrategia-web' ) : '',
 		);
@@ -320,7 +331,7 @@ final class Meta_Panel {
 			);
 		}
 		$out = array( 0 => __( '— None —', 'estrategia-web' ) );
-		foreach ( get_posts( array( 'post_type' => 'client', 'post_status' => array( 'publish', 'draft', 'private' ), 'numberposts' => 200, 'orderby' => 'title', 'order' => 'ASC' ) ) as $client ) {
+		foreach ( get_posts( array( 'post_type' => Type_Names::name( 'client' ),'post_status' => array( 'publish', 'draft', 'private' ), 'numberposts' => 200, 'orderby' => 'title', 'order' => 'ASC' ) ) as $client ) {
 			$out[ $client->ID ] = $client->post_title;
 		}
 		return $out;

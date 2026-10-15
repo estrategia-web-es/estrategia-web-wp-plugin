@@ -53,6 +53,7 @@ final class Location {
 
 	public const SOURCE = 'estrategia-web-site/location';
 
+	/** La CLAVE del tipo; en wp_posts se llama Type_Names::name( TYPE ) (1.2.0). */
 	public const TYPE = 'location';
 
 	public const DERIVED = array( 'estrategia_web_location_phone_href', 'estrategia_web_location_email_href' );
@@ -91,8 +92,8 @@ final class Location {
 		}
 		$found = get_posts(
 			array(
-				'post_type'        => self::TYPE,
-				'name'             => sanitize_title( $slug ),
+				'post_type'        => Type_Names::name( self::TYPE ),
+				'name'           => sanitize_title( $slug ),
 				'post_status'      => 'publish',
 				'numberposts'      => 1,
 				'no_found_rows'    => true,
@@ -108,7 +109,7 @@ final class Location {
 			return null;
 		}
 		$post = get_post( $id );
-		return ( $post && self::TYPE === $post->post_type && 'publish' === $post->post_status ) ? $post : null;
+		return ( $post && Type_Names::name( self::TYPE ) === $post->post_type && 'publish' === $post->post_status ) ? $post : null;
 	}
 
 	/** El valor en texto plano (sin escapar). '' si la clave no existe o está vacía. */
@@ -145,7 +146,7 @@ final class Location {
 		if ( self::enabled() ) {
 			$posts = get_posts(
 				array(
-					'post_type'        => self::TYPE,
+					'post_type'        => Type_Names::name( self::TYPE ),
 					'post_status'      => 'publish',
 					'numberposts'      => 200,
 					'orderby'          => 'title',

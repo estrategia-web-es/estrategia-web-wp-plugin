@@ -37,6 +37,8 @@ define( 'ESTRATEGIA_WEB_SITE_VERSION', ESTRATEGIA_WEB_VERSION ); // Globales con
 define( 'ESTRATEGIA_WEB_SITE_DIR', __DIR__ . '/' );
 define( 'ESTRATEGIA_WEB_SITE_URL', plugin_dir_url( __FILE__ ) );
 
+require_once __DIR__ . '/includes/class-type-names.php';
+require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/class-links.php';
 require_once __DIR__ . '/includes/class-svg-sanitizer.php';
 require_once __DIR__ . '/includes/class-settings.php';
@@ -47,6 +49,7 @@ require_once __DIR__ . '/includes/class-shortcode.php';
 require_once __DIR__ . '/includes/class-content-types.php';
 require_once __DIR__ . '/includes/class-svg.php';
 require_once __DIR__ . '/includes/class-legacy-names.php';
+require_once __DIR__ . '/includes/class-unprefixed-names.php';
 require_once __DIR__ . '/includes/class-meta-panel.php';
 require_once __DIR__ . '/includes/admin/class-admin.php';
 
@@ -59,6 +62,7 @@ add_action( 'init', array( Bindings::class, 'register' ) );
 add_action( 'init', array( Location::class, 'register' ) );
 add_action( 'init', array( Shortcode::class, 'register' ) );
 Legacy_Names::boot(); // Los nombres de antes de 1.0.0, como alias (hasta 2.0.0).
+Unprefixed_Names::boot(); // Los tipos y taxonomías sin prefijo de antes de 1.2.0, como alias (hasta 2.0.0).
 add_action( 'enqueue_block_editor_assets', array( Bindings::class, 'enqueue_editor' ) );
 add_filter( 'post_class', array( Content_Types::class, 'post_class' ), 10, 3 );
 add_action( 'update_option_' . Settings::OPTION, array( Content_Types::class, 'maybe_flush' ), 10, 2 );

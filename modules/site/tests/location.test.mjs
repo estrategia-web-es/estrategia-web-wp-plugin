@@ -1,7 +1,7 @@
 // NIVEL: 2 — WordPress de Playground, porque ESCRIBE: activa el tipo `location`, crea sedes por REST y una página; lo que se mira es el HTML que pinta el servidor, sin navegador.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { reset, wp, saveCompany, seedPage, html } from "../../../tests/lib.mjs";
+import { reset, wp, saveCompany, seedPage, html, type } from "../../../tests/lib.mjs";
 
 const SRC = "estrategia-web-site/location";
 const meta = (args) => ({ metadata: { bindings: { content: { source: SRC, args } } } });
@@ -12,7 +12,7 @@ before(async () => {
   await reset();
   await saveCompany({ enabled_types: ["location"], phone: "971 00 00 00" });
   const make = async (title, slug, status, m) => {
-    const r = await wp("/location", { method: "POST", body: { title, slug, status, meta: m } });
+    const r = await wp(`/${type("location")}`, { method: "POST", body: { title, slug, status, meta: m } });
     assert.equal(r.status, 201, r.text);
     return r.json;
   };
@@ -85,7 +85,7 @@ test("una sede inexistente, en borrador o sin clave sale vacía; fuera de una se
 });
 
 test("sin slug, dentro de una Consulta de sedes: cada <li> enseña la dirección de SU sede (contexto postId)", async () => {
-  const query = JSON.stringify({ queryId: 3, query: { perPage: 10, pages: 0, offset: 0, postType: "location", order: "asc", orderBy: "title", inherit: false } });
+  const query = JSON.stringify({ queryId: 3, query: { perPage: 10, pages: 0, offset: 0, postType: type("location"), order: "asc", orderBy: "title", inherit: false } });
   const page = await seedPage(
     `<!-- wp:query ${query} -->
 <div class="wp-block-query"><!-- wp:post-template -->

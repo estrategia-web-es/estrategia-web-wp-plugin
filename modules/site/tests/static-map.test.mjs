@@ -8,13 +8,13 @@
 // a ese mismo campo, que es lo que recibe el bloque.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { BASE, reset, wp, saveCompany, seedPage, html, upload, png } from "../../../tests/lib.mjs";
+import { BASE, reset, wp, saveCompany, seedPage, html, upload, png, type } from "../../../tests/lib.mjs";
 
 let sede, imageId;
 before(async () => {
   await reset();
   await saveCompany({ enabled_types: ["location"] });
-  const r = await wp("/location", { method: "POST", body: { title: "Sede Palma", slug: "palma", status: "publish" } });
+  const r = await wp(`/${type("location")}`, { method: "POST", body: { title: "Sede Palma", slug: "palma", status: "publish" } });
   assert.equal(r.status, 201, r.text);
   sede = r.json;
   const img = await upload("mapa-palma.png", "image/png", png(8, 4, [40, 120, 200]));
@@ -23,7 +23,7 @@ before(async () => {
 });
 
 const saveMeta = async (meta) => {
-  const r = await wp(`/location/${sede.id}`, { method: "POST", body: { meta } });
+  const r = await wp(`/${type("location")}/${sede.id}`, { method: "POST", body: { meta } });
   assert.equal(r.status, 200, r.text);
   return r.json.meta;
 };
@@ -65,11 +65,11 @@ test("estrategia_web_location_static_map_id (0.4.0): un adjunto de imagen se gua
 
 test("en una Consulta de sedes, core/post-meta da a cada sede SU mapa estático (lo que recibe staticMapUrl de estrategia-web/map)", async () => {
   await saveMeta({ estrategia_web_location_static_map: "/wp-content/uploads/mapa-palma.webp" });
-  const otra = await wp("/location", { method: "POST", body: { title: "Sede Inca", slug: "inca", status: "publish", meta: { estrategia_web_location_static_map: "/wp-content/uploads/mapa-inca.webp" } } });
+  const otra = await wp(`/${type("location")}`, { method: "POST", body: { title: "Sede Inca", slug: "inca", status: "publish", meta: { estrategia_web_location_static_map: "/wp-content/uploads/mapa-inca.webp" } } });
   assert.equal(otra.status, 201, otra.text);
 
   const pm = (attr) => ({ [attr]: { source: "core/post-meta", args: { key: "estrategia_web_location_static_map" } } });
-  const query = JSON.stringify({ queryId: 7, query: { perPage: 10, pages: 0, offset: 0, postType: "location", order: "asc", orderBy: "title", inherit: false } });
+  const query = JSON.stringify({ queryId: 7, query: { perPage: 10, pages: 0, offset: 0, postType: type("location"), order: "asc", orderBy: "title", inherit: false } });
   const page = await seedPage(
     `<!-- wp:query ${query} -->
 <div class="wp-block-query"><!-- wp:post-template -->
