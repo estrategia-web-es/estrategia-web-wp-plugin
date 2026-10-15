@@ -1,6 +1,6 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
-	"__comment": "estrategia-web/language-switcher — selector de idioma (WPML). Sin editor propio: supports.autoRegister (WP 7.0). Documentación y mantenimiento en la cabecera de render.php.",
+	"__comment": "estrategia-web/language-switcher — language switcher (WPML). No editor of its own: supports.autoRegister (WP 7.0). Documentation and maintenance in the header of render.php.",
 	"apiVersion": 3,
 	"name": "estrategia-web/language-switcher",
 	"version": "0.1.0",

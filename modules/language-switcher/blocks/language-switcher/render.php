@@ -1,48 +1,53 @@
 <?php
 /**
- * estrategia-web/language-switcher — selector de idioma (0.7.6).
+ * estrategia-web/language-switcher — language switcher (0.7.6).
  *
- * Qué pinta: un BOTÓN con el idioma actual («ES» y una flecha) y, al
- * pulsarlo, una lista de enlaces a la MISMA página en los otros idiomas:
+ * What it renders: a BUTTON with the current language («ES» and an arrow)
+ * and, when pressed, a list of links to the SAME page in the other
+ * languages:
  *
  *     <div class="estrategia-web-language">
  *       <button aria-expanded="false" aria-controls="…">ES</button>
  *       <ul id="…" hidden><li><a href="/en/…" hreflang="en" lang="en">English</a></li></ul>
  *     </div>
  *
- * Los idiomas y sus URL los da WPML (filtro wpml_active_languages). SIN WPML,
- * o con un solo idioma activo, NO SE PINTA NADA: un selector con un idioma no
- * sirve, y una web monolingüe no tiene por qué saber que existe este bloque.
+ * The languages and their URLs come from WPML (wpml_active_languages
+ * filter). WITHOUT WPML, or with only one active language, NOTHING IS
+ * RENDERED: a switcher with one language is useless, and a monolingual site
+ * has no reason to know this block exists.
  *
- * Decisiones:
- * - Botón con aria-expanded y una lista de enlaces, no un <select>: cambiar de
- *   idioma es navegar, y un enlace con hreflang y lang es lo que entienden un
- *   lector de pantalla y un buscador. Y no <details>: su <summary> no dice
- *   «expandido/contraído» en todos los lectores, que es el motivo de que el
- *   hijo de Lavandería tuviera uno y se haya sustituido por este.
- * - Interactivity API (view.js), como el resto de bloques del padre: abre y
- *   cierra, se cierra con Escape (y el foco vuelve al botón) y al pulsar
- *   fuera. Sin JavaScript la lista no se abre; el idioma actual se sigue
- *   viendo.
- * - Cada enlace lleva el nombre del idioma EN ESE IDIOMA («English», no
- *   «Inglés»): quien busca su idioma lo reconoce así.
- * - skip_missing 0: si la página no está traducida, WPML da la portada de ese
- *   idioma. Mejor llegar a la portada en inglés que no poder cambiar.
- * - Sin estilos de marca: la hoja solo coloca la lista. El hijo pone el
- *   aspecto sobre .estrategia-web-language (Lavandería: theme/assets/css/header.css),
- *   también la flecha (.estrategia-web-language__toggle::after).
+ * Decisions:
+ * - A button with aria-expanded and a list of links, not a <select>:
+ *   switching language is navigating, and a link with hreflang and lang is
+ *   what a screen reader and a search engine understand. And not <details>:
+ *   its <summary> doesn't announce «expanded/collapsed» in every screen
+ *   reader, which is why Lavandería's child theme had one and it was
+ *   replaced by this.
+ * - Interactivity API (view.js), like the parent's other blocks: opens and
+ *   closes, closes with Escape (and focus returns to the button) and on
+ *   clicking outside. Without JavaScript the list doesn't open; the current
+ *   language is still visible.
+ * - Each link carries the language's name IN THAT LANGUAGE («English», not
+ *   «Inglés»): that is how someone looking for their language recognises it.
+ * - skip_missing 0: if the page isn't translated, WPML gives that language's
+ *   front page. Better to land on the English front page than not to be able
+ *   to switch.
+ * - No brand styles: the stylesheet only positions the list. The child sets
+ *   the look on .estrategia-web-language (Lavandería: theme/assets/css/header.css),
+ *   the arrow included (.estrategia-web-language__toggle::after).
  *
- * Cómo se mantiene:
- * - Quién: quien toque la cabecera de una web con WPML. Cuándo: al añadir un
- *   idioma no hay que tocar nada (sale de WPML); al cambiar el marcado, en el
- *   mismo commit, tests/language-switcher.test.mjs del hijo que lo use.
- * - Caso frontera: el código que se enseña es el de WPML en mayúsculas
- *   («ES»); si una web quiere «Español», atributo display: name. Las banderas
- *   NO: son países, no idiomas.
- * - La trampa: en el editor (ServerSideRender, petición REST) WPML puede
- *   decir que no hay idiomas y el bloque sale vacío. No es un fallo: en la web
- *   sí sale. Y con dos bloques en la misma página, el id de la lista se
- *   distingue con wp_unique_id(); nunca un id fijo.
+ * How to maintain:
+ * - Who: whoever touches the header of a site with WPML. When: adding a
+ *   language needs no change (it comes from WPML); when changing the markup,
+ *   in the same commit, tests/language-switcher.test.mjs of the child theme
+ *   that uses it.
+ * - Edge case: the code shown is WPML's in upper case («ES»); if a site wants
+ *   «Español», attribute display: name. Flags NO: they are countries, not
+ *   languages.
+ * - The trap: in the editor (ServerSideRender, a REST request) WPML may say
+ *   there are no languages and the block comes out empty. It's not a bug: on
+ *   the site it does show. And with two blocks on the same page, the list id
+ *   is made distinct with wp_unique_id(); never a fixed id.
  *
  * @package estrategia-web
  */
@@ -69,10 +74,10 @@ if ( ! $estrategia_web_current || ! $estrategia_web_others ) {
 
 $estrategia_web_name    = static fn( array $l ): string => (string) ( $l['native_name'] ?? $l['translated_name'] ?? strtoupper( (string) $l['code'] ) );
 
-// «inline» (0.7.7): todos los idiomas en línea, «EN – ES», sin desplegable; el
-// actual marcado con aria-current y el resto enlazados. Para el menú del móvil:
-// David, 06-10-2026, «el selector de idioma en mobile es feo, puedes poner
-// EN - ES (sin desplegable)». El orden es el de WPML. Sin JS.
+// «inline» (0.7.7): all languages on one line, «EN – ES», no drop-down; the
+// current one marked with aria-current and the rest linked. For the mobile
+// menu: David, 06-10-2026, «the language switcher on mobile is ugly, can you
+// put EN - ES (without a drop-down)». The order is WPML's. No JS.
 if ( 'inline' === ( $attributes['layout'] ?? 'dropdown' ) ) {
 	$estrategia_web_text = static fn( array $l ): string => 'name' === ( $attributes['display'] ?? 'code' ) ? $estrategia_web_name( $l ) : strtoupper( (string) $l['code'] );
 	$estrategia_web_wrap = get_block_wrapper_attributes(

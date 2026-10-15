@@ -1,12 +1,12 @@
 /*
- * estrategia-web/language-switcher — solo lo que hace falta para que funcione: el
- * botón sin aspecto de botón del navegador, la flecha y la lista colgando
- * debajo. El aspecto (tamaño de letra, bordes, colores) es del hijo, sobre
- * .estrategia-web-language. La flecha es un triángulo de CSS en
- * .estrategia-web-language__toggle::after; un hijo con su propio icono redefine ese
- * ::after (clip-path: none y su máscara).
- * La trampa: [hidden] lo pisa cualquier «display» de un hijo sobre la lista;
- * por eso la regla de [hidden] va con !important.
+ * estrategia-web/language-switcher — only what it takes to work: the button
+ * without the browser's button look, the arrow and the list hanging below.
+ * The look (font size, borders, colours) belongs to the child theme, on
+ * .estrategia-web-language. The arrow is a CSS triangle in
+ * .estrategia-web-language__toggle::after; a child with its own icon
+ * redefines that ::after (clip-path: none and its mask).
+ * The trap: any «display» a child sets on the list overrides [hidden];
+ * that is why the [hidden] rule carries !important.
  */
 .estrategia-web-language {
 	position: relative;
@@ -49,9 +49,9 @@
 	.estrategia-web-language__toggle::after { transition: none; }
 }
 
-/* «inline» (0.7.7): «EN – ES» en línea. El guion es decorativo (::before), no
-   lo lee el lector de pantalla. El actual, sin enlace y en negrita; el otro,
-   enlace con diana de 44 px de alto. */
+/* «inline» (0.7.7): «EN – ES» on one line. The dash is decorative (::before),
+   screen readers don't read it. The current one, unlinked and bold; the
+   other, a link with a 44 px tall target. */
 .estrategia-web-language__inline { display: flex; align-items: center; justify-content: center; gap: 0; margin: 0; padding: 0; list-style: none; }
 .estrategia-web-language__inline li { display: flex; align-items: center; }
 .estrategia-web-language__inline li + li::before { content: "–"; padding-inline: 0.5em; opacity: 0.7; }
