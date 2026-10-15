@@ -1,121 +1,120 @@
 <?php
 /**
- * estrategia-web/carousel — carrusel de desplazamiento horizontal.
+ * estrategia-web/carousel — horizontally scrolling carousel.
  *
- * Qué es: una fila desplazable (scroll-snap) con los bloques que se metan
- * dentro (imágenes, grupos, tarjetas: cada hijo directo es una diapositiva),
- * flechas anterior/siguiente, puntos opcionales y autoplay SOLO si se pide.
+ * What it is: a scrollable row (scroll-snap) holding whatever blocks are put
+ * inside (images, groups, cards: each direct child is a slide), previous/next
+ * arrows, optional dots and autoplay ONLY when asked for.
  *
- * Con una Consulta dentro (0.2.0): si un hijo directo es un core/query, cada
- * entrada de su post-template (<li>) es una diapositiva. Así una lista que
- * vive en la base de datos (clientes, opiniones) se pasa en carrusel sin
- * copiar sus fichas a mano. La consulta y su <ul> se aplanan con
- * display: contents (style.css) y view.js recorre los <li>.
- * - Caso frontera: la paginación de la consulta NO va dentro del carrusel
- *   (sería una diapositiva más); el carrusel enseña las perPage que traiga.
- * - La trampa: el post-template tiene que ser hijo DIRECTO de la consulta. Si
- *   se envuelve en un grupo, el grupo es la única diapositiva.
- * - En el editor la consulta se ve con su disposición normal (en columna): el
- *   aplanado es solo de la página publicada.
+ * With a Query inside (0.2.0): if a direct child is a core/query, each entry
+ * of its post-template (<li>) is a slide. That way a list that lives in the
+ * database (clients, reviews) becomes a carousel without copying its cards by
+ * hand. The query and its <ul> are flattened with display: contents
+ * (style.css) and view.js walks the <li> elements.
+ * - Edge case: the query pagination does NOT go inside the carousel (it would
+ *   be one more slide); the carousel shows whatever perPage the query brings.
+ * - The trap: the post-template must be a DIRECT child of the query. If it is
+ *   wrapped in a group, the group is the only slide.
+ * - In the editor the query keeps its normal layout (a column): the
+ *   flattening only applies to the published page.
  *
- * En bucle (0.5.0, atributo loop, por defecto SÍ): «siguiente» en la última
- * va a la primera y «anterior» en la primera va a la última (también con
- * ← → del teclado). Las dos flechas están
- * siempre activas: sin bucle, «anterior» sale gris al cargar y en una web
- * parecía un carrusel roto. Con una Consulta dentro funciona igual (cuenta
- * entradas). Por qué SÍ por defecto: es lo que espera quien usa un carrusel
- * en una web de negocio, y el gris al cargar se veía como un fallo; un
- * carrusel que deba terminar (pasos de un proceso) pone loop: false.
+ * Looping (0.5.0, loop attribute, default YES): "next" on the last slide goes
+ * to the first and "previous" on the first goes to the last (also with the
+ * ← → keys). Both arrows are
+ * always active: without looping, "previous" showed greyed out on load and on
+ * a live site it looked like a broken carousel. With a Query inside it works
+ * the same (it counts entries). Why YES by default: it is what a visitor of a
+ * business site expects from a carousel, and the grey arrow on load looked
+ * like a bug; a carousel that must end (steps of a process) sets loop: false.
  *
- * INFINITO (0.6.0): el bucle ya no rebobina. De la última se pasa a la
- * primera SIGUIENDO en la misma dirección (y al revés), con flechas, teclado,
- * puntos, autoplay y con el dedo (scroll-snap). Lo pidió David: el rebobinado
- * de la 0.5.0 recorría todas las diapositivas hacia atrás.
- * - Técnica: SIN CLONES. view.js pone a cada diapositiva un `order` de flex
- *   que ROTA la fila sin tocar el DOM, de modo que alrededor de la que se ve
- *   siempre hay diapositivas a los dos lados. Cuando la pista se para
- *   (scrollend; en Safari sin scrollend, tras 120 ms quieta) se vuelve a rotar
- *   alrededor de la del borde y se corrige scrollLeft en el mismo fotograma,
- *   sin animación: la diapositiva no se mueve en pantalla y el salto no se ve.
- *   Antes de cada paso con flechas o puntos se rota lo necesario para que el
- *   destino quede del lado al que se va.
- * - Por qué no clones: duplicarían enlaces enfocables, ids y lo que lee un
- *   lector de pantalla (habría que marcarlos inert/aria-hidden y quitarles
- *   los ids), cargarían otra vez las imágenes, y sobre todo cambiarían el
- *   :nth-child de las diapositivas, del que tiran los hijos (Lavandería da a
- *   cada foto del hero-carousel su proporción por nth-child(3n+…)). `order`
- *   no cambia el DOM: ni el nth-child, ni el orden de lectura, ni el del
- *   tabulador, que siguen siendo el lógico (1, 2, 3…).
- * - Rejilla: si el hijo hace la pista una rejilla de varias filas llenada
- *   por filas (Lavandería: la franja de clientes, dos filas de 12), lo que
- *   rota son las COLUMNAS, cada fila igual; rotar ficha a ficha pasaba fichas
- *   de una fila a otra. Las filas se miden con el orden natural al cargar y
- *   al cambiar de ancho. Una disposición irregular (filas de distinto largo,
- *   flex con wrap) no se rota: da la vuelta rebobinando, como la 0.5.0.
- *   Con varias filas los puntos no cuadran (cuentan fichas, no columnas):
- *   esos carruseles van sin puntos.
- * - Caso frontera: con UNA diapositiva, o todas a la vista, no hay nada que
- *   desplazar: la fila queda quieta (is-static) y no se toca su orden. Con
- *   solo UNA de más (p. ej. 3 fotos y 2 a la vista) el dedo solo encuentra
- *   vecina a un lado en cada momento; las flechas dan la vuelta igual, y
- *   desde la 0.7.2 DESLIZANDO: como la fila no da para desplazar una entera,
- *   view.js (glide) anima cada diapositiva con transform desde donde estaba,
- *   y la que da la vuelta sale por un lado con una copia inerte y temporal
- *   mientras entra por el otro. En reposo no queda ninguna copia.
- * - Pulsar seguido no salta (0.7.2): durante la animación propia la pista va
- *   sin scroll-snap, y los pasos que llegan mientras glide anima se encolan.
- * - Los puntos: el activo es el de la diapositiva del borde izquierdo
- *   (también con varias visibles); un punto lleva a la suya por el camino
- *   más corto. Inicio y Fin van a la primera y a la última.
- * - Con «reducir movimiento», los pasos son instantáneos; la vuelta se da
- *   igual.
- * - La trampa (para un hijo): una regla con `order` sobre las diapositivas
- *   pierde contra el estilo en línea de view.js, y un estilo que dependa de
- *   la posición VISUAL (:first-child para «la primera que se ve») no vale:
- *   la primera del DOM ya no es la de la izquierda. Las de :nth-child siguen
- *   pegadas a su diapositiva, que es lo que se quiere.
- * - Pruebas: tests/carousel-glide.test.mjs (cada paso desliza, con varios
- *   fotogramas intermedios y sin saltos) y tests/carousel-infinite.test.mjs, que mira fotograma a
- *   fotograma que la pista no retroceda.
+ * INFINITE (0.6.0): the loop no longer rewinds. From the last slide it moves
+ * to the first CONTINUING in the same direction (and vice versa), with arrows,
+ * keyboard, dots, autoplay and by finger (scroll-snap). David asked for it:
+ * the 0.5.0 rewind ran through every slide backwards.
+ * - Technique: NO CLONES. view.js gives each slide a flex `order` that
+ *   ROTATES the row without touching the DOM, so that around the visible one
+ *   there are always slides on both sides. When the track stops (scrollend;
+ *   on Safari, without scrollend, after 120 ms still) it rotates again around
+ *   the edge slide and corrects scrollLeft in the same frame, without
+ *   animation: the slide does not move on screen and the jump is invisible.
+ *   Before each arrow or dot step it rotates as much as needed so that the
+ *   target ends up on the side it is moving towards.
+ * - Why no clones: they would duplicate focusable links, ids and what a
+ *   screen reader reads (they would need inert/aria-hidden and their ids
+ *   removed), they would load the images again, and above all they would
+ *   change the :nth-child of the slides, which child themes rely on
+ *   (Lavandería gives each photo of the hero-carousel its aspect ratio via
+ *   nth-child(3n+…)). `order` does not change the DOM: not the nth-child, not
+ *   the reading order, not the tab order, which stay logical (1, 2, 3…).
+ * - Grid: if the child theme makes the track a multi-row grid filled by rows
+ *   (Lavandería: the clients strip, two rows of 12), what rotates are the
+ *   COLUMNS, every row alike; rotating card by card moved cards from one row
+ *   to another. Rows are measured with the natural order on load and on width
+ *   change. An irregular layout (rows of different length, flex with wrap) is
+ *   not rotated: it wraps around by rewinding, like 0.5.0.
+ *   With several rows the dots do not match (they count cards, not columns):
+ *   those carousels go without dots.
+ * - Edge case: with ONE slide, or all of them in view, there is nothing to
+ *   scroll: the row stays still (is-static) and its order is not touched. With
+ *   only ONE extra (e.g. 3 photos and 2 in view) the finger only finds a
+ *   neighbour on one side at any moment; the arrows still wrap around, and
+ *   since 0.7.2 by SLIDING: as the row cannot scroll a whole slide, view.js
+ *   (glide) animates each slide with transform from where it was, and the one
+ *   that wraps around leaves on one side with an inert, temporary copy while
+ *   it enters on the other. At rest no copy remains.
+ * - Rapid clicks do not jump (0.7.2): during its own animation the track has
+ *   no scroll-snap, and steps arriving while glide is animating are queued.
+ * - Dots: the active one is the slide at the left edge (also with several in
+ *   view); a dot goes to its slide by the shortest path. Home and End go to
+ *   the first and the last.
+ * - With "reduce motion", steps are instant; the wrap-around still happens.
+ * - The trap (for a child theme): a rule with `order` on the slides loses
+ *   against view.js's inline style, and a style that depends on the VISUAL
+ *   position (:first-child for "the first one you see") does not work: the
+ *   first in the DOM is no longer the one on the left. :nth-child rules stay
+ *   attached to their slide, which is what we want.
+ * - Tests: tests/carousel-glide.test.mjs (every step slides, with several
+ *   intermediate frames and no jumps) and tests/carousel-infinite.test.mjs, which checks frame by
+ *   frame that the track never goes backwards.
  *
- * FOTOS (0.7.4): las diapositivas que se ven al cargar llevan
- * fetchpriority="high" (si el carrusel es lo primero de la página), las demás
- * loading="lazy", y todas un sizes del ancho de la diapositiva, o el del
- * atributo imageSizes. Todo en modules/carousel/includes/carousel-images.php, con su caso frontera
- * (Lavandería) y sus trampas. Prueba: tests/carousel-images.test.mjs.
+ * PHOTOS (0.7.4): the slides visible on load get fetchpriority="high" (if the
+ * carousel is the first thing on the page), the rest loading="lazy", and all
+ * of them a sizes equal to the slide width, or the one from the imageSizes
+ * attribute. All of it in modules/carousel/includes/carousel-images.php, with its edge case
+ * (Lavandería) and its traps. Test: tests/carousel-images.test.mjs.
  *
- * Decisiones:
- * - Sin JavaScript es una fila desplazable con el dedo, la rueda o las flechas
- *   del teclado: el comportamiento es una mejora, no un requisito. Los
- *   controles salen ocultos y view.js les quita la ocultación (clase is-ready).
- * - Comportamiento con la Interactivity API (view.js, módulo ES nativo).
- * - Editor: InnerBlocks necesita JavaScript en el editor, y WordPress 7.1 no
- *   admite módulos ES como editorScript (no hay editorScriptModule). Por eso
- *   edit.js es un script CLÁSICO que usa los globales wp.element y
- *   wp.blockEditor, sin JSX ni compilación. Su lista de dependencias está en
- *   edit.asset.php, escrita a mano.
- * - Cuántos se ven: por ANCHO DEL CARRUSEL (container queries), no de la
- *   ventana. Un carrusel en una columna estrecha enseña los de móvil aunque la
- *   pantalla sea grande, que es lo que se quiere.
- * - Accesibilidad: región con aria-roledescription «carousel» y nombre; la
- *   pista es enfocable (tabindex=0) y responde a ← → Inicio Fin; botones con
- *   nombre y aria-controls; prefers-reduced-motion quita el desplazamiento
- *   suave y anula el autoplay. El autoplay, si se activa, se para al pasar el
- *   ratón o al entrar el foco, y tiene botón de pausa (WCAG 2.2.2).
+ * Decisions:
+ * - Without JavaScript it is a row scrollable by finger, wheel or arrow keys:
+ *   the behaviour is an enhancement, not a requirement. The controls render
+ *   hidden and view.js unhides them (is-ready class).
+ * - Behaviour with the Interactivity API (view.js, native ES module).
+ * - Editor: InnerBlocks needs JavaScript in the editor, and WordPress 7.1 does
+ *   not accept ES modules as editorScript (there is no editorScriptModule). So
+ *   edit.js is a CLASSIC script using the wp.element and wp.blockEditor
+ *   globals, with no JSX and no build. Its dependency list is in
+ *   edit.asset.php, written by hand.
+ * - How many are visible: by CAROUSEL WIDTH (container queries), not the
+ *   viewport. A carousel in a narrow column shows the mobile count even on a
+ *   large screen, which is what we want.
+ * - Accessibility: region with aria-roledescription "carousel" and a name; the
+ *   track is focusable (tabindex=0) and responds to ← → Home End; buttons with
+ *   a name and aria-controls; prefers-reduced-motion removes smooth scrolling
+ *   and disables autoplay. Autoplay, if enabled, stops on mouse hover or when
+ *   focus enters, and has a pause button (WCAG 2.2.2).
  *
- * Cómo se mantiene:
- * - Quién: quien toque el módulo carousel (hasta la 1.0.0, el tema padre). Cuándo: al cambiar el marcado o los
- *   atributos; un atributo nuevo lleva default para que los carruseles ya
- *   guardados sigan igual (condición 2 del padre: no obligar a tocar un hijo).
- * - Caso frontera: «quiero el carrusel con las flechas encima de las
- *   imágenes» es un AJUSTE (CSS del hijo sobre .estrategia-web-carousel__controls);
- *   «quiero un carrusel que sincronice dos filas» es OTRA COSA: bloque del hijo.
- * - Los cortes de container query (480px / 782px) copian settings.viewport de
- *   theme.json. Si se cambian allí, se cambian en style.css: CSS no deja usar
- *   variables dentro de @container.
- * - La trampa: los puntos se cuentan con los bloques internos al renderizar;
- *   un bloque interno que no pinta nada (un párrafo vacío borrado a medias)
- *   cuenta como diapositiva invisible.
+ * How to maintain:
+ * - Who: whoever touches the carousel module (until 1.0.0, the parent theme). When: on changing the markup or the
+ *   attributes; a new attribute gets a default so that already saved
+ *   carousels stay the same (parent condition 2: never force a child to change).
+ * - Edge case: "I want the carousel with the arrows over the images" is an
+ *   ADJUSTMENT (child CSS on .estrategia-web-carousel__controls);
+ *   "I want a carousel that syncs two rows" is SOMETHING ELSE: a child block.
+ * - The container query breakpoints (480px / 782px) copy settings.viewport
+ *   from theme.json. If they change there, change them in style.css: CSS does
+ *   not allow variables inside @container.
+ * - The trap: dots are counted from the inner blocks at render time; an inner
+ *   block that renders nothing (an empty paragraph half deleted) counts as an
+ *   invisible slide.
  *
  * @package estrategia-web
  *
@@ -127,10 +126,10 @@
 defined( 'ABSPATH' ) || exit;
 
 /*
- * Diapositivas: cada bloque interno directo, SALVO un core/query, que aporta
- * una por cada <li> de su post-template (0.2.0). Las de la consulta se
- * cuentan en el HTML ya pintado: antes de renderizar no se sabe cuántas
- * entradas trae.
+ * Slides: each direct inner block, EXCEPT a core/query, which contributes one
+ * per <li> of its post-template (0.2.0). The query ones are counted in the
+ * already rendered HTML: before rendering, the number of entries it brings is
+ * unknown.
  */
 $estrategia_web_count = 0;
 foreach ( $block->inner_blocks as $estrategia_web_inner ) {
@@ -146,8 +145,8 @@ if ( str_contains( $content, 'wp-block-post-template' ) ) {
 }
 $estrategia_web_track_id = wp_unique_id( 'estrategia-web-carousel-' );
 
-// Fotos (0.7.4): prioridad a las que se ven al cargar, diferidas las demás y
-// un sizes del ancho de la diapositiva. Cómo y por qué: modules/carousel/includes/carousel-images.php.
+// Photos (0.7.4): priority for those visible on load, the rest deferred, and
+// a sizes equal to the slide width. How and why: modules/carousel/includes/carousel-images.php.
 \EstrategiaWeb\Carousel\images_register( $estrategia_web_track_id, (array) $attributes );
 $content = \EstrategiaWeb\Carousel\images_mark( (string) $content, $estrategia_web_track_id );
 

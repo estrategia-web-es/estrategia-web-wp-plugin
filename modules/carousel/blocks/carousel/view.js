@@ -1,65 +1,67 @@
 /**
- * estrategia-web/carousel — comportamiento (Interactivity API, módulo ES nativo).
+ * estrategia-web/carousel — behaviour (Interactivity API, native ES module).
  *
- * Lo que hace: mover la pista una diapositiva con las flechas, el teclado o
- * los puntos; sin bucle, marcar inicio/fin para desactivar flechas; con
- * bucle (atributo loop, por defecto), INFINITO (0.6.0); autoplay opcional.
- * La documentación del módulo está en la cabecera de render.php.
+ * What it does: moves the track one slide with the arrows, the keyboard or
+ * the dots; without looping, flags start/end to disable arrows; with
+ * looping (loop attribute, default), INFINITE (0.6.0); optional autoplay.
+ * The module documentation is in the header of render.php.
  *
- * El infinito, en corto (detalle en render.php): no hay clones. Cada
- * diapositiva lleva un `order` que ROTA la fila sin tocar el DOM, de modo
- * que siempre hay diapositivas a los dos lados de la que se ve. Al pararse la
- * pista (scrollend) se vuelve a rotar alrededor de la que está en el borde y
- * se corrige scrollLeft en el mismo fotograma: la diapositiva no se mueve en
- * pantalla y el salto no se ve.
+ * Infinite, in short (details in render.php): there are no clones. Each
+ * slide gets an `order` that ROTATES the row without touching the DOM, so
+ * there are always slides on both sides of the visible one. When the track
+ * stops (scrollend) it rotates again around the slide at the edge and
+ * scrollLeft is corrected in the same frame: the slide does not move on
+ * screen and the jump is invisible.
  *
- * Lo que rota son UNIDADES: en una fila, cada diapositiva; en una rejilla de
- * varias filas llenada por filas (la franja de clientes de dos filas de
- * Lavandería), cada COLUMNA, y cada fila rota igual. Una disposición que no
- * es ni lo uno ni lo otro no se rota: da la vuelta rebobinando, como la 0.5.0.
+ * What rotates are UNITS: in a single row, each slide; in a multi-row grid
+ * filled by rows (Lavandería's two-row clients strip), each COLUMN, and every
+ * row rotates alike. A layout that is neither is not rotated: it wraps
+ * around by rewinding, like 0.5.0.
  *
- * Cómo se mantiene:
- * - WordPress NO sirve este fichero: sirve view.min.js (1.1.x, ~8 KB en vez
- *   de ~25). Después de editar aquí, `node tools/minify.mjs` en el mismo
- *   commit; tests/minified.test.mjs (nivel 1) falla si se olvida.
- * - Si se importa algo nuevo de WordPress, se añade a DEPS en
- *   tools/minify.mjs (genera view.min.asset.php).
- * - La trampa: los manejadores que llaman a event.preventDefault() van con
- *   withSyncEvent(). Sin él, WordPress los ejecuta en diferido y el
- *   preventDefault llega tarde: la flecha del teclado mueve la pista Y además
- *   desplaza la página.
- * - Otra, del infinito: TODO desplazamiento que corrige la rotación va con
- *   behavior 'instant'. La pista tiene scroll-behavior: smooth en CSS, y un
- *   scrollLeft = x a secas se animaría: se vería la pista correr hacia atrás,
- *   que es justo el rebobinado que el infinito quita.
- * - Y otra: al corregir scrollLeft salta otro scrollend. settle() es
- *   idempotente (si la rotación ya es la buena no toca nada), y mientras va
- *   una animación propia hacia una diapositiva no se rota hasta que llega.
- * - Y la de la rejilla (medida en Lavandería el 03-10-2026): rotar `order`
- *   diapositiva a diapositiva en una rejilla de dos filas pasa fichas de una
- *   fila a otra. Por eso las filas se miden con el orden natural (rows()) y
- *   se rota por columnas.
+ * How to maintain:
+ * - WordPress does NOT serve this file: it serves view.min.js (1.1.x, ~8 KB
+ *   instead of ~25). After editing here, run `node tools/minify.mjs` in the
+ *   same commit; tests/minified.test.mjs (level 1) fails if you forget.
+ * - If something new is imported from WordPress, add it to DEPS in
+ *   tools/minify.mjs (it generates view.min.asset.php).
+ * - The trap: handlers that call event.preventDefault() are wrapped in
+ *   withSyncEvent(). Without it, WordPress runs them deferred and
+ *   preventDefault arrives too late: the arrow key moves the track AND also
+ *   scrolls the page.
+ * - Another, from the infinite mode: EVERY scroll that corrects the rotation
+ *   uses behavior 'instant'. The track has scroll-behavior: smooth in CSS,
+ *   and a bare scrollLeft = x would animate: the track would be seen running
+ *   backwards, which is exactly the rewind the infinite mode removes.
+ * - And another: correcting scrollLeft fires another scrollend. settle() is
+ *   idempotent (if the rotation is already right it touches nothing), and
+ *   while our own animation is heading to a slide it does not rotate until
+ *   it arrives.
+ * - And the grid one (measured on Lavandería on 03-10-2026): rotating `order`
+ *   slide by slide in a two-row grid moves cards from one row to another.
+ *   That is why rows are measured with the natural order (rows()) and the
+ *   rotation is by columns.
  *
- * Cada paso DESLIZA (0.7.2; David: «el carrusel necesita una animación, va a
- * saltos», medido el 06-10-2026 en la portada de Lavandería):
- * - Con solo UNA de más (3 fotos y 2,4 a la vista) ninguna rotación deja
- *   desplazar una diapositiva entera: la fila no da para tanto. Hasta la 0.7.1
- *   se rotaba y se ponía scrollLeft a 0 de golpe: un salto en un fotograma.
- *   Ahora glide(): rota, mide dónde ha quedado cada diapositiva y la anima
- *   desde donde estaba (transform con la Web Animations API). La que da la
- *   vuelta entra por el otro lado y, mientras, una COPIA suya (ghostOf) sale
- *   por este: sin ella el hueco que deja se ve vacío. La copia es inerte,
- *   aria-hidden, sin ids, con los estilos calculados en línea (fuera de la
- *   pista no le llegan las reglas :nth-child del hijo) y se quita al acabar.
- *   Pulsar mientras anima no corta: el paso se encola (state.queue).
- * - Pulsando seguido en una pista que SÍ desplaza: se mantiene la rotación
- *   si ya permite el viaje, para que el navegador reoriente su animación sin
- *   pararla; y mientras va una animación propia la pista va sin scroll-snap
- *   (hold/release): con snap obligatorio, la corrección instantánea de
- *   scrollLeft caía en el punto de anclaje más cercano y la pista saltaba.
- * - La trampa: un scroll-snap-type en línea que se quede puesto deja la
- *   pista sin anclaje para el dedo. Se quita al llegar (settle), al tocar o
- *   girar la rueda (take) y al acabar glide().
+ * Every step SLIDES (0.7.2; David: "the carousel needs an animation, it
+ * jumps", measured on 06-10-2026 on Lavandería's home page):
+ * - With only ONE extra (3 photos and 2.4 in view) no rotation lets a whole
+ *   slide scroll: the row is not long enough. Up to 0.7.1 it rotated and set
+ *   scrollLeft to 0 at once: a jump in one frame. Now glide(): it rotates,
+ *   measures where each slide ended up and animates it from where it was
+ *   (transform with the Web Animations API). The one that wraps around enters
+ *   from the other side and, meanwhile, a COPY of it (ghostOf) leaves on this
+ *   side: without it the gap it leaves looks empty. The copy is inert,
+ *   aria-hidden, without ids, with its computed styles inline (outside the
+ *   track the child's :nth-child rules do not reach it) and is removed at the
+ *   end. Clicking while it animates does not cut it: the step is queued
+ *   (state.queue).
+ * - Rapid clicks on a track that DOES scroll: the rotation is kept if it
+ *   already allows the trip, so the browser redirects its animation without
+ *   stopping it; and while our own animation runs the track has no
+ *   scroll-snap (hold/release): with mandatory snap, the instant scrollLeft
+ *   correction landed on the nearest snap point and the track jumped.
+ * - The trap: an inline scroll-snap-type left behind leaves the track with
+ *   no snapping for the finger. It is removed on arrival (settle), on touch
+ *   or wheel (take) and at the end of glide().
  */
 import { store, getContext, getElement, withSyncEvent } from '@wordpress/interactivity';
 

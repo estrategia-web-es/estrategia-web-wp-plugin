@@ -1,6 +1,6 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
-	"__comment": "estrategia-web/carousel — fila desplazable con scroll-snap. Documentación y mantenimiento en la cabecera de render.php.",
+	"__comment": "estrategia-web/carousel — scrollable row with scroll-snap. Documentation and maintenance notes in the header of render.php.",
 	"apiVersion": 3,
 	"name": "estrategia-web/carousel",
 	"version": "0.7.4",

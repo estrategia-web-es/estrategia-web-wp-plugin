@@ -1,11 +1,11 @@
 /*
- * estrategia-web/carousel — estilos. Todo cuelga de .estrategia-web-carousel (ámbito por
- * prefijo de clase, la convención de los bloques de WordPress).
- * Colores y medidas: solo tokens de theme.json (var(--wp--preset--...)).
- * Un hijo ajusta con las propiedades --estrategia-web-carousel-* o con CSS propio
- * sobre estas clases; no copia este fichero.
- * Los cortes 480px / 782px repiten settings.viewport de theme.json (CSS no
- * admite variables en @container): si cambian allí, cambian aquí.
+ * estrategia-web/carousel — styles. Everything hangs off .estrategia-web-carousel (scoped by
+ * class prefix, the WordPress block convention).
+ * Colours and sizes: theme.json tokens only (var(--wp--preset--...)).
+ * A child theme adjusts with the --estrategia-web-carousel-* properties or with its own CSS
+ * on these classes; it does not copy this file.
+ * The 480px / 782px breakpoints repeat settings.viewport from theme.json (CSS does
+ * not allow variables in @container): if they change there, they change here.
  */
 .estrategia-web-carousel {
 	--estrategia-web-carousel-gap: var(--wp--preset--spacing--16, 1rem);
@@ -38,9 +38,9 @@
 	padding-block-end: var(--wp--preset--spacing--8, 0.5rem);
 }
 
-/* El <picture> del recorte para el móvil (1.1.x, includes/carousel-mobile-crop.php)
-   no pinta caja: el <img> sigue siendo hijo, a efectos de maquetación, de su
-   figure, y las reglas del hijo sobre «.wp-block-image img» valen igual. */
+/* The <picture> of the mobile crop (1.1.x, includes/carousel-mobile-crop.php)
+   renders no box: for layout purposes the <img> is still a child of its
+   figure, and the child theme's rules on ".wp-block-image img" still apply. */
 .estrategia-web-carousel__picture {
 	display: contents;
 }
@@ -54,9 +54,9 @@
 }
 
 /*
- * Una Consulta dentro (0.2.0): la consulta y su <ul> desaparecen como cajas y
- * cada <li> pasa a ser hija flex de la pista. Va con más especificidad que el
- * «display: grid» del diseño en rejilla del post-template.
+ * A Query inside (0.2.0): the query and its <ul> disappear as boxes and each
+ * <li> becomes a flex child of the track. Higher specificity than the
+ * "display: grid" of the post-template grid layout.
  */
 .estrategia-web-carousel:not(.is-editing) .estrategia-web-carousel__track > .wp-block-query,
 .estrategia-web-carousel:not(.is-editing) .estrategia-web-carousel__track > .wp-block-query > .wp-block-post-template {
@@ -68,13 +68,13 @@
 	height: auto;
 }
 
-/* En el editor el «appender» de InnerBlocks no es una diapositiva. */
+/* In the editor the InnerBlocks "appender" is not a slide. */
 .estrategia-web-carousel.is-editing .estrategia-web-carousel__track > .block-list-appender {
 	flex: 0 0 auto;
 	align-self: center;
 }
 
-/* Sin JS (o sin nada que desplazar) no hay controles: queda una fila desplazable. */
+/* Without JS (or with nothing to scroll) there are no controls: a scrollable row remains. */
 .estrategia-web-carousel:not(.is-ready) .estrategia-web-carousel__controls,
 .estrategia-web-carousel:not(.is-ready) .estrategia-web-carousel__dots,
 .estrategia-web-carousel.is-static .estrategia-web-carousel__controls,
@@ -111,13 +111,13 @@
 .estrategia-web-carousel__toggle-icon {
 	inline-size: 0.75rem;
 	block-size: 0.75rem;
-	/* Triángulo de «reproducir» */
+	/* "Play" triangle */
 	background: currentColor;
 	clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 
 .estrategia-web-carousel__toggle-icon.is-playing {
-	/* Dos barras de «pausa» */
+	/* Two "pause" bars */
 	clip-path: polygon(0 0, 35% 0, 35% 100%, 0 100%, 0 0, 65% 0, 100% 0, 100% 100%, 65% 100%, 65% 0);
 }
 

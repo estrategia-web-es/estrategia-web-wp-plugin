@@ -1,8 +1,8 @@
 <?php
 /**
- * Lo llama modules/carousel/tests/mobile-crop-pure.test.mjs con el PHP de la
- * máquina (sin WordPress): la geometría del recorte para el móvil. Un caso
- * nuevo es una clave nueva aquí y su assert allí.
+ * Called by modules/carousel/tests/mobile-crop-pure.test.mjs with the
+ * machine's PHP (no WordPress): the geometry of the mobile crop. A new case
+ * is a new key here and its assert there.
  */
 
 namespace EstrategiaWeb\Carousel;
@@ -17,12 +17,12 @@ echo json_encode(
 		'ratio_colon'   => mobile_ratio_parse( '4:5' ),
 		'ratio_number'  => mobile_ratio_parse( '0.8' ),
 		'ratio_bad'     => array( mobile_ratio_parse( '' ), mobile_ratio_parse( 'vertical' ), mobile_ratio_parse( '1/0' ), mobile_ratio_parse( '100' ) ),
-		// Foto horizontal de Lavandería (2560×1707), caja 370/460, centro.
+		// Lavandería landscape photo (2560×1707), 370/460 box, centre.
 		'box_center'    => mobile_crop_box( 2560, 1707, $r, 0.5, 0.5 ),
-		// Enfoque a la izquierda del todo: el recorte se pega al borde, no se sale.
+		// Focal point at the far left: the crop sticks to the edge, it does not overflow.
 		'box_left'      => mobile_crop_box( 2560, 1707, $r, 0.0, 0.5 ),
 		'box_right'     => mobile_crop_box( 2560, 1707, $r, 0.9, 0.5 ),
-		// Foto vertical más alta que la caja: se recorta en alto.
+		// Portrait photo taller than the box: cropped in height.
 		'box_tall'      => mobile_crop_box( 1000, 2000, $r, 0.5, 0.3 ),
 		'widths_big'    => mobile_crop_widths( 1373, array( 600, 900, 1200 ) ),
 		'widths_mid'    => mobile_crop_widths( 1000, array( 600, 900, 1200 ) ),
@@ -34,7 +34,7 @@ echo json_encode(
 	)
 );
 
-/** Lo mínimo de WordPress que pide el fichero al cargarse. */
+/** The bare minimum of WordPress the file needs when it loads. */
 function apply_filters( string $hook, $value ) {
 	return $value;
 }
