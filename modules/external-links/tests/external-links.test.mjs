@@ -1,20 +1,21 @@
-// NIVEL: 2 — WordPress de Playground, porque lo probado es la PÁGINA SERVIDA: el filtro corre en el búfer de salida de la plantilla del núcleo (wp_template_enhancement_output_buffer), que solo existe pintando una página de verdad.
+// NIVEL: 2 — Playground WordPress, because what is tested is the SERVED PAGE: the filter runs in core's template output buffer (wp_template_enhancement_output_buffer), which only exists when rendering a real page.
 //
-// Enlaces externos en pestaña nueva (0.5.2, includes/class-external-links.php):
-// - externo (wa.me, como «Hablar con un asesor» de Lavandería): target,
-//   rel con noopener y aria-label con el texto + «(se abre en una pestaña nueva)»;
-// - internos, www, relativos, anclas, tel: y mailto:, intactos;
-// - con target (aunque sea _self), intacto; con rel, se le añade noopener
-//   sin quitar nofollow/sponsored; con aria-label, se le añade el aviso al
-//   final; un enlace-imagen toma el alt;
-// - el «Powered by» del aviso de cookies no se duplica;
-// - el contenido por REST (lo que lee el editor) no se toca;
-// - con el filtro estrategia_web_site_external_links a false, nada.
-// Qué es externo caso por caso (otro dominio, subdominios, esquemas) está en
-// el nivel 1 (tests/pure.test.mjs); aquí, lo que solo se ve pintando.
+// External links in a new tab (0.5.2, includes/class-external-links.php):
+// - external (wa.me, like Lavandería's «Hablar con un asesor»): target, rel
+//   with noopener and aria-label with the text + «(se abre en una pestaña nueva)»;
+// - internal, www, relative, anchors, tel: and mailto: untouched;
+// - with target (even _self), untouched; with rel, noopener is appended
+//   without removing nofollow/sponsored; with aria-label, the notice is
+//   appended at the end; an image link takes the alt;
+// - the cookie notice's «Powered by» is not duplicated;
+// - content over REST (what the editor reads) is not touched;
+// - with the estrategia_web_site_external_links filter set to false, nothing.
+// What is external case by case (another domain, subdomains, schemes) is at
+// level 1 (tests/pure.test.mjs); here, only what can be seen by rendering.
 //
-// Vista fallar el 06-10-2026 apagando el filtro (external-links-setup
-// enabled:false con las aserciones del encendido): el externo salía sin target.
+// Seen failing on 2026-10-06 by switching the filter off (external-links-setup
+// enabled:false with the switched-on assertions): the external link came out
+// without target.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, reset, seedPage, testApi, html, wp } from "../../../tests/lib.mjs";
@@ -41,10 +42,10 @@ const CONTENT = `
 <a id="x-img" href="https://instagram.com/x"><img src="/x.png" alt="Instagram"></a>
 </p>`;
 
-// Atributos de la etiqueta <a> con ese id, ya decodificados (&quot; &amp;…).
+// Attributes of the <a> tag with that id, already decoded (&quot; &amp;…).
 function anchor(page, id) {
   const tag = page.match(new RegExp(`<a\\b[^>]*\\bid="${id}"[^>]*>`))?.[0];
-  assert.ok(tag, `no está el enlace ${id}`);
+  assert.ok(tag, `link ${id} is missing`);
   const attrs = {};
   for (const m of tag.matchAll(/([\w-]+)(?:="([^"]*)"|='([^']*)')?/g).drop(1)) {
     attrs[m[1].toLowerCase()] = (m[2] ?? m[3] ?? "").replace(/&quot;/g, '"').replace(/&#039;|&#39;/g, "'").replace(/&amp;/g, "&");
@@ -55,13 +56,13 @@ function anchor(page, id) {
 let url;
 before(async () => {
   await reset();
-  // Con una categoría declarada sale el aviso de cookies, y con él el «Powered by».
+  // With a declared category the cookie notice shows, and with it the «Powered by».
   await testApi("/consent-setup", { method: "POST", body: { categories: ["maps"], powered_by: { show: true } } });
   ({ url } = await seedPage(CONTENT, "enlaces-externos"));
 });
 after(() => reset());
 
-test("externo (el botón de WhatsApp): target _blank, rel noopener y aviso para lectores de pantalla", async () => {
+test("external (the WhatsApp button): target _blank, rel noopener and a notice for screen readers", async () => {
   const { status, text } = await html(url);
   assert.equal(status, 200);
   const a = anchor(text, "x-ext");
@@ -70,17 +71,17 @@ test("externo (el botón de WhatsApp): target _blank, rel noopener y aviso para 
   assert.equal(a["aria-label"], `Hablar con un asesor ${NOTICE}`);
 });
 
-test("internos, www, relativos, anclas, tel: y mailto: quedan como estaban", async () => {
+test("internal, www, relative, anchors, tel: and mailto: stay as they were", async () => {
   const { text } = await html(url);
   for (const id of ["x-int", "x-www", "x-rel", "x-anchor", "x-tel", "x-mail"]) {
     const a = anchor(text, id);
-    assert.equal(a.target, undefined, `${id} con target`);
-    assert.equal(a.rel, undefined, `${id} con rel`);
-    assert.equal(a["aria-label"], undefined, `${id} con aria-label`);
+    assert.equal(a.target, undefined, `${id} with target`);
+    assert.equal(a.rel, undefined, `${id} with rel`);
+    assert.equal(a["aria-label"], undefined, `${id} with aria-label`);
   }
 });
 
-test("con target no se toca; con rel se añade noopener; con aria-label se añade el aviso; una imagen da su alt", async () => {
+test("with target it is not touched; with rel noopener is appended; with aria-label the notice is appended; an image gives its alt", async () => {
   const { text } = await html(url);
   assert.deepEqual(anchor(text, "x-target"), { id: "x-target", href: "https://facebook.com/x", target: "_self" });
   const rel = anchor(text, "x-relkeep");
@@ -90,22 +91,22 @@ test("con target no se toca; con rel se añade noopener; con aria-label se añad
   assert.equal(anchor(text, "x-img")["aria-label"], `Instagram ${NOTICE}`);
 });
 
-test("el «Powered by» del aviso de cookies no se duplica", async () => {
+test("the cookie notice's «Powered by» is not duplicated", async () => {
   const { text } = await html(url);
   const tag = text.match(/<a\b[^>]*href="https:\/\/estrategiaweb\.es\/"[^>]*>/)?.[0];
-  assert.ok(tag, "no sale el «Powered by»");
+  assert.ok(tag, "the «Powered by» does not show");
   assert.equal(tag.match(/\btarget=/g).length, 1);
   assert.match(tag, /\brel="noopener"/);
   assert.doesNotMatch(tag, /aria-label/);
 });
 
-test("solo el frontal: el contenido por REST (lo que lee el editor) no se toca", async () => {
+test("front end only: content over REST (what the editor reads) is not touched", async () => {
   const page = (await wp(`/pages?slug=enlaces-externos&context=edit`)).json[0];
   assert.doesNotMatch(page.content.raw, /target="_blank"/);
   assert.doesNotMatch(page.content.rendered, /target="_blank"/);
 });
 
-test("apagado con el filtro estrategia_web_site_external_links: nada", async () => {
+test("switched off with the estrategia_web_site_external_links filter: nothing", async () => {
   await setup(false);
   try {
     const a = anchor((await html(url)).text, "x-ext");
