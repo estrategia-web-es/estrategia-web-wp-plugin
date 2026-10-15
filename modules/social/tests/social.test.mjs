@@ -24,7 +24,35 @@ before(async () => {
 });
 after(() => saveLinks(null));
 
-test("sin lista guardada, el bloque pinta las redes de «Datos de la empresa», accesible y en pestaña nueva", async () => {
+test("migración: sin lista guardada, los campos fijos de «Datos de la empresa» pasan a la lista UNA vez, con su icono, y no se borran", async () => {
+  // El saveCompany de before() ya fue otra petición: su init vio los campos vacíos. Esta lectura es la primera con valor.
+  await wp("/settings");
+  const first = (await wp("/settings")).json;
+  assert.deepEqual(first[OPTION], [{ name: "", url: "https://instagram.com/prueba", icon: "instagram", icon_id: 0 }]);
+  assert.equal(first.estrategia_web_site.social.instagram, "https://instagram.com/prueba", "el valor viejo se queda guardado");
+  await saveCompany({ social: { facebook: "https://facebook.com/prueba" } });
+  await wp("/settings");
+  assert.equal((await wp("/settings")).json[OPTION].length, 1, "ya migrada: un campo fijo nuevo no entra");
+  await saveCompany({ social: { facebook: "" } });
+});
+
+test("alias social.<red> hasta la 2.0.0: el shortcode da el enlace de la primera red de la lista con ese icono", async () => {
+  const shortcode = async (slug) => {
+    const page = await seedPage("<!-- wp:paragraph --><p class=\"t-alias\">[estrategia_web_company key=\"social.instagram\"]|[estrategia_web_company key=\"social.x\"]</p><!-- /wp:paragraph -->", slug);
+    return (await html(page.url)).text.match(/class="t-alias[^"]*">([^<]*)<\/p>/)?.[1];
+  };
+  assert.equal(await shortcode("alias-1"), "https://instagram.com/prueba|");
+  await saveLinks([
+    { url: "https://ejemplo.test/" },
+    { url: "https://twitter.com/prueba" },
+    { url: "https://www.instagram.com/otra" },
+    { url: "https://instagram.com/prueba", icon: "instagram" },
+  ]);
+  assert.equal(await shortcode("alias-2"), "https://www.instagram.com/otra|https://twitter.com/prueba", "icono adivinado, y la primera");
+  await saveLinks([{ url: "https://instagram.com/prueba", icon: "instagram" }]);
+});
+
+test("con la lista migrada, el bloque pinta la red, accesible y en pestaña nueva", async () => {
   const ul = await render({}, "redes-empresa");
   const links = [...ul.matchAll(/<a\b[\s\S]*?<\/a>/g)].map((m) => m[0]);
   assert.equal(links.length, 1, ul);
@@ -88,8 +116,10 @@ test("SVG propio: solo un SVG de la mediateca vale como icono, y se pinta sanead
   await saveCompany({ allow_svg: false });
 });
 
-test("lista guardada vacía: el bloque no pinta nada (y no vuelve a las de la empresa)", async () => {
+test("lista guardada vacía: el bloque no pinta nada y no se vuelve a migrar (el campo fijo sigue con valor)", async () => {
   assert.deepEqual(await saveLinks([]), []);
+  await wp("/settings");
+  assert.deepEqual((await wp("/settings")).json[OPTION], []);
   const page = await seedPage(block(), "redes-vacia");
   const { text } = await html(page.url);
   assert.doesNotMatch(text, /estrategia-web-social-links__item/);

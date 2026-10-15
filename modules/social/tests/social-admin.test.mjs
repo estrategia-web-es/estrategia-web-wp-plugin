@@ -28,10 +28,15 @@ after(async () => {
 
 const rows = () => p.locator(".estrategia-web-social__row");
 
-test("pantalla «Redes sociales»: parte de las de la empresa, añade, sube, quita y guarda en el orden que se ve", async () => {
+test("«Datos de la empresa» ya no tiene los campos fijos de redes: enlaza a «Redes sociales»", async () => {
+  await p.goto(`${BASE}/wp-admin/admin.php?page=estrategia-web-site`);
+  assert.equal(await p.locator('input[name^="estrategia_web_site[social]"]').count(), 0);
+  assert.match(await p.locator('a[href*="page=estrategia-web-social"]').first().textContent(), /Redes sociales/);
+});
+
+test("pantalla «Redes sociales»: parte de las de la empresa (migradas), añade, sube, quita y guarda en el orden que se ve", async () => {
   await p.goto(`${BASE}/wp-admin/admin.php?page=estrategia-web-social`);
   assert.equal(await p.locator("h1").first().textContent(), "Redes sociales");
-  assert.match(await p.locator(".notice-info").textContent(), /Todavía sin guardar/);
   assert.equal(await rows().count(), 2, "la de la empresa y la vacía");
   assert.equal(await rows().nth(0).locator('[data-field="url"]').inputValue(), "https://instagram.com/prueba");
   assert.match(await rows().nth(0).locator(".estrategia-web-social__preview").innerHTML(), /<svg/);
@@ -53,7 +58,6 @@ test("pantalla «Redes sociales»: parte de las de la empresa, añade, sube, qui
   await Promise.all([p.waitForURL(/settings-updated/), p.click("#submit")]);
   const saved = (await wp("/settings")).json[OPTION];
   assert.deepEqual(saved.map((i) => [i.name, i.url]), [["Correo", "mailto:hola@ejemplo.test"], ["", "https://instagram.com/prueba"]]);
-  assert.equal(await p.locator(".notice-info").count(), 0, "guardada, ya no avisa");
   assert.deepEqual(errors, [], "sin errores de JavaScript");
 });
 

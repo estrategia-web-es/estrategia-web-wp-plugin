@@ -11,6 +11,29 @@ bloques, en el README del tema (armazon-wp-padre, «Versiones»).
 
 ## Sin publicar
 
+### Redes: fuera los campos fijos de «Datos de la empresa» (15-10-2026)
+
+No obliga a tocar las webs ni al desplegador: la migración corre sola en la
+primera petición y no borra nada.
+
+- **`site`: los seis campos fijos de redes** (`social.facebook`,
+  `social.instagram`, …) **ya no salen en «Datos de la empresa»**; en su
+  lugar, un enlace a **Estrategia Web → Redes sociales**. El objeto `social`
+  de `estrategia_web_site` se sigue aceptando por REST y se queda guardado.
+  **Obsoleto: sale en la 2.0.0.**
+- **`social`: migración idempotente** (`Links::migrate`, en `init`): si la
+  lista `estrategia_web_social_links` no se ha guardado nunca y algún campo
+  fijo tiene valor, se copian a la lista una vez, en su orden y con su icono.
+  Sin valores, no escribe nada. Con la lista ya guardada (también vacía), no
+  vuelve a correr.
+- **Alias `social.<red>` hasta la 2.0.0**: `Company::value()`, la fuente de
+  Block Bindings y `[estrategia_web_company]` dan el enlace de la primera red
+  de la lista con ese icono (elegido o adivinado del enlace). Con el módulo
+  `social` apagado, el valor viejo guardado.
+- **El bloque `estrategia-web/social-links` ya no usa los campos fijos de
+  respaldo**: pinta solo la lista. La pantalla «Redes sociales» pierde el
+  aviso «Todavía sin guardar».
+
 ### Migrador al plugin único (14-10-2026)
 
 - `includes/class-armazon-migration.php`: el paso 7 deja activo SOLO
@@ -30,8 +53,8 @@ No obliga a tocar las webs: todo añade; nada cambia de nombre ni se borra.
   `estrategia_web_social_links`: nombre, enlace, icono de una colección de
   17 —Simple Icons, CC0; Bootstrap Icons, MIT— o un SVG de la mediateca,
   saneado al pintarlo) y bloque `estrategia-web/social-links` (solo iconos o
-  icono y nombre, tres tamaños, color del texto). Mientras la lista no se
-  guarda, salen las redes de «Datos de la empresa». Con WPML, nombre y
+  icono y nombre, tres tamaños, color del texto). Las redes de «Datos de la
+  empresa» se migran a la lista (ver arriba, 15-10-2026). Con WPML, nombre y
   enlace como textos de administración (sin probar con WPML).
 - **`site`: «Tipo de negocio» del cliente** (`estrategia_web_client_business_type`),
   traducible, enlazable con core/post-meta.

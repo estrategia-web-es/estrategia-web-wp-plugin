@@ -110,20 +110,14 @@ final class Admin {
 					?>
 				</table>
 
-				<h2><?php esc_html_e( 'Social networks', 'estrategia-web' ); ?></h2>
-				<table class="form-table" role="presentation">
-					<?php
-					foreach ( Settings::SOCIAL as $network ) {
-						printf(
-							'<tr><th scope="row"><label for="estrategia-web-site-social-%1$s">%2$s</label></th><td><input type="url" class="regular-text" id="estrategia-web-site-social-%1$s" name="%3$s" value="%4$s"></td></tr>',
-							esc_attr( $network ),
-							esc_html( $labels[ 'social.' . $network ] ),
-							esc_attr( Settings::OPTION . '[social][' . $network . ']' ),
-							esc_attr( (string) $data['social'][ $network ] )
-						);
-					}
+				<?php
+				// Las redes ya no van aquí (15-10-2026): son la lista del módulo social.
+				// La pantalla no manda `social` y sanitize() conserva lo guardado.
+				if ( class_exists( \EstrategiaWeb\Social\Admin::class ) ) :
 					?>
-				</table>
+					<h2><?php esc_html_e( 'Social networks', 'estrategia-web' ); ?></h2>
+					<p><a href="<?php echo esc_url( admin_url( 'admin.php?page=' . \EstrategiaWeb\Social\Admin::PAGE ) ); ?>"><?php esc_html_e( 'Social networks are edited in Estrategia Web › Social networks.', 'estrategia-web' ); ?></a></p>
+				<?php endif; ?>
 
 				<h2><?php esc_html_e( 'Content types', 'estrategia-web' ); ?></h2>
 				<p><?php esc_html_e( 'Only the checked types appear in the menu and on the site. Unchecking a type does not delete its content: it comes back when it is checked again.', 'estrategia-web' ); ?></p>

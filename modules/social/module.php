@@ -7,8 +7,9 @@
  *
  * Tres piezas:
  * - La lista: opción estrategia_web_social_links (includes/class-links.php,
- *   ahí está su forma, el saneado y el caso frontera de las webs que ya
- *   tenían redes en «Datos de la empresa»).
+ *   ahí está su forma, el saneado, la migración de las webs que ya tenían
+ *   redes en los campos fijos de «Datos de la empresa» y el alias
+ *   `social.<red>` de Company::value() hasta la 2.0.0).
  * - La pantalla «Estrategia Web → Redes sociales» (includes/class-admin.php
  *   y assets/admin.js): una fila por red, ordenable con botones.
  * - El bloque estrategia-web/social-links (blocks/social-links/render.php):
@@ -54,6 +55,8 @@ require_once __DIR__ . '/includes/class-icons.php';
 require_once __DIR__ . '/includes/class-links.php';
 
 add_action( 'init', array( Links::class, 'register' ) );
+// Después de register: los seis campos fijos de «Datos de la empresa» → la lista, una vez (ver Links).
+add_action( 'init', array( Links::class, 'migrate' ), 11 );
 add_action( 'init', static fn() => register_block_type( __DIR__ . '/blocks/social-links' ) );
 
 if ( is_admin() ) {

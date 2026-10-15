@@ -457,8 +457,8 @@ msgid ""
 msgstr ""
 
 #: modules/consent/includes/admin/class-cookies-page.php:290
-#: modules/social/includes/class-admin.php:93
-#: modules/social/includes/class-admin.php:134
+#: modules/social/includes/class-admin.php:90
+#: modules/social/includes/class-admin.php:131
 msgid "Name"
 msgstr ""
 
@@ -2110,7 +2110,7 @@ msgstr ""
 #: modules/site/includes/admin/class-admin.php:83
 #: modules/site/includes/class-bindings.php:50
 #: modules/site/includes/class-legacy-names.php:109
-#: modules/site/includes/class-settings.php:138
+#: modules/site/includes/class-settings.php:144
 msgid "Company details"
 msgstr ""
 
@@ -2169,122 +2169,126 @@ msgstr ""
 msgid "Text that appears already written when the chat opens."
 msgstr ""
 
-#: modules/site/includes/admin/class-admin.php:113
+#: modules/site/includes/admin/class-admin.php:118
 #: modules/social/includes/class-admin.php:45
 #: modules/social/includes/class-admin.php:82
 msgid "Social networks"
 msgstr ""
 
-#: modules/site/includes/admin/class-admin.php:128
+#: modules/site/includes/admin/class-admin.php:119
+msgid "Social networks are edited in Estrategia Web › Social networks."
+msgstr ""
+
+#: modules/site/includes/admin/class-admin.php:122
 msgid "Content types"
 msgstr ""
 
-#: modules/site/includes/admin/class-admin.php:129
+#: modules/site/includes/admin/class-admin.php:123
 msgid ""
 "Only the checked types appear in the menu and on the site. Unchecking a type "
 "does not delete its content: it comes back when it is checked again."
 msgstr ""
 
-#: modules/site/includes/admin/class-admin.php:140
+#: modules/site/includes/admin/class-admin.php:134
 msgid "Media"
 msgstr ""
 
-#: modules/site/includes/admin/class-admin.php:144
+#: modules/site/includes/admin/class-admin.php:138
 msgid "Allow SVG uploads (administrators only; files are sanitized)"
 msgstr ""
 
-#: modules/site/includes/class-company.php:91
+#: modules/site/includes/class-company.php:107
 msgid "Company name"
 msgstr ""
 
-#: modules/site/includes/class-company.php:92
+#: modules/site/includes/class-company.php:108
 msgid "Legal name"
 msgstr ""
 
-#: modules/site/includes/class-company.php:93
+#: modules/site/includes/class-company.php:109
 msgid "Tax ID"
 msgstr ""
 
-#: modules/site/includes/class-company.php:94
+#: modules/site/includes/class-company.php:110
 msgid "Company registry"
 msgstr ""
 
-#: modules/site/includes/class-company.php:95
+#: modules/site/includes/class-company.php:111
 #: modules/site/includes/class-content-types.php:157
 #: modules/social/includes/class-icons.php:80
 msgid "Email"
 msgstr ""
 
-#: modules/site/includes/class-company.php:96
+#: modules/site/includes/class-company.php:112
 #: modules/site/includes/class-content-types.php:156
 msgid "Phone"
 msgstr ""
 
-#: modules/site/includes/class-company.php:97
+#: modules/site/includes/class-company.php:113
 msgid "Secondary phone"
 msgstr ""
 
-#: modules/site/includes/class-company.php:98
+#: modules/site/includes/class-company.php:114
 msgid "WhatsApp"
 msgstr ""
 
-#: modules/site/includes/class-company.php:99
+#: modules/site/includes/class-company.php:115
 msgid "WhatsApp message"
 msgstr ""
 
-#: modules/site/includes/class-company.php:100
+#: modules/site/includes/class-company.php:116
 #: modules/site/includes/class-content-types.php:155
 msgid "Address"
 msgstr ""
 
-#: modules/site/includes/class-company.php:101
+#: modules/site/includes/class-company.php:117
 #: modules/site/includes/class-content-types.php:158
 msgid "Opening hours"
 msgstr ""
 
-#: modules/site/includes/class-company.php:102
+#: modules/site/includes/class-company.php:118
 msgid "Map link"
 msgstr ""
 
-#: modules/site/includes/class-company.php:103
+#: modules/site/includes/class-company.php:119
 msgid "Facebook"
 msgstr ""
 
-#: modules/site/includes/class-company.php:104
+#: modules/site/includes/class-company.php:120
 msgid "Instagram"
 msgstr ""
 
-#: modules/site/includes/class-company.php:105
+#: modules/site/includes/class-company.php:121
 msgid "LinkedIn"
 msgstr ""
 
-#: modules/site/includes/class-company.php:106
+#: modules/site/includes/class-company.php:122
 msgid "X (Twitter)"
 msgstr ""
 
-#: modules/site/includes/class-company.php:107
+#: modules/site/includes/class-company.php:123
 msgid "YouTube"
 msgstr ""
 
-#: modules/site/includes/class-company.php:108
+#: modules/site/includes/class-company.php:124
 msgid "TikTok"
 msgstr ""
 
-#: modules/site/includes/class-company.php:109
+#: modules/site/includes/class-company.php:125
 #: modules/site/includes/class-location.php:133
 msgid "Phone (link)"
 msgstr ""
 
-#: modules/site/includes/class-company.php:110
+#: modules/site/includes/class-company.php:126
 msgid "Secondary phone (link)"
 msgstr ""
 
-#: modules/site/includes/class-company.php:111
+#: modules/site/includes/class-company.php:127
 #: modules/site/includes/class-location.php:134
 msgid "Email (link)"
 msgstr ""
 
-#: modules/site/includes/class-company.php:112
+#: modules/site/includes/class-company.php:128
 msgid "WhatsApp (link)"
 msgstr ""
 
@@ -2667,7 +2671,7 @@ msgstr ""
 
 #: modules/site/includes/class-legacy-names.php:110
 #: modules/site/includes/class-location.php:64
-#: modules/site/includes/class-meta-panel.php:123
+#: modules/site/includes/class-meta-panel.php:171
 msgid "Location details"
 msgstr ""
 
@@ -2675,82 +2679,82 @@ msgstr ""
 msgid "Location name"
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:124
+#: modules/site/includes/class-meta-panel.php:172
 msgid "Client details"
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:125
+#: modules/site/includes/class-meta-panel.php:173
 msgid "Testimonial details"
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:132
+#: modules/site/includes/class-meta-panel.php:180
 msgid "Google Maps › Share › Copy link."
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:133
+#: modules/site/includes/class-meta-panel.php:181
 msgid "Google Maps › Share › Embed a map. You can paste the whole iframe code."
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:134
+#: modules/site/includes/class-meta-panel.php:182
 msgid ""
 "Map picture shown before Google Maps loads (privacy: Google only loads after "
 "a click)."
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:135
+#: modules/site/includes/class-meta-panel.php:183
 msgid ""
 "Only if the picture is not in the media library: a theme path (assets/maps/"
 "place.webp) or a URL of this site. The picture above wins."
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:136
+#: modules/site/includes/class-meta-panel.php:184
 msgid ""
 "What the client does, e.g. “holiday rental agency”. It is translated; the "
 "name is not."
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:154
+#: modules/site/includes/class-meta-panel.php:202
 msgid "Changed in the original language: it is copied to the translations."
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:162
+#: modules/site/includes/class-meta-panel.php:210
 msgid ""
 "Phone, links and map are copied to the translations when you save; address "
 "and opening hours are translated in each language."
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:266
+#: modules/site/includes/class-meta-panel.php:314
 msgid "No rating"
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:270
+#: modules/site/includes/class-meta-panel.php:318
 msgid "Photo (fills the box, may be cropped)"
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:271
+#: modules/site/includes/class-meta-panel.php:319
 msgid "Logo (whole, never cropped)"
 msgstr ""
 
-#: modules/site/includes/class-meta-panel.php:274
+#: modules/site/includes/class-meta-panel.php:322
 msgid "— None —"
 msgstr ""
 
-#: modules/site/includes/class-settings.php:139
+#: modules/site/includes/class-settings.php:145
 msgid "Company details and site options of the Estrategia Web Site plugin."
 msgstr ""
 
-#: modules/site/includes/class-settings.php:260
+#: modules/site/includes/class-settings.php:266
 msgid "The email address is not valid. The previous one has been kept."
 msgstr ""
 
-#: modules/site/includes/class-settings.php:273
+#: modules/site/includes/class-settings.php:279
 msgid ""
 "The WhatsApp number is not valid (international format, digits only). The "
 "previous one has been kept."
 msgstr ""
 
 #. translators: %s: the field name.
-#: modules/site/includes/class-settings.php:347
+#: modules/site/includes/class-settings.php:353
 #, php-format
 msgid ""
 "The address in «%s» is not a valid web address. The previous one has been "
@@ -2864,41 +2868,35 @@ msgid ""
 "SVG from the media library."
 msgstr ""
 
-#: modules/social/includes/class-admin.php:85
-msgid ""
-"Not saved yet: until you save this list, the block uses the networks of "
-"Company details."
-msgstr ""
-
-#: modules/social/includes/class-admin.php:92
-#: modules/social/includes/class-admin.php:125
+#: modules/social/includes/class-admin.php:89
+#: modules/social/includes/class-admin.php:122
 msgid "Icon"
 msgstr ""
 
-#: modules/social/includes/class-admin.php:94
-#: modules/social/includes/class-admin.php:142
+#: modules/social/includes/class-admin.php:91
+#: modules/social/includes/class-admin.php:139
 msgid "Link"
 msgstr ""
 
-#: modules/social/includes/class-admin.php:95
+#: modules/social/includes/class-admin.php:92
 msgid "Order"
 msgstr ""
 
-#: modules/social/includes/class-admin.php:103
+#: modules/social/includes/class-admin.php:100
 msgid "Add network"
 msgstr ""
 
-#: modules/social/includes/class-admin.php:104
+#: modules/social/includes/class-admin.php:101
 msgid ""
 "To remove a network without JavaScript, empty its link. Your own SVG can "
 "only be uploaded if “Allow SVG uploads” is on in Company details."
 msgstr ""
 
-#: modules/social/includes/class-admin.php:111
+#: modules/social/includes/class-admin.php:108
 msgid "Automatic (from the link)"
 msgstr ""
 
-#: modules/social/includes/class-admin.php:137
+#: modules/social/includes/class-admin.php:134
 msgid "Empty: the icon name"
 msgstr ""
 
@@ -2910,7 +2908,7 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
-#: modules/social/includes/class-links.php:67
+#: modules/social/includes/class-links.php:77
 msgid "Social network links, in order."
 msgstr ""
 

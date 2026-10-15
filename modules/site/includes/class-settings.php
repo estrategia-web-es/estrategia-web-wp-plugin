@@ -30,6 +30,12 @@
  *   POR CLAVE: mandar {"rewrite_slugs":{"client":"cliente"}} no borra el slug
  *   fijado de `client_sector`. Y se guardan siempre con todas sus claves (las
  *   no fijadas, ''), para que REST devuelva un objeto y no un [] vacío.
+ * - `social` (los seis campos fijos de redes) NO sale en la pantalla desde el
+ *   15-10-2026: las redes son la lista del módulo social, que copia estos
+ *   valores una vez (Social\Links::migrate). Se sigue aceptando y guardando
+ *   por REST para no perder datos ni romper cargas de contenido viejas, y
+ *   Company::value('social.<red>') es un alias hasta la 2.0.0, en la que
+ *   sale del contrato (ver class-company.php).
  * - `rewrite_slugs` NO sale en la pantalla, a propósito: cambia URL
  *   publicadas y lo fija quien monta la web (REST, carga de contenido). La
  *   pantalla no lo manda, y la fusión lo conserva al guardarla.

@@ -241,6 +241,7 @@ add_action(
 				delete_option( 'estrategia_web_site_test_webp' );
 				delete_option( 'estrategia_web_site_test_external_links' );
 				delete_option( 'estrategia_web_test_suite' ); // La marca de las pruebas de forms (vuelve el es_ES).
+				delete_option( 'estrategia_web_social_links' ); // Sin lista: la migración de los campos fijos vuelve a correr.
 				delete_option( 'estrategia_web_modules' ); // 1.1.0: todos los módulos, como recién instalado.
 				delete_option( 'estrategia_web_modules_known' );
 				delete_option( 'rewrite_rules' );

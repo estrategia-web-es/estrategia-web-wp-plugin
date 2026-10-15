@@ -511,8 +511,8 @@ msgstr ""
 "se rellenan con la propuesta, si la hay."
 
 #: modules/consent/includes/admin/class-cookies-page.php:290
-#: modules/social/includes/class-admin.php:93
-#: modules/social/includes/class-admin.php:134
+#: modules/social/includes/class-admin.php:90
+#: modules/social/includes/class-admin.php:131
 msgid "Name"
 msgstr "Nombre"
 
@@ -2321,7 +2321,7 @@ msgstr "Redirecciones"
 #: modules/site/includes/admin/class-admin.php:83
 #: modules/site/includes/class-bindings.php:50
 #: modules/site/includes/class-legacy-names.php:109
-#: modules/site/includes/class-settings.php:138
+#: modules/site/includes/class-settings.php:144
 msgid "Company details"
 msgstr "Datos de la empresa"
 
@@ -2385,17 +2385,21 @@ msgstr "Formato internacional, solo dígitos, sin +. Ejemplo: 34600000000."
 msgid "Text that appears already written when the chat opens."
 msgstr "Texto que aparece ya escrito al abrir el chat."
 
-#: modules/site/includes/admin/class-admin.php:113
+#: modules/site/includes/admin/class-admin.php:118
 #: modules/social/includes/class-admin.php:45
 #: modules/social/includes/class-admin.php:82
 msgid "Social networks"
 msgstr "Redes sociales"
 
-#: modules/site/includes/admin/class-admin.php:128
+#: modules/site/includes/admin/class-admin.php:119
+msgid "Social networks are edited in Estrategia Web › Social networks."
+msgstr "Las redes sociales se editan en Estrategia Web › Redes sociales."
+
+#: modules/site/includes/admin/class-admin.php:122
 msgid "Content types"
 msgstr "Tipos de contenido"
 
-#: modules/site/includes/admin/class-admin.php:129
+#: modules/site/includes/admin/class-admin.php:123
 msgid ""
 "Only the checked types appear in the menu and on the site. Unchecking a type "
 "does not delete its content: it comes back when it is checked again."
@@ -2403,106 +2407,106 @@ msgstr ""
 "Solo los tipos marcados aparecen en el menú y en la web. Desmarcar un tipo "
 "no borra su contenido: vuelve al marcarlo otra vez."
 
-#: modules/site/includes/admin/class-admin.php:140
+#: modules/site/includes/admin/class-admin.php:134
 msgid "Media"
 msgstr "Medios"
 
-#: modules/site/includes/admin/class-admin.php:144
+#: modules/site/includes/admin/class-admin.php:138
 msgid "Allow SVG uploads (administrators only; files are sanitized)"
 msgstr "Permitir subir SVG (solo administradores; los ficheros se sanean)"
 
-#: modules/site/includes/class-company.php:91
+#: modules/site/includes/class-company.php:107
 msgid "Company name"
 msgstr "Nombre comercial"
 
-#: modules/site/includes/class-company.php:92
+#: modules/site/includes/class-company.php:108
 msgid "Legal name"
 msgstr "Razón social"
 
-#: modules/site/includes/class-company.php:93
+#: modules/site/includes/class-company.php:109
 msgid "Tax ID"
 msgstr "NIF/CIF"
 
-#: modules/site/includes/class-company.php:94
+#: modules/site/includes/class-company.php:110
 msgid "Company registry"
 msgstr "Inscripción registral"
 
-#: modules/site/includes/class-company.php:95
+#: modules/site/includes/class-company.php:111
 #: modules/site/includes/class-content-types.php:157
 #: modules/social/includes/class-icons.php:80
 msgid "Email"
 msgstr "Correo electrónico"
 
-#: modules/site/includes/class-company.php:96
+#: modules/site/includes/class-company.php:112
 #: modules/site/includes/class-content-types.php:156
 msgid "Phone"
 msgstr "Teléfono"
 
-#: modules/site/includes/class-company.php:97
+#: modules/site/includes/class-company.php:113
 msgid "Secondary phone"
 msgstr "Teléfono secundario"
 
-#: modules/site/includes/class-company.php:98
+#: modules/site/includes/class-company.php:114
 msgid "WhatsApp"
 msgstr "WhatsApp"
 
-#: modules/site/includes/class-company.php:99
+#: modules/site/includes/class-company.php:115
 msgid "WhatsApp message"
 msgstr "Mensaje de WhatsApp"
 
-#: modules/site/includes/class-company.php:100
+#: modules/site/includes/class-company.php:116
 #: modules/site/includes/class-content-types.php:155
 msgid "Address"
 msgstr "Dirección"
 
-#: modules/site/includes/class-company.php:101
+#: modules/site/includes/class-company.php:117
 #: modules/site/includes/class-content-types.php:158
 msgid "Opening hours"
 msgstr "Horario"
 
-#: modules/site/includes/class-company.php:102
+#: modules/site/includes/class-company.php:118
 msgid "Map link"
 msgstr "Enlace al mapa"
 
-#: modules/site/includes/class-company.php:103
+#: modules/site/includes/class-company.php:119
 msgid "Facebook"
 msgstr "Facebook"
 
-#: modules/site/includes/class-company.php:104
+#: modules/site/includes/class-company.php:120
 msgid "Instagram"
 msgstr "Instagram"
 
-#: modules/site/includes/class-company.php:105
+#: modules/site/includes/class-company.php:121
 msgid "LinkedIn"
 msgstr "LinkedIn"
 
-#: modules/site/includes/class-company.php:106
+#: modules/site/includes/class-company.php:122
 msgid "X (Twitter)"
 msgstr "X (Twitter)"
 
-#: modules/site/includes/class-company.php:107
+#: modules/site/includes/class-company.php:123
 msgid "YouTube"
 msgstr "YouTube"
 
-#: modules/site/includes/class-company.php:108
+#: modules/site/includes/class-company.php:124
 msgid "TikTok"
 msgstr "TikTok"
 
-#: modules/site/includes/class-company.php:109
+#: modules/site/includes/class-company.php:125
 #: modules/site/includes/class-location.php:133
 msgid "Phone (link)"
 msgstr "Teléfono (enlace)"
 
-#: modules/site/includes/class-company.php:110
+#: modules/site/includes/class-company.php:126
 msgid "Secondary phone (link)"
 msgstr "Teléfono secundario (enlace)"
 
-#: modules/site/includes/class-company.php:111
+#: modules/site/includes/class-company.php:127
 #: modules/site/includes/class-location.php:134
 msgid "Email (link)"
 msgstr "Correo electrónico (enlace)"
 
-#: modules/site/includes/class-company.php:112
+#: modules/site/includes/class-company.php:128
 msgid "WhatsApp (link)"
 msgstr "WhatsApp (enlace)"
 
@@ -2885,7 +2889,7 @@ msgstr "Categoría del portfolio"
 
 #: modules/site/includes/class-legacy-names.php:110
 #: modules/site/includes/class-location.php:64
-#: modules/site/includes/class-meta-panel.php:123
+#: modules/site/includes/class-meta-panel.php:171
 msgid "Location details"
 msgstr "Datos de la sede"
 
@@ -2893,25 +2897,25 @@ msgstr "Datos de la sede"
 msgid "Location name"
 msgstr "Nombre de la sede"
 
-#: modules/site/includes/class-meta-panel.php:124
+#: modules/site/includes/class-meta-panel.php:172
 msgid "Client details"
 msgstr "Datos del cliente"
 
-#: modules/site/includes/class-meta-panel.php:125
+#: modules/site/includes/class-meta-panel.php:173
 msgid "Testimonial details"
 msgstr "Datos de la opinión"
 
-#: modules/site/includes/class-meta-panel.php:132
+#: modules/site/includes/class-meta-panel.php:180
 msgid "Google Maps › Share › Copy link."
 msgstr "Google Maps › Compartir › Copiar enlace."
 
-#: modules/site/includes/class-meta-panel.php:133
+#: modules/site/includes/class-meta-panel.php:181
 msgid "Google Maps › Share › Embed a map. You can paste the whole iframe code."
 msgstr ""
 "Google Maps › Compartir › Insertar un mapa. Puedes pegar el código del "
 "iframe entero."
 
-#: modules/site/includes/class-meta-panel.php:134
+#: modules/site/includes/class-meta-panel.php:182
 msgid ""
 "Map picture shown before Google Maps loads (privacy: Google only loads after "
 "a click)."
@@ -2919,7 +2923,7 @@ msgstr ""
 "Imagen del mapa que se ve antes de cargar Google Maps (privacidad: Google "
 "solo se carga tras un clic)."
 
-#: modules/site/includes/class-meta-panel.php:135
+#: modules/site/includes/class-meta-panel.php:183
 msgid ""
 "Only if the picture is not in the media library: a theme path (assets/maps/"
 "place.webp) or a URL of this site. The picture above wins."
@@ -2927,7 +2931,7 @@ msgstr ""
 "Solo si la imagen no está en la mediateca: una ruta del tema (assets/maps/"
 "sede.webp) o una URL de este sitio. Si hay imagen arriba, manda esa."
 
-#: modules/site/includes/class-meta-panel.php:136
+#: modules/site/includes/class-meta-panel.php:184
 msgid ""
 "What the client does, e.g. “holiday rental agency”. It is translated; the "
 "name is not."
@@ -2935,11 +2939,11 @@ msgstr ""
 "A qué se dedica el cliente, p. ej. «agencia de alquiler vacacional». Se "
 "traduce; el nombre no."
 
-#: modules/site/includes/class-meta-panel.php:154
+#: modules/site/includes/class-meta-panel.php:202
 msgid "Changed in the original language: it is copied to the translations."
 msgstr "Se cambia en el idioma original: se copia a las traducciones."
 
-#: modules/site/includes/class-meta-panel.php:162
+#: modules/site/includes/class-meta-panel.php:210
 msgid ""
 "Phone, links and map are copied to the translations when you save; address "
 "and opening hours are translated in each language."
@@ -2947,32 +2951,32 @@ msgstr ""
 "El teléfono, los enlaces y el mapa se copian a las traducciones al guardar; "
 "la dirección y el horario se traducen en cada idioma."
 
-#: modules/site/includes/class-meta-panel.php:266
+#: modules/site/includes/class-meta-panel.php:314
 msgid "No rating"
 msgstr "Sin valoración"
 
-#: modules/site/includes/class-meta-panel.php:270
+#: modules/site/includes/class-meta-panel.php:318
 msgid "Photo (fills the box, may be cropped)"
 msgstr "Foto (llena el recuadro, puede recortarse)"
 
-#: modules/site/includes/class-meta-panel.php:271
+#: modules/site/includes/class-meta-panel.php:319
 msgid "Logo (whole, never cropped)"
 msgstr "Logo (entero, nunca se recorta)"
 
-#: modules/site/includes/class-meta-panel.php:274
+#: modules/site/includes/class-meta-panel.php:322
 msgid "— None —"
 msgstr "— Ninguno —"
 
-#: modules/site/includes/class-settings.php:139
+#: modules/site/includes/class-settings.php:145
 msgid "Company details and site options of the Estrategia Web Site plugin."
 msgstr ""
 "Datos de la empresa y opciones de la web del plugin Estrategia Web Site."
 
-#: modules/site/includes/class-settings.php:260
+#: modules/site/includes/class-settings.php:266
 msgid "The email address is not valid. The previous one has been kept."
 msgstr "El correo electrónico no es válido. Se ha mantenido el anterior."
 
-#: modules/site/includes/class-settings.php:273
+#: modules/site/includes/class-settings.php:279
 msgid ""
 "The WhatsApp number is not valid (international format, digits only). The "
 "previous one has been kept."
@@ -2981,7 +2985,7 @@ msgstr ""
 "ha mantenido el anterior."
 
 #. translators: %s: the field name.
-#: modules/site/includes/class-settings.php:347
+#: modules/site/includes/class-settings.php:353
 #, php-format
 msgid ""
 "The address in «%s» is not a valid web address. The previous one has been "
@@ -3109,33 +3113,25 @@ msgstr ""
 "se adivina del enlace; elige uno solo si se equivoca, o usa tu propio SVG de "
 "la mediateca."
 
-#: modules/social/includes/class-admin.php:85
-msgid ""
-"Not saved yet: until you save this list, the block uses the networks of "
-"Company details."
-msgstr ""
-"Todavía sin guardar: hasta que guardes esta lista, el bloque usa las redes "
-"de «Datos de la empresa»."
-
-#: modules/social/includes/class-admin.php:92
-#: modules/social/includes/class-admin.php:125
+#: modules/social/includes/class-admin.php:89
+#: modules/social/includes/class-admin.php:122
 msgid "Icon"
 msgstr "Icono"
 
-#: modules/social/includes/class-admin.php:94
-#: modules/social/includes/class-admin.php:142
+#: modules/social/includes/class-admin.php:91
+#: modules/social/includes/class-admin.php:139
 msgid "Link"
 msgstr "Enlace"
 
-#: modules/social/includes/class-admin.php:95
+#: modules/social/includes/class-admin.php:92
 msgid "Order"
 msgstr "Orden"
 
-#: modules/social/includes/class-admin.php:103
+#: modules/social/includes/class-admin.php:100
 msgid "Add network"
 msgstr "Añadir red"
 
-#: modules/social/includes/class-admin.php:104
+#: modules/social/includes/class-admin.php:101
 msgid ""
 "To remove a network without JavaScript, empty its link. Your own SVG can "
 "only be uploaded if “Allow SVG uploads” is on in Company details."
@@ -3143,11 +3139,11 @@ msgstr ""
 "Para quitar una red sin JavaScript, vacía su enlace. Solo se puede subir un "
 "SVG propio si «Permitir subir SVG» está marcado en «Datos de la empresa»."
 
-#: modules/social/includes/class-admin.php:111
+#: modules/social/includes/class-admin.php:108
 msgid "Automatic (from the link)"
 msgstr "Automático (según el enlace)"
 
-#: modules/social/includes/class-admin.php:137
+#: modules/social/includes/class-admin.php:134
 msgid "Empty: the icon name"
 msgstr "Vacío: el nombre del icono"
 
@@ -3159,7 +3155,7 @@ msgstr "Google (Perfil de Empresa)"
 msgid "Website"
 msgstr "Web"
 
-#: modules/social/includes/class-links.php:67
+#: modules/social/includes/class-links.php:77
 msgid "Social network links, in order."
 msgstr "Enlaces a las redes sociales, en orden."
 
@@ -3333,6 +3329,13 @@ msgid ""
 msgstr ""
 "Con WPML, /en/ enseña la portada traducida en vez de las últimas entradas. "
 "Sin WPML no hace nada."
+
+#~ msgid ""
+#~ "Not saved yet: until you save this list, the block uses the networks of "
+#~ "Company details."
+#~ msgstr ""
+#~ "Todavía sin guardar: hasta que guardes esta lista, el bloque usa las "
+#~ "redes de «Datos de la empresa»."
 
 #~ msgid "Statistics"
 #~ msgstr "Estadísticas"

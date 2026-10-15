@@ -20,6 +20,14 @@
  * - Caso frontera: una clave que no existe («phone_mobile») devuelve '' y no
  *   un error: un bloque mal enlazado se ve vacío en la web y en el editor
  *   enseña el nombre de la clave, que es donde se nota.
+ * - `social.<red>` es un ALIAS HASTA LA 2.0.0 (15-10-2026): los seis campos
+ *   fijos ya no se editan en «Datos de la empresa»; las redes son la lista
+ *   libre del módulo social (estrategia_web_social_links). Con ese módulo
+ *   encendido, value('social.facebook') es el enlace de la PRIMERA red de la
+ *   lista con el icono de Facebook (Social\Links::url_for); apagado, el valor
+ *   viejo que siga guardado. Lo mantiene vivo para no romper temas que lo
+ *   enlazan. En la 2.0.0 sale de keys(), labels() y de aquí. Un tema nuevo
+ *   no lo usa: pone el bloque estrategia-web/social-links.
  * - La trampa: para un tema, `Company::value()` es la API pública en PHP;
  *   leer `get_option('estrategia_web_site')` directamente se salta el filtro
  *   `estrategia_web_site_settings` y las derivadas.
@@ -74,7 +82,15 @@ final class Company {
 				return Links::whatsapp( (string) $data['whatsapp'], (string) $data['whatsapp_message'], self::country_code() );
 		}
 		if ( str_starts_with( $key, 'social.' ) ) {
-			return (string) ( $data['social'][ substr( $key, 7 ) ] ?? '' );
+			$network = substr( $key, 7 );
+			if ( ! in_array( $network, Settings::SOCIAL, true ) ) {
+				return '';
+			}
+			// Alias hasta la 2.0.0 (ver la cabecera): de la lista del módulo social si está encendido.
+			if ( class_exists( \EstrategiaWeb\Social\Links::class ) ) {
+				return \EstrategiaWeb\Social\Links::url_for( $network );
+			}
+			return (string) ( $data['social'][ $network ] ?? '' );
 		}
 		if ( in_array( $key, self::NOT_DATA, true ) || ! array_key_exists( $key, Settings::DEFAULTS ) ) {
 			return '';

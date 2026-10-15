@@ -19,13 +19,22 @@
  *   pie»), aquí (FIELDS, sanitize_item, esquema de REST), en la pantalla y en
  *   wpml-config.xml si se lee.
  * - CASO FRONTERA con nombre: una web que ya tenía las redes en «Datos de la
- *   empresa» (los seis campos fijos social.instagram, etc., del módulo site).
- *   Mientras esta opción NO EXISTE, la lista sale de ahí (from_company): se
- *   enciende el módulo y el bloque pinta lo que ya había, sin migrar nada.
- *   En cuanto se guarda la lista una vez (aunque sea vacía), manda la lista
- *   y los campos de la empresa dejan de usarse para el bloque (siguen
- *   valiendo para la fuente de Block Bindings `social.<red>`). La pantalla
- *   lo avisa.
+ *   empresa» (los seis campos fijos social.instagram, etc., del módulo site,
+ *   que desde el 15-10-2026 ya no salen en esa pantalla). migrate(), en
+ *   `init`: si esta opción NO EXISTE y alguno de esos campos tiene valor, los
+ *   copia aquí UNA vez, en su orden y con su icono, con add_option (si otra
+ *   petición llega a la vez, la segunda no hace nada). Los valores viejos se
+ *   quedan guardados en estrategia_web_site: no se borra ningún dato.
+ *   Después manda SOLO la lista, también si se vacía: guardar [] no
+ *   resucita los campos viejos. Sin campos con valor no se escribe nada, así
+ *   que una carga de contenido que todavía mande `social` por REST a «Datos
+ *   de la empresa» se migra en la petición siguiente, mientras la lista no se
+ *   haya guardado; con la lista ya guardada, eso se ignora.
+ * - Alias `social.<red>` (Company::value, la fuente de Block Bindings y el
+ *   shortcode) HASTA LA 2.0.0: url_for() da el enlace de la primera red de
+ *   la lista con ese icono (elegido o adivinado del enlace). En la 2.0.0 se
+ *   quitan las claves social.<red> y el objeto `social` de la opción del
+ *   módulo site (versión mayor: es contrato).
  * - Con WPML: name y url se traducen como textos de administración
  *   (wpml-config.xml, <admin-texts>), por POSICIÓN en la lista. La trampa:
  *   reordenar la lista desplaza las traducciones (la del 2º pasa a ser del
@@ -39,6 +48,7 @@
 namespace EstrategiaWeb\Social;
 
 use EstrategiaWeb\Site\Company;
+use EstrategiaWeb\Site\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -125,30 +135,73 @@ final class Links {
 		);
 	}
 
-	/** Si la lista se ha guardado alguna vez (si no, se usan las redes de la empresa). */
+	/** Si la lista se ha guardado alguna vez (la migración cuenta). */
 	public static function saved(): bool {
 		return null !== get_option( self::OPTION, null );
 	}
 
-	/** La lista guardada, o la de «Datos de la empresa» si nunca se guardó (ver la cabecera). */
+	/** La lista guardada; vacía si no hay (la migración de `init` ya trajo las de la empresa). */
 	public static function items(): array {
-		$saved = get_option( self::OPTION, null );
-		return null === $saved ? self::from_company() : self::sanitize( $saved );
+		return self::sanitize( get_option( self::OPTION, array() ) );
+	}
+
+	/**
+	 * La migración de los campos fijos de «Datos de la empresa» (ver el caso
+	 * frontera de la cabecera). Idempotente: con la lista ya guardada, o sin
+	 * campos con valor, no hace nada.
+	 */
+	public static function migrate(): void {
+		if ( self::saved() ) {
+			return;
+		}
+		$items = self::from_company();
+		if ( $items ) {
+			add_option( self::OPTION, $items );
+		}
+	}
+
+	/**
+	 * El alias `social.<red>` hasta la 2.0.0: el enlace de la primera red de
+	 * la lista con ese icono (elegido, o adivinado del enlace si es automático).
+	 * Antes de migrar (una lectura anterior a `init`), el campo viejo.
+	 */
+	public static function url_for( string $network ): string {
+		if ( ! self::saved() ) {
+			return self::legacy()[ $network ] ?? '';
+		}
+		foreach ( self::items() as $item ) {
+			$slug = '' !== $item['icon'] ? $item['icon'] : Icons::guess( $item['url'] );
+			if ( $slug === $network ) {
+				return $item['url'];
+			}
+		}
+		return '';
 	}
 
 	/** Las redes de los seis campos fijos de «Datos de la empresa», en su orden. */
-	public static function from_company(): array {
-		if ( ! class_exists( Company::class ) ) {
-			return array();
-		}
-		$out = array();
+	private static function from_company(): array {
+		$legacy = self::legacy();
+		$out    = array();
 		foreach ( self::COMPANY as $network ) {
-			$url = Company::value( 'social.' . $network );
+			$url = (string) ( $legacy[ $network ] ?? '' );
 			if ( '' !== $url ) {
 				$out[] = array( 'name' => '', 'url' => $url, 'icon' => $network, 'icon_id' => 0 );
 			}
 		}
 		return $out;
+	}
+
+	/**
+	 * Lo guardado en los campos fijos, leído de Settings y NO de
+	 * Company::value(), que ahora llama a url_for(): sería un bucle.
+	 * @return array<string,string>
+	 */
+	private static function legacy(): array {
+		if ( ! class_exists( Settings::class ) ) {
+			return array();
+		}
+		$social = Settings::all()['social'] ?? array();
+		return is_array( $social ) ? array_map( 'strval', $social ) : array();
 	}
 
 	/**

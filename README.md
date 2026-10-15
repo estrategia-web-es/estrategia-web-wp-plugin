@@ -99,7 +99,7 @@ su esquema: `GET/POST /wp/v2/settings` → clave `estrategia_web_site`.
 | `address` | texto varias líneas | sin HTML, conserva saltos |
 | `schedule` | texto varias líneas | ídem |
 | `map_url` | URL | http(s); inválida → se queda la anterior |
-| `social` | objeto: `facebook`, `instagram`, `linkedin`, `x`, `youtube`, `tiktok` | URL http(s) cada una |
+| `social` | objeto: `facebook`, `instagram`, `linkedin`, `x`, `youtube`, `tiktok` | URL http(s) cada una. **Obsoleto (sin publicar), sale en la 2.0.0**: ya no está en la pantalla; el módulo `social` lo copia una vez a su lista. Las redes se escriben en `estrategia_web_social_links` |
 | `enabled_types` | array ⊂ `client`, `testimonial`, `location`, `project`, `portfolio` | otro valor → **400** entero |
 | `allow_svg` | booleano | |
 | `rewrite_slugs` | objeto `nombre → slug` con los nombres `client`, `client_sector`, `testimonial`, `location`, `project`, `project_category`, `portfolio`, `portfolio_category` (0.2.0) | `sanitize_title` («Mi Cliente!» → `mi-cliente`); `''` = el de siempre; otro nombre → **400** entero. Se fusiona **por clave**. Al cambiar, se rehacen las reglas de URL |
@@ -124,7 +124,9 @@ En PHP, un tema lee un dato con `\EstrategiaWeb\Site\Company::value( 'phone' )`
 ### 2. Fuente de Block Bindings `estrategia-web-site/company`
 
 `args.key` = cualquier clave de arriba (menos `enabled_types`, `allow_svg` y `rewrite_slugs`),
-`social.<red>` con punto, y cuatro **derivadas**:
+`social.<red>` con punto (**alias hasta la 2.0.0**: con el módulo `social`
+encendido, el enlace de la primera red de su lista con ese icono; ver
+[class-company.php](modules/site/includes/class-company.php)), y cuatro **derivadas**:
 
 | Clave | Ejemplo |
 |---|---|
@@ -634,8 +636,8 @@ formularios esperan inglés; su `reset()` lo marca y vuelve a `en_US` (ver
 | [site/meta-panel](modules/site/tests/meta-panel.test.mjs) | 1 | (sin publicar) toda meta de sede, cliente y opinión está decidida para WPML (copy/translate) y `wpml-config.xml` dice lo mismo que `Meta_Panel`. Vista en rojo con el teléfono pasado a «translate» en el XML |
 | [site/meta-fields](modules/site/tests/meta-fields.test.mjs) | 2 | (sin publicar) `estrategia_web_client_business_type` saneado y pintado por core/post-meta en una Consulta de clientes; el embed de la sede guarda el `src` del `<iframe>` pegado y rechaza `javascript:` |
 | [site/meta-panel-editor](modules/site/tests/meta-panel-editor.test.mjs) | 3 | (sin publicar) el panel «Datos de la sede» sale abierto, enseña los valores y guarda el teléfono cambiado ahí; la meta box «Datos del cliente» en la pantalla clásica; el panel de la opinión guarda valoración y cliente como números; una página no lo lleva. Vista en rojo en su primera ejecución: el panel nacía cerrado y el cliente no tenía ninguno |
-| [social/social](modules/social/tests/social.test.mjs) | 2 | (sin publicar) sin lista guardada, las redes de «Datos de la empresa»; nombre accesible «Instagram de …», `_blank` + `noopener`, `currentColor`, sin `<title>`; la lista manda en su orden, icono adivinado, correo a `mailto:` sin pestaña nueva, fuera `javascript:`; SVG propio saneado y con su color, un PNG no vale; lista vacía no pinta nada; un autor no puede |
-| [social/social-admin](modules/social/tests/social-admin.test.mjs) | 3 | (sin publicar) la pantalla «Redes sociales»: añadir, subir, quitar y guardar en el orden que se ve; vaciarla guarda `[]`; el bloque se ve en el editor sin errores |
+| [social/social](modules/social/tests/social.test.mjs) | 2 | (sin publicar) migración: sin lista guardada, los campos fijos de «Datos de la empresa» pasan a la lista una vez y se quedan guardados; alias `social.<red>` por shortcode (primera red con ese icono); nombre accesible «Instagram de …», `_blank` + `noopener`, `currentColor`, sin `<title>`; la lista manda en su orden, icono adivinado, correo a `mailto:` sin pestaña nueva, fuera `javascript:`; SVG propio saneado y con su color, un PNG no vale; lista vacía no pinta nada ni se vuelve a migrar; un autor no puede |
+| [social/social-admin](modules/social/tests/social-admin.test.mjs) | 3 | (sin publicar) «Datos de la empresa» ya no tiene campos de redes y enlaza aquí; la pantalla «Redes sociales»: añadir, subir, quitar y guardar en el orden que se ve; vaciarla guarda `[]`; el bloque se ve en el editor sin errores |
 | [redirects/pure](modules/redirects/tests/pure.test.mjs) | 1 | normalizar y casar (%3F, `?p=`/`?page_id=`, barra final, mayúsculas, query de más); el CSV real de Lavandería (83 reglas) entero y sin errores; bucles, duplicados, destinos y tipos; CSV con `;`, BOM y «revisar» |
 | [redirects/server](modules/redirects/tests/server.test.mjs) | 2 | apagado por defecto; importar el CSV real (dry-run, idempotente); sus orígenes redirigen con variantes; 410; contador; 0 consultas en una página que existe y 1 en un 404; registro de 404 sin query y su purga; coste de una búsqueda con 84 y 5000 reglas |
 | [redirects/admin](modules/redirects/tests/admin.test.mjs) | 3 | la pantalla: lista y búsqueda, alta, error de bucle sin perder lo escrito, aviso de Rank Math, importar subiendo el CSV, exportar, «Crear redirección» desde el registro de 404 |

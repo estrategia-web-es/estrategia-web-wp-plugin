@@ -81,9 +81,6 @@ final class Admin {
 		$items = Links::items();
 		echo '<div class="wrap estrategia-web-social"><h1>' . esc_html__( 'Social networks', 'estrategia-web' ) . '</h1>';
 		echo '<p>' . esc_html__( 'The links shown by the “Social networks” block, in this order. The icon is guessed from the link; choose one only if it gets it wrong, or use your own SVG from the media library.', 'estrategia-web' ) . '</p>';
-		if ( ! Links::saved() ) {
-			echo '<div class="notice notice-info inline"><p>' . esc_html__( 'Not saved yet: until you save this list, the block uses the networks of Company details.', 'estrategia-web' ) . '</p></div>';
-		}
 		echo '<form method="post" action="options.php">';
 		settings_fields( Links::GROUP );
 		// Para que una lista vacía llegue (ver la cabecera de Links).
