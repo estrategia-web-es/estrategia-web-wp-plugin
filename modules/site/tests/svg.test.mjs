@@ -18,13 +18,16 @@ function assertDenied(r) {
   assert.match(r.json?.message || "", /No tienes permiso para subir ficheros SVG/, r.text);
 }
 
+// Uploaded files are named «prueba-…» on purpose: reset() (tests/wp) deletes
+// the attachments whose title starts with «prueba-»; any other name is left
+// behind in the media library.
 before(async () => {
   await reset();
   await saveCompany({ allow_svg: true });
 });
 
 test("an SVG with <script> is uploaded by an administrator SANITIZED: no script, no on*, with its dimensions", async () => {
-  const r = await upload("test-logo.svg", "image/svg+xml", HOSTILE);
+  const r = await upload("prueba-logo.svg", "image/svg+xml", HOSTILE);
   assert.equal(r.status, 201, r.text);
   assert.equal(r.json.mime_type, "image/svg+xml");
   assert.equal(r.json.media_details.width, 120);
@@ -39,7 +42,7 @@ test("through the API's other path (raw body = sideload) it also comes out sanit
   const r = await wp("/media", {
     method: "POST",
     raw: HOSTILE,
-    headers: { "Content-Type": "image/svg+xml", "Content-Disposition": 'attachment; filename="test-raw.svg"' },
+    headers: { "Content-Type": "image/svg+xml", "Content-Disposition": 'attachment; filename="prueba-crudo.svg"' },
   });
   assert.equal(r.status, 201, r.text);
   const stored = await (await fetch(r.json.source_url)).text();
@@ -47,7 +50,7 @@ test("through the API's other path (raw body = sideload) it also comes out sanit
 });
 
 test("the media library (wp.media) receives the SVG's width, height and full size", async () => {
-  const r = await upload("test-dimensions.svg", "image/svg+xml", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100"><circle cx="50" cy="50" r="40"/></svg>');
+  const r = await upload("prueba-medidas.svg", "image/svg+xml", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100"><circle cx="50" cy="50" r="40"/></svg>');
   assert.equal(r.status, 201, r.text);
   assert.equal(r.json.media_details.width, 300);
   assert.equal(r.json.media_details.sizes.full.width, 300);
@@ -55,14 +58,14 @@ test("the media library (wp.media) receives the SVG's width, height and full siz
 });
 
 test("an author user can NOT upload SVG (even with allow_svg enabled); a PNG yes", async () => {
-  const r = await upload("test-author.svg", "image/svg+xml", '<svg xmlns="http://www.w3.org/2000/svg"/>', "author");
+  const r = await upload("prueba-autor.svg", "image/svg+xml", '<svg xmlns="http://www.w3.org/2000/svg"/>', "author");
   assertDenied(r);
-  const ok = await upload("test-author.png", "image/png", png(), "author");
+  const ok = await upload("prueba-autor.png", "image/png", png(), "author");
   assert.equal(ok.status, 201, "the author can upload files: the no is because of the SVG");
 });
 
 test("with allow_svg disabled, not even the administrator can", async () => {
   await saveCompany({ allow_svg: false });
-  const r = await upload("test-off.svg", "image/svg+xml", '<svg xmlns="http://www.w3.org/2000/svg"/>');
+  const r = await upload("prueba-off.svg", "image/svg+xml", '<svg xmlns="http://www.w3.org/2000/svg"/>');
   assertDenied(r);
 });
