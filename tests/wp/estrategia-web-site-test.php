@@ -48,7 +48,57 @@ if ( ! defined( 'ESTRATEGIA_WEB_SITE_TESTING' ) || true !== ESTRATEGIA_WEB_SITE_
 }
 
 // WPLANG does not work: sanitize_option() rejects it if the core language pack is not downloaded.
-add_filter( 'locale', static fn() => 'es_ES' );
+// Except with ?wpml-double=<code>: then nothing forces the locale (WordPress
+// says en_US, as with WPLANG empty) and a WPML double says the language
+// (1.3.1, tests/wplang.test.mjs).
+if ( ! isset( $_GET['wpml-double'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	add_filter( 'locale', static fn() => 'es_ES' );
+} else {
+	/*
+	 * A WPML DOUBLE with what Lavandería production did on 15-10-2026: Spanish
+	 * by default, English in /en/, WPLANG empty. Only the public surface the
+	 * plugin uses: the wpml_current_language and wpml_default_language
+	 * filters, $sitepress->get_locale() (language code → locale, as WPML
+	 * resolves it), the wpml_switch_language action and the
+	 * wpml_language_has_switched one it fires. And the LATE locale fix:
+	 * on init 5 it moves the WordPress locale and the translation controller
+	 * to the language's locale with no change_locale, which is what WPML
+	 * String Translation did there (measured in local Lavandería without
+	 * WPML's `locale` filter: between init 2 and init 1000).
+	 * What it does NOT imitate: WPML's swap of $l10n on a switch, nor URLs.
+	 * The real check is the local Lavandería with real WPML (its deployer
+	 * and tests/server.mjs).
+	 */
+	$GLOBALS['estrategia_web_test_wpml'] = sanitize_key( wp_unslash( $_GET['wpml-double'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$GLOBALS['sitepress']                = new class() {
+		public function get_locale( $code ) {
+			return array( 'es' => 'es_ES', 'en' => 'en_US' )[ $code ] ?? false;
+		}
+	};
+	add_filter( 'wpml_current_language', static fn() => $GLOBALS['estrategia_web_test_wpml'] );
+	add_filter( 'wpml_default_language', static fn() => 'es' );
+	add_action(
+		'wpml_switch_language',
+		static function ( $code ) {
+			if ( null === $code ) {
+				$GLOBALS['estrategia_web_test_wpml'] = array_pop( $GLOBALS['estrategia_web_test_wpml_stack'] );
+			} else {
+				$GLOBALS['estrategia_web_test_wpml_stack'][] = $GLOBALS['estrategia_web_test_wpml'];
+				$GLOBALS['estrategia_web_test_wpml']         = $code;
+			}
+			do_action( 'wpml_language_has_switched', $code, false, null );
+		}
+	);
+	add_action(
+		'init',
+		static function () {
+			$locale = $GLOBALS['sitepress']->get_locale( $GLOBALS['estrategia_web_test_wpml'] );
+			add_filter( 'locale', static fn() => $locale, PHP_INT_MAX );
+			WP_Translation_Controller::get_instance()->set_locale( $locale );
+		},
+		5
+	);
+}
 add_filter( 'wp_is_application_passwords_available', '__return_true' );
 
 // 0.5.0: what the theme would do with the cookie notice (see the header, consent-setup).
@@ -118,6 +168,31 @@ add_action(
 		};
 
 		$route( '/ping', 'GET', static fn() => array( 'ok' => true ) );
+
+		// 1.3.1, languages (tests/wplang.test.mjs, with ?wpml-double=<code>):
+		// a plugin text and a URL slug as THIS request translates them, the
+		// slug the location type was registered with, and the same text after
+		// a WPML switch to English and after switching back.
+		$route(
+			'/i18n',
+			'GET',
+			static function () {
+				$now = static fn() => array(
+					'text' => __( 'Accept all', 'estrategia-web' ),
+					'slug' => _x( 'locations', 'URL slug', 'estrategia-web' ),
+				);
+				$out = array(
+					'determine_locale' => determine_locale(),
+					'now'              => $now(),
+					'registered_slug'  => get_post_type_object( \EstrategiaWeb\Site\Type_Names::name( 'location' ) )->rewrite['slug'] ?? null,
+				);
+				do_action( 'wpml_switch_language', 'en' );
+				$out['switched_en'] = $now();
+				do_action( 'wpml_switch_language', null );
+				$out['switched_back'] = $now();
+				return $out;
+			}
+		);
 
 		// 1.1.0, modules: what was loaded in THIS request and what is saved.
 		// POST saves the list with update_option (like the screen), so it goes

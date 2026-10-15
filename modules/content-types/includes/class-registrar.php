@@ -35,7 +35,7 @@ final class Registrar {
 	public static function register(): void {
 		$types  = Loader::types();
 		$files  = Loader::load()['files'];
-		$locale = determine_locale();
+		$locale = \EstrategiaWeb\Plugin::locale(); // Not determine_locale(): with WPML it can lag behind (see Plugin::load_textdomain()).
 
 		// Which types use each taxonomy: the one that declares it and those that reference it.
 		$tax_types = array();
