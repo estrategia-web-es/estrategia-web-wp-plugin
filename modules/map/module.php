@@ -5,21 +5,21 @@
  * Default: on
  * Requires:
  *
- * Bloque estrategia-web/map. Hasta la 1.0.0 lo registraba el tema padre (ver
- * modules/carousel/module.php: el mismo traslado). Todo lo que hace, en la
- * cabecera de blocks/map/render.php.
+ * The estrategia-web/map block. Up to 1.0.0 the parent theme registered it
+ * (see modules/carousel/module.php: the same move). Everything it does is in
+ * the header of blocks/map/render.php.
  *
- * Block Bindings: el núcleo solo deja enlazar atributos de sus propios
- * bloques; el filtro de abajo (WordPress 6.9+) deja enlazar estos, para que
- * la dirección de una sede (core/post-meta, dentro de una Consulta) llegue al
- * mapa sin copiarla. Un atributo de TEXTO o URL nuevo que tenga sentido
- * rellenar desde fuera entra en BINDABLE. Caso frontera: números y
- * booleanos (imageId, showDetails) no, porque las fuentes devuelven texto. La
- * trampa: los enlazados se resuelven ANTES de render.php, así que render.php
- * no sabe de dónde vino un valor; no se escribe código que dependa de eso.
+ * Block Bindings: core only allows binding attributes of its own blocks; the
+ * filter below (WordPress 6.9+) allows binding these, so that a location's
+ * address (core/post-meta, inside a Query) reaches the map without copying
+ * it. A new TEXT or URL attribute that makes sense to fill from outside goes
+ * into BINDABLE. Edge case: numbers and booleans (imageId, showDetails) do
+ * not, because sources return text. The trap: bindings are resolved BEFORE
+ * render.php, so render.php does not know where a value came from; do not
+ * write code that depends on that.
  *
- * Pruebas: en el repo del tema (armazon-wp-padre/tests/map*.test.mjs), como
- * las del carrusel.
+ * Tests: in the theme repo (armazon-wp-padre/tests/map*.test.mjs), like the
+ * carousel ones.
  */
 
 namespace EstrategiaWeb\Map;

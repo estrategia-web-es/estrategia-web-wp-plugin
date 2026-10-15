@@ -1,21 +1,21 @@
 /*
- * estrategia-web/map — estilos. Solo tokens de theme.json. La proporción del
- * recuadro se ajusta en el hijo con --estrategia-web-map-ratio (por defecto 16/9).
+ * estrategia-web/map — styles. theme.json tokens only. The box ratio is
+ * adjusted in the child theme with --estrategia-web-map-ratio (default 16/9).
  */
 .estrategia-web-map {
 	--estrategia-web-map-ratio: 16 / 9;
 	margin-inline: 0;
 	/*
-	 * OCUPA TODO EL ANCHO, siempre. Un Grupo vertical de WordPress es un flex
-	 * en columna con align-items:flex-start (alineado a la izquierda): sus
-	 * hijos no se estiran y se miden «a lo que ocupe su contenido». El marco
-	 * del mapa no tiene contenido en flujo (su alto sale de aspect-ratio y de
-	 * su ancho), así que en esa medición ancho 0 → alto 0: el mapa se quedaba
-	 * en 2 px (solo el borde) con todo lo de dentro cortado.
-	 * Lo pillo la comparacion de altos de Lavanderia el 03-10-2026
-	 * (Autoservicio un 14 % mas corta). La 0.3.1 lo intento con flex:none y no
-	 * servia: el problema no era encogerse sino el ancho de la medicion.
-	 * Ver tests/map-in-flex.test.mjs.
+	 * FULL WIDTH, always. A vertical WordPress Group is a column flex with
+	 * align-items:flex-start (left aligned): its children do not stretch and
+	 * are sized "to fit their content". The map frame has no in-flow content
+	 * (its height comes from aspect-ratio and its width), so in that
+	 * measurement width 0 → height 0: the map was left at 2 px (just the
+	 * border) with everything inside cut off.
+	 * Caught by the Lavandería height comparison on 03-10-2026
+	 * (Autoservicio 14 % shorter). 0.3.1 tried flex:none and it did not
+	 * work: the problem was not shrinking but the width of the measurement.
+	 * See tests/map-in-flex.test.mjs.
 	 */
 	inline-size: 100%;
 	flex: none;
@@ -43,10 +43,10 @@
 }
 
 /*
- * Sin imagen (lo normal desde 0.3.0): un recuadro con los datos del sitio en
- * texto, con los colores del tema. No imita un mapa: una captura de Google
- * Maps como «foto» se veía mal y mentía (no se puede mover). Un hijo lo viste
- * sobre estas clases o con su propio fondo decorativo.
+ * Without an image (the norm since 0.3.0): a box with the site's data as
+ * text, in the theme colours. It does not imitate a map: a Google Maps
+ * screenshot as a "photo" looked bad and lied (it cannot be moved). A child
+ * theme styles it via these classes or with its own decorative background.
  */
 .estrategia-web-map__card {
 	position: absolute;
@@ -72,10 +72,10 @@
 }
 
 /*
- * Con mapa estático (0.5.0): el mapa llena el marco y el recuadro de datos
- * flota a la izquierda, sin pasar del 42 % para no tapar el marcador, que va
- * en el centro. En un bloque estrecho no cabe encima: el marco pierde la
- * proporción, el mapa la lleva él y el recuadro va debajo.
+ * With a static map (0.5.0): the map fills the frame and the data box floats
+ * on the left, never wider than 42 % so as not to cover the marker, which is
+ * in the centre. In a narrow block it does not fit on top: the frame drops
+ * its ratio, the map carries it instead and the box goes below.
  */
 .estrategia-web-map.has-static-map {
 	container-type: inline-size;

@@ -1,8 +1,8 @@
 /**
- * estrategia-web/map — editor. Script CLÁSICO, sin compilar (ver blocks/carousel/edit.js
- * para el porqué). Existe solo por el selector de imagen de la mediateca, que
- * los controles automáticos de autoRegister no ofrecen. La vista previa la
- * pinta el servidor (ServerSideRender) con el mismo render.php del front.
+ * estrategia-web/map — editor. CLASSIC script, no build step (see blocks/carousel/edit.js
+ * for why). It exists only for the media library image picker, which the
+ * automatic autoRegister controls do not offer. The preview is rendered by
+ * the server (ServerSideRender) with the same render.php as the front end.
  */
 ( function ( wp ) {
 	const { registerBlockType } = wp.blocks;

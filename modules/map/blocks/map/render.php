@@ -1,99 +1,102 @@
 <?php
 /**
- * estrategia-web/map — mapa «en dos clics».
+ * estrategia-web/map — "two-click" map.
  *
- * Qué es: una imagen estática (de la mediateca) con la dirección, un botón
- * «Ver mapa» que SOLO ENTONCES pone el iframe de Google Maps, y un enlace
- * «Abrir en Google Maps». Antes del clic no se pide nada a Google: el iframe
- * está en el HTML sin src (about:blank) y view.js le pone la URL.
+ * What it is: a static image (from the media library) with the address, a
+ * "Show map" button that ONLY THEN inserts the Google Maps iframe, and an
+ * "Open in Google Maps" link. Before the click nothing is requested from
+ * Google: the iframe is in the HTML without src (about:blank) and view.js
+ * sets the URL.
  *
- * Decisiones:
- * - El clic del visitante es el consentimiento para ESA carga, por eso el mapa
- *   no necesita aviso de cookies. Debajo del botón se dice qué pasa al pulsar.
- * - Si el sitio declara la categoría «maps» en el consentimiento (el aviso de
- *   cookies del plugin estrategia-web-site desde la 0.7.0 del padre; antes,
- *   inc/consent.php) y el visitante la aceptó, el mapa carga directo, también
- *   si la acepta después con la página abierta (evento estrategia-web:consent).
- *   SIN EL PLUGIN el mapa funciona igual: imagen estática o recuadro, y
- *   «Ver mapa» carga ese mapa al pulsar. Solo habla con el aviso por su
- *   contrato JS (window.estrategiaWebConsent?.…, el evento), nunca por PHP, para no
- *   depender de que esté (tests/map.test.mjs corre sin él).
- * - La URL de embed se valida: https, host www.google.com o maps.google.com y
- *   ruta /maps/embed. Se acepta pegar el <iframe> entero que da Google
- *   (Compartir › Insertar un mapa): se saca el src.
- * - Sin imagen elegida sale un recuadro neutro con la dirección.
- * - Editor: edit.js (script clásico) por el selector de imagen de la
- *   mediateca, que autoRegister no ofrece; la vista previa es ServerSideRender.
- * - SIN IMAGEN por defecto (0.3.0): antes del clic se ve un recuadro con los
- *   DATOS del sitio en texto (nombre, dirección, teléfono con tel:, horario),
- *   con los colores del tema, y debajo «Ver mapa» y «Abrir en Google Maps».
- *   Por qué: una captura de Google Maps como foto se veía mal (David,
- *   02-10-2026) y aparentaba un mapa que no se puede mover. La imagen sigue
- *   siendo posible (elegida, o la destacada con useFeaturedImage) pero es la
- *   excepción. Con «maps» aceptado en el consentimiento se pinta el iframe
- *   directamente, como antes.
- *   Caso frontera: el recuadro dice lo que el bloque sabe; los datos de una
- *   sede llegan por bindings (p. ej. la fuente estrategia-web-site/location).
- *   La trampa: las fuentes de bindings devuelven el texto ya escapado y con
- *   <br>; render.php lo devuelve a texto plano antes de escaparlo (si no, sale
- *   «&amp;amp;» o «<br>» a la vista).
- * - MAPA ESTÁTICO (0.5.0, atributos staticMapUrl o staticMapId): una imagen
- *   de OpenStreetMap generada UNA vez con tools/static-map.mjs (marcador del
- *   color de la marca y «© OpenStreetMap» dentro) va DEBAJO del recuadro de
- *   datos, que se mantiene: en ancho, el recuadro flota a la izquierda sobre
- *   el mapa; en estrecho (< 480 px de bloque), va debajo. No es una captura de
- *   Google (su licencia no lo permite y pedirla al visitar manda la IP a
- *   Google sin consentimiento). Se sirve desde el PROPIO sitio:
- *   staticMapUrl es una ruta del tema («assets/maps/sede.webp», se busca en
- *   el hijo y luego en el padre), una ruta del sitio («/wp-content/…») o una
- *   URL del mismo dominio; cualquier otra se descarta (estrategia_web_map_static_url).
- *   staticMapId es la misma imagen subida a la mediateca. Acepta bindings
- *   (cada sede de una Consulta, su mapa). Si hay mapa estático, la «foto»
- *   (imageId/imageUrl/useFeaturedImage) no se usa.
- *   Caso frontera: el mapa estático no se mueve ni hace zoom; quien quiera
- *   moverlo pulsa «Ver mapa», que carga Google y CONCEDE la categoría «maps»
- *   del consentimiento (window.estrategiaWebConsent.grant), así los demás mapas de
- *   la web cargan ya sin preguntar. Si la web no declara «maps», el clic solo
- *   carga ese mapa, como antes.
- *   La trampa: el marcador va en el CENTRO de la imagen y el recuadro tapa la
- *   izquierda; por eso el recuadro no pasa del 42 % del ancho. Un hijo que lo
- *   ensanche tapa el marcador.
- * - SIN DATOS (0.6.0, atributo showDetails, por defecto SÍ): con
- *   showDetails:false el bloque no pinta su recuadro de datos (ni la
- *   dirección bajo una foto). Para cuando la ficha de la sede ya los dice al
- *   lado: en Lavandería la dirección salía dos veces, en la ficha y dentro
- *   del mapa. Queda: con mapa estático o foto, SOLO la imagen, y debajo
- *   «Ver mapa» y «Abrir en Google Maps»; sin imagen, solo los botones (el
- *   marco no se pinta hasta que hay mapa: una caja vacía parecería rota).
- *   La dirección se sigue pasando: hace falta para el enlace a Google Maps,
- *   el título del iframe y el texto alternativo del mapa estático.
+ * Decisions:
+ * - The visitor's click is the consent for THAT load, so the map does not
+ *   need a cookie notice. Below the button it says what happens on click.
+ * - If the site declares the "maps" category in the consent (the cookie
+ *   notice of the estrategia-web-site plugin since parent 0.7.0; before,
+ *   inc/consent.php) and the visitor accepted it, the map loads straight
+ *   away, also if they accept it later with the page open (the
+ *   estrategia-web:consent event).
+ *   WITHOUT THE PLUGIN the map works the same: static image or box, and
+ *   "Show map" loads that map on click. It only talks to the notice through
+ *   its JS contract (window.estrategiaWebConsent?.…, the event), never through PHP, so as
+ *   not to depend on it being there (tests/map.test.mjs runs without it).
+ * - The embed URL is validated: https, host www.google.com or maps.google.com
+ *   and path /maps/embed. Pasting the whole <iframe> Google gives (Share ›
+ *   Embed a map) is accepted: the src is extracted.
+ * - With no image chosen, a neutral box with the address is shown.
+ * - Editor: edit.js (classic script) because of the media library image
+ *   picker, which autoRegister does not offer; the preview is ServerSideRender.
+ * - NO IMAGE by default (0.3.0): before the click a box shows the site's
+ *   DATA as text (name, address, phone with tel:, opening hours), in the
+ *   theme colours, and below it "Show map" and "Open in Google Maps".
+ *   Why: a Google Maps screenshot as a photo looked bad (David, 02-10-2026)
+ *   and pretended to be a map that cannot be moved. An image is still
+ *   possible (chosen, or the featured one with useFeaturedImage) but it is
+ *   the exception. With "maps" accepted in the consent the iframe is rendered
+ *   directly, as before.
+ *   Edge case: the box says what the block knows; a location's data arrives
+ *   through bindings (e.g. the estrategia-web-site/location source).
+ *   The trap: binding sources return the text already escaped and with <br>;
+ *   render.php turns it back into plain text before escaping it (otherwise
+ *   "&amp;amp;" or "<br>" shows up on screen).
+ * - STATIC MAP (0.5.0, staticMapUrl or staticMapId attributes): an
+ *   OpenStreetMap image generated ONCE with tools/static-map.mjs (brand
+ *   coloured marker and "© OpenStreetMap" inside) goes UNDER the data box,
+ *   which stays: when wide, the box floats on the left over the map; when
+ *   narrow (< 480 px of block), it goes below. It is not a Google screenshot
+ *   (its licence does not allow it, and requesting it on each visit sends the
+ *   IP to Google without consent). It is served from the site ITSELF:
+ *   staticMapUrl is a theme path ("assets/maps/sede.webp", looked up in the
+ *   child and then the parent), a site path ("/wp-content/…") or a URL on the
+ *   same domain; anything else is discarded (estrategia_web_map_static_url).
+ *   staticMapId is the same image uploaded to the media library. It accepts
+ *   bindings (each location in a Query, its own map). If there is a static
+ *   map, the "photo" (imageId/imageUrl/useFeaturedImage) is not used.
+ *   Edge case: the static map does not move or zoom; whoever wants to move
+ *   it clicks "Show map", which loads Google and GRANTS the "maps" consent
+ *   category (window.estrategiaWebConsent.grant), so the other maps on
+ *   the site load without asking. If the site does not declare "maps", the
+ *   click only loads that map, as before.
+ *   The trap: the marker is in the CENTRE of the image and the box covers
+ *   the left; that is why the box never exceeds 42 % of the width. A child
+ *   theme that widens it covers the marker.
+ * - NO DETAILS (0.6.0, showDetails attribute, default YES): with
+ *   showDetails:false the block does not render its data box (nor the
+ *   address under a photo). For when the location card already shows them
+ *   alongside: on Lavandería the address appeared twice, in the card and
+ *   inside the map. What remains: with a static map or photo, ONLY the image,
+ *   and below it "Show map" and "Open in Google Maps"; without an image, only
+ *   the buttons (the frame is not rendered until there is a map: an empty
+ *   box would look broken).
+ *   The address is still passed: it is needed for the Google Maps link, the
+ *   iframe title and the static map's alt text.
  *       <!-- wp:estrategia-web/map {"showDetails":false,"metadata":{"bindings":{
  *         "address":…,"embedUrl":…,"staticMapUrl":…}}} /-->
- *   Por qué un atributo y no adivinarlo: el bloque no ve lo que hay al lado
- *   (un hermano en el mismo grupo puede ser la ficha o no). Lo sabe el patrón
- *   del hijo, que es quien lo pone.
- *   Caso frontera: un mapa suelto (página de contacto sin ficha) se queda
- *   con el valor por defecto: sin datos no diría dónde está.
- * - Dentro de una Consulta (0.2.0): sus atributos de texto aceptan Block
- *   Bindings (modules/map/module.php), así que la dirección y la URL de embed pueden
- *   salir de los campos de cada entrada (core/post-meta); y sin imagen
- *   elegida usa la imagen destacada de la entrada (usesContext postId). Así
- *   una lista de sedes que vive en la base de datos lleva cada una su mapa.
+ *   Why an attribute and not a guess: the block cannot see what is next to
+ *   it (a sibling in the same group may or may not be the card). The child
+ *   theme's pattern knows, and it is the one that sets it.
+ *   Edge case: a standalone map (contact page without a card) keeps the
+ *   default: without details it would not say where it is.
+ * - Inside a Query (0.2.0): its text attributes accept Block Bindings
+ *   (modules/map/module.php), so the address and the embed URL can come
+ *   from each entry's fields (core/post-meta); and with no image chosen it
+ *   uses the entry's featured image (usesContext postId). That way a list of
+ *   locations that lives in the database gets one map each.
  *
- * Cómo se mantiene:
- * - Quién: quien toque el módulo map (hasta la 1.0.0, el tema padre). Cuándo: si Google cambia el formato de la URL
- *   de embed (se ajusta estrategia_web_map_embed_url) o al añadir un proveedor.
- * - Caso frontera: otro proveedor (OpenStreetMap) es un AJUSTE si es otra URL
- *   de iframe con la misma mecánica: se amplía la validación aquí. Un mapa con
- *   marcadores propios y JS del proveedor es OTRA COSA: bloque del hijo.
- * - La trampa que costó la tarde (01-10-2026): el iframe NO lleva
- *   loading="lazy". Con lazy, si el src se pone al hidratar (consentimiento
- *   ya aceptado) mientras el iframe aún está oculto, Chrome no lo carga nunca:
- *   src puesto, frame en about:blank, recuadro en blanco. Sin src no se carga
- *   nada de todos modos, así que lazy no ahorraba nada.
- * - Otra: el enlace «Abrir en Google Maps» es un <a> normal y no hace
- *   ninguna petición hasta que se pulsa; las pruebas miran PETICIONES, no
- *   apariciones de «google.com» en el HTML, que las hay por diseño.
+ * How to maintain:
+ * - Who: whoever touches the map module (until 1.0.0, the parent theme). When: if Google changes the embed URL
+ *   format (adjust estrategia_web_map_embed_url) or when adding a provider.
+ * - Edge case: another provider (OpenStreetMap) is an ADJUSTMENT if it is
+ *   another iframe URL with the same mechanics: widen the validation here. A
+ *   map with its own markers and provider JS is SOMETHING ELSE: a child block.
+ * - The trap that cost an afternoon (01-10-2026): the iframe does NOT have
+ *   loading="lazy". With lazy, if the src is set on hydration (consent
+ *   already accepted) while the iframe is still hidden, Chrome never loads
+ *   it: src set, frame at about:blank, blank box. Without src nothing loads
+ *   anyway, so lazy saved nothing.
+ * - Another: the "Open in Google Maps" link is a plain <a> and makes no
+ *   request until clicked; the tests check REQUESTS, not occurrences of
+ *   "google.com" in the HTML, which are there by design.
  *
  * @package estrategia-web
  *
@@ -163,9 +166,9 @@ if ( ! function_exists( 'estrategia_web_map_static_url' ) ) {
 	}
 }
 
-// Los datos llegan de atributos o de Block Bindings: una fuente de texto los
-// trae con <br> en vez de saltos (las de estrategia-web-site lo hacen); se
-// devuelven a saltos para escaparlos aquí una sola vez.
+// The data comes from attributes or from Block Bindings: a text source brings
+// it with <br> instead of line breaks (the estrategia-web-site ones do); they
+// are turned back into line breaks so they are escaped here only once.
 $estrategia_web_text      = static fn( string $key ): string => trim( html_entity_decode( wp_strip_all_tags( preg_replace( '/<br\s*\/?>/i', "\n", (string) $attributes[ $key ] ) ), ENT_QUOTES, 'UTF-8' ) );
 $estrategia_web_place     = $estrategia_web_text( 'placeName' );
 $estrategia_web_phone     = $estrategia_web_text( 'phone' );
@@ -221,8 +224,8 @@ if ( '' !== $estrategia_web_static ) {
 		)
 	);
 }
-// Dentro de una Consulta, SOLO si se pide (useFeaturedImage, 0.3.0; en 0.2.0
-// era siempre): la imagen destacada de la entrada.
+// Inside a Query, ONLY if asked for (useFeaturedImage, 0.3.0; in 0.2.0 it
+// was always): the entry's featured image.
 if ( '' === $estrategia_web_image && '' === $attributes['imageUrl'] && $attributes['useFeaturedImage'] && ! empty( $block->context['postId'] ) && has_post_thumbnail( (int) $block->context['postId'] ) ) {
 	$estrategia_web_image = wp_get_attachment_image(
 		get_post_thumbnail_id( (int) $block->context['postId'] ),
@@ -244,18 +247,19 @@ if ( '' === $estrategia_web_image && '' !== $attributes['imageUrl'] ) {
 	);
 }
 
-// Foto = una imagen que SUSTITUYE al recuadro (la de 0.2.0). El mapa
-// estático no es foto: va DEBAJO del recuadro de datos (0.5.0).
+// Photo = an image that REPLACES the box (the 0.2.0 one). The static map is
+// not a photo: it goes UNDER the data box (0.5.0).
 $estrategia_web_has_photo = '' !== $estrategia_web_image && '' === $estrategia_web_static;
 
-// Sin datos (0.6.0, showDetails:false): ni recuadro ni dirección bajo la foto,
-// porque la ficha de al lado ya los dice. Sin imagen, el marco no se pinta
-// hasta que hay mapa: una caja vacía antes del clic parecería rota.
+// No details (0.6.0, showDetails:false): neither box nor address under the
+// photo, because the card next to it already shows them. Without an image,
+// the frame is not rendered until there is a map: an empty box before the
+// click would look broken.
 $estrategia_web_details     = ! isset( $attributes['showDetails'] ) || false !== $attributes['showDetails'];
 $estrategia_web_frame_later = ! $estrategia_web_details && '' === $estrategia_web_image;
 $estrategia_web_no_frame    = false;
 if ( $estrategia_web_frame_later && '' === $estrategia_web_embed ) {
-	// Nada que enseñar ni antes ni después del clic: solo el enlace.
+	// Nothing to show before or after the click: just the link.
 	$estrategia_web_frame_later = false;
 	$estrategia_web_no_frame    = true;
 }
@@ -318,15 +322,16 @@ $estrategia_web_title = '' !== $estrategia_web_address
 		<?php endif; ?>
 		<?php if ( '' !== $estrategia_web_maps_url ) : ?>
 		<?php
-		// Nombre accesible distinto por sede (1.1.x): con dos mapas en la página,
-		// dos enlaces iguales a destinos distintos fallan en Lighthouse («Los
-		// enlaces tienen nombres distintos»). El texto visible va el PRIMERO
-		// dentro del nombre (WCAG 2.5.3, la etiqueta dentro del nombre); la sede
-		// (o la dirección, si no tiene nombre) solo la oye el lector de pantalla.
-		// Va en aria-label y NO en un span oculto: el span cuenta en innerText y
-		// en el texto copiado, y la dirección saldría dos veces donde la ficha ya
-		// la dice al lado (showDetails:false; prueba map-details del tema). Sin
-		// sede ni dirección no hay aria-label: el nombre es el texto de siempre.
+		// A distinct accessible name per location (1.1.x): with two maps on the
+		// page, two identical links to different targets fail in Lighthouse
+		// ("Links have distinct names"). The visible text goes FIRST inside the
+		// name (WCAG 2.5.3, label in name); the location (or the address, if it
+		// has no name) is only heard by the screen reader.
+		// It goes in aria-label and NOT in a hidden span: the span counts in
+		// innerText and in copied text, and the address would appear twice where
+		// the card already shows it alongside (showDetails:false; the theme's
+		// map-details test). Without location or address there is no aria-label:
+		// the name is the usual text.
 		$estrategia_web_link_for = preg_replace( '/\s+/', ' ', '' !== $estrategia_web_place ? $estrategia_web_place : $estrategia_web_address );
 		$estrategia_web_link_aria = '' === $estrategia_web_link_for ? '' : sprintf(
 			/* translators: 1: place name (or its address), 2: «(opens in a new tab)». The text before the colon must be the visible text of the link. */
