@@ -17,8 +17,9 @@
  * How to maintain:
  * - A new attribute: block.json + its control here + Definitions (if it
  *   affects the submission) + wpml-config.xml (if it is a text someone reads).
- * - A new marker in the emails: Notifier::marker_values() and the
- *   FIXED_MARKERS list here, so that the editor help does not lie.
+ * - A new marker in the emails: Markers (constant), Notifier::marker_values()
+ *   and the FIXED_MARKERS list here, so that the editor help does not lie.
+ *   The rules (aliases, a field named like a marker) are in class-markers.php.
  * - The trap: texts go with __( '…', 'estrategia-web' ) and are translated
  *   with the JSON in languages/ (tools/i18n.mjs). If you change this file,
  *   that JSON still applies: its name carries the md5 of the PATH, not of
@@ -32,7 +33,9 @@
 	const { useSelect } = wp.data;
 	const { __ } = wp.i18n;
 
-	const FIXED_MARKERS = [ 'todos_los_campos', 'fecha', 'url_pagina', 'nombre_sitio' ];
+	// Only the current names: the old Spanish ones (Markers::ALIASES) still
+	// work in saved forms until 2.0.0, but the help no longer offers them.
+	const FIXED_MARKERS = [ 'all_fields', 'submission_date', 'page_url', 'site_name' ];
 
 	const randomId = ( prefix ) => prefix + '-' + Math.random().toString( 36 ).slice( 2, 8 );
 
@@ -63,7 +66,7 @@
 				/* translators: {{name}} is a marker: do not translate it. */
 				subject: __( 'New message from {{name}}', 'estrategia-web' ),
 				/* translators: what goes between {{ }} are markers: do not translate them. */
-				body: __( 'New message sent from {{url_pagina}} on {{fecha}}:\n\n{{todos_los_campos}}', 'estrategia-web' ),
+				body: __( 'New message sent from {{page_url}} on {{submission_date}}:\n\n{{all_fields}}', 'estrategia-web' ),
 			},
 		],
 		[
@@ -73,7 +76,7 @@
 				to: '{{email}}',
 				subject: __( 'We have received your message', 'estrategia-web' ),
 				/* translators: what goes between {{ }} are markers: do not translate them. */
-				body: __( 'Hello {{name}},\n\nThank you for writing to us. We have received your message and will reply soon.\n\n{{todos_los_campos}}\n\n{{nombre_sitio}}', 'estrategia-web' ),
+				body: __( 'Hello {{name}},\n\nThank you for writing to us. We have received your message and will reply soon.\n\n{{all_fields}}\n\n{{site_name}}', 'estrategia-web' ),
 			},
 		],
 	];

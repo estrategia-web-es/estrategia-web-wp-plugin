@@ -149,8 +149,8 @@ final class Notifier {
 		$html[ Markers::ALL_FIELDS ] = $all_html;
 
 		return array(
-			'text' => $text,
-			'html' => $html,
+			'text' => Markers::with_aliases( $text ),
+			'html' => Markers::with_aliases( $html ),
 		);
 	}
 

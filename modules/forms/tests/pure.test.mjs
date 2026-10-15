@@ -25,6 +25,19 @@ test("markers: escaped in HTML except those declared as already-built HTML", () 
   assert.equal(out.raw_not_escaped, "<table>");
 });
 
+test("fixed markers: the English names, and the old Spanish ones as aliases until 2.0.0", () => {
+  const expected = "Nombre: Ana|15/10/2026 10:00|https://example.test/contacto/|Lavandería";
+  assert.equal(out.fixed_current, expected);
+  assert.equal(out.fixed_aliases, expected, "sites have {{fecha}}, {{url_pagina}}… saved in their forms: they must keep working");
+});
+
+test("fixed markers: an alias wins over a field with the same name, as before the rename", () => {
+  // The field "fecha" (el 3 de mayo) is shadowed by the alias: that is what
+  // {{fecha}} printed before 1.4.0, so no saved email changes its content.
+  assert.match(out.fixed_aliases, /\|15\/10\/2026 10:00\|/);
+  assert.deepEqual(out.alias_no_value, { nombre: "Ana" }, "no current marker, no alias: nothing is invented");
+});
+
 test("subject on a single line: no header injection", () => {
   assert.equal(out.single_line, "Asunto Bcc: x@y.z");
 });

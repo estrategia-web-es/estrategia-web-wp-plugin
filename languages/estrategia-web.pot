@@ -1295,204 +1295,204 @@ msgid ""
 "decorative."
 msgstr ""
 
-#: modules/forms/assets/editor.js:55 modules/forms/assets/editor.js:413
+#: modules/forms/assets/editor.js:58 modules/forms/assets/editor.js:416
 msgid "Message"
 msgstr ""
 
-#: modules/forms/assets/editor.js:61
+#: modules/forms/assets/editor.js:64
 msgid "Notice to the site"
 msgstr ""
 
 #. translators: {{name}} is a marker: do not translate it.
-#: modules/forms/assets/editor.js:64
+#: modules/forms/assets/editor.js:67
 msgid "New message from {{name}}"
 msgstr ""
 
 #. translators: what goes between {{ }} are markers: do not translate them.
-#: modules/forms/assets/editor.js:66
+#: modules/forms/assets/editor.js:69
 msgid ""
-"New message sent from {{url_pagina}} on {{fecha}}:\n"
+"New message sent from {{page_url}} on {{submission_date}}:\n"
 "\n"
-"{{todos_los_campos}}"
+"{{all_fields}}"
 msgstr ""
 
-#: modules/forms/assets/editor.js:72
+#: modules/forms/assets/editor.js:75
 msgid "Acknowledgement to the sender"
 msgstr ""
 
-#: modules/forms/assets/editor.js:74
+#: modules/forms/assets/editor.js:77
 msgid "We have received your message"
 msgstr ""
 
 #. translators: what goes between {{ }} are markers: do not translate them.
-#: modules/forms/assets/editor.js:76
+#: modules/forms/assets/editor.js:79
 msgid ""
 "Hello {{name}},\n"
 "\n"
 "Thank you for writing to us. We have received your message and will reply "
 "soon.\n"
 "\n"
-"{{todos_los_campos}}\n"
+"{{all_fields}}\n"
 "\n"
-"{{nombre_sitio}}"
+"{{site_name}}"
 msgstr ""
 
-#: modules/forms/assets/editor.js:99
+#: modules/forms/assets/editor.js:102
 msgid "Name in the submissions log"
 msgstr ""
 
-#: modules/forms/assets/editor.js:105
+#: modules/forms/assets/editor.js:108
 msgid "Form identifier"
 msgstr ""
 
-#: modules/forms/assets/editor.js:106
+#: modules/forms/assets/editor.js:109
 msgid ""
 "Groups the submissions of this form in the log, in every language. Change it "
 "only if two copies of the form must be counted apart."
 msgstr ""
 
-#: modules/forms/assets/editor.js:114
+#: modules/forms/assets/editor.js:117
 msgid "Messages"
 msgstr ""
 
-#: modules/forms/assets/editor.js:117 modules/forms/assets/editor.js:124
+#: modules/forms/assets/editor.js:120 modules/forms/assets/editor.js:127
 msgid "Empty: the default message from Forms → Settings."
 msgstr ""
 
-#: modules/forms/assets/editor.js:147 modules/forms/assets/editor.js:308
-#: modules/forms/assets/editor.js:317
+#: modules/forms/assets/editor.js:150 modules/forms/assets/editor.js:311
+#: modules/forms/assets/editor.js:320
 msgid "Label"
 msgstr ""
 
-#: modules/forms/assets/editor.js:150
+#: modules/forms/assets/editor.js:153
 msgid ""
 "The text between braces becomes the link to the privacy policy. Empty: the "
 "default text."
 msgstr ""
 
-#: modules/forms/assets/editor.js:158
+#: modules/forms/assets/editor.js:161
 msgid "Name (key)"
 msgstr ""
 
-#: modules/forms/assets/editor.js:159
+#: modules/forms/assets/editor.js:162
 msgid ""
 "Used in the email markers, e.g. {{name}}, and in the log. Lowercase letters, "
 "numbers, - and _."
 msgstr ""
 
-#: modules/forms/assets/editor.js:180
+#: modules/forms/assets/editor.js:183
 msgid "First option (empty value)"
 msgstr ""
 
-#: modules/forms/assets/editor.js:180
+#: modules/forms/assets/editor.js:183
 msgid "Placeholder"
 msgstr ""
 
-#: modules/forms/assets/editor.js:188
+#: modules/forms/assets/editor.js:191
 msgid "Autocomplete"
 msgstr ""
 
-#: modules/forms/assets/editor.js:189
+#: modules/forms/assets/editor.js:192
 msgid ""
 "What the browser may fill in: name, organization, email, tel, street-"
 "address… Empty: email and phone fields still get email and tel."
 msgstr ""
 
-#: modules/forms/assets/editor.js:200
+#: modules/forms/assets/editor.js:203
 msgid "Options"
 msgstr ""
 
-#: modules/forms/assets/editor.js:201
+#: modules/forms/assets/editor.js:204
 msgid "One per line."
 msgstr ""
 
-#: modules/forms/assets/editor.js:208
+#: modules/forms/assets/editor.js:211
 msgid "Preselected option"
 msgstr ""
 
-#: modules/forms/assets/editor.js:209
+#: modules/forms/assets/editor.js:212
 msgid ""
 "In a synced pattern, set it per page in the pattern block instead. A link "
 "can also choose it with ?af_ followed by the field name."
 msgstr ""
 
-#: modules/forms/assets/editor.js:211
+#: modules/forms/assets/editor.js:214
 msgid "None"
 msgstr ""
 
-#: modules/forms/assets/editor.js:223
+#: modules/forms/assets/editor.js:226
 msgid "Privacy consent"
 msgstr ""
 
-#: modules/forms/assets/editor.js:224
+#: modules/forms/assets/editor.js:227
 msgid "Always required, and links to the privacy policy."
 msgstr ""
 
-#: modules/forms/assets/editor.js:234
+#: modules/forms/assets/editor.js:237
 msgid "Privacy policy URL"
 msgstr ""
 
-#: modules/forms/assets/editor.js:235
+#: modules/forms/assets/editor.js:238
 msgid ""
 "Empty: the privacy policy page set in Settings → Privacy (translated, with "
 "WPML)."
 msgstr ""
 
-#: modules/forms/assets/editor.js:246
+#: modules/forms/assets/editor.js:249
 msgid "Width"
 msgstr ""
 
-#: modules/forms/assets/editor.js:249
+#: modules/forms/assets/editor.js:252
 msgid "Full"
 msgstr ""
 
-#: modules/forms/assets/editor.js:250
+#: modules/forms/assets/editor.js:253
 msgid "Half"
 msgstr ""
 
-#: modules/forms/assets/editor.js:356
+#: modules/forms/assets/editor.js:359
 msgid "Button text"
 msgstr ""
 
-#: modules/forms/assets/editor.js:406 modules/forms/assets/editor.js:425
+#: modules/forms/assets/editor.js:409 modules/forms/assets/editor.js:428
 msgid "Email notification"
 msgstr ""
 
-#: modules/forms/assets/editor.js:407
+#: modules/forms/assets/editor.js:410
 msgid "Name of this notification"
 msgstr ""
 
-#: modules/forms/assets/editor.js:408
+#: modules/forms/assets/editor.js:411
 msgid ""
 "Addresses separated by commas, or a marker such as {{email}}. Empty: the "
 "site administrator email."
 msgstr ""
 
-#: modules/forms/assets/editor.js:408 modules/forms/assets/editor.js:426
+#: modules/forms/assets/editor.js:411 modules/forms/assets/editor.js:429
 msgid "To"
 msgstr ""
 
-#: modules/forms/assets/editor.js:409
+#: modules/forms/assets/editor.js:412
 msgid "An address or a marker such as {{email}}. Optional."
 msgstr ""
 
-#: modules/forms/assets/editor.js:409
+#: modules/forms/assets/editor.js:412
 msgid "Reply to"
 msgstr ""
 
-#: modules/forms/assets/editor.js:410 modules/forms/assets/editor.js:427
+#: modules/forms/assets/editor.js:413 modules/forms/assets/editor.js:430
 msgid "Subject"
 msgstr ""
 
-#: modules/forms/assets/editor.js:414
+#: modules/forms/assets/editor.js:417
 msgid "Available markers:"
 msgstr ""
 
-#: modules/forms/assets/editor.js:426
+#: modules/forms/assets/editor.js:429
 msgid "site administrator"
 msgstr ""
 
-#: modules/forms/assets/editor.js:428
+#: modules/forms/assets/editor.js:431
 msgid "Not shown to visitors. Edit it in the side panel."
 msgstr ""
 

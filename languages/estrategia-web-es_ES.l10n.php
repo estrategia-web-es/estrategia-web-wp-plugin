@@ -244,26 +244,26 @@ return array(
 		'Message' => 'Mensaje',
 		'Notice to the site' => 'Aviso a la web',
 		'New message from {{name}}' => 'Nuevo mensaje de {{name}}',
-		'New message sent from {{url_pagina}} on {{fecha}}:
+		'New message sent from {{page_url}} on {{submission_date}}:
 
-{{todos_los_campos}}' => 'Nuevo mensaje enviado desde {{url_pagina}} el {{fecha}}:
+{{all_fields}}' => 'Nuevo mensaje enviado desde {{page_url}} el {{submission_date}}:
 
-{{todos_los_campos}}',
+{{all_fields}}',
 		'Acknowledgement to the sender' => 'Acuse al remitente',
 		'We have received your message' => 'Hemos recibido tu mensaje',
 		'Hello {{name}},
 
 Thank you for writing to us. We have received your message and will reply soon.
 
-{{todos_los_campos}}
+{{all_fields}}
 
-{{nombre_sitio}}' => 'Hola, {{name}}:
+{{site_name}}' => 'Hola, {{name}}:
 
 Gracias por escribirnos. Hemos recibido tu mensaje y te responderemos pronto.
 
-{{todos_los_campos}}
+{{all_fields}}
 
-{{nombre_sitio}}',
+{{site_name}}',
 		'Name in the submissions log' => 'Nombre en el registro de envíos',
 		'Form identifier' => 'Identificador del formulario',
 		'Groups the submissions of this form in the log, in every language. Change it only if two copies of the form must be counted apart.' => 'Agrupa los envíos de este formulario en el registro, en todos los idiomas. Cámbialo solo si dos copias del formulario deben contarse por separado.',

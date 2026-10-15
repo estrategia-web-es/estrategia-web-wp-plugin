@@ -24,8 +24,21 @@ $options = array( 'Lavandería para hoteles', 'Lavandería para restaurantes', '
 $values = array(
 	'nombre'           => 'Ana <b>',
 	'telefono'         => '',
-	'todos_los_campos' => '<table>',
+	'all_fields'       => '<table>',
 );
+// What Notifier::marker_values() hands over: the fields first, then the fixed
+// markers. "fecha" is a FIELD here, named like an old alias (edge case).
+$fixed  = Markers::with_aliases(
+	array(
+		'fecha'                => 'el 3 de mayo',
+		Markers::ALL_FIELDS    => 'Nombre: Ana',
+		Markers::DATE          => '15/10/2026 10:00',
+		Markers::PAGE_URL      => 'https://example.test/contacto/',
+		Markers::SITE_NAME     => 'Lavandería',
+	)
+);
+$fixed_template = '{{all_fields}}|{{submission_date}}|{{page_url}}|{{site_name}}';
+$old_template   = '{{todos_los_campos}}|{{fecha}}|{{url_pagina}}|{{ Nombre_Sitio }}';
 $esc    = static fn( $v ) => htmlspecialchars( $v, ENT_QUOTES );
 $secret = 'test-secret';
 $now    = 1790000000;
@@ -38,8 +51,11 @@ echo json_encode(
 		'empty_known'    => Markers::replace( 'Tel: {{telefono}}.', $values ),
 		'unknown_kept'   => Markers::replace( 'Mal: {{emial}}', $values ),
 		'escaped'        => Markers::replace( '{{nombre}}', $values, $esc ),
-		'raw_not_escaped' => Markers::replace( '{{todos_los_campos}}', $values, $esc, array( 'todos_los_campos' ) ),
+		'raw_not_escaped' => Markers::replace( '{{all_fields}}', $values, $esc, array( Markers::ALL_FIELDS ) ),
 		'single_line'    => Markers::single_line( "Asunto\r\nBcc: x@y.z" ),
+		'fixed_current'  => Markers::replace( $fixed_template, $fixed ),
+		'fixed_aliases'  => Markers::replace( $old_template, $fixed ),
+		'alias_no_value' => Markers::with_aliases( array( 'nombre' => 'Ana' ) ),
 		'ipv4'           => Ip::truncate( '203.0.113.77' ),
 		'ipv6'           => Ip::truncate( '2001:db8:85a3:8d3:1319:8a2e:370:7348' ),
 		'ip_bad'         => Ip::truncate( 'not-an-ip' ),
