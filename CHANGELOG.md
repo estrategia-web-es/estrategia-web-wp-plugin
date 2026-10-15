@@ -9,6 +9,11 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## Unreleased
+
+- **forms: fixed email markers in English** (David, 15-10-2026): `{{all_fields}}`, `{{submission_date}}`, `{{page_url}}`, `{{site_name}}`. The old Spanish names (`{{todos_los_campos}}`, `{{fecha}}`, `{{url_pagina}}`, `{{nombre_sitio}}`) keep working as deprecated aliases until 2.0.0, so saved forms (Lavandería) need no change; the editor only offers the new ones. `{{submission_date}}` and not `{{date}}`: a fixed marker shadows a field with the same name, and "date" is a likely field name. Field markers (`{{name}}`, `{{email}}`…) do not change.
+- **content-types: example prefix `gment_`** (was `gmct_`): `examples/gment_restaurant.json`. 0 plugins on WordPress.org use it.
+
 ## 1.3.0 — 15-10-2026
 
 - **Code in English** (Armazón row 8, 15-10-2026): comments, tests, tool output and the plugin header. Checked token by token that no logic changed.

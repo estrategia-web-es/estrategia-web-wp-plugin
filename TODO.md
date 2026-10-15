@@ -5,6 +5,14 @@ it goes to the git history, with the commit that closes it.
 
 ---
 
+## 2.0.0: remove the Spanish marker aliases of forms
+**Date:** 15-10-2026 · **Due:** 2.0.0
+
+Remove `Markers::ALIASES` and `with_aliases()` in
+`modules/forms/includes/class-markers.php`. Before that, change
+`{{todos_los_campos}}`, `{{fecha}}` and `{{url_pagina}}` to the English names in
+Lavandería's saved forms (and in any other site that uses them).
+
 ## The plugin's translations must not depend on the site language (WPLANG)
 **Date:** 15-10-2026 · **Due:** before the next site (Gastronòmicament, Catalan by default)
 

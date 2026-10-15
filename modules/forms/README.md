@@ -64,7 +64,7 @@ no WPML) is in
      Empty = the site administrator's email.
    - **Reply to**: an address or a marker. Optional.
    - **Subject** and **Message**: text with markers. Empty message =
-     `{{todos_los_campos}}`.
+     `{{all_fields}}`.
 5. The **consent checkbox** is always required. Whatever goes between braces
    in its label is the link: «I have read and accept the {privacy policy}.»
    (on a Spanish site, «He leído y acepto la {política de privacidad}»).
@@ -107,11 +107,17 @@ the reason for using the position and the pitfalls, in
 
 | Marker | What it inserts |
 |---|---|
-| `{{nombre_del_campo}}` | what the visitor typed in that field (a checkbox: Sí / No) |
-| `{{todos_los_campos}}` | all fields with their label; a table in HTML, lines in plain text |
-| `{{fecha}}` | date and time of the submission, in the site's format |
-| `{{url_pagina}}` | the page the form was submitted from |
-| `{{nombre_sitio}}` | the site name |
+| `{{field_name}}` | what the visitor typed in that field (a checkbox: Sí / No) |
+| `{{all_fields}}` | all fields with their label; a table in HTML, lines in plain text |
+| `{{submission_date}}` | date and time of the submission, in the site's format |
+| `{{page_url}}` | the page the form was submitted from |
+| `{{site_name}}` | the site name |
+
+Until 2.0.0 the old Spanish names keep working as aliases:
+`{{todos_los_campos}}`, `{{fecha}}`, `{{url_pagina}}` and `{{nombre_sitio}}`.
+`{{submission_date}}` and not `{{date}}`: a fixed marker shadows a field with
+the same name, and «date» is a likely field name. The details, in
+[includes/class-markers.php](includes/class-markers.php).
 
 An empty optional field is replaced with nothing. A marker **that does not
 exist** (`{{emial}}`) is left as is, on purpose: the typo shows in the email.
