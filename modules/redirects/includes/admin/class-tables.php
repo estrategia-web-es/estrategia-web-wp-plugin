@@ -1,7 +1,7 @@
 <?php
 /**
- * Las dos tablas de la pantalla: reglas y registro de 404 (WP_List_Table,
- * como la de envíos de forms).
+ * The screen's two tables: rules and 404 log (WP_List_Table, like the forms
+ * submissions one).
  */
 
 namespace EstrategiaWeb\Redirects\Admin;
@@ -14,7 +14,7 @@ if ( ! class_exists( '\WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
-/** Las reglas. */
+/** The rules. */
 final class Rules_Table extends \WP_List_Table {
 
 	public function __construct() {
@@ -59,7 +59,7 @@ final class Rules_Table extends \WP_List_Table {
 
 	public function prepare_items(): void {
 		$per_page = 50;
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- lectura: búsqueda, orden y página.
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read only: search, order and page.
 		$search  = isset( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : '';
 		$orderby = isset( $_REQUEST['orderby'] ) ? sanitize_key( $_REQUEST['orderby'] ) : 'source';
 		$order   = isset( $_REQUEST['order'] ) ? sanitize_key( $_REQUEST['order'] ) : 'asc';
@@ -114,7 +114,7 @@ final class Rules_Table extends \WP_List_Table {
 	}
 }
 
-/** El registro de 404. */
+/** The 404 log. */
 final class Log_Table extends \WP_List_Table {
 
 	public function __construct() {
@@ -151,7 +151,7 @@ final class Log_Table extends \WP_List_Table {
 
 	public function prepare_items(): void {
 		$per_page = 50;
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- lectura.
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read only.
 		$search  = isset( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : '';
 		$orderby = isset( $_REQUEST['orderby'] ) ? sanitize_key( $_REQUEST['orderby'] ) : 'hits';
 		$order   = isset( $_REQUEST['order'] ) ? sanitize_key( $_REQUEST['order'] ) : 'desc';

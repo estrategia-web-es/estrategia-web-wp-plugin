@@ -1,41 +1,42 @@
 <?php
 /**
- * Lo PURO del módulo: normalizar un origen, las claves con que se busca una
- * petición, leer el CSV y validar una regla contra las demás. Sin WordPress
- * (ni una función wp_*, ni $wpdb): así lo prueba el nivel 1 con el PHP de la
- * máquina (tests/php/pure.php), con el CSV de verdad de Lavandería.
+ * The PURE part of the module: normalising a source, the keys a request is
+ * looked up with, reading the CSV and validating a rule against the others.
+ * No WordPress (not one wp_* function, no $wpdb): that way level 1 tests it
+ * with the machine's PHP (tests/php/pure.php), using Lavandería's real CSV.
  *
  * =========================================================================
- * EL CRITERIO PARA CASAR (lo que decide si una petición casa con un origen)
+ * THE MATCHING CRITERION (what decides whether a request matches a source)
  * =========================================================================
  *
- * Origen y petición se reducen a la misma CLAVE, y casan si la clave es igual:
+ * Source and request are reduced to the same KEY, and they match if the key
+ * is equal:
  *
- *   1. Fuera el esquema y el dominio (https://ejemplo.com/x → /x) y el #.
- *   2. La ruta se decodifica UNA vez (%xx → carácter; %253F queda en %3F).
- *   3. Si tras decodificar la ruta lleva un «?» (las URL viejas de WordPress
- *      exportadas a estático: /index.html%3Fp=6981.html), lo que va detrás
- *      se trata como query. Así /index.html%3Fp=6981.html y
- *      /index.html?p=6981.html son la misma clave.
- *   4. Barras repetidas a una; sin barra final (/contacto/ = /contacto); la
- *      raíz sigue siendo «/». Todo en minúsculas (las rutas de WordPress lo
- *      son; «/Contacto/» casa con «/contacto/»), también los valores de la
- *      query.
- *   5. Query: page_id es lo mismo que p (WordPress resuelve las dos por ID),
- *      parámetros ordenados por nombre, sin vacíos.
+ *   1. Scheme, domain (https://example.com/x → /x) and the # are dropped.
+ *   2. The path is decoded ONCE (%xx → character; %253F stays as %3F).
+ *   3. If after decoding the path contains a «?» (old WordPress URLs
+ *      exported to static: /index.html%3Fp=6981.html), whatever follows is
+ *      treated as query. So /index.html%3Fp=6981.html and
+ *      /index.html?p=6981.html are the same key.
+ *   4. Repeated slashes collapse to one; no trailing slash
+ *      (/contacto/ = /contacto); the root stays «/». Everything lower-case
+ *      (WordPress paths are; «/Contacto/» matches «/contacto/»), query
+ *      values included.
+ *   5. Query: page_id is the same as p (WordPress resolves both by ID),
+ *      parameters sorted by name, empty ones dropped.
  *
- * La query de la PETICIÓN que no forma parte del origen se ignora: el origen
- * /contacto/ casa con /contacto/?utm_source=x, y /?p=6981 con
- * /?p=6981&lang=es. Por eso una petición se busca con varias claves
- * (candidates()), de más concreta a menos: la query entera, cada parámetro
- * suelto, y la ruta sola. Caso frontera con nombre: un origen con DOS
- * parámetros (/?a=1&b=2) casa con exactamente esos dos, no con a=1&b=2&c=3.
- * Las URL de WordPress que hay que redirigir llevan uno (p o page_id).
+ * Any query in the REQUEST that is not part of the source is ignored: the
+ * source /contacto/ matches /contacto/?utm_source=x, and /?p=6981 matches
+ * /?p=6981&lang=es. That is why a request is looked up with several keys
+ * (candidates()), from most to least specific: the whole query, each single
+ * parameter, and the bare path. Named edge case: a source with TWO
+ * parameters (/?a=1&b=2) matches exactly those two, not a=1&b=2&c=3. The
+ * WordPress URLs that need redirecting carry one (p or page_id).
  *
- * La trampa que mordió: decodificar ANTES de partir por «?» convierte
- * /index.html%3Fp=6981.html en ruta + query; partir antes y decodificar
- * después deja el «?» dentro de la ruta. Por eso se parte dos veces (paso 3):
- * así las dos formas acaban igual, venga el «?» codificado o no.
+ * The trap that bit: decoding BEFORE splitting on «?» turns
+ * /index.html%3Fp=6981.html into path + query; splitting first and decoding
+ * afterwards leaves the «?» inside the path. That is why it splits twice
+ * (step 3): both forms end up the same, whether the «?» comes encoded or not.
  */
 
 namespace EstrategiaWeb\Redirects;
@@ -46,18 +47,18 @@ final class Rules {
 
 	public const TYPES = array( 301, 302, 410 );
 
-	/** Cuántos saltos se siguen buscando un bucle (A→B→C→…→A). */
+	/** How many hops are followed when looking for a loop (A→B→C→…→A). */
 	public const MAX_HOPS = 20;
 
-	/** Parámetros de la petición que se miran como mucho (una query de 500 no genera 500 claves). */
+	/** Maximum number of request parameters looked at (a 500-parameter query does not produce 500 keys). */
 	public const MAX_PARAMS = 10;
 
 	/**
-	 * Ruta y parámetros normalizados de una URL, ruta u origen.
+	 * Normalised path and parameters of a URL, path or source.
 	 *
-	 * @param string $url  Lo que sea: «/x/», «/x?p=1», «https://dominio/x», «/x%3Fp=1».
-	 * @param string $base Ruta de la instalación si WordPress vive en una subcarpeta («/blog»); se quita.
-	 * @return array{0: string, 1: array<string, string>} [ ruta, parámetros ordenados ]
+	 * @param string $url  Anything: «/x/», «/x?p=1», «https://domain/x», «/x%3Fp=1».
+	 * @param string $base Install path if WordPress lives in a subfolder («/blog»); it is stripped.
+	 * @return array{0: string, 1: array<string, string>} [ path, sorted parameters ]
 	 */
 	public static function split( string $url, string $base = '' ): array {
 		$url = trim( $url );
@@ -68,7 +69,7 @@ final class Rules {
 
 		list( $path, $query ) = array_pad( explode( '?', $url, 2 ), 2, '' );
 		$path = rawurldecode( $path );
-		if ( false !== strpos( $path, '?' ) ) { // Paso 3: el %3F de las URL viejas.
+		if ( false !== strpos( $path, '?' ) ) { // Step 3: the %3F of old URLs.
 			list( $path, $more ) = explode( '?', $path, 2 );
 			$query = '' === $query ? $more : $more . '&' . $query;
 		}
@@ -97,13 +98,13 @@ final class Rules {
 			if ( 'page_id' === $k ) {
 				$k = 'p';
 			}
-			$params[ $k ] = $v; // Repetido (p=1&p=2): gana el último, como en $_GET.
+			$params[ $k ] = $v; // Repeated (p=1&p=2): the last one wins, as in $_GET.
 		}
 		ksort( $params, SORT_STRING );
 		return array( $path, $params );
 	}
 
-	/** La clave con que se guarda un origen (y se busca). '' si no hay nada que casar. */
+	/** The key a source is stored (and looked up) under. '' if there is nothing to match. */
 	public static function key( string $source, string $base = '' ): string {
 		if ( '' === trim( $source ) ) {
 			return '';
@@ -113,7 +114,7 @@ final class Rules {
 	}
 
 	/**
-	 * Claves con que se busca una PETICIÓN, de más concreta a menos.
+	 * Keys a REQUEST is looked up with, from most to least specific.
 	 *
 	 * @return string[]
 	 */
@@ -124,7 +125,7 @@ final class Rules {
 		if ( $params ) {
 			$keys[] = self::join( $path, $params );
 			if ( isset( $params['p'] ) ) {
-				$keys[] = self::join( $path, array( 'p' => $params['p'] ) ); // El caso que importa, primero.
+				$keys[] = self::join( $path, array( 'p' => $params['p'] ) ); // The case that matters, first.
 			}
 			foreach ( $params as $k => $v ) {
 				$keys[] = self::join( $path, array( $k => $v ) );
@@ -134,22 +135,22 @@ final class Rules {
 		return array_values( array_unique( $keys ) );
 	}
 
-	/** Hash de una clave: lo que lleva el índice único (una clave puede pasar de 191 caracteres). */
+	/** Hash of a key: what the unique index holds (a key can exceed 191 characters). */
 	public static function hash( string $key ): string {
 		return md5( $key );
 	}
 
 	/**
-	 * Lee un CSV de redirecciones. Acepta el de Lavandería
-	 * (origen,destino,tipo,motivo,revisar) y lo que exporta este módulo
-	 * (con activa, visitas, ultima_visita, que al importar se ignoran salvo
-	 * activa). Cabecera en castellano o inglés; sin cabecera, posicional
-	 * (origen, destino, tipo, motivo). Separador «,» o «;» (Excel en
-	 * castellano), según la primera línea. Con o sin BOM.
+	 * Reads a redirects CSV. Accepts Lavandería's
+	 * (origen,destino,tipo,motivo,revisar) and what this module exports
+	 * (with activa, visitas, ultima_visita, which are ignored on import except
+	 * activa). Header in Spanish or English; without a header, positional
+	 * (source, target, type, note). Separator «,» or «;» (Spanish-locale
+	 * Excel), decided by the first line. With or without BOM.
 	 *
-	 * Criterio de «revisar»: una fila con algo en esa columna entra APAGADA y
-	 * con lo que diga en la nota. Una regla que alguien marcó para revisar no
-	 * se pone a funcionar sola.
+	 * «revisar» (review) criterion: a row with anything in that column comes in
+	 * DISABLED, with its content added to the note. A rule someone flagged for
+	 * review does not start working on its own.
 	 *
 	 * @return array{rows: array<int, array{line: int, source: string, target: string, type: string, note: string, active: bool}>, errors: array<int, string>}
 	 */
@@ -177,7 +178,7 @@ final class Rules {
 		while ( false !== ( $cells = fgetcsv( $fh, 0, $sep, '"', '' ) ) ) {
 			++$line;
 			if ( array( null ) === $cells || '' === trim( implode( '', array_map( 'strval', $cells ) ) ) ) {
-				continue; // Línea vacía.
+				continue; // Empty line.
 			}
 			$cells = array_map( static fn( $c ) => trim( (string) $c ), $cells );
 			if ( 1 === $line ) {
@@ -218,35 +219,36 @@ final class Rules {
 	}
 
 	/**
-	 * Una celda que el export protegió contra fórmulas («'=…») vuelve a ser lo que era.
+	 * A cell that the export protected against formulas («'=…») goes back to what it was.
 	 */
 	private static function uncell( string $cell ): string {
 		return preg_match( "/^'[=+\-@]/", $cell ) ? substr( $cell, 1 ) : $cell;
 	}
 
-	/** Protege una celda del CSV exportado: Excel ejecuta lo que empieza por = + - @. */
+	/** Protects a cell of the exported CSV: Excel executes whatever starts with = + - @. */
 	public static function cell( string $value ): string {
 		return preg_match( '/^[=+\-@]/', $value ) ? "'" . $value : $value;
 	}
 
 	/**
-	 * Limpia y valida una regla contra las que ya hay. Pura: las demás llegan
-	 * como array clave → regla.
+	 * Cleans and validates a rule against the existing ones. Pure: the others
+	 * arrive as an array key → rule.
 	 *
-	 * Lo que rechaza: origen vacío o la portada sola; tipo que no sea
-	 * 301/302/410; 301/302 sin destino o con un destino que no sea ruta
-	 * («/x») ni URL http(s); destino igual al origen; un origen que ya tiene
-	 * otra regla (duplicado); y un bucle: seguir el destino por las reglas
-	 * (activas o no) vuelve al origen (A→B→A, A→B→C→A). Una cadena sin bucle
-	 * (A→B, B→C) se deja: funciona, con un salto de más.
+	 * What it rejects: empty source or the home page alone; a type other than
+	 * 301/302/410; 301/302 without a target or with a target that is neither a
+	 * path («/x») nor an http(s) URL; target equal to source; a source that
+	 * already has another rule (duplicate); and a loop: following the target
+	 * through the rules (active or not) leads back to the source (A→B→A,
+	 * A→B→C→A). A chain without a loop (A→B, B→C) is allowed: it works, with
+	 * one extra hop.
 	 *
-	 * Un 410 no lleva destino: si trae uno, se vacía (no es un error; el CSV
-	 * de Lavandería no lo trae, pero uno escrito a mano podría).
+	 * A 410 has no target: if it comes with one, it is emptied (not an error;
+	 * Lavandería's CSV doesn't include one, but a hand-written one might).
 	 *
 	 * @param array{source: string, target: string, type: mixed, note?: string, active?: bool} $rule
-	 * @param array<string, array{id?: int, key?: string, target: string, type: int, active: bool}> $others Por clave, sin la propia.
-	 * @param string $home Dominio de la web («https://lavanderiamallorca.com»): un destino absoluto a la propia web cuenta como ruta para bucles.
-	 * @return array{0: array{source: string, key: string, target: string, type: int, note: string, active: bool}|null, 1: string} [ regla limpia o null, código de error ]
+	 * @param array<string, array{id?: int, key?: string, target: string, type: int, active: bool}> $others By key, excluding this one.
+	 * @param string $home Site domain («https://lavanderiamallorca.com»): an absolute target to this same site counts as a path for loops.
+	 * @return array{0: array{source: string, key: string, target: string, type: int, note: string, active: bool}|null, 1: string} [ clean rule or null, error code ]
 	 */
 	public static function validate( array $rule, array $others, string $home = '', string $base = '' ): array {
 		$source = trim( (string) $rule['source'] );
@@ -291,7 +293,7 @@ final class Rules {
 				}
 				$seen[ $next ] = true;
 				$other         = $others[ $next ] ?? null;
-				// También las APAGADAS: si no, encender una en lote (que no pasa por aquí) cerraría el bucle.
+				// DISABLED ones too: otherwise enabling one in bulk (which doesn't go through here) would close the loop.
 				if ( ! $other || 410 === (int) $other['type'] ) {
 					break;
 				}
@@ -312,7 +314,7 @@ final class Rules {
 		);
 	}
 
-	/** Clave de un destino si es de esta web (ruta o URL con el mismo dominio); null si es de fuera. */
+	/** Key of a target if it belongs to this site (path or URL with the same domain); null if external. */
 	public static function internal_key( string $target, string $home, string $base = '' ): ?string {
 		if ( '' === $target ) {
 			return null;

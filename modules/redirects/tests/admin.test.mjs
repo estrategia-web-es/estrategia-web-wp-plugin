@@ -1,12 +1,12 @@
-// NIVEL: 3 — navegador. NECESITA NAVEGADOR PORQUE: la pantalla «Estrategia Web → Redirecciones» solo existe pintada y con sesión de administrador; importar es subir un fichero y exportar, una descarga.
+// NIVEL: 3 — browser. NEEDS A BROWSER BECAUSE: the «Estrategia Web → Redirects» screen only exists rendered and with an administrator session; importing is uploading a file and exporting is a download.
 //
-// En castellano (el mu-plugin de pruebas del núcleo pone es_ES): de paso
-// comprueba que los textos del módulo están traducidos.
+// In Spanish (the core test mu-plugin sets es_ES): along the way it checks
+// that the module's texts are translated.
 //
-// Vista en rojo (14-10-2026), y era un fallo de verdad: «acción en lote:
-// desactivar» se quedaba esperando porque el formulario de la tabla llevaba
-// un nonce propio y WP_List_Table pinta el suyo (bulk-redirects) con el
-// mismo nombre _wpnonce, que lo pisaba: «el enlace ha caducado».
+// Seen red (14-10-2026), and it was a real bug: «bulk action: deactivate»
+// kept waiting because the table's form carried its own nonce and
+// WP_List_Table prints its own (bulk-redirects) with the same name
+// _wpnonce, which overwrote it: «the link you followed has expired».
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -18,7 +18,7 @@ const PAGE = BASE + "/wp-admin/admin.php?page=estrategia-web-redirects";
 before(async () => {
   await reset();
   const r = await api("/import", { method: "POST", body: { csv: CSV } });
-  assert.equal(r.created, 83, "siembra: las 83 de Lavandería");
+  assert.equal(r.created, 83, "seed: Lavandería's 83");
   browser = await playwright().chromium.launch();
   const ctx = await browser.newContext({ acceptDownloads: true });
   p = await ctx.newPage();
@@ -35,7 +35,7 @@ after(async () => {
   await api("/setup", { method: "POST", body: { on: false } });
 });
 
-test("lista paginada con las 83 y búsqueda", async () => {
+test("paginated list with the 83 and search", async () => {
   await p.goto(PAGE);
   assert.equal(await p.locator("h1").first().textContent(), "Redirecciones");
   assert.match(await p.locator(".tablenav.top .displaying-num").textContent(), /83/);
@@ -46,7 +46,7 @@ test("lista paginada con las 83 y búsqueda", async () => {
   assert.match(await p.textContent("table.wp-list-table tbody"), /410 Ya no existe/);
 });
 
-test("alta de una regla, y un bucle se rechaza sin perder lo escrito", async () => {
+test("adding a rule, and a loop is rejected without losing what was typed", async () => {
   await p.goto(PAGE + "&view=edit");
   await p.fill("#ew-source", "/promo-verano/");
   await p.fill("#ew-target", "/autoservicio/");
@@ -61,20 +61,20 @@ test("alta de una regla, y un bucle se rechaza sin perder lo escrito", async () 
   await p.click(".ew-redirects-edit [type=submit]");
   await p.waitForSelector(".ew-redirects-error");
   assert.match(await p.textContent(".ew-redirects-error"), /bucle/);
-  assert.equal(await p.inputValue("#ew-source"), "/quienes-somos/", "lo escrito sigue ahí");
+  assert.equal(await p.inputValue("#ew-source"), "/quienes-somos/", "what was typed is still there");
   assert.equal(await p.inputValue("#ew-target"), "/nosotros/");
 });
 
-test("acción en lote: desactivar", async () => {
+test("bulk action: deactivate", async () => {
   await p.goto(PAGE + "&s=promo-verano");
   await p.check("table.wp-list-table tbody input[name='ids[]']");
   await p.selectOption("#bulk-action-selector-top", "deactivate");
   await Promise.all([p.waitForURL(/ew_msg=updated/), p.click("#doaction")]);
   assert.equal(Number((await api("/rules")).find((r) => r.source === "/promo-verano/").active), 0);
-  assert.equal((await get("/promo-verano/")).status, 404, "apagada no redirige");
+  assert.equal((await get("/promo-verano/")).status, 404, "disabled doesn't redirect");
 });
 
-test("aviso de dos sistemas: con Rank Math y su módulo de redirecciones, sí; sin ese módulo, no", async () => {
+test("two-systems warning: with Rank Math and its redirects module, yes; without that module, no", async () => {
   await p.goto(PAGE);
   assert.equal(await p.locator(".ew-redirects-conflict").count(), 0);
   await api("/fake-rank-math", { method: "POST", body: { on: true } });
@@ -82,11 +82,11 @@ test("aviso de dos sistemas: con Rank Math y su módulo de redirecciones, sí; s
   assert.match(await p.textContent(".ew-redirects-conflict"), /dos sistemas de redirecciones.*Rank Math/s);
   await api("/fake-rank-math", { method: "POST", body: { on: true, modules: ["sitemap"] } });
   await p.goto(PAGE);
-  assert.equal(await p.locator(".ew-redirects-conflict").count(), 0, "Rank Math sin su módulo de redirecciones no es conflicto");
+  assert.equal(await p.locator(".ew-redirects-conflict").count(), 0, "Rank Math without its redirects module is not a conflict");
   await api("/fake-rank-math", { method: "POST", body: { on: false } });
 });
 
-test("importar subiendo el CSV real: nada nuevo, nada duplicado; y exportar", async () => {
+test("importing by uploading the real CSV: nothing new, nothing duplicated; and exporting", async () => {
   await p.goto(PAGE + "&view=import");
   await p.setInputFiles(".ew-redirects-import input[type=file]", FIXTURE);
   await Promise.all([p.waitForURL(/ew_msg=imported/), p.click(".ew-redirects-import [type=submit]")]);
@@ -94,13 +94,13 @@ test("importar subiendo el CSV real: nada nuevo, nada duplicado; y exportar", as
 
   const [download] = await Promise.all([p.waitForEvent("download"), p.click(".ew-redirects-export")]);
   const csv = fs.readFileSync(await download.path(), "utf8");
-  assert.ok(csv.startsWith("﻿origen,destino,tipo,motivo,activa,visitas,ultima_visita"), "con BOM para Excel");
+  assert.ok(csv.startsWith("﻿origen,destino,tipo,motivo,activa,visitas,ultima_visita"), "with BOM for Excel");
   assert.equal(csv.trim().split("\n").length, 1 + 84);
   const back = await api("/import", { method: "POST", body: { csv } });
-  assert.deepEqual([back.created, back.updated, back.errors.length], [0, 0, 0], "lo exportado se vuelve a importar sin cambios");
+  assert.deepEqual([back.created, back.updated, back.errors.length], [0, 0, 0], "what was exported re-imports without changes");
 });
 
-test("registro de 404: «Crear redirección» rellena el origen y, al guardar, la ruta sale del registro", async () => {
+test("404 log: «Crear redirección» fills in the source and, on save, the path leaves the log", async () => {
   await api("/settings", { method: "POST", body: { log_404: true } });
   await get("/pagina-perdida-xyz/?utm_source=x");
   await p.goto(PAGE + "&view=log");

@@ -1,12 +1,12 @@
-// NIVEL: 2 — WordPress de Playground, porque lo probado es lo que contesta WordPress a una petición de verdad (404 → 301/410), con la tabla, el contador y el registro de 404 en su base de datos.
+// NIVEL: 2 — Playground WordPress, because what is tested is what WordPress answers to a real request (404 → 301/410), with the table, the counter and the 404 log in its database.
 //
-// Importa el CSV REAL de Lavandería (83 reglas) y pide sus orígenes tal cual.
-// También mide lo que cuesta: las consultas a las tablas del módulo en una
-// página que existe (cero) y en un 404, y el tiempo de una búsqueda.
+// Imports Lavandería's REAL CSV (83 rules) and requests its sources as is.
+// It also measures the cost: queries to the module's tables on a page that
+// exists (zero) and on a 404, and the time of one lookup.
 //
-// Vista en rojo (14-10-2026): con Runtime sin mirar is_404() (consultando
-// en todas las peticiones), «una página que existe no toca la tabla» falla:
-// la regla /about/ del CSV se come la página viva /about/ con un 301.
+// Seen red (14-10-2026): with Runtime not checking is_404() (querying on
+// every request), «a page that exists doesn't touch the table» fails: the
+// CSV's /about/ rule swallows the live /about/ page with a 301.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, CSV, api, coreApi, reset, get, seedPage } from "./lib.mjs";
@@ -17,7 +17,7 @@ after(async () => {
   await api("/setup", { method: "POST", body: { on: false } });
 });
 
-test("apagado por defecto: una web sin la opción guardada no lo carga", async () => {
+test("off by default: a site without the saved option doesn't load it", async () => {
   await coreApi("/modules", { method: "POST", body: { active: null } });
   const m = await coreApi("/modules");
   assert.ok(m.available.includes("redirects"));
@@ -26,10 +26,10 @@ test("apagado por defecto: una web sin la opción guardada no lo carga", async (
   assert.ok((await coreApi("/modules")).loaded.includes("redirects"));
 });
 
-test("el CSV de Lavandería entra entero; dos veces no duplica; --dry-run no escribe", async () => {
+test("Lavandería's CSV goes in whole; twice doesn't duplicate; --dry-run doesn't write", async () => {
   const dry = await api("/import", { method: "POST", body: { csv: CSV, dry_run: true } });
   assert.deepEqual([dry.created, dry.updated, dry.unchanged, dry.errors.length], [83, 0, 0, 0]);
-  assert.equal((await api("/rules")).length, 0, "dry_run no escribe");
+  assert.equal((await api("/rules")).length, 0, "dry_run doesn't write");
 
   const first = await api("/import", { method: "POST", body: { csv: CSV } });
   assert.deepEqual(first.errors, []);
@@ -39,7 +39,7 @@ test("el CSV de Lavandería entra entero; dos veces no duplica; --dry-run no esc
   assert.equal((await api("/rules")).length, 83);
 });
 
-test("los orígenes del CSV redirigen, con sus variantes (%3F, ?, page_id, utm, mayúsculas)", async () => {
+test("the CSV sources redirect, with their variants (%3F, ?, page_id, utm, upper case)", async () => {
   const cases = [
     ["/index.html", 301, "/"],
     ["/index.html%3Fp=6981.html", 301, "/quienes-somos/"],
@@ -61,17 +61,17 @@ test("los orígenes del CSV redirigen, con sus variantes (%3F, ?, page_id, utm, 
   }
 });
 
-test("un 410 devuelve 410 y la página de «no encontrado» del tema, sin redirigir", async () => {
+test("a 410 returns 410 and the theme's «not found» page, without redirecting", async () => {
   for (const from of ["/lavanderia-santa-ponsa/", "/?p=30859", "/de/"]) {
     const r = await get(from);
     assert.equal(r.status, 410, from);
     assert.equal(r.location, null);
-    assert.match(r.text, /<html/i, "se pinta la web");
+    assert.match(r.text, /<html/i, "the site is rendered");
     assert.ok(!/Fatal error|Warning:|Notice:/.test(r.text));
   }
 });
 
-test("contador y última visita", async () => {
+test("hit counter and last hit", async () => {
   await get("/contact/");
   await get("/contact/?x=1");
   const rule = (await api("/rules")).find((r) => r.source === "/contact/");
@@ -79,60 +79,60 @@ test("contador y última visita", async () => {
   assert.match(rule.last_hit, /^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d$/);
 });
 
-test("una página que existe no toca la tabla; un 404 hace una consulta", async () => {
-  // /about/ tiene regla en el CSV (→ /quienes-somos/). La página se borra en el reset del módulo:
-  // si se quedara, las pruebas siguientes en el mismo Playground verían una página viva.
+test("a page that exists doesn't touch the table; a 404 makes one query", async () => {
+  // /about/ has a rule in the CSV (→ /quienes-somos/). The page is deleted in the module's reset:
+  // if it stayed, the following tests in the same Playground would see a live page.
   const page = await seedPage("<!-- wp:paragraph --><p>Viva</p><!-- /wp:paragraph -->", "about");
   const live = await get(new URL(page.url).pathname);
-  assert.equal(live.status, 200, "la página viva gana a la regla /about/ (solo actúan en los 404)");
+  assert.equal(live.status, 200, "the live page beats the /about/ rule (rules only act on 404s)");
   const l = await api("/last");
-  assert.equal(l.queries, 0, "cero consultas a las tablas del módulo en una página que existe");
-  console.log(`  · página que existe: ${l.total} consultas en total, 0 del módulo`);
+  assert.equal(l.queries, 0, "zero queries to the module's tables on a page that exists");
+  console.log(`  · existing page: ${l.total} queries in total, 0 from the module`);
 
   await get("/esto-no-existe/");
   const n = await api("/last");
-  assert.equal(n.queries, 1, "un 404 sin regla: una consulta (registro de 404 apagado)");
-  console.log(`  · 404 sin regla: ${n.total} consultas en total, ${n.queries} del módulo`);
+  assert.equal(n.queries, 1, "a 404 with no rule: one query (404 log off)");
+  console.log(`  · 404 with no rule: ${n.total} queries in total, ${n.queries} from the module`);
 });
 
-test("validación por la misma vía que la pantalla: bucle, destino igual, duplicado", async () => {
-  assert.equal((await api("/rule", { method: "POST", body: { source: "/quienes-somos/", target: "/nosotros/" } })).error, "loop", "/nosotros/ → /quienes-somos/ ya existe");
+test("validation through the same path as the screen: loop, same target, duplicate", async () => {
+  assert.equal((await api("/rule", { method: "POST", body: { source: "/quienes-somos/", target: "/nosotros/" } })).error, "loop", "/nosotros/ → /quienes-somos/ already exists");
   assert.equal((await api("/rule", { method: "POST", body: { source: "/x/", target: "/X" } })).error, "same_target");
   assert.equal((await api("/rule", { method: "POST", body: { source: "/Index.html/", target: "/otra/" } })).error, "duplicate");
   const ok = await api("/rule", { method: "POST", body: { source: "/temporal/", target: "https://ejemplo.org/oferta", type: 302 } });
   assert.equal(ok.error, "");
   const r = await get("/temporal/?utm_campaign=x");
   assert.equal(r.status, 302);
-  assert.equal(r.location, "https://ejemplo.org/oferta", "destino externo, sin la query de la petición");
+  assert.equal(r.location, "https://ejemplo.org/oferta", "external target, without the request's query");
 });
 
-test("registro de 404: apagado no apunta; encendido apunta la ruta sin la query ni datos personales; la purga lo vacía", async () => {
+test("404 log: off records nothing; on records the path without the query or personal data; the purge empties it", async () => {
   await get("/ruta-perdida/?email=ana@ejemplo.test");
-  assert.equal((await api("/log")).length, 0, "apagado de serie");
+  assert.equal((await api("/log")).length, 0, "off by default");
 
   await api("/settings", { method: "POST", body: { log_404: true, log_days: 30 } });
   await get("/ruta-perdida/?email=ana@ejemplo.test");
   await get("/Ruta-Perdida");
-  // /index.html%3Fp=99999.html NO valdría: casa con la regla /index.html → / (la query que no es del origen se ignora).
+  // /index.html%3Fp=99999.html would NOT do: it matches the rule /index.html → / (query not in the source is ignored).
   assert.equal((await get("/index.html%3Fp=99999.html")).location, BASE + "/");
   await get("/vieja.html%3Fp=99999.html");
   const log = await api("/log");
   assert.deepEqual(log.map((r) => [r.path, Number(r.hits)]), [["/ruta-perdida", 2], ["/vieja.html?p=99999.html", 1]]);
-  assert.ok(!JSON.stringify(log).includes("ana@"), "ni rastro de la query");
-  assert.ok(!Object.keys(log[0]).some((k) => /ip|agent|referer/i.test(k)), "sin columnas de IP ni navegador");
+  assert.ok(!JSON.stringify(log).includes("ana@"), "no trace of the query");
+  assert.ok(!Object.keys(log[0]).some((k) => /ip|agent|referer/i.test(k)), "no IP or browser columns");
 
   await get("/quienes-somos-no/");
-  assert.equal((await api("/last")).queries, 4, "404 NUEVO sin regla con registro: buscar regla + actualizar (0 filas) + contar el tope + insertar");
+  assert.equal((await api("/last")).queries, 4, "NEW 404 with no rule and log on: look up rule + update (0 rows) + count the cap + insert");
   await get("/quienes-somos-no/");
-  assert.equal((await api("/last")).queries, 2, "el mismo 404 otra vez: buscar regla + actualizar");
+  assert.equal((await api("/last")).queries, 2, "the same 404 again: look up rule + update");
 
   await api("/log-backdate", { method: "POST" });
   const p = await api("/purge", { method: "POST" });
-  assert.equal(p.scheduled, true, "la purga diaria está programada");
+  assert.equal(p.scheduled, true, "the daily purge is scheduled");
   assert.equal((await api("/log")).length, 0);
 });
 
-test("apagar el módulo deja de redirigir y no borra las reglas", async () => {
+test("switching the module off stops redirecting and doesn't delete the rules", async () => {
   await api("/setup", { method: "POST", body: { on: false } });
   assert.equal((await get("/index.html%3Fp=6981.html")).status, 404);
   await api("/setup", { method: "POST", body: { on: true } });
@@ -140,9 +140,9 @@ test("apagar el módulo deja de redirigir y no borra las reglas", async () => {
   assert.equal((await get("/index.html%3Fp=6981.html")).status, 301);
 });
 
-test("lo que cuesta una búsqueda (se apunta, no se exige)", async () => {
+test("the cost of a lookup (recorded, not enforced)", async () => {
   const small = await api("/bench", { method: "POST", body: { n: 300, rules: 0 } });
   const big = await api("/bench", { method: "POST", body: { n: 300, rules: 5000 } });
-  console.log(`  · ${small.rules} reglas: ${small.ms_each} ms/búsqueda · ${big.rules} reglas: ${big.ms_each} ms/búsqueda (${big.db_engine})`);
-  assert.ok(big.ms_each < 50, "una búsqueda por índice no depende del número de reglas");
+  console.log(`  · ${small.rules} rules: ${small.ms_each} ms/lookup · ${big.rules} rules: ${big.ms_each} ms/lookup (${big.db_engine})`);
+  assert.ok(big.ms_each < 50, "an indexed lookup doesn't depend on the number of rules");
 });

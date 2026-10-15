@@ -1,18 +1,18 @@
 <?php
 /**
- * La pantalla «Estrategia Web → Redirecciones». Cuatro vistas en pestañas:
- * reglas (lista con búsqueda y acciones en lote), alta/edición, registro de
- * 404 (con «Crear redirección» en cada ruta) e importar/exportar CSV.
+ * The «Estrategia Web → Redirects» screen. Four tabbed views: rules (list
+ * with search and bulk actions), add/edit, 404 log (with «Create redirect»
+ * on each path) and CSV import/export.
  *
- * Todo lo que escribe se procesa en load-<página> (antes de pintar nada),
- * con nonce y manage_options, y termina en una redirección con ?ew_msg=…
- * (patrón POST → redirección → GET: recargar no repite la acción). La
- * excepción es guardar con error: se vuelve a pintar el formulario con lo
- * escrito y el error, sin redirigir, para no perder lo tecleado.
+ * Everything that writes is processed in load-<page> (before anything is
+ * rendered), with nonce and manage_options, and ends in a redirect with
+ * ?ew_msg=… (POST → redirect → GET pattern: reloading doesn't repeat the
+ * action). The exception is a failed save: the form is rendered again with
+ * what was typed and the error, without redirecting, so input isn't lost.
  *
- * Cómo se mantiene: un mensaje nuevo tras una acción es un código en
- * notice() y el redirect con ew_msg=<código>. El informe de importación no
- * cabe en la URL: va en un transitorio por usuario de 5 minutos.
+ * How to maintain: a new message after an action is a code in notice() and
+ * the redirect with ew_msg=<code>. The import report doesn't fit in the URL:
+ * it goes in a per-user transient lasting 5 minutes.
  */
 
 namespace EstrategiaWeb\Redirects\Admin;
@@ -31,11 +31,11 @@ final class Page {
 	public const SLUG  = 'estrategia-web-redirects';
 	public const NONCE = 'estrategia_web_redirects';
 
-	/** @var array{0: array<string, mixed>, 1: string}|null Lo tecleado y el error, si guardar falló. */
+	/** @var array{0: array<string, mixed>, 1: string}|null What was typed and the error, if saving failed. */
 	private static ?array $failed = null;
 
 	public static function boot(): void {
-		add_action( 'admin_menu', array( self::class, 'menu' ), 20 ); // Después del menú «Estrategia Web» (prioridad 10).
+		add_action( 'admin_menu', array( self::class, 'menu' ), 20 ); // After the «Estrategia Web» menu (priority 10).
 	}
 
 	public static function menu(): void {
@@ -56,18 +56,18 @@ final class Page {
 		exit;
 	}
 
-	/** Procesa las acciones. Corre antes de pintar. */
+	/** Processes the actions. Runs before rendering. */
 	public static function handle(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
-		// phpcs:disable WordPress.Security.NonceVerification -- se verifica abajo, antes de cada acción.
+		// phpcs:disable WordPress.Security.NonceVerification -- verified below, before each action.
 		$do    = isset( $_REQUEST['do'] ) ? sanitize_key( $_REQUEST['do'] ) : '';
 		$nonce = self::NONCE;
 		if ( '' === $do ) {
-			// Acción en lote de WP_List_Table. Su formulario ya lleva el nonce
-			// «bulk-<plural>» de la tabla (display_tablenav) con el nombre
-			// _wpnonce: uno propio en el mismo formulario quedaría pisado.
+			// WP_List_Table bulk action. Its form already carries the table's
+			// «bulk-<plural>» nonce (display_tablenav) named _wpnonce: our own
+			// in the same form would be overwritten.
 			foreach ( array( 'action', 'action2' ) as $field ) {
 				if ( ! empty( $_POST[ $field ] ) && '-1' !== $_POST[ $field ] ) {
 					$do    = sanitize_key( $_POST[ $field ] );
@@ -94,7 +94,7 @@ final class Page {
 				list( $saved, $err ) = Importer::save_one( $input, $id );
 				if ( ! $saved ) {
 					self::$failed = array( $input + array( 'id' => $id ), $err );
-					return; // Se vuelve a pintar el formulario con lo escrito.
+					return; // The form is rendered again with what was typed.
 				}
 				self::back( array( 'ew_msg' => self::exists( $input['source'] ) ? 'saved_exists' : 'saved' ) );
 				break;
@@ -121,7 +121,7 @@ final class Page {
 				nocache_headers();
 				header( 'Content-Type: text/csv; charset=utf-8' );
 				header( 'Content-Disposition: attachment; filename="redirecciones-' . gmdate( 'Y-m-d' ) . '.csv"' );
-				echo "\xEF\xBB\xBF" . Importer::export(); // phpcs:ignore WordPress.Security.EscapeOutput -- CSV. El BOM, para que Excel lea las tildes.
+				echo "\xEF\xBB\xBF" . Importer::export(); // phpcs:ignore WordPress.Security.EscapeOutput -- CSV. The BOM is so Excel reads accented characters.
 				exit;
 			case 'log_settings':
 				Settings::save( ! empty( $_POST['log_404'] ), isset( $_POST['log_days'] ) ? (int) $_POST['log_days'] : 90 );
@@ -139,7 +139,7 @@ final class Page {
 		// phpcs:enable
 	}
 
-	/** ¿El origen es una página que hoy existe? Entonces la regla no actuará (ver class-runtime.php). */
+	/** Is the source a page that exists today? Then the rule won't fire (see class-runtime.php). */
 	private static function exists( string $source ): bool {
 		list( $path, $params ) = Rules::split( $source, Store::base() );
 		if ( $params || '/' === $path ) {
@@ -221,14 +221,14 @@ final class Page {
 		echo '<form method="get"><input type="hidden" name="page" value="' . esc_attr( self::SLUG ) . '" />';
 		$table->search_box( __( 'Search redirects', 'estrategia-web' ), 'ew-redirects' );
 		echo '</form><form method="post" action="' . esc_url( self::url() ) . '">';
-		$table->display(); // Lleva su nonce bulk-redirects (ver handle()).
+		$table->display(); // Carries its bulk-redirects nonce (see handle()).
 		echo '</form>';
 	}
 
 	private static function render_edit(): void {
 		$rule = array(
 			'id'     => 0,
-			'source' => isset( $_GET['source'] ) ? sanitize_text_field( wp_unslash( $_GET['source'] ) ) : '', // phpcs:ignore WordPress.Security.NonceVerification -- prerrelleno desde el registro de 404.
+			'source' => isset( $_GET['source'] ) ? sanitize_text_field( wp_unslash( $_GET['source'] ) ) : '', // phpcs:ignore WordPress.Security.NonceVerification -- prefilled from the 404 log.
 			'target' => '',
 			'type'   => 301,
 			'note'   => '',
@@ -313,7 +313,7 @@ final class Page {
 		echo '<form method="get"><input type="hidden" name="page" value="' . esc_attr( self::SLUG ) . '" /><input type="hidden" name="view" value="log" />';
 		$table->search_box( __( 'Search paths', 'estrategia-web' ), 'ew-404' );
 		echo '</form><form method="post" action="' . esc_url( self::url( array( 'view' => 'log' ) ) ) . '">';
-		$table->display(); // Lleva su nonce bulk-not_found (ver handle()).
+		$table->display(); // Carries its bulk-not_found nonce (see handle()).
 		echo '</form>';
 	}
 

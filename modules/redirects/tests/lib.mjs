@@ -1,7 +1,7 @@
-// NIVEL: BANCO DE TRABAJO — no es una prueba. Ayudantes de las pruebas de nivel 2 y 3 del módulo redirects.
+// NIVEL: BANCO DE TRABAJO — not a test. Helpers for the redirects module's level 2 and 3 tests.
 //
-// Habla con el Playground que arranca tests/run.mjs (AS_BASE, 9404 por
-// defecto) y con las rutas de modules/redirects/tests/wp/.
+// Talks to the Playground started by tests/run.mjs (AS_BASE, 9404 by
+// default) and to the routes in modules/redirects/tests/wp/.
 import fs from "node:fs";
 import path from "node:path";
 import { reset as coreReset, testApi as coreApi } from "../../../tests/lib.mjs";
@@ -23,14 +23,14 @@ export async function api(p, { method = "GET", body } = {}) {
   return res.json();
 }
 
-/** El núcleo como recién instalado, el módulo encendido y sus tablas vacías. */
+/** Core as freshly installed, the module on and its tables empty. */
 export async function reset({ on = true } = {}) {
   await coreReset();
   await api("/setup", { method: "POST", body: { on } });
   await api("/reset", { method: "POST" });
 }
 
-/** Una petición pública sin seguir redirecciones: { status, location, text }. */
+/** A public request without following redirects: { status, location, text }. */
 export async function get(p) {
   const { BASE } = await import("../../../tests/lib.mjs");
   const res = await fetch(BASE + p, { redirect: "manual" });

@@ -5,59 +5,61 @@
  * Default: off
  * Requires:
  *
- * Redirecciones editables en «Estrategia Web → Redirecciones»: origen,
- * destino, tipo (301, 302, 410), activa, contador y última visita. Importar
- * y exportar CSV (el formato del de Lavandería,
- * docs/redirecciones/redirecciones-2026-10-07.csv de aquel repo), registro
- * opcional de 404 con «Crear redirección», y WP-CLI para desplegar:
+ * Editable redirects under «Estrategia Web → Redirects»: source, target,
+ * type (301, 302, 410), active, hit counter and last hit. CSV import and
+ * export (the format of Lavandería's,
+ * docs/redirecciones/redirecciones-2026-10-07.csv in that repo), optional
+ * 404 log with «Create redirect», and WP-CLI for deployment:
  *
- *     wp estrategia-web redirects import fichero.csv [--dry-run]
+ *     wp estrategia-web redirects import file.csv [--dry-run]
  *     wp estrategia-web redirects list | export
  *
- * POR QUÉ NACE APAGADO (Default: off): cambia lo que ve el visitante, y en
- * Lavandería, la única web hoy, las redirecciones las lleva Rank Math porque
- * la empresa de SEO trabaja con él. Encenderlo allí serían dos sistemas a la
- * vez; la pantalla lo avisa si pasa (includes/class-conflicts.php).
+ * WHY IT SHIPS DISABLED (Default: off): it changes what the visitor sees, and
+ * on Lavandería, the only site today, redirects are handled by Rank Math
+ * because the SEO agency works with it. Enabling it there would mean two
+ * systems at once; the screen warns if that happens
+ * (includes/class-conflicts.php).
  *
- * Dónde está cada cosa:
- *   includes/class-rules.php     lo puro: normalizar, casar, leer el CSV,
- *                                validar (bucles, duplicados). EL CRITERIO
- *                                PARA CASAR está en su cabecera.
- *   includes/class-runtime.php   cuándo se mira la tabla (solo en los 404) y
- *                                lo que se mide.
- *   includes/class-store.php     las dos tablas.
- *   includes/class-importer.php  guardar una o muchas; importar es idempotente.
+ * Where everything lives:
+ *   includes/class-rules.php     the pure part: normalise, match, read the
+ *                                CSV, validate (loops, duplicates). THE
+ *                                MATCHING CRITERION is in its header.
+ *   includes/class-runtime.php   when the table is consulted (only on 404s)
+ *                                and what is counted.
+ *   includes/class-store.php     the two tables.
+ *   includes/class-importer.php  save one or many; importing is idempotent.
  *   includes/class-cli.php       WP-CLI.
- *   includes/admin/              la pantalla.
+ *   includes/admin/              the screen.
  *
- * CÓMO SE MANTIENE
- * - Quién y cuándo: quien migre una web con URL viejas. El CSV de reglas vive
- *   en el repo DE LA WEB (no aquí) y se importa al desplegar con WP-CLI o
- *   desde la pantalla; importar dos veces no duplica. Lo que se edite en el
- *   panel después se baja con «Exportar» (o `wp … export`) al repo de la web.
- * - Criterio de qué entra como regla: una URL que existió y que alguien puede
- *   tener enlazada o en Google. 301 si hay página equivalente; 410 si el
- *   contenido ya no existe a propósito (negocio vendido, idioma quitado); 302
- *   solo para algo temporal. Una errata que nunca se publicó no es una regla.
- * - Caso frontera con nombre: /?p=24298 → / en Lavandería. Funciona porque
- *   en la web nueva el post 24298 NO existe y la petición va a 404. Si algún
- *   día un post nuevo tuviera ese ID, WordPress lo enseñaría y la regla no
- *   actuaría: las reglas solo actúan en los 404 (class-runtime.php). Es a
- *   propósito: una regla vieja nunca tapa una página viva.
- * - La trampa que mordió al montarlo: las URL viejas exportadas a estático
- *   llevan el «?» codificado dentro de la ruta (/index.html%3Fp=6981.html).
- *   Partir por «?» y DESPUÉS decodificar las deja como ruta; decodificar y
- *   después partir, como query. Se parte dos veces para que las dos formas
- *   den la misma clave (cabecera de class-rules.php). Y engaña: con
- *   /index.html%3Fp=6981.html la clave sin partir coincide por casualidad
- *   con la partida, así que la prueba obvia sale verde aunque el código
- *   esté mal; la delatan /en/%3Fp=1 (barra antes del ?) y %3Fpage_id=.
- *   Lo prueba el nivel 1, con el CSV real.
- * - Una tabla cambia de forma: Store::DB_VERSION (cabecera de class-store.php).
- * - Otro plugin de redirecciones que detectar: class-conflicts.php.
+ * HOW TO MAINTAIN
+ * - Who and when: whoever migrates a site with old URLs. The rules CSV lives
+ *   in the SITE's repo (not here) and is imported on deploy with WP-CLI or
+ *   from the screen; importing twice doesn't duplicate. Whatever is edited in
+ *   the panel afterwards is pulled down with «Export» (or `wp … export`) into
+ *   the site's repo.
+ * - Criterion for what becomes a rule: a URL that existed and that someone
+ *   may have linked or that Google may have. 301 if there is an equivalent
+ *   page; 410 if the content is deliberately gone (business sold, language
+ *   removed); 302 only for something temporary. A typo that was never
+ *   published is not a rule.
+ * - Named edge case: /?p=24298 → / on Lavandería. It works because on the new
+ *   site post 24298 does NOT exist and the request goes to 404. If some day a
+ *   new post had that ID, WordPress would show it and the rule would not
+ *   fire: rules only act on 404s (class-runtime.php). That is on purpose: an
+ *   old rule never hides a live page.
+ * - The trap that bit while building it: old URLs exported to static carry
+ *   the «?» encoded inside the path (/index.html%3Fp=6981.html). Splitting on
+ *   «?» and THEN decoding leaves them as a path; decoding and then splitting,
+ *   as a query. It splits twice so both forms give the same key (header of
+ *   class-rules.php). And it is deceptive: with /index.html%3Fp=6981.html the
+ *   unsplit key happens to match the split one, so the obvious test passes
+ *   even when the code is wrong; /en/%3Fp=1 (slash before the ?) and
+ *   %3Fpage_id= give it away. Level 1 tests it, with the real CSV.
+ * - A table changes shape: Store::DB_VERSION (header of class-store.php).
+ * - Another redirects plugin to detect: class-conflicts.php.
  *
- * Datos personales: ninguno. El registro de 404 guarda la ruta y un
- * contador; ni IP, ni navegador, ni la query (salvo p=, que es un ID).
+ * Personal data: none. The 404 log stores the path and a counter; no IP, no
+ * browser, no query (except p=, which is an ID).
  */
 
 namespace EstrategiaWeb\Redirects;
@@ -71,7 +73,7 @@ require_once __DIR__ . '/includes/class-importer.php';
 require_once __DIR__ . '/includes/class-conflicts.php';
 require_once __DIR__ . '/includes/class-runtime.php';
 
-// Idempotentes en cada carga: encender el módulo no pasa por la activación.
+// Idempotent on every load: enabling the module does not go through activation.
 add_action( 'plugins_loaded', array( Store::class, 'maybe_install' ) );
 add_action( 'init', array( Settings::class, 'schedule' ) );
 add_action( Settings::CRON, array( Settings::class, 'purge' ) );
