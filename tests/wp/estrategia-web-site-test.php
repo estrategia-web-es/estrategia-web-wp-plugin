@@ -247,6 +247,9 @@ add_action(
 				delete_option( 'estrategia_web_modules' ); // 1.1.0: todos los módulos, como recién instalado.
 				delete_option( 'estrategia_web_modules_known' );
 				delete_option( 'rewrite_rules' );
+				delete_option( 'icl_sitepress_settings#custom_posts_sync_option' ); // Los de legacy-types (1.2.0).
+				delete_option( 'WPML(setup/translate-everything-taxonomies)' );
+				delete_option( 'rank_math_known_post_types' );
 				// Con y sin prefijo (1.2.0): la prueba del migrador siembra filas con los nombres viejos.
 				$renamed = \EstrategiaWeb\Site\Type_Names::renamed();
 				$names   = array_merge( array_keys( $renamed ), array_values( $renamed ) );
@@ -351,9 +354,20 @@ add_action(
 				$query = '<!-- wp:query {"queryId":5,"query":{"perPage":10,"pages":0,"offset":0,"postType":"client","order":"asc","orderBy":"title","inherit":false,"taxQuery":{"client_sector":[' . $term . ']}}} -->'
 					. '<div class="wp-block-query"><!-- wp:post-template --><!-- wp:post-title /--><!-- wp:post-terms {"term":"client_sector"} /--><!-- /wp:post-template --></div><!-- /wp:query -->';
 				$page = $insert( 'page', 'Clientes de antes', 'clientes-de-antes', $query );
+				// Como los guardan WPML 5.1 y Rank Math en Lavandería (sin esos plugins aquí: solo las filas).
+				update_option( 'icl_sitepress_settings#custom_posts_sync_option', array( 'v' => array( 'page' => 1, 'client' => 2, 'location' => 2 ) ) );
+				update_option( 'WPML(setup/translate-everything-taxonomies)', array( 'v' => array( 'client_sector' => array() ) ) );
+				update_option( 'rank_math_known_post_types', array( 'post' => 'post', 'client' => 'client' ) );
 				wp_cache_flush();
 				return array( 'client' => $client, 'term' => $term, 'location' => $location, 'page' => $page );
 			}
+		);
+
+		// Unas opciones tal cual están (solo lee): lo que dejó el migrador.
+		$route(
+			'/options',
+			'POST',
+			static fn( WP_REST_Request $r ) => array_combine( (array) $r->get_param( 'names' ), array_map( static fn( $n ) => get_option( (string) $n, null ), (array) $r->get_param( 'names' ) ) )
 		);
 
 		// El migrador del prefijo (includes/class-prefix-migration.php), en seco o de verdad.

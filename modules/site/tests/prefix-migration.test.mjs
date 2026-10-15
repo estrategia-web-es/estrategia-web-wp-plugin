@@ -47,6 +47,12 @@ test("de verdad: la fila, el sector y la Consulta pasan a los nombres nuevos y l
   assert.match(text, /Hoteles de antes/, "post-terms pinta el sector");
   const sede = await wp(`/${type("location")}/${seed.location}?context=edit`);
   assert.equal(sede.json.meta.estrategia_web_location_phone, "971 11 22 33", "las metas no cambian");
+  assert.ok(r.wpml.includes(`icl_sitepress_settings#custom_posts_sync_option[v]: client → ${type("client")}`), JSON.stringify(r.wpml));
+  assert.ok(r.wpml.includes(`WPML(setup/translate-everything-taxonomies)[v]: client_sector → ${type("client_sector")}`), JSON.stringify(r.wpml));
+  assert.ok(r.rankmath.includes(`rank_math_known_post_types: client → ${type("client")}`), JSON.stringify(r.rankmath));
+  const opts = await testApi("/options", { method: "POST", body: { names: ["icl_sitepress_settings#custom_posts_sync_option", "rank_math_known_post_types"] } });
+  assert.deepEqual(opts["icl_sitepress_settings#custom_posts_sync_option"], { v: { page: 1, [type("client")]: 2, [type("location")]: 2 } }, "el orden y los valores se conservan");
+  assert.deepEqual(opts.rank_math_known_post_types, { post: "post", [type("client")]: type("client") });
 });
 
 test("idempotente: la segunda pasada no encuentra nada", async () => {

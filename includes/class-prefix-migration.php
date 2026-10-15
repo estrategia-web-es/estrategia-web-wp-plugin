@@ -26,12 +26,16 @@
  *                  archivo o a una taxonomía (_menu_item_object).
  *   6. wpml        icl_translations (element_type post_client → post_ew_client,
  *                  tax_client_sector → tax_ew_client_sector), los ajustes de
- *                  tipos y taxonomías traducibles de icl_sitepress_settings
- *                  (SETTINGS_SECTIONS, solo CLAVES y solo en esas secciones) y
- *                  las cadenas de traducción de slugs («URL slug: client»).
+ *                  tipos y taxonomías traducibles (SETTINGS_SECTIONS, solo
+ *                  CLAVES y solo en esas secciones) en los TRES sitios donde
+ *                  WPML 5.1 los guarda: icl_sitepress_settings entero, sus
+ *                  copias partidas icl_sitepress_settings#<sección> y
+ *                  WPML(setup…) (WPML_OPTIONS); y las cadenas de traducción
+ *                  de slugs («URL slug: client»).
  *   7. rank math   las opciones rank-math-options-* por tipo y taxonomía
  *                  (pt_client_… / tax_client_sector_… y el valor de
- *                  pt_…_primary_taxonomy) y la meta rank_math_primary_<tax>.
+ *                  pt_…_primary_taxonomy), rank_math_known_post_types y la
+ *                  meta rank_math_primary_<tax>.
  *   8. pantallas   las preferencias por tipo de cada usuario (columnas
  *                  ocultas, entradas por página, cajas cerradas): cosmético.
  *   9. avisos      lo que NO sabe migrar y nombra un tipo viejo: opciones con
@@ -92,6 +96,85 @@ final class Prefix_Migration {
 		'taxonomies_sync_option',
 		'taxonomies_unlocked_option',
 	);
+
+	/**
+	 * Otras opciones de WPML 5 con tipos o taxonomías como CLAVES: opción =>
+	 * [ ruta dentro del valor => 'types' | 'taxes' ]. Medido en Lavandería el
+	 * 15-10-2026: WPML 5.1 guarda sus ajustes DOS veces, en icl_sitepress_settings
+	 * entero y partidos en icl_sitepress_settings#<sección> ({"v": …}); y lo de
+	 * «traducir todo» en WPML(setup) y WPML(setup/…). Se migran todos.
+	 */
+	private const WPML_OPTIONS = array(
+		'WPML(setup)'                                  => array( 'translate-everything-taxonomies' => 'taxes', 'translate-everything-posts' => 'types' ),
+		'WPML(setup/translate-everything-taxonomies)' => array( 'v' => 'taxes' ),
+		'WPML(setup/translate-everything-posts)'      => array( 'v' => 'types' ),
+	);
+
+	/** @return array<string, array<string,string>> Opción de WPML => [ ruta => types|taxes ]. */
+	private static function wpml_targets(): array {
+		$out = array( 'icl_sitepress_settings' => array() );
+		foreach ( self::SETTINGS_SECTIONS as $section ) {
+			$kind                                       = str_starts_with( $section, 'taxonomies' ) ? 'taxes' : 'types';
+			$out['icl_sitepress_settings'][ $section ]  = $kind;
+			$out[ 'icl_sitepress_settings#' . $section ] = array( 'v' => $kind );
+		}
+		return $out + self::WPML_OPTIONS;
+	}
+
+	/**
+	 * Renombra las CLAVES que son nombres viejos dentro de una opción, en las
+	 * rutas dadas. Lee y escribe la fila tal cual (sin get_option/update_option:
+	 * WPML filtra los suyos). Idempotente; si están la vieja y la nueva, se
+	 * queda la nueva y sale un aviso.
+	 *
+	 * @param array<string,string> $paths Ruta (clave de primer nivel) => 'types' | 'taxes'.
+	 * @param array<string,string> $types
+	 * @param array<string,string> $taxes
+	 * @param string               $step  Dónde sale en el informe.
+	 * @param bool                 $values También los VALORES iguales a la clave (rank_math_known_post_types: «client» => «client»).
+	 */
+	private static function rename_keys_in_option( string $option, array $paths, array $types, array $taxes, string $step, bool $values = false ): void {
+		global $wpdb;
+		$raw = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", $option ) ); // phpcs:ignore
+		if ( null === $raw ) {
+			return;
+		}
+		$value = maybe_unserialize( $raw );
+		if ( ! is_array( $value ) ) {
+			return;
+		}
+		$new = $value;
+		foreach ( $paths as $path => $kind ) {
+			$map  = 'taxes' === $kind ? $taxes : $types;
+			$list = '' === $path ? $value : ( $value[ $path ] ?? null );
+			if ( ! is_array( $list ) ) {
+				continue;
+			}
+			$out = array();
+			foreach ( $list as $key => $item ) {
+				if ( is_string( $key ) && isset( $map[ $key ] ) ) {
+					if ( array_key_exists( $map[ $key ], $list ) ) {
+						self::$report['avisos'][] = "$option" . ( '' === $path ? '' : "[$path]" ) . ": están «{$key}» y «{$map[ $key ]}»; se queda el nuevo";
+						continue;
+					}
+					self::$report[ $step ][]   = "$option" . ( '' === $path ? '' : "[$path]" ) . ": $key → {$map[ $key ]}";
+					$out[ $map[ $key ] ]       = ( $values && $item === $key ) ? $map[ $key ] : $item;
+					continue;
+				}
+				$out[ $key ] = $item;
+			}
+			if ( '' === $path ) {
+				$new = $out;
+			} else {
+				$new[ $path ] = $out;
+			}
+		}
+		if ( $new !== $value && ! self::$dry ) {
+			$wpdb->update( $wpdb->options, array( 'option_value' => maybe_serialize( $new ) ), array( 'option_name' => $option ) ); // phpcs:ignore
+			wp_cache_delete( $option, 'options' );
+			wp_cache_delete( 'alloptions', 'options' );
+		}
+	}
 
 	/** Bloques y atributos de su JSON que guardan un nombre de tipo o taxonomía. */
 	private const BLOCK_KEYS = array(
@@ -352,32 +435,10 @@ final class Prefix_Migration {
 				}
 			}
 		}
-		$settings = get_option( 'icl_sitepress_settings', null );
-		if ( is_array( $settings ) ) {
-			$changed = $settings;
-			foreach ( self::SETTINGS_SECTIONS as $section ) {
-				if ( empty( $settings[ $section ] ) || ! is_array( $settings[ $section ] ) ) {
-					continue;
-				}
-				$map = str_starts_with( $section, 'taxonomies' ) ? $taxes : $types;
-				$out = array();
-				foreach ( $settings[ $section ] as $key => $value ) {
-					if ( isset( $map[ $key ] ) ) {
-						if ( array_key_exists( $map[ $key ], $settings[ $section ] ) ) {
-							self::$report['avisos'][] = "WPML $section: están «{$key}» y «{$map[ $key ]}»; se queda el nuevo";
-							continue;
-						}
-						self::$report['wpml'][] = "icl_sitepress_settings[$section]: $key → {$map[ $key ]} (" . wp_json_encode( $value ) . ')';
-						$out[ $map[ $key ] ]    = $value;
-						continue;
-					}
-					$out[ $key ] = $value;
-				}
-				$changed[ $section ] = $out;
-			}
-			if ( $changed !== $settings && ! self::$dry ) {
-				update_option( 'icl_sitepress_settings', $changed );
-			}
+		// Los ajustes de WPML: claves que son tipos o taxonomías, en cada sitio
+		// donde WPML 5 las guarda (ver WPML_OPTIONS).
+		foreach ( self::wpml_targets() as $option => $paths ) {
+			self::rename_keys_in_option( $option, $paths, $types, $taxes, 'wpml' );
 		}
 		// Traducción de slugs de WPML: cadenas «URL slug: client» del contexto WordPress.
 		$strings = $wpdb->prefix . 'icl_strings';
@@ -438,6 +499,9 @@ final class Prefix_Migration {
 				update_option( $option, $out );
 			}
 		}
+		// Los tipos que Rank Math ya conoce («client» => «client»): sin esto vería
+		// los nuevos como recién llegados y les pondría sus valores por defecto.
+		self::rename_keys_in_option( 'rank_math_known_post_types', array( '' => 'types' ), $types, $taxes, 'rankmath', true );
 		foreach ( $taxes as $old => $new ) {
 			$n = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key = %s", 'rank_math_primary_' . $old ) ); // phpcs:ignore
 			if ( ! $n ) {
@@ -480,7 +544,8 @@ final class Prefix_Migration {
 	private static function leftovers( array $map ): void {
 		global $wpdb;
 		// estrategia_web_site habla en claves a propósito (Type_Names): no es un resto.
-		$skip  = array( 'rewrite_rules', 'icl_sitepress_settings', 'estrategia_web_site' );
+		// Y las que migran los pasos 6 y 7: en seco aún los nombran.
+		$skip  = array_merge( array( 'rewrite_rules', 'estrategia_web_site', 'rank_math_known_post_types' ), array_keys( self::wpml_targets() ) );
 		$like  = array();
 		$regex = array();
 		foreach ( array_keys( $map ) as $old ) {
