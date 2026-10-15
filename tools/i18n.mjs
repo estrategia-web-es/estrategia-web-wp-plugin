@@ -1,49 +1,49 @@
-// NIVEL: BANCO DE TRABAJO — no es una prueba. Traducciones (Armazón, fila 11): extrae, fusiona y compila.
+// NIVEL: BANCO DE TRABAJO — not a test. Translations (Armazón, row 11): extracts, merges and compiles.
 //
-//   node tools/i18n.mjs          todo: .pot → fusiona en cada .po → compila
-//   node tools/i18n.mjs compile  solo compilar los .po (tras traducir)
+//   node tools/i18n.mjs          everything: .pot → merge into each .po → compile
+//   node tools/i18n.mjs compile  only compile the .po files (after translating)
 //
-// UN dominio para todo el plugin, estrategia-web (desde la 1.1.0, que juntó
-// Site, Forms y los bloques del tema). Qué produce en languages/:
-//   estrategia-web.pot                 plantilla
-//   estrategia-web-<locale>.po         lo que se traduce (Poedit o a mano)
-//   estrategia-web-<locale>.l10n.php   lo que lee WordPress 6.5+ (servidor Y editor)
+// ONE text domain for the whole plugin, estrategia-web (since 1.1.0, which merged
+// Site, Forms and the theme's blocks). What it produces in languages/:
+//   estrategia-web.pot                 template
+//   estrategia-web-<locale>.po         what gets translated (Poedit or by hand)
+//   estrategia-web-<locale>.l10n.php   what WordPress 6.5+ reads (server AND editor)
 //
-// De dónde saca los textos:
-//   - PHP: estrategia-web.php, includes/ y modules/ (sin tests/).
-//   - JS: todos los .js de modules/ (editor.js, edit.js, view.js).
-//   - block.json de modules/*/blocks/*: título, descripción y palabras clave,
-//     con los contextos de block-i18n.json del núcleo.
-//   - Cabecera de modules/*/module.php: «Module Name» (contexto «module
-//     name») y «Description» («module description»), que la pantalla de
-//     Módulos traduce con _x(). xgettext no las ve: se escriben a mano.
+// Where it takes the strings from:
+//   - PHP: estrategia-web.php, includes/ and modules/ (without tests/).
+//   - JS: every .js in modules/ (editor.js, edit.js, view.js).
+//   - block.json in modules/*/blocks/*: title, description and keywords,
+//     with the contexts from core's block-i18n.json.
+//   - Header of modules/*/module.php: "Module Name" (context "module
+//     name") and "Description" ("module description"), which the Modules
+//     screen translates with _x(). xgettext does not see them: they are written by hand.
 //
-// NO hay JSON del editor (el <dominio>-<locale>-<md5>.json de WordPress): el
-// núcleo del plugin le pasa al editor las mismas traducciones PHP en línea
-// (includes/class-blocks.php). Una sola fuente, sin md5 de rutas que se
-// rompen al mover un fichero.
+// There is NO editor JSON (WordPress' <domain>-<locale>-<md5>.json): the
+// plugin core passes the same PHP translations inline to the editor
+// (includes/class-blocks.php). A single source, with no md5 of paths that
+// break when a file moves.
 //
-// Necesita xgettext, msgmerge y msgcat (GNU gettext; vienen con Git para
-// Windows). No hay .mo: WordPress 6.5+ prefiere el .l10n.php y el plugin pide
-// 7.1, así que un .mo sería un tercer fichero que mantener sin lector.
+// Needs xgettext, msgmerge and msgcat (GNU gettext; they come with Git for
+// Windows). There is no .mo: WordPress 6.5+ prefers the .l10n.php and the
+// plugin requires 7.1, so a .mo would be a third file to maintain with no reader.
 //
-// Cómo se mantiene:
-// - Quién y cuándo: quien añada o cambie un texto, en el mismo commit. Se
-//   corre esto, se traduce lo nuevo en el .po (lo que msgmerge deja «fuzzy» o
-//   vacío) y se vuelve a correr `compile`.
-// - Dos módulos nuevos a la vez tocan el MISMO .po: es uno de los tres
-//   ficheros compartidos (ver includes/class-modules.php). Se regenera, no se
-//   fusiona a mano: si git choca, se coge cualquiera de los dos, se vuelve a
-//   correr esto y se traduce lo que salga vacío.
-// - Un idioma nuevo: copiar el .pot a estrategia-web-<locale>.po, poner la
-//   cabecera Language y traducir. Solo idiomas que vaya a leer alguien.
-// - Caso frontera: los slugs de URL (_x( 'clients', 'URL slug' )). Se
-//   traducen como un texto más, pero traducirlos CAMBIA las URL de las webs
-//   ya publicadas en ese idioma: un cambio ahí es versión mayor.
-// - La trampa: el msgid ES el texto en inglés (convención de WordPress).
-//   Cambiar una coma del inglés deja la traducción como fuzzy, y una fuzzy NO
-//   se compila: hasta que alguien la repase, sale en inglés. Por eso este
-//   script avisa de cuántas hay.
+// How to maintain:
+// - Who and when: whoever adds or changes a string, in the same commit. Run
+//   this, translate what is new in the .po (whatever msgmerge leaves "fuzzy"
+//   or empty) and run `compile` again.
+// - Two new modules at once touch the SAME .po: it is one of the three
+//   shared files (see includes/class-modules.php). It is regenerated, not
+//   merged by hand: if git conflicts, take either side, run this again and
+//   translate whatever comes out empty.
+// - A new language: copy the .pot to estrategia-web-<locale>.po, set the
+//   Language header and translate. Only languages someone is going to read.
+// - Edge case: URL slugs (_x( 'clients', 'URL slug' )). They are translated
+//   like any other string, but translating them CHANGES the URLs of sites
+//   already published in that language: a change there is a major version.
+// - The pitfall: the msgid IS the English text (WordPress convention).
+//   Changing a comma in the English leaves the translation fuzzy, and a fuzzy
+//   one is NOT compiled: until someone reviews it, it shows in English. That
+//   is why this script reports how many there are.
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
@@ -56,7 +56,7 @@ const POT = path.join(LANG, `${DOMAIN}.pot`);
 function run(cmd, args) {
   const r = spawnSync(cmd, args, { cwd: ROOT, encoding: "utf8" });
   if (r.status !== 0) {
-    console.error(`${cmd} falló:\n${r.stderr || r.error}`);
+    console.error(`${cmd} failed:\n${r.stderr || r.error}`);
     process.exit(1);
   }
   return r;
@@ -83,8 +83,8 @@ function extract() {
   const js = walk("modules", (f) => f.endsWith(".js"));
   run("xgettext", [...common, "--language=JavaScript", "--keyword", "--keyword=__", "--keyword=_x:1,2c", "--keyword=_n:1,2", "--keyword=_nx:1,2,4c", "-o", path.join(tmp, "js.pot"), ...js]);
 
-  // block.json y cabeceras de module.php: xgettext no los lee, se escriben a mano.
-  // Una entrada por contexto + texto (la palabra clave «form» sale en varios bloques), con todas sus referencias.
+  // block.json and module.php headers: xgettext does not read them, so they are written by hand.
+  // One entry per context + text (the keyword "form" appears in several blocks), with all its references.
   const seen = new Map();
   const add = (file, ctx, msgid) => msgid && (seen.get(ctx + "\x04" + msgid)?.refs.push(file) ?? seen.set(ctx + "\x04" + msgid, { ctx, msgid, refs: [file] }));
   for (const file of walk("modules", (f) => f.endsWith("/block.json"))) {
@@ -94,7 +94,7 @@ function extract() {
     (data.keywords || []).forEach((k) => add(file, "block keyword", k));
   }
   for (const file of walk("modules", (f) => /^modules\/[^/]+\/module\.php$/.test(f))) {
-    // Lo mismo que get_file_data(): «Clave:» al principio de una línea de comentario, en los primeros 8 KB.
+    // Same as get_file_data(): "Key:" at the start of a comment line, in the first 8 KB.
     const head = fs.readFileSync(path.join(ROOT, file), "utf8").slice(0, 8192);
     const header = (key) => (head.match(new RegExp(`^[ \\t/*#@]*${key}:(.*)$`, "mi")) || [, ""])[1].replace(/\s*(?:\*\/|\?>).*$/, "").trim();
     add(file, "module name", header("Module Name"));
@@ -107,10 +107,10 @@ function extract() {
   run("msgcat", ["--use-first", "--sort-by-file", "-o", POT, path.join(tmp, "php.pot"), path.join(tmp, "js.pot"), path.join(tmp, "extra.pot")]);
   fs.rmSync(tmp, { recursive: true, force: true });
 
-  // Cabecera estable: sin fecha de creación, para que el .pot no cambie si nada cambió.
+  // Stable header: no creation date, so the .pot does not change if nothing changed.
   const pot = fs.readFileSync(POT, "utf8").replace(/"POT-Creation-Date: [^"]*"\n/, "").replace(/charset=CHARSET/, "charset=UTF-8");
   fs.writeFileSync(POT, pot);
-  console.log(`.pot: ${(pot.match(/^msgid /gm).length - 1)} textos`);
+  console.log(`.pot: ${(pot.match(/^msgid /gm).length - 1)} strings`);
 
   for (const po of poFiles()) run("msgmerge", ["--quiet", "--update", "--backup=none", "--previous", path.join(LANG, po), POT]);
 }
@@ -119,7 +119,7 @@ function poFiles() {
   return fs.readdirSync(LANG).filter((f) => new RegExp(`^${DOMAIN}-[a-z]{2,3}(_[A-Z]{2})?\\.po$`).test(f));
 }
 
-// Lector de .po mínimo: lo justo para lo que escribe msgmerge.
+// Minimal .po reader: just enough for what msgmerge writes.
 function parsePo(text) {
   const entries = [];
   let cur = null;
@@ -170,13 +170,13 @@ function compile() {
     const empty = entries.filter((e) => e.msgid !== "" && !e.flags.includes("fuzzy") && !e.msgstr.every((s) => s)).length;
     const key = (e) => (e.msgctxt !== undefined ? e.msgctxt + "\x04" : "") + e.msgid;
 
-    let php = "<?php\n// Generado por tools/i18n.mjs desde " + po + ". No se edita a mano: se edita el .po y se recompila.\nreturn array(\n";
+    let php = "<?php\n// Generated by tools/i18n.mjs from " + po + ". Do not edit by hand: edit the .po and recompile.\nreturn array(\n";
     php += `\t'domain' => '${DOMAIN}',\n\t'language' => ${phpString(locale)},\n\t'plural-forms' => ${phpString(plural)},\n\t'messages' => array(\n`;
     for (const e of usable) php += `\t\t${phpString(key(e))} => ${phpString(e.msgstr.join("\0"))},\n`;
     php += "\t),\n);\n";
     fs.writeFileSync(path.join(LANG, `${DOMAIN}-${locale}.l10n.php`), php);
 
-    console.log(`${po}: ${usable.length} compiladas · ${fuzzy} fuzzy · ${empty} sin traducir${fuzzy + empty ? "  ← REPASAR" : ""}`);
+    console.log(`${po}: ${usable.length} compiled · ${fuzzy} fuzzy · ${empty} untranslated${fuzzy + empty ? "  ← REVIEW" : ""}`);
   }
 }
 

@@ -1,26 +1,26 @@
-// NIVEL: BANCO DE TRABAJO — no es una prueba. Busca en el código de TODOS los plugins de
-// WordPress.org si un prefijo o un nombre ya se usa, antes de elegirlo.
+// NIVEL: BANCO DE TRABAJO — not a test. Searches the code of ALL WordPress.org plugins
+// for whether a prefix or a name is already in use, before choosing it.
 //
-//   node tools/buscar-colisiones.mjs '[\x27\x22]eweb_'            ¿alguien usa la cadena 'eweb_…?
+//   node tools/buscar-colisiones.mjs '[\x27\x22]eweb_'            does anyone use the string 'eweb_…?
 //   node tools/buscar-colisiones.mjs '[\x27\x22]gmt_' '[\x27\x22]gmt_recipe[\x27\x22]'
 //
-// Usa el servidor MCP público de veloria.dev (antes wpdirectory.net): sin clave ni
-// cuenta, solo lectura, regex RE2, solo ficheros .php. Imprime cuántos plugins casan
-// y los más instalados.
+// Uses veloria.dev's public MCP server (formerly wpdirectory.net): no key or
+// account, read-only, RE2 regex, .php files only. Prints how many plugins match
+// and the most installed ones.
 //
-// Cómo se mantiene:
-// - Quién y cuándo: quien vaya a elegir un prefijo o un nombre de tipo, taxonomía u
-//   opción para el plugin o para el plugin propio de una web (caso: el prefijo
-//   eweb_ de los tipos, 15-10-2026: 0 plugins; ew_ lo usaban 13).
-// - LA TRAMPA que dio un número basura la primera vez: '.ew_' casa con «new_» y
-//   «view_» (el punto es cualquier carácter). Ancla el prefijo detrás de una
-//   comilla: [\x27\x22] (comilla simple o doble). En Git Bash, escribe UNA barra
-//   (\x27): los pares de barras se pierden por el camino (CLAUDE.md 3.2).
-// - Lo que NO ve: plugins de pago, código a medida y temas (repo: 'themes' si hace
-//   falta, cambiando `repo` abajo). Cero coincidencias es «nadie en el directorio
-//   público», no «nadie».
-// - Si veloria.dev cambia su MCP, el esquema de la herramienta search_code se ve con
-//   el argumento `schema`.
+// How to maintain:
+// - Who and when: whoever is about to choose a prefix or a post type, taxonomy or
+//   option name for the plugin or for a site's own plugin (case: the eweb_ prefix
+//   for the types, 15-10-2026: 0 plugins; 13 used ew_).
+// - THE PITFALL that gave a garbage number the first time: '.ew_' matches "new_" and
+//   "view_" (the dot is any character). Anchor the prefix behind a quote:
+//   [\x27\x22] (single or double quote). In Git Bash, type ONE backslash
+//   (\x27): pairs of backslashes get lost on the way (CLAUDE.md 3.2).
+// - What it does NOT see: paid plugins, custom code and themes (repo: 'themes' if
+//   needed, changing `repo` below). Zero matches means "nobody in the public
+//   directory", not "nobody".
+// - If veloria.dev changes its MCP, the schema of the search_code tool is shown with
+//   the `schema` argument.
 const U = "https://veloria.dev/mcp";
 const base = { "Content-Type": "application/json", Accept: "application/json,text/event-stream" };
 let sid;
@@ -33,7 +33,7 @@ async function rpc(body) {
 }
 const args = process.argv.slice(2);
 if (!args.length || args[0] === "--ayuda") {
-  console.log("Uso: node tools/buscar-colisiones.mjs '<regex>' [...]   (ver la cabecera)");
+  console.log("Usage: node tools/buscar-colisiones.mjs '<regex>' [...]   (see the header)");
   process.exit(args.length ? 0 : 1);
 }
 await rpc({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-03-26", capabilities: {}, clientInfo: { name: "buscar-colisiones", version: "1" } } });

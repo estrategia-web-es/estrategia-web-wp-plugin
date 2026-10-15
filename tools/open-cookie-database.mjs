@@ -1,48 +1,48 @@
-// NIVEL: BANCO DE TRABAJO — no es una prueba. Regenera el extracto de la Open Cookie Database.
+// NIVEL: BANCO DE TRABAJO — not a test. Regenerates the Open Cookie Database extract.
 //
-//   node tools/open-cookie-database.mjs             descarga el CSV de GitHub y reescribe el JSON
-//   node tools/open-cookie-database.mjs --seco      descarga y cuenta, sin escribir nada
-//   node tools/open-cookie-database.mjs --csv f.csv usa un CSV ya descargado (sin red)
+//   node tools/open-cookie-database.mjs             downloads the CSV from GitHub and rewrites the JSON
+//   node tools/open-cookie-database.mjs --seco      downloads and counts, writes nothing (dry run)
+//   node tools/open-cookie-database.mjs --csv f.csv uses an already downloaded CSV (no network)
 //
-// Qué produce: modules/consent/data/open-cookie-database.json, el extracto que
-// el detector de cookies (modules/consent/includes/class-cookie-registry.php)
-// usa para PROPONER proveedor, categoría, finalidad y duración de cada nombre
-// de cookie que ve. El administrador lo confirma o lo cambia: es una
-// propuesta, no la verdad.
+// What it produces: modules/consent/data/open-cookie-database.json, the extract
+// the cookie detector (modules/consent/includes/class-cookie-registry.php)
+// uses to PROPOSE provider, category, purpose and duration for each cookie
+// name it sees. The administrator confirms or changes it: it is a proposal,
+// not the truth.
 //
-// Fuente: https://github.com/jkwakman/Open-Cookie-Database (Jan Kwakman y
-// colaboradores), licencia Apache 2.0. La atribución viaja DENTRO del JSON
-// (campos source, license, attribution) y en modules/consent/data/NOTICE. Si
-// se cambia el formato, que siga llevándola: la licencia lo pide.
+// Source: https://github.com/jkwakman/Open-Cookie-Database (Jan Kwakman and
+// contributors), Apache 2.0 license. The attribution travels INSIDE the JSON
+// (source, license, attribution fields) and in modules/consent/data/NOTICE. If
+// the format changes, it must keep carrying it: the license requires it.
 //
-// Formato del JSON (compacto: son ~2.300 filas y se lee en PHP en cada
-// consulta del panel, no en cada visita):
+// JSON format (compact: ~2,300 rows, read in PHP on each admin panel request,
+// not on each visit):
 //   { source, license, attribution, commit, generated,
-//     cookies: [ [ nombre, proveedor, categoría, finalidad, duración, comodín ], … ] }
-//   - categoría ya traducida a las del aviso: necessary, preferences,
-//     statistics, marketing (MAP, abajo).
-//   - comodín 1 = el nombre es un PREFIJO (_ga_ casa con _ga_ABC123).
-//   - finalidad y duración, en inglés, tal cual la base.
+//     cookies: [ [ name, provider, category, purpose, duration, wildcard ], … ] }
+//   - category already mapped to the notice's: necessary, preferences,
+//     statistics, marketing (MAP, below).
+//   - wildcard 1 = the name is a PREFIX (_ga_ matches _ga_ABC123).
+//   - purpose and duration in English, as in the database.
 //
-// Cómo se mantiene:
-// - Quién y cuándo: quien toque el detector, o cada pocos meses (la base
-//   crece: el 14-10-2026 tenía 2.277 filas). Se corre, se mira el diff del
-//   JSON por encima y se commitea con el número de filas en el mensaje.
-// - Criterio de MAP: Functional y Security de la base son lo que la AEPD
-//   llama técnicas (necesarias); Personalization es preferencias. Si la base
-//   añade una categoría nueva, el script PARA y lo dice: se decide aquí.
-// - Lo que la base clasifica mal para nuestras webs (wp-wpml_current_language,
-//   la propia cookie del aviso) NO se arregla aquí: va en
-//   modules/consent/data/base-cookies.json, que manda sobre este extracto.
-//   Así regenerar no deshace una decisión nuestra.
-// - Caso frontera: un mismo nombre en varias filas (p. ej. _pk_id de Matomo
-//   y _pk_id. de Piwik PRO). Se quedan todas; el detector usa la PRIMERA que
-//   casa exacta y, si ninguna, el prefijo más largo.
-// - La trampa: el CSV tiene descripciones con comas, comillas dobladas ("")
-//   y saltos de línea dentro de comillas. Partir por líneas y luego por comas
-//   corta filas por la mitad y descoloca las columnas SIN AVISAR. Por eso el
-//   lector de abajo va carácter a carácter, y el script comprueba que cada
-//   fila tiene las 10 columnas de la cabecera.
+// How to maintain:
+// - Who and when: whoever touches the detector, or every few months (the
+//   database grows: on 14-10-2026 it had 2,277 rows). Run it, skim the JSON
+//   diff and commit with the row count in the message.
+// - MAP criterion: the database's Functional and Security are what the AEPD
+//   calls technical (necessary); Personalization is preferences. If the
+//   database adds a new category, the script STOPS and says so: decide here.
+// - What the database misclassifies for our sites (wp-wpml_current_language,
+//   the notice's own cookie) is NOT fixed here: it goes in
+//   modules/consent/data/base-cookies.json, which overrides this extract.
+//   That way regenerating does not undo a decision of ours.
+// - Edge case: the same name in several rows (e.g. Matomo's _pk_id and
+//   Piwik PRO's _pk_id.). All are kept; the detector uses the FIRST exact
+//   match and, if none, the longest prefix.
+// - The pitfall: the CSV has descriptions with commas, doubled quotes ("")
+//   and line breaks inside quotes. Splitting by lines and then by commas
+//   cuts rows in half and shifts the columns WITHOUT WARNING. That is why the
+//   reader below goes character by character, and the script checks that each
+//   row has the header's 10 columns.
 import fs from "node:fs";
 import path from "node:path";
 
@@ -68,7 +68,7 @@ if (args.includes("--ayuda") || args.includes("-h")) {
 const dry = args.includes("--seco");
 const csvArg = args.includes("--csv") ? args[args.indexOf("--csv") + 1] : null;
 
-/** CSV (RFC 4180) a filas: comillas, "" dentro de comillas y saltos de línea entre comillas. */
+/** CSV (RFC 4180) to rows: quotes, "" inside quotes and line breaks between quotes. */
 function parseCsv(text) {
   const rows = [];
   let row = [];
@@ -119,7 +119,7 @@ try {
 const [header, ...rows] = parseCsv(csv.replace(/^﻿/, ""));
 const col = (name) => {
   const i = header.indexOf(name);
-  if (i < 0) throw new Error(`El CSV no tiene la columna «${name}». Cabecera: ${header.join(" | ")}`);
+  if (i < 0) throw new Error(`The CSV has no "${name}" column. Header: ${header.join(" | ")}`);
   return i;
 };
 const C = {
@@ -149,13 +149,13 @@ for (const r of rows) {
   cookies.push([name, clean(r[C.platform]), category, clean(r[C.description]), clean(r[C.retention]), clean(r[C.wildcard]) === "1" ? 1 : 0]);
 }
 
-// «Category» como valor es la fila de cabecera repetida que trae la base: no es una categoría.
+// "Category" as a value is the repeated header row the database carries: it is not a category.
 unknown.delete("Category");
 if (unknown.size) {
-  console.error("✖ Categorías de la base que MAP no conoce (decide a cuál van y añádelas):", Object.fromEntries(unknown));
+  console.error("✖ Database categories MAP does not know (decide where they go and add them):", Object.fromEntries(unknown));
   process.exit(1);
 }
-if (bad) console.warn(`· ${bad} filas con un número de columnas distinto de la cabecera, descartadas`);
+if (bad) console.warn(`· ${bad} rows with a column count different from the header, discarded`);
 
 const out = {
   source: "https://github.com/jkwakman/Open-Cookie-Database",
@@ -167,11 +167,11 @@ const out = {
 };
 const json = JSON.stringify(out);
 const byCat = cookies.reduce((acc, c) => ((acc[c[2]] = (acc[c[2]] || 0) + 1), acc), {});
-console.log(`${cookies.length} cookies (${Object.entries(byCat).map(([k, v]) => `${k} ${v}`).join(", ")}), ${(json.length / 1024).toFixed(0)} KB, commit ${commit ?? "desconocido"}`);
+console.log(`${cookies.length} cookies (${Object.entries(byCat).map(([k, v]) => `${k} ${v}`).join(", ")}), ${(json.length / 1024).toFixed(0)} KB, commit ${commit ?? "unknown"}`);
 if (dry) {
-  console.log("--seco: no se escribe nada");
+  console.log("--seco: nothing is written");
 } else {
   fs.mkdirSync(path.dirname(OUT), { recursive: true });
   fs.writeFileSync(OUT, json + "\n");
-  console.log("escrito " + path.relative(ROOT, OUT));
+  console.log("wrote " + path.relative(ROOT, OUT));
 }
