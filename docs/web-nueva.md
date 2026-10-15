@@ -7,6 +7,19 @@ la única web hecha así: **la prueba de que esto escala es que la próxima web
 salga siguiendo esta guía sin preguntar**. Donde hoy hay que preguntar a
 alguien, pone **HUECO**.
 
+**El caso real con el que se prueba: rehacer https://gastronomicament.cat**
+(Grup Gastronòmicament, desde 2006). Lo que se sabe a 15-10-2026, de leer la
+portada y de David: revista gastronómica de Baleares, **en catalán** con
+castellano, inglés y alemán (WPML probable); es **WordPress** (confirmado) en
+**Raiola Networks** con cPanel, **sin SSH**, varios GB (sobre todo fotos);
+menú Restaurants, Receptes, Alimentació (con buscador), Vinícola, Actualitat
+(Fires i rutes, Concursos i premis, Cursos i tallers, Reportatges i
+novetats…; unas 133 páginas de artículos) y Contacte; boletín
+(«Subscriu-m'hi»), buscador, comentarios en los artículos y redes (Facebook,
+X, Instagram, correo); **sin sedes ni direcciones**. Cada sección dice qué
+le toca a esta web con «**Gastronòmicament:**». Lo que pide y aún no tenemos,
+con una propuesta cada cosa, está en la sección 8.
+
 Las tres piezas y qué lleva cada una:
 
 | Pieza | Repo | Qué lleva | Qué NO lleva |
@@ -19,7 +32,9 @@ Las tres piezas y qué lleva cada una:
 
 ## 1. Qué se instala y en qué orden
 
-1. **WordPress 7.1+**, PHP 8.1+, en castellano (Ajustes › Generales).
+1. **WordPress 7.1+**, PHP 8.1+, en el idioma PRINCIPAL de la web (Ajustes ›
+   Generales): castellano en Lavandería; **catalán** en Gastronòmicament (ver
+   8.4: el plugin hoy solo trae `es_ES`).
 2. **El plugin `estrategia-web`** (carpeta `wp-content/plugins/estrategia-web/`,
    sin `tests/`, `modules/*/tests/` ni `tools/`) y activarlo. Va antes que
    el tema: el padre pinta bloques que registra el plugin
@@ -97,6 +112,15 @@ Lavandería; apagar un módulo no borra nada de lo que guardó.
 | Sin comentarios | `comments-off` (apagado por defecto) |
 
 La lista completa y qué hace cada uno: [README](../README.md), «Módulos».
+
+**Gastronòmicament:** `site` (datos de la empresa; **ningún** tipo de los
+nuestros: no tiene clientes ni sedes; sus tipos son otros, 8.1), `consent`,
+`webp`, `uploads` (y su recorte a 2560 px y WebP pesa en la importación, 8.2),
+`external-links`, `featured-images`, `forms` (Contacte), `social`,
+`language-switcher` y `wpml-front-page` (cuatro idiomas, 8.4), `redirects`
+**encendido** (las URL viejas, 8.2), `matomo` o `google-tags` según lo que
+mida hoy. `comments-off` **apagado**: tiene comentarios (8.5). Sin `map` ni
+`whatsapp` mientras no se pidan.
 
 ## 4. Qué se configura en el panel
 
@@ -207,6 +231,114 @@ no hay una semilla mínima (inicio, contacto, legales) para empezar.
 - [ ] Formularios: un envío de prueba llega al destinatario.
 - [ ] Batería entera del plugin, del padre y del hijo en verde.
 - [ ] El OK de David, literal, para `desplegar.mjs --ok "<frase>"`.
+
+## 8. Lo que pide Gastronòmicament y aún no tenemos
+
+Cinco huecos, cada uno con una **propuesta** (sin hacer: se decide y se
+hace cuando toque). El criterio para decidir dónde va cada cosa es el del
+Armazón: si la próxima web lo haría igual sin saber de qué va, es del plugin;
+si no, es de la web.
+
+### 8.1 Tipos de contenido PROPIOS (restaurante, receta, producto, bodega)
+
+Los nuestros (clientes, opiniones, sedes…) son de toda web corporativa; un
+«restaurante» con su cocina y su precio es de esta web. **Propuesta: un
+plugin propio de la web** (`gastronomicament-tipos`, en el repo de la web,
+junto al tema hijo), **no el tema hijo** (lo que se guarda no puede
+desaparecer al cambiar de tema: README, primera sección) **ni el plugin
+común** (no lo haría igual la siguiente web). Y para que no se invente cada
+vez, el plugin común le da **el molde**:
+
+- Declarar un tipo con la misma forma que `Content_Types::definitions()`
+  (etiquetas, slug traducible, supports, taxonomía, METAS con su saneado) por
+  un filtro, p. ej. `estrategia_web_content_types`, y que el plugin común
+  haga el resto: registrar, `rewrite_slugs`, el panel de campos
+  (`Meta_Panel`), la copia WPML de los campos «copy» y su prueba.
+- **Prefijo propio** de la web en sus nombres (`gm_restaurant`, metas
+  `gastronomicament_…`): el `eweb_` es solo de los tipos del plugin común.
+- Integración, igual que los nuestros: Consultas por `"postType"`, campos por
+  `core/post-meta`, `wpml-config.xml` propio en la raíz de ESE plugin (WPML lo
+  lee de cada plugin activo), y las reglas de esta guía (huellas, semilla)
+  no cambian.
+- **HUECO**: el filtro-molde no existe; hoy un tipo propio se registra a mano
+  con `register_post_type` y no tiene panel de campos ni copia WPML.
+
+### 8.2 IMPORTAR lo que ya existe (miles de entradas, medios, URL viejas)
+
+La semilla y `cargar.mjs` son para **crear** una web desde ficheros; aquí
+hay que **traer** una web viva. **Procedimiento por defecto para un hosting
+sin SSH** (es el caso de Raiola):
+
+1. **Base de datos**: copia por cPanel (Copia de seguridad › base de datos) o
+   phpMyAdmin (Exportar). Se importa en LOCAL y es la vía PRINCIPAL: conserva
+   lo que la API REST no da, sobre todo las **relaciones de traducción de
+   WPML** (`icl_translations`), los ajustes y las metas que no están en REST.
+2. **Fotos** (`wp-content/uploads`, varios GB): por **FTP con réplica
+   incremental** (`lftp -e "mirror --only-newer --parallel=4 …"`), con una
+   cuenta FTP de cPanel **limitada a `wp-content/uploads`**. **No un zip
+   único**: con GB se corta, y no se puede reanudar.
+3. La web vieja **sigue publicando** mientras se rehace: el día del cambio,
+   una **resincronización final** de solo lo nuevo (otro `mirror
+   --only-newer` y las entradas nuevas de la base de datos, por fecha).
+4. Al importar, el módulo `uploads` (2560 px y WebP) **reduce el peso**:
+   **medir antes y después** (GB de `uploads`, peso medio por foto) y
+   apuntarlo, que es un argumento para el cliente.
+5. **URL viejas → `redirects`**: si cambian (estructura de enlaces,
+   categorías), se exportan viejas y nuevas y se importa el CSV en
+   Estrategia Web › Redirecciones (`wp estrategia-web redirects import`).
+6. La **API REST** (con una contraseña de aplicación de un usuario de solo
+   lectura, guardada fuera del repo) queda para **comprobar en vivo**:
+   cuántas entradas y medios hay hoy, qué tipos y taxonomías propios están
+   registrados, y si devuelve idioma y traducciones. **La trampa**: la REST
+   del núcleo NO trae las relaciones de WPML; según la versión y la
+   configuración de WPML se exponen o no. Por eso no es la vía de importación.
+
+**Lo primero con el acceso delante**: si el plan tiene SSH (si lo tiene,
+`wp db export` y `rsync` sustituyen a los pasos 1 y 2), la versión de WPML,
+si la REST da `lang`/traducciones, los tipos y taxonomías propios
+registrados (de un plugin o del tema: 8.1), y el número de entradas y de
+medios. **HUECO**: no hay importador; la propuesta es un script en el repo de
+la web, idempotente y con `--seco`, que pase de la copia local a la
+estructura nueva (tipos propios, bloques) y escriba el CSV de redirecciones.
+
+### 8.3 Boletín («Subscriu-m'hi»)
+
+**No tenemos nada.** Propuesta: **no** guardar suscriptores en WordPress
+(datos personales, bajas, envíos: es un servicio entero); un **formulario del
+módulo `forms`** que mande el alta a un servicio de boletines (Brevo, Mailchimp,
+MailerLite…) por su API, con el consentimiento de la casilla y doble
+confirmación del propio servicio. Encaja como un aviso más de `forms` («al
+enviar, alta en la lista X»). **HUECO**: qué servicio usa hoy, cuántos
+suscriptores tiene y si se migran (los datos son suyos y de sus lectores:
+eso lo decide el cliente con su RGPD).
+
+### 8.4 Cuatro idiomas y catalán como principal
+
+- **WPML con cuatro idiomas** (ca, es, en, de): solo se ha probado con dos.
+  Lo que hay que mirar: el selector (`language-switcher`) con cuatro, la
+  portada traducida (`wpml-front-page`), la carga (`cargar.mjs` tiene el
+  inglés fijo: `LANG = 'en'`) y los slugs traducidos (la trampa de /en/:
+  las reglas de URL se rehacen con el idioma de la petición; README y
+  `Prefix_Migration::run`).
+- **Catalán como idioma principal**: los textos del plugin, del padre y del
+  hijo existen en `es_ES`; **falta `ca`**. Propuesta: `ca.po` en los tres con
+  `tools/i18n.mjs` (fusiona y compila), en **imperativo de tú** para los
+  botones (la regla de David para interfaces en catalán), y revisarlo con el
+  léxico de David antes de publicar.
+- Los slugs de los tipos y de las páginas se traducen con gettext: en una web
+  publicada, **fijarlos** (`rewrite_slugs`) antes de cambiar o añadir idiomas.
+- **HUECO**: quién traduce al alemán y quién revisa el catalán.
+
+### 8.5 Comentarios
+
+Lavandería los apaga (`comments-off`). Aquí hay comentarios en los artículos:
+el módulo se deja **apagado** y la web usa los comentarios de WordPress.
+Propuesta: moderación previa (Ajustes › Comentarios), sin enlaces, con el
+aviso de privacidad en el formulario. **HUECO**: la plantilla `single.html`
+del tema padre **no lleva bloque de comentarios** (medido el 15-10-2026):
+o se añade en el padre (lo haría igual la siguiente web con comentarios) o
+en el hijo de esta web. **HUECO**: cuánto spam recibe hoy y si usa
+algo (Akismet u otro) — se mira con la copia de la base de datos (8.2).
 
 ## Cómo se mantiene esta guía
 
