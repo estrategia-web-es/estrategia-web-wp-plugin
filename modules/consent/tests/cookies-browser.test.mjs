@@ -1,22 +1,23 @@
-// NIVEL: 3 — navegador. NECESITA NAVEGADOR PORQUE: el detector lee document.cookie en el navegador del visitante y decide cuándo mandar; reabrir el panel desde un enlace es un clic; y la pantalla «Cookies» solo existe pintada y con sesión de administrador.
+// NIVEL: 3 — browser. NEEDS A BROWSER BECAUSE: the detector reads document.cookie in the visitor's browser and decides when to send; reopening the panel from a link is a click; and the «Cookies» screen only exists rendered and with an administrator session.
 //
-// Registro de cookies (1.1.0). Qué es y por qué: cabeceras de
-// includes/class-cookie-registry.php y class-cookie-rest.php. Aquí:
-// - al ACEPTAR, el navegador manda los NOMBRES de sus cookies y ningún valor
-//   (una cookie con un valor «secreto» puesta antes, y se mira el cuerpo de
-//   la petición tal cual salió);
-// - rechazando no manda nada; y aceptado, la siguiente página no vuelve a
-//   mandar (localStorage) si nada cambió;
-// - un enlace a #estrategia-web-consent o un elemento con la clase
-//   estrategia-web-consent-open reabre el panel;
-// - en la pantalla, lo detectado sale pendiente con su propuesta; se confirma
-//   con su botón y aparece en la tabla de la política.
+// Cookie registry (1.1.0). What it is and why: headers of
+// includes/class-cookie-registry.php and class-cookie-rest.php. Here:
+// - on ACCEPTING, the browser sends the NAMES of its cookies and no value
+//   (a cookie with a «secret» value set beforehand, and the request body is
+//   checked exactly as it left);
+// - rejecting sends nothing; and once accepted, the next page does not send
+//   again (localStorage) if nothing changed;
+// - a link to #estrategia-web-consent or an element with the
+//   estrategia-web-consent-open class reopens the panel;
+// - on the screen, what was detected shows as pending with its suggestion;
+//   it is confirmed with its button and appears in the policy table.
 //
-// Vista fallar el 14-10-2026 con dos mutantes: cookieNames() devolviendo los
-// pares enteros (sale el valor) y scheduleScan sin mirar si se aceptó algo.
+// Seen failing on 14-10-2026 with two mutants: cookieNames() returning the
+// whole pairs (the value leaks) and scheduleScan without checking whether
+// anything was accepted.
 //
-// Cómo se mantiene: si cambia lo que manda el detector, el caso «ni un
-// valor» sigue mirando el CUERPO de la petición, no lo guardado.
+// How to maintain: if what the detector sends changes, the «not a single
+// value» case keeps checking the request BODY, not what was stored.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, playwright, reset, seedPage, testApi } from "../../../tests/lib.mjs";
@@ -41,11 +42,11 @@ before(async () => {
   await cookiesTest("/setup", { interval: 0 });
   await testApi("/consent-setup", { method: "POST", body: { categories: ["maps", "statistics"] } });
   ({ url: pageUrl } = await seedPage(
-    '<!-- wp:paragraph --><p><a href="#estrategia-web-consent">Cookies del menú</a></p><!-- /wp:paragraph -->' +
-      '<!-- wp:paragraph {"className":"estrategia-web-consent-open"} --><p class="estrategia-web-consent-open">Botón con clase</p><!-- /wp:paragraph -->',
-    "prueba-detector"
+    '<!-- wp:paragraph --><p><a href="#estrategia-web-consent">Menu cookies</a></p><!-- /wp:paragraph -->' +
+      '<!-- wp:paragraph {"className":"estrategia-web-consent-open"} --><p class="estrategia-web-consent-open">Button with class</p><!-- /wp:paragraph -->',
+    "test-detector"
   ));
-  ({ url: policyUrl } = await seedPage("<!-- wp:estrategia-web/cookie-table /-->", "prueba-politica"));
+  ({ url: policyUrl } = await seedPage("<!-- wp:estrategia-web/cookie-table /-->", "test-policy"));
 });
 after(async () => {
   await browser?.close();
@@ -54,7 +55,7 @@ after(async () => {
 
 async function open(url = pageUrl) {
   const ctx = await browser.newContext({ viewport: { width: 1200, height: 900 } });
-  await ctx.addCookies([{ name: "prueba_valor", value: "SECRETO123", url: BASE }]);
+  await ctx.addCookies([{ name: "prueba_valor", value: "SECRET123", url: BASE }]);
   const page = await ctx.newPage();
   page.reports = [];
   page.errors = [];
@@ -67,14 +68,14 @@ async function open(url = pageUrl) {
   return { ctx, page };
 }
 
-test("detector: al aceptar manda SOLO nombres (ni un valor) y la página siguiente no repite", async () => {
+test("detector: on accepting it sends ONLY names (not a single value) and the next page does not repeat", async () => {
   const { ctx, page } = await open();
   await page.getByRole("button", { name: "Aceptar todas" }).click();
   await page.waitForRequest((r) => r.url().includes("/cookies/seen"), { timeout: 10000 });
   await page.waitForTimeout(500);
   assert.equal(page.reports.length, 1);
   const body = page.reports[0];
-  assert.ok(!body.includes("SECRETO123"), `el valor de una cookie salió del navegador: ${body}`);
+  assert.ok(!body.includes("SECRET123"), `a cookie value left the browser: ${body}`);
   const names = JSON.parse(body).names;
   assert.ok(names.includes("prueba_valor") && names.includes("estrategia_web_consent"), body);
   assert.ok(names.every((n) => !n.includes("=")), body);
@@ -82,17 +83,17 @@ test("detector: al aceptar manda SOLO nombres (ni un valor) y la página siguien
   const raw = (await cookiesTest("/raw")).raw;
   assert.equal(raw.estrategia_web_consent.category, "necessary");
   assert.equal(raw.estrategia_web_consent.status, "pending");
-  assert.ok(raw.prueba_valor, "una cookie desconocida entra igual, sin propuesta");
+  assert.ok(raw.prueba_valor, "an unknown cookie gets in anyway, without a suggestion");
 
   page.reports.length = 0;
   await page.reload({ waitUntil: "networkidle" });
   await page.waitForTimeout(5000);
-  assert.deepEqual(page.reports, [], "misma lista y mismos nombres: no vuelve a mandar");
+  assert.deepEqual(page.reports, [], "same list and same names: it does not send again");
   assert.deepEqual(page.errors, []);
   await ctx.close();
 });
 
-test("detector: rechazando no manda nada", async () => {
+test("detector: rejecting sends nothing", async () => {
   const { ctx, page } = await open();
   await page.getByRole("button", { name: "Rechazar todas" }).click();
   await page.waitForTimeout(5000);
@@ -100,23 +101,23 @@ test("detector: rechazando no manda nada", async () => {
   await ctx.close();
 });
 
-test("reabrir: un enlace a #estrategia-web-consent y un elemento con la clase abren el panel", async () => {
+test("reopen: a link to #estrategia-web-consent and an element with the class open the panel", async () => {
   const { ctx, page } = await open();
   const notice = page.locator("#estrategia-web-consent");
   await page.getByRole("button", { name: "Rechazar todas" }).click();
   await notice.waitFor({ state: "hidden" });
-  await page.getByRole("link", { name: "Cookies del menú" }).click();
+  await page.getByRole("link", { name: "Menu cookies" }).click();
   await notice.waitFor({ state: "visible" });
-  assert.ok(!page.url().endsWith("#estrategia-web-consent"), "el enlace no navega");
+  assert.ok(!page.url().endsWith("#estrategia-web-consent"), "the link does not navigate");
   await page.waitForFunction(() => document.activeElement?.id === "estrategia-web-consent-title");
   await page.keyboard.press("Escape");
   await notice.waitFor({ state: "hidden" });
-  await page.getByText("Botón con clase").click();
+  await page.getByText("Button with class").click();
   await notice.waitFor({ state: "visible" });
   await ctx.close();
 });
 
-test("pantalla Cookies: lo detectado sale pendiente con su propuesta; confirmado, sale en la política", async () => {
+test("Cookies screen: what was detected shows as pending with its suggestion; once confirmed, it shows in the policy", async () => {
   const ctx = await browser.newContext({ viewport: { width: 1400, height: 1000 } });
   const page = await ctx.newPage();
   await page.goto(BASE + "/wp-admin/admin.php?page=estrategia-web-cookies");
@@ -139,6 +140,6 @@ test("pantalla Cookies: lo detectado sale pendiente con su propuesta; confirmado
   await policy.goto(policyUrl);
   const table = policy.locator(".estrategia-web-cookie-table");
   assert.match(await table.innerText(), /Necesarias[\s\S]*estrategia_web_consent[\s\S]*Este sitio web[\s\S]*1 año/);
-  assert.ok(!(await table.innerText()).includes("prueba_valor"), "lo pendiente no sale");
+  assert.ok(!(await table.innerText()).includes("prueba_valor"), "pending items do not show");
   await ctx.close();
 });

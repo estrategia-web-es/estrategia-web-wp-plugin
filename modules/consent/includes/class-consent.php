@@ -1,176 +1,182 @@
 <?php
 /**
- * Aviso de cookies (consentimiento) propio y mínimo — 0.5.0.
+ * Own, minimal cookie notice (consent) — 0.5.0.
  *
- * Qué es: un aviso con Aceptar / Rechazar / Configurar (los tres con el mismo
- * peso visual, como pide la AEPD), categorías declarables, la elección en una
- * cookie propia y técnica (estrategia_web_consent), y la elección expuesta:
- * - a PHP:  estrategia_web_consent_has( 'maps' ), estrategia_web_consent_categories()
- *           (includes/consent-functions.php; por dentro, esta clase);
- * - a JS:   window.estrategiaWebConsent.has( 'maps' ) / .get() / .open() /
- *           .grant( 'maps' ) / .categories, el evento «estrategia-web:consent» en
- *           document (detail.accepted), «estrategia-web:consent-ready» (0.5.0, una
- *           vez al arrancar, también sin elección) y el store de Interactivity
+ * What it is: a notice with Accept / Reject / Configure (all three with the
+ * same visual weight, as the AEPD requires), declarable categories, the
+ * choice in an own technical cookie (estrategia_web_consent), and the choice
+ * exposed:
+ * - to PHP: estrategia_web_consent_has( 'maps' ), estrategia_web_consent_categories()
+ *           (includes/consent-functions.php; inside, this class);
+ * - to JS:  window.estrategiaWebConsent.has( 'maps' ) / .get() / .open() /
+ *           .grant( 'maps' ) / .categories, the «estrategia-web:consent» event on
+ *           document (detail.accepted), «estrategia-web:consent-ready» (0.5.0, once
+ *           on boot, also without a choice) and the Interactivity store
  *           «estrategia-web/consent» (blocks/consent/view.js);
- * - y activa solo los <script type="text/plain" data-estrategia-web-consent="X">
- *   de las categorías aceptadas.
- * El aviso se pinta en wp_body_open, al PRINCIPIO del body (no depende de que
- * el tema ponga un bloque); si el tema no llama a wp_body_open(), en
- * wp_footer, como antes de la 0.5.1.
+ * - and it activates only the <script type="text/plain" data-estrategia-web-consent="X">
+ *   of the accepted categories.
+ * The notice is printed on wp_body_open, at the START of the body (it does not
+ * depend on the theme placing a block); if the theme does not call
+ * wp_body_open(), on wp_footer, as before 0.5.1.
  *
- * 1.1.0 — CATEGORÍAS, DETECTOR Y TABLA DE LA POLÍTICA
+ * 1.1.0 — CATEGORIES, DETECTOR AND POLICY TABLE
  *
- * Las categorías son las de la AEPD: necesarias (siempre, no se preguntan),
- * preferencias, analítica y publicidad, más «mapas y contenido de terceros»,
- * que ya existía. Los SLUGS no cambian, porque la revisión del aviso es un
- * hash de los slugs y cambiarlos haría que TODOS los visitantes que ya
- * eligieron vieran el aviso otra vez (trampa 2):
- *     necessary    Necesarias               (no se guarda: siempre)
- *     preferences  Preferencias             (nueva en 1.1.0)
- *     statistics   Analítica                (antes se rotulaba «Estadísticas»)
- *     marketing    Publicidad               (antes se rotulaba «Marketing»)
- *     maps         Mapas y contenido de terceros
- * Se admiten como ALIAS (al declarar y al preguntar, en PHP y en JS):
- * analytics → statistics, advertising y ads → marketing. Así un módulo nuevo
- * puede escribir has( 'analytics' ) sin saber la historia.
- * - «preferences» se añadió al FINAL de known_categories() a propósito: el
- *   orden de esa lista entra en la revisión. Al pintar, el aviso las ordena
- *   con display_order() (preferencias, analítica, publicidad, mapas), que no
- *   toca la revisión.
- * - Quién declara categorías: el CÓDIGO con el filtro de siempre (el tema,
- *   Matomo híbrido, google-tags) y, desde 1.1.0, el ADMINISTRADOR en
- *   «Estrategia Web → Cookies» (opción estrategia_web_cookies_settings, clave
- *   ask). Se unen; el administrador no puede quitar lo que declara el código.
- *   code_categories() da solo las del código.
- * - REABRIR EL PANEL (para el pie): el bloque «Configurar cookies», el
- *   shortcode [estrategia_web_consent_settings], window.estrategiaWebConsent.open()
- *   y, desde 1.1.0, CUALQUIER enlace a «#estrategia-web-consent» o elemento con
- *   la clase «estrategia-web-consent-open» (o el atributo
- *   data-estrategia-web-consent-open): sirve para un enlace del menú de
- *   navegación o un botón del editor con «Clase CSS adicional».
- * - El DETECTOR, el REGISTRO de cookies y la TABLA de la política tienen su
- *   cabecera propia: includes/class-cookie-registry.php, class-cookie-rest.php
- *   y class-cookie-table.php; la pantalla, admin/class-cookies-page.php.
+ * The categories are the AEPD ones: necessary (always, not asked),
+ * preferences, analytics and advertising, plus «maps and third-party
+ * content», which already existed. The SLUGS do not change, because the
+ * notice revision is a hash of the slugs and changing them would make ALL
+ * visitors who already chose see the notice again (trap 2):
+ *     necessary    Necessary                (not stored: always)
+ *     preferences  Preferences              (new in 1.1.0)
+ *     statistics   Analytics                (previously labelled «Statistics»)
+ *     marketing    Advertising              (previously labelled «Marketing»)
+ *     maps         Maps and third-party content
+ * Accepted as ALIASES (when declaring and when asking, in PHP and in JS):
+ * analytics → statistics, advertising and ads → marketing. That way a new
+ * module can write has( 'analytics' ) without knowing the history.
+ * - «preferences» was added at the END of known_categories() on purpose: the
+ *   order of that list is part of the revision. When printing, the notice
+ *   sorts them with display_order() (preferences, analytics, advertising,
+ *   maps), which does not touch the revision.
+ * - Who declares categories: the CODE with the usual filter (the theme,
+ *   hybrid Matomo, google-tags) and, since 1.1.0, the ADMINISTRATOR in
+ *   «Estrategia Web → Cookies» (option estrategia_web_cookies_settings, key
+ *   ask). They are merged; the administrator cannot remove what the code
+ *   declares. code_categories() returns only the code ones.
+ * - REOPENING THE PANEL (for the footer): the «Cookie settings» block, the
+ *   [estrategia_web_consent_settings] shortcode, window.estrategiaWebConsent.open()
+ *   and, since 1.1.0, ANY link to «#estrategia-web-consent» or element with
+ *   the «estrategia-web-consent-open» class (or the
+ *   data-estrategia-web-consent-open attribute): it works for a navigation
+ *   menu link or an editor button with «Additional CSS class(es)».
+ * - The DETECTOR, the cookie REGISTRY and the policy TABLE have their own
+ *   header: includes/class-cookie-registry.php, class-cookie-rest.php and
+ *   class-cookie-table.php; the screen, admin/class-cookies-page.php.
  *
- * ORDEN DE FOCO (0.5.1, WCAG 2.4.3). En el pie quedaba el último de la
- * página: con teclado había que pasar 30-35 tabuladores para llegar a
- * Aceptar / Rechazar (auditoría de Lavandería, 06-10-2026). Ahora va el
- * primero en el DOM y el primer Tab cae en él, aunque se vea abajo (es
- * position: fixed). Decisiones:
- * - Primero en el DOM y NO mover el foco al abrirse: robar el foco al cargar
- *   la página desorienta al lector de pantalla y salta por encima del
- *   «Saltar al contenido». Así el primer Tab lo encuentra, y quien no quiera
- *   contestar sigue tabulando hacia la página.
- * - Sin trampa de foco: es role="dialog" con aria-modal="false" y la página
- *   sigue usable; Tab sale de él y Mayús+Tab vuelve. La AEPD (Guía sobre el
- *   uso de las cookies, 2023) pide que la primera capa se vea y que aceptar
- *   y rechazar estén al mismo nivel, no que bloquee la web.
- * - Escape NO lo cierra la primera vez: cerrar sin elegir dejaría al
- *   visitante sin aviso y sin decisión, y volvería a salir en la página
- *   siguiente. Reabierto desde «Configurar cookies» (ya hay elección), sí.
- * - La trampa: el «Saltar al contenido» del núcleo lo mete un script DENTRO
- *   de .wp-site-blocks, después del aviso; mientras el aviso está abierto es
- *   el segundo destino del tabulador, no el primero. Elegido o no, al
- *   cerrarse vuelve a ser el primero.
- * Prueba: tests/consent-browser.test.mjs («lo PRIMERO al tabular»).
- * El bloque estrategia-web-site/consent es el ENLACE para reabrirlo, pensado para el
- * pie; también hay shortcode [estrategia_web_consent_settings].
+ * FOCUS ORDER (0.5.1, WCAG 2.4.3). In the footer it was the last thing on the
+ * page: with a keyboard it took 30-35 Tab presses to reach Accept / Reject
+ * (Lavandería audit, 06-10-2026). Now it is the first in the DOM and the
+ * first Tab lands on it, even though it shows at the bottom (it is
+ * position: fixed). Decisions:
+ * - First in the DOM and do NOT move focus on open: stealing focus on page
+ *   load disorients screen readers and jumps over «Skip to content». This way
+ *   the first Tab finds it, and whoever does not want to answer keeps tabbing
+ *   into the page.
+ * - No focus trap: it is role="dialog" with aria-modal="false" and the page
+ *   stays usable; Tab leaves it and Shift+Tab comes back. The AEPD (Guide on
+ *   the use of cookies, 2023) requires the first layer to be visible and
+ *   accept and reject to be at the same level, not that it blocks the site.
+ * - Escape does NOT close it the first time: closing without choosing would
+ *   leave the visitor without a notice and without a decision, and it would
+ *   show again on the next page. Reopened from «Cookie settings» (there is
+ *   already a choice), it does.
+ * - The trap: core's «Skip to content» is inserted by a script INSIDE
+ *   .wp-site-blocks, after the notice; while the notice is open it is the
+ *   second Tab stop, not the first. Chosen or not, once closed it is the
+ *   first again.
+ * Test: tests/consent-browser.test.mjs («the FIRST thing when tabbing»).
+ * The estrategia-web-site/consent block is the LINK to reopen it, meant for
+ * the footer; there is also the [estrategia_web_consent_settings] shortcode.
  *
- * POR QUÉ ESTÁ AQUÍ Y NO EN EL TEMA PADRE (vino de armazon-wp-padre 0.6.0,
- * inc/consent.php): el consentimiento es funcionalidad, no presentación. Si
- * una web cambia de tema no puede quedarse sin aviso, y Matomo, que está en
- * este plugin, depende de él. Las tres capas (decisión del Armazón
- * 2026-10-01): cómo se ve, del tema; lo que funciona y se guarda, de aquí.
- * Se movió SIN cambiar el contrato: la misma cookie con el mismo formato y
- * la misma revisión (un visitante que ya eligió no vuelve a ver el aviso), el
- * mismo filtro estrategia_web_consent_categories, las mismas funciones PHP, la misma
- * API JS, el mismo evento y el mismo store.
+ * WHY IT IS HERE AND NOT IN THE PARENT THEME (it came from armazon-wp-padre
+ * 0.6.0, inc/consent.php): consent is functionality, not presentation. If a
+ * site changes theme it cannot be left without a notice, and Matomo, which is
+ * in this plugin, depends on it. The three layers (Armazón decision
+ * 2026-10-01): how it looks, the theme's; what works and is stored, here.
+ * It was moved WITHOUT changing the contract: the same cookie with the same
+ * format and the same revision (a visitor who already chose does not see the
+ * notice again), the same estrategia_web_consent_categories filter, the same
+ * PHP functions, the same JS API, the same event and the same store.
  *
- * 1.0.0, EL CAMBIO DE NOMBRE (Armazón Sitio → Estrategia Web Site): la cookie
- * pasa de armazon_consent a estrategia_web_consent con el MISMO formato y la
- * misma revisión. Se lee la vieja si falta la nueva (choice() y view.js) y el
- * navegador la reescribe con el nombre nuevo y borra la vieja: quien ya
- * eligió NO vuelve a ver el aviso. Filtros, funciones, API JS, evento y store
- * cambian de prefijo (estrategia_web_…, window.estrategiaWebConsent,
- * «estrategia-web:consent»); padre y plugin se actualizan juntos.
+ * 1.0.0, THE RENAME (Armazón Sitio → Estrategia Web Site): the cookie goes
+ * from armazon_consent to estrategia_web_consent with the SAME format and the
+ * same revision. The old one is read if the new one is missing (choice() and
+ * view.js) and the browser rewrites it with the new name and deletes the old
+ * one: whoever already chose does NOT see the notice again. Filters,
+ * functions, JS API, event and store change prefix (estrategia_web_…,
+ * window.estrategiaWebConsent, «estrategia-web:consent»); parent and plugin
+ * are updated together.
  *
- * El nombre del bloque: estrategia-web-site/consent. Los viejos,
- * armazon-site/consent y armazon/consent (tema padre ≤ 0.6.0), son ALIAS
- * ocultos del insertador (includes/class-legacy-names.php) que pintan lo
- * mismo, para el marcado que quede sin migrar. Se quitan en 2.0.0.
+ * The block name: estrategia-web-site/consent. The old ones,
+ * armazon-site/consent and armazon/consent (parent theme ≤ 0.6.0), are
+ * inserter-hidden ALIASES (includes/class-legacy-names.php) that print the
+ * same, for markup not yet migrated. Removed in 2.0.0.
  *
- * Convivencia con un tema padre viejo (≤ 0.6.0, que aún trae el aviso): si al
- * llegar after_setup_theme ya existe estrategia_web_consent_categories(), es que el
- * tema la definió; este plugin NO arranca su aviso (habría dos, y PHP
- * revienta al redeclarar las funciones). Por eso las funciones globales se
- * cargan tarde, en after_setup_theme, y no al cargar el plugin: los plugins
- * se cargan ANTES que el functions.php del tema.
- * Y al revés, padre 0.7.0 con un estrategia-web-site viejo (≤ 0.4.0): no hay aviso.
- * Nada opcional se carga (los mapas piden clic; Matomo híbrido se queda sin
- * cookies), así que falla del lado seguro, pero la web pierde el aviso:
- * se actualizan los dos a la vez.
+ * Coexistence with an old parent theme (≤ 0.6.0, which still ships the
+ * notice): if estrategia_web_consent_categories() already exists when
+ * after_setup_theme arrives, the theme defined it; this plugin does NOT boot
+ * its notice (there would be two, and PHP crashes when redeclaring the
+ * functions). That is why the global functions are loaded late, on
+ * after_setup_theme, and not when the plugin loads: plugins load BEFORE the
+ * theme's functions.php.
+ * And the other way round, parent 0.7.0 with an old estrategia-web-site
+ * (≤ 0.4.0): there is no notice. Nothing optional loads (maps require a
+ * click; hybrid Matomo stays without cookies), so it fails on the safe side,
+ * but the site loses the notice: update both at once.
  *
- * Cómo declara categorías un tema o un plugin:
+ * How a theme or a plugin declares categories:
  *
  *     add_filter( 'estrategia_web_consent_categories', fn( $c ) => array_merge( (array) $c, array( 'maps' ) ) );
  *
- * Categorías conocidas: ver arriba (1.1.0). «necessary» siempre está
- * y no se pregunta. SI NO SE DECLARA NINGUNA, EL AVISO NO SALE, y es lo
- * normal: con Matomo sin cookies (fila 16 del Armazón) y los mapas en dos
- * clics (estrategia-web/map del padre), la mayoría de webs no tienen nada que
- * preguntar. Matomo en modo híbrido declara «statistics» él solo
- * (modules/matomo), y google-tags lo que necesite cada etiqueta.
+ * Known categories: see above (1.1.0). «necessary» is always there and is
+ * not asked. IF NONE IS DECLARED, THE NOTICE DOES NOT SHOW, and that is
+ * normal: with cookieless Matomo (row 16 of the Armazón) and maps in two
+ * clicks (estrategia-web/map from the parent), most sites have nothing to
+ * ask. Matomo in hybrid mode declares «statistics» by itself
+ * (modules/matomo), and google-tags whatever each tag needs.
  *
- * «Powered by» (0.5.0): al pie del aviso, «Powered by Estrategia Web» con
- * enlace a https://estrategiaweb.es/, en pestaña nueva, rel="noopener" y SIN
- * nofollow (lo quiere Juan: cuenta como enlace). DESDE 1.0.0 VIENE APAGADA:
- * la guideline 10 de WordPress.org prohíbe enlazar al autor en la web
- * pública sin que lo active quien usa el plugin. Se enciende con el FILTRO
- * estrategia_web_site_consent_powered_by (no con una opción: es la firma de
- * quien hace la web, no un dato que el cliente toque en su escritorio).
- * Lavandería la enciende en su tema hijo.
+ * «Powered by» (0.5.0): at the foot of the notice, «Powered by Estrategia Web»
+ * linking to https://estrategiaweb.es/, in a new tab, rel="noopener" and
+ * WITHOUT nofollow (Juan wants it: it counts as a link). SINCE 1.0.0 IT IS
+ * OFF: WordPress.org guideline 10 forbids linking to the author on the public
+ * site unless whoever uses the plugin enables it. It is switched on with the
+ * FILTER estrategia_web_site_consent_powered_by (not with an option: it is
+ * the signature of whoever builds the site, not something the client touches
+ * in their dashboard). Lavandería switches it on in its child theme.
  *
- *     // Encenderla:
+ *     // Switch it on:
  *     add_filter( 'estrategia_web_site_consent_powered_by', '__return_true' );
- *     // Encendida con otro texto o URL (lo que no se pase, se queda):
- *     add_filter( 'estrategia_web_site_consent_powered_by', fn( $p ) => array_merge( $p, array( 'show' => true, 'text' => 'Hecha por X', 'url' => 'https://x.es/' ) ) );
+ *     // On, with another text or URL (whatever is not passed is kept):
+ *     add_filter( 'estrategia_web_site_consent_powered_by', fn( $p ) => array_merge( $p, array( 'show' => true, 'text' => 'Made by X', 'url' => 'https://x.es/' ) ) );
  *
- * Caso frontera: 'url' vacía pinta el texto sin enlace; 'text' vacío no
- * pinta la línea. El nombre «Estrategia Web» no se traduce (es una marca);
- * «Powered by %s» sí, y en es_ES se deja en inglés, como lo dice CookieYes.
+ * Edge case: an empty 'url' prints the text without a link; an empty 'text'
+ * does not print the line. The name «Estrategia Web» is not translated (it is
+ * a brand); «Powered by %s» is, and in es_ES it is left in English, as
+ * CookieYes does.
  *
- * WP Consent API (plugin): si está activo, se declara el tipo «optin» y el JS
- * llama a wp_set_consent() al guardar: statistics → statistics y
+ * WP Consent API (plugin): if active, the «optin» type is declared and the JS
+ * calls wp_set_consent() on save: statistics → statistics and
  * statistics-anonymous, marketing → marketing, preferences → preferences
- * (1.1.0). «maps» no tiene equivalente en esa API y no se comunica. No se
- * depende de ella: sin el plugin, todo igual.
+ * (1.1.0). «maps» has no equivalent in that API and is not communicated. It
+ * does not depend on it: without the plugin, everything stays the same.
  *
- * Cómo se mantiene:
- * - Quién: quien toque el plugin. Cuándo: al añadir una categoría, cambiar el
- *   texto legal por defecto o tocar el formato de la cookie. Las pruebas son
- *   tests/consent.test.mjs (nivel 2) y tests/consent-browser.test.mjs
- *   (nivel 3, con Matomo híbrido contra este aviso real); las del registro,
- *   tests/cookies.test.mjs y cookies-browser.test.mjs.
- * - Al cambiar las categorías declaradas cambia la «revisión» (hash de la
- *   lista) y el aviso vuelve a salir a todo el mundo: es lo correcto, se les
- *   pregunta por algo nuevo. Si hay que forzarlo sin cambiar categorías (otra
- *   política), el filtro estrategia_web_consent_revision.
- * - Caso frontera: una web necesita una categoría que no se conoce (p. ej.
- *   «chat»). Es un AJUSTE si basta con etiqueta y descripción: se añade aquí
- *   en una versión menor, AL FINAL de known_categories() (como preferences
- *   en 1.1.0) y en DISPLAY_ORDER. Si necesita otra lógica, es de esa web.
- * - La trampa 1: estrategia_web_consent_has() lee la cookie en el SERVIDOR. Con
- *   caché de página (SiteGround, etc.) la página cacheada de un visitante se
- *   sirve a otro. Para decidir si se carga algo, mejor en el navegador
- *   (text/plain + data-estrategia-web-consent, o el evento).
- * - La trampa 2: la revisión es md5 de la lista + el filtro de revisión, y
- *   tiene que dar EXACTAMENTE lo mismo que daba el padre (lo comprueba
- *   tests/consent.test.mjs con el valor calculado a mano). Si se toca el
- *   orden de las categorías conocidas, la revisión cambia y TODOS los
- *   visitantes vuelven a ver el aviso.
- * - La trampa 3: los filtros de los textos (estrategia_web_consent_text, …)
- *   cambiaron de prefijo en 1.0.0 con todo lo demás: un tema o plugin que
- *   enganchaba armazon_consent_… deja de afinar el aviso hasta que se renombre.
+ * How to maintain:
+ * - Who: whoever touches the plugin. When: on adding a category, changing the
+ *   default legal text or touching the cookie format. The tests are
+ *   tests/consent.test.mjs (level 2) and tests/consent-browser.test.mjs
+ *   (level 3, with hybrid Matomo against this real notice); the registry
+ *   ones, tests/cookies.test.mjs and cookies-browser.test.mjs.
+ * - Changing the declared categories changes the «revision» (hash of the
+ *   list) and the notice shows again to everyone: that is correct, they are
+ *   being asked about something new. To force it without changing
+ *   categories (another policy), the estrategia_web_consent_revision filter.
+ * - Edge case: a site needs an unknown category (e.g. «chat»). It is a
+ *   SETTING if a label and description are enough: it is added here in a
+ *   minor version, at the END of known_categories() (like preferences in
+ *   1.1.0) and in DISPLAY_ORDER. If it needs other logic, it belongs to that
+ *   site.
+ * - Trap 1: estrategia_web_consent_has() reads the cookie on the SERVER. With
+ *   page caching (SiteGround, etc.) one visitor's cached page is served to
+ *   another. To decide whether to load something, better in the browser
+ *   (text/plain + data-estrategia-web-consent, or the event).
+ * - Trap 2: the revision is md5 of the list + the revision filter, and it
+ *   must give EXACTLY the same as the parent did (tests/consent.test.mjs
+ *   checks it with the value computed by hand). If the order of the known
+ *   categories is touched, the revision changes and ALL visitors see the
+ *   notice again.
+ * - Trap 3: the text filters (estrategia_web_consent_text, …) changed prefix
+ *   in 1.0.0 along with everything else: a theme or plugin that hooked
+ *   armazon_consent_… stops tuning the notice until it is renamed.
  */
 
 namespace EstrategiaWeb\Site;
@@ -179,32 +185,33 @@ defined( 'ABSPATH' ) || exit;
 
 final class Consent {
 
-	/** Cookie técnica con la elección (1.0.0; antes armazon_consent). */
+	/** Technical cookie holding the choice (1.0.0; previously armazon_consent). */
 	public const COOKIE = 'estrategia_web_consent';
 
 	/**
-	 * La cookie con el nombre de antes de 1.0.0. Se LEE si falta la nueva, y
-	 * el navegador la pasa a la nueva y la borra (blocks/consent/view.js):
-	 * quien ya eligió no vuelve a ver el aviso por el cambio de nombre. Se
-	 * quita en 2.0.0, con los alias de Legacy_Names.
+	 * The cookie with its pre-1.0.0 name. It is READ if the new one is
+	 * missing, and the browser moves it to the new one and deletes it
+	 * (blocks/consent/view.js): whoever already chose does not see the notice
+	 * again because of the rename. Removed in 2.0.0, with the Legacy_Names
+	 * aliases.
 	 */
 	public const LEGACY_COOKIE = 'armazon_consent';
 
-	/** Nombre del bloque del enlace. Los viejos (armazon/consent, armazon-site/consent) son alias: Legacy_Names. */
+	/** Name of the link block. The old ones (armazon/consent, armazon-site/consent) are aliases: Legacy_Names. */
 	public const BLOCK = 'estrategia-web-site/consent';
 
-	/** Handles que WordPress deriva de blocks/consent/block.json. */
+	/** Handles WordPress derives from blocks/consent/block.json. */
 	public const SCRIPT_MODULE = 'estrategia-web-site-consent-view-script-module';
 	public const STYLE         = 'estrategia-web-site-consent-style';
 
-	/** 1.1.0: otros nombres que se aceptan para una categoría (ver la cabecera). */
+	/** 1.1.0: other names accepted for a category (see the header). */
 	public const ALIASES = array(
 		'analytics'   => 'statistics',
 		'advertising' => 'marketing',
 		'ads'         => 'marketing',
 	);
 
-	/** 1.1.0: orden en que el aviso y la pantalla las enseñan (no toca la revisión). */
+	/** 1.1.0: order in which the notice and the screen show them (does not touch the revision). */
 	public const DISPLAY_ORDER = array( 'preferences', 'statistics', 'marketing', 'maps' );
 
 	private static bool $active = false;
@@ -213,12 +220,12 @@ final class Consent {
 		add_action( 'after_setup_theme', array( self::class, 'take_over' ), 0 );
 	}
 
-	/** Si el aviso es de este plugin en esta petición (false con un tema padre viejo que aún lo trae). */
+	/** Whether the notice belongs to this plugin in this request (false with an old parent theme that still ships it). */
 	public static function active(): bool {
 		return self::$active;
 	}
 
-	/** Arranca el aviso salvo que el tema ya lo defina (ver la cabecera, «Convivencia»). */
+	/** Boots the notice unless the theme already defines it (see the header, «Coexistence»). */
 	public static function take_over(): void {
 		if ( function_exists( 'estrategia_web_consent_categories' ) ) {
 			return;
@@ -230,12 +237,12 @@ final class Consent {
 		add_action( 'init', array( self::class, 'register_settings' ) );
 		add_filter( 'block_type_metadata', array( self::class, 'block_labels' ) );
 		add_action( 'wp_enqueue_scripts', array( self::class, 'enqueue' ) );
-		// 0.5.1: al PRINCIPIO del body (orden de foco, ver la cabecera); en el
-		// pie solo si el tema no llama a wp_body_open().
+		// 0.5.1: at the START of the body (focus order, see the header); in the
+		// footer only if the theme does not call wp_body_open().
 		add_action( 'wp_body_open', array( self::class, 'print_notice' ), 5 );
 		add_action( 'wp_footer', array( self::class, 'print_notice' ), 5 );
 		add_shortcode( 'estrategia_web_consent_settings', array( self::class, 'shortcode' ) );
-		// 1.1.0: registro de cookies, detector y tabla de la política.
+		// 1.1.0: cookie registry, detector and policy table.
 		add_shortcode( Cookie_Table::SHORTCODE, array( Cookie_Table::class, 'shortcode' ) );
 		add_action( 'rest_api_init', array( Cookie_Rest::class, 'register' ) );
 		if ( is_admin() ) {
@@ -248,8 +255,8 @@ final class Consent {
 	}
 
 	/**
-	 * Categorías opcionales que se saben describir. EL ORDEN ENTRA EN LA
-	 * REVISIÓN: una nueva va al final (trampa 2).
+	 * Optional categories that can be described. THE ORDER IS PART OF THE
+	 * REVISION: a new one goes at the end (trap 2).
 	 *
 	 * @return array<string, array{label: string, description: string}>
 	 */
@@ -274,14 +281,14 @@ final class Consent {
 		);
 	}
 
-	/** Un slug de categoría con los alias resueltos («analytics» → «statistics»). */
+	/** A category slug with aliases resolved («analytics» → «statistics»). */
 	public static function normalize( string $category ): string {
 		$category = strtolower( trim( $category ) );
 		return self::ALIASES[ $category ] ?? $category;
 	}
 
 	/**
-	 * Las categorías en el orden de enseñarlas (DISPLAY_ORDER).
+	 * The categories in display order (DISPLAY_ORDER).
 	 *
 	 * @param string[] $categories
 	 * @return string[]
@@ -293,7 +300,7 @@ final class Consent {
 	}
 
 	/**
-	 * Las que declara el CÓDIGO (el filtro), en el orden estable de known_categories().
+	 * The ones declared by the CODE (the filter), in the stable order of known_categories().
 	 *
 	 * @return string[]
 	 */
@@ -303,8 +310,8 @@ final class Consent {
 	}
 
 	/**
-	 * Categorías opcionales que pregunta el aviso: las del código y las que
-	 * añade el administrador (1.1.0), en un orden estable.
+	 * Optional categories the notice asks about: the code ones and the ones
+	 * the administrator adds (1.1.0), in a stable order.
 	 *
 	 * @return string[]
 	 */
@@ -313,22 +320,22 @@ final class Consent {
 		return array_values( array_intersect( array_keys( self::known_categories() ), $declared ) );
 	}
 
-	/** Revisión: una elección guardada con otra revisión no vale y el aviso vuelve a salir. */
+	/** Revision: a choice stored with another revision is not valid and the notice shows again. */
 	public static function revision(): string {
 		$seed = implode( ',', self::categories() ) . '|' . apply_filters( 'estrategia_web_consent_revision', '1' );
 		return substr( md5( $seed ), 0, 8 );
 	}
 
-	/** Vida de la elección, en segundos. 12 meses (la AEPD recomienda no pasar de 24). */
+	/** Lifetime of the choice, in seconds. 12 months (the AEPD recommends not exceeding 24). */
 	public static function max_age(): int {
 		return (int) apply_filters( 'estrategia_web_consent_max_age', YEAR_IN_SECONDS );
 	}
 
 	/**
-	 * La elección guardada, o null si no hay ninguna válida para la revisión.
-	 * Formato de la cookie: "<revisión>.<cat~cat>.<unix>".
+	 * The stored choice, or null if there is none valid for the revision.
+	 * Cookie format: "<revision>.<cat~cat>.<unix>".
 	 *
-	 * @return string[]|null Categorías opcionales aceptadas.
+	 * @return string[]|null Accepted optional categories.
 	 */
 	public static function choice(): ?array {
 		$name = empty( $_COOKIE[ self::COOKIE ] ) ? self::LEGACY_COOKIE : self::COOKIE;
@@ -344,7 +351,7 @@ final class Consent {
 		return array_values( array_intersect( self::categories(), $accepted ) );
 	}
 
-	/** Si una categoría está aceptada. «necessary» siempre. Admite los alias. */
+	/** Whether a category is accepted. «necessary» always. Accepts aliases. */
 	public static function has( string $category ): bool {
 		$category = self::normalize( $category );
 		if ( 'necessary' === $category ) {
@@ -355,23 +362,23 @@ final class Consent {
 	}
 
 	/**
-	 * La línea «Powered by» ya filtrada. Ver la cabecera.
+	 * The «Powered by» line, already filtered. See the header.
 	 *
 	 * @return array{show: bool, text: string, url: string}
 	 */
 	public static function powered_by(): array {
 		$defaults = array(
-			// APAGADA por defecto (1.0.0): WordPress.org (guideline 10) no deja
-			// enlazar al autor en la web pública sin que lo active quien la usa.
+			// OFF by default (1.0.0): WordPress.org (guideline 10) does not allow
+			// linking to the author on the public site unless the user enables it.
 			'show' => false,
 			/* translators: %s: name of the company that built the site (a brand, not translated). */
 			'text' => sprintf( __( 'Powered by %s', 'estrategia-web' ), 'Estrategia Web' ),
 			'url'  => 'https://estrategiaweb.es/',
 		);
 		/**
-		 * La línea «Powered by» del aviso de cookies.
+		 * The «Powered by» line of the cookie notice.
 		 *
-		 * @param array{show: bool, text: string, url: string}|false $powered false la quita.
+		 * @param array{show: bool, text: string, url: string}|false $powered false removes it.
 		 */
 		$value = apply_filters( 'estrategia_web_site_consent_powered_by', $defaults );
 		if ( ! is_array( $value ) ) {
@@ -385,13 +392,13 @@ final class Consent {
 		);
 	}
 
-	/** Registra el bloque del enlace y el de la tabla (1.1.0). Los nombres viejos del enlace son alias de Legacy_Names. */
+	/** Registers the link block and the table block (1.1.0). The old link names are Legacy_Names aliases. */
 	public static function register_blocks(): void {
 		register_block_type( ESTRATEGIA_WEB_CONSENT_DIR . 'blocks/consent' );
 		register_block_type( ESTRATEGIA_WEB_CONSENT_DIR . 'blocks/cookie-table' );
 	}
 
-	/** 1.1.0: los ajustes del registro, también por /wp/v2/settings (para scripts y pruebas). */
+	/** 1.1.0: the registry settings, also through /wp/v2/settings (for scripts and tests). */
 	public static function register_settings(): void {
 		register_setting(
 			'estrategia_web_cookies',
@@ -423,15 +430,15 @@ final class Consent {
 		);
 	}
 
-	/** Etiqueta del control de autoRegister (block.json no traduce la clave «label»). */
+	/** Label of the autoRegister control (block.json does not translate the «label» key). */
 	private static function label_text(): string {
 		return __( 'Link text (empty: “Cookie settings”)', 'estrategia-web' );
 	}
 
 	/**
-	 * Pone la etiqueta traducida al atributo del bloque.
+	 * Sets the translated label on the block attribute.
 	 *
-	 * @param array $metadata block.json leído.
+	 * @param array $metadata block.json as read.
 	 */
 	public static function block_labels( array $metadata ): array {
 		if ( ( $metadata['name'] ?? '' ) === self::BLOCK && isset( $metadata['attributes']['label'] ) ) {
@@ -440,7 +447,7 @@ final class Consent {
 		return $metadata;
 	}
 
-	/** Estado de Interactivity que comparten el aviso y el enlace. */
+	/** Interactivity state shared by the notice and the link. */
 	public static function state(): void {
 		$known    = self::known_categories();
 		$settings = Cookie_Registry::settings();
@@ -456,12 +463,12 @@ final class Consent {
 				'maxAge'       => self::max_age(),
 				'isOpen'       => false,
 				'showSettings' => false,
-				// 1.1.0: el detector (blocks/consent/view.js, class-cookie-rest.php).
-				// Sin «versión de la lista del servidor» a propósito: la cambia el
-				// propio informe (entra una fila) y, con caché de página, cada
-				// visitante vería una versión vieja y volvería a mandar en cada
-				// página. La «versión» que cuenta es la lista de NOMBRES del
-				// visitante: se manda si cambia o si pasan «days» días.
+				// 1.1.0: the detector (blocks/consent/view.js, class-cookie-rest.php).
+				// No «server list version» on purpose: the report itself changes
+				// it (a row comes in) and, with page caching, each visitor would
+				// see an old version and send again on every page. The «version»
+				// that counts is the visitor's list of NAMES: it is sent if it
+				// changes or after «days» days.
 				'detector'     => $settings['detector'] ? array(
 					'url'   => rest_url( Cookie_Rest::NAMESPACE . '/cookies/seen' ),
 					'days'  => (int) apply_filters( 'estrategia_web_cookies_report_days', 7 ),
@@ -471,7 +478,7 @@ final class Consent {
 		);
 	}
 
-	/** Pone el módulo y la hoja en la web cuando hay algo que preguntar. */
+	/** Puts the module and the stylesheet on the site when there is something to ask. */
 	public static function enqueue(): void {
 		if ( ! self::categories() ) {
 			return;
@@ -482,9 +489,9 @@ final class Consent {
 	}
 
 	/**
-	 * Pinta el aviso. Oculto por defecto: view.js lo enseña si no hay elección
-	 * válida. Sin JavaScript se queda oculto, y tampoco se carga nada opcional
-	 * (los scripts son text/plain), así que no se pierde nada.
+	 * Prints the notice. Hidden by default: view.js shows it if there is no
+	 * valid choice. Without JavaScript it stays hidden, and nothing optional
+	 * loads either (the scripts are text/plain), so nothing is lost.
 	 */
 	public static function print_notice(): void {
 		static $printed = false;
@@ -569,13 +576,14 @@ final class Consent {
 	}
 
 	/**
-	 * HTML del enlace «Configurar cookies»: el bloque, su alias y el shortcode.
+	 * HTML of the «Cookie settings» link: the block, its alias and the shortcode.
 	 *
-	 * - Es un <button>, no un <a href="#">: abre algo en la página, no navega.
-	 * - Si la web no declara categorías no pinta nada (no hay aviso que
-	 *   reabrir). En el editor sí enseña una nota, para que no parezca roto.
+	 * - It is a <button>, not an <a href="#">: it opens something on the page, it does not navigate.
+	 * - If the site declares no categories it prints nothing (there is no
+	 *   notice to reopen). In the editor it does show a note, so it does not
+	 *   look broken.
 	 *
-	 * @param array $attributes Atributos del bloque (label).
+	 * @param array $attributes Block attributes (label).
 	 */
 	public static function render_link( array $attributes ): string {
 		if ( ! self::categories() ) {
@@ -598,9 +606,9 @@ final class Consent {
 	}
 
 	/**
-	 * [estrategia_web_consent_settings label="…"]: lo mismo que el bloque.
+	 * [estrategia_web_consent_settings label="…"]: the same as the block.
 	 *
-	 * @param array|string $atts Atributos del shortcode.
+	 * @param array|string $atts Shortcode attributes.
 	 */
 	public static function shortcode( $atts ): string {
 		$atts = shortcode_atts( array( 'label' => '' ), $atts, 'estrategia_web_consent_settings' );

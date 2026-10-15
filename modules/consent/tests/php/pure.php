@@ -1,12 +1,12 @@
 <?php
 /**
- * Lo llama modules/consent/tests/cookies-pure.test.mjs con el PHP de la
- * máquina, SIN WordPress: el registro de cookies (propuestas, comodines,
- * límites) y los alias de las categorías. Lo mínimo de WordPress va
- * simulado aquí abajo (opciones en memoria, gettext que devuelve el inglés).
- * Escribe el resultado en JSON; las aserciones están en el .mjs.
+ * Called by modules/consent/tests/cookies-pure.test.mjs with the machine's
+ * PHP, WITHOUT WordPress: the cookie registry (suggestions, wildcards,
+ * limits) and the category aliases. The bare minimum of WordPress is
+ * stubbed below (options in memory, gettext that returns the English).
+ * Writes the result as JSON; the assertions are in the .mjs.
  *
- * Cómo se mantiene: un caso nuevo es una clave nueva aquí y su assert allí.
+ * How to maintain: a new case is a new key here and its assert there.
  */
 
 define( 'ABSPATH', __DIR__ . '/' );
@@ -15,7 +15,7 @@ define( 'ESTRATEGIA_WEB_CONSENT_DIR', dirname( __DIR__, 2 ) . '/' );
 define( 'YEAR_IN_SECONDS', 31536000 );
 define( 'MINUTE_IN_SECONDS', 60 );
 
-/** Lo justo de WP_Error para save(). */
+/** Just enough WP_Error for save(). */
 class WP_Error {
 	public function __construct( public $code = '', public $message = '', public $data = null ) {}
 }
@@ -73,30 +73,30 @@ $out['name_ok']           = array(
 	'html'    => R::name_ok( '<script>' ),
 );
 
-// El detector: dos medidas de GA en un solo patrón, un valor colado, un nombre largo.
-R::record_seen( array( '_ga', '_ga_ABC123', 'wp-wpml_current_language', 'x=secreto', str_repeat( 'b', 200 ) ), 1000 );
+// The detector: two GA measurements under a single pattern, a sneaked-in value, a long name.
+R::record_seen( array( '_ga', '_ga_ABC123', 'wp-wpml_current_language', 'x=secret', str_repeat( 'b', 200 ) ), 1000 );
 R::record_seen( array( '_ga_ZZZ999', '_ga' ), 2000 );
 $out['recorded']          = R::all();
 
-// Tope de filas.
+// Row cap.
 $GLOBALS['pure_options'] = array();
 $many                    = array();
 for ( $i = 0; $i < R::MAX_ENTRIES + 25; $i++ ) {
-	$many[] = 'inventada_' . $i;
+	$many[] = 'madeup_' . $i;
 }
 $out['full']              = R::record_seen( $many, 3000 );
 $out['full_count']        = count( R::all() );
 
-// Guardar a mano: lo vacío se rellena con la propuesta; un nombre malo no.
+// Manual save: empty fields are filled from the suggestion; a bad name is not saved.
 $GLOBALS['pure_options'] = array();
-$out['save_manual']       = R::save( 'NID', array( 'category' => 'maps', 'provider' => '', 'purpose' => 'Mapas de Google', 'duration' => '' ) );
-$out['save_bad']          = R::save( 'mal nombre', array() ) instanceof WP_Error;
+$out['save_manual']       = R::save( 'NID', array( 'category' => 'maps', 'provider' => '', 'purpose' => 'Google Maps', 'duration' => '' ) );
+$out['save_bad']          = R::save( 'bad name', array() ) instanceof WP_Error;
 
 $out['duration']          = array(
 	'years'   => Cookie_Table::duration_parts( '2 years' ),
 	'one'     => Cookie_Table::duration_parts( '1 Day' ),
 	'session' => Cookie_Table::duration_parts( 'Session' ),
-	'free'    => Cookie_Table::duration_parts( 'Hasta cerrar el navegador' ),
+	'free'    => Cookie_Table::duration_parts( 'Until the browser closes' ),
 );
 $out['normalize']         = array( Consent::normalize( 'analytics' ), Consent::normalize( 'Advertising' ), Consent::normalize( 'ads' ), Consent::normalize( 'maps' ) );
 $out['display']           = Consent::display_order( array( 'maps', 'marketing', 'statistics', 'preferences' ) );

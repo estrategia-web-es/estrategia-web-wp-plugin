@@ -1,6 +1,6 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
-	"__comment": "estrategia-web/cookie-table — la tabla de cookies confirmadas para la Política de cookies. Sin editor propio: supports.autoRegister (WP 7.0). Documentación y mantenimiento en la cabecera de includes/class-cookie-table.php.",
+	"__comment": "estrategia-web/cookie-table — the table of confirmed cookies for the Cookie policy. No editor of its own: supports.autoRegister (WP 7.0). Documentation and maintenance in the header of includes/class-cookie-table.php.",
 	"apiVersion": 3,
 	"name": "estrategia-web/cookie-table",
 	"version": "1.1.0",

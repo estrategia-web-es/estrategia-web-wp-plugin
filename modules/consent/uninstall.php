@@ -1,15 +1,16 @@
 <?php
 /**
- * Al BORRAR el plugin (lo llama el uninstall.php de la raíz).
+ * On plugin DELETION (called by the root uninstall.php).
  *
- * - Siempre: los transitorios de ritmo del detector (estrategia_web_cs_*),
- *   que no son de nadie.
- * - Solo con ESTRATEGIA_WEB_SITE_REMOVE_DATA en wp-config.php: el registro de
- *   cookies y sus ajustes. Las finalidades las escribió el cliente para su
- *   política: son SUS datos, como los de la empresa, y se quedan por defecto.
+ * - Always: the detector's rate-limit transients (estrategia_web_cs_*),
+ *   which belong to no one.
+ * - Only with ESTRATEGIA_WEB_SITE_REMOVE_DATA in wp-config.php: the cookie
+ *   registry and its settings. The purposes were written by the client for
+ *   their policy: they are THEIR data, like the company data, and are kept by
+ *   default.
  *
- * Cómo se mantiene: una opción nueva del aviso, su delete_option aquí y en la
- * ruta de reset de modules/consent/tests/wp/.
+ * How to maintain: a new option of the notice gets its delete_option here and
+ * in the reset route of modules/consent/tests/wp/.
  */
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;

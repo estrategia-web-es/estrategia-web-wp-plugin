@@ -1,61 +1,60 @@
 <?php
 /**
- * El REGISTRO DE COOKIES de la web: qué cookies hay, de quién son, para qué
- * sirven, cuánto duran y en qué categoría del aviso van. De aquí salen la
- * pantalla «Estrategia Web → Cookies» (admin/class-cookies-page.php), la
- * tabla de la política de cookies (class-cookie-table.php) y lo que apunta
- * el detector (class-cookie-rest.php).
+ * The site's COOKIE REGISTRY: which cookies exist, whose they are, what they
+ * are for, how long they last and which notice category they belong to. It
+ * feeds the «Estrategia Web → Cookies» screen (admin/class-cookies-page.php),
+ * the cookie policy table (class-cookie-table.php) and what the detector
+ * records (class-cookie-rest.php).
  *
- * Cómo se llena:
- * 1. El DETECTOR: cuando un visitante ACEPTA alguna categoría, su navegador
- *    manda los NOMBRES de las cookies de primera parte que ve
- *    (document.cookie), nunca los valores (blocks/consent/view.js). Cada
- *    nombre nuevo entra como «pendiente» con una PROPUESTA de proveedor,
- *    categoría, finalidad y duración.
- * 2. A MANO, en la pantalla: las de terceros que el navegador no deja ver por
- *    document.cookie (las de google.com en el iframe de un mapa, las HttpOnly).
- * El administrador confirma, cambia o ignora. Solo lo CONFIRMADO sale en la
- * tabla de la política.
+ * How it gets filled:
+ * 1. The DETECTOR: when a visitor ACCEPTS some category, their browser sends
+ *    the NAMES of the first-party cookies it sees (document.cookie), never the
+ *    values (blocks/consent/view.js). Each new name comes in as «pending»
+ *    with a SUGGESTION of provider, category, purpose and duration.
+ * 2. BY HAND, on the screen: third-party cookies the browser does not expose
+ *    through document.cookie (google.com ones in a map iframe, HttpOnly ones).
+ * The administrator confirms, changes or ignores. Only what is CONFIRMED
+ * shows in the policy table.
  *
- * De dónde sale la propuesta, por este orden (suggest()):
- * - base(): las nuestras, aquí abajo, traducibles. Mandan sobre la base de
- *   datos externa: la cookie del propio aviso, las de WordPress y
- *   wp-wpml_current_language (WPML la pone ANTES de cualquier elección para
- *   recordar el idioma: es técnica y va como NECESARIA).
- * - data/open-cookie-database.json: extracto de la Open Cookie Database
- *   (Apache 2.0, atribución dentro del JSON y en data/NOTICE), regenerado con
- *   tools/open-cookie-database.mjs. Textos en inglés: son una propuesta.
- * Dentro de cada fuente: el nombre exacto y, si no, el PREFIJO más largo
- * (comodín). Un comodín se guarda con «*» al final: _ga_* recoge _ga_ABC123,
- * _pk_id* recoge _pk_id.87.a1b2. Así cada medición de Analytics no crea una
- * fila nueva.
+ * Where the suggestion comes from, in this order (suggest()):
+ * - base(): ours, below, translatable. They override the external database:
+ *   the notice's own cookie, the WordPress ones and wp-wpml_current_language
+ *   (WPML sets it BEFORE any choice to remember the language: it is technical
+ *   and goes as NECESSARY).
+ * - data/open-cookie-database.json: extract of the Open Cookie Database
+ *   (Apache 2.0, attribution inside the JSON and in data/NOTICE), regenerated
+ *   with tools/open-cookie-database.mjs. English texts: they are a suggestion.
+ * Within each source: the exact name and, failing that, the longest PREFIX
+ * (wildcard). A wildcard is stored with a trailing «*»: _ga_* catches
+ * _ga_ABC123, _pk_id* catches _pk_id.87.a1b2. That way each Analytics
+ * measurement does not create a new row.
  *
- * Dónde se guarda: la opción estrategia_web_cookies (sin autoload), clave =
- * nombre o patrón, valor = ENTRY_DEFAULTS. Los ajustes (detector sí/no y las
- * categorías que el administrador añade al aviso) en
+ * Where it is stored: the estrategia_web_cookies option (no autoload), key =
+ * name or pattern, value = ENTRY_DEFAULTS. The settings (detector on/off and
+ * the categories the administrator adds to the notice) in
  * estrategia_web_cookies_settings.
  *
- * Cómo se mantiene:
- * - Quién y cuándo: quien toque el aviso de cookies. Una cookie de WordPress
- *   o de un plugin que USAMOS en nuestras webs y que la base externa
- *   clasifica mal, entra en base() con su texto traducible (y su línea en el
- *   .po). Lo demás lo decide cada web en su pantalla.
- * - Criterio para base(): solo cookies que pone NUESTRA pila (WordPress,
- *   WPML, este plugin). La de un plugin que solo usa una web la confirma esa
- *   web en su pantalla.
- * - Caso frontera con nombre: wp-wpml_current_language. La base externa la da
- *   como Functional (y la mapeamos a necesaria); aun así está en base() porque
- *   su duración real es 1 DÍA (wpml_cookies del HTML de Lavandería,
- *   14-10-2026) y la base dice «session». Y porque se pone antes de la
- *   elección: si un día cayera en otra categoría, la web estaría poniendo una
- *   cookie no necesaria sin consentimiento.
- * - Límites contra la inundación (el detector es público): MAX_ENTRIES filas
- *   en total, nombres con los caracteres de RFC 6265 y como mucho 128. Lo
- *   demás se ignora sin error. Los de ritmo, en class-cookie-rest.php.
- * - La trampa: un patrón casa por PREFIJO, así que «_ga*» se comería también
- *   _gac_, _gat… Por eso los patrones de base() terminan en el separador
- *   (_ga_*, wp-settings-*) y la búsqueda mira primero el nombre EXACTO
- *   (_ga) antes que cualquier patrón.
+ * How to maintain:
+ * - Who and when: whoever touches the cookie notice. A cookie from WordPress
+ *   or from a plugin we USE on our sites that the external database
+ *   misclassifies goes into base() with its translatable text (and its line
+ *   in the .po). Everything else is decided by each site on its screen.
+ * - Criterion for base(): only cookies set by OUR stack (WordPress, WPML,
+ *   this plugin). One from a plugin used by a single site is confirmed by
+ *   that site on its screen.
+ * - Named edge case: wp-wpml_current_language. The external database lists it
+ *   as Functional (and we map it to necessary); even so it is in base()
+ *   because its real duration is 1 DAY (wpml_cookies in the Lavandería HTML,
+ *   14-10-2026) and the database says «session». And because it is set before
+ *   the choice: if one day it fell into another category, the site would be
+ *   setting a non-necessary cookie without consent.
+ * - Flood limits (the detector is public): MAX_ENTRIES rows in total, names
+ *   with RFC 6265 characters and at most 128. Anything else is ignored
+ *   without error. The rate limits, in class-cookie-rest.php.
+ * - The trap: a pattern matches by PREFIX, so «_ga*» would also swallow
+ *   _gac_, _gat… That is why the base() patterns end in the separator
+ *   (_ga_*, wp-settings-*) and the lookup checks the EXACT name (_ga) before
+ *   any pattern.
  */
 
 namespace EstrategiaWeb\Site;
@@ -64,16 +63,16 @@ defined( 'ABSPATH' ) || exit;
 
 final class Cookie_Registry {
 
-	/** Las cookies conocidas: nombre o patrón => ENTRY_DEFAULTS. */
+	/** The known cookies: name or pattern => ENTRY_DEFAULTS. */
 	public const OPTION = 'estrategia_web_cookies';
 
-	/** Ajustes: detector (bool) y ask (categorías que el administrador añade al aviso). */
+	/** Settings: detector (bool) and ask (categories the administrator adds to the notice). */
 	public const SETTINGS = 'estrategia_web_cookies_settings';
 
-	/** Filas como mucho (el detector es público: no puede crecer sin fin). */
+	/** Maximum rows (the detector is public: it cannot grow without bound). */
 	public const MAX_ENTRIES = 300;
 
-	/** Categorías en las que puede ir una cookie, en el orden de la tabla. */
+	/** Categories a cookie can belong to, in table order. */
 	public const CATEGORIES = array( 'necessary', 'preferences', 'statistics', 'marketing', 'maps' );
 
 	public const STATUSES = array( 'pending', 'confirmed', 'ignored' );
@@ -85,30 +84,30 @@ final class Cookie_Registry {
 		'duration'   => '',
 		'status'     => 'pending',
 		'source'     => 'detected', // detected | manual
-		'suggested'  => '',         // de dónde salió la propuesta: base | ocd | ''
-		'example'    => '',         // un nombre concreto visto, para los patrones
+		'suggested'  => '',         // where the suggestion came from: base | ocd | ''
+		'example'    => '',         // a concrete name seen, for patterns
 		'first_seen' => 0,
 		'last_seen'  => 0,
 	);
 
-	/** @var array|null Extracto de la Open Cookie Database, leído una vez por petición. */
+	/** @var array|null Open Cookie Database extract, read once per request. */
 	private static ?array $ocd = null;
 
-	/** Si un nombre (o patrón con «*» final) es aceptable: caracteres de token de RFC 6265, ≤ 128. */
+	/** Whether a name (or pattern with a trailing «*») is acceptable: RFC 6265 token characters, ≤ 128. */
 	public static function name_ok( string $name ): bool {
 		return (bool) preg_match( '/^[!#$%&\'+\-.^_`|~0-9A-Za-z]{1,128}\*?$/', $name );
 	}
 
-	/** Si una clave es un patrón (termina en «*»). */
+	/** Whether a key is a pattern (ends in «*»). */
 	public static function is_pattern( string $key ): bool {
 		return str_ends_with( $key, '*' );
 	}
 
 	/**
-	 * Qué clave de $keys corresponde a $name: la exacta y, si no, el patrón
-	 * con el prefijo más largo. Pura (sin WordPress): se prueba en el nivel 1.
+	 * Which key of $keys matches $name: the exact one and, failing that, the
+	 * pattern with the longest prefix. Pure (no WordPress): tested at level 1.
 	 *
-	 * @param string[] $keys Claves (nombres o patrones con «*»).
+	 * @param string[] $keys Keys (names or patterns with «*»).
 	 */
 	public static function match_key( array $keys, string $name ): ?string {
 		if ( in_array( $name, $keys, true ) ) {
@@ -127,7 +126,7 @@ final class Cookie_Registry {
 	}
 
 	/**
-	 * Las nuestras: mandan sobre la base externa. Ver el criterio en la cabecera.
+	 * Ours: they override the external database. See the criterion in the header.
 	 *
 	 * @return array<string, array{provider: string, category: string, purpose: string, duration: string}>
 	 */
@@ -182,9 +181,9 @@ final class Cookie_Registry {
 				'purpose'  => __( 'Remembers the dashboard settings of the site’s users (editors and administrators).', 'estrategia-web' ),
 				'duration' => '1 year',
 			),
-			// Matomo: la base externa tiene también las de Piwik PRO con un
-			// prefijo MÁS LARGO (_pk_id. contra _pk_id) y ganaría por longitud
-			// con el proveedor equivocado. Matomo es nuestra pila: van aquí.
+			// Matomo: the external database also has the Piwik PRO ones with a
+			// LONGER prefix (_pk_id. versus _pk_id) and they would win by length
+			// with the wrong provider. Matomo is our stack: they go here.
 			'_pk_id.*'                 => array(
 				'provider' => 'Matomo',
 				'category' => 'statistics',
@@ -218,7 +217,7 @@ final class Cookie_Registry {
 		);
 	}
 
-	/** El extracto de la Open Cookie Database: { source, license, attribution, commit, generated, cookies }. */
+	/** The Open Cookie Database extract: { source, license, attribution, commit, generated, cookies }. */
 	public static function ocd(): array {
 		if ( null === self::$ocd ) {
 			$file      = ESTRATEGIA_WEB_CONSENT_DIR . 'data/open-cookie-database.json';
@@ -229,8 +228,8 @@ final class Cookie_Registry {
 	}
 
 	/**
-	 * La propuesta para un nombre concreto: clave (el nombre o el patrón que lo
-	 * recoge) y datos. null si nadie lo conoce.
+	 * The suggestion for a concrete name: key (the name or the pattern that
+	 * catches it) and data. null if nobody knows it.
 	 *
 	 * @return array{key: string, provider: string, category: string, purpose: string, duration: string, suggested: string}|null
 	 */
@@ -256,7 +255,7 @@ final class Cookie_Registry {
 		if ( null === $row ) {
 			return null;
 		}
-		// Un prefijo (o un nombre que la base marca como comodín) se guarda como patrón.
+		// A prefix (or a name the database marks as wildcard) is stored as a pattern.
 		$key = ( null === $exact || ! empty( $row[5] ) ) ? self::pattern_for( (string) $row[0] ) : $name;
 		return array(
 			'key'       => $key,
@@ -268,12 +267,12 @@ final class Cookie_Registry {
 		);
 	}
 
-	/** El prefijo de la base como patrón: «_ga_» → «_ga_*», «_pk_id» → «_pk_id*». */
+	/** The database prefix as a pattern: «_ga_» → «_ga_*», «_pk_id» → «_pk_id*». */
 	private static function pattern_for( string $prefix ): string {
 		return rtrim( $prefix, '*' ) . '*';
 	}
 
-	/** @return array<string, array> Todas las filas, con los campos completos. */
+	/** @return array<string, array> All rows, with complete fields. */
 	public static function all(): array {
 		$saved = get_option( self::OPTION, array() );
 		$out   = array();
@@ -291,11 +290,11 @@ final class Cookie_Registry {
 	}
 
 	/**
-	 * Apunta lo que manda el detector. Devuelve cuántas filas nuevas y cuántas
-	 * ya conocidas. Los nombres raros, y los nuevos por encima de MAX_ENTRIES,
-	 * se ignoran.
+	 * Records what the detector sends. Returns how many rows are new and how
+	 * many were already known. Odd names, and new ones beyond MAX_ENTRIES, are
+	 * ignored.
 	 *
-	 * @param string[] $names Nombres de cookies (sin valores).
+	 * @param string[] $names Cookie names (without values).
 	 * @return array{added: int, seen: int}
 	 */
 	public static function record_seen( array $names, ?int $now = null ): array {
@@ -343,12 +342,12 @@ final class Cookie_Registry {
 	}
 
 	/**
-	 * Crea o cambia una fila (la pantalla y la ruta REST de administración).
-	 * Lo que no llega se queda; en una fila NUEVA, lo vacío se rellena con la
-	 * propuesta.
+	 * Creates or changes a row (the screen and the admin REST route). What is
+	 * not sent stays; in a NEW row, empty fields are filled from the
+	 * suggestion.
 	 *
 	 * @param array $data provider, category, purpose, duration, status.
-	 * @return array|\WP_Error La fila guardada.
+	 * @return array|\WP_Error The saved row.
 	 */
 	public static function save( string $key, array $data ) {
 		$key = trim( $key );
@@ -401,7 +400,7 @@ final class Cookie_Registry {
 	}
 
 	/**
-	 * Las confirmadas, por categoría y en el orden de CATEGORIES.
+	 * The confirmed ones, by category and in CATEGORIES order.
 	 *
 	 * @return array<string, array<string, array>>
 	 */
@@ -416,7 +415,7 @@ final class Cookie_Registry {
 	}
 
 	/**
-	 * Los ajustes, completos.
+	 * The settings, complete.
 	 *
 	 * @return array{detector: bool, ask: string[]}
 	 */
@@ -429,7 +428,7 @@ final class Cookie_Registry {
 		);
 	}
 
-	/** Saneado de SETTINGS (pantalla y REST). */
+	/** Sanitisation of SETTINGS (screen and REST). */
 	public static function sanitize_settings( $value ): array {
 		$value = is_array( $value ) ? $value : array();
 		return array(
@@ -439,9 +438,9 @@ final class Cookie_Registry {
 	}
 
 	/**
-	 * Versión de la lista: cambia cuando entra o sale una fila. La da la ruta
-	 * REST de administración, para que un script sepa si algo cambió. El
-	 * navegador NO la usa (ver Consent::state()).
+	 * Version of the list: changes when a row comes in or goes out. Exposed by
+	 * the admin REST route, so a script can tell whether something changed.
+	 * The browser does NOT use it (see Consent::state()).
 	 */
 	public static function version(): string {
 		return substr( md5( implode( ',', array_keys( self::all() ) ) . '|' . ESTRATEGIA_WEB_VERSION ), 0, 8 );

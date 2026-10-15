@@ -1,36 +1,38 @@
 <?php
 /**
- * Pantalla «Estrategia Web → Cookies» (manage_options): el registro de
- * cookies (includes/class-cookie-registry.php) y los ajustes del aviso que no
- * son código.
+ * «Estrategia Web → Cookies» screen (manage_options): the cookie registry
+ * (includes/class-cookie-registry.php) and the notice settings that are not
+ * code.
  *
- * Qué hay, de arriba abajo:
- * 1. Qué categorías pregunta el aviso: las que declara el CÓDIGO (el tema,
- *    Matomo híbrido, google-tags…; no se pueden quitar desde aquí) y las que
- *    añade el administrador con las casillas. Y el detector, sí o no.
- * 2. Avisos: cookies confirmadas en una categoría que el aviso NO pregunta
- *    (se estarían poniendo sin consentimiento, o sobran en la política).
- * 3. La lista: una fila por cookie o patrón, cada una con SU formulario
- *    (atributo form= de HTML5: los campos están en la tabla y el <form>
- *    vacío fuera). Ver la trampa.
- * 4. Añadir a mano (las de terceros que el detector no ve).
- * 5. La atribución de la Open Cookie Database (Apache 2.0).
+ * What is there, top to bottom:
+ * 1. Which categories the notice asks about: the ones declared by the CODE
+ *    (the theme, hybrid Matomo, google-tags…; they cannot be removed from
+ *    here) and the ones the administrator adds with the checkboxes. And the
+ *    detector, on or off.
+ * 2. Warnings: confirmed cookies in a category the notice does NOT ask about
+ *    (they would be set without consent, or they do not belong in the policy).
+ * 3. The list: one row per cookie or pattern, each with ITS own form (HTML5
+ *    form= attribute: the fields are in the table and the empty <form>
+ *    outside). See the trap.
+ * 4. Add by hand (third-party cookies the detector does not see).
+ * 5. The Open Cookie Database attribution (Apache 2.0).
  *
- * Guarda por admin-post.php con nonce; la misma lógica que la ruta REST de
- * administración (Cookie_Registry::save / delete).
+ * Saves through admin-post.php with a nonce; the same logic as the admin
+ * REST route (Cookie_Registry::save / delete).
  *
- * Cómo se mantiene:
- * - Quién y cuándo: quien toque el aviso. Prueba de nivel 2 en
- *   modules/consent/tests/cookies.test.mjs (la pantalla carga y guarda).
- * - Un campo nuevo de una fila: su celda aquí, su clave en
- *   Cookie_Registry::ENTRY_DEFAULTS y su saneado en Cookie_Registry::save().
- * - Caso frontera: el administrador marca una categoría que ya declara el
- *   código. No pasa nada (se unen sin repetir) y la casilla sale marcada y
- *   deshabilitada con «la declara el código».
- * - La trampa: un único formulario con todas las filas manda 7 campos por
- *   fila; con 150 filas pasa de max_input_vars (1.000 por defecto en PHP) y
- *   PHP CORTA el POST sin avisar: se guardarían las primeras filas y el resto
- *   no. Por eso un formulario por fila.
+ * How to maintain:
+ * - Who and when: whoever touches the notice. Level 2 test in
+ *   modules/consent/tests/cookies.test.mjs (the screen loads and saves).
+ * - A new field of a row: its cell here, its key in
+ *   Cookie_Registry::ENTRY_DEFAULTS and its sanitisation in
+ *   Cookie_Registry::save().
+ * - Edge case: the administrator ticks a category the code already declares.
+ *   Nothing happens (they are merged without duplicates) and the checkbox
+ *   shows ticked and disabled with «declared by the code».
+ * - The trap: a single form with all the rows sends 7 fields per row; with
+ *   150 rows it goes past max_input_vars (1,000 by default in PHP) and PHP
+ *   TRUNCATES the POST silently: the first rows would be saved and the rest
+ *   not. Hence one form per row.
  */
 
 namespace EstrategiaWeb\Site;
@@ -45,7 +47,7 @@ final class Cookies_Page {
 	public const ACTION = 'estrategia_web_cookies';
 
 	public static function boot(): void {
-		add_action( 'admin_menu', array( self::class, 'menu' ), 20 ); // Después del menú «Estrategia Web» (10).
+		add_action( 'admin_menu', array( self::class, 'menu' ), 20 ); // After the «Estrategia Web» menu (10).
 		add_action( 'admin_post_' . self::ACTION, array( self::class, 'handle' ) );
 	}
 
@@ -57,7 +59,7 @@ final class Cookies_Page {
 		return add_query_arg( array_merge( array( 'page' => self::PAGE ), $args ), admin_url( 'admin.php' ) );
 	}
 
-	/** Guarda lo que llegue de cualquiera de los formularios de la pantalla. */
+	/** Saves whatever comes from any of the screen's forms. */
 	public static function handle(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'estrategia-web' ), 403 );
@@ -287,7 +289,7 @@ final class Cookies_Page {
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 				<?php self::hidden( 'add' ); ?>
 				<table class="form-table" role="presentation">
-					<tr><th scope="row"><label for="estrategia-web-cookie-name"><?php esc_html_e( 'Name', 'estrategia-web' ); ?></label></th><td><input type="text" class="regular-text" id="estrategia-web-cookie-name" name="name" required maxlength="129"></td></tr><?php // Sin «pattern»: los navegadores lo compilan con el modo «v» y un «|» sin escapar dentro de [] lo invalida en silencio. Valida el servidor (Cookie_Registry::name_ok). ?>
+					<tr><th scope="row"><label for="estrategia-web-cookie-name"><?php esc_html_e( 'Name', 'estrategia-web' ); ?></label></th><td><input type="text" class="regular-text" id="estrategia-web-cookie-name" name="name" required maxlength="129"></td></tr><?php // No «pattern»: browsers compile it in «v» mode and an unescaped «|» inside [] silently invalidates it. The server validates (Cookie_Registry::name_ok). ?>
 					<tr><th scope="row"><label for="estrategia-web-cookie-category"><?php esc_html_e( 'Category', 'estrategia-web' ); ?></label></th><td><?php echo str_replace( '<select ', '<select id="estrategia-web-cookie-category" ', self::category_select( 'category', 'maps' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?></td></tr>
 					<tr><th scope="row"><label for="estrategia-web-cookie-provider"><?php esc_html_e( 'Provider', 'estrategia-web' ); ?></label></th><td><input type="text" class="regular-text" id="estrategia-web-cookie-provider" name="provider"></td></tr>
 					<tr><th scope="row"><label for="estrategia-web-cookie-purpose"><?php esc_html_e( 'Purpose', 'estrategia-web' ); ?></label></th><td><textarea class="large-text" rows="2" id="estrategia-web-cookie-purpose" name="purpose"></textarea></td></tr>

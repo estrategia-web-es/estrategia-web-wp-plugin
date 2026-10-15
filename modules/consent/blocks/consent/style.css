@@ -1,22 +1,23 @@
 /*
- * Aviso de cookies y botón para reabrirlo — ESTILOS BASE NEUTROS.
+ * Cookie notice and button to reopen it — NEUTRAL BASE STYLES.
  *
- * Por qué están en el plugin y no en el tema (0.5.0): el aviso tiene que
- * verse bien aunque la web cambie de tema. No llevan ningún color propio: leen
- * los tokens de theme.json del tema activo (base, contrast, border, spacing,
- * font-size) y, si el tema no los tiene, caen a blanco/negro. El tema AFINA
- * con sus tokens o con CSS sobre .estrategia-web-consent (más específico o cargado
- * después); no se copia esta hoja en el tema.
+ * Why they are in the plugin and not in the theme (0.5.0): the notice has to
+ * look right even if the site changes theme. They carry no colour of their
+ * own: they read the theme.json tokens of the active theme (base, contrast,
+ * border, spacing, font-size) and, if the theme lacks them, fall back to
+ * white/black. The theme REFINES with its tokens or with CSS on
+ * .estrategia-web-consent (more specific or loaded later); this sheet is not
+ * copied into the theme.
  *
- * Los tres botones del aviso comparten clase y estilo A PROPÓSITO: la AEPD
- * pide que aceptar y rechazar tengan el mismo peso visual. Un tema puede
- * cambiar el aspecto de los tres, no de uno solo.
+ * The three notice buttons share class and style ON PURPOSE: the AEPD
+ * requires accept and reject to have the same visual weight. A theme can
+ * change the look of all three, not of just one.
  *
- * La línea «Powered by» es pequeña y va al final, alineada al final: no
- * compite con los botones. Su color es el del texto del aviso (sin opacidad),
- * para que el contraste sea el mismo que el del texto (AA medido en
- * tests/consent-browser.test.mjs). Un tema que la atenúe tiene que volver a
- * medirlo.
+ * The «Powered by» line is small and goes last, aligned to the end: it does
+ * not compete with the buttons. Its colour is the notice text colour (no
+ * opacity), so the contrast is the same as the text (AA measured in
+ * tests/consent-browser.test.mjs). A theme that dims it has to measure it
+ * again.
  */
 .estrategia-web-consent {
 	position: fixed;
@@ -41,15 +42,15 @@
 }
 
 /*
- * Los márgenes del título, el texto y el «Powered by» van con DOS clases a
- * propósito (0.5.1). Con una sola empataban en especificidad con lo que
- * emite el theme.json de un tema de bloques, «:root :where(p) { margin: 0 }»
- * (:root cuenta como clase), y esa hoja se carga DESPUÉS: en Lavandería el
- * texto quedaba pegado a los botones (0,6 px; medido el 06-10-2026).
- * El hueco texto → botones es de 24 (1,5rem) y no de 16: el botón de un tema
- * puede llevar sombra desplazada hacia arriba (Lavandería, 3 px) y con 16
- * casi tocaba el enlace de la política. tests/consent-browser.test.mjs pide
- * al menos 16 px, con la regla de Lavandería puesta.
+ * The margins of the title, the text and the «Powered by» use TWO classes on
+ * purpose (0.5.1). With just one they tied in specificity with what a block
+ * theme's theme.json emits, «:root :where(p) { margin: 0 }» (:root counts as
+ * a class), and that sheet loads AFTER: in Lavandería the text ended up stuck
+ * to the buttons (0.6 px; measured on 06-10-2026).
+ * The text → buttons gap is 24 (1.5rem) and not 16: a theme's button may
+ * carry a shadow offset upwards (Lavandería, 3 px) and with 16 it almost
+ * touched the policy link. tests/consent-browser.test.mjs requires at least
+ * 16 px, with the Lavandería rule applied.
  */
 .estrategia-web-consent .estrategia-web-consent__title {
 	margin: 0 0 var(--wp--preset--spacing--8, 0.5rem);
@@ -109,16 +110,16 @@
 }
 
 .estrategia-web-consent__powered a {
-	/* 0.5.1: diana táctil de 24 px de alto como mínimo (WCAG 2.5.8; Lighthouse
-	   target-size la daba pequeña en la auditoría de Lavandería). */
+	/* 0.5.1: touch target at least 24 px tall (WCAG 2.5.8; Lighthouse
+	   target-size flagged it as too small in the Lavandería audit). */
 	display: inline-block;
 	padding-block: 0.25rem;
 	color: inherit;
 	text-decoration: none;
 }
 
-/* 0.5.1: el enlace dentro del texto, subrayado. Solo con el color no se
-   distingue del párrafo (WCAG 1.4.1; auditoría de Lavandería). */
+/* 0.5.1: the link inside the text, underlined. By colour alone it cannot be
+   told apart from the paragraph (WCAG 1.4.1; Lavandería audit). */
 .estrategia-web-consent .estrategia-web-consent__text a {
 	text-decoration: underline;
 }
@@ -128,8 +129,8 @@
 	text-decoration: underline;
 }
 
-/* Solo para lectores de pantalla. Propia: no se cuenta con el
-   .screen-reader-text del tema, que otro tema puede no tener. */
+/* Screen readers only. Our own: we do not rely on the theme's
+   .screen-reader-text, which another theme may not have. */
 .estrategia-web-consent__sr {
 	position: absolute;
 	inline-size: 1px;
@@ -153,14 +154,14 @@
 }
 
 /*
- * Transiciones entre páginas (0.5.1; las pone el tema padre Estrategia Web desde la
- * 0.7.5). El aviso tiene nombre propio y ninguna animación: mientras dure el
- * fundido de la página se queda QUIETO donde estaba, en vez de fundirse con
- * ella y volver a salir de golpe cuando view.js lo enseña en la página nueva
- * (en la nueva sale oculto hasta que corre el módulo). Sin transiciones, esto
- * no hace nada. Escondido (ya elegido) no participa: display none.
- * Cómo se mantiene: el nombre «estrategia-web-consent» no lo puede usar nadie más en
- * la página (un nombre repetido aborta la transición entera).
+ * Page transitions (0.5.1; set by the Estrategia Web parent theme since
+ * 0.7.5). The notice has its own name and no animation: while the page
+ * cross-fade lasts it stays STILL where it was, instead of fading with it and
+ * popping back in when view.js shows it on the new page (on the new one it
+ * starts hidden until the module runs). Without transitions, this does
+ * nothing. Hidden (already chosen) it does not take part: display none.
+ * How to maintain: the name «estrategia-web-consent» cannot be used by
+ * anything else on the page (a repeated name aborts the whole transition).
  */
 .estrategia-web-consent {
 	view-transition-name: estrategia-web-consent;

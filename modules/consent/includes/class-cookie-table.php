@@ -1,38 +1,38 @@
 <?php
 /**
- * La TABLA DE COOKIES para la página de Política de cookies: las cookies
- * CONFIRMADAS en «Estrategia Web → Cookies», agrupadas por categoría, con
- * nombre, proveedor, finalidad y duración.
+ * The COOKIE TABLE for the Cookie policy page: the cookies CONFIRMED in
+ * «Estrategia Web → Cookies», grouped by category, with name, provider,
+ * purpose and duration.
  *
- * Dónde se usa: el bloque estrategia-web/cookie-table (blocks/cookie-table,
- * sin editor propio: autoRegister) y el shortcode [estrategia_web_cookie_table
- * category="statistics" heading_level="3"], para quien edite la política sin
- * bloques. Los dos pintan lo mismo (render()).
+ * Where it is used: the estrategia-web/cookie-table block (blocks/cookie-table,
+ * no editor of its own: autoRegister) and the shortcode [estrategia_web_cookie_table
+ * category="statistics" heading_level="3"], for whoever edits the policy
+ * without blocks. Both print the same thing (render()).
  *
- * Traducción, en tres capas:
- * - Lo FIJO (cabeceras de la tabla, nombre y descripción de cada categoría):
- *   gettext, dominio estrategia-web (.po del plugin).
- * - La DURACIÓN, si es de la forma «2 years», «30 minutes», «session»
- *   (como viene de la base externa y de base()): se escribe con _n() en el
- *   idioma de la página. Si el administrador escribió otra cosa («Hasta
- *   cerrar el navegador»), se trata como texto libre (siguiente punto).
- * - Lo que ESCRIBE el administrador (proveedor, finalidad, duración libre):
- *   WPML String Translation, contexto «estrategia-web-cookies», nombres
- *   «purpose <cookie>», «provider <cookie>», «duration <cookie>». Se
- *   registran al guardar (register_strings) y se traducen al pintar con
- *   wpml_translate_single_string. Sin WPML, se pinta tal cual.
+ * Translation, in three layers:
+ * - The FIXED parts (table headings, name and description of each category):
+ *   gettext, estrategia-web domain (the plugin's .po).
+ * - The DURATION, if it has the form «2 years», «30 minutes», «session» (as
+ *   it comes from the external database and from base()): written with _n()
+ *   in the page language. If the administrator wrote something else («Until
+ *   the browser closes»), it is treated as free text (next point).
+ * - What the administrator WRITES (provider, purpose, free duration): WPML
+ *   String Translation, context «estrategia-web-cookies», names
+ *   «purpose <cookie>», «provider <cookie>», «duration <cookie>». They are
+ *   registered on save (register_strings) and translated on render with
+ *   wpml_translate_single_string. Without WPML, printed as is.
  *
- * Cómo se mantiene:
- * - Quién y cuándo: quien toque el aviso o la tabla. Prueba:
- *   modules/consent/tests/cookies.test.mjs (nivel 2).
- * - Una unidad de duración nueva: a duration() con su _n().
- * - Caso frontera: ninguna cookie confirmada. En la web no se pinta NADA (una
- *   tabla vacía en la política diría «no usamos cookies», y es falso: como
- *   mínimo está la del aviso). En el editor sale una nota que dice por qué.
- * - La trampa: las cadenas de WPML se registran AL GUARDAR, no al pintar. Una
- *   fila que el detector creó y nadie ha guardado en la pantalla no está en
- *   String Translation; tampoco sale en la tabla (no está confirmada), así
- *   que no se nota. Confirmar = guardar = registrar.
+ * How to maintain:
+ * - Who and when: whoever touches the notice or the table. Test:
+ *   modules/consent/tests/cookies.test.mjs (level 2).
+ * - A new duration unit: into duration() with its _n().
+ * - Edge case: no confirmed cookie. On the site NOTHING is printed (an empty
+ *   table in the policy would say «we use no cookies», and that is false: at
+ *   the very least there is the notice's own). In the editor a note says why.
+ * - The trap: WPML strings are registered ON SAVE, not on render. A row the
+ *   detector created and nobody has saved on the screen is not in String
+ *   Translation; it does not show in the table either (it is not confirmed),
+ *   so it goes unnoticed. Confirm = save = register.
  */
 
 namespace EstrategiaWeb\Site;
@@ -45,7 +45,7 @@ final class Cookie_Table {
 	public const WPML_CONTEXT  = 'estrategia-web-cookies';
 	public const SHORTCODE     = 'estrategia_web_cookie_table';
 
-	/** Nombre y descripción de cada categoría, para la tabla y la pantalla. */
+	/** Name and description of each category, for the table and the screen. */
 	public static function category_labels(): array {
 		$known  = Consent::known_categories();
 		$labels = array(
@@ -62,7 +62,7 @@ final class Cookie_Table {
 		return $labels;
 	}
 
-	/** Registra en WPML los textos libres de una fila (al guardarla). */
+	/** Registers a row's free texts in WPML (when it is saved). */
 	public static function register_strings( string $key, array $entry ): void {
 		foreach ( array( 'provider', 'purpose', 'duration' ) as $field ) {
 			if ( '' !== (string) $entry[ $field ] && ( 'duration' !== $field || null === self::duration_parts( (string) $entry[ $field ] ) ) ) {
@@ -76,7 +76,7 @@ final class Cookie_Table {
 	}
 
 	/**
-	 * «2 years» → array( 2, 'year' ); «session» → array( 0, 'session' ); otra cosa → null.
+	 * «2 years» → array( 2, 'year' ); «session» → array( 0, 'session' ); anything else → null.
 	 *
 	 * @return array{0: int, 1: string}|null
 	 */
@@ -91,7 +91,7 @@ final class Cookie_Table {
 		return null;
 	}
 
-	/** La duración en el idioma de la página (ver la cabecera). */
+	/** The duration in the page language (see the header). */
 	public static function duration( string $key, string $value ): string {
 		$parts = self::duration_parts( $value );
 		if ( null === $parts ) {
@@ -126,9 +126,9 @@ final class Cookie_Table {
 	}
 
 	/**
-	 * El HTML de la tabla.
+	 * The table HTML.
 	 *
-	 * @param array $attributes category ('' = todas), headingLevel (2-6).
+	 * @param array $attributes category ('' = all), headingLevel (2-6).
 	 */
 	public static function render( array $attributes ): string {
 		$only    = (string) ( $attributes['category'] ?? '' );
@@ -182,7 +182,7 @@ final class Cookie_Table {
 	/**
 	 * [estrategia_web_cookie_table category="…" heading_level="3"].
 	 *
-	 * @param array|string $atts Atributos del shortcode.
+	 * @param array|string $atts Shortcode attributes.
 	 */
 	public static function shortcode( $atts ): string {
 		$atts = shortcode_atts(

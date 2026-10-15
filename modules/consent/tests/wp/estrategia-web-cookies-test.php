@@ -1,18 +1,18 @@
 <?php
 /**
- * Solo para el WordPress de pruebas (tests/blueprint.json lo carga como
- * mu-plugin). Rutas del registro de cookies que NO son lo probado:
+ * Only for the test WordPress (tests/blueprint.json loads it as a
+ * mu-plugin). Routes for the cookie registry that are NOT what is under test:
  *
- * - POST /estrategia-web-cookies-test/v1/reset — borra el registro, sus
- *   ajustes, los transitorios de ritmo y lo que haya puesto setup.
+ * - POST /estrategia-web-cookies-test/v1/reset — deletes the registry, its
+ *   settings, the rate-limit transients and whatever setup stored.
  * - POST /estrategia-web-cookies-test/v1/setup {"interval": 0, "cap": 5} —
- *   hace de wp-config/tema para los límites del detector (los filtros
- *   estrategia_web_cookies_report_interval y _hourly_cap). Sin setup valen
- *   los de verdad (10 min y 100/hora), que es lo que prueba el «429».
- * - GET /estrategia-web-cookies-test/v1/raw — la opción tal cual está en la
- *   base de datos (para ver que no se guardó ningún VALOR de cookie).
+ *   plays the role of wp-config/theme for the detector limits (the filters
+ *   estrategia_web_cookies_report_interval and _hourly_cap). Without setup the
+ *   real ones apply (10 min and 100/hour), which is what the «429» tests.
+ * - GET /estrategia-web-cookies-test/v1/raw — the option as it is in the
+ *   database (to check that no cookie VALUE was stored).
  *
- * Cómo se mantiene: una opción nueva del registro, su delete_option en reset.
+ * How to maintain: a new option of the registry gets its delete_option in reset.
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -54,7 +54,7 @@ add_action(
 				delete_option( 'estrategia_web_cookies' );
 				delete_option( 'estrategia_web_cookies_settings' );
 				delete_option( 'estrategia_web_cookies_test' );
-				delete_option( 'estrategia_web_google_tags' ); // modules/google-tags: sus pruebas usan este mismo reset.
+				delete_option( 'estrategia_web_google_tags' ); // modules/google-tags: its tests use this same reset.
 				$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\\_transient\\_%estrategia\\_web\\_cs\\_%'" ); // phpcs:ignore
 				return array( 'ok' => true );
 			}
