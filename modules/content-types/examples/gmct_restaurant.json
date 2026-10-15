@@ -1,0 +1,59 @@
+{
+  "$schema": "../content-types.schema.json",
+  "prefix": "gmct_",
+  "name": "gmct_restaurant",
+  "slug": "restaurants",
+  "labels": {
+    "singular": { "ca": "Restaurant", "es": "Restaurante", "en": "Restaurant" },
+    "plural": { "ca": "Restaurants", "es": "Restaurantes", "en": "Restaurants" }
+  },
+  "icon": "dashicons-food",
+  "supports": ["title", "editor", "thumbnail", "excerpt", "revisions"],
+  "wpml": "translate",
+  "taxonomies": [
+    {
+      "name": "gmct_cuisine",
+      "slug": "cuisine",
+      "labels": {
+        "singular": { "ca": "Tipus de cuina", "es": "Tipo de cocina", "en": "Cuisine" },
+        "plural": { "ca": "Tipus de cuina", "es": "Tipos de cocina", "en": "Cuisines" }
+      },
+      "hierarchical": true,
+      "wpml": "translate"
+    }
+  ],
+  "fields": [
+    {
+      "name": "gmct_phone",
+      "type": "tel",
+      "label": { "ca": "Telèfon", "es": "Teléfono", "en": "Phone" },
+      "wpml": "copy"
+    },
+    {
+      "name": "gmct_address",
+      "type": "textarea",
+      "label": { "ca": "Adreça", "es": "Dirección", "en": "Address" },
+      "required": true,
+      "wpml": "translate"
+    },
+    {
+      "name": "gmct_price_range",
+      "type": "select",
+      "label": { "ca": "Preu", "es": "Precio", "en": "Price range" },
+      "options": [
+        { "value": "€", "label": { "ca": "€ — econòmic", "es": "€ — económico", "en": "€ — budget" } },
+        { "value": "€€", "label": { "ca": "€€ — mitjà", "es": "€€ — medio", "en": "€€ — mid-range" } },
+        { "value": "€€€", "label": { "ca": "€€€ — alt", "es": "€€€ — alto", "en": "€€€ — high-end" } }
+      ],
+      "default": "€€",
+      "wpml": "copy"
+    },
+    {
+      "name": "gmct_website",
+      "type": "url",
+      "label": { "ca": "Web", "es": "Web", "en": "Website" },
+      "help": { "ca": "L'adreça completa, amb https://", "es": "La dirección completa, con https://", "en": "The full address, with https://" },
+      "wpml": "copy"
+    }
+  ]
+}

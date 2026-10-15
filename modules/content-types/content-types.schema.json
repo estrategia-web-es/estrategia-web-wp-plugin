@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://estrategiaweb.es/schemas/estrategia-web/content-types.schema.json",
+  "title": "Estrategia Web content type",
+  "description": "One file = one post type, with its taxonomies and fields. The same rules as includes/class-schema.php (the PHP validator is the one that decides; tests/schema.test.mjs fails if the two drift apart). Name limits and the prefix of every name are checked by PHP only.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["prefix", "name", "labels"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "prefix": {
+      "description": "The site's own prefix, checked with tools/buscar-colisiones.mjs. Every name in the file starts with it. eweb_, estrategia_web_, ew_ and wp_ are reserved.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]{1,8}_$",
+      "not": { "enum": ["eweb_", "estrategia_web_", "ew_", "wp_"] }
+    },
+    "name": {
+      "description": "The registered post type (the REST route /wp/v2/<name>). Starts with prefix. At most 20 characters: WordPress cuts it silently.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "maxLength": 20
+    },
+    "slug": { "$ref": "#/$defs/slug", "description": "Public URL base (and archive). Default: the name without the prefix, with - for _." },
+    "labels": { "$ref": "#/$defs/labels" },
+    "description": { "$ref": "#/$defs/text" },
+    "icon": { "type": "string", "pattern": "^dashicons-[a-z0-9-]+$", "description": "A Dashicons class, e.g. dashicons-food." },
+    "supports": {
+      "type": "array",
+      "items": { "enum": ["title", "editor", "author", "thumbnail", "excerpt", "trackbacks", "custom-fields", "comments", "revisions", "page-attributes", "post-formats"] },
+      "uniqueItems": true,
+      "description": "Default: title, editor, thumbnail, excerpt, revisions. custom-fields is added when there are fields. Without editor, WordPress uses the classic screen (the fields go in a meta box)."
+    },
+    "public": { "type": "boolean", "default": true },
+    "has_archive": { "type": "boolean", "default": true },
+    "show_in_rest": { "type": "boolean", "default": true, "description": "false also turns off the block editor and the fields panel." },
+    "hierarchical": { "type": "boolean", "default": false },
+    "menu_position": { "type": "integer", "minimum": 0 },
+    "wpml": { "$ref": "#/$defs/typeWpml" },
+    "taxonomies": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "description": "A taxonomy declared in another file, or category / post_tag." },
+          { "$ref": "#/$defs/taxonomy" }
+        ]
+      }
+    },
+    "fields": { "type": "array", "items": { "$ref": "#/$defs/field" } }
+  },
+  "$defs": {
+    "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*(/[a-z0-9][a-z0-9-]*)*$" },
+    "text": {
+      "description": "A string, or an object locale → string: {\"ca\": \"…\", \"es\": \"…\", \"en\": \"…\"}. Picked by the admin or site language: exact locale, then its language, then en, then the first one.",
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "pattern": "^[a-z]{2,3}(_[A-Z]{2})?$" },
+          "additionalProperties": { "type": "string", "minLength": 1 }
+        }
+      ]
+    },
+    "labels": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["singular", "plural"],
+      "properties": {
+        "singular": { "$ref": "#/$defs/text" },
+        "plural": { "$ref": "#/$defs/text" }
+      }
+    },
+    "typeWpml": { "enum": ["translate", "display-as-translated", "ignore"], "default": "translate" },
+    "taxonomy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "labels"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "maxLength": 32, "description": "Starts with prefix. At most 32 characters." },
+        "slug": { "$ref": "#/$defs/slug" },
+        "labels": { "$ref": "#/$defs/labels" },
+        "hierarchical": { "type": "boolean", "default": true },
+        "public": { "type": "boolean", "default": true },
+        "show_in_rest": { "type": "boolean", "default": true },
+        "show_admin_column": { "type": "boolean", "default": true },
+        "wpml": { "$ref": "#/$defs/typeWpml" }
+      }
+    },
+    "option": {
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value", "label"],
+          "properties": { "value": { "type": "string", "minLength": 1 }, "label": { "$ref": "#/$defs/text" } }
+        }
+      ]
+    },
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type", "label"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "maxLength": 64, "description": "The meta key. Starts with prefix." },
+        "type": { "enum": ["text", "textarea", "number", "url", "email", "tel", "image", "date", "select", "relation", "boolean"] },
+        "label": { "$ref": "#/$defs/text" },
+        "help": { "$ref": "#/$defs/text" },
+        "required": { "type": "boolean", "description": "Publishing with it empty is refused (block editor)." },
+        "default": { "description": "A value the field could store: an option value for select, YYYY-MM-DD for date, a number within min/max, true/false. Not for image or relation." },
+        "wpml": { "enum": ["copy", "translate", "ignore"], "description": "Default: translate for text and textarea, copy for the rest." },
+        "options": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/option" } },
+        "post_type": {
+          "oneOf": [
+            { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,19}$" },
+            { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,19}$" } }
+          ]
+        },
+        "min": { "type": "number" },
+        "max": { "type": "number" },
+        "integer": { "type": "boolean" }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "const": "select" } } }, "then": { "required": ["options"] }, "else": { "not": { "required": ["options"] } } },
+        { "if": { "properties": { "type": { "const": "relation" } } }, "then": { "required": ["post_type"], "not": { "required": ["default"] } }, "else": { "not": { "required": ["post_type"] } } },
+        { "if": { "properties": { "type": { "const": "number" } } }, "else": { "not": { "anyOf": [{ "required": ["min"] }, { "required": ["max"] }, { "required": ["integer"] }] } } },
+        { "if": { "properties": { "type": { "const": "image" } } }, "then": { "not": { "required": ["default"] } } },
+        { "if": { "properties": { "type": { "const": "boolean" } } }, "then": { "properties": { "default": { "type": "boolean" }, "required": { "const": false } } } }
+      ]
+    }
+  }
+}
