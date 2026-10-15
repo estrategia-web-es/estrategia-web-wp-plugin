@@ -9,7 +9,12 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
-## Unreleased
+## 1.4.0 — 15-10-2026
+
+- **Fixed: the plugin's texts now follow the language of the request with WPML, even when WordPress' locale (WPLANG) disagrees.** Measured in Lavandería production (15-10-2026): WPLANG empty and WPML in Spanish → every plugin text in English on the Spanish site (cookie notice «Accept all», maps «Show map»). The file is chosen by WPML's current language, loaded under both the locale WordPress looks up now and that language's, and reloaded on `wpml_language_has_switched` (WPML String Translation moves the locale later without `change_locale`).
+- **Fixed: URL slugs (`_x( …, 'URL slug' )`) are always in the SITE language** (WPML default language, or `get_locale()`), never the request's. Before, /en/ registered `locations` while the stored rules said `sedes`, and every English location permalink was a 404. Per-language slugs are WPML's slug translation.
+- content-types: labels use `Plugin::locale()`.
+- Test: `tests/wplang.test.mjs` (level 2) with a WPML double in the test mu-plugin (`?wpml-double=<code>`).
 
 - **forms: fixed email markers in English** (David, 15-10-2026): `{{all_fields}}`, `{{submission_date}}`, `{{page_url}}`, `{{site_name}}`. The old Spanish names (`{{todos_los_campos}}`, `{{fecha}}`, `{{url_pagina}}`, `{{nombre_sitio}}`) keep working as deprecated aliases until 2.0.0, so saved forms (Lavandería) need no change; the editor only offers the new ones. `{{submission_date}}` and not `{{date}}`: a fixed marker shadows a field with the same name, and "date" is a likely field name. Field markers (`{{name}}`, `{{email}}`…) do not change.
 - **content-types: example prefix `gment_`** (was `gmct_`): `examples/gment_restaurant.json`. 0 plugins on WordPress.org use it.

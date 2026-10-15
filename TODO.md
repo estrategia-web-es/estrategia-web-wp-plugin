@@ -13,13 +13,11 @@ Remove `Markers::ALIASES` and `with_aliases()` in
 `{{todos_los_campos}}`, `{{fecha}}` and `{{url_pagina}}` to the English names in
 Lavandería's saved forms (and in any other site that uses them).
 
-## The plugin's translations must not depend on the site language (WPLANG)
-**Date:** 15-10-2026 · **Due:** before the next site (Gastronòmicament, Catalan by default)
+## WPML and the site language: what is left after 1.4.0
+**Date:** 15-10-2026 · **Due:** —
 
-Measured in Lavandería production after publishing 1.1.0/1.2.0: WPLANG was empty (en_US) and WPML sets the Spanish locale LATER than `Plugin::load_textdomain()` (init, priority 1). The plugin loaded `estrategia-web-en_US` (does not exist), so every plugin string on the Spanish site came out in English (cookie notice «Accept all», maps «Show map») and the location CPT slug was registered as `locations` instead of `sedes`. Local tests did not catch it because the local site has WPLANG = es_ES. Fixed on the server by setting WPLANG = es_ES (Settings → General). Pending in code: with WPML active, take the locale of WPML's current language (or reload on `wpml_language_has_switched`) instead of trusting `determine_locale()` at init; and a test that boots with WPLANG empty and a WPML default language that is not English. The deployer's check should also look for a translated plugin string, not only `lang`.
-
----
-
+- Open: why WPML's `locale` filter did not apply early in Lavandería production (same WPML 5.0.2 as the local copy, where it does). Not needed for the fix (1.4.0); worth a look if another WPML site shows the language late. The server keeps WPLANG = es_ES.
+- Gastronòmicament (Catalan by default): the plugin has no `ca` translation, so its URL slugs are the English msgids in all four languages. Add `estrategia-web-ca` BEFORE that site goes live: adding it later changes its URLs.
 ## Estrategia Web roadmap — what EVERY site must have (12-10-2026)
 
 David's list, so that new sites and existing ones carry the same things. It

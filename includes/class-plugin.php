@@ -16,7 +16,7 @@
  * the labels of post types and blocks come from gettext and are registered
  * on init (10).
  *
- * Languages (1.3.1): the plugin's texts follow the language of the REQUEST
+ * Languages (1.4.0): the plugin's texts follow the language of the REQUEST
  * (locale(): WPML's on the front end), and its URL slugs follow the language
  * of the SITE (site_locale(), url_slug()). Neither trusts WPLANG to agree
  * with WPML. The why, with the measurements, in load_textdomain() and

@@ -50,7 +50,7 @@ if ( ! defined( 'ESTRATEGIA_WEB_SITE_TESTING' ) || true !== ESTRATEGIA_WEB_SITE_
 // WPLANG does not work: sanitize_option() rejects it if the core language pack is not downloaded.
 // Except with ?wpml-double=<code>: then nothing forces the locale (WordPress
 // says en_US, as with WPLANG empty) and a WPML double says the language
-// (1.3.1, tests/wplang.test.mjs).
+// (1.4.0, tests/wplang.test.mjs).
 if ( ! isset( $_GET['wpml-double'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	add_filter( 'locale', static fn() => 'es_ES' );
 } else {
@@ -169,7 +169,7 @@ add_action(
 
 		$route( '/ping', 'GET', static fn() => array( 'ok' => true ) );
 
-		// 1.3.1, languages (tests/wplang.test.mjs, with ?wpml-double=<code>):
+		// 1.4.0, languages (tests/wplang.test.mjs, with ?wpml-double=<code>):
 		// a plugin text and a URL slug as THIS request translates them, the
 		// slug the location type was registered with, and the same text after
 		// a WPML switch to English and after switching back.
