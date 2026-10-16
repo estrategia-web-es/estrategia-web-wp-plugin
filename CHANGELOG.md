@@ -9,6 +9,10 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## Unreleased
+
+- **content-types: Block Bindings source `estrategia-web/content-field`.** It shows a declared field formatted by its type, where `core/post-meta` shows the stored value: select → the option's label in the request's language; image → URL (`size`), alt or ID; relation → the related post's title, permalink or ID, in its WPML translation (`link` for an `<a>`); boolean → translated Yes/No or the definition's new `true_label` / `false_label` (`""` shows nothing); date → the site's date format (`format`); number → `number_format_i18n` with the stored decimals (`decimals`); url / email / tel → as they are, as a link with `link`, and as `mailto:` / `tel:` in `url` / `href`. The editor shows the formatted value and lists the fields of the type in context.
+
 ## 1.4.2 — 16-10-2026
 
 - **carousel: desktop preload of the LCP slide (`preloadSlides` attribute, `estrategia_web_carousel_preload` filter).** PageSpeed on Lavandería's desktop (16-10-2026): «LCP request discovery — fetchpriority=high should be applied». On desktop the hero's LCP is slide 2, and only slide 1 has `fetchpriority="high"` (0.7.9, for mobile, where only one slide is visible). Slides 2…n now get a `<link rel="preload" as="image" fetchpriority="high" media="(min-width: 782px)">` in the `<head>` with exactly their `<img>`'s srcset and sizes (the landscape one, not the mobile crop), so the `<img>` reuses it. Only for a hero carousel (WordPress gave its first image priority) and only for slides that load eagerly. Printed in `wp_head`: block themes render the template before it; in a classic theme nothing is preloaded. **Does nothing until asked for** (default 0): Lavandería asks for 2 from its theme. Measured with Lighthouse 13.5 on local Lavandería: desktop insight from failed to passed, slide 2 downloaded once (51 KB, High, first request); mobile, the same three crops as before and none of the preload's files. Test: the theme's `tests/carousel-preload.test.mjs` (level 3).

@@ -101,7 +101,7 @@ code, with the prefix of its row.
 | Cookies | `estrategia_web_` | `estrategia_web_consent` (the old `armazon_consent` is read and carried over) |
 | Hooks (filters and actions) | `estrategia_web_` | those of each section; the live list: `grep -rhoE "(apply_filters\|do_action)\( *'estrategia_web[a-z_]*'" modules includes` |
 | REST routes | `estrategia-web/v1`, `estrategia-web-forms/v1` | `estrategia-web/v1/cookies`, `/cookies/seen`; `estrategia-web-forms/v1/submit`, `/token`; the post types' routes are core's, `/wp/v2/eweb_client`… (aliases of `/wp/v2/client`… until 2.0.0) |
-| Block Bindings sources | `estrategia-web-site/` | `estrategia-web-site/company`, `estrategia-web-site/location` |
+| Block Bindings sources | `estrategia-web-site/`, `estrategia-web/` | `estrategia-web-site/company`, `estrategia-web-site/location`, `estrategia-web/content-field` (content-types module) |
 | Shortcodes | `estrategia_web_` | `[estrategia_web_company]`, `[estrategia_web_consent_settings]`, `[estrategia_web_cookie_table]` |
 | Global functions (for themes) | `estrategia_web_` | `estrategia_web_type_name()` (1.2.0) |
 | PHP | namespace `EstrategiaWeb\` | `EstrategiaWeb\Site\…`, `EstrategiaWeb\Forms\…`… |
@@ -917,3 +917,26 @@ Before it, a database backup.
   check that its header is still true.
 
 Pending: [TODO.md](TODO.md).
+
+## content-types module: showing a field with `estrategia-web/content-field`
+
+`core/post-meta` shows what is stored: `€€` instead of the option's label, an image or a related post as its ID, a boolean as `1`. The source `estrategia-web/content-field` shows the field formatted by its type, for the post in context (each row of a Query, or the post of a single template):
+
+```html
+<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"estrategia-web/content-field","args":{"key":"gment_price_range"}}}}} -->
+<p></p>
+<!-- /wp:paragraph -->
+```
+
+| Type | In text (content, alt…) | In url / href | In id |
+|---|---|---|---|
+| select | the option's label, in the request's language | — | — |
+| image | the alt text (`title`: the image's title) | the image URL (`"size": "large"`…) | the attachment ID |
+| relation | the related post's title (`"link": true`: a link) | its permalink | its ID |
+| boolean | `true_label` / `false_label` of the definition, or Yes / No translated | — | — |
+| date | the site's date format (`"format": "d/m/Y"` to change it) | — | — |
+| number | localized, with the decimals that were stored (`"decimals": 2`) | — | — |
+| url, email, tel | as they are (`"link": true`: a link) | the URL, `mailto:…`, `tel:…` | — |
+| text, textarea | escaped (textarea: line breaks as `<br>`) | — | — |
+
+The related post and the image are those of the request's language (WPML). Empty, invalid or unpublished gives nothing. A button binds `url` and `text` to the same field, without `link`. How to maintain it, in the header of `modules/content-types/module.php`.
