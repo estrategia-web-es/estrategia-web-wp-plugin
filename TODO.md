@@ -157,21 +157,14 @@ preferred option is private GitHub, and a plugin several sites will use needs
 a place to download it from. David decides (same case as
 armazon-wp-formularios).
 
-## WPML: what gets translated from here
-**Date:** 02-10-2026 · **Due:** before the first site with WPML
+## WPML: what is still not translatable
+**Date:** 16-10-2026 · **Due:** before Gastronòmicament goes live
 
-Partly done (checked 15-10-2026): `wpml-config.xml` exists since 1.1.0 and
-declares the meta of locations, clients and testimonials (copy/translate) and
-the social links list; Lavandería runs on WPML. Still open:
-- The company details in the `estrategia_web_site` option (`schedule`,
-  `address`, `whatsapp_message`) are not declared in `<admin-texts>`, so WPML
-  does not offer them for translation.
-- The post types and taxonomies do not declare whether they are translatable
-  (`<custom-types>`/`<taxonomies>`); on Lavandería that was set by hand in
-  WPML's settings. A new site (Gastronòmicament, four languages) would repeat
-  it by hand.
+Types, taxonomies and company details are declared since the release after 1.4.2. Left:
 - URL slugs: with WPML, WPML translates them, not gettext.
-
+- Block attributes a visitor reads (the whatsapp block's message and label, map, carousel, social-links…) are not in `<gutenberg-blocks>`: audit them.
+- On Playground (SQLite), String Translation needs the collation fix of Lavandería's `tests/fixtures/lm-test.php`: the forms strings have never been seen translated there.
+- content-types defaults its types to «translate only» (1) while the site module's types are display-as-translated: decide whether to align them.
 ## Manual order in a Query Loop
 **Date:** 02-10-2026 · **Due:** —
 

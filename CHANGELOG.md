@@ -11,6 +11,9 @@ four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
 ## Unreleased
 
+- **WPML: `wpml-config.xml` declares the site module's types** (eweb_client, eweb_testimonial, eweb_location, eweb_project, eweb_portfolio) **and taxonomies as display-as-translated** (`translate="1" display-as-translated="1"`; `"2"` fails WPML's XSD and drops the whole file's admin texts). WPML locks the setting on its screen. Same values Lavandería had set by hand.
+- **WPML String Translation offers the company details** `registry`, `whatsapp_message`, `address` and `schedule` (`estrategia_web_site`) and the WhatsApp module's `estrategia_web_whatsapp_message`. `Settings::WPML_TRANSLATE` / `WPML_SAME`, `Content_Types::WPML_MODES`.
+- Test `site/wpml-config` (level 1): the XML against the code.
 - **content-types: Block Bindings source `estrategia-web/content-field`.** It shows a declared field formatted by its type, where `core/post-meta` shows the stored value: select → the option's label in the request's language; image → URL (`size`), alt or ID; relation → the related post's title, permalink or ID, in its WPML translation (`link` for an `<a>`); boolean → translated Yes/No or the definition's new `true_label` / `false_label` (`""` shows nothing); date → the site's date format (`format`); number → `number_format_i18n` with the stored decimals (`decimals`); url / email / tel → as they are, as a link with `link`, and as `mailto:` / `tel:` in `url` / `href`. The editor shows the formatted value and lists the fields of the type in context.
 
 ## 1.4.2 — 16-10-2026
