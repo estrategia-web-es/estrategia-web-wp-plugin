@@ -27,5 +27,5 @@
 	"editorScript": "estrategia-web-forms-editor",
 	"editorStyle": "estrategia-web-forms-editor",
 	"style": "estrategia-web-forms",
-	"viewScriptModule": "file:./view.js"
+	"viewScriptModule": "file:./view.min.js"
 }

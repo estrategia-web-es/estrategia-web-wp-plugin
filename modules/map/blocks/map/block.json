@@ -34,7 +34,7 @@
 		"spacing": { "margin": true }
 	},
 	"editorScript": "file:./edit.js",
-	"viewScriptModule": "file:./view.js",
+	"viewScriptModule": "file:./view.min.js",
 	"style": "file:./style.css",
 	"render": "file:./render.php"
 }

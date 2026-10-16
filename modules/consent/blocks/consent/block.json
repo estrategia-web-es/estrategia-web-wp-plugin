@@ -20,7 +20,7 @@
 		"typography": { "fontSize": true },
 		"color": { "text": true }
 	},
-	"viewScriptModule": "file:./view.js",
+	"viewScriptModule": "file:./view.min.js",
 	"style": "file:./style.css",
 	"render": "file:./render.php"
 }
