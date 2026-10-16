@@ -97,34 +97,47 @@
 		Until 1.4.2 nothing was declared and each site set it by hand in
 		WPML › Settings (Lavandería: content/semilla/cargar.mjs, WPML_MODES).
 
-		translate="2" is «Translatable - use translation if available or
-		fallback to default language» (display-as-translated), the same value
-		the content-types module writes for its «display-as-translated»
+		translate="1" display-as-translated="1" is «Translatable - use
+		translation if available or fallback to default language»: WPML turns
+		it into mode 2 when it reads the file
+		(WPML_Config_Display_As_Translated), the same mode the content-types
+		module writes for its «display-as-translated»
 		(modules/content-types/includes/class-wpml.php).
+
+		THE TRAP THAT COST AN AFTERNOON (16-10-2026, WPML 5.0.2): writing
+		translate="2" here, as the array of the content-types filter does,
+		LOOKS like it works — the types end up in mode 2 — but WPML's XSD
+		(res/xsd/wpml-config.xsd) only admits 0 or 1, and String Translation
+		validates the file before reading <admin-texts>: with one invalid
+		attribute the WHOLE file is dropped and no admin text of this plugin
+		is registered (not even the social links), with no error anywhere.
+		modules/site/tests/wpml-config.test.mjs checks the attributes. The
+		filter is not affected: it never goes through the XSD.
 
 		The criterion: ALL of them are display-as-translated. They are lists
 		of items (clients, testimonials, locations, projects) shown in Query
-		Loops and archives; with «1» (translatable, only the translation) a
-		site that adds a language sees every list EMPTY in it until each item
-		is translated, and with «0» nothing could be translated. With «2»
-		every item shows from day one in the default language, and translating
-		it (the address and schedule of a location, the role in a testimonial)
-		replaces it. The texts of each item are still translated or copied by
-		the <custom-fields> above.
+		Loops and archives; with «translatable, only the translation» a site
+		that adds a language sees every list EMPTY in it until each item is
+		translated, and «not translatable» would not let anything be
+		translated. Display-as-translated shows every item from day one in the
+		default language, and translating it (the address and schedule of a
+		location, the role in a testimonial) replaces it. The texts of each
+		item are still translated or copied by the <custom-fields> above.
 
 		Edge case, by name: a testimonial. It is a quote, usually left in the
-		language it was written in; with «2» it shows as it is in /en/ and is
-		only translated if someone wants to. A site where an untranslated
-		item must NOT show in another language (a catalogue with prices that
-		differ per country) is not served by this file: see the trap.
+		language it was written in; it shows as it is in /en/ and is only
+		translated if someone wants to. A site where an untranslated item must
+		NOT show in another language (a catalogue with prices that differ per
+		country) changes that type: see the next paragraph.
 
-		The trap: once declared here, WPML LOCKS the setting on its screen
-		(«This setting is controlled by a wpml-config.xml file»). A site that
-		needs a different mode for one type changes it from its theme with the
-		wpml_config_array filter (the same one the content-types module uses),
-		not on the screen. And WPML applies it when it re-reads the files
-		(opening WPML or Plugins in the admin, WPML_Config::load_config_run),
-		not on the next request.
+		What declaring it does: WPML LOCKS the setting on its screen
+		(WPML › Settings, post types; «controlled by a wpml-config.xml file»).
+		A site that needs another mode for one type either ticks WPML's
+		«unlock» for that type on that screen (custom_posts_unlocked_option)
+		or, better because it stays in code, changes it from its theme with
+		the wpml_config_array filter. And WPML applies it when it re-reads the
+		files (opening WPML or Plugins in the admin, WPML_Config::load_config_run;
+		Lavandería's deployer forces it), not on the next request.
 
 		How to maintain: a new type or taxonomy of Content_Types goes in here,
 		in Content_Types::WPML_MODES and in Type_Names::KEYS, in the same
@@ -134,16 +147,16 @@
 		«wpml».
 	-->
 	<custom-types>
-		<custom-type translate="2">eweb_client</custom-type>
-		<custom-type translate="2">eweb_testimonial</custom-type>
-		<custom-type translate="2">eweb_location</custom-type>
-		<custom-type translate="2">eweb_project</custom-type>
-		<custom-type translate="2">eweb_portfolio</custom-type>
+		<custom-type translate="1" display-as-translated="1">eweb_client</custom-type>
+		<custom-type translate="1" display-as-translated="1">eweb_testimonial</custom-type>
+		<custom-type translate="1" display-as-translated="1">eweb_location</custom-type>
+		<custom-type translate="1" display-as-translated="1">eweb_project</custom-type>
+		<custom-type translate="1" display-as-translated="1">eweb_portfolio</custom-type>
 	</custom-types>
 	<taxonomies>
-		<taxonomy translate="2">eweb_client_sector</taxonomy>
-		<taxonomy translate="2">eweb_project_category</taxonomy>
-		<taxonomy translate="2">eweb_portfolio_category</taxonomy>
+		<taxonomy translate="1" display-as-translated="1">eweb_client_sector</taxonomy>
+		<taxonomy translate="1" display-as-translated="1">eweb_project_category</taxonomy>
+		<taxonomy translate="1" display-as-translated="1">eweb_portfolio_category</taxonomy>
 	</taxonomies>
 	<!--
 		Social module (unpublished): name and link of each network, by
@@ -175,8 +188,14 @@
 		in wp-admin, so the «Company details» screen always shows and saves
 		the original; but a REST request (/wp/v2/settings) is not wp-admin,
 		and with ?lang=en it reads the translation. Content loads write
-		without ?lang. Also: after a change in this list WPML registers the
-		strings when it re-reads the files (see above).
+		without ?lang (measured 16-10-2026 on Lavandería local, WPML 5.0.2 +
+		String Translation 5.0.2). Also: WPML registers the strings when it
+		re-reads the files (see above), and only of an option that EXISTS
+		then; estrategia_web_site is saved with all its keys, so the empty
+		ones (a schedule not filled in yet) are registered too. And on
+		Playground (SQLite) String Translation builds no .mo and translates
+		nothing until its collation cache is cleared: see Lavandería's
+		tests/fixtures/lm-test.php. It does not happen on MySQL.
 
 		How to maintain: a new detail in Settings::DEFAULTS goes into
 		Settings::WPML_TRANSLATE (and here) or Settings::WPML_SAME, in the same

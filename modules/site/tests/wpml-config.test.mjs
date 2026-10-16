@@ -8,7 +8,9 @@
 // Seen red (16-10-2026): with eweb_location switched to translate="1" in the
 // XML, «the XML declares every type…» fails naming it; with «schedule»
 // removed from Settings::WPML_TRANSLATE, «every company detail is decided»
-// fails naming it.
+// fails naming it; with translate="2" on eweb_location (what the first
+// version of this XML had, valid-looking and dropped by WPML's XSD), the
+// attribute test fails.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -31,9 +33,10 @@ const PREFIX = names.match(/const PREFIX = '([a-z_]+)';/)?.[1];
 const KEYS = list(names, "KEYS");
 const TAXONOMIES = list(names, "TAXONOMIES");
 const MODES = Object.fromEntries([...constBody(types, "WPML_MODES").matchAll(/'([a-z_]+)'\s*=>\s*'([a-z-]+)'/g)].map((m) => [m[1], m[2]]));
-const MODE_ATTR = { translate: "1", "display-as-translated": "2", ignore: "0" }; // = content-types' Wpml::MODE
+// The XML spelling of each mode. NOT translate="2": WPML's XSD only admits 0|1 and a file that fails it loses its <admin-texts> (see the XML).
+const MODE_ATTR = { translate: 'translate="1"', "display-as-translated": 'translate="1" display-as-translated="1"', ignore: 'translate="0"' };
 
-const declared = (tag) => Object.fromEntries([...xml.matchAll(new RegExp(`<${tag} translate="(\\d)">([a-z_]+)</${tag}>`, "g"))].map((m) => [m[2], m[1]]));
+const declared = (tag) => Object.fromEntries([...xml.matchAll(new RegExp(`<${tag} ([^>]*)>([a-z_]+)</${tag}>`, "g"))].map((m) => [m[2], m[1].trim()]));
 
 // Top-level keys of Settings::DEFAULTS (two tabs of indentation), minus Company::NOT_DATA.
 const defaultsBody = settings.match(/const DEFAULTS = array\(([\s\S]*?)\n\t\);/)?.[1] ?? "";
@@ -61,6 +64,13 @@ test("the XML declares every type and taxonomy, under its registered name, with 
   const want = (isTax) => Object.fromEntries(KEYS.filter((k) => TAXONOMIES.includes(k) === isTax).map((k) => [PREFIX + k, MODE_ATTR[MODES[k]]]));
   assert.deepEqual(declared("custom-type"), want(false), "<custom-types>");
   assert.deepEqual(declared("taxonomy"), want(true), "<taxonomies>");
+});
+
+test("every translate attribute is one WPML's XSD admits (0 or 1): an invalid one drops the whole file's <admin-texts> silently", () => {
+  const bad = [...xml.matchAll(/\btranslate="([^"]*)"/g)].map((m) => m[1]).filter((v) => !["0", "1"].includes(v));
+  assert.deepEqual(bad, []);
+  const dat = [...xml.matchAll(/\bdisplay-as-translated="([^"]*)"/g)].map((m) => m[1]).filter((v) => v !== "1");
+  assert.deepEqual(dat, []);
 });
 
 test("every company detail is decided (Settings::WPML_TRANSLATE or WPML_SAME), and only once", () => {

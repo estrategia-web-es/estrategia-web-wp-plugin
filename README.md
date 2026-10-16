@@ -149,6 +149,17 @@ with its schema: `GET/POST /wp/v2/settings` → key `estrategia_web_site`.
 changes the phone and leaves the rest. That way the content loading fills it
 in by parts.
 
+**With WPML** (1.4.3), `registry`, `whatsapp_message`, `address` and
+`schedule` are offered in **WPML › String Translation** (domain
+`admin_texts_estrategia_web_site`); untranslated, every language shows the
+original. The translation reaches the site through `Company::value()`
+(shortcode, Block Bindings, WhatsApp button) on its own. The «Company
+details» screen always shows and saves the original, whatever the admin
+language; `/wp/v2/settings?lang=en` returns the translation, so a content
+load reads and writes **without** `?lang`. The rest of the details are the
+same in every language. Criterion and edge case, in
+[wpml-config.xml](wpml-config.xml).
+
 ```bash
 # REST (as an administrator; Playground or a site with an application password)
 curl -u admin:APP_PASS -X POST https://web.test/wp-json/wp/v2/settings \
@@ -314,6 +325,13 @@ author and rating are **copied** from the original to the translation;
 address, opening hours, business type and role are **translated**. The
 criterion, in the header of
 [modules/site/includes/class-meta-panel.php](modules/site/includes/class-meta-panel.php).
+
+**With WPML, the types and taxonomies** (1.4.3) are declared by the plugin's
+`wpml-config.xml`, all as *display-as-translated* (translatable, showing the
+original while there is no translation): a new language never empties a
+list. WPML locks that setting on its screen; a site that needs another mode
+for a type changes it with the `wpml_config_array` filter. The criterion,
+in [wpml-config.xml](wpml-config.xml).
 
 All the types have `custom-fields`, so the fields are rendered with the
 **`core/post-meta`** source inside a Query Loop (the business type on a
@@ -710,6 +728,7 @@ tests expect English; their `reset()` marks it and goes back to `en_US` (see
 | [webp/webp](modules/webp/tests/webp.test.mjs) | 2 | WebP (0.5.1): the editor writes WebP; uploaded JPEG and PNG generate their sizes (and the main file) in WebP; the filter set to `false` switches it off; the trap of regenerating what was already uploaded (the content's `.jpg` without `srcset`, the intermediate one broken) and its fix |
 | [site/editor](modules/site/tests/editor.test.mjs) | 3 | the editor shows the bound value and lists the details (company, and location by slug); the settings screen saves, warns and disables the last type |
 | [site/meta-panel](modules/site/tests/meta-panel.test.mjs) | 1 | (unreleased) every location, client and testimonial meta has a WPML decision (copy/translate) and `wpml-config.xml` says the same as `Meta_Panel`. Seen in red with the phone switched to «translate» in the XML |
+| [site/wpml-config](modules/site/tests/wpml-config.test.mjs) | 1 | (1.4.3) `wpml-config.xml` declares every type and taxonomy of `Type_Names` with the mode of `Content_Types::WPML_MODES`, and in `<admin-texts>` exactly `Settings::WPML_TRANSLATE`; every company detail is decided; every `translate` attribute is 0/1 (WPML's XSD). Seen in red with `translate="2"` and without `schedule`. The check with real WPML is in Lavandería (`tests/company-data-wpml.test.mjs`) |
 | [site/meta-fields](modules/site/tests/meta-fields.test.mjs) | 2 | (unreleased) `estrategia_web_client_business_type` sanitized and rendered by core/post-meta in a Query Loop of clients; the location embed stores the `src` of the pasted `<iframe>` and rejects `javascript:` |
 | [site/meta-panel-editor](modules/site/tests/meta-panel-editor.test.mjs) | 3 | (unreleased) the «Location details» panel starts open, shows the values and saves the phone changed there; the «Client details» meta box on the classic screen; the testimonial panel saves rating and client as numbers; a page does not have it. Seen in red on its first run: the panel started closed and the client had none |
 | [social/social](modules/social/tests/social.test.mjs) | 2 | (unreleased) migration: with no saved list, the fixed fields of «Company details» go into the list once and stay saved; alias `social.<network>` via shortcode (first network with that icon); accessible name «Instagram de …», `_blank` + `noopener`, `currentColor`, no `<title>`; the list rules in its order, guessed icon, email to `mailto:` without a new tab, `javascript:` out; own SVG sanitized and with its colour, a PNG is not valid; an empty list prints nothing and is not migrated again; an author cannot |
