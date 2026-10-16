@@ -9,6 +9,10 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 1.4.1 — 15-10-2026
+
+- **wpml-front-page: fixed, REST requests no longer get `page_on_front` translated.** `boot()` checked `REST_REQUEST`, which does not exist yet at `plugins_loaded`, so the filter was added on REST requests too and the option came back as an int (`109`) instead of the stored string (`"109"`). Measured on Lavandería (15-10-2026): its content load fingerprints the front-page options over REST, the fingerprint changed between two loads and the second one took its own front page for an edit made in the dashboard. The REST check now runs when the option is read (`wp_is_serving_rest_request()`), and a value that is not translated goes back untouched, type included. Nothing to change on the sites. Test: `modules/wpml-front-page/tests/front-page-pure.test.mjs` (level 1).
+
 ## 1.4.0 — 15-10-2026
 
 - **Fixed: the plugin's texts now follow the language of the request with WPML, even when WordPress' locale (WPLANG) disagrees.** Measured in Lavandería production (15-10-2026): WPLANG empty and WPML in Spanish → every plugin text in English on the Spanish site (cookie notice «Accept all», maps «Show map»). The file is chosen by WPML's current language, loaded under both the locale WordPress looks up now and that language's, and reloaded on `wpml_language_has_switched` (WPML String Translation moves the locale later without `change_locale`).

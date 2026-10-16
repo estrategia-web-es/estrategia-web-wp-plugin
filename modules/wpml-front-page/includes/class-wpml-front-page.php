@@ -20,8 +20,9 @@
  *   why it isn't checked beforehand).
  * - Without WPML it does nothing: the `wpml_object_id` filter doesn't exist
  *   and the value is returned as is.
- * - Public side only: in the dashboard, the option must be the default
- *   language's, which is the one that gets saved.
+ * - Public side only: in the dashboard and over REST, the option must be
+ *   the default language's, which is the one that gets saved. REST is
+ *   checked in translate(), not in boot() (see there why).
  * - The edge case: a front page WITHOUT a translation into the requested
  *   language. The original is returned (return_original = true), which is
  *   what WPML shows with «display as translated».
@@ -37,7 +38,7 @@ defined( 'ABSPATH' ) || exit;
 final class Wpml_Front_Page {
 
 	public static function boot(): void {
-		if ( is_admin() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+		if ( is_admin() || wp_doing_ajax() ) {
 			return;
 		}
 		if ( ! apply_filters( 'estrategia_web_site_wpml_front_page', true ) ) {
@@ -47,12 +48,23 @@ final class Wpml_Front_Page {
 		add_filter( 'option_page_for_posts', array( self::class, 'translate' ), 20 );
 	}
 
-	/** @param mixed $id */
+	/**
+	 * The REST check lives HERE, at read time, and not in boot(): boot() runs
+	 * at plugins_loaded and REST_REQUEST is only defined later (parse_request),
+	 * so checking it there let every REST request through. Measured on
+	 * Lavandería (15-10-2026): over REST, page_on_front came back as the int
+	 * 109 instead of the stored "109", the content load's fingerprint of the
+	 * front-page options changed between two loads and the second one listed
+	 * its own front page as edited in the dashboard. Hence also: when nothing
+	 * is translated, the value goes back untouched, type included
+	 * (tests/front-page-pure.test.mjs).
+	 *
+	 * @param mixed $id
+	 */
 	public static function translate( $id ) {
-		$id = (int) $id;
-		if ( ! $id || ! has_filter( 'wpml_object_id' ) ) {
+		if ( wp_is_serving_rest_request() || ! (int) $id || ! has_filter( 'wpml_object_id' ) ) {
 			return $id;
 		}
-		return (int) apply_filters( 'wpml_object_id', $id, 'page', true );
+		return (int) apply_filters( 'wpml_object_id', (int) $id, 'page', true );
 	}
 }
