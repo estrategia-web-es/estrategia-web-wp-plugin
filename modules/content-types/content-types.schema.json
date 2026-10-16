@@ -61,6 +61,9 @@
         }
       ]
     },
+    "booleanText": {
+      "oneOf": [{ "const": "" }, { "$ref": "#/$defs/text" }]
+    },
     "labels": {
       "type": "object",
       "additionalProperties": false,
@@ -118,14 +121,16 @@
         },
         "min": { "type": "number" },
         "max": { "type": "number" },
-        "integer": { "type": "boolean" }
+        "integer": { "type": "boolean" },
+        "true_label": { "$ref": "#/$defs/booleanText", "description": "boolean only: what the estrategia-web/content-field binding shows when it is true. Default: «Yes», translated. \"\" shows nothing." },
+        "false_label": { "$ref": "#/$defs/booleanText", "description": "boolean only: what the estrategia-web/content-field binding shows when it is false. Default: «No», translated. \"\" shows nothing." }
       },
       "allOf": [
         { "if": { "properties": { "type": { "const": "select" } } }, "then": { "required": ["options"] }, "else": { "not": { "required": ["options"] } } },
         { "if": { "properties": { "type": { "const": "relation" } } }, "then": { "required": ["post_type"], "not": { "required": ["default"] } }, "else": { "not": { "required": ["post_type"] } } },
         { "if": { "properties": { "type": { "const": "number" } } }, "else": { "not": { "anyOf": [{ "required": ["min"] }, { "required": ["max"] }, { "required": ["integer"] }] } } },
         { "if": { "properties": { "type": { "const": "image" } } }, "then": { "not": { "required": ["default"] } } },
-        { "if": { "properties": { "type": { "const": "boolean" } } }, "then": { "properties": { "default": { "type": "boolean" }, "required": { "const": false } } } }
+        { "if": { "properties": { "type": { "const": "boolean" } } }, "then": { "properties": { "default": { "type": "boolean" }, "required": { "const": false } } }, "else": { "not": { "anyOf": [{ "required": ["true_label"] }, { "required": ["false_label"] }] } } }
       ]
     }
   }

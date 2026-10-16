@@ -33,7 +33,7 @@ final class Schema {
 
 	public const TYPE_KEYS = array( '$schema', 'prefix', 'name', 'slug', 'labels', 'description', 'icon', 'supports', 'public', 'has_archive', 'show_in_rest', 'hierarchical', 'menu_position', 'wpml', 'taxonomies', 'fields' );
 	public const TAXONOMY_KEYS = array( 'name', 'slug', 'labels', 'hierarchical', 'public', 'show_in_rest', 'show_admin_column', 'wpml' );
-	public const FIELD_KEYS = array( 'name', 'type', 'label', 'help', 'required', 'default', 'wpml', 'options', 'post_type', 'min', 'max', 'integer' );
+	public const FIELD_KEYS = array( 'name', 'type', 'label', 'help', 'required', 'default', 'wpml', 'options', 'post_type', 'min', 'max', 'integer', 'true_label', 'false_label' );
 	public const LABEL_KEYS = array( 'singular', 'plural' );
 
 	public const FIELD_TYPES = array( 'text', 'textarea', 'number', 'url', 'email', 'tel', 'image', 'date', 'select', 'relation', 'boolean' );
@@ -237,6 +237,9 @@ final class Schema {
 			'post_type' => (array) ( $field['post_type'] ?? array() ),
 			'min'       => $field['min'] ?? null,
 			'max'       => $field['max'] ?? null,
+			// boolean: what the content-field binding shows; null = the translated «Yes» / «No».
+			'true_label'  => $field['true_label'] ?? null,
+			'false_label' => $field['false_label'] ?? null,
 		);
 	}
 
@@ -348,7 +351,7 @@ final class Schema {
 				$errors[] = sprintf( __( '%1$s.wpml must be one of: %2$s.', 'estrategia-web' ), $where, implode( ', ', self::FIELD_WPML ) );
 			}
 			// Keys that only make sense for one type: a typo there would be silently ignored.
-			$only = array( 'options' => 'select', 'post_type' => 'relation', 'min' => 'number', 'max' => 'number', 'integer' => 'number' );
+			$only = array( 'options' => 'select', 'post_type' => 'relation', 'min' => 'number', 'max' => 'number', 'integer' => 'number', 'true_label' => 'boolean', 'false_label' => 'boolean' );
 			foreach ( $only as $key => $for ) {
 				if ( array_key_exists( $key, $field ) && $type !== $for ) {
 					/* translators: 1: where in the file, 2: a key, 3: a field type */
@@ -430,6 +433,13 @@ final class Schema {
 			if ( $has && ! is_bool( $def ) ) {
 				/* translators: %s: where in the file */
 				$errors[] = sprintf( __( '%s.default must be true or false.', 'estrategia-web' ), $where );
+			}
+			// "" is allowed on purpose: «Terrace» when true and nothing when false.
+			foreach ( array( 'true_label', 'false_label' ) as $key ) {
+				if ( array_key_exists( $key, $field ) && '' !== $field[ $key ] && ! self::is_text( $field[ $key ] ) ) {
+					/* translators: 1: where in the file, 2: true_label or false_label */
+					$errors[] = sprintf( __( '%1$s.%2$s must be a string ("" to show nothing) or an object of locale → string.', 'estrategia-web' ), $where, $key );
+				}
 			}
 		} elseif ( 'image' === $type ) {
 			if ( $has ) {

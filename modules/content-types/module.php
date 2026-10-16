@@ -32,7 +32,8 @@
  *                  declared in another file (or category / post_tag)
  *   fields[]       name (the meta key, with prefix), type, label, help,
  *                  required, default, wpml (copy | translate | ignore),
- *                  options (select), post_type (relation), min/max/integer (number)
+ *                  options (select), post_type (relation), min/max/integer (number),
+ *                  true_label/false_label (boolean: what the binding shows; "" = nothing)
  *   Field types: text, textarea, number, url, email, tel, image (attachment
  *   ID), date (YYYY-MM-DD), select, relation (ID of a post of a given type),
  *   boolean. Labels, help and option labels are a string or an object
@@ -49,11 +50,23 @@
  * (class-wpml.php); a 400 on publish when a required field is empty; and a
  * rewrite flush only when the definitions change (hash).
  *
+ * SHOWING A FIELD (16-10-2026): core/post-meta shows what is STORED — a
+ * select's value («€€»), an image or a relation as an ID, a boolean as 1.
+ * The Block Bindings source `estrategia-web/content-field` (class-bindings.php)
+ * shows it formatted by its type: the option's label in the request's
+ * language, the image's URL / alt, the related post's title or link (its WPML
+ * translation), Yes/No or the definition's texts, the date and the number in
+ * the site's format, mailto:/tel: links. The rules, type by type:
+ * class-field-format.php. Use it instead of core/post-meta for anything but
+ * plain text.
+ *
  * Tests: modules/content-types/tests/ — level 1: schema.test.mjs (validator,
  * name limits, PHP ↔ JSON Schema drift), wpml.test.mjs (the WPML config and
- * the copy on save, with a WPML double); level 2: register.test.mjs
- * (registration, REST, sanitizers, required, URLs, binding, admin screen);
- * level 3: editor-panel.test.mjs (the panel saves). The test site reads the
+ * the copy on save, with a WPML double), format.test.mjs (the content-field
+ * rules per type); level 2: register.test.mjs (registration, REST,
+ * sanitizers, required, URLs, binding, admin screen), bindings.test.mjs
+ * (content-field rendered in Queries); level 3: editor-panel.test.mjs (the
+ * panel saves), bindings-editor.test.mjs (content-field in the editor). The test site reads the
  * definitions in tests/fixtures/ (its mu-plugin, tests/wp/).
  *
  * =========================================================================
@@ -64,7 +77,7 @@
  *   have. A site that needs a TYPE does not touch this module: it adds a
  *   JSON file to its own repo.
  *
- * - A NEW FIELD TYPE is six places, in the same commit, and the level 1 test
+ * - A NEW FIELD TYPE is seven places, in the same commit, and the level 1 test
  *   fails if the first two disagree:
  *     1. Schema::FIELD_TYPES (and its rules in check_type_rules(), and its
  *        meta type and WPML default in normalize_field());
@@ -73,8 +86,21 @@
  *     3. Registrar::sanitizer();
  *     4. assets/fields-panel.js, a case in Field();
  *     5. Fields_Panel::render_meta_box() (classic screen);
- *     6. Wpml::config() if it stores IDs (post-ids, like image and relation).
- *   A new KEY is 1, 2 and wherever it is used.
+ *     6. Wpml::config() if it stores IDs (post-ids, like image and relation);
+ *     7. how it is SHOWN: Field_Format::format() and its editor copy in
+ *        assets/bindings.js, with its line in tests/format.test.mjs. Without
+ *        it, the content-field binding shows "" for that type.
+ *   A new KEY is 1, 2 and wherever it is used (true_label/false_label:
+ *   Schema, the JSON Schema, Field_Format and Bindings::editor_field()).
+ *
+ * - THE CONTENT-FIELD BINDING, who and when: whoever changes how a type is
+ *   shown changes Field_Format and assets/bindings.js together (the level 3
+ *   test compares the editor with the site). Boundary case, with a name: a
+ *   number never filled in shows «0» and a select never saved shows its
+ *   default's label — they are values, not «empty». The trap: core escapes a
+ *   value that goes into an HTML ATTRIBUTE (core/image's alt) and only
+ *   kses-filters one that goes into the HTML (a paragraph): escaping both
+ *   gave «&amp;quot;» in an alt. Bindings::is_html() decides per attribute.
  *
  * - BOUNDARY CASE, with a name: a relation to a type of ANOTHER file, or to
  *   one registered by other code (eweb_client). It is allowed — the target
@@ -116,10 +142,13 @@ require_once __DIR__ . '/includes/class-loader.php';
 require_once __DIR__ . '/includes/class-registrar.php';
 require_once __DIR__ . '/includes/class-wpml.php';
 require_once __DIR__ . '/includes/class-fields-panel.php';
+require_once __DIR__ . '/includes/class-field-format.php';
+require_once __DIR__ . '/includes/class-bindings.php';
 
 Registrar::boot();
 Wpml::boot();
 Fields_Panel::boot();
+Bindings::boot();
 
 // Another theme, other folders: read again and let the hash decide the flush.
 add_action( 'after_switch_theme', array( Loader::class, 'forget' ) );

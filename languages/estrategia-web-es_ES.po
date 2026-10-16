@@ -2,7 +2,7 @@
 # Copyright (C) 2026 THE estrategia-web'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the estrategia-web package.
 # Automatically generated, 2026.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: estrategia-web\n"
@@ -259,7 +259,7 @@ msgctxt "block keyword"
 msgid "privacy"
 msgstr "privacidad"
 
-#
+# 
 #: modules/consent/blocks/cookie-table/block.json
 msgctxt "block title"
 msgid "Cookie table"
@@ -296,7 +296,7 @@ msgstr "Nivel del título de cada categoría"
 msgid "Cookies"
 msgstr "Cookies"
 
-#
+# 
 #: modules/consent/includes/admin/class-cookies-page.php:65
 msgid "Sorry, you are not allowed to do that."
 msgstr "No tienes permiso para hacer esto."
@@ -306,7 +306,7 @@ msgstr "No tienes permiso para hacer esto."
 msgid "Pending"
 msgstr "Pendiente"
 
-#
+# 
 #: modules/consent/includes/admin/class-cookies-page.php:126
 msgid "Confirmed"
 msgstr "Confirmada"
@@ -319,7 +319,7 @@ msgstr "Ignorada"
 msgid "Changes saved."
 msgstr "Cambios guardados."
 
-#
+# 
 #: modules/consent/includes/admin/class-cookies-page.php:152
 msgid "Cookie deleted."
 msgstr "Cookie borrada."
@@ -340,7 +340,7 @@ msgstr ""
 "El tema activo trae su propio aviso de cookies: estos ajustes no se le "
 "aplican."
 
-#
+# 
 #: modules/consent/includes/admin/class-cookies-page.php:160
 msgid "Cookie notice"
 msgstr "Aviso de cookies"
@@ -362,7 +362,7 @@ msgstr ""
 "Cambiar las categorías vuelve a enseñar el aviso a todos los visitantes: se "
 "les pregunta por algo nuevo. Sin ninguna categoría, el aviso no sale."
 
-#
+# 
 #: modules/consent/includes/admin/class-cookies-page.php:183
 msgid "Cookie detector"
 msgstr "Detector de cookies"
@@ -378,7 +378,7 @@ msgstr ""
 "semana o cuando cambia la lista. Los nombres nuevos salen abajo como "
 "pendientes."
 
-#
+# 
 #: modules/consent/includes/admin/class-cookies-page.php:192
 msgid "Save notice settings"
 msgstr "Guardar los ajustes del aviso"
@@ -395,7 +395,7 @@ msgstr ""
 "categoría: %2$s. O el aviso pregunta por ella (arriba), o esas cookies no se "
 "deberían poner."
 
-#
+# 
 #: modules/consent/includes/admin/class-cookies-page.php:216
 msgid "Cookies of this site"
 msgstr "Cookies de esta web"
@@ -416,13 +416,13 @@ msgstr ""
 msgid "Confirm all pending proposals"
 msgstr "Confirmar todas las propuestas pendientes"
 
-#
+# 
 #: modules/consent/includes/admin/class-cookies-page.php:227
 #: modules/consent/includes/class-cookie-table.php:163
 msgid "Cookie"
 msgstr "Cookie"
 
-#
+# 
 #: modules/consent/includes/admin/class-cookies-page.php:229
 #: modules/consent/includes/admin/class-cookies-page.php:293
 msgid "Category"
@@ -440,7 +440,7 @@ msgstr "Proveedor"
 msgid "Purpose"
 msgstr "Finalidad"
 
-#
+# 
 #: modules/consent/includes/admin/class-cookies-page.php:232
 #: modules/consent/includes/admin/class-cookies-page.php:296
 #: modules/consent/includes/class-cookie-table.php:166
@@ -451,7 +451,7 @@ msgstr "Duración"
 msgid "Seen"
 msgstr "Vista"
 
-#
+# 
 #: modules/consent/includes/admin/class-cookies-page.php:234
 msgid "Actions"
 msgstr "Acciones"
@@ -478,7 +478,7 @@ msgstr "Añadida a mano"
 msgid "Proposal: Open Cookie Database"
 msgstr "Propuesta: Open Cookie Database"
 
-#
+# 
 #: modules/consent/includes/admin/class-cookies-page.php:270
 msgid "Proposal: Estrategia Web"
 msgstr "Propuesta: Estrategia Web"
@@ -524,7 +524,7 @@ msgstr ""
 "Como «2 years», «30 minutes» o «session» para que se traduzca sola; "
 "cualquier otra cosa sale tal cual se escribe."
 
-#
+# 
 #: modules/consent/includes/admin/class-cookies-page.php:298
 msgid "Add cookie"
 msgstr "Añadir cookie"
@@ -662,7 +662,7 @@ msgstr ""
 msgid "Cookie settings"
 msgstr "Configurar cookies"
 
-#
+# 
 #: modules/consent/includes/class-cookie-registry.php:134
 msgid "This website"
 msgstr "Este sitio web"
@@ -741,7 +741,7 @@ msgstr ""
 msgid "The cookie list is full. Delete the cookies you do not need."
 msgstr "La lista de cookies está llena. Borra las que no necesites."
 
-#
+# 
 #: modules/consent/includes/class-cookie-table.php:103
 msgid "Session"
 msgstr "Sesión"
@@ -815,7 +815,7 @@ msgctxt "module name"
 msgid "Cookie notice"
 msgstr "Aviso de cookies"
 
-#
+# 
 #: modules/consent/module.php
 msgctxt "module description"
 msgid ""
@@ -889,12 +889,12 @@ msgstr ""
 msgid "copy"
 msgstr "copiar"
 
-#
+# 
 #: modules/content-types/includes/admin/class-page.php:62
 msgid "translate"
 msgstr "traducir"
 
-#
+# 
 #: modules/content-types/includes/admin/class-page.php:63
 msgid "ignore"
 msgstr "ignorar"
@@ -941,10 +941,28 @@ msgstr "Tipo"
 msgid "WPML"
 msgstr "WPML"
 
-#
+# 
 #: modules/content-types/includes/admin/class-page.php:87
 msgid "yes"
 msgstr "sí"
+
+#: modules/content-types/includes/class-bindings.php:68
+msgid "Content field"
+msgstr "Campo de contenido"
+
+#: modules/content-types/includes/class-bindings.php:123
+#: modules/forms/includes/admin/class-admin.php:132
+#: modules/forms/includes/class-notifier.php:159
+#: modules/redirects/includes/admin/class-tables.php:113
+msgid "Yes"
+msgstr "Sí"
+
+#: modules/content-types/includes/class-bindings.php:124
+#: modules/forms/includes/admin/class-admin.php:132
+#: modules/forms/includes/class-notifier.php:159
+#: modules/redirects/includes/admin/class-tables.php:113
+msgid "No"
+msgstr "No"
 
 #: modules/content-types/includes/class-fields-panel.php:56
 #: modules/site/includes/class-meta-panel.php:213
@@ -957,7 +975,7 @@ msgstr "Se cambia en el idioma original: se copia a las traducciones."
 msgid "%s details"
 msgstr "%s: datos"
 
-#
+# 
 #: modules/content-types/includes/class-fields-panel.php:72
 msgid ""
 "Fields that are the same in every language are copied to the translations "
@@ -1032,12 +1050,12 @@ msgstr "Ver %s"
 msgid "Search %s"
 msgstr "Buscar %s"
 
-#
+# 
 #: modules/content-types/includes/class-registrar.php:174
 msgid "Nothing found."
 msgstr "No se ha encontrado nada."
 
-#
+# 
 #: modules/content-types/includes/class-registrar.php:175
 msgid "Nothing found in the trash."
 msgstr "No hay nada en la papelera."
@@ -1136,101 +1154,101 @@ msgstr ""
 "La taxonomía «%s» no está declarada en ningún fichero (declárala como objeto "
 "en uno de ellos)."
 
-#: modules/content-types/includes/class-schema.php:268
+#: modules/content-types/includes/class-schema.php:271
 msgid "“taxonomies” must be a list."
 msgstr "«taxonomies» tiene que ser una lista."
 
 #. translators: %d: position in the list, from 1
-#: modules/content-types/includes/class-schema.php:273
+#: modules/content-types/includes/class-schema.php:276
 #, php-format
 msgid "taxonomies[%d]"
 msgstr "taxonomies[%d]"
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:277
+#: modules/content-types/includes/class-schema.php:280
 #, php-format
 msgid "%s: a reference must be a taxonomy name."
 msgstr "%s: una referencia tiene que ser el nombre de una taxonomía."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:283
+#: modules/content-types/includes/class-schema.php:286
 #, php-format
 msgid "%s: must be a taxonomy name or an object."
 msgstr "%s: tiene que ser el nombre de una taxonomía o un objeto."
 
 #. translators: 1: where in the file, 2: a key
-#: modules/content-types/includes/class-schema.php:293
+#: modules/content-types/includes/class-schema.php:296
 #, php-format
 msgid "%1$s.%2$s must be true or false."
 msgstr "%1$s.%2$s tiene que ser true o false."
 
 #. translators: 1: where in the file, 2: allowed values
-#: modules/content-types/includes/class-schema.php:298
-#: modules/content-types/includes/class-schema.php:348
+#: modules/content-types/includes/class-schema.php:301
+#: modules/content-types/includes/class-schema.php:351
 #, php-format
 msgid "%1$s.wpml must be one of: %2$s."
 msgstr "%1$s.wpml tiene que ser uno de: %2$s."
 
-#: modules/content-types/includes/class-schema.php:306
+#: modules/content-types/includes/class-schema.php:309
 msgid "“fields” must be a list."
 msgstr "«fields» tiene que ser una lista."
 
 #. translators: %d: position in the list, from 1
-#: modules/content-types/includes/class-schema.php:312
+#: modules/content-types/includes/class-schema.php:315
 #, php-format
 msgid "fields[%d]"
 msgstr "fields[%d]"
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:315
+#: modules/content-types/includes/class-schema.php:318
 #, php-format
 msgid "%s: must be an object."
 msgstr "%s: tiene que ser un objeto."
 
 #. translators: %s: field name
-#: modules/content-types/includes/class-schema.php:324
+#: modules/content-types/includes/class-schema.php:327
 #, php-format
 msgid "The field “%s” is declared twice."
 msgstr "El campo «%s» está declarado dos veces."
 
 #. translators: 1: where in the file, 2: allowed values
-#: modules/content-types/includes/class-schema.php:331
+#: modules/content-types/includes/class-schema.php:334
 #, php-format
 msgid "%1$s.type must be one of: %2$s."
 msgstr "%1$s.type tiene que ser uno de: %2$s."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:336
+#: modules/content-types/includes/class-schema.php:339
 #, php-format
 msgid "%s.label is required (a string or an object of locale → string)."
 msgstr "%s.label es obligatorio (un texto o un objeto idioma → texto)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:340
+#: modules/content-types/includes/class-schema.php:343
 #, php-format
 msgid "%s.help must be a string or an object of locale → string."
 msgstr "%s.help tiene que ser un texto o un objeto idioma → texto."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:344
+#: modules/content-types/includes/class-schema.php:347
 #, php-format
 msgid "%s.required must be true or false."
 msgstr "%s.required tiene que ser true o false."
 
 #. translators: 1: where in the file, 2: a key, 3: a field type
-#: modules/content-types/includes/class-schema.php:355
+#: modules/content-types/includes/class-schema.php:358
 #, php-format
 msgid "%1$s.%2$s is only for fields of type “%3$s”."
 msgstr "%1$s.%2$s solo vale para campos de tipo «%3$s»."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:373
+#: modules/content-types/includes/class-schema.php:376
 #, php-format
 msgid "%s: a select needs “options”, a non-empty list."
 msgstr "%s: un select necesita «options», una lista no vacía."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:380
+#: modules/content-types/includes/class-schema.php:383
 #, php-format
 msgid ""
 "%s.options: each option is a non-empty string or {\"value\": \"…\", "
@@ -1240,19 +1258,19 @@ msgstr ""
 "…}."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:387
+#: modules/content-types/includes/class-schema.php:390
 #, php-format
 msgid "%s.options: two options have the same value."
 msgstr "%s.options: dos opciones tienen el mismo valor."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:391
+#: modules/content-types/includes/class-schema.php:394
 #, php-format
 msgid "%s.default must be the value of one of the options."
 msgstr "%s.default tiene que ser el valor de una de las opciones."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:399
+#: modules/content-types/includes/class-schema.php:402
 #, php-format
 msgid "%s: a relation needs “post_type”, a post type name or a list of them."
 msgstr ""
@@ -1260,32 +1278,32 @@ msgstr ""
 "ellos."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:403
+#: modules/content-types/includes/class-schema.php:406
 #, php-format
 msgid "%s: a relation cannot have a default (it is the ID of a post)."
 msgstr ""
 "%s: una relación no puede tener valor por defecto (es el ID de una entrada)."
 
 #. translators: 1: where in the file, 2: min or max
-#: modules/content-types/includes/class-schema.php:409
+#: modules/content-types/includes/class-schema.php:412
 #, php-format
 msgid "%1$s.%2$s must be a number."
 msgstr "%1$s.%2$s tiene que ser un número."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:414
+#: modules/content-types/includes/class-schema.php:417
 #, php-format
 msgid "%s.integer must be true or false."
 msgstr "%s.integer tiene que ser true o false."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:418
+#: modules/content-types/includes/class-schema.php:421
 #, php-format
 msgid "%s: min is greater than max."
 msgstr "%s: min es mayor que max."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:423
+#: modules/content-types/includes/class-schema.php:426
 #, php-format
 msgid ""
 "%s.default must be a number within min and max (a whole number if “integer”)."
@@ -1294,65 +1312,73 @@ msgstr ""
 "«integer»)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:428
+#: modules/content-types/includes/class-schema.php:431
 #, php-format
 msgid "%s: a boolean cannot be required (“no” is an answer)."
 msgstr ""
 "%s: un booleano no puede ser obligatorio («no» también es una respuesta)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:432
+#: modules/content-types/includes/class-schema.php:435
 #, php-format
 msgid "%s.default must be true or false."
 msgstr "%s.default tiene que ser true o false."
 
+#. translators: 1: where in the file, 2: true_label or false_label
+#: modules/content-types/includes/class-schema.php:441
+#, php-format
+msgid ""
+"%1$s.%2$s must be a string (\"\" to show nothing) or an object of locale → "
+"string."
+msgstr "%1$s.%2$s tiene que ser un texto (\"\" para no mostrar nada) o un objeto idioma → texto."
+
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:437
+#: modules/content-types/includes/class-schema.php:447
 #, php-format
 msgid "%s: an image cannot have a default (it is the ID of an attachment)."
 msgstr ""
 "%s: una imagen no puede tener valor por defecto (es el ID de un adjunto)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:441
+#: modules/content-types/includes/class-schema.php:451
 #, php-format
 msgid "%s.default must be a string."
 msgstr "%s.default tiene que ser un texto."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:444
+#: modules/content-types/includes/class-schema.php:454
 #, php-format
 msgid "%s.default must be a date as YYYY-MM-DD."
 msgstr "%s.default tiene que ser una fecha AAAA-MM-DD."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:457
+#: modules/content-types/includes/class-schema.php:467
 #, php-format
 msgid "%s must be lowercase letters, digits and “_”, starting with a letter."
 msgstr ""
 "%s tiene que llevar letras minúsculas, cifras y «_», y empezar por una letra."
 
 #. translators: 1: where in the file, 2: the name, 3: max length, 4: its length
-#: modules/content-types/includes/class-schema.php:462
+#: modules/content-types/includes/class-schema.php:472
 #, php-format
 msgid ""
 "%1$s “%2$s” is longer than %3$d characters (%4$d): WordPress would cut it."
 msgstr "%1$s «%2$s» pasa de %3$d caracteres (%4$d): WordPress lo cortaría."
 
 #. translators: 1: where in the file, 2: the name, 3: the prefix
-#: modules/content-types/includes/class-schema.php:466
+#: modules/content-types/includes/class-schema.php:476
 #, php-format
 msgid "%1$s “%2$s” must start with the prefix “%3$s”."
 msgstr "%1$s «%2$s» tiene que empezar por el prefijo «%3$s»."
 
 #. translators: 1: where in the file, 2: the name, 3: a reserved prefix
-#: modules/content-types/includes/class-schema.php:471
+#: modules/content-types/includes/class-schema.php:481
 #, php-format
 msgid "%1$s “%2$s” uses the reserved prefix “%3$s”."
 msgstr "%1$s «%2$s» usa el prefijo reservado «%3$s»."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:484
+#: modules/content-types/includes/class-schema.php:494
 #, php-format
 msgid ""
 "%s must be lowercase letters, digits, “-” and “/” (a URL path without "
@@ -1362,30 +1388,30 @@ msgstr ""
 "sin barras en los extremos)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:492
+#: modules/content-types/includes/class-schema.php:502
 #, php-format
 msgid "%s is required: {\"singular\": …, \"plural\": …}."
 msgstr "%s es obligatorio: {\"singular\": …, \"plural\": …}."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:496
+#: modules/content-types/includes/class-schema.php:506
 #, php-format
 msgid "%s must be an object: {\"singular\": …, \"plural\": …}."
 msgstr "%s tiene que ser un objeto: {\"singular\": …, \"plural\": …}."
 
 #. translators: 1: where in the file, 2: singular or plural
-#: modules/content-types/includes/class-schema.php:502
+#: modules/content-types/includes/class-schema.php:512
 #, php-format
 msgid "%1$s.%2$s is required: a string or an object of locale → string."
 msgstr "%1$s.%2$s es obligatorio: un texto o un objeto idioma → texto."
 
 #. translators: 1: a key, 2: allowed keys
-#: modules/content-types/includes/class-schema.php:529
+#: modules/content-types/includes/class-schema.php:539
 #, php-format
 msgid "Unknown key “%1$s”. Allowed: %2$s."
 msgstr "Clave desconocida «%1$s». Se admiten: %2$s."
 
-#
+# 
 #: modules/content-types/module.php
 msgctxt "module name"
 msgid "Content types from JSON"
@@ -1840,18 +1866,6 @@ msgstr "Envío n.º %d"
 msgid "Data"
 msgstr "Datos"
 
-#: modules/forms/includes/admin/class-admin.php:132
-#: modules/forms/includes/class-notifier.php:159
-#: modules/redirects/includes/admin/class-tables.php:113
-msgid "No"
-msgstr "No"
-
-#: modules/forms/includes/admin/class-admin.php:132
-#: modules/forms/includes/class-notifier.php:159
-#: modules/redirects/includes/admin/class-tables.php:113
-msgid "Yes"
-msgstr "Sí"
-
 #: modules/forms/includes/admin/class-admin.php:137
 #: modules/forms/includes/admin/class-submissions-table.php:34
 msgid "Notifications"
@@ -2157,7 +2171,7 @@ msgstr "Formularios"
 msgid "Google"
 msgstr "Google"
 
-#
+# 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:29
 #: modules/google-tags/includes/admin/class-google-tags-page.php:51
 msgid "Google tags"
@@ -2185,7 +2199,7 @@ msgstr "ID de medición del flujo web de GA4."
 msgid "Conversion ID of the Google Ads account."
 msgstr "ID de conversión de la cuenta de Google Ads."
 
-#
+# 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:59
 msgid "Google Ads"
 msgstr "Google Ads"
@@ -2217,7 +2231,7 @@ msgstr "Google Tag Manager"
 msgid "Loading"
 msgstr "Carga"
 
-#
+# 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:69
 msgid ""
 "Basic (recommended): nothing is requested from Google until the visitor "
@@ -2257,7 +2271,7 @@ msgstr ""
 "formulario) y Google Tag Manager detrás del aviso de cookies, con Consent "
 "Mode v2. Un campo vacío no carga nada."
 
-#
+# 
 #: modules/google-tags/module.php
 msgctxt "module name"
 msgid "Google tags"
@@ -2515,7 +2529,7 @@ msgstr "ID del sitio"
 msgid "Without cookies (recommended): nothing to ask the visitor."
 msgstr "Sin cookies (recomendado): no hay nada que preguntar al visitante."
 
-#
+# 
 #: modules/matomo/includes/class-admin-fields.php:50
 msgid ""
 "Hybrid: without cookies until the visitor accepts «Analytics» in the cookie "
@@ -2524,13 +2538,13 @@ msgstr ""
 "Híbrido: sin cookies hasta que el visitante acepta «Analítica» en el aviso "
 "de cookies."
 
-#
+# 
 #: modules/matomo/module.php
 msgctxt "module name"
 msgid "Matomo"
 msgstr "Matomo"
 
-#
+# 
 #: modules/matomo/module.php
 msgctxt "module description"
 msgid ""
@@ -3548,7 +3562,7 @@ msgctxt "module name"
 msgid "Company data and content types"
 msgstr "Datos de la empresa y tipos de contenido"
 
-#
+# 
 #: modules/site/module.php
 msgctxt "module description"
 msgid ""
