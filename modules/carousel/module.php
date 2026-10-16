@@ -10,7 +10,9 @@
  * it was moved here as is (14-10-2026). Everything it does is in the header
  * of blocks/carousel/render.php; the priority, lazy loading and sizes of its
  * images, in includes/carousel-images.php; the mobile crop (mobileRatio,
- * 1.1.x), in includes/carousel-mobile-crop.php. WordPress serves
+ * 1.1.x), in includes/carousel-mobile-crop.php; the desktop preload of the
+ * slides visible on load (preloadSlides, 1.4.2), in includes/carousel-images.php
+ * (preload_config()). WordPress serves
  * blocks/carousel/view.min.js: after editing view.js, run `node tools/minify.mjs`.
  *
  * Without the plugin (or with this module off) the theme templates and

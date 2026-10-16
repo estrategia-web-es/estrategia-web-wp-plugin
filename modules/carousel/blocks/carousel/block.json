@@ -22,7 +22,8 @@
 		"autoplayInterval": { "type": "number", "default": 6000 },
 		"imageSizes": { "type": "string", "default": "" },
 		"mobileRatio": { "type": "string", "default": "" },
-		"mobileImageSizes": { "type": "string", "default": "" }
+		"mobileImageSizes": { "type": "string", "default": "" },
+		"preloadSlides": { "type": "number", "default": 0 }
 	},
 	"supports": {
 		"align": [ "wide", "full" ],

@@ -67,6 +67,8 @@ namespace EstrategiaWeb\Carousel;
 
 defined( 'ABSPATH' ) || exit;
 
+const PRELOAD_MEDIA = '(min-width: 782px)';
+
 /**
  * Carousels rendered in this request: id => { eager: int, sizes: string, hero: bool }.
  *
@@ -100,13 +102,129 @@ function images_register( string $id, array $attributes ): void {
 
 	$registry        = &images_registry();
 	$registry[ $id ] = array(
-		'eager' => max( 0, $eager ),
-		'sizes' => images_sizes( $attributes ),
-		'hero'  => false,
+		'eager'   => max( 0, $eager ),
+		'sizes'   => images_sizes( $attributes ),
+		'hero'    => false,
 		// 1.1.x: mobile crop (null if not requested). See carousel-mobile-crop.php.
-		'crop'  => mobile_crop_config( $attributes ),
+		'crop'    => mobile_crop_config( $attributes ),
+		// 1.4.2: desktop preload of slides 2…n (null if not requested). See preload_config().
+		'preload' => preload_config( $attributes ),
 	);
 }
+
+/**
+ * The desktop preload a carousel asks for (1.4.2), or null.
+ *
+ * What it solves (Lavandería desktop PageSpeed, 16-10-2026: «LCP request
+ * discovery — fetchpriority=high should be applied»): on desktop the hero
+ * shows slide 1 and most of slide 2, and the LCP is slide 2; but only slide 1
+ * gets fetchpriority="high" (0.7.9: on mobile only one is visible, and three
+ * at "high" made the mobile LCP worse). The <img> cannot say «high, but only
+ * on desktop»; a <link rel="preload" media="…"> can. So slides 2…n get, in
+ * the <head>:
+ *
+ *     <link rel="preload" as="image" fetchpriority="high" media="(min-width: 782px)"
+ *           imagesrcset="…the <img>'s srcset…" imagesizes="…the <img>'s sizes…">
+ *
+ * with EXACTLY the srcset and sizes of the <img> (the landscape one, not the
+ * mobile crop's <source>), so the browser picks the same file and the <img>
+ * reuses the preloaded one: nothing is downloaded twice. Below 782 px the
+ * media does not match and nothing is preloaded: on mobile nothing changes.
+ *
+ * ONLY IF ASKED FOR, because the plugin does not know which slide is the
+ * desktop LCP: that depends on the width the THEME gives each slide, not on
+ * perViewDesktop (Lavandería: 3 per view, slides 442 / 629 / 596 px wide, the
+ * third only half in view, and the LCP is the second, the widest). And
+ * preloading more than needed takes bandwidth from the LCP: the criterion is
+ * «up to the LCP slide», not «every slide in view» (the others still load
+ * eagerly, without priority). The block attribute preloadSlides (how many of
+ * the first slides get high priority on desktop, counting the first; 0 or 1
+ * = no preload, the default) or,
+ * for a theme style (Lavandería: is-style-hero-carousel), the filter
+ * estrategia_web_carousel_preload( $preload, $attributes ), which receives
+ * null or the array below and returns the same:
+ *     array( 'slides' => 2, 'media' => '(min-width: 782px)' )
+ *
+ * Conditions, all of them, for a slide to be preloaded: index 1 … slides-1
+ * (the first already has fetchpriority="high" on its <img>); visible on load
+ * (below «eager», never a lazy one); and the carousel is the hero (WordPress
+ * gave its first image fetchpriority="high"). A carousel further down the
+ * page preloads nothing even if it asks.
+ *
+ * WHERE IT IS PRINTED: wp_head, priority 1. In a block theme it works
+ * because template-canvas.php renders the whole template
+ * (get_the_block_template_html) BEFORE calling wp_head, so by then the
+ * images have gone through wp_content_img_tag and are recorded here.
+ * The trap: in a CLASSIC theme the content is rendered after wp_head and
+ * there is no <head> left to print in: nothing is preloaded, silently (the
+ * page is the same as without asking). The same if the image has no srcset
+ * nor src.
+ * Test: the theme's tests/carousel-preload.test.mjs (level 3).
+ *
+ * How to maintain: if the 782 px breakpoint of style.css changes, change
+ * PRELOAD_MEDIA too (it is the complement of carousel-mobile-crop.php's
+ * MOBILE_MEDIA, «(max-width: 781px)»).
+ *
+ * @param array $attributes Block attributes.
+ */
+function preload_config( array $attributes ): ?array {
+	$slides  =(int) ( $attributes['preloadSlides'] ?? 0 );
+	$preload = $slides > 1 ? array(
+		'slides' => $slides,
+		'media'  => PRELOAD_MEDIA,
+	) : null;
+	/**
+	 * The desktop preload of a carousel's visible slides (null = none). See preload_config().
+	 *
+	 * @param array|null $preload    { slides, media } or null.
+	 * @param array      $attributes Block attributes.
+	 */
+	$preload = apply_filters( 'estrategia_web_carousel_preload', $preload, $attributes );
+	if ( ! is_array( $preload ) || (int) ( $preload['slides'] ?? 0 ) < 2 ) {
+		return null;
+	}
+	return array(
+		'slides' => (int) $preload['slides'],
+		'media'  => trim( (string) ( $preload['media'] ?? PRELOAD_MEDIA ) ),
+	);
+}
+
+/**
+ * The preload links recorded in this request, keyed to avoid duplicates.
+ *
+ * @return array<string, string>
+ */
+function &preload_links(): array {
+	static $links = array();
+	return $links;
+}
+
+/**
+ * Records the <link rel="preload"> of a carousel image (see preload_config()).
+ *
+ * @param string $srcset The img srcset ('' if none).
+ * @param string $sizes  The img sizes.
+ * @param string $src    The img src (used only without srcset).
+ * @param string $media  Media query of the preload.
+ */
+function preload_record( string $srcset, string $sizes, string $src, string $media ): void {
+	if ( did_action( 'wp_head' ) || ( '' === $srcset && '' === $src ) ) {
+		return; // Classic theme: the <head> is already out (see preload_config()).
+	}
+	$link = '' !== $srcset
+		? sprintf( '<link rel="preload" as="image" fetchpriority="high" media="%1$s" imagesrcset="%2$s" imagesizes="%3$s">', esc_attr( $media ), esc_attr( $srcset ), esc_attr( $sizes ) )
+		: sprintf( '<link rel="preload" as="image" fetchpriority="high" media="%1$s" href="%2$s">', esc_attr( $media ), esc_url( $src ) );
+	$links          = &preload_links();
+	$links[ $link ] = $link;
+}
+
+/** Prints the recorded preloads in the <head> (wp_head, priority 1). */
+function preload_print(): void {
+	foreach ( preload_links() as $link ) {
+		echo $link . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in preload_record().
+	}
+}
+add_action( 'wp_head', __NAMESPACE__ . '\preload_print', 1 );
 
 /**
  * The sizes attribute for the slides of a carousel. See the header.
@@ -280,6 +398,10 @@ function images_filter( $image, $context = '', $attachment_id = 0 ) {
 	if ( '' !== $sizes ) {
 		$lazy = 'lazy' === $tag->get_attribute( 'loading' );
 		$tag->set_attribute( 'sizes', ( $lazy ? 'auto, ' : '' ) . $sizes );
+	}
+	// 1.4.2: desktop preload of the other slides visible on load (preload_config()).
+	if ( $eager && $carousel['hero'] && $slide >= 1 && ! empty( $carousel['preload'] ) && $slide < $carousel['preload']['slides'] ) {
+		preload_record( (string) $tag->get_attribute( 'srcset' ), (string) $tag->get_attribute( 'sizes' ), (string) $tag->get_attribute( 'src' ), $carousel['preload']['media'] );
 	}
 	$html = $tag->get_updated_html();
 	// 1.1.x: on mobile, a crop of the image shaped like the box (carousel-mobile-crop.php).
