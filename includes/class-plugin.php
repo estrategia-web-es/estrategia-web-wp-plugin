@@ -153,10 +153,9 @@ final class Plugin {
 	 * language in English) breaks the Spanish ones. So:
 	 * - The slug is the site language's: Lavandería (Spanish by default)
 	 *   /sedes/ and /en/sedes/…; Gastronòmicament (Catalan by default, four
-	 *   languages) the Catalan one in all four, as soon as the plugin ships a
-	 *   ca translation (until then, the English msgid: `locations`, in all
-	 *   four too, which is consistent; adding it changes their URLs, see
-	 *   tools/i18n.mjs).
+	 *   languages) the Catalan one in all four: /seus/ (languages/
+	 *   estrategia-web-ca.po, tests/catalan.test.mjs). Changing a Catalan
+	 *   slug changes their URLs, see tools/i18n.mjs.
 	 * - Slugs per language (/en/locations/) are NOT the plugin's job: that is
 	 *   WPML's slug translation («URL slug: eweb_location» strings, see
 	 *   class-prefix-migration.php), which rewrites on top of the registered
