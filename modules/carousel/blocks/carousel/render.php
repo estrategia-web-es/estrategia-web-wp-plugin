@@ -50,8 +50,13 @@
  *   (Lavandería: the clients strip, two rows of 12), what rotates are the
  *   COLUMNS, every row alike; rotating card by card moved cards from one row
  *   to another. Rows are measured with the natural order on load and on width
- *   change. An irregular layout (rows of different length, flex with wrap) is
- *   not rotated: it wraps around by rewinding, like 0.5.0.
+ *   change. ANY number of cards (1.4.3): the last row may be short (23
+ *   clients in rows of 12 = 12 + 11); then each card is placed in its grid
+ *   cell and the hole of the short row travels with its column, also across
+ *   the seam. An irregular layout (a short row that is not the last one,
+ *   flex with wrap and a short last row) is not rotated: it wraps around by
+ *   rewinding, like 0.5.0. Test: the parent theme's
+ *   tests/carousel-any-count.test.mjs.
  *   With several rows the dots do not match (they count cards, not columns):
  *   those carousels go without dots.
  * - Edge case: with ONE slide, or all of them in view, there is nothing to

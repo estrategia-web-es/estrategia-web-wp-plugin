@@ -15,8 +15,14 @@
  *
  * What rotates are UNITS: in a single row, each slide; in a multi-row grid
  * filled by rows (Lavandería's two-row clients strip), each COLUMN, and every
- * row rotates alike. A layout that is neither is not rotated: it wraps
- * around by rewinding, like 0.5.0.
+ * row rotates alike. The last row may be SHORT (1.4.3: Lavandería's 23
+ * clients in rows of 12 are 12 + 11; before, that grid did not rotate and
+ * the loop rewound from the last column to the first, which David did not
+ * want): then each card is put in its grid cell (grid-area) instead of
+ * `order`, which would pack the short row to the left, and the hole moves
+ * round with its column. A layout that is none of these (rows of different
+ * length that are not the last one, flex with wrap and a short last row) is
+ * not rotated: it wraps around by rewinding, like 0.5.0.
  *
  * How to maintain:
  * - WordPress does NOT serve this file: it serves view.min.js (1.1.x, ~8 KB
@@ -38,8 +44,15 @@
  *   it arrives.
  * - And the grid one (measured on Lavandería on 03-10-2026): rotating `order`
  *   slide by slide in a two-row grid moves cards from one row to another.
- *   That is why rows are measured with the natural order (rows()) and the
+ *   That is why rows are measured with the natural order (measure()) and the
  *   rotation is by columns.
+ * - And the short-row one (16-10-2026): in a grid, `order` only changes the
+ *   SEQUENCE of auto-placement, so a row of 11 in 12 columns always fills
+ *   cells 1-11 and its cards leave their columns as soon as it rotates. With
+ *   a short last row (state.place) every card gets an explicit grid-area,
+ *   and measure() clears both properties to see the natural layout. Test:
+ *   the parent theme's tests/carousel-any-count.test.mjs (23 cards, 12
+ *   columns; 7 slides with 3 in view).
  *
  * Every step SLIDES (0.7.2; David: "the carousel needs an animation, it
  * jumps", measured on 06-10-2026 on Lavandería's home page):
@@ -139,7 +152,7 @@ const stepRewind = ( track, direction ) => {
 const ring = new WeakMap();
 const ringOf = ( track ) => {
 	if ( ! ring.has( track ) ) {
-		ring.set( track, { start: 0, cols: 0, moving: false, target: 0, touching: false, gliding: false, queue: [] } );
+		ring.set( track, { start: 0, cols: 0, place: false, moving: false, target: 0, touching: false, gliding: false, queue: [] } );
 	}
 	return ring.get( track );
 };
@@ -159,8 +172,11 @@ const release = ( track ) => track.style.removeProperty( 'scroll-snap-type' );
 const measure = ( track ) => {
 	const state = ringOf( track );
 	const slides = slidesOf( track );
-	const saved = slides.map( ( slide ) => slide.style.order );
-	slides.forEach( ( slide ) => ( slide.style.order = '' ) );
+	const saved = slides.map( ( slide ) => [ slide.style.order, slide.style.gridArea ] );
+	slides.forEach( ( slide ) => {
+		slide.style.order = '';
+		slide.style.gridArea = '';
+	} );
 	const rowOf = [];
 	let rows = 0;
 	let bottom = -Infinity;
@@ -172,10 +188,27 @@ const measure = ( track ) => {
 		bottom = Math.max( bottom, slide.offsetTop + slide.offsetHeight );
 		rowOf.push( rows - 1 );
 	} );
-	slides.forEach( ( slide, i ) => ( slide.style.order = saved[ i ] ) );
-	const cols = slides.length / rows;
-	const regular = Number.isInteger( cols ) && rowOf.every( ( row, i ) => row === Math.floor( i / cols ) );
-	state.cols = regular ? cols : 0;
+	// Columns: as many as the first row has. Every row is full except maybe
+	// the last one (23 clients in rows of 12: 12 + 11, 1.4.3). A short last
+	// row only rotates in a GRID, where each card can be put in its cell
+	// (place); before 1.4.3 it did not rotate and the loop rewound.
+	const cols = rowOf.filter( ( row ) => 0 === row ).length;
+	const filled = rowOf.every( ( row, i ) => row === Math.floor( i / cols ) );
+	const short = slides.length % cols !== 0;
+	const place = short && filled && window.getComputedStyle( track ).display.endsWith( 'grid' );
+	const next = filled && ( ! short || place ) ? cols : 0;
+	if ( next === state.cols && place === Boolean( state.place ) ) {
+		slides.forEach( ( slide, i ) => {
+			slide.style.order = saved[ i ][ 0 ];
+			slide.style.gridArea = saved[ i ][ 1 ];
+		} );
+	} else {
+		// Another layout (a breakpoint): the old rotation means nothing in it.
+		// The row is left in its natural order and settle() rotates it again.
+		state.start = 0;
+	}
+	state.cols = next;
+	state.place = place;
 	return state.cols;
 };
 
@@ -194,7 +227,17 @@ const arrange = ( track, start ) => {
 	state.start = start;
 	slides.forEach( ( slide, i ) => {
 		const row = Math.floor( i / cols );
-		slide.style.order = String( row * cols + ( ( ( i % cols ) - start + cols ) % cols ) );
+		const col = ( ( i % cols ) - start + cols ) % cols;
+		if ( state.place ) {
+			// Short last row (1.4.3): `order` would pack the cards of that row
+			// to its left and move them out of their columns, so each card is
+			// put in its cell. The hole travels with its column.
+			slide.style.gridArea = `${ row + 1 } / ${ col + 1 }`;
+			slide.style.order = '';
+		} else {
+			slide.style.order = String( row * cols + col );
+			slide.style.gridArea = '';
+		}
 	} );
 };
 
