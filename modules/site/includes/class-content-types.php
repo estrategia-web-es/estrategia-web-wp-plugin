@@ -26,7 +26,9 @@
  * - A new type: Settings TYPES (it is the schema enum), definitions() here,
  *   its labels, the README and a test. It is a MINOR version (it adds).
  *   Removing or renaming one is MAJOR. It and its taxonomy also go into
- *   Settings::REWRITE_NAMES and DEFAULTS['rewrite_slugs'].
+ *   Settings::REWRITE_NAMES and DEFAULTS['rewrite_slugs'], and into
+ *   WPML_MODES and wpml-config.xml (<custom-types>/<taxonomies>, under the
+ *   registered name «eweb_…»).
  * - Public slugs (0.2.0, slug()): translated ← the option's `rewrite_slugs`
  *   ← the `estrategia_web_site_rewrite_slug` filter. The routes belong to the
  *   PLUGIN: a site sets them in the option (over REST or in the content load),
@@ -66,6 +68,25 @@ namespace EstrategiaWeb\Site;
 defined( 'ABSPATH' ) || exit;
 
 final class Content_Types {
+
+	/**
+	 * WPML translation mode of each type and taxonomy, by key: what
+	 * wpml-config.xml declares (<custom-types>, <taxonomies>) under the
+	 * registered name. All «display-as-translated» on purpose; the criterion,
+	 * the edge case and what declaring it does to a site are in the XML. The
+	 * test modules/site/tests/wpml-config.test.mjs fails if the XML says
+	 * otherwise or a key of Type_Names::KEYS is missing here.
+	 */
+	public const WPML_MODES = array(
+		'client'             => 'display-as-translated',
+		'client_sector'      => 'display-as-translated',
+		'testimonial'        => 'display-as-translated',
+		'location'           => 'display-as-translated',
+		'project'            => 'display-as-translated',
+		'project_category'   => 'display-as-translated',
+		'portfolio'          => 'display-as-translated',
+		'portfolio_category' => 'display-as-translated',
+	);
 
 	/** @return array<string, array> Definition of each type, only what differs between them. */
 	private static function definitions(): array {

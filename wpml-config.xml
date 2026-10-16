@@ -92,13 +92,134 @@
 		<custom-field action="copy">testimonial_client</custom-field>
 	</custom-fields>
 	<!--
+		Site module (1.4.3): the translation mode of the plugin's types and
+		taxonomies, under their REGISTERED name (Type_Names: «eweb_» + key).
+		Until 1.4.2 nothing was declared and each site set it by hand in
+		WPML › Settings (Lavandería: content/semilla/cargar.mjs, WPML_MODES).
+
+		translate="1" display-as-translated="1" is «Translatable - use
+		translation if available or fallback to default language»: WPML turns
+		it into mode 2 when it reads the file
+		(WPML_Config_Display_As_Translated), the same mode the content-types
+		module writes for its «display-as-translated»
+		(modules/content-types/includes/class-wpml.php).
+
+		THE TRAP THAT COST AN AFTERNOON (16-10-2026, WPML 5.0.2): writing
+		translate="2" here, as the array of the content-types filter does,
+		LOOKS like it works — the types end up in mode 2 — but WPML's XSD
+		(res/xsd/wpml-config.xsd) only admits 0 or 1, and String Translation
+		validates the file before reading <admin-texts>: with one invalid
+		attribute the WHOLE file is dropped and no admin text of this plugin
+		is registered (not even the social links), with no error anywhere.
+		modules/site/tests/wpml-config.test.mjs checks the attributes. The
+		filter is not affected: it never goes through the XSD.
+
+		The criterion: ALL of them are display-as-translated. They are lists
+		of items (clients, testimonials, locations, projects) shown in Query
+		Loops and archives; with «translatable, only the translation» a site
+		that adds a language sees every list EMPTY in it until each item is
+		translated, and «not translatable» would not let anything be
+		translated. Display-as-translated shows every item from day one in the
+		default language, and translating it (the address and schedule of a
+		location, the role in a testimonial) replaces it. The texts of each
+		item are still translated or copied by the <custom-fields> above.
+
+		Edge case, by name: a testimonial. It is a quote, usually left in the
+		language it was written in; it shows as it is in /en/ and is only
+		translated if someone wants to. A site where an untranslated item must
+		NOT show in another language (a catalogue with prices that differ per
+		country) changes that type: see the next paragraph.
+
+		What declaring it does: WPML LOCKS the setting on its screen
+		(WPML › Settings, post types; «controlled by a wpml-config.xml file»).
+		A site that needs another mode for one type either ticks WPML's
+		«unlock» for that type on that screen (custom_posts_unlocked_option)
+		or, better because it stays in code, changes it from its theme with
+		the wpml_config_array filter. And WPML applies it when it re-reads the
+		files (opening WPML or Plugins in the admin, WPML_Config::load_config_run;
+		Lavandería's deployer forces it), not on the next request.
+
+		How to maintain: a new type or taxonomy of Content_Types goes in here,
+		in Content_Types::WPML_MODES and in Type_Names::KEYS, in the same
+		commit; modules/site/tests/wpml-config.test.mjs fails if they do not
+		match. The types of each site (content-types module) do NOT go here:
+		that module declares them through the filter, from each definition's
+		«wpml».
+	-->
+	<custom-types>
+		<custom-type translate="1" display-as-translated="1">eweb_client</custom-type>
+		<custom-type translate="1" display-as-translated="1">eweb_testimonial</custom-type>
+		<custom-type translate="1" display-as-translated="1">eweb_location</custom-type>
+		<custom-type translate="1" display-as-translated="1">eweb_project</custom-type>
+		<custom-type translate="1" display-as-translated="1">eweb_portfolio</custom-type>
+	</custom-types>
+	<taxonomies>
+		<taxonomy translate="1" display-as-translated="1">eweb_client_sector</taxonomy>
+		<taxonomy translate="1" display-as-translated="1">eweb_project_category</taxonomy>
+		<taxonomy translate="1" display-as-translated="1">eweb_portfolio_category</taxonomy>
+	</taxonomies>
+	<!--
 		Social module (unpublished): name and link of each network, by
 		POSITION in the list («*» is the index). Reordering the list shifts the
 		translations; see modules/social/includes/class-links.php. icon and
 		icon_id are not translated: they are the same drawing in every
 		language.
+
+		Site module (1.4.3): the company details in «Company details»
+		(estrategia_web_site) that are written in a language. WPML String
+		Translation offers them in WPML › String Translation, domain
+		«admin_texts_estrategia_web_site»; untranslated, every language shows
+		the original. They reach the site translated through
+		Company::value(), so the shortcode, the Block Bindings source and the
+		WhatsApp button get them with no code of their own.
+
+		The criterion: a detail goes in if a visitor reads it as a sentence in
+		a language (an address says «Nave 14» / «Unit 14», a schedule says
+		«Lunes a viernes», the WhatsApp message is a greeting, the registry is
+		«Registro Mercantil de…»). Names, numbers, addresses of the internet
+		and identifiers do not: Settings::WPML_SAME lists them.
+
+		Edge case, by name: company_name. Even when it is made of words
+		(«Lavandería Mallorca») it is a brand and is the same in every
+		language; a site whose name really changes per language translates
+		the site title (blogname), which WPML already offers.
+
+		The trap: WPML only translates the option on the FRONT (and AJAX), not
+		in wp-admin, so the «Company details» screen always shows and saves
+		the original; but a REST request (/wp/v2/settings) is not wp-admin,
+		and with ?lang=en it reads the translation. Content loads write
+		without ?lang (measured 16-10-2026 on Lavandería local, WPML 5.0.2 +
+		String Translation 5.0.2). Also: WPML registers the strings when it
+		re-reads the files (see above), and only of an option that EXISTS
+		then; estrategia_web_site is saved with all its keys, so the empty
+		ones (a schedule not filled in yet) are registered too. On a NEW WPML
+		install, String Translation builds no translation files (.mo) until
+		someone opens WPML › String Translation once: until then a saved
+		translation is in the database and the site does not show it
+		(measured on a fresh Lavandería local, 16-10-2026). And on
+		Playground (SQLite) String Translation builds no .mo and translates
+		nothing until its collation cache is cleared: see Lavandería's
+		tests/fixtures/lm-test.php. It does not happen on MySQL.
+
+		How to maintain: a new detail in Settings::DEFAULTS goes into
+		Settings::WPML_TRANSLATE (and here) or Settings::WPML_SAME, in the same
+		commit; modules/site/tests/wpml-config.test.mjs fails otherwise.
 	-->
 	<admin-texts>
+		<key name="estrategia_web_site">
+			<key name="registry" />
+			<key name="whatsapp_message" />
+			<key name="address" />
+			<key name="schedule" />
+		</key>
+		<!--
+			WhatsApp module (1.4.3): the button's own message option, used
+			when the block's «message» is neither filled in nor bound (the
+			parent theme's footer). The phone (estrategia_web_whatsapp_phone)
+			is not translated. Lavandería binds the message to the company's
+			whatsapp_message above instead.
+		-->
+		<key name="estrategia_web_whatsapp_message" />
 		<key name="estrategia_web_social_links">
 			<key name="*">
 				<key name="name" />

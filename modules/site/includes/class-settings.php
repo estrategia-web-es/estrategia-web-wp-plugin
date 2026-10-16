@@ -20,7 +20,9 @@
  *
  * How to maintain:
  * - A new key goes into DEFAULTS, schema(), sanitize(), the screen (Admin),
- *   the editor list (assets/editor.js) and the README, in the same commit. If
+ *   the editor list (assets/editor.js) and the README, in the same commit. A
+ *   detail that is shown also goes into WPML_TRANSLATE or WPML_SAME (and, if
+ *   translated, into wpml-config.xml's <admin-texts>). If
  *   a test needs it, also into tests/lib.mjs. If it is an OPTION and not a
  *   detail that is shown (like the Matomo ones), also into Company::NOT_DATA.
  * - Edge case: a detail only ONE site has (a clinic's health registration
@@ -95,6 +97,18 @@ final class Settings {
 
 	/** Multi-line fields (line breaks are kept and rendered as <br>). */
 	private const TEXTAREA = array( 'address', 'schedule' );
+
+	/**
+	 * WPML String Translation (wpml-config.xml, <admin-texts>): the details
+	 * that are written in a language and are offered for translation, and
+	 * the ones that are the same in every language. Every data key of
+	 * DEFAULTS is in one of the two; the criterion and the edge case are in
+	 * the XML, and modules/site/tests/wpml-config.test.mjs fails if the XML
+	 * says otherwise or a key is left undecided.
+	 */
+	public const WPML_TRANSLATE = array( 'registry', 'whatsapp_message', 'address', 'schedule' );
+
+	public const WPML_SAME = array( 'company_name', 'legal_name', 'tax_id', 'email', 'phone', 'phone_secondary', 'whatsapp', 'map_url' );
 
 	public const DEFAULTS = array(
 		'company_name'     => '',
