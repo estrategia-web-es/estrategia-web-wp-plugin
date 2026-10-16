@@ -1,0 +1,14 @@
+# Line endings: LF everywhere, also in a Windows checkout (core.autocrlf=true).
+# Why (16-10-2026): the deployer packs the WORKING folder, and the compiled
+# translations (languages/*.l10n.php) keep multi-line strings as literal line
+# breaks inside PHP quotes. Checked out as CRLF they became "\r\n", stopped
+# matching their msgid ("\n") and the default email templates were served
+# untranslated in Lavandería production. tests/translations.test.mjs catches it.
+# Same rule as the parent theme's .gitattributes.
+* text=auto eol=lf
+
+# Binary files git must not touch.
+*.png binary
+*.jpg binary
+*.webp binary
+*.woff2 binary
