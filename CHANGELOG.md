@@ -11,6 +11,10 @@ four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
 ## Unreleased
 
+- **Catalan translation (ca)**: languages/estrategia-web-ca.po and .l10n.php, all 727 strings. Buttons in the imperative (Softcatalà), the site speaks to the visitor as «tu». URL slugs in Catalan: clients, sector, opinions, seus, projectes, categoria-projecte, portafolis, categoria-portafolis. A Catalan-by-default site (Gastronòmicament) registers these from the start; changing one later changes its URLs. Doubtful wording, pending David's review: docs/translations/ca-review.md.
+- `tools/i18n.mjs new <locale>` starts a language (header and Plural-Forms from the PLURALS table).
+- **Fixed: the default email templates were served untranslated** on a site deployed from a Windows checkout. The compiled translations keep multi-line strings with literal line breaks; checked out as CRLF they stopped matching their msgid. `.gitattributes` now forces LF, like the parent theme's.
+- Tests: translations (level 1: every .po complete, no fuzzy, placeholders kept, ASCII slugs, compiled) and catalan (level 2: what the visitor reads on a Catalan site, and the Catalan slugs whatever the request's language). The WPML double knows «ca» and takes `&wpml-default=<code>`.
 - **WPML: `wpml-config.xml` declares the site module's types** (eweb_client, eweb_testimonial, eweb_location, eweb_project, eweb_portfolio) **and taxonomies as display-as-translated** (`translate="1" display-as-translated="1"`; `"2"` fails WPML's XSD and drops the whole file's admin texts). WPML locks the setting on its screen. Same values Lavandería had set by hand.
 - **WPML String Translation offers the company details** `registry`, `whatsapp_message`, `address` and `schedule` (`estrategia_web_site`) and the WhatsApp module's `estrategia_web_whatsapp_message`. `Settings::WPML_TRANSLATE` / `WPML_SAME`, `Content_Types::WPML_MODES`.
 - Test `site/wpml-config` (level 1): the XML against the code.
