@@ -107,6 +107,8 @@ test("field rules: select, relation, number, date, boolean, image, duplicates, w
     [(d) => (d.slug = "/restaurants/"), /slug must be lowercase/],
     [(d) => (d.supports = ["title", "editr"]), /unknown value “editr”/],
     [(d) => (d.icon = "food"), /Dashicons/],
+    [(d) => (d.fields[0].true_label = "Yes"), /true_label is only for fields of type “boolean”/],
+    [(d) => d.fields.push({ name: "gment_terrace", type: "boolean", label: "Terrace", false_label: 0 }), /false_label must be a string/],
   ];
   for (const [change, re] of cases) {
     const def = base();
@@ -118,7 +120,7 @@ test("field rules: select, relation, number, date, boolean, image, duplicates, w
   ok.slug = "carta/restaurants";
   ok.fields.push({ name: "gment_seats", type: "number", label: "Seats", integer: true, min: 0, max: 500, default: 40 });
   ok.fields.push({ name: "gment_related", type: "relation", label: "Related", post_type: ["gment_restaurant", "post"] });
-  ok.fields.push({ name: "gment_terrace", type: "boolean", label: "Terrace", default: true });
+  ok.fields.push({ name: "gment_terrace", type: "boolean", label: "Terrace", default: true, true_label: { ca: "Amb terrassa", es: "Con terraza" }, false_label: "" });
   assert.deepEqual(errors(ok), []);
 });
 
