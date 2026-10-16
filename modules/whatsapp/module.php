@@ -26,6 +26,12 @@
  * number, from the site module's source). See the explanation in
  * modules/map/module.php.
  *
+ * WPML (1.4.3): estrategia_web_whatsapp_message is declared in the plugin's
+ * wpml-config.xml (<admin-texts>), so String Translation offers it and each
+ * language gets its own message; the phone is the same in every language.
+ * A new text option here goes there too (modules/site/tests/wpml-config.test.mjs
+ * checks this one).
+ *
  * Tests: in the theme repo (armazon-wp-padre/tests/whatsapp.test.mjs).
  */
 
