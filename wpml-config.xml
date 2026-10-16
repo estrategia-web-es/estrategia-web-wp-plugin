@@ -192,7 +192,11 @@
 		String Translation 5.0.2). Also: WPML registers the strings when it
 		re-reads the files (see above), and only of an option that EXISTS
 		then; estrategia_web_site is saved with all its keys, so the empty
-		ones (a schedule not filled in yet) are registered too. And on
+		ones (a schedule not filled in yet) are registered too. On a NEW WPML
+		install, String Translation builds no translation files (.mo) until
+		someone opens WPML › String Translation once: until then a saved
+		translation is in the database and the site does not show it
+		(measured on a fresh Lavandería local, 16-10-2026). And on
 		Playground (SQLite) String Translation builds no .mo and translates
 		nothing until its collation cache is cleared: see Lavandería's
 		tests/fixtures/lm-test.php. It does not happen on MySQL.
