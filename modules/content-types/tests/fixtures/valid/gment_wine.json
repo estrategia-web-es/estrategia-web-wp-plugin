@@ -13,7 +13,8 @@
     { "name": "gment_contact", "type": "email", "label": "Contact" },
     { "name": "gment_label", "type": "image", "label": "Label" },
     { "name": "gment_released", "type": "date", "label": "Released" },
-    { "name": "gment_organic", "type": "boolean", "label": "Organic" },
+    { "name": "gment_organic", "type": "boolean", "label": "Organic", "true_label": { "es": "Ecológico", "en": "Organic" }, "false_label": "" },
+    { "name": "gment_featured", "type": "boolean", "label": "Featured" },
     { "name": "gment_tasting", "type": "text", "label": "Tasting note" }
   ]
 }
