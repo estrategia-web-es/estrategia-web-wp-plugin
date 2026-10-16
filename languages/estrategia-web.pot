@@ -2634,32 +2634,32 @@ msgstr ""
 #: modules/site/includes/admin/class-admin.php:84
 #: modules/site/includes/class-bindings.php:51
 #: modules/site/includes/class-legacy-names.php:109
-#: modules/site/includes/class-settings.php:146
+#: modules/site/includes/class-settings.php:160
 msgid "Company details"
 msgstr ""
 
 #: modules/site/includes/admin/class-admin.php:46
-#: modules/site/includes/class-content-types.php:78
+#: modules/site/includes/class-content-types.php:99
 msgid "Clients"
 msgstr ""
 
 #: modules/site/includes/admin/class-admin.php:47
-#: modules/site/includes/class-content-types.php:120
+#: modules/site/includes/class-content-types.php:141
 msgid "Testimonials"
 msgstr ""
 
 #: modules/site/includes/admin/class-admin.php:48
-#: modules/site/includes/class-content-types.php:146
+#: modules/site/includes/class-content-types.php:167
 msgid "Locations"
 msgstr ""
 
 #: modules/site/includes/admin/class-admin.php:49
-#: modules/site/includes/class-content-types.php:178
+#: modules/site/includes/class-content-types.php:199
 msgid "Projects"
 msgstr ""
 
 #: modules/site/includes/admin/class-admin.php:50
-#: modules/site/includes/class-content-types.php:210
+#: modules/site/includes/class-content-types.php:231
 msgid "Portfolio"
 msgstr ""
 
@@ -2734,13 +2734,13 @@ msgid "Company registry"
 msgstr ""
 
 #: modules/site/includes/class-company.php:111
-#: modules/site/includes/class-content-types.php:163
+#: modules/site/includes/class-content-types.php:184
 #: modules/social/includes/class-icons.php:82
 msgid "Email"
 msgstr ""
 
 #: modules/site/includes/class-company.php:112
-#: modules/site/includes/class-content-types.php:162
+#: modules/site/includes/class-content-types.php:183
 msgid "Phone"
 msgstr ""
 
@@ -2757,12 +2757,12 @@ msgid "WhatsApp message"
 msgstr ""
 
 #: modules/site/includes/class-company.php:116
-#: modules/site/includes/class-content-types.php:161
+#: modules/site/includes/class-content-types.php:182
 msgid "Address"
 msgstr ""
 
 #: modules/site/includes/class-company.php:117
-#: modules/site/includes/class-content-types.php:164
+#: modules/site/includes/class-content-types.php:185
 msgid "Opening hours"
 msgstr ""
 
@@ -2812,380 +2812,380 @@ msgstr ""
 msgid "WhatsApp (link)"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:75
+#: modules/site/includes/class-content-types.php:96
 msgctxt "URL slug"
 msgid "clients"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:79
+#: modules/site/includes/class-content-types.php:100
 msgid "Client"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:80
+#: modules/site/includes/class-content-types.php:101
 msgid "Add client"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:81
+#: modules/site/includes/class-content-types.php:102
 msgid "Edit client"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:82
+#: modules/site/includes/class-content-types.php:103
 msgid "New client"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:83
+#: modules/site/includes/class-content-types.php:104
 msgid "View client"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:84
+#: modules/site/includes/class-content-types.php:105
 msgid "View clients"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:85
+#: modules/site/includes/class-content-types.php:106
 msgid "Search clients"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:86
+#: modules/site/includes/class-content-types.php:107
 msgid "No clients found."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:87
+#: modules/site/includes/class-content-types.php:108
 msgid "No clients found in Trash."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:88
+#: modules/site/includes/class-content-types.php:109
 msgid "All clients"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:89
+#: modules/site/includes/class-content-types.php:110
 msgid "Logo or photo"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:90
+#: modules/site/includes/class-content-types.php:111
 msgid "Set logo or photo"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:94
+#: modules/site/includes/class-content-types.php:115
 msgctxt "URL slug"
 msgid "client-sector"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:96
+#: modules/site/includes/class-content-types.php:117
 msgid "Sectors"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:97
+#: modules/site/includes/class-content-types.php:118
 msgid "Sector"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:98
+#: modules/site/includes/class-content-types.php:119
 msgid "Add sector"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:99
+#: modules/site/includes/class-content-types.php:120
 msgid "Edit sector"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:100
+#: modules/site/includes/class-content-types.php:121
 msgid "Search sectors"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:101
+#: modules/site/includes/class-content-types.php:122
 msgid "All sectors"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:102
+#: modules/site/includes/class-content-types.php:123
 msgid "No sectors found."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:106
+#: modules/site/includes/class-content-types.php:127
 msgid "Client website"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:108
+#: modules/site/includes/class-content-types.php:129
 msgid "Image fit (cover for a photo, contain for a logo)"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:112
+#: modules/site/includes/class-content-types.php:133
 msgid "Business type"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:117
+#: modules/site/includes/class-content-types.php:138
 msgctxt "URL slug"
 msgid "testimonials"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:121
+#: modules/site/includes/class-content-types.php:142
 msgid "Testimonial"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:122
+#: modules/site/includes/class-content-types.php:143
 msgid "Add testimonial"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:123
+#: modules/site/includes/class-content-types.php:144
 msgid "Edit testimonial"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:124
+#: modules/site/includes/class-content-types.php:145
 msgid "New testimonial"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:125
+#: modules/site/includes/class-content-types.php:146
 msgid "View testimonial"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:126
+#: modules/site/includes/class-content-types.php:147
 msgid "View testimonials"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:127
+#: modules/site/includes/class-content-types.php:148
 msgid "Search testimonials"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:128
+#: modules/site/includes/class-content-types.php:149
 msgid "No testimonials found."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:129
+#: modules/site/includes/class-content-types.php:150
 msgid "No testimonials found in Trash."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:130
+#: modules/site/includes/class-content-types.php:151
 msgid "All testimonials"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:131
+#: modules/site/includes/class-content-types.php:152
 msgid "Author photo"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:132
+#: modules/site/includes/class-content-types.php:153
 msgid "Set author photo"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:135
+#: modules/site/includes/class-content-types.php:156
 msgid "Author"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:136
+#: modules/site/includes/class-content-types.php:157
 msgid "Author role or company"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:137
+#: modules/site/includes/class-content-types.php:158
 msgid "Rating (1 to 5)"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:138
+#: modules/site/includes/class-content-types.php:159
 msgid "Related client"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:143
+#: modules/site/includes/class-content-types.php:164
 msgctxt "URL slug"
 msgid "locations"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:147
+#: modules/site/includes/class-content-types.php:168
 msgid "Location"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:148
+#: modules/site/includes/class-content-types.php:169
 msgid "Add location"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:149
+#: modules/site/includes/class-content-types.php:170
 msgid "Edit location"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:150
+#: modules/site/includes/class-content-types.php:171
 msgid "New location"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:151
+#: modules/site/includes/class-content-types.php:172
 msgid "View location"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:152
+#: modules/site/includes/class-content-types.php:173
 msgid "View locations"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:153
+#: modules/site/includes/class-content-types.php:174
 msgid "Search locations"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:154
+#: modules/site/includes/class-content-types.php:175
 msgid "No locations found."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:155
+#: modules/site/includes/class-content-types.php:176
 msgid "No locations found in Trash."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:156
+#: modules/site/includes/class-content-types.php:177
 msgid "All locations"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:157
+#: modules/site/includes/class-content-types.php:178
 msgid "Static map image"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:158
+#: modules/site/includes/class-content-types.php:179
 msgid "Set static map image"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:165
+#: modules/site/includes/class-content-types.php:186
 msgid "Google Maps link"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:167
+#: modules/site/includes/class-content-types.php:188
 msgid "Map embed URL"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:169
+#: modules/site/includes/class-content-types.php:190
 msgid "Static map image (theme path or URL of this site)"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:170
+#: modules/site/includes/class-content-types.php:191
 msgid "Static map image (media library ID)"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:175
+#: modules/site/includes/class-content-types.php:196
 msgctxt "URL slug"
 msgid "projects"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:179
+#: modules/site/includes/class-content-types.php:200
 msgid "Project"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:180
+#: modules/site/includes/class-content-types.php:201
 msgid "Add project"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:181
+#: modules/site/includes/class-content-types.php:202
 msgid "Edit project"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:182
+#: modules/site/includes/class-content-types.php:203
 msgid "New project"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:183
+#: modules/site/includes/class-content-types.php:204
 msgid "View project"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:184
+#: modules/site/includes/class-content-types.php:205
 msgid "View projects"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:185
+#: modules/site/includes/class-content-types.php:206
 msgid "Search projects"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:186
+#: modules/site/includes/class-content-types.php:207
 msgid "No projects found."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:187
+#: modules/site/includes/class-content-types.php:208
 msgid "No projects found in Trash."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:188
+#: modules/site/includes/class-content-types.php:209
 msgid "All projects"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:192
+#: modules/site/includes/class-content-types.php:213
 msgctxt "URL slug"
 msgid "project-category"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:194
+#: modules/site/includes/class-content-types.php:215
 msgid "Project categories"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:195
+#: modules/site/includes/class-content-types.php:216
 msgid "Project category"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:196
-#: modules/site/includes/class-content-types.php:228
+#: modules/site/includes/class-content-types.php:217
+#: modules/site/includes/class-content-types.php:249
 msgid "Add category"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:197
-#: modules/site/includes/class-content-types.php:229
+#: modules/site/includes/class-content-types.php:218
+#: modules/site/includes/class-content-types.php:250
 msgid "Edit category"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:198
-#: modules/site/includes/class-content-types.php:230
+#: modules/site/includes/class-content-types.php:219
+#: modules/site/includes/class-content-types.php:251
 msgid "Search categories"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:199
-#: modules/site/includes/class-content-types.php:231
+#: modules/site/includes/class-content-types.php:220
+#: modules/site/includes/class-content-types.php:252
 msgid "All categories"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:200
-#: modules/site/includes/class-content-types.php:232
+#: modules/site/includes/class-content-types.php:221
+#: modules/site/includes/class-content-types.php:253
 msgid "No categories found."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:207
+#: modules/site/includes/class-content-types.php:228
 msgctxt "URL slug"
 msgid "portfolio"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:211
+#: modules/site/includes/class-content-types.php:232
 msgid "Portfolio item"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:212
+#: modules/site/includes/class-content-types.php:233
 msgid "Add portfolio item"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:213
+#: modules/site/includes/class-content-types.php:234
 msgid "Edit portfolio item"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:214
+#: modules/site/includes/class-content-types.php:235
 msgid "New portfolio item"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:215
+#: modules/site/includes/class-content-types.php:236
 msgid "View portfolio item"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:216
+#: modules/site/includes/class-content-types.php:237
 msgid "View portfolio"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:217
+#: modules/site/includes/class-content-types.php:238
 msgid "Search portfolio"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:218
+#: modules/site/includes/class-content-types.php:239
 msgid "No portfolio items found."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:219
+#: modules/site/includes/class-content-types.php:240
 msgid "No portfolio items found in Trash."
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:220
+#: modules/site/includes/class-content-types.php:241
 msgid "All portfolio items"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:224
+#: modules/site/includes/class-content-types.php:245
 msgctxt "URL slug"
 msgid "portfolio-category"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:226
+#: modules/site/includes/class-content-types.php:247
 msgid "Portfolio categories"
 msgstr ""
 
-#: modules/site/includes/class-content-types.php:227
+#: modules/site/includes/class-content-types.php:248
 msgid "Portfolio category"
 msgstr ""
 
@@ -3251,22 +3251,22 @@ msgstr ""
 msgid "Logo (whole, never cropped)"
 msgstr ""
 
-#: modules/site/includes/class-settings.php:147
+#: modules/site/includes/class-settings.php:161
 msgid "Company details and site options of the Estrategia Web Site plugin."
 msgstr ""
 
-#: modules/site/includes/class-settings.php:269
+#: modules/site/includes/class-settings.php:283
 msgid "The email address is not valid. The previous one has been kept."
 msgstr ""
 
-#: modules/site/includes/class-settings.php:282
+#: modules/site/includes/class-settings.php:296
 msgid ""
 "The WhatsApp number is not valid (international format, digits only). The "
 "previous one has been kept."
 msgstr ""
 
 #. translators: %s: the field name.
-#: modules/site/includes/class-settings.php:356
+#: modules/site/includes/class-settings.php:370
 #, php-format
 msgid ""
 "The address in «%s» is not a valid web address. The previous one has been "
@@ -3556,11 +3556,11 @@ msgctxt "module name"
 msgid "WhatsApp button"
 msgstr ""
 
-#: modules/whatsapp/module.php:46
+#: modules/whatsapp/module.php:52
 msgid "WhatsApp phone number in international format, digits only."
 msgstr ""
 
-#: modules/whatsapp/module.php:57
+#: modules/whatsapp/module.php:63
 msgid "Predefined WhatsApp message."
 msgstr ""
 
