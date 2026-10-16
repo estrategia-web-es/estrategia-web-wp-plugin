@@ -68,15 +68,19 @@ if ( ! isset( $_GET['wpml-double'] ) ) { // phpcs:ignore WordPress.Security.Nonc
 	 * What it does NOT imitate: WPML's swap of $l10n on a switch, nor URLs.
 	 * The real check is the local Lavandería with real WPML (its deployer
 	 * and tests/server.mjs).
+	 * It also knows Catalan («ca», WPML's own locale for it), and
+	 * &wpml-default=<code> changes the default language: ?wpml-double=ca&wpml-default=ca
+	 * is Gastronòmicament (Catalan by default; tests/catalan.test.mjs).
 	 */
-	$GLOBALS['estrategia_web_test_wpml'] = sanitize_key( wp_unslash( $_GET['wpml-double'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	$GLOBALS['sitepress']                = new class() {
+	$GLOBALS['estrategia_web_test_wpml']         = sanitize_key( wp_unslash( $_GET['wpml-double'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$GLOBALS['estrategia_web_test_wpml_default'] = isset( $_GET['wpml-default'] ) ? sanitize_key( wp_unslash( $_GET['wpml-default'] ) ) : 'es'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$GLOBALS['sitepress']                        = new class() {
 		public function get_locale( $code ) {
-			return array( 'es' => 'es_ES', 'en' => 'en_US' )[ $code ] ?? false;
+			return array( 'es' => 'es_ES', 'en' => 'en_US', 'ca' => 'ca' )[ $code ] ?? false;
 		}
 	};
 	add_filter( 'wpml_current_language', static fn() => $GLOBALS['estrategia_web_test_wpml'] );
-	add_filter( 'wpml_default_language', static fn() => 'es' );
+	add_filter( 'wpml_default_language', static fn() => $GLOBALS['estrategia_web_test_wpml_default'] );
 	add_action(
 		'wpml_switch_language',
 		static function ( $code ) {
@@ -190,6 +194,20 @@ add_action(
 				$out['switched_en'] = $now();
 				do_action( 'wpml_switch_language', null );
 				$out['switched_back'] = $now();
+				return $out;
+			}
+		);
+
+		// Catalan (tests/catalan.test.mjs): every URL slug of the plugin as
+		// THIS request translates it (the site language's, see url_slug()).
+		$route(
+			'/i18n-slugs',
+			'GET',
+			static function () {
+				$out = array();
+				foreach ( array( 'clients', 'client-sector', 'testimonials', 'locations', 'projects', 'project-category', 'portfolio', 'portfolio-category' ) as $slug ) {
+					$out[ $slug ] = _x( $slug, 'URL slug', 'estrategia-web' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
+				}
 				return $out;
 			}
 		);

@@ -14,9 +14,10 @@
 // estrategia-web-en_US, which does not exist), and on the English one the
 // slug «locations» instead of «sedes».
 //
-// How to maintain: the double only knows es and en. If a third language is
-// needed (the Gastronòmicament case, Catalan by default), it goes into its
-// get_locale() and the plugin needs that language's .po; then add a case here.
+// How to maintain: the double knows es, en and ca (&wpml-default=<code>
+// changes the default language). The Gastronòmicament case, Catalan by
+// default, is tests/catalan.test.mjs. A fourth language goes into the
+// double's get_locale() and needs that language's .po.
 // The check with REAL WPML is not here: it is Lavandería's deployer («comprobar»
 // step) and its local tests/server.mjs.
 import { test, before, after } from "node:test";
