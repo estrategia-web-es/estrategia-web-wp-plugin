@@ -1,7 +1,12 @@
 // NIVEL: BANCO DE TRABAJO — not a test. Translations (Armazón, row 11): extracts, merges and compiles.
 //
-//   node tools/i18n.mjs          everything: .pot → merge into each .po → compile
-//   node tools/i18n.mjs compile  only compile the .po files (after translating)
+//   node tools/i18n.mjs              everything: .pot → merge into each .po → compile
+//   node tools/i18n.mjs compile      only compile the .po files (after translating)
+//   node tools/i18n.mjs new <locale> start a language: estrategia-web-<locale>.po with
+//                                    every string empty, then everything as above
+//
+// Languages: every languages/estrategia-web-<locale>.po there is (today es_ES
+// and ca). Nothing here lists them: a new .po is merged and compiled like the others.
 //
 // ONE text domain for the whole plugin, estrategia-web (since 1.1.0, which merged
 // Site, Forms and the theme's blocks). What it produces in languages/:
@@ -35,8 +40,13 @@
 //   shared files (see includes/class-modules.php). It is regenerated, not
 //   merged by hand: if git conflicts, take either side, run this again and
 //   translate whatever comes out empty.
-// - A new language: copy the .pot to estrategia-web-<locale>.po, set the
-//   Language header and translate. Only languages someone is going to read.
+// - A new language: `node tools/i18n.mjs new <locale>` (the WordPress locale,
+//   the one WPML resolves the language code to: ca, de_DE, en_GB…), translate
+//   the .po and run `compile`. Only languages someone is going to read.
+//   tests/translations.test.mjs (level 1) goes red while it has an empty or
+//   fuzzy string, so a half-done language cannot be committed by accident.
+// - Plural forms: PLURALS below. A locale not in it stops `new`: look up its
+//   Plural-Forms (WordPress' GlotPress, or the gettext manual) and add it.
 // - Edge case: URL slugs (_x( 'clients', 'URL slug' )). They are translated
 //   like any other string, but translating them CHANGES the URLs of sites
 //   already published in that language: a change there is a major version.
@@ -180,5 +190,34 @@ function compile() {
   }
 }
 
+// Plural-Forms per locale, for `new`. All the ones used today have two forms.
+const PLURALS = {
+  ca: "nplurals=2; plural=(n != 1);",
+  es_ES: "nplurals=2; plural=(n != 1);",
+  en_GB: "nplurals=2; plural=(n != 1);",
+  de_DE: "nplurals=2; plural=(n != 1);",
+};
+
+// A new .po with the header and no strings: extract() then merges every string into it, empty.
+function start(locale) {
+  if (!/^[a-z]{2,3}(_[A-Z]{2})?$/.test(locale || "")) {
+    console.error("Usage: node tools/i18n.mjs new <locale>   (e.g. ca, de_DE)");
+    process.exit(1);
+  }
+  if (!PLURALS[locale]) {
+    console.error(`No Plural-Forms known for «${locale}»: add it to PLURALS in tools/i18n.mjs.`);
+    process.exit(1);
+  }
+  const file = path.join(LANG, `${DOMAIN}-${locale}.po`);
+  if (fs.existsSync(file)) {
+    console.error(`${path.basename(file)} already exists: nothing is overwritten.`);
+    process.exit(1);
+  }
+  const header = ["Project-Id-Version: estrategia-web", "Language: " + locale, "MIME-Version: 1.0", "Content-Type: text/plain; charset=UTF-8", "Content-Transfer-Encoding: 8bit", "Plural-Forms: " + PLURALS[locale]];
+  fs.writeFileSync(file, `msgid ""\nmsgstr ""\n${header.map((h) => q(h + "\n")).join("\n")}\n`);
+  console.log(`${path.basename(file)}: created`);
+}
+
+if (process.argv[2] === "new") start(process.argv[3]);
 if (process.argv[2] !== "compile") extract();
 compile();
