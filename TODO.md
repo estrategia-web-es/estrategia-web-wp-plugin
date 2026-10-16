@@ -164,7 +164,6 @@ Types, taxonomies and company details are declared since the release after 1.4.2
 - URL slugs: with WPML, WPML translates them, not gettext.
 - Block attributes a visitor reads (the whatsapp block's message and label, map, carousel, social-links…) are not in `<gutenberg-blocks>`: audit them.
 - On Playground (SQLite), String Translation needs the collation fix of Lavandería's `tests/fixtures/lm-test.php`: the forms strings have never been seen translated there.
-- content-types defaults its types to «translate only» (1) while the site module's types are display-as-translated: decide whether to align them.
 ## Manual order in a Query Loop
 **Date:** 02-10-2026 · **Due:** —
 

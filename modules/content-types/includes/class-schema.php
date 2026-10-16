@@ -182,7 +182,7 @@ final class Schema {
 				'public'            => $tax['public'] ?? true,
 				'show_in_rest'      => $tax['show_in_rest'] ?? true,
 				'show_admin_column' => $tax['show_admin_column'] ?? true,
-				'wpml'              => $tax['wpml'] ?? 'translate',
+				'wpml'              => $tax['wpml'] ?? 'display-as-translated',
 			);
 		}
 		return array(
@@ -198,7 +198,7 @@ final class Schema {
 			'show_in_rest'  => $def['show_in_rest'] ?? true,
 			'hierarchical'  => $def['hierarchical'] ?? false,
 			'menu_position' => $def['menu_position'] ?? null,
-			'wpml'          => $def['wpml'] ?? 'translate',
+			'wpml'          => $def['wpml'] ?? 'display-as-translated',
 			'taxonomies'    => $taxonomies,
 			'fields'        => $fields,
 		);

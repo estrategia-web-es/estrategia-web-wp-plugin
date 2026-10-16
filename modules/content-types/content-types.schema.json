@@ -73,7 +73,7 @@
         "plural": { "$ref": "#/$defs/text" }
       }
     },
-    "typeWpml": { "enum": ["translate", "display-as-translated", "ignore"], "default": "translate" },
+    "typeWpml": { "enum": ["translate", "display-as-translated", "ignore"], "default": "display-as-translated" },
     "taxonomy": {
       "type": "object",
       "additionalProperties": false,

@@ -46,10 +46,10 @@ test("relation and image with copy: WPML copies the ID of the TRANSLATED post (p
   assert.deepEqual(field("gment_pairs")[0].attr, { action: "translate" }, "translate: no post-ids");
 });
 
-test("types and taxonomies: translate=1, display-as-translated=2; a referenced taxonomy is not declared twice", () => {
+test("types and taxonomies: translate=1, display-as-translated=1+1 (never 2: WPML's XSD); a referenced taxonomy is not declared twice", () => {
   assert.deepEqual(cfg["custom-types"]["custom-type"], [
     { value: "gment_restaurant", attr: { translate: "1" } },
-    { value: "gment_wine", attr: { translate: "2" } },
+    { value: "gment_wine", attr: { translate: "1", "display-as-translated": "1" } },
   ]);
   assert.deepEqual(cfg.taxonomies.taxonomy, [{ value: "gment_cuisine", attr: { translate: "1" } }]);
   assert.equal(config.not_array, "x", "something that is not an array goes back untouched");

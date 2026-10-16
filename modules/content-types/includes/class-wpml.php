@@ -18,7 +18,12 @@
  *
  * What is mapped:
  *   type   wpml: translate → <custom-type translate="1">,
- *          display-as-translated → translate="2", ignore → translate="0"
+ *          display-as-translated → translate="1" display-as-translated="1"
+ *          (NOT translate="2": WPML's XSD only takes 0 or 1, and in a file a
+ *          "2" drops the whole file; measured 16-10-2026), ignore → translate="0".
+ *          Default for types and taxonomies: display-as-translated (David,
+ *          16-10-2026): a list of restaurants or recipes must not go empty in a
+ *          language until every item is translated.
  *   taxonomy, the same with <taxonomy>
  *   field  wpml: copy | translate | ignore → <custom-field action="…">.
  *          image and relation with copy also get type="post-ids" (and the
@@ -63,7 +68,11 @@ final class Wpml {
 
 	public const PENDING_OPTION = 'estrategia_web_content_types_wpml_pending';
 
-	private const MODE = array( 'translate' => '1', 'display-as-translated' => '2', 'ignore' => '0' );
+	private const MODE = array(
+		'translate'             => array( 'translate' => '1' ),
+		'display-as-translated' => array( 'translate' => '1', 'display-as-translated' => '1' ),
+		'ignore'                => array( 'translate' => '0' ),
+	);
 
 	private static bool $syncing = false;
 
@@ -87,10 +96,10 @@ final class Wpml {
 		$ctypes = array();
 		$taxes  = array();
 		foreach ( $types as $name => $def ) {
-			$ctypes[] = array( 'value' => $name, 'attr' => array( 'translate' => self::MODE[ $def['wpml'] ] ) );
+			$ctypes[] = array( 'value' => $name, 'attr' => self::MODE[ $def['wpml'] ] );
 			foreach ( $def['taxonomies'] as $tax ) {
 				if ( is_array( $tax ) ) {
-					$taxes[] = array( 'value' => $tax['name'], 'attr' => array( 'translate' => self::MODE[ $tax['wpml'] ] ) );
+					$taxes[] = array( 'value' => $tax['name'], 'attr' => self::MODE[ $tax['wpml'] ] );
 				}
 			}
 			foreach ( $def['fields'] as $field ) {

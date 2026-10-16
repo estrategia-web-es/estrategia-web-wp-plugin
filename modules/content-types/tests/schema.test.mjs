@@ -144,7 +144,7 @@ test("normalize: the defaults, WPML per field type, and custom-fields added when
   const n = php("normalize", { prefix: "gment_", name: "gment_wine_cellar", labels: { singular: "Winery", plural: "Wineries" }, supports: ["title"], fields: [{ name: "gment_notes", type: "textarea", label: "Notes" }, { name: "gment_founded", type: "number", label: "Founded", integer: true }, { name: "gment_logo", type: "image", label: "Logo" }] });
   assert.equal(n.slug, "wine-cellar");
   assert.deepEqual(n.supports, ["title", "custom-fields"]);
-  assert.equal(n.wpml, "translate");
+  assert.equal(n.wpml, "display-as-translated", "default since 16-10-2026: a list must not go empty in an untranslated language");
   assert.equal(n.has_archive, true);
   assert.deepEqual(n.fields.map((f) => [f.name, f.meta_type, f.wpml, f.default]), [
     ["gment_notes", "string", "translate", ""],

@@ -9,8 +9,10 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
-## Unreleased
+## 1.4.3 — 16-10-2026
 
+- **Carousel: the infinite loop works with any number of cards in a multi-row grid.** A short last row (e.g. 23 clients in rows of 12) used to stop the rotation and the loop rewound from the last column to the first; now each card is placed in its grid cell and the gap travels with its column (option (a), David, 16-10-2026). No clones, nothing new in the accessibility tree. Test: parent theme `tests/carousel-any-count.test.mjs`.
+- **content-types: types and taxonomies default to display-as-translated** (David, 16-10-2026), like the site module's types: a list of restaurants or recipes does not go empty in a language until every item is translated. Written as `translate="1" display-as-translated="1"`, the form WPML's XSD accepts.
 - **Catalan translation (ca)**: languages/estrategia-web-ca.po and .l10n.php, all 727 strings. Buttons in the imperative (Softcatalà), the site speaks to the visitor as «tu». URL slugs in Catalan: clients, sector, opinions, seus, projectes, categoria-projecte, portafolis, categoria-portafolis. A Catalan-by-default site (Gastronòmicament) registers these from the start; changing one later changes its URLs. Doubtful wording, pending David's review: docs/translations/ca-review.md.
 - `tools/i18n.mjs new <locale>` starts a language (header and Plural-Forms from the PLURALS table).
 - **Fixed: the default email templates were served untranslated** on a site deployed from a Windows checkout. The compiled translations keep multi-line strings with literal line breaks; checked out as CRLF they stopped matching their msgid. `.gitattributes` now forces LF, like the parent theme's.

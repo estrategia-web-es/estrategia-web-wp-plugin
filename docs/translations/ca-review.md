@@ -1,5 +1,7 @@
 # Catalan translation (ca): review before publishing
 
+> **Decided by David on 16-10-2026: every recommendation in this file is accepted** («Adelante con todas tus recomendaciones»): seus, portafolis, opinions, galetes, Accepta-les totes / Rebutja-les totes, Desa la selecció, Configura, He llegit i accepto, privadesa, Escriu-nos per WhatsApp. The translation already uses them.
+
 The plugin's Catalan translation (`languages/estrategia-web-ca.po`, 727 strings) and the parent theme's (`armazon-wp-padre/languages/ca.po`, 27 strings) were written on 16-10-2026, before the first Catalan site (Gastronòmicament, Catalan by default with es/en/de) goes live. **Nothing here is published yet.** This file is for deciding the doubtful forms first: a URL slug, once a site is live, cannot change without changing its addresses.
 
 How to maintain this file: it is a one-off review, not a living document. Once David has decided the doubts below, apply the answers to `languages/estrategia-web-ca.po` (and the theme's `ca.po` if it applies), run `node tools/i18n.mjs`, update `tests/catalan.test.mjs` if a visitor text or a slug changed, and delete this file or mark it as decided at the top. A later wording change goes straight to the .po: this file is not kept in sync.
