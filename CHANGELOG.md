@@ -9,7 +9,7 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
-## Unreleased
+## 1.5.0 — 17-10-2026
 
 - **content-types: the constructor** (David, 17-10-2026: «una definición de tipo es dato»). Definitions are data of each site (private post type `eweb_content_type`, one per type, with revisions), made in «Estrategia Web → Content types» (names and URL per language, supports, taxonomies, fields) with JSON export/import; REST `estrategia-web/v1/content-types` (administrators). Templates: clients, testimonials, locations, projects, portfolio, added with one click and then editable. Field types `rating`, `embed`, `local_image`. Protections: the internal name is fixed once there are entries, removed fields keep their data, URL changes create 301s per language (redirects module, or a warning), a type with entries can only be switched off.
 - **The site module no longer registers clients, testimonials, locations, projects and portfolio**: they are content-types templates with the same names. On update, each site's types are stored once with the URLs it serves today (`Site_Types`); `enabled_types` and `rewrite_slugs` still switch them. `Meta_Panel` and their `wpml-config.xml` entries are removed (content-types declares them). content-types is now **Default: on**. JSON files in the theme are a read-only second source; a definition in the database with the same name wins.
