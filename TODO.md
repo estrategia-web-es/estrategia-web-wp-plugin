@@ -17,7 +17,6 @@ Lavandería's saved forms (and in any other site that uses them).
 **Date:** 15-10-2026 · **Due:** —
 
 - Open: why WPML's `locale` filter did not apply early in Lavandería production (same WPML 5.0.2 as the local copy, where it does). Not needed for the fix (1.4.0); worth a look if another WPML site shows the language late. The server keeps WPLANG = es_ES.
-- Gastronòmicament (Catalan by default): the plugin has no `ca` translation, so its URL slugs are the English msgids in all four languages. Add `estrategia-web-ca` BEFORE that site goes live: adding it later changes its URLs.
 ## Estrategia Web roadmap — what EVERY site must have (12-10-2026)
 
 David's list, so that new sites and existing ones carry the same things. It
@@ -32,75 +31,39 @@ items are built as a **new module** (a folder in `modules/`, see the header
 of `includes/class-modules.php`) or inside the module they belong to (the
 cookies, in `consent`).
 
-### Done and not deployed (local, committed)
+### Published
 
-- **One theme + one plugin with modules** (plugin 1.1.0, theme 1.1.0,
-  14-10-2026): this repo is now the `estrategia-web` plugin, with Site, Forms
-  (repo archived) and the theme's four blocks as modules (the blocks no
-  longer live in the theme); «Estrategia Web → Modules» screen; one
-  translation domain. Lavandería already uses it locally.
-- **Migrator to the single plugin** (14-10-2026): `class-armazon-migration.php`
-  leaves only `estrategia-web/estrategia-web.php` active (out go armazon-site,
-  armazon-forms and the two from 1.0.0). Lavandería's deployer uploads one
-  plugin (without `tests/`, `modules/*/tests/` or `tools/`) and the theme
-  without `blocks/`, sets aside the uploads MU-plugin, switches
-  `comments-off` on once, and has the optional steps `medios` and
-  `limpieza`. Rehearsed locally with the production versions; see its
-  header.
-- **Image uploads** (`uploads` module, Default: on): 20 MB, 2560 px threshold
-  and deleting the giant original, configurable in Settings → Media.
-  Replaces Lavandería's MU-plugin, which the deployer sets aside on publish.
-- **Cookies with detector and analytics** (merged on 14-10-2026): AEPD
-  categories, name detector, Open Cookie Database, Cookies screen, policy
-  table; `google-tags` (Consent Mode v2, Default: off) and `matomo`
-  (Default: on, the option stays in `estrategia_web_site`) modules. What
-  was left out:
-  - the Google Ads conversion of a form sent WITHOUT JavaScript (the
-    redirect with `af_result`) is not counted;
-  - the policy table does not include third-party cookies nobody adds by
-    hand (the google.com ones from the map iframe): the detector does not
-    see them.
-- **Custom social networks** (`social` module, Default: on): free list
-  (name, link, icon from the collection or SVG) and the
-  `estrategia-web/social-links` block. David will review how he wants it.
-- **Client «Business type»** (`estrategia_web_client_business_type`,
-  translatable). In Lavandería, what today goes in brackets in the title
-  still has to be moved to that field (by hand in the admin, after
-  publishing).
-- **«Location details» box** (and the client and testimonial ones): the
-  `site` module's `Meta_Panel`, with `wpml-config.xml` to copy or translate
-  each field.
-- **Other new modules**: `comments-off` (Default: off; Lavandería switches it
-  on when deploying), `featured-images` (size `estrategia-web-small`,
-  200 px: `wp media regenerate --only-missing` on sites that already have
-  photos), vertical crop of the carousel on mobile (the theme asks for it
-  with `estrategia_web_carousel_mobile_crop`).
-- **Phase 1: the Estrategia Web name** in the three repos (theme 1.0.0, this
-  plugin 1.0.0, forms 1.0.0): folders, prefixes, blocks, options, tables,
-  cookie; aliases of the old names until 2.0.0; «Powered by» off by default
-  (WordPress.org, guideline 10). Migrator: Lavandería
-  `despliegue/migrar-a-estrategia-web.mjs` (--seco against the server,
-  clean).
-- **Deployer that does not overwrite content** (Lavandería): publishing =
-  code; content only with `--contenido`, with a fingerprint per post and
-  without touching what was edited in the admin or WPML's English pages.
-- **bajar-contenido.mjs** (Lavandería): brings what was edited on the server
-  into the repo.
-- **Redirects editable in the admin** (`redirects` module, Default: off,
-  14-10-2026): Lavandería's whole CSV, `%3F` and `?p=`/`?page_id=`, only on
-  404s, 404 log, Rank Math notice, WP-CLI. In Lavandería it stays OFF (Rank
-  Math handles them).
-- **Post types and taxonomies with the `eweb_` prefix** (15-10-2026, branch
-  prefijo-tipos, proposed version 1.2.0): `Type_Names`, the
-  `Unprefixed_Names` alias until 2.0.0, the `Prefix_Migration` migrator (and
-  in Lavandería `despliegue/prefijo-tipos.mjs`, which the deployer runs
-  once). Table of public names in the README and the guide
-  [docs/web-nueva.md](docs/web-nueva.md).
+Everything on David's list of 12-10-2026 is built and published on Lavandería
+(1.1.0 to 1.4.3, 14 to 17-10-2026): see the CHANGELOG. What each part left
+open is below, in its own section.
 
 ### To add (not done yet)
 
-(Nothing from David's list of 12-10-2026: everything is in «Done and not
-deployed». Whatever new he asks for goes here.)
+(Nothing pending from David's list. Whatever new he asks for goes here.)
+
+## Cookies: what the detector does not cover
+**Date:** 14-10-2026 · **Due:** —
+
+- The Google Ads conversion of a form sent WITHOUT JavaScript (the redirect
+  with `af_result`) is not counted.
+- The policy table does not include third-party cookies nobody adds by hand
+  (the google.com ones from the map iframe): the detector does not see them.
+  Lavandería keeps its hand-written policy tables for that reason.
+
+## content-types: open points
+**Date:** 16-10-2026 · **Due:** before Gastronòmicament goes live (the first two)
+
+- «required» is only enforced through REST (block editor); the classic
+  screen (types without «editor») publishes anyway.
+- URL slugs per language (WPML slug translation) are not handled; the slug is
+  one string.
+- Move the `eweb_` types (client, testimonial, location, project,
+  portfolio) to content-types: one JSON per type inside the plugin (a folder
+  added with `estrategia_web_content_types_dirs`), keeping the same type,
+  taxonomy and meta names so nothing is migrated in the database. The special
+  sanitizers (rating, fit, embed, local_image, client) need field types or a
+  «sanitize» key first; then remove their definitions from `modules/site`
+  (`Content_Types`, `Meta_Panel`) and from `wpml-config.xml`.
 
 ## Block tests: from the theme to the plugin
 **Date:** 14-10-2026 · **Due:** —
