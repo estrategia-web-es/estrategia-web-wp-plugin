@@ -36,8 +36,25 @@
  *    with consent denied it does not write.
  * 5. Form conversion (optional): with a «Conversion label» (AW-123/abc) and
  *    Advertising accepted, each successful submission of a form from the forms
- *    module («estrategia-web:form-sent» event, JavaScript submissions only)
- *    sends gtag('event', 'conversion', {send_to}).
+ *    module («estrategia-web:form-sent» event) sends
+ *    gtag('event', 'conversion', {send_to}). Two ways the event arrives:
+ *    - JavaScript submission: view.js fires it when the server says OK. If
+ *      Advertising is not accepted at that moment, it is not counted.
+ *    - Submission WITHOUT JavaScript (native POST, 303 back with
+ *      ?af_result=…): the form, rendered again with an OK result, prints a
+ *      one-line script that fires it with detail.returned = true, ONCE per
+ *      submission (modules/forms/includes/class-blocks.php, announce()). That
+ *      script runs while the page is still being parsed, usually BEFORE the
+ *      notice has said what was accepted; so a «returned» conversion WAITS
+ *      (pending) and is sent the first time Advertising is granted on that
+ *      page, by the stored choice or by a click. If it is never granted,
+ *      nothing is sent.
+ *    Only the form id travels, never what was typed.
+ *
+ * Cookies: it declares to the cookie registry (estrategia_web_cookie_services
+ * filter, priority 99) «google-analytics» with a G- id and «google-ads» with
+ * an AW- id; their cookies are in modules/consent/includes/class-cookie-services.php.
+ * Tag Manager alone declares nothing (named edge case there).
  *
  * Notice categories: the module DECLARES with the
  * estrategia_web_consent_categories filter (priority 99, appending, like
@@ -86,6 +103,20 @@ final class Google_Tags {
 		add_action( 'init', array( self::class, 'register' ) );
 		add_action( 'wp_head', array( self::class, 'print' ), 1 );
 		add_filter( 'estrategia_web_consent_categories', array( self::class, 'consent_categories' ), 99 );
+		add_filter( 'estrategia_web_cookie_services', array( self::class, 'cookie_services' ), 99 );
+	}
+
+	/** Third-party services for the cookie registry (see the header). From the configuration only. */
+	public static function cookie_services( mixed $services ): array {
+		$services = (array) $services;
+		$s        = self::settings();
+		if ( '' !== $s['ga4'] ) {
+			$services[] = 'google-analytics';
+		}
+		if ( '' !== $s['ads'] ) {
+			$services[] = 'google-ads';
+		}
+		return array_values( array_unique( $services ) );
 	}
 
 	public static function defaults(): array {
@@ -236,7 +267,7 @@ gtag('consent', 'default', {
 gtag('set', 'ads_data_redaction', true);
 (function () {
 	var c = {$config};
-	var loaded = false, now = { stats: false, ads: false, prefs: false }, known = false;
+	var loaded = false, now = { stats: false, ads: false, prefs: false }, known = false, pending = false;
 	function add(src) { var s = document.createElement('script'); s.async = true; s.src = src; document.head.appendChild(s); }
 	function load() {
 		if (loaded) { return; }
@@ -280,15 +311,18 @@ gtag('set', 'ads_data_redaction', true);
 		if (before.stats && !next.stats) { forget(/^(_ga|_ga_.*|_gid|_gat.*)$/); }
 		if (before.ads && !next.ads) { forget(/^(_gcl_.*|_gac_.*)$/); }
 		if (next.stats || next.ads) { load(); }
+		if (pending && next.ads && loaded) { pending = false; convert(); }
 	}
+	function convert() { gtag('event', 'conversion', { send_to: c.form }); }
 	if (c.advanced) { load(); }
 	document.addEventListener('estrategia-web:consent', function (e) { sync(e.detail && e.detail.accepted); });
 	document.addEventListener('estrategia-web:consent-ready', function (e) { if (e.detail && e.detail.accepted) { sync(e.detail.accepted); } });
 	if (window.estrategiaWebConsent && typeof window.estrategiaWebConsent.get === 'function' && window.estrategiaWebConsent.get()) {
 		sync(window.estrategiaWebConsent.get());
 	}
-	document.addEventListener('estrategia-web:form-sent', function () {
-		if (c.form && now.ads && loaded) { gtag('event', 'conversion', { send_to: c.form }); }
+	document.addEventListener('estrategia-web:form-sent', function (e) {
+		if (!c.form) { return; }
+		if (now.ads && loaded) { convert(); } else if (e.detail && e.detail.returned) { pending = true; }
 	});
 })();
 JS;

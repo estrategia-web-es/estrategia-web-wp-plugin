@@ -11,8 +11,12 @@
  *    the NAMES of the first-party cookies it sees (document.cookie), never the
  *    values (blocks/consent/view.js). Each new name comes in as «pending»
  *    with a SUGGESTION of provider, category, purpose and duration.
- * 2. BY HAND, on the screen: third-party cookies the browser does not expose
- *    through document.cookie (google.com ones in a map iframe, HttpOnly ones).
+ * 2. The MODULES: a module that loads a third-party service (the map's Google
+ *    embed, Google tags, hybrid Matomo) declares it, and that service's known
+ *    cookies come in as «pending» proposals (class-cookie-services.php and
+ *    merge_declared() below). That covers what the detector cannot see.
+ * 3. BY HAND, on the screen: whatever is left (a third-party service no module
+ *    of ours loads, HttpOnly cookies).
  * The administrator confirms, changes or ignores. Only what is CONFIRMED
  * shows in the policy table.
  *
@@ -83,8 +87,9 @@ final class Cookie_Registry {
 		'purpose'    => '',
 		'duration'   => '',
 		'status'     => 'pending',
-		'source'     => 'detected', // detected | manual
-		'suggested'  => '',         // where the suggestion came from: base | ocd | ''
+		'source'     => 'detected', // detected | manual | module (declared by a module: class-cookie-services.php)
+		'suggested'  => '',         // where the suggestion came from: base | ocd | service | ''
+		'service'    => '',         // source «module»: the Cookie_Services catalogue id
 		'example'    => '',         // a concrete name seen, for patterns
 		'first_seen' => 0,
 		'last_seen'  => 0,
@@ -387,6 +392,64 @@ final class Cookie_Registry {
 		self::store( $entries );
 		Cookie_Table::register_strings( $key, $entry );
 		return $entry;
+	}
+
+	/**
+	 * Writes in the cookies the modules declare (Cookie_Services::sync()).
+	 * Pure apart from the option: tested at level 1.
+	 * - A key that already exists, or a name an existing pattern already
+	 *   covers, is NOT touched: detected, typed or edited, the
+	 *   administrator's row wins.
+	 * - A new one comes in as pending, source «module», with its service.
+	 * - A PENDING module row whose service is no longer in $services goes
+	 *   away (nobody confirmed it); a confirmed one stays.
+	 *
+	 * @param array<string, array> $rows     key => provider, category, purpose, duration, service.
+	 * @param string[]             $services The services declared now.
+	 * @return array{added: int, removed: int}
+	 */
+	public static function merge_declared( array $rows, array $services, ?int $now = null ): array {
+		$now     = $now ?? time();
+		$entries = self::all();
+		$added   = 0;
+		$removed = 0;
+		foreach ( $entries as $key => $entry ) {
+			if ( 'module' === $entry['source'] && 'pending' === $entry['status'] && ! in_array( $entry['service'], $services, true ) ) {
+				unset( $entries[ $key ] );
+				++$removed;
+			}
+		}
+		foreach ( $rows as $key => $row ) {
+			$key = (string) $key;
+			if ( ! self::name_ok( $key ) || isset( $entries[ $key ] ) ) {
+				continue;
+			}
+			if ( ! self::is_pattern( $key ) && null !== self::match_key( array_keys( $entries ), $key ) ) {
+				continue;
+			}
+			if ( count( $entries ) >= self::MAX_ENTRIES ) {
+				break;
+			}
+			$entries[ $key ] = array_merge(
+				self::ENTRY_DEFAULTS,
+				array_intersect_key( (array) $row, array_flip( array( 'provider', 'purpose', 'duration', 'service' ) ) ),
+				array(
+					'category'   => in_array( $row['category'] ?? '', self::CATEGORIES, true ) ? $row['category'] : 'necessary',
+					'status'     => 'pending',
+					'source'     => 'module',
+					'suggested'  => 'service',
+					'first_seen' => $now,
+				)
+			);
+			++$added;
+		}
+		if ( $added || $removed ) {
+			self::store( $entries );
+		}
+		return array(
+			'added'   => $added,
+			'removed' => $removed,
+		);
 	}
 
 	public static function delete( string $key ): bool {

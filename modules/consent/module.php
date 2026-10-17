@@ -32,7 +32,10 @@
  *
  * How to maintain: anything about WHICH cookies exist and WHAT is asked goes
  * here; a tag or a service that WAITS for consent (Matomo, Google, a chat) is
- * its own module and talks through the JS API. Each piece documents its own
+ * its own module and talks through the JS API. Which cookies that service
+ * sets is declared from its module with the estrategia_web_cookie_services
+ * filter, against the catalogue in includes/class-cookie-services.php (the
+ * «How to maintain» for a new one is there). Each piece documents its own
  * part in its header (includes/class-*.php).
  */
 
@@ -44,6 +47,7 @@ define( 'ESTRATEGIA_WEB_CONSENT_DIR', __DIR__ . '/' );
 
 require_once __DIR__ . '/includes/class-consent.php';
 require_once __DIR__ . '/includes/class-cookie-registry.php';
+require_once __DIR__ . '/includes/class-cookie-services.php';
 require_once __DIR__ . '/includes/class-cookie-table.php';
 require_once __DIR__ . '/includes/class-cookie-rest.php';
 

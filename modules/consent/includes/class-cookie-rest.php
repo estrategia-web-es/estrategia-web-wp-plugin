@@ -154,6 +154,7 @@ final class Cookie_Rest {
 	}
 
 	public static function index(): array {
+		Cookie_Services::sync(); // Like the screen: the services the modules declare, as proposals.
 		$ocd = Cookie_Registry::ocd();
 		return array(
 			'version'     => Cookie_Registry::version(),

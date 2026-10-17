@@ -96,6 +96,22 @@ final class Matomo {
 	public static function boot(): void {
 		add_action( 'wp_head', array( self::class, 'print' ), 20 );
 		add_filter( 'estrategia_web_consent_categories', array( self::class, 'consent_categories' ), 99 );
+		add_filter( 'estrategia_web_cookie_services', array( self::class, 'cookie_services' ), 99 );
+	}
+
+	/**
+	 * For the cookie registry: hybrid mode sets Matomo's cookies after
+	 * consent, so they are proposed before any visitor accepts. Cookieless
+	 * sets none and declares nothing. Which cookies, and why Matomo on another
+	 * domain changes nothing: modules/consent/includes/class-cookie-services.php.
+	 */
+	public static function cookie_services( mixed $services ): array {
+		$services = (array) $services;
+		$config   = self::config();
+		if ( $config && 'hybrid' === $config['mode'] && ! in_array( 'matomo', $services, true ) ) {
+			$services[] = 'matomo';
+		}
+		return $services;
 	}
 
 	/**

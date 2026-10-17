@@ -45,8 +45,10 @@ function sanitize_textarea_field( $v ) {
 require ESTRATEGIA_WEB_CONSENT_DIR . 'includes/class-consent.php';
 require ESTRATEGIA_WEB_CONSENT_DIR . 'includes/class-cookie-registry.php';
 require ESTRATEGIA_WEB_CONSENT_DIR . 'includes/class-cookie-table.php';
+require ESTRATEGIA_WEB_CONSENT_DIR . 'includes/class-cookie-services.php';
 
 use EstrategiaWeb\Site\Consent;
+use EstrategiaWeb\Site\Cookie_Services;
 use EstrategiaWeb\Site\Cookie_Registry as R;
 use EstrategiaWeb\Site\Cookie_Table;
 
@@ -101,6 +103,29 @@ $out['duration']          = array(
 $out['normalize']         = array( Consent::normalize( 'analytics' ), Consent::normalize( 'Advertising' ), Consent::normalize( 'ads' ), Consent::normalize( 'maps' ) );
 $out['display']           = Consent::display_order( array( 'maps', 'marketing', 'statistics', 'preferences' ) );
 $out['known_order']       = array_keys( Consent::known_categories() );
+// Services declared by the modules (class-cookie-services.php).
+$catalogue                = Cookie_Services::catalogue();
+$out['services_catalogue'] = array();
+foreach ( Cookie_Services::rows( array_keys( $catalogue ) ) as $key => $row ) {
+	$out['services_catalogue'][ $key ] = array(
+		'name_ok'  => R::name_ok( $key ),
+		'category' => in_array( $row['category'], R::CATEGORIES, true ),
+		'duration' => null !== Cookie_Table::duration_parts( $row['duration'] ),
+		'filled'   => '' !== $row['provider'] && '' !== $row['purpose'],
+		'service'  => $row['service'],
+	);
+}
+$GLOBALS['pure_options'] = array();
+R::record_seen( array( '_ga' ), 500 );
+R::save( '_ga', array( 'status' => 'confirmed', 'provider' => 'Written by the admin' ) );
+R::save( '_gcl_*', array( 'status' => 'confirmed', 'category' => 'marketing' ) );
+$out['merge_first']      = R::merge_declared( Cookie_Services::rows( array( 'google-maps', 'google-analytics', 'google-ads', 'matomo' ) ), array( 'google-maps', 'google-analytics', 'google-ads', 'matomo' ), 4000 );
+$out['merged']           = R::all();
+$out['merge_again']      = R::merge_declared( Cookie_Services::rows( array( 'google-maps', 'google-analytics', 'google-ads', 'matomo' ) ), array( 'google-maps', 'google-analytics', 'google-ads', 'matomo' ), 5000 );
+R::save( 'NID', array( 'status' => 'confirmed' ) );
+$out['merge_dropped']    = R::merge_declared( Cookie_Services::rows( array( 'google-analytics' ) ), array( 'google-analytics' ), 6000 );
+$out['after_drop']       = array_keys( R::all() );
+
 $ocd                      = R::ocd();
 $out['ocd']               = array(
 	'license'     => $ocd['license'] ?? null,

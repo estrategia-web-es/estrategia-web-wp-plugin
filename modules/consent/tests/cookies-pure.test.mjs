@@ -7,6 +7,10 @@
 // prefix (_g* wins over _ga_*), _pk_id.* removed from base() («Piwik» comes
 // from the external database) and name_ok without excluding «=» («x=secret»
 // would be stored).
+// Cookie services (17-10-2026), seen failing with two mutants in
+// merge_declared(): without the «an existing pattern covers it» check
+// (_gcl_au came in next to the administrator's _gcl_*) and without removing
+// the pending rows of a service no longer declared.
 //
 // How to maintain: a new case, its key in tests/php/pure.php and its assert here.
 import { test } from "node:test";
@@ -92,6 +96,44 @@ test("consent 1.1.0: category aliases and display order WITHOUT touching the rev
   assert.deepEqual(out.normalize, ["statistics", "marketing", "marketing", "maps"]);
   assert.deepEqual(out.display, ["preferences", "statistics", "marketing", "maps"]);
   assert.deepEqual(out.known_order, ["statistics", "maps", "marketing", "preferences"], "preferences goes LAST: the order is part of the revision");
+});
+
+test("cookie services: every catalogue cookie has a valid name, a known category, a translatable duration, provider and purpose", () => {
+  const rows = Object.entries(out.services_catalogue);
+  assert.ok(rows.length >= 10, `only ${rows.length} rows`);
+  for (const [key, r] of rows) {
+    assert.deepEqual({ name_ok: r.name_ok, category: r.category, duration: r.duration, filled: r.filled }, { name_ok: true, category: true, duration: true, filled: true }, key);
+  }
+  assert.equal(out.services_catalogue.NID.service, "google-maps");
+  assert.equal(out.services_catalogue["_pk_id.*"].service, "matomo");
+});
+
+test("cookie services: what a module declares comes in PENDING, from the module, with its service (the google.com ones the detector cannot see)", () => {
+  const nid = out.merged.NID;
+  assert.equal(nid.status, "pending");
+  assert.equal(nid.source, "module");
+  assert.equal(nid.service, "google-maps");
+  assert.equal(nid.category, "maps");
+  assert.match(nid.provider, /google\.com/);
+  assert.equal(out.merged.IDE.provider, "Google (doubleclick.net)");
+  assert.equal(out.merged.IDE.category, "marketing");
+  // Matomo has no texts in the catalogue: they come from base().
+  assert.equal(out.merged["_pk_id.*"].provider, "Matomo");
+  assert.equal(out.merged["_pk_id.*"].duration, "13 months");
+});
+
+test("cookie services: a row the administrator already has is NOT touched, nor is a name an existing pattern covers", () => {
+  assert.equal(out.merged._ga.status, "confirmed");
+  assert.equal(out.merged._ga.provider, "Written by the admin");
+  assert.equal(out.merged._ga.source, "detected");
+  assert.equal(out.merged._gcl_au, undefined, "_gcl_* (by hand) already covers it");
+  assert.equal(out.merge_first.added, 11);
+  assert.deepEqual(out.merge_again, { added: 0, removed: 0 }, "a second sync changes nothing");
+});
+
+test("cookie services: when a service is no longer declared, its PENDING rows go away and the confirmed ones stay", () => {
+  assert.equal(out.merge_dropped.removed, 9);
+  assert.deepEqual(out.after_drop.sort(), ["NID", "_ga", "_ga_*", "_gcl_*"].sort());
 });
 
 test("cookies: the extract carries its license and its attribution (Apache 2.0)", () => {

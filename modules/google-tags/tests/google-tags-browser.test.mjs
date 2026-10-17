@@ -134,6 +134,69 @@ test("google-tags: Ads + form conversion only with Advertising accepted", async 
   await ctx.close();
 });
 
+// A form submitted WITHOUT going through view.js (form.submit() skips the
+// submit event: the native POST, as without JS or before hydration) comes
+// back with ?af_result=… and the form fires form-sent with «returned».
+// Seen failing on 17-10-2026 without the «pending» queue (the signal arrives
+// before the notice says what was accepted, and was lost) and without
+// waiting for consent (counted with Advertising rejected).
+test("google-tags: a form sent WITHOUT JavaScript counts its conversion once, only with Advertising accepted (even if accepted on the page that comes back)", async () => {
+  await save({ ga4: "", ads: "AW-123456789", ads_form_label: "AW-123456789/AbCd_ef-12", gtm: "", mode: "basic" });
+  const { url: formUrl } = await seedPage(
+    '<!-- wp:estrategia-web-forms/form {"formId":"contacto","title":"Contacto"} --><!-- wp:estrategia-web-forms/text {"label":"Nombre","name":"nombre","required":true} /--><!-- wp:estrategia-web-forms/submit {"text":"Enviar"} /--><!-- /wp:estrategia-web-forms/form -->',
+    "prueba-google-form"
+  );
+  const formsSettings = (body) => fetch(BASE + "/wp-json/estrategia-web-forms-test/v1/settings", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  await formsSettings({ rate_limit: 0 }); // Three submissions from the same IP; other tests may have used the bucket.
+  try {
+    await nativeCases(formUrl);
+  } finally {
+    await formsSettings({ rate_limit: 5 });
+  }
+});
+
+async function nativeCases(formUrl) {
+  const conversions = async (page) => (await layer(page)).filter((e) => e[0] === "event" && e[1] === "conversion");
+  async function sendNative(page) {
+    await page.goto(formUrl, { waitUntil: "networkidle" });
+    await page.fill("#af-contacto-nombre", "Ana");
+    await page.waitForTimeout(3200); // The form's minimum fill time (3 s by default): what the server checks.
+    await Promise.all([page.waitForURL(/af_result=/), page.evaluate(() => document.getElementById("af-contacto").submit())]);
+    await page.waitForLoadState("networkidle");
+    await page.waitForFunction(() => window.estrategiaWebConsent);
+    await page.waitForTimeout(300);
+  }
+
+  // 1. Advertising accepted beforehand: one conversion; reloading does not add another.
+  let { ctx, page } = await open();
+  await page.getByRole("button", { name: "Aceptar todas" }).click();
+  await sendNative(page);
+  assert.match(page.url(), /af_result=/);
+  assert.deepEqual((await conversions(page)).map((e) => e[2]), [{ send_to: "AW-123456789/AbCd_ef-12" }]);
+  await page.reload({ waitUntil: "networkidle" });
+  await page.waitForTimeout(300);
+  assert.equal((await conversions(page)).length, 0, "the reload is not a new submission");
+  await ctx.close();
+
+  // 2. No choice yet: it waits; rejecting sends nothing.
+  ({ ctx, page } = await open());
+  await sendNative(page);
+  assert.equal((await conversions(page)).length, 0, "nothing before choosing");
+  await page.getByRole("button", { name: "Rechazar todas" }).click();
+  await page.waitForTimeout(300);
+  assert.equal((await conversions(page)).length, 0, "nothing after rejecting");
+  await ctx.close();
+
+  // 3. No choice yet, and the visitor accepts on the page that comes back: it is sent then.
+  ({ ctx, page } = await open());
+  await sendNative(page);
+  await page.getByRole("button", { name: "Aceptar todas" }).click();
+  await page.waitForFunction(() => window.dataLayer.some((a) => a[0] === "event" && a[1] === "conversion"));
+  assert.equal((await conversions(page)).length, 1);
+  assert.deepEqual(page.errors, []);
+  await ctx.close();
+}
+
 test("google-tags (advanced): Google is requested RIGHT AWAY, with everything denied, before choosing", async () => {
   await save({ ga4: "G-TEST12345", ads: "", ads_form_label: "", gtm: "GTM-ABCD123", mode: "advanced" });
   const { ctx, page } = await open();

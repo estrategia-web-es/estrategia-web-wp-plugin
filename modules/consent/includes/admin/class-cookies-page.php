@@ -14,7 +14,11 @@
  * 3. The list: one row per cookie or pattern, each with ITS own form (HTML5
  *    form= attribute: the fields are in the table and the empty <form>
  *    outside). See the trap.
- * 4. Add by hand (third-party cookies the detector does not see).
+ *    Rows «Declared by the plugin» come from Cookie_Services::sync(), called
+ *    at the top of render(): the third-party services the active modules
+ *    load (includes/class-cookie-services.php).
+ * 4. Add by hand (third-party cookies the detector does not see and no
+ *    module declares).
  * 5. The Open Cookie Database attribution (Apache 2.0).
  *
  * Saves through admin-post.php with a nonce; the same logic as the admin
@@ -137,11 +141,13 @@ final class Cookies_Page {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
+		Cookie_Services::sync(); // The third-party services our modules load, as pending proposals (before reading the list).
 		$settings = Cookie_Registry::settings();
 		$labels   = Cookie_Table::category_labels();
 		$code     = Consent::code_categories();
 		$asked    = Consent::categories();
 		$entries  = Cookie_Registry::all();
+		$services = Cookie_Services::declared();
 		$ocd      = Cookie_Registry::ocd();
 		$notice   = sanitize_key( wp_unslash( $_GET['notice'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		$date     = static fn( int $t ): string => $t ? wp_date( get_option( 'date_format' ), $t ) : '—';
@@ -215,6 +221,7 @@ final class Cookies_Page {
 
 			<h2><?php esc_html_e( 'Cookies of this site', 'estrategia-web' ); ?></h2>
 			<p><?php esc_html_e( 'Only confirmed cookies appear in the cookie table of the policy (block «Cookie table» or shortcode [estrategia_web_cookie_table]). Proposals come from our own list and from the Open Cookie Database: check them. A name ending in * covers every cookie that starts like that.', 'estrategia-web' ); ?></p>
+			<p><?php esc_html_e( 'The cookies «Declared by the plugin» belong to third-party services that the active modules load (the Google map, Google tags, Matomo): the detector cannot see the ones set on the provider’s own domain, and sees the rest only after a visitor accepts. To leave one out of the policy, mark it Ignored: if you delete it, it comes back as a proposal while its module still loads the service.', 'estrategia-web' ); ?></p>
 			<?php if ( in_array( 'pending', array_column( $entries, 'status' ), true ) ) : ?>
 				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="margin:.5em 0">
 					<?php self::hidden( 'confirm-all' ); ?>
@@ -263,7 +270,19 @@ final class Cookies_Page {
 							<td><input type="text" style="width:7em" name="duration" form="<?php echo esc_attr( $form ); ?>" value="<?php echo esc_attr( $entry['duration'] ); ?>"></td>
 							<td>
 								<small>
-									<?php echo 'manual' === $entry['source'] ? esc_html__( 'Added by hand', 'estrategia-web' ) : esc_html( $date( (int) $entry['last_seen'] ) ); ?>
+									<?php if ( 'module' === $entry['source'] ) : ?>
+										<?php
+										/* translators: %s: name of a third-party service, e.g. «Google Maps (map block)». */
+										printf( esc_html__( 'Declared by the plugin: %s', 'estrategia-web' ), esc_html( Cookie_Services::label( $entry['service'] ) ?: $entry['service'] ) );
+										?>
+										<?php if ( ! in_array( $entry['service'], $services, true ) ) : ?>
+											<br><strong><?php esc_html_e( 'Its module no longer loads this service: delete the cookie if the site does not use it any more.', 'estrategia-web' ); ?></strong>
+										<?php elseif ( (int) $entry['last_seen'] ) : ?>
+											<br><?php echo esc_html( $date( (int) $entry['last_seen'] ) ); ?>
+										<?php endif; ?>
+									<?php else : ?>
+										<?php echo 'manual' === $entry['source'] ? esc_html__( 'Added by hand', 'estrategia-web' ) : esc_html( $date( (int) $entry['last_seen'] ) ); ?>
+									<?php endif; ?>
 									<?php if ( 'ocd' === $entry['suggested'] ) : ?>
 										<br><?php esc_html_e( 'Proposal: Open Cookie Database', 'estrategia-web' ); ?>
 									<?php elseif ( 'base' === $entry['suggested'] ) : ?>
@@ -285,7 +304,7 @@ final class Cookies_Page {
 			</table>
 
 			<h2><?php esc_html_e( 'Add a cookie by hand', 'estrategia-web' ); ?></h2>
-			<p><?php esc_html_e( 'For third-party cookies the detector cannot see (for example, the ones Google sets on its own domain when a map loads). Empty fields are filled with the proposal, if there is one.', 'estrategia-web' ); ?></p>
+			<p><?php esc_html_e( 'For third-party cookies the detector cannot see and no module declares (for example, a video or a chat embedded by hand). Empty fields are filled with the proposal, if there is one.', 'estrategia-web' ); ?></p>
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 				<?php self::hidden( 'add' ); ?>
 				<table class="form-table" role="presentation">

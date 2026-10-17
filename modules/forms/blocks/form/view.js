@@ -112,7 +112,8 @@ store( 'estrategia-web-forms', {
 					form.reset();
 					// 1.1.0: signal for whoever measures conversions (modules/google-tags).
 					// Only the form name, never what was typed. Without JS (submission
-					// with redirect) there is no event: that conversion is not counted.
+					// with redirect) the page that comes back fires it instead
+					// (Blocks::announce(), with detail.returned).
 					document.dispatchEvent( new CustomEvent( 'estrategia-web:form-sent', { detail: { form: form.getAttribute( 'id' ) || '' } } ) );
 				} else {
 					showErrors( form, data.errors || {} );

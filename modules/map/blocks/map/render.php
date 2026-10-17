@@ -190,6 +190,9 @@ if ( '' === $estrategia_web_embed && '' === $estrategia_web_maps_url ) {
 	}
 	return;
 }
+if ( '' !== $estrategia_web_embed ) {
+	\EstrategiaWeb\Map\google_rendered(); // For the cookie registry: see module.php.
+}
 
 $estrategia_web_static = '';
 if ( $attributes['staticMapId'] ) {

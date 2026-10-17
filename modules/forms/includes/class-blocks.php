@@ -111,7 +111,35 @@ final class Blocks {
 				data-wp-text="context.message" data-wp-class--is-error="context.isError"><?php echo esc_html( $context['message'] ); ?></div>
 		</form>
 		<?php
-		return (string) ob_get_clean();
+		return (string) ob_get_clean() . self::announce( $dom_id, $result );
+	}
+
+	/**
+	 * After a submission WITHOUT JavaScript that went well, the same signal
+	 * view.js gives after a JS one: the «estrategia-web:form-sent» event, with
+	 * detail.returned = true. Whoever measures conversions listens to it
+	 * (modules/google-tags; it waits for consent there). ONCE per submission:
+	 * the result is marked «announced» in its transient, so reloading the
+	 * ?af_result=… URL (or opening it in another tab) does not count it again.
+	 * Only the form id travels, never what was typed.
+	 *
+	 * Edge case: a browser that really has no JavaScript ignores the script;
+	 * the submission is marked announced anyway (nobody could measure it).
+	 */
+	private static function announce( string $dom_id, ?array $result ): string {
+		if ( null === $result || 'ok' !== ( $result['status'] ?? '' ) || ! empty( $result['announced'] ) ) {
+			return '';
+		}
+		$key                                = sanitize_key( wp_unslash( $_GET[ self::RESULT_PARAM ] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		self::$results[ $key ]['announced'] = true;
+		set_transient( 'estrategia_web_forms_result_' . $key, self::$results[ $key ], 10 * MINUTE_IN_SECONDS );
+		$detail = wp_json_encode(
+			array(
+				'form'     => $dom_id,
+				'returned' => true,
+			)
+		);
+		return wp_get_inline_script_tag( "document.dispatchEvent(new CustomEvent('estrategia-web:form-sent',{detail:{$detail}}));", array( 'class' => 'estrategia-web-forms-sent' ) );
 	}
 
 	public static function render_field( array $attributes, string $content, \WP_Block $block ): string {

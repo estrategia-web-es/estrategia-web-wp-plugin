@@ -94,7 +94,7 @@ code, with the prefix of its row.
 | Post types | `eweb_` (≤ 20 characters in total) | `eweb_client`, `eweb_testimonial`, `eweb_location`, `eweb_project`, `eweb_portfolio` (unreleased, 1.2.0; unprefixed up to 1.1.0) |
 | Taxonomies | `eweb_` | `eweb_client_sector`, `eweb_project_category`, `eweb_portfolio_category` (same) |
 | Blocks | `estrategia-web/`, `estrategia-web-site/`, `estrategia-web-forms/` | `estrategia-web/carousel`, `/map`, `/whatsapp`, `/language-switcher`, `/social-links`, `/cookie-table`; `estrategia-web-site/consent`; `estrategia-web-forms/form`, `/text`, `/email`, `/tel`, `/textarea`, `/select`, `/checkbox`, `/submit`, `/notification` |
-| Options | `estrategia_web_` | `estrategia_web_site`, `estrategia_web_modules`, `estrategia_web_modules_known`, `estrategia_web_forms_settings`, `estrategia_web_forms_db_version`, `estrategia_web_forms_last_purge`, `estrategia_web_forms_migrations_log`, `estrategia_web_cookies`, `estrategia_web_cookies_settings`, `estrategia_web_google_tags`, `estrategia_web_redirects_settings`, `estrategia_web_redirects_db_version`, `estrategia_web_social_links`, `estrategia_web_uploads`, `estrategia_web_whatsapp_phone`, `estrategia_web_whatsapp_message` |
+| Options | `estrategia_web_` | `estrategia_web_site`, `estrategia_web_modules`, `estrategia_web_modules_known`, `estrategia_web_forms_settings`, `estrategia_web_forms_db_version`, `estrategia_web_forms_last_purge`, `estrategia_web_forms_migrations_log`, `estrategia_web_cookies`, `estrategia_web_cookies_settings`, `estrategia_web_google_tags`, `estrategia_web_map_google_seen`, `estrategia_web_redirects_settings`, `estrategia_web_redirects_db_version`, `estrategia_web_social_links`, `estrategia_web_uploads`, `estrategia_web_whatsapp_phone`, `estrategia_web_whatsapp_message` |
 | Post meta | `estrategia_web_` | those of section 3; **three unprefixed**, from before 1.0.0: `client_url`, `testimonial_role`, `testimonial_client` (see [TODO.md](TODO.md)) |
 | Tables | `{prefix}estrategia_web_` | `estrategia_web_forms_submissions`, `estrategia_web_forms_definitions`, `estrategia_web_redirects` |
 | Transients and cron | `estrategia_web_` | `estrategia_web_redirects_report_*`, `estrategia_web_cs_*` (detector limit); events `estrategia_web_forms_purge`, `estrategia_web_redirects_purge` |
@@ -568,6 +568,15 @@ header:
   (Apache 2.0) in [modules/consent/data/](modules/consent/data/NOTICE),
   regenerable with `node tools/open-cookie-database.mjs` (`--seco`, `--csv`).
   Wildcards: `_ga_*` catches `_ga_ABC123`.
+- **Third-party services our modules load**: the map (Google embed, once a
+  map with an embed has been rendered), Google tags (GA4, Ads) and Matomo in
+  hybrid mode declare their service with the
+  **`estrategia_web_cookie_services`** filter (an array of ids), and its
+  known cookies —from the vendor's own documentation, in
+  [class-cookie-services.php](modules/consent/includes/class-cookie-services.php)—
+  appear on the screen as pending «Declared by the plugin», without anyone
+  typing them. That covers the ones the detector cannot see (google.com,
+  doubleclick.net). How a new module adds its service: that file's header.
 - **Estrategia Web → Cookies screen**: pending / confirmed / ignored;
   editable category, provider, purpose and duration; adding third-party ones
   by hand; and a warning if there are confirmed cookies in a category the
@@ -590,7 +599,11 @@ any tag and `update` on choosing (Analytics → `analytics_storage`;
 Advertising → `ad_storage`, `ad_user_data`, `ad_personalization`). **Basic
 mode** (default): nothing from Google until Analytics or Advertising is
 accepted; **advanced mode**: Google loads right away, denied (cookieless
-pings before consent: the client's decision). All of it, in the header of
+pings before consent: the client's decision). The form conversion also
+counts a submission WITHOUT JavaScript: the page that comes back
+(`?af_result=…`) fires `estrategia-web:form-sent` with `detail.returned`,
+once per submission, and the conversion waits until Advertising is
+accepted. All of it, in the header of
 [class-google-tags.php](modules/google-tags/includes/class-google-tags.php).
 
 ### 7. WebP (0.5.1)
@@ -720,11 +733,12 @@ tests expect English; their `reset()` marks it and goes back to `en_US` (see
 | [matomo/matomo-browser](modules/matomo/tests/matomo-browser.test.mjs) | 3 | with the real `matomo.js` ([modules/matomo/tests/fixtures/matomo.js](modules/matomo/tests/fixtures/matomo.js), 5.4.0, BSD-3) served through a fake route and, since 0.5.0, with the **real cookie notice** (its buttons and its cookie, not a simulated event): without configuration it is not requested; cookieless measures, leaves no cookies and there is no notice; hybrid without cookies until «Accept all» (only «maps» does not count), `mtm_cookie_consent` and `_pk_id` on accepting, deleted on «Reject all»; notice already answered on load; an expired choice forgets; an administrator is not measured |
 | [consent/consent](modules/consent/tests/consent.test.mjs) | 2 | cookie notice (0.5.0): without categories it does not appear; with them, in a stable order and with the three buttons; revision and cookie equal to the parent's; hybrid Matomo makes it appear; «Powered by» (text, `href`, `_blank`, `rel="noopener"` without `nofollow`, after the buttons); the filter changes text and URL, an empty or non-http(s) URL leaves the text without a link, `false` removes it; link via the new block, the old alias and the shortcode |
 | [consent/consent-browser](modules/consent/tests/consent-browser.test.mjs) | 3 | cookie notice (0.5.0): it appears; accepting and rejecting weigh the same; rejecting stores the cookie and persists; the link (new and alias) reopens it with focus inside and Escape closes it; JS contract (event, `has`, `get`, `categories`, `grant`, `open`) and deferred scripts; a cookie from the parent's notice is still valid; «Powered by» visible, smaller than the buttons and with measured AA contrast; (0.5.1) when open it is the first thing when tabbing, no trap, and Escape does not close it without choosing; ≥ 16 px between the text and the buttons at 402 and 1512 with Lavandería's `:root :where(p)` |
-| [consent/cookies-pure](modules/consent/tests/cookies-pure.test.mjs) | 1 | cookie register without WordPress: exact before pattern and longest prefix; `wp-wpml_current_language` necessary; GA with `_ga_*`; Matomo's `_pk_id.*` and not Piwik's; names without values or HTML; row cap; aliases and order of the categories; attribution of the extract |
+| [consent/cookies-pure](modules/consent/tests/cookies-pure.test.mjs) | 1 | cookie register without WordPress: exact before pattern and longest prefix; `wp-wpml_current_language` necessary; GA with `_ga_*`; Matomo's `_pk_id.*` and not Piwik's; names without values or HTML; row cap; aliases and order of the categories; attribution of the extract; the third-party services catalogue (valid names, categories, durations) and its merge (pending, the administrator's rows untouched, removal of pending rows when a service goes) |
+| [consent/cookie-services](modules/consent/tests/cookie-services.test.mjs) | 2 | each module declares only what its configuration loads (GA4 yes; GTM, cookieless Matomo, a map never shown, no); a rendered map, Ads and hybrid Matomo bring their cookies as pending; confirmed, into the policy table; Ads off removes only its pending rows |
 | [consent/cookies](modules/consent/tests/cookies.test.mjs) | 2 | detector: names only, 202, 429 per client and per hour, 400 with more than 60, 403 from another origin or when off; admin route by permissions; policy table (only confirmed, by category, in Spanish, block and shortcode, empty prints nothing); «Preferences» added by the administrator and aliases when declaring, without changing the usual revision |
 | [consent/cookies-browser](modules/consent/tests/cookies-browser.test.mjs) | 3 | on accepting, the browser sends only names (it checks the request body) and does not repeat; rejecting sends nothing; reopening from a link and a class; the Cookies screen confirms and the table shows it |
 | [google-tags/google-tags](modules/google-tags/tests/google-tags.test.mjs) | 2 | off by default; empty prints nothing; `default` denied first and no Google `<script src>`; categories per tag; conversion only with its account; invalid ids 400; without `consent` it does not load |
-| [google-tags/google-tags-browser](modules/google-tags/tests/google-tags-browser.test.mjs) | 3 | basic: nothing to Google without accepting, when rejecting or with maps only; on accepting gtag.js and only `analytics_storage`; withdrawing deletes `_ga*`; Ads and form conversion; advanced loads earlier |
+| [google-tags/google-tags-browser](modules/google-tags/tests/google-tags-browser.test.mjs) | 3 | basic: nothing to Google without accepting, when rejecting or with maps only; on accepting gtag.js and only `analytics_storage`; withdrawing deletes `_ga*`; Ads and form conversion; conversion of a form sent without JavaScript (once, waiting for Advertising); advanced loads earlier |
 | [webp/webp](modules/webp/tests/webp.test.mjs) | 2 | WebP (0.5.1): the editor writes WebP; uploaded JPEG and PNG generate their sizes (and the main file) in WebP; the filter set to `false` switches it off; the trap of regenerating what was already uploaded (the content's `.jpg` without `srcset`, the intermediate one broken) and its fix |
 | [site/editor](modules/site/tests/editor.test.mjs) | 3 | the editor shows the bound value and lists the details (company, and location by slug); the settings screen saves, warns and disables the last type |
 | [site/meta-panel](modules/site/tests/meta-panel.test.mjs) | 1 | (unreleased) every location, client and testimonial meta has a WPML decision (copy/translate) and `wpml-config.xml` says the same as `Meta_Panel`. Seen in red with the phone switched to «translate» in the XML |
