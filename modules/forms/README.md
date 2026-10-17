@@ -233,7 +233,13 @@ if WPML is active:
   translated (so a translator cannot redirect the emails).
 - The **Settings** texts are registered with
   `wpml_register_single_string` and translated with
-  `wpml_translate_single_string` (domain `estrategia-web-forms`).
+  `wpml_translate_single_string` (domain `estrategia-web-forms`), only once
+  they are filled in (empty = the default text of the `.po`). They are
+  registered in the site's **default language**: without it WPML assumes
+  English for this domain and never translates them into English (fixed
+  after 1.4.3; a site that saved them before with WPML has them marked as
+  English in String Translation and must re-register them, see the
+  CHANGELOG).
 - The submission language is that of the page the visitor saw
   (`wpml_current_language` at render time), it is stored in the log, and on
   submission the code switches to it (`wpml_switch_language` +
@@ -371,12 +377,13 @@ are removed in **2.0.0**. Tables, options and WPML strings are moved by
   logo». That is not a plugin option: it is the child's
   `estrategia-web-forms/email.php` template. If **every** site ends up
   wanting a logo, then it does go in here.
-- **The trap:** WPML is not in the tests (it is paid). Every version that
-  touches [includes/class-language.php](includes/class-language.php) or
-  [wpml-config.xml](wpml-config.xml) is tested by hand on a site with WPML
-  before taking it to the others: a translated form, a submission in the
-  second language, and checking that the acknowledgement comes out in that
-  language.
+- **The trap:** WPML is not in this plugin's tests (it is paid). Every
+  version that touches [includes/class-language.php](includes/class-language.php)
+  or [wpml-config.xml](wpml-config.xml) runs, before going to the other
+  sites, Lavandería's WPML tests: `tests/forms-wpml.test.mjs` (a submission
+  on `/en/contact/`: validations, messages, acknowledgement, log, String
+  Translation) and `tests/wpml-blocks.test.mjs` (a page translated through
+  WPML's flow, and its form submitted).
 - **Each file says how it is maintained in its header.** If you change one,
   check that its header is still true.
 
