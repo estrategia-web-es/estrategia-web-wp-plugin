@@ -68,18 +68,18 @@ test("location: the «Datos de la sede» panel shows the fields with their value
 });
 
 test("client (CLASSIC screen: it has no 'editor'): the «Datos del cliente» meta box saves business type and image fit", async () => {
-  const client = await wp(`/${type("client")}`, { method: "POST", body: { title: "Portic Villas", status: "publish", meta: { client_url: "https://portic.test" } } });
+  const client = await wp(`/${type("client")}`, { method: "POST", body: { title: "Portic Villas", status: "publish", meta: { estrategia_web_client_url: "https://portic.test" } } });
   await p.goto(`${BASE}/wp-admin/post.php?post=${client.json.id}&action=edit`);
   const box = p.locator("#estrategia-web-meta");
   assert.match(await box.locator("h2").first().textContent(), /Datos del cliente/);
-  assert.equal(await box.locator('[data-meta-key="client_url"] input').inputValue(), "https://portic.test");
+  assert.equal(await box.locator('[data-meta-key="estrategia_web_client_url"] input').inputValue(), "https://portic.test");
   await box.locator('[data-meta-key="estrategia_web_client_business_type"] input').fill("Agencia de <b>alquiler</b> vacacional");
   await box.locator('[data-meta-key="estrategia_web_client_image_fit"] select').selectOption("contain");
   await Promise.all([p.waitForURL(/message=/), p.click("#publish")]);
   const saved = (await wp(`/${type("client")}/${client.json.id}?context=edit`)).json.meta;
   assert.equal(saved.estrategia_web_client_business_type, "Agencia de alquiler vacacional", "sanitized as via REST");
   assert.equal(saved.estrategia_web_client_image_fit, "contain");
-  assert.equal(saved.client_url, "https://portic.test", "what was not touched stays the same");
+  assert.equal(saved.estrategia_web_client_url, "https://portic.test", "what was not touched stays the same");
   assert.deepEqual(errors, [], "no JavaScript errors");
 });
 
@@ -92,14 +92,14 @@ test("testimonial: its panel with author, rating and related client (integers tr
   assert.match(await panel.locator(".components-panel__body-title").first().textContent(), /Datos de la opinión/);
   await panel.locator('[data-meta-key="estrategia_web_testimonial_author"] input').fill("Marta G.");
   await panel.locator('[data-meta-key="estrategia_web_testimonial_rating"] select').selectOption("4");
-  const related = panel.locator('[data-meta-key="testimonial_client"] select');
+  const related = panel.locator('[data-meta-key="estrategia_web_testimonial_client"] select');
   await related.locator(`option[value="${client.id}"]`).waitFor({ state: "attached", timeout: 15000 });
   await related.selectOption(String(client.id));
   await save();
   const saved = (await wp(`/${type("testimonial")}/${testimonial.json.id}?context=edit`)).json.meta;
   assert.equal(saved.estrategia_web_testimonial_author, "Marta G.");
   assert.equal(saved.estrategia_web_testimonial_rating, 4);
-  assert.equal(saved.testimonial_client, client.id);
+  assert.equal(saved.estrategia_web_testimonial_client, client.id);
   assert.deepEqual(errors, [], "no JavaScript errors in the editor");
 });
 

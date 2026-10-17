@@ -95,7 +95,7 @@ code, with the prefix of its row.
 | Taxonomies | `eweb_` | `eweb_client_sector`, `eweb_project_category`, `eweb_portfolio_category` (same) |
 | Blocks | `estrategia-web/`, `estrategia-web-site/`, `estrategia-web-forms/` | `estrategia-web/carousel`, `/map`, `/whatsapp`, `/language-switcher`, `/social-links`, `/cookie-table`; `estrategia-web-site/consent`; `estrategia-web-forms/form`, `/text`, `/email`, `/tel`, `/textarea`, `/select`, `/checkbox`, `/submit`, `/notification` |
 | Options | `estrategia_web_` | `estrategia_web_site`, `estrategia_web_modules`, `estrategia_web_modules_known`, `estrategia_web_forms_settings`, `estrategia_web_forms_db_version`, `estrategia_web_forms_last_purge`, `estrategia_web_forms_migrations_log`, `estrategia_web_cookies`, `estrategia_web_cookies_settings`, `estrategia_web_google_tags`, `estrategia_web_redirects_settings`, `estrategia_web_redirects_db_version`, `estrategia_web_social_links`, `estrategia_web_uploads`, `estrategia_web_whatsapp_phone`, `estrategia_web_whatsapp_message` |
-| Post meta | `estrategia_web_` | those of section 3; **three unprefixed**, from before 1.0.0: `client_url`, `testimonial_role`, `testimonial_client` (see [TODO.md](TODO.md)) |
+| Post meta | `estrategia_web_` | those of section 3, all of them (unreleased: `client_url`, `testimonial_role` and `testimonial_client`, from before 1.0.0, became `estrategia_web_…`; the old keys are read aliases until 2.0.0, see «Names») |
 | Tables | `{prefix}estrategia_web_` | `estrategia_web_forms_submissions`, `estrategia_web_forms_definitions`, `estrategia_web_redirects` |
 | Transients and cron | `estrategia_web_` | `estrategia_web_redirects_report_*`, `estrategia_web_cs_*` (detector limit); events `estrategia_web_forms_purge`, `estrategia_web_redirects_purge` |
 | Cookies | `estrategia_web_` | `estrategia_web_consent` (the old `armazon_consent` is read and carried over) |
@@ -311,8 +311,8 @@ with the prefix migrator (section «Names»).
 
 | Key (registered: `eweb_` + key) | Menu | Slug (es_ES) | Uses | Fields (`register_post_meta`, `single`, `show_in_rest`) | Taxonomy |
 |---|---|---|---|---|---|
-| `client` | Clients | `/clientes/` | title = name, featured image = logo/photo, excerpt, manual order | `client_url` (URL), `estrategia_web_client_image_fit` (`cover` by default or `contain`; any other value → `cover`; 0.2.0), `estrategia_web_client_business_type` (text: «agencia de alquiler vacacional», what used to go in brackets in the title; translated with WPML; unreleased) | `client_sector` (hierarchical, slug `/sector/`) |
-| `testimonial` | Testimonials | `/opiniones/` | title (internal), content = the testimonial, image = author's photo, order | `estrategia_web_testimonial_author`, `testimonial_role` (text), `estrategia_web_testimonial_rating` (integer 0-5; **0 = no rating**), `testimonial_client` (id of a `client`, or 0) | — |
+| `client` | Clients | `/clientes/` | title = name, featured image = logo/photo, excerpt, manual order | `estrategia_web_client_url` (URL; `client_url` up to 1.4.3), `estrategia_web_client_image_fit` (`cover` by default or `contain`; any other value → `cover`; 0.2.0), `estrategia_web_client_business_type` (text: «agencia de alquiler vacacional», what used to go in brackets in the title; translated with WPML; unreleased) | `client_sector` (hierarchical, slug `/sector/`) |
+| `testimonial` | Testimonials | `/opiniones/` | title (internal), content = the testimonial, image = author's photo, order | `estrategia_web_testimonial_author`, `estrategia_web_testimonial_role` (text), `estrategia_web_testimonial_rating` (integer 0-5; **0 = no rating**), `estrategia_web_testimonial_client` (id of a `client`, or 0) (the role and the client were `testimonial_role` / `testimonial_client` up to 1.4.3) | — |
 | `location` | Locations | `/sedes/` | title = location, content, image = static map, excerpt, order | `estrategia_web_location_address`, `estrategia_web_location_schedule` (multi-line), `estrategia_web_location_phone`, `estrategia_web_location_email`, `estrategia_web_location_map_url` (link to Google Maps), `estrategia_web_location_map_embed` (embed URL for the `estrategia-web/map` block; unreleased: if the whole `<iframe>` is pasted, its `src` is stored), `estrategia_web_location_static_map` (0.4.0: static map image served by **this** site: theme path `assets/maps/sede.webp`, site path `/wp-content/…` or a URL on the same domain, ending in webp/png/jpg/gif/avif/svg; anything else → `''`), `estrategia_web_location_static_map_id` (0.4.0: integer, id of an **image** attachment; otherwise 0) | — |
 | `project` | Projects | `/proyectos/` | title, content, image, excerpt, order, revisions | — | `project_category` (`/categoria-proyecto/`) |
 | `portfolio` | Portfolio | `/portfolio/` | same | — | `portfolio_category` (`/categoria-portfolio/`) |
@@ -870,6 +870,24 @@ Lavandería does (`despliegue/prefijo-tipos.mjs`, which also renews the
 fingerprints of its content loading). It is run **right after uploading the
 1.2.0 plugin**: in between, the site cannot find its clients or locations.
 Before it, a database backup.
+
+**THE THREE METAS (unreleased).** `client_url`, `testimonial_role` and
+`testimonial_client` are registered as `estrategia_web_client_url`,
+`estrategia_web_testimonial_role` and `estrategia_web_testimonial_client`
+(the map lives only in
+[modules/site/includes/class-unprefixed-meta.php](modules/site/includes/class-unprefixed-meta.php)).
+Until 2.0.0 the old keys are **read aliases** on clients and testimonials:
+`get_post_meta( $id, 'client_url', true )` answers with the new value, a
+`core/post-meta` binding saved with `"key":"client_url"` renders the new
+one, and until the site is migrated the new key reads the old row. **Not**
+for writing (an old key in REST `meta` is ignored) nor in the editor. The
+migrator is
+[includes/class-meta-prefix-migration.php](includes/class-meta-prefix-migration.php)
+(`wp estrategia-web migrate-meta-prefix --dry-run`): `wp_postmeta` of
+clients and testimonials and the `core/post-meta` bindings of the content;
+idempotent, with a dry run; a post with both keys keeps the new one and is
+warned about. A class of its own so that its dry run works against a server
+still on 1.4.3 (Lavandería: `despliegue/prefijo-tipos.mjs` carries both).
 
 ## If you change provider
 

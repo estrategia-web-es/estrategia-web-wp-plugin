@@ -22,7 +22,7 @@ test("without `client` in enabled_types the type does not exist; once enabled it
 
 test("disabling the type does NOT delete its content, and re-enabling it finds it still there", async () => {
   await saveCompany({ enabled_types: ["client"] });
-  const created = await wp(`/${type("client")}`, { method: "POST", body: { title: "Cliente de antes", status: "publish", meta: { client_url: "https://antes.test" } } });
+  const created = await wp(`/${type("client")}`, { method: "POST", body: { title: "Cliente de antes", status: "publish", meta: { estrategia_web_client_url: "https://antes.test" } } });
   assert.equal(created.status, 201, created.text);
   before_id = created.json.id;
 
@@ -36,7 +36,7 @@ test("disabling the type does NOT delete its content, and re-enabling it finds i
   const back = await wp(`/${type("client")}/${before_id}`);
   assert.equal(back.status, 200);
   assert.equal(back.json.title.rendered, "Cliente de antes");
-  assert.equal(back.json.meta.client_url, "https://antes.test", "with its fields");
+  assert.equal(back.json.meta.estrategia_web_client_url, "https://antes.test", "with its fields");
 });
 
 test("the public slug is the Spanish one (/clientes/) and the single page responds after enabling the type", async () => {
@@ -49,14 +49,14 @@ test("the public slug is the Spanish one (/clientes/) and the single page respon
 
 test("fields (meta) via REST: type and sanitizing (rating 1-5, email, URL)", async () => {
   await saveCompany({ enabled_types: ["client", "testimonial", "location"] });
-  const t = await wp(`/${type("testimonial")}`, { method: "POST", body: { title: "Testimonial", content: "Very good", status: "publish", meta: { estrategia_web_testimonial_author: "Ana <b>", estrategia_web_testimonial_rating: 9, testimonial_client: before_id } } });
+  const t = await wp(`/${type("testimonial")}`, { method: "POST", body: { title: "Testimonial", content: "Very good", status: "publish", meta: { estrategia_web_testimonial_author: "Ana <b>", estrategia_web_testimonial_rating: 9, estrategia_web_testimonial_client: before_id } } });
   assert.equal(t.status, 201, t.text);
   assert.equal(t.json.meta.estrategia_web_testimonial_author, "Ana");
   assert.equal(t.json.meta.estrategia_web_testimonial_rating, 5, "out of range is clamped to 5");
-  assert.equal(t.json.meta.testimonial_client, before_id);
+  assert.equal(t.json.meta.estrategia_web_testimonial_client, before_id);
 
-  const t2 = await wp(`/${type("testimonial")}`, { method: "POST", body: { title: "Another", status: "publish", meta: { testimonial_client: t.json.id } } });
-  assert.equal(t2.json.meta.testimonial_client, 0, "an id that is not a client is not saved");
+  const t2 = await wp(`/${type("testimonial")}`, { method: "POST", body: { title: "Another", status: "publish", meta: { estrategia_web_testimonial_client: t.json.id } } });
+  assert.equal(t2.json.meta.estrategia_web_testimonial_client, 0, "an id that is not a client is not saved");
 
   const l = await wp(`/${type("location")}`, { method: "POST", body: { title: "Palma location", status: "publish", meta: { estrategia_web_location_email: "bad", estrategia_web_location_map_url: "javascript:alert(1)", estrategia_web_location_map_embed: "https://www.google.com/maps/embed?pb=x", estrategia_web_location_address: "Calle 1\nPalma" } } });
   assert.equal(l.status, 201, l.text);
