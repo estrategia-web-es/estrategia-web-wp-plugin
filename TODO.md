@@ -62,18 +62,6 @@ open is below, in its own section.
   «sanitize» key first; then remove their definitions from `modules/site`
   (`Content_Types`, `Meta_Panel`) and from `wpml-config.xml`.
 
-## Forms: test it with real WPML
-**Date:** 01-10-2026 · **Due:** before the first site with WPML
-
-(Came from armazon-wp-formularios, archived.) `class-language.php` and
-`wpml-config.xml` have never run with WPML in the plugin's tests (Playground
-does not have it). Lavandería does have WPML locally
-(`tests/fixtures/wpml/`): translate a page with a form, submit in the second
-language, check that the acknowledgement comes out translated, that the log
-records that language and that the default strings show up in String
-Translation; and that on the translated page the dropdown with
-`defaultOption` arrives with the same option selected.
-
 ## Forms: level 4
 **Date:** 01-10-2026 · **Due:** —
 
@@ -98,12 +86,12 @@ a place to download it from. David decides (same case as
 armazon-wp-formularios).
 
 ## WPML: what is still not translatable
-**Date:** 16-10-2026 · **Due:** before Gastronòmicament goes live
+**Date:** 17-10-2026 · **Due:** before Gastronòmicament goes live
 
-Types, taxonomies and company details are declared since the release after 1.4.2. Left:
-- URL slugs: with WPML, WPML translates them, not gettext.
-- Block attributes a visitor reads (the whatsapp block's message and label, map, carousel, social-links…) are not in `<gutenberg-blocks>`: audit them.
-- On Playground (SQLite), String Translation needs the collation fix of Lavandería's `tests/fixtures/lm-test.php`: the forms strings have never been seen translated there.
+- URL slugs of the `eweb_` types (modules/site): the content-types mechanism works for them too (values from each language's .po), but turning it on changes Lavandería's English URLs (/en/sedes/ → /en/locations/). Proposal: opt-in per site, off by default; Gastronòmicament turns it on. The constructor (content-types templates) takes these types over.
+- «required» in Quick Edit is not enforced.
+- Slug translation measured with real WPML for es/en only; four languages with Catalan as default only at level 1.
+- English pages of Lavandería are created by the content load, not by a WPML job: sending one to WPML translation rebuilds it from the original and loses the hand-written English.
 ## Manual order in a Query Loop
 **Date:** 02-10-2026 · **Due:** —
 
