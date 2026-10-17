@@ -55,6 +55,7 @@ add_action(
 				delete_option( 'estrategia_web_cookies_settings' );
 				delete_option( 'estrategia_web_cookies_test' );
 				delete_option( 'estrategia_web_google_tags' ); // modules/google-tags: its tests use this same reset.
+				delete_option( 'estrategia_web_map_google_seen' ); // modules/map: declares google-maps once a map with an embed was rendered.
 				$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\\_transient\\_%estrategia\\_web\\_cs\\_%'" ); // phpcs:ignore
 				return array( 'ok' => true );
 			}

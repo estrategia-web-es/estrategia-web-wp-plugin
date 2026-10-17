@@ -2,7 +2,7 @@
 # Copyright (C) 2026 THE estrategia-web'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the estrategia-web package.
 # Automatically generated, 2026.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: estrategia-web\n"
@@ -46,7 +46,7 @@ msgid "Module"
 msgstr "Módulo"
 
 #: includes/admin/class-modules-page.php:101
-#: modules/consent/includes/admin/class-cookies-page.php:228
+#: modules/consent/includes/admin/class-cookies-page.php:235
 msgid "Status"
 msgstr "Estado"
 
@@ -151,37 +151,37 @@ msgstr ""
 "Desactivada por defecto por accesibilidad. No se aplica si el visitante pide "
 "reducir el movimiento."
 
-#: modules/carousel/blocks/carousel/render.php:154
+#: modules/carousel/blocks/carousel/render.php:159
 msgid "Carousel"
 msgstr "Carrusel"
 
-#: modules/carousel/blocks/carousel/render.php:174
+#: modules/carousel/blocks/carousel/render.php:179
 msgid "Pause carousel"
 msgstr "Pausar el carrusel"
 
-#: modules/carousel/blocks/carousel/render.php:175
+#: modules/carousel/blocks/carousel/render.php:180
 msgid "Play carousel"
 msgstr "Reanudar el carrusel"
 
-#: modules/carousel/blocks/carousel/render.php:182
+#: modules/carousel/blocks/carousel/render.php:187
 msgctxt "ARIA role description"
 msgid "carousel"
 msgstr "carrusel"
 
-#: modules/carousel/blocks/carousel/render.php:235
+#: modules/carousel/blocks/carousel/render.php:240
 msgid "Previous slide"
 msgstr "Diapositiva anterior"
 
-#: modules/carousel/blocks/carousel/render.php:245
+#: modules/carousel/blocks/carousel/render.php:250
 msgid "Next slide"
 msgstr "Diapositiva siguiente"
 
-#: modules/carousel/blocks/carousel/render.php:256
+#: modules/carousel/blocks/carousel/render.php:261
 msgid "Choose slide"
 msgstr "Elegir diapositiva"
 
 #. translators: %d: slide number.
-#: modules/carousel/blocks/carousel/render.php:262
+#: modules/carousel/blocks/carousel/render.php:267
 #, php-format
 msgid "Go to slide %d"
 msgstr "Ir a la diapositiva %d"
@@ -259,7 +259,7 @@ msgctxt "block keyword"
 msgid "privacy"
 msgstr "privacidad"
 
-# 
+#
 #: modules/consent/blocks/cookie-table/block.json
 msgctxt "block title"
 msgid "Cookie table"
@@ -289,42 +289,42 @@ msgstr "Categoría (vacío: todas)"
 msgid "Heading level of each category"
 msgstr "Nivel del título de cada categoría"
 
-#: modules/consent/includes/admin/class-cookies-page.php:55
-#: modules/consent/includes/admin/class-cookies-page.php:150
+#: modules/consent/includes/admin/class-cookies-page.php:59
+#: modules/consent/includes/admin/class-cookies-page.php:156
 #: modules/consent/includes/class-consent.php:527
 #: modules/matomo/includes/class-admin-fields.php:41
 msgid "Cookies"
 msgstr "Cookies"
 
-# 
-#: modules/consent/includes/admin/class-cookies-page.php:65
+#
+#: modules/consent/includes/admin/class-cookies-page.php:69
 msgid "Sorry, you are not allowed to do that."
 msgstr "No tienes permiso para hacer esto."
 
-#: modules/consent/includes/admin/class-cookies-page.php:125
+#: modules/consent/includes/admin/class-cookies-page.php:129
 #: modules/forms/includes/admin/class-submissions-table.php:115
 msgid "Pending"
 msgstr "Pendiente"
 
-# 
-#: modules/consent/includes/admin/class-cookies-page.php:126
+#
+#: modules/consent/includes/admin/class-cookies-page.php:130
 msgid "Confirmed"
 msgstr "Confirmada"
 
-#: modules/consent/includes/admin/class-cookies-page.php:127
+#: modules/consent/includes/admin/class-cookies-page.php:131
 msgid "Ignored"
 msgstr "Ignorada"
 
-#: modules/consent/includes/admin/class-cookies-page.php:152
+#: modules/consent/includes/admin/class-cookies-page.php:158
 msgid "Changes saved."
 msgstr "Cambios guardados."
 
-# 
-#: modules/consent/includes/admin/class-cookies-page.php:152
+#
+#: modules/consent/includes/admin/class-cookies-page.php:158
 msgid "Cookie deleted."
 msgstr "Cookie borrada."
 
-#: modules/consent/includes/admin/class-cookies-page.php:154
+#: modules/consent/includes/admin/class-cookies-page.php:160
 msgid ""
 "Not saved: check the cookie name (exact name, or a prefix ending in *) and "
 "that the list is not full."
@@ -332,7 +332,7 @@ msgstr ""
 "No se ha guardado: revisa el nombre de la cookie (nombre exacto, o un "
 "prefijo acabado en *) y que la lista no esté llena."
 
-#: modules/consent/includes/admin/class-cookies-page.php:157
+#: modules/consent/includes/admin/class-cookies-page.php:163
 msgid ""
 "The active theme brings its own cookie notice: these settings do not apply "
 "to it."
@@ -340,20 +340,20 @@ msgstr ""
 "El tema activo trae su propio aviso de cookies: estos ajustes no se le "
 "aplican."
 
-# 
-#: modules/consent/includes/admin/class-cookies-page.php:160
+#
+#: modules/consent/includes/admin/class-cookies-page.php:166
 msgid "Cookie notice"
 msgstr "Aviso de cookies"
 
-#: modules/consent/includes/admin/class-cookies-page.php:165
+#: modules/consent/includes/admin/class-cookies-page.php:171
 msgid "Categories the notice asks about"
 msgstr "Categorías que pregunta el aviso"
 
-#: modules/consent/includes/admin/class-cookies-page.php:174
+#: modules/consent/includes/admin/class-cookies-page.php:180
 msgid "declared by the code (theme or a module)"
 msgstr "la declara el código (el tema o un módulo)"
 
-#: modules/consent/includes/admin/class-cookies-page.php:179
+#: modules/consent/includes/admin/class-cookies-page.php:185
 msgid ""
 "Changing the categories shows the notice again to every visitor: they are "
 "being asked about something new. Without any category, the notice does not "
@@ -362,12 +362,12 @@ msgstr ""
 "Cambiar las categorías vuelve a enseñar el aviso a todos los visitantes: se "
 "les pregunta por algo nuevo. Sin ninguna categoría, el aviso no sale."
 
-# 
-#: modules/consent/includes/admin/class-cookies-page.php:183
+#
+#: modules/consent/includes/admin/class-cookies-page.php:189
 msgid "Cookie detector"
 msgstr "Detector de cookies"
 
-#: modules/consent/includes/admin/class-cookies-page.php:187
+#: modules/consent/includes/admin/class-cookies-page.php:193
 msgid ""
 "When a visitor accepts cookies, their browser sends the NAMES (never the "
 "values) of the cookies it sees on this site, at most once a week or when the "
@@ -378,13 +378,13 @@ msgstr ""
 "semana o cuando cambia la lista. Los nombres nuevos salen abajo como "
 "pendientes."
 
-# 
-#: modules/consent/includes/admin/class-cookies-page.php:192
+#
+#: modules/consent/includes/admin/class-cookies-page.php:198
 msgid "Save notice settings"
 msgstr "Guardar los ajustes del aviso"
 
 #. translators: 1: category name, 2: list of cookie names.
-#: modules/consent/includes/admin/class-cookies-page.php:208
+#: modules/consent/includes/admin/class-cookies-page.php:214
 #, php-format
 msgid ""
 "The notice does not ask about «%1$s», but these confirmed cookies belong to "
@@ -395,12 +395,12 @@ msgstr ""
 "categoría: %2$s. O el aviso pregunta por ella (arriba), o esas cookies no se "
 "deberían poner."
 
-# 
-#: modules/consent/includes/admin/class-cookies-page.php:216
+#
+#: modules/consent/includes/admin/class-cookies-page.php:222
 msgid "Cookies of this site"
 msgstr "Cookies de esta web"
 
-#: modules/consent/includes/admin/class-cookies-page.php:217
+#: modules/consent/includes/admin/class-cookies-page.php:223
 msgid ""
 "Only confirmed cookies appear in the cookie table of the policy (block "
 "«Cookie table» or shortcode [estrategia_web_cookie_table]). Proposals come "
@@ -412,51 +412,67 @@ msgstr ""
 "propuestas salen de nuestra lista y de la Open Cookie Database: revísalas. "
 "Un nombre acabado en * cubre todas las cookies que empiezan así."
 
-#: modules/consent/includes/admin/class-cookies-page.php:221
+#: modules/consent/includes/admin/class-cookies-page.php:224
+msgid ""
+"The cookies «Declared by the plugin» belong to third-party services that the "
+"active modules load (the Google map, Google tags, Matomo): the detector "
+"cannot see the ones set on the provider’s own domain, and sees the rest only "
+"after a visitor accepts. To leave one out of the policy, mark it Ignored: if "
+"you delete it, it comes back as a proposal while its module still loads the "
+"service."
+msgstr ""
+"Las cookies marcadas «Declarada por el plugin» son de servicios de terceros "
+"que cargan los módulos activos (el mapa de Google, las etiquetas de Google, "
+"Matomo): el detector no ve las que se ponen en el dominio del propio "
+"proveedor, y el resto solo las ve cuando un visitante acepta. Para dejar una "
+"fuera de la política, márcala como Ignorada: si la borras, vuelve como "
+"propuesta mientras su módulo siga cargando el servicio."
+
+#: modules/consent/includes/admin/class-cookies-page.php:228
 msgid "Confirm all pending proposals"
 msgstr "Confirmar todas las propuestas pendientes"
 
-# 
-#: modules/consent/includes/admin/class-cookies-page.php:227
+#
+#: modules/consent/includes/admin/class-cookies-page.php:234
 #: modules/consent/includes/class-cookie-table.php:163
 msgid "Cookie"
 msgstr "Cookie"
 
-# 
-#: modules/consent/includes/admin/class-cookies-page.php:229
-#: modules/consent/includes/admin/class-cookies-page.php:293
+#
+#: modules/consent/includes/admin/class-cookies-page.php:236
+#: modules/consent/includes/admin/class-cookies-page.php:312
 msgid "Category"
 msgstr "Categoría"
 
-#: modules/consent/includes/admin/class-cookies-page.php:230
-#: modules/consent/includes/admin/class-cookies-page.php:294
+#: modules/consent/includes/admin/class-cookies-page.php:237
+#: modules/consent/includes/admin/class-cookies-page.php:313
 #: modules/consent/includes/class-cookie-table.php:164
 msgid "Provider"
 msgstr "Proveedor"
 
-#: modules/consent/includes/admin/class-cookies-page.php:231
-#: modules/consent/includes/admin/class-cookies-page.php:295
+#: modules/consent/includes/admin/class-cookies-page.php:238
+#: modules/consent/includes/admin/class-cookies-page.php:314
 #: modules/consent/includes/class-cookie-table.php:165
 msgid "Purpose"
 msgstr "Finalidad"
 
-# 
-#: modules/consent/includes/admin/class-cookies-page.php:232
-#: modules/consent/includes/admin/class-cookies-page.php:296
+#
+#: modules/consent/includes/admin/class-cookies-page.php:239
+#: modules/consent/includes/admin/class-cookies-page.php:315
 #: modules/consent/includes/class-cookie-table.php:166
 msgid "Duration"
 msgstr "Duración"
 
-#: modules/consent/includes/admin/class-cookies-page.php:233
+#: modules/consent/includes/admin/class-cookies-page.php:240
 msgid "Seen"
 msgstr "Vista"
 
-# 
-#: modules/consent/includes/admin/class-cookies-page.php:234
+#
+#: modules/consent/includes/admin/class-cookies-page.php:241
 msgid "Actions"
 msgstr "Acciones"
 
-#: modules/consent/includes/admin/class-cookies-page.php:239
+#: modules/consent/includes/admin/class-cookies-page.php:246
 msgid ""
 "No cookies yet. They appear when a visitor accepts the notice, or add them "
 "below."
@@ -465,29 +481,42 @@ msgstr ""
 "añádelas abajo."
 
 #. translators: %s: a concrete cookie name.
-#: modules/consent/includes/admin/class-cookies-page.php:250
+#: modules/consent/includes/admin/class-cookies-page.php:257
 #, php-format
 msgid "e.g. %s"
 msgstr "p. ej. %s"
 
-#: modules/consent/includes/admin/class-cookies-page.php:266
+#. translators: %s: name of a third-party service, e.g. «Google Maps (map block)».
+#: modules/consent/includes/admin/class-cookies-page.php:276
+#, php-format
+msgid "Declared by the plugin: %s"
+msgstr "Declarada por el plugin: %s"
+
+#: modules/consent/includes/admin/class-cookies-page.php:279
+msgid ""
+"Its module no longer loads this service: delete the cookie if the site does "
+"not use it any more."
+msgstr ""
+"Su módulo ya no carga este servicio: borra la cookie si la web ya no lo usa."
+
+#: modules/consent/includes/admin/class-cookies-page.php:284
 msgid "Added by hand"
 msgstr "Añadida a mano"
 
-#: modules/consent/includes/admin/class-cookies-page.php:268
+#: modules/consent/includes/admin/class-cookies-page.php:287
 msgid "Proposal: Open Cookie Database"
 msgstr "Propuesta: Open Cookie Database"
 
-# 
-#: modules/consent/includes/admin/class-cookies-page.php:270
+#
+#: modules/consent/includes/admin/class-cookies-page.php:289
 msgid "Proposal: Estrategia Web"
 msgstr "Propuesta: Estrategia Web"
 
-#: modules/consent/includes/admin/class-cookies-page.php:278
+#: modules/consent/includes/admin/class-cookies-page.php:297
 msgid "Save"
 msgstr "Guardar"
 
-#: modules/consent/includes/admin/class-cookies-page.php:279
+#: modules/consent/includes/admin/class-cookies-page.php:298
 #: modules/forms/includes/admin/class-submissions-table.php:39
 #: modules/forms/includes/admin/class-submissions-table.php:86
 #: modules/redirects/includes/admin/class-tables.php:56
@@ -496,27 +525,27 @@ msgstr "Guardar"
 msgid "Delete"
 msgstr "Borrar"
 
-#: modules/consent/includes/admin/class-cookies-page.php:287
+#: modules/consent/includes/admin/class-cookies-page.php:306
 msgid "Add a cookie by hand"
 msgstr "Añadir una cookie a mano"
 
-#: modules/consent/includes/admin/class-cookies-page.php:288
+#: modules/consent/includes/admin/class-cookies-page.php:307
 msgid ""
-"For third-party cookies the detector cannot see (for example, the ones "
-"Google sets on its own domain when a map loads). Empty fields are filled "
-"with the proposal, if there is one."
+"For third-party cookies the detector cannot see and no module declares (for "
+"example, a video or a chat embedded by hand). Empty fields are filled with "
+"the proposal, if there is one."
 msgstr ""
-"Para las cookies de terceros que el detector no puede ver (por ejemplo, las "
-"que pone Google en su propio dominio al cargar un mapa). Los campos vacíos "
-"se rellenan con la propuesta, si la hay."
+"Para las cookies de terceros que el detector no puede ver y que ningún "
+"módulo declara (por ejemplo, un vídeo o un chat insertados a mano). Los "
+"campos vacíos se rellenan con la propuesta, si la hay."
 
-#: modules/consent/includes/admin/class-cookies-page.php:292
+#: modules/consent/includes/admin/class-cookies-page.php:311
 #: modules/social/includes/class-admin.php:90
 #: modules/social/includes/class-admin.php:131
 msgid "Name"
 msgstr "Nombre"
 
-#: modules/consent/includes/admin/class-cookies-page.php:296
+#: modules/consent/includes/admin/class-cookies-page.php:315
 msgid ""
 "Like «2 years», «30 minutes» or «session» to have it translated "
 "automatically; anything else is shown as written."
@@ -524,13 +553,13 @@ msgstr ""
 "Como «2 years», «30 minutes» o «session» para que se traduzca sola; "
 "cualquier otra cosa sale tal cual se escribe."
 
-# 
-#: modules/consent/includes/admin/class-cookies-page.php:298
+#
+#: modules/consent/includes/admin/class-cookies-page.php:317
 msgid "Add cookie"
 msgstr "Añadir cookie"
 
 #. translators: 1: link to the Open Cookie Database, 2: licence name, 3: date.
-#: modules/consent/includes/admin/class-cookies-page.php:305
+#: modules/consent/includes/admin/class-cookies-page.php:324
 #, php-format
 msgid ""
 "Proposals use data from the %1$s, licensed under %2$s (extract of %3$s)."
@@ -644,7 +673,7 @@ msgstr "Configurar"
 
 #: modules/consent/includes/class-consent.php:567
 #: modules/external-links/includes/class-external-links.php:101
-#: modules/map/blocks/map/render.php:340 modules/map/blocks/map/render.php:344
+#: modules/map/blocks/map/render.php:343 modules/map/blocks/map/render.php:347
 #: modules/social/blocks/social-links/render.php:74
 #: modules/whatsapp/blocks/whatsapp/render.php:74
 msgid "(opens in a new tab)"
@@ -662,16 +691,16 @@ msgstr ""
 msgid "Cookie settings"
 msgstr "Configurar cookies"
 
-# 
-#: modules/consent/includes/class-cookie-registry.php:134
+#
+#: modules/consent/includes/class-cookie-registry.php:139
 msgid "This website"
 msgstr "Este sitio web"
 
-#: modules/consent/includes/class-cookie-registry.php:139
+#: modules/consent/includes/class-cookie-registry.php:144
 msgid "Remembers your choice in the cookie notice."
 msgstr "Recuerda tu elección en el aviso de cookies."
 
-#: modules/consent/includes/class-cookie-registry.php:145
+#: modules/consent/includes/class-cookie-registry.php:150
 msgid ""
 "Previous name of the cookie that remembers your choice in the cookie notice; "
 "it is replaced on the next visit."
@@ -679,23 +708,23 @@ msgstr ""
 "Nombre anterior de la cookie que recuerda tu elección en el aviso de "
 "cookies; se sustituye en la siguiente visita."
 
-#: modules/consent/includes/class-cookie-registry.php:151
-#: modules/consent/includes/class-cookie-registry.php:157
-#: modules/consent/includes/class-cookie-registry.php:163
+#: modules/consent/includes/class-cookie-registry.php:156
+#: modules/consent/includes/class-cookie-registry.php:162
+#: modules/consent/includes/class-cookie-registry.php:168
 msgid "Remembers the language in which you are browsing the site."
 msgstr "Recuerda el idioma en el que navegas por la web."
 
-#: modules/consent/includes/class-cookie-registry.php:169
+#: modules/consent/includes/class-cookie-registry.php:174
 msgid "Checks that the browser accepts cookies. Only on the login page."
 msgstr ""
 "Comprueba que el navegador acepta cookies. Solo en la página de acceso."
 
-#: modules/consent/includes/class-cookie-registry.php:175
+#: modules/consent/includes/class-cookie-registry.php:180
 msgid "Keeps the session of the site’s users (editors and administrators)."
 msgstr ""
 "Mantiene la sesión de los usuarios de la web (editores y administradores)."
 
-#: modules/consent/includes/class-cookie-registry.php:181
+#: modules/consent/includes/class-cookie-registry.php:186
 msgid ""
 "Remembers the dashboard settings of the site’s users (editors and "
 "administrators)."
@@ -703,7 +732,7 @@ msgstr ""
 "Recuerda los ajustes del escritorio de los usuarios de la web (editores y "
 "administradores)."
 
-#: modules/consent/includes/class-cookie-registry.php:190
+#: modules/consent/includes/class-cookie-registry.php:195
 msgid ""
 "Statistics: recognises a returning visitor (an anonymous identifier). Only "
 "after accepting analytics."
@@ -711,25 +740,25 @@ msgstr ""
 "Estadísticas: reconoce a un visitante que vuelve (con un identificador "
 "anónimo). Solo tras aceptar la analítica."
 
-#: modules/consent/includes/class-cookie-registry.php:196
+#: modules/consent/includes/class-cookie-registry.php:201
 msgid "Statistics: groups the pages viewed in the same visit."
 msgstr "Estadísticas: agrupa las páginas vistas en una misma visita."
 
-#: modules/consent/includes/class-cookie-registry.php:202
+#: modules/consent/includes/class-cookie-registry.php:207
 msgid "Statistics: remembers the website the visitor came from."
 msgstr "Estadísticas: recuerda desde qué web llegó el visitante."
 
-#: modules/consent/includes/class-cookie-registry.php:208
+#: modules/consent/includes/class-cookie-registry.php:213
 msgid "Statistics: remembers that analytics cookies were accepted."
 msgstr "Estadísticas: recuerda que se aceptaron las cookies de analítica."
 
-#: modules/consent/includes/class-cookie-registry.php:214
+#: modules/consent/includes/class-cookie-registry.php:219
 msgid ""
 "Remembers your name and email for the next comment, only if you ask for it."
 msgstr ""
 "Recuerda tu nombre y tu correo para el próximo comentario, solo si lo pides."
 
-#: modules/consent/includes/class-cookie-registry.php:355
+#: modules/consent/includes/class-cookie-registry.php:360
 msgid ""
 "Invalid cookie name. Use the exact name, or a prefix ending in * for a "
 "family of cookies (e.g. _ga_*)."
@@ -737,11 +766,97 @@ msgstr ""
 "Nombre de cookie no válido. Usa el nombre exacto, o un prefijo acabado en * "
 "para una familia de cookies (p. ej. _ga_*)."
 
-#: modules/consent/includes/class-cookie-registry.php:360
+#: modules/consent/includes/class-cookie-registry.php:365
 msgid "The cookie list is full. Delete the cookies you do not need."
 msgstr "La lista de cookies está llena. Borra las que no necesites."
 
-# 
+#: modules/consent/includes/class-cookie-services.php:87
+msgid "Google (google.com), only if the map is shown"
+msgstr "Google (google.com), solo si se muestra el mapa"
+
+#: modules/consent/includes/class-cookie-services.php:93
+msgid "Google Maps (map block)"
+msgstr "Google Maps (bloque de mapa)"
+
+#: modules/consent/includes/class-cookie-services.php:98
+#: modules/consent/includes/class-cookie-services.php:104
+msgid ""
+"Google may set it when the map loads: it remembers preferences such as the "
+"language."
+msgstr ""
+"Google puede ponerla al cargar el mapa: recuerda preferencias como el idioma."
+
+#: modules/consent/includes/class-cookie-services.php:110
+msgid "Google may set it when the map loads: it detects spam, fraud and abuse."
+msgstr "Google puede ponerla al cargar el mapa: detecta spam, fraude y abusos."
+
+#: modules/consent/includes/class-cookie-services.php:116
+msgid ""
+"Google may set it when the map loads: it stores the choice made about "
+"Google’s own cookies."
+msgstr ""
+"Google puede ponerla al cargar el mapa: guarda la elección hecha sobre las "
+"cookies del propio Google."
+
+#: modules/consent/includes/class-cookie-services.php:126
+msgid "Google Analytics (Google tags module)"
+msgstr "Google Analytics (módulo de etiquetas de Google)"
+
+#: modules/consent/includes/class-cookie-services.php:131
+msgid ""
+"Statistics: distinguishes one visitor from another. Only after accepting "
+"analytics."
+msgstr ""
+"Estadísticas: distingue a un visitante de otro. Solo tras aceptar la "
+"analítica."
+
+#: modules/consent/includes/class-cookie-services.php:137
+msgid ""
+"Statistics: keeps the state of the visit. Only after accepting analytics."
+msgstr ""
+"Estadísticas: guarda el estado de la visita. Solo tras aceptar la analítica."
+
+#: modules/consent/includes/class-cookie-services.php:146
+msgid "Google Ads (Google tags module)"
+msgstr "Google Ads (módulo de etiquetas de Google)"
+
+#: modules/consent/includes/class-cookie-services.php:151
+msgid ""
+"Advertising: measures the conversions that come from ads. Only after "
+"accepting advertising."
+msgstr ""
+"Publicidad: mide las conversiones que llegan desde los anuncios. Solo tras "
+"aceptar la publicidad."
+
+#: modules/consent/includes/class-cookie-services.php:157
+msgid ""
+"Advertising: remembers the ad click that brought the visitor, to measure the "
+"conversion. Only after accepting advertising."
+msgstr ""
+"Publicidad: recuerda el clic en el anuncio que trajo al visitante, para "
+"medir la conversión. Solo tras aceptar la publicidad."
+
+#: modules/consent/includes/class-cookie-services.php:163
+msgid ""
+"Advertising: Google uses it to show and measure ads on other websites. Only "
+"after accepting advertising."
+msgstr ""
+"Publicidad: Google la usa para mostrar y medir anuncios en otras webs. Solo "
+"tras aceptar la publicidad."
+
+#: modules/consent/includes/class-cookie-services.php:169
+msgid ""
+"Advertising: Google checks whether the browser accepts cookies. Only after "
+"accepting advertising."
+msgstr ""
+"Publicidad: Google comprueba si el navegador acepta cookies. Solo tras "
+"aceptar la publicidad."
+
+#: modules/consent/includes/class-cookie-services.php:178
+msgid "Matomo, hybrid mode (Matomo module)"
+msgstr "Matomo, modo híbrido (módulo Matomo)"
+
+#
 #: modules/consent/includes/class-cookie-table.php:103
 msgid "Session"
 msgstr "Sesión"
@@ -815,7 +930,7 @@ msgctxt "module name"
 msgid "Cookie notice"
 msgstr "Aviso de cookies"
 
-# 
+#
 #: modules/consent/module.php
 msgctxt "module description"
 msgid ""
@@ -889,12 +1004,12 @@ msgstr ""
 msgid "copy"
 msgstr "copiar"
 
-# 
+#
 #: modules/content-types/includes/admin/class-page.php:62
 msgid "translate"
 msgstr "traducir"
 
-# 
+#
 #: modules/content-types/includes/admin/class-page.php:63
 msgid "ignore"
 msgstr "ignorar"
@@ -941,7 +1056,7 @@ msgstr "Tipo"
 msgid "WPML"
 msgstr "WPML"
 
-# 
+#
 #: modules/content-types/includes/admin/class-page.php:87
 msgid "yes"
 msgstr "sí"
@@ -975,7 +1090,7 @@ msgstr "Se cambia en el idioma original: se copia a las traducciones."
 msgid "%s details"
 msgstr "%s: datos"
 
-# 
+#
 #: modules/content-types/includes/class-fields-panel.php:72
 msgid ""
 "Fields that are the same in every language are copied to the translations "
@@ -1050,12 +1165,12 @@ msgstr "Ver %s"
 msgid "Search %s"
 msgstr "Buscar %s"
 
-# 
+#
 #: modules/content-types/includes/class-registrar.php:174
 msgid "Nothing found."
 msgstr "No se ha encontrado nada."
 
-# 
+#
 #: modules/content-types/includes/class-registrar.php:175
 msgid "Nothing found in the trash."
 msgstr "No hay nada en la papelera."
@@ -1413,7 +1528,7 @@ msgstr "%1$s.%2$s es obligatorio: un texto o un objeto idioma → texto."
 msgid "Unknown key “%1$s”. Allowed: %2$s."
 msgstr "Clave desconocida «%1$s». Se admiten: %2$s."
 
-# 
+#
 #: modules/content-types/module.php
 msgctxt "module name"
 msgid "Content types from JSON"
@@ -2076,18 +2191,18 @@ msgstr ""
 msgid "Leave this field empty"
 msgstr "Deja este campo vacío"
 
-#: modules/forms/includes/class-blocks.php:167
+#: modules/forms/includes/class-blocks.php:195
 msgid "Choose an option"
 msgstr "Elige una opción"
 
-#: modules/forms/includes/class-blocks.php:193
+#: modules/forms/includes/class-blocks.php:221
 msgid "Send"
 msgstr "Enviar"
 
 #. translators: the text between braces becomes the link to the privacy policy.
 #. translators: the text between braces becomes the link to the privacy policy; {text|url} links to that url.
-#: modules/forms/includes/class-blocks.php:242
-#: modules/forms/includes/class-blocks.php:268
+#: modules/forms/includes/class-blocks.php:270
+#: modules/forms/includes/class-blocks.php:296
 msgid "I have read and accept the {privacy policy}."
 msgstr "He leído y acepto la {política de privacidad}."
 
@@ -2173,7 +2288,7 @@ msgstr "Formularios"
 msgid "Google"
 msgstr "Google"
 
-# 
+#
 #: modules/google-tags/includes/admin/class-google-tags-page.php:29
 #: modules/google-tags/includes/admin/class-google-tags-page.php:51
 msgid "Google tags"
@@ -2201,7 +2316,7 @@ msgstr "ID de medición del flujo web de GA4."
 msgid "Conversion ID of the Google Ads account."
 msgstr "ID de conversión de la cuenta de Google Ads."
 
-# 
+#
 #: modules/google-tags/includes/admin/class-google-tags-page.php:59
 msgid "Google Ads"
 msgstr "Google Ads"
@@ -2233,7 +2348,7 @@ msgstr "Google Tag Manager"
 msgid "Loading"
 msgstr "Carga"
 
-# 
+#
 #: modules/google-tags/includes/admin/class-google-tags-page.php:69
 msgid ""
 "Basic (recommended): nothing is requested from Google until the visitor "
@@ -2251,13 +2366,13 @@ msgstr ""
 "y manda avisos sin cookies. Mide mejor, pero llegan datos a Google antes de "
 "que el visitante decida: decídelo con el cliente."
 
-#: modules/google-tags/includes/class-google-tags.php:119
+#: modules/google-tags/includes/class-google-tags.php:150
 msgid "Google tags: GA4, Ads and Tag Manager IDs and the loading mode."
 msgstr ""
 "Etiquetas de Google: los ID de GA4, Ads y Tag Manager y el modo de carga."
 
 #. translators: %s: the value that was not saved.
-#: modules/google-tags/includes/class-google-tags.php:150
+#: modules/google-tags/includes/class-google-tags.php:181
 #, php-format
 msgid "«%s» does not look like a valid ID and was not saved."
 msgstr "«%s» no parece un ID válido y no se ha guardado."
@@ -2273,7 +2388,7 @@ msgstr ""
 "formulario) y Google Tag Manager detrás del aviso de cookies, con Consent "
 "Mode v2. Un campo vacío no carga nada."
 
-# 
+#
 #: modules/google-tags/module.php
 msgctxt "module name"
 msgid "Google tags"
@@ -2447,30 +2562,30 @@ msgstr ""
 "ajustes del bloque."
 
 #. translators: %s: postal address.
-#: modules/map/blocks/map/render.php:210
+#: modules/map/blocks/map/render.php:213
 #, php-format
 msgid "Street map around %s"
 msgstr "Plano de las calles alrededor de %s"
 
-#: modules/map/blocks/map/render.php:211
+#: modules/map/blocks/map/render.php:214
 msgid "Street map of the area"
 msgstr "Plano de las calles de la zona"
 
 #. translators: %s: postal address.
-#: modules/map/blocks/map/render.php:269
+#: modules/map/blocks/map/render.php:272
 #, php-format
 msgid "Map: %s"
 msgstr "Mapa: %s"
 
-#: modules/map/blocks/map/render.php:270
+#: modules/map/blocks/map/render.php:273
 msgid "Map"
 msgstr "Mapa"
 
-#: modules/map/blocks/map/render.php:319
+#: modules/map/blocks/map/render.php:322
 msgid "Show map"
 msgstr "Ver mapa"
 
-#: modules/map/blocks/map/render.php:320
+#: modules/map/blocks/map/render.php:323
 msgid ""
 "The map is served by Google. Loading it sends your IP address to Google, "
 "which may set its own cookies."
@@ -2479,12 +2594,12 @@ msgstr ""
 "puede instalar sus propias cookies."
 
 #. translators: 1: place name (or its address), 2: «(opens in a new tab)». The text before the colon must be the visible text of the link.
-#: modules/map/blocks/map/render.php:338
+#: modules/map/blocks/map/render.php:341
 #, php-format
 msgid "Open in Google Maps: %1$s %2$s"
 msgstr "Abrir en Google Maps: %1$s %2$s"
 
-#: modules/map/blocks/map/render.php:344
+#: modules/map/blocks/map/render.php:347
 msgid "Open in Google Maps"
 msgstr "Abrir en Google Maps"
 
@@ -2531,7 +2646,7 @@ msgstr "ID del sitio"
 msgid "Without cookies (recommended): nothing to ask the visitor."
 msgstr "Sin cookies (recomendado): no hay nada que preguntar al visitante."
 
-# 
+#
 #: modules/matomo/includes/class-admin-fields.php:50
 msgid ""
 "Hybrid: without cookies until the visitor accepts «Analytics» in the cookie "
@@ -2540,13 +2655,13 @@ msgstr ""
 "Híbrido: sin cookies hasta que el visitante acepta «Analítica» en el aviso "
 "de cookies."
 
-# 
+#
 #: modules/matomo/module.php
 msgctxt "module name"
 msgid "Matomo"
 msgstr "Matomo"
 
-# 
+#
 #: modules/matomo/module.php
 msgctxt "module description"
 msgid ""
@@ -3564,7 +3679,7 @@ msgctxt "module name"
 msgid "Company data and content types"
 msgstr "Datos de la empresa y tipos de contenido"
 
-# 
+#
 #: modules/site/module.php
 msgctxt "module description"
 msgid ""
