@@ -62,17 +62,6 @@ open is below, in its own section.
   «sanitize» key first; then remove their definitions from `modules/site`
   (`Content_Types`, `Meta_Panel`) and from `wpml-config.xml`.
 
-## Block tests: from the theme to the plugin
-**Date:** 14-10-2026 · **Due:** —
-
-The carousel, map and WhatsApp ones are still in `armazon-wp-padre/tests/`,
-which mounts this plugin with only the block modules switched on. They work,
-but whoever touches `modules/carousel/` has to know that its test lives in
-another repo (its `module.php` says so). Moving them requires bringing their
-seeding along (the theme's `tests/fixtures/setup/setup.php`) and measuring
-them without the theme's CSS, or with a test theme of their own. It gets done
-the next time one of them is touched.
-
 ## Forms: test it with real WPML
 **Date:** 01-10-2026 · **Due:** before the first site with WPML
 

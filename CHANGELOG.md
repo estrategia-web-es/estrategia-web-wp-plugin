@@ -11,6 +11,8 @@ four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
 ## Unreleased
 
+- **Tests: the browser tests of the carousel, map and WhatsApp blocks moved from the parent theme repo to their modules** (`modules/<block>/tests/`), with their seed in `modules/<block>/tests/wp/` and a shared harness in `tests/browser.mjs` (`blockSite`: reset, only the block modules, the module's seed). They run in Playground's default theme. The theme's editor test was split into carousel-editor, map-editor and whatsapp-editor.
+- **Map: the details box over a static map is now at most 42 % INCLUDING its padding** (`box-sizing: border-box`). With content-box it could reach the marker in a theme with larger text (seen in Twenty Twenty-Five when the tests moved).
 - **Cookies: third-party services the plugin itself loads now declare their known cookies.** The map (once a map with a Google embed has been rendered), Google tags (GA4 / Ads) and Matomo in hybrid mode declare their service with the new `estrategia_web_cookie_services` filter; the cookies of each service (catalogue in `modules/consent/includes/class-cookie-services.php`, taken from Google's and Matomo's own documentation, source and date in comments) appear on Estrategia Web → Cookies as pending «Declared by the plugin» proposals and, once confirmed, in the policy table. Existing rows are never overwritten; pending rows of a service no longer declared are removed. New option `estrategia_web_map_google_seen`.
 - **Google tags: the form conversion also counts a submission sent WITHOUT JavaScript.** The page that comes back (`?af_result=…`) fires `estrategia-web:form-sent` with `detail.returned`, once per submission; the conversion waits until Advertising is granted on that page and is never sent without it.
 

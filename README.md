@@ -702,10 +702,13 @@ production site.
 module's in `modules/<slug>/tests/`. The runner discovers them in both
 places. The ones in the table below moved from `tests/` to their module
 without changing anything but the path to `lib.mjs`; the forms ones are in
-[modules/forms/README.md](modules/forms/README.md). **The tests of the four
-blocks that came from the theme are still in the theme repo**
-(`armazon-wp-padre/tests/`), which mounts this plugin: they measure the
-blocks with the theme's CSS.
+[modules/forms/README.md](modules/forms/README.md). **The tests of the blocks that came from the theme** (carousel, map,
+WhatsApp; 17-10-2026) are in their modules like the rest, at level 3, in
+Playground's default theme: a plugin block must work in any block theme.
+Their pages are seeded by each module's
+`tests/wp/estrategia-web-<block>-test.php` and the shared harness is
+[tests/browser.mjs](tests/browser.mjs) (`blockSite()`: reset, only the block
+modules, the seed).
 
 The runner starts **Playground** (WP 7.1, PHP 8.3) on **port 9404** if there
 is none, with the plugin mounted as `plugins/estrategia-web` and
