@@ -76,6 +76,10 @@
  * on the left, never wider than 42 % so as not to cover the marker, which is
  * in the centre. In a narrow block it does not fit on top: the frame drops
  * its ratio, the map carries it instead and the box goes below.
+ * The 42 % INCLUDES the box's padding (border-box): with content-box the
+ * padding went on top of it and, in a theme with larger text (Twenty
+ * Twenty-Five, 17-10-2026), the box reached the marker. The parent theme
+ * hid it only because its text was short enough not to hit the maximum.
  */
 .estrategia-web-map.has-static-map {
 	container-type: inline-size;
@@ -91,6 +95,7 @@
 .estrategia-web-map.has-static-map .estrategia-web-map__card {
 	inset: var(--wp--preset--spacing--16, 1rem) auto auto var(--wp--preset--spacing--16, 1rem);
 	max-inline-size: min(22rem, 42%);
+	box-sizing: border-box;
 	border-radius: 4px;
 	box-shadow: 0 1px 4px rgb(0 0 0 / 0.2);
 }

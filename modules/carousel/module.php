@@ -19,9 +19,12 @@
  * patterns that use it do not error: WordPress does not render a block that
  * is not registered.
  *
- * Tests: they are still in the theme repo (armazon-wp-padre/tests/carousel*.test.mjs),
- * because they measure the carousel with the theme CSS and its test site;
- * that server mounts this plugin. Moving them here is pending (TODO.md).
+ * Tests: in tests/ of this module (since 17-10-2026; before, in the theme
+ * repo). The pure PHP one of the mobile crop at level 1; the browser ones at
+ * level 3, in Playground's default theme, with their pages seeded by
+ * tests/wp/estrategia-web-carousel-test.php (the list of pages and which test
+ * uses each one, in its header) and the shared harness in the plugin's
+ * tests/browser.mjs.
  */
 
 namespace EstrategiaWeb\Carousel;

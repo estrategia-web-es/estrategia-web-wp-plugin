@@ -18,8 +18,11 @@
  * render.php, so render.php does not know where a value came from; do not
  * write code that depends on that.
  *
- * Tests: in the theme repo (armazon-wp-padre/tests/map*.test.mjs), like the
- * carousel ones.
+ * Tests: in tests/ of this module (since 17-10-2026; before, in the theme
+ * repo), level 3, in Playground's default theme, with their pages seeded by
+ * tests/wp/estrategia-web-map-test.php and the shared harness in the
+ * plugin's tests/browser.mjs. With the cookie notice they are in
+ * modules/consent and in Lavandería (tests/consent-maps.test.mjs).
  */
 
 namespace EstrategiaWeb\Map;

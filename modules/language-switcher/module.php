@@ -9,7 +9,7 @@
  * registered it (see modules/carousel/module.php: the same move). Everything
  * it does, in the header of blocks/language-switcher/render.php.
  *
- * Tests: there are none in the theme repo (WPML is paid and not in its
+ * Tests: there are none here (WPML is paid and not in the plugin's
  * Playground); the real one is Lavandería's,
  * lavanderia-mallorca/tests/language-switcher.test.mjs, with its local copy
  * of WPML.
