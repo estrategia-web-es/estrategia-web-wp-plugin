@@ -13,9 +13,12 @@
  * and WPML translates them with the page, according to wpml-config.xml.
  *
  * How to maintain: if a WPML version changes a hook, it is changed here and
- * nowhere else. The trap: WPML is not in the test environment (it is paid),
- * so this class is tested by hand on a site with WPML before every version
- * that touches it — noted in the README, «Versions».
+ * nowhere else. The trap: WPML is not in this plugin's test environment (it
+ * is paid). Since 17-10-2026 this class runs with real WPML in Lavandería's
+ * tests (tests/forms-wpml.test.mjs: a submission on /en/contact/ with the
+ * messages, the emails, the log and String Translation; and
+ * tests/wpml-blocks.test.mjs: a page translated through WPML's flow); run
+ * them there before every version that touches it.
  */
 
 namespace EstrategiaWeb\Forms;
@@ -77,9 +80,22 @@ final class Language {
 		}
 	}
 
+	/**
+	 * Registers a text of the settings in String Translation, IN THE SITE'S
+	 * DEFAULT LANGUAGE: it is written on the settings screen, which shows and
+	 * saves the original.
+	 *
+	 * The trap (17-10-2026, WPML ST 5.0.2, Lavandería local): without the
+	 * language, WPML assumes ENGLISH for any domain that is not admin_texts_…
+	 * (it treats it like a gettext string, WPML_Autoregister_Save_Strings::
+	 * get_source_lang), so a Spanish success message was registered as
+	 * English, String Translation offered it for translation into Spanish
+	 * only, and /en/ always showed the Spanish text. No error anywhere.
+	 */
 	public static function register_string( string $name, string $value ): void {
 		if ( self::wpml_active() ) {
-			do_action( 'wpml_register_single_string', self::STRING_CONTEXT, $name, $value );
+			$source = (string) apply_filters( 'wpml_default_language', null );
+			do_action( 'wpml_register_single_string', self::STRING_CONTEXT, $name, $value, false, $source );
 		}
 	}
 
