@@ -27,7 +27,8 @@ stored and what it does, to this plugin.
 
 | Module (folder) | What it does | Default |
 |---|---|---|
-| `site` | company details (Block Bindings, `[estrategia_web_company]`), content types (clients, testimonials, locations, projects, portfolio) and sanitized SVG: sections 1 to 4 below | on |
+| `site` | company details (Block Bindings, `[estrategia_web_company]`), the details of one location (Block Bindings) and sanitized SVG: sections 1 to 4 below; the content types (clients, testimonials, locations, projects, portfolio) are `content-types` templates since 17-10-2026 | on |
+| `content-types` | the constructor: each site's own content types, fields and taxonomies, made in the panel or from templates (section «content-types module») | on (since 17-10-2026) |
 | `matomo` | Matomo code, cookieless or hybrid (unreleased: previously inside `site`; requires `site`, stores in its option): section 5 | on |
 | `consent` | the cookie notice and its API; (unreleased) cookie register with detector and table for the policy: sections 6 and 6 bis | on |
 | `google-tags` | (unreleased) GA4, Google Ads and Tag Manager with Consent Mode v2; requires `consent`: section 6 ter | **off** |
@@ -289,6 +290,16 @@ The address of each location inside a Query Loop (`"postType":"location"`):
 ```
 
 ### 3. Content types
+
+**Since 17-10-2026 they are templates of the content-types module** (see
+«content-types module: the constructor»): same type, taxonomy and meta names
+as in the table below, stored as definitions in each site's database and
+edited in **Estrategia Web → Content types**. A site that had them gets them
+stored once, with the URLs it serves today; `enabled_types` and
+`rewrite_slugs` still switch them on and set the site language's slug
+(`modules/content-types/includes/class-site-types.php`). The editor panel and
+the WPML config come from the definition. What follows is the contract as it
+was, and still is, for those names.
 
 Each one is registered **only if it is in `enabled_types`**. Disabling it
 **deletes nothing**: its posts stay in the database and come back as they

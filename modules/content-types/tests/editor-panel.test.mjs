@@ -122,7 +122,7 @@ test("the «Content types» screen lists the types from files read-only and the 
   await p.goto(BASE + "/wp-admin/admin.php?page=estrategia-web-content-types");
   const row = p.locator('tr[data-type="gment_restaurant"]');
   await row.waitFor({ timeout: 15000 });
-  assert.match(await row.textContent(), /restaurants/);
+  assert.match(await row.textContent(), /\/restaurantes\//, "its URL in the site language (es: the example's slug per language)");
   assert.equal(await row.locator('[data-action="edit"]').count(), 0, "a file is not edited here");
   assert.equal(await row.locator('[data-action="copy"]').count(), 1, "it can be copied to the panel");
   assert.match(await p.locator('[data-file="gment_too_long.json"]').textContent(), /gment_restaurant_menu/);
