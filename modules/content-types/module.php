@@ -71,11 +71,12 @@
  *
  * Tests: modules/content-types/tests/ — level 1: schema.test.mjs (validator,
  * name limits, PHP ↔ JSON Schema drift), wpml.test.mjs (the WPML config and
- * the copy on save, with a WPML double), format.test.mjs (the content-field
+ * the copy on save and the slug translations, with a WPML double), format.test.mjs (the content-field
  * rules per type); level 2: register.test.mjs (registration, REST,
  * sanitizers, required, URLs, binding, admin screen), bindings.test.mjs
  * (content-field rendered in Queries); level 3: editor-panel.test.mjs (the
- * panel saves), bindings-editor.test.mjs (content-field in the editor). The test site reads the
+ * panel saves), bindings-editor.test.mjs (content-field in the editor),
+ * classic-required.test.mjs («required» on the classic screen). The test site reads the
  * definitions in tests/fixtures/ (its mu-plugin, tests/wp/).
  *
  * =========================================================================
