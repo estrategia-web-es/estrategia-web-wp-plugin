@@ -266,7 +266,7 @@ final class Rest {
 	private static function redirects( array $slugs, array $old ): array {
 		$created = 0;
 		$skipped = array();
-		foreach ( $slugs as [ $kind, $name, $from, $to ] ) {
+		foreach ( $slugs as [ $kind, $name, $from, $to, $lang ] ) {
 			$paths = array();
 			if ( 'type' === $kind ) {
 				if ( $old['has_archive'] && ( $archive = get_post_type_archive_link( $name ) ) ) {
@@ -284,7 +284,8 @@ final class Rest {
 					}
 				}
 			}
-			foreach ( Changes::redirect_paths( array_unique( $paths ), $from, $to ) as $source => $target ) {
+			$paths = self::paths_in( array_unique( $paths ), $lang );
+			foreach ( Changes::redirect_paths( $paths, $from, $to ) as $source => $target ) {
 				$existing = \EstrategiaWeb\Redirects\Store::all_by_key();
 				$key      = \EstrategiaWeb\Redirects\Rules::key( $target, \EstrategiaWeb\Redirects\Store::base() );
 				if ( isset( $existing[ $key ] ) ) {
@@ -300,6 +301,34 @@ final class Rest {
 			}
 		}
 		return array( 'created' => $created, 'skipped' => $skipped );
+	}
+
+	/**
+	 * The paths of ONE language: '' = all (a slug that is the same string in
+	 * every language); WPML's default language = those without a language
+	 * directory in front; another = those under /<code>/. WPML in «language
+	 * directory» mode, which is what these sites use; with ?lang= or a
+	 * domain per language, every path counts as the default's.
+	 *
+	 * @param string[] $paths
+	 * @return string[]
+	 */
+	private static function paths_in( array $paths, string $lang ): array {
+		$codes = array_keys( (array) apply_filters( 'wpml_active_languages', null, array( 'skip_missing' => 0 ) ) );
+		if ( '' === $lang || ! $codes ) {
+			return $paths;
+		}
+		$default = (string) apply_filters( 'wpml_default_language', null );
+		return array_values(
+			array_filter(
+				$paths,
+				static function ( $path ) use ( $codes, $lang, $default ) {
+					$first = explode( '/', trim( (string) $path, '/' ) )[0] ?? '';
+					$in    = in_array( $first, $codes, true ) ? $first : $default;
+					return $in === $lang;
+				}
+			)
+		);
 	}
 
 	/** One type as the panel shows it: from the database, from a file, or neither. */

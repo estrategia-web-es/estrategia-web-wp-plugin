@@ -52,7 +52,7 @@ final class Changes {
 	 * @param array      $new    The NORMALIZED definition about to be stored.
 	 * @param array{entries?:int,terms?:array<string,int>} $counts Entries of the OLD type name; terms per OLD taxonomy name.
 	 * @return array{errors:string[],warnings:string[],slugs:array<int,array{0:string,1:string,2:string,3:string}>}
-	 *   slugs: [kind ('type'|'taxonomy'), name, old slug, new slug] of every URL base that changes.
+	 *   slugs: [kind ('type'|'taxonomy'), name, old slug, new slug, language code or ''] of every URL base that changes.
 	 */
 	public static function check( ?array $old, array $new, array $counts ): array {
 		$errors   = array();
@@ -99,12 +99,12 @@ final class Changes {
 			}
 		}
 
-		if ( $old['slug'] !== $new['slug'] && $old['name'] === $new['name'] ) {
-			$slugs[] = array( 'type', $new['name'], self::slug_text( $old['slug'] ), self::slug_text( $new['slug'] ) );
+		if ( $old['name'] === $new['name'] ) {
+			$slugs = self::slug_changes( 'type', $new['name'], $old['slug'], $new['slug'] );
 		}
 		foreach ( $new_taxes as $name => $tax ) {
-			if ( isset( $old_taxes[ $name ] ) && $old_taxes[ $name ]['slug'] !== $tax['slug'] ) {
-				$slugs[] = array( 'taxonomy', $name, self::slug_text( $old_taxes[ $name ]['slug'] ), self::slug_text( $tax['slug'] ) );
+			if ( isset( $old_taxes[ $name ] ) ) {
+				$slugs = array_merge( $slugs, self::slug_changes( 'taxonomy', $name, $old_taxes[ $name ]['slug'], $tax['slug'] ) );
 			}
 		}
 		foreach ( $slugs as [ $kind, $name, $from, $to ] ) {
@@ -112,6 +112,30 @@ final class Changes {
 			$warnings[] = sprintf( __( 'The URL of “%1$s” changes from /%2$s/ to /%3$s/: its published addresses move.', 'estrategia-web' ), $name, $from, $to );
 		}
 		return compact( 'errors', 'warnings', 'slugs' );
+	}
+
+	/**
+	 * The URL bases that change, LANGUAGE BY LANGUAGE (slugs per language,
+	 * 17-10-2026): a slug is a string (every language) or locale → slug.
+	 * Each language named in either is compared as Registrar and WPML resolve
+	 * it (Schema::text: that language, then en, then the first). The fifth
+	 * element is the language code ('' for a plain string on both sides).
+	 * Boundary case, with a name: «sedes» → {"es": "sedes", "en": "sedes"}
+	 * (Lavandería's migration): the same in every language, so NO change.
+	 *
+	 * @return array<int,array{0:string,1:string,2:string,3:string,4:string}>
+	 */
+	private static function slug_changes( string $kind, string $name, $old, $new ): array {
+		$langs = array_unique( array_merge( is_array( $old ) ? array_keys( $old ) : array(), is_array( $new ) ? array_keys( $new ) : array() ) );
+		$out   = array();
+		foreach ( $langs ? $langs : array( '' ) as $lang ) {
+			$from = Schema::text( $old, (string) $lang );
+			$to   = Schema::text( $new, (string) $lang );
+			if ( $from !== $to ) {
+				$out[] = array( $kind, $name, $from, $to, strtolower( explode( '_', (string) $lang )[0] ) );
+			}
+		}
+		return $out;
 	}
 
 	/**
@@ -148,10 +172,5 @@ final class Changes {
 			}
 		}
 		return $out;
-	}
-
-	/** A slug as text for the messages: a string, or (per language, content-types/url) the first one. */
-	private static function slug_text( $slug ): string {
-		return is_array( $slug ) ? (string) reset( $slug ) : (string) $slug;
 	}
 }

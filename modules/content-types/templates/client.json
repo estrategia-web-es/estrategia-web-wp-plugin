@@ -29,7 +29,7 @@
   ],
   "fields": [
     {
-      "name": "client_url",
+      "name": "estrategia_web_client_url",
       "type": "url",
       "label": { "en": "Client website", "es": "Web del cliente", "ca": "Web del client" },
       "wpml": "copy"

@@ -83,23 +83,17 @@ final class Templates {
 	}
 
 	/**
-	 * What «Add …» stores: the template with its URL slugs resolved to the
-	 * SITE language (Plugin::site_locale(), WPML's default: «sedes» on a
-	 * Spanish site, «seus» on a Catalan one). The files keep one slug per
-	 * language so a new site gets the right one; a definition takes ONE slug
-	 * until slugs per language arrive in the schema (branch content-types/url),
-	 * and then this only has to stop resolving them.
+	 * What «Add …» stores for a NEW type: the template as it is, with its URL
+	 * slug per language ({"en": "locations", "es": "sedes", "ca": "seus"}).
+	 * Registrar registers the SITE language's one and, with WPML, the others
+	 * become slug translations (Wpml::sync_slugs()).
+	 * Boundary case, with a name: a type that ALREADY has published URLs
+	 * (modules/site registered it before). That one must not take these
+	 * slugs — /en/sedes/ would become /en/locations/ — so Site_Types builds
+	 * its slugs from what the site serves today, not from here.
 	 */
-	public static function materialize( array $template, ?string $locale = null ): array {
-		$locale ??= \EstrategiaWeb\Plugin::site_locale();
-		if ( isset( $template['slug'] ) && is_array( $template['slug'] ) ) {
-			$template['slug'] = Schema::text( $template['slug'], $locale );
-		}
-		foreach ( $template['taxonomies'] ?? array() as $i => $tax ) {
-			if ( is_array( $tax ) && isset( $tax['slug'] ) && is_array( $tax['slug'] ) ) {
-				$template['taxonomies'][ $i ]['slug'] = Schema::text( $tax['slug'], $locale );
-			}
-		}
+	public static function materialize( array $template ): array {
+		unset( $template['$schema'] );
 		return $template;
 	}
 

@@ -3,8 +3,8 @@
 // If there is no `php` on the PATH the test FAILS (it is not skipped).
 //
 // Seen red (17-10-2026): with the shipped-names exemption off in
-// Schema::check_name(), «every template validates» failed (client_url and
-// estrategia_web_* «must start with the prefix eweb_»); with Changes::check()
+// Schema::check_name(), «every template validates» failed (client_url — the
+// name then — and estrategia_web_* «must start with the prefix eweb_»); with Changes::check()
 // not comparing slugs, «a URL that moves» failed; with redirect_paths()
 // matching the base anywhere in the path, «/sedes-viejas/» was redirected.
 import { test } from "node:test";
@@ -35,8 +35,8 @@ const resolved = (key) => {
 
 // THE CONTRACT: the names modules/site registered (Type_Names, Content_Types), which the themes, the content loads and the stored data use.
 const CONTRACT = {
-  client: { name: "eweb_client", taxonomies: ["eweb_client_sector"], fields: ["client_url", "estrategia_web_client_image_fit", "estrategia_web_client_business_type"] },
-  testimonial: { name: "eweb_testimonial", taxonomies: [], fields: ["estrategia_web_testimonial_author", "testimonial_role", "estrategia_web_testimonial_rating", "testimonial_client"] },
+  client: { name: "eweb_client", taxonomies: ["eweb_client_sector"], fields: ["estrategia_web_client_url", "estrategia_web_client_image_fit", "estrategia_web_client_business_type"] },
+  testimonial: { name: "eweb_testimonial", taxonomies: [], fields: ["estrategia_web_testimonial_author", "estrategia_web_testimonial_role", "estrategia_web_testimonial_rating", "estrategia_web_testimonial_client"] },
   location: {
     name: "eweb_location",
     taxonomies: [],
@@ -60,6 +60,7 @@ test("every template validates, in every language of the plugin, with its URL in
   assert.deepEqual(es.client.taxonomy_slugs, ["sector"], "the same slug the gettext translation gave (Lavandería: /sector/…)");
   assert.equal(es.testimonial.slug, "opiniones");
   assert.equal(es.client.slug, "clientes");
+  for (const key of Object.keys(CONTRACT)) assert.deepEqual(Object.keys(es[key].slugs).sort(), ["ca", "en", "es"], key + ": one slug per language of the plugin, stored as such");
 });
 
 test("the templates keep the old names: type, taxonomies and meta keys (nothing to migrate in the database)", () => {
@@ -88,8 +89,8 @@ test("the templates keep the old names: type, taxonomies and meta keys (nothing 
   );
   const t = Object.fromEntries(es.testimonial.normalized.fields.map((f) => [f.name, f]));
   assert.equal(t.estrategia_web_testimonial_rating.meta_type, "integer", "rating stored as an integer, as before");
-  assert.equal(t.testimonial_role.wpml, "translate");
-  assert.deepEqual(t.testimonial_client.post_type, ["eweb_client"]);
+  assert.equal(t.estrategia_web_testimonial_role.wpml, "translate");
+  assert.deepEqual(t.estrategia_web_testimonial_client.post_type, ["eweb_client"]);
   const c = Object.fromEntries(es.client.normalized.fields.map((f) => [f.name, f]));
   assert.equal(c.estrategia_web_client_image_fit.default, "cover", "a client without the field saved counts as a photo");
   assert.deepEqual(es.client.normalized.supports, ["title", "thumbnail", "excerpt", "page-attributes", "custom-fields"], "no editor: the classic screen, as before");
@@ -116,8 +117,8 @@ test("template rules: the shipped names keep their prefixes; the type name is fi
   const unknown = resolved("testimonial");
   unknown.template = "review";
   hasError(unknown, /there is no template “review”/);
-  // Outside a template, a pre-1.0.0 meta key gets no free pass.
-  hasError({ prefix: "gment_", name: "gment_client", labels: { singular: "C", plural: "Cs" }, fields: [{ name: "client_url", type: "url", label: "Web" }] }, /“client_url” must start with the prefix “gment_”/);
+  // Outside a template, a template's meta key gets no free pass.
+  hasError({ prefix: "gment_", name: "gment_client", labels: { singular: "C", plural: "Cs" }, fields: [{ name: "estrategia_web_client_url", type: "url", label: "Web" }] }, /“estrategia_web_client_url” must start with the prefix “gment_”/);
 });
 
 test("the new field types: rating (0–5), embed, local_image; and the optional type labels", () => {
@@ -166,7 +167,11 @@ test("Changes: what is refused, what is warned, and the URLs that move", () => {
     d.slug = "eat";
     d.taxonomies[0].slug = "kitchen";
   });
-  assert.deepEqual(url.slugs, [["type", "gment_restaurant", "restaurants", "eat"], ["taxonomy", "gment_cuisine", "cuisine", "kitchen"]]);
+  assert.deepEqual(url.slugs, [["type", "gment_restaurant", "restaurants", "eat", ""], ["taxonomy", "gment_cuisine", "cuisine", "kitchen", ""]]);
+  // Per language (content-types/url): only the languages whose slug really changes.
+  assert.deepEqual(check((d) => (d.slug = { es: "restaurants", en: "restaurants" })).slugs, [], "a string to the same slug in every language: nothing moves (Lavandería's migration)");
+  const perLang = php("changes", { old: { ...base, slug: { es: "restaurantes", en: "restaurants" } }, new: { ...base, slug: { es: "restaurantes", en: "eateries" } }, counts: {} });
+  assert.deepEqual(perLang.slugs, [["type", "gment_restaurant", "restaurants", "eateries", "en"]]);
   assert.match(url.warnings.join(" "), /from \/restaurants\/ to \/eat\//);
 
   const taxRenamed = check((d) => (d.taxonomies[0].name = "gment_kitchen"), { terms: { gment_cuisine: 4 } });

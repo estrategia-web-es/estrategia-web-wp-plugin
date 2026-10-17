@@ -23,7 +23,7 @@
       "wpml": "copy"
     },
     {
-      "name": "testimonial_role",
+      "name": "estrategia_web_testimonial_role",
       "type": "text",
       "label": { "en": "Author role or company", "es": "Cargo o empresa del autor", "ca": "Càrrec o empresa de l'autor" },
       "wpml": "translate"
@@ -35,7 +35,7 @@
       "wpml": "copy"
     },
     {
-      "name": "testimonial_client",
+      "name": "estrategia_web_testimonial_client",
       "type": "relation",
       "post_type": "eweb_client",
       "label": { "en": "Related client", "es": "Cliente relacionado", "ca": "Client relacionat" },

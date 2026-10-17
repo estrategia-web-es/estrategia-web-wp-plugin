@@ -39,12 +39,14 @@ switch ( $argv[1] ?? '' ) {
 	case 'templates':
 		$out = array();
 		foreach ( Templates::all() as $key => $raw ) {
-			$def         = Templates::materialize( $raw, $in['locale'] );
+			$def         = Templates::materialize( $raw );
 			$out[ $key ] = array(
 				'errors'         => Schema::validate( $def, $def ),
 				'name'           => $def['name'],
-				'slug'           => $def['slug'],
-				'taxonomy_slugs' => array_map( static fn( $t ) => is_array( $t ) ? $t['slug'] : $t, $def['taxonomies'] ?? array() ),
+				// What Registrar would register on a site in that locale.
+				'slug'           => Schema::text( $def['slug'], $in['locale'] ),
+				'slugs'          => $def['slug'],
+				'taxonomy_slugs' => array_map( static fn( $t ) => is_array( $t ) ? Schema::text( $t['slug'], $in['locale'] ) : $t, $def['taxonomies'] ?? array() ),
 				'normalized'     => Schema::validate( $def, $def ) ? null : Schema::normalize( $def ),
 			);
 		}

@@ -71,8 +71,9 @@ final class Schema {
 	 * would orphan the data already stored under them — and the type name
 	 * must stay the template's. Anything the site ADDS (a new field) follows
 	 * the usual rules with the definition's own prefix. Boundary case, with a
-	 * name: «client_url», from before 1.0.0, has no prefix at all; it passes
-	 * because the template ships it, not because it looks right.
+	 * name: «estrategia_web_client_url» on eweb_client starts with neither the
+	 * definition's prefix nor anything the site may use; it passes because the
+	 * template ships it, not because it looks right.
 	 *
 	 * @param mixed      $def      What json_decode( …, true ) returned.
 	 * @param array|null $template The RAW template it names, if it names one that exists.

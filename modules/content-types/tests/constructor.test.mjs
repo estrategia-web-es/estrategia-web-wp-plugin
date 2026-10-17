@@ -155,12 +155,12 @@ test("the special sanitizers, now field types: rating, embed, local_image and th
   const client = await wp("/eweb_client", { method: "POST", body: { title: "Cliente prueba", status: "publish" } });
   assert.equal(client.status, 201, client.text);
   const page = await wp("/pages", { method: "POST", body: { title: "Una página", status: "publish" } });
-  const op = await wp("/eweb_testimonial", { method: "POST", body: { title: "Opinión", status: "publish", meta: { estrategia_web_testimonial_rating: 9, testimonial_client: page.json.id } } });
+  const op = await wp("/eweb_testimonial", { method: "POST", body: { title: "Opinión", status: "publish", meta: { estrategia_web_testimonial_rating: 9, estrategia_web_testimonial_client: page.json.id } } });
   assert.equal(op.status, 201, op.text);
   assert.equal(op.json.meta.estrategia_web_testimonial_rating, 5, "clamped to 5");
-  assert.equal(op.json.meta.testimonial_client, 0, "a page is not a client");
-  const ok = await wp(`/eweb_testimonial/${op.json.id}`, { method: "POST", body: { meta: { testimonial_client: client.json.id, estrategia_web_testimonial_rating: -2 } } });
-  assert.equal(ok.json.meta.testimonial_client, client.json.id);
+  assert.equal(op.json.meta.estrategia_web_testimonial_client, 0, "a page is not a client");
+  const ok = await wp(`/eweb_testimonial/${op.json.id}`, { method: "POST", body: { meta: { estrategia_web_testimonial_client: client.json.id, estrategia_web_testimonial_rating: -2 } } });
+  assert.equal(ok.json.meta.estrategia_web_testimonial_client, client.json.id);
   assert.equal(ok.json.meta.estrategia_web_testimonial_rating, 0);
   const iframe = '<iframe src="https://www.google.com/maps/embed?pb=!1m18&amp;x=1" width="600"></iframe>';
   const loc = await wp("/eweb_location", { method: "POST", body: { title: "Sede", status: "publish", meta: { estrategia_web_location_map_embed: iframe, estrategia_web_location_static_map: "https://otro.test/mapa.webp" } } });
