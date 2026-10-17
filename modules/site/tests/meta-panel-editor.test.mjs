@@ -1,7 +1,12 @@
 // NIVEL: 3 — browser. NEEDS A BROWSER BECAUSE: the «Datos de la sede» panel only exists once the block editor (JS) renders it, and what is tested is that what is typed THERE ends up saved in the meta.
 //
 // The real case (07-10-2026): changing the phone of the Maioris location from its
-// edit screen, without WP-CLI.
+// edit screen, without WP-CLI. Since 17-10-2026 the panel is the content-types
+// module's (the types are its templates): this test is the proof that the editor
+// reads the same — same titles, same fields, same saving — after the move.
+//
+// Seen red (17-10-2026): with the location template's «details» label removed,
+// the panel title was «Sede: datos» and the first test failed.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, playwright, reset, saveCompany, wp, type } from "../../../tests/lib.mjs";
@@ -30,7 +35,7 @@ async function openEditor(id) {
   // The editor may open with the welcome guide on top.
   await p.evaluate(() => window.wp.data.dispatch("core/preferences")?.set("core/edit-post", "welcomeGuide", false));
   await p.evaluate(() => window.wp.data.dispatch("core/edit-post")?.openGeneralSidebar?.("edit-post/document"));
-  await p.locator(".estrategia-web-meta-panel").waitFor({ timeout: 15000 });
+  await p.locator(".estrategia-web-content-types-panel").waitFor({ timeout: 15000 });
 }
 
 async function save() {
@@ -46,7 +51,7 @@ test("location: the «Datos de la sede» panel shows the fields with their value
   assert.equal(loc.status, 201, loc.text);
   await openEditor(loc.json.id);
 
-  const panel = p.locator(".estrategia-web-meta-panel");
+  const panel = p.locator(".estrategia-web-content-types-panel");
   assert.match(await panel.locator(".components-panel__body-title").first().textContent(), /Datos de la sede/);
   const phone = panel.locator('[data-meta-key="estrategia_web_location_phone"] input');
   assert.equal(await phone.inputValue(), "971 00 00 00");
@@ -70,7 +75,7 @@ test("location: the «Datos de la sede» panel shows the fields with their value
 test("client (CLASSIC screen: it has no 'editor'): the «Datos del cliente» meta box saves business type and image fit", async () => {
   const client = await wp(`/${type("client")}`, { method: "POST", body: { title: "Portic Villas", status: "publish", meta: { estrategia_web_client_url: "https://portic.test" } } });
   await p.goto(`${BASE}/wp-admin/post.php?post=${client.json.id}&action=edit`);
-  const box = p.locator("#estrategia-web-meta");
+  const box = p.locator("#estrategia-web-content-types");
   assert.match(await box.locator("h2").first().textContent(), /Datos del cliente/);
   assert.equal(await box.locator('[data-meta-key="estrategia_web_client_url"] input').inputValue(), "https://portic.test");
   await box.locator('[data-meta-key="estrategia_web_client_business_type"] input').fill("Agencia de <b>alquiler</b> vacacional");
@@ -88,7 +93,7 @@ test("testimonial: its panel with author, rating and related client (integers tr
   assert.ok(client, "the client from the previous test");
   const testimonial = await wp(`/${type("testimonial")}`, { method: "POST", body: { title: "Very good", status: "publish" } });
   await openEditor(testimonial.json.id);
-  const panel = p.locator(".estrategia-web-meta-panel");
+  const panel = p.locator(".estrategia-web-content-types-panel");
   assert.match(await panel.locator(".components-panel__body-title").first().textContent(), /Datos de la opinión/);
   await panel.locator('[data-meta-key="estrategia_web_testimonial_author"] input').fill("Marta G.");
   await panel.locator('[data-meta-key="estrategia_web_testimonial_rating"] select').selectOption("4");
@@ -107,6 +112,6 @@ test("a page does not get the panel (only location, client and testimonial)", as
   const page = await wp("/pages", { method: "POST", body: { title: "A page", status: "publish" } });
   await p.goto(`${BASE}/wp-admin/post.php?post=${page.json.id}&action=edit`);
   await p.waitForFunction(() => window.wp?.data?.select("core/editor")?.getCurrentPostId(), null, { timeout: 60000 });
-  assert.equal(await p.evaluate(() => typeof window.estrategiaWebMetaPanel), "undefined");
+  assert.equal(await p.evaluate(() => typeof window.estrategiaWebContentTypesPanel), "undefined");
   await wp(`/pages/${page.json.id}?force=true`, { method: "DELETE" });
 });
