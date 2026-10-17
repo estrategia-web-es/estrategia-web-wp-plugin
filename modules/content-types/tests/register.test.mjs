@@ -36,7 +36,7 @@ after(async () => {
 
 test("the valid files are registered; the broken ones are not, and their errors are listed", () => {
   assert.equal(state.module, true, "module loaded");
-  assert.deepEqual(state.registered.sort(), ["gment_cuisine", "gment_restaurant", "gment_wine"]);
+  assert.deepEqual(state.registered.sort(), ["gment_cuisine", "gment_restaurant", "gment_wine", "gment_winery"]);
   assert.deepEqual(state.taxonomy.sort(), ["gment_restaurant", "gment_wine"], "the cuisine taxonomy is shared by reference");
   const long = state.errors["gment_too_long.json"].join(" | ");
   // In Spanish: the site under test speaks es_ES, and the errors are translated (languages/).
@@ -117,16 +117,23 @@ test("sanitizers: what cannot be stored becomes empty (or the default), never an
   assert.equal(missing.status, 400, "the integer required field at 0 is empty");
 });
 
-test("the URLs: single, archive and taxonomy, from the slugs of the JSON (rules flushed by the hash)", async () => {
-  assert.ok(state.rules.some((r) => r.startsWith("restaurants/")), "rewrite rules for restaurants: " + JSON.stringify(state.rules));
+test("the URLs: single, archive and taxonomy, from the slugs of the JSON in the SITE language (rules flushed by the hash)", async () => {
+  // The example's slugs are per language ({"ca": "restaurants", "es": "restaurantes", …}); without WPML the
+  // site language's is registered — es_ES here — and the others are not URLs at all.
+  assert.ok(state.rules.some((r) => r.startsWith("restaurantes/")), "rewrite rules for restaurantes: " + JSON.stringify(state.rules));
+  assert.ok(!state.rules.some((r) => r.startsWith("restaurants/") || r.startsWith("cuina/")), "no rules for the other languages' slugs");
+  assert.ok(state.rules.some((r) => r.startsWith("bodegas/")), "the fixture without a plain string either: bodegas");
   const term = await wp("/gment_cuisine", { method: "POST", body: { name: "Mallorquina", slug: "mallorquina" } });
   assert.equal(term.status, 201, term.text);
   await wp(`/gment_restaurant/${restaurant.id}`, { method: "POST", body: { gment_cuisine: [term.json.id] } });
-  const single = await html(BASE + "/restaurants/ca-nandreu/");
+  const single = await html(BASE + "/restaurantes/ca-nandreu/");
   assert.equal(single.status, 200);
   assert.match(single.text, /Ca n.(#8217;|’|')?Andreu/);
-  assert.equal((await html(BASE + "/restaurants/")).status, 200, "archive");
-  assert.equal((await html(BASE + "/cuisine/mallorquina/")).status, 200, "taxonomy");
+  assert.equal((await wp(`/gment_restaurant/${restaurant.id}`)).json.link, BASE + "/restaurantes/ca-nandreu/", "the permalink agrees with the rules");
+  assert.equal((await html(BASE + "/restaurantes/")).status, 200, "archive");
+  assert.equal((await html(BASE + "/cocina/mallorquina/")).status, 200, "taxonomy");
+  // Not followed: WordPress may 301 a 404 to the post it guesses, which is fine — what matters is that it is not served there.
+  assert.notEqual((await fetch(BASE + "/restaurants/ca-nandreu/", { redirect: "manual" })).status, 200, "the Catalan slug is not a URL without WPML");
 });
 
 test("Block Bindings: a Query of restaurants with core/post-meta renders the phone and the price", async () => {
@@ -154,5 +161,5 @@ test("changing the definitions flushes the rules once: off, the restaurant URLs 
   await ct("/state");
   const on = await ct("/state");
   assert.equal(on.hash, state.hash, "same definitions, same hash");
-  assert.ok(on.rules.some((r) => r.startsWith("restaurants/")));
+  assert.ok(on.rules.some((r) => r.startsWith("restaurantes/")));
 });

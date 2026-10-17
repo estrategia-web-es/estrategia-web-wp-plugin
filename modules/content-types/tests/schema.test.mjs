@@ -104,7 +104,12 @@ test("field rules: select, relation, number, date, boolean, image, duplicates, w
     [(d) => (d.fields[0].options = ["a"]), /options is only for fields of type “select”/],
     [(d) => (d.fields[0].label = { catalan: "Telèfon" }), /label is required/],
     [(d) => (d.labels = { singular: "Restaurant" }), /labels\.plural is required/],
-    [(d) => (d.slug = "/restaurants/"), /slug must be lowercase/],
+    [(d) => (d.slug = "/restaurants/"), /slug must be a URL path/],
+    [(d) => (d.slug = { ca: "restaurants", es: "Restaurantes" }), /slug must be a URL path/],
+    [(d) => (d.slug = { ca: "restaurants", es: "cafès" }), /slug must be a URL path/, "ASCII only: a «è» would be a percent-encoded URL"],
+    [(d) => (d.slug = { catalan: "restaurants" }), /slug must be a URL path/],
+    [(d) => (d.slug = {}), /slug must be a URL path/],
+    [(d) => (d.taxonomies[0].slug = { ca: "cuina", es: "co_cina" }), /taxonomies\[1\]\.slug must be a URL path/],
     [(d) => (d.supports = ["title", "editr"]), /unknown value “editr”/],
     [(d) => (d.icon = "food"), /Dashicons/],
     [(d) => (d.fields[0].true_label = "Yes"), /true_label is only for fields of type “boolean”/],
@@ -118,6 +123,7 @@ test("field rules: select, relation, number, date, boolean, image, duplicates, w
   // And what IS allowed: a nested slug, a number within range, a relation to two types.
   const ok = base();
   ok.slug = "carta/restaurants";
+  assert.deepEqual(errors({ ...base(), slug: { ca: "carta/restaurants", es_ES: "carta/restaurantes" } }), [], "a slug per locale, nested");
   ok.fields.push({ name: "gment_seats", type: "number", label: "Seats", integer: true, min: 0, max: 500, default: 40 });
   ok.fields.push({ name: "gment_related", type: "relation", label: "Related", post_type: ["gment_restaurant", "post"] });
   ok.fields.push({ name: "gment_terrace", type: "boolean", label: "Terrace", default: true, true_label: { ca: "Amb terrassa", es: "Con terraza" }, false_label: "" });
@@ -136,6 +142,18 @@ test("across files: the same type twice, the same taxonomy twice, a reference to
   assert.match(out["b.json"].join(" "), /name “gment_cuisine” is already declared in a\.json/);
   assert.match(out["c.json"].join(" "), /taxonomy “gment_wine_region” is not declared/);
   assert.equal(out["a.json"], undefined, "the first one keeps its name");
+  // Slugs: a URL per type and language. The example has restaurants/cuina in ca and restaurantes/cocina in es.
+  const bar = (slug) => ({ prefix: "gment_", name: "gment_bar", slug, labels: { singular: "Bar", plural: "Bars" } });
+  assert.deepEqual(php("check-all", { "a.json": example, "b.json": bar({ ca: "bars", es: "restaurants" }) }), {}, "«restaurants» in es (bar) and in ca (restaurant) are different URLs");
+  const sameEs = php("check-all", { "a.json": example, "b.json": bar({ ca: "bars", es: "restaurantes" }) });
+  assert.match(sameEs["b.json"].join(" "), /slug “restaurantes” \(language “es”\) is already the URL of “gment_restaurant” in a\.json/);
+  const plain = php("check-all", { "a.json": example, "b.json": bar("cuina") });
+  assert.equal(plain["b.json"].length, 1, "a plain slug clashes in ca (the taxonomy's cuina) and is reported once: " + JSON.stringify(plain));
+  assert.match(plain["b.json"][0], /“cuina” \(language “ca”\) is already the URL of “gment_cuisine”/);
+  const own = php("check-all", { "a.json": { ...example, taxonomies: [{ ...example.taxonomies[0], slug: { ca: "restaurants", es: "cocina" } }] } });
+  assert.match(own["a.json"].join(" "), /“restaurants” \(language “ca”\) is already the URL of “gment_restaurant”/, "a type and its own taxonomy");
+  const derived = php("check-all", { "a.json": { prefix: "gment_", name: "gment_wine", labels: { singular: "W", plural: "W" } }, "b.json": bar("wine") });
+  assert.match(derived["b.json"].join(" "), /“wine” .* “gment_wine”/, "the default slug (name without prefix) counts too");
   const clash = php("check-all", { "a.json": example, "b.json": { ...recipe, fields: [{ name: "gment_phone", type: "tel", label: "Phone", wpml: "translate" }] } });
   assert.match(clash["b.json"].join(" "), /“gment_phone” has wpml “translate” here and “copy” in a\.json/);
 });

@@ -134,6 +134,9 @@ final class Schema {
 				}
 			}
 		}
+		foreach ( self::slug_clashes( $defs ) as $file => $found ) {
+			$errors[ $file ] = array_merge( $errors[ $file ] ?? array(), $found );
+		}
 		// WPML's setting is per meta KEY, not per type: one key, one mode.
 		$modes = array();
 		foreach ( $defs as $file => $def ) {
@@ -158,6 +161,57 @@ final class Schema {
 	}
 
 	/**
+	 * Two types or taxonomies with the same URL base in the same language:
+	 * WordPress would keep the rules of the first one and the second one's
+	 * posts would be 404s (or open the other's). Compared language by
+	 * language — the languages that appear in any slug object, each slug
+	 * resolved as the registrar resolves it (Schema::text: that language,
+	 * then en, then the first) — so «vins» in Catalan and «vins» in a
+	 * French-only slug of another type do not count as a clash.
+	 *
+	 * @param array<string,array> $defs File name => VALID definition.
+	 * @return array<string,string[]>
+	 */
+	private static function slug_clashes( array $defs ): array {
+		$entries = array(); // [file, name, slug]
+		$langs   = array();
+		foreach ( $defs as $file => $def ) {
+			$items = array( array( $def['name'], $def['slug'] ?? null ) );
+			foreach ( $def['taxonomies'] ?? array() as $tax ) {
+				if ( is_array( $tax ) ) {
+					$items[] = array( $tax['name'], $tax['slug'] ?? null );
+				}
+			}
+			foreach ( $items as [ $name, $slug ] ) {
+				$slug      = $slug ?? self::default_slug( $name, $def['prefix'] );
+				$entries[] = array( $file, $name, $slug );
+				foreach ( is_array( $slug ) ? array_keys( $slug ) : array() as $locale ) {
+					$langs[ strtolower( explode( '_', (string) $locale )[0] ) ] = true;
+				}
+			}
+		}
+		$errors = array();
+		foreach ( $langs ? array_keys( $langs ) : array( 'en' ) as $lang ) {
+			$seen = array();
+			foreach ( $entries as [ $file, $name, $slug ] ) {
+				$value = self::text( $slug, $lang );
+				// The same pair clashing in several languages is reported once (the first language).
+				if ( isset( $seen[ $value ] ) && $seen[ $value ][1] !== $name && ! isset( $errors[ $file ][ $value . '|' . $seen[ $value ][1] ] ) ) {
+					/* translators: 1: a URL slug, 2: a language code, 3: type or taxonomy name, 4: a file name */
+					$errors[ $file ][ $value . '|' . $seen[ $value ][1] ] = sprintf( __( 'The slug “%1$s” (language “%2$s”) is already the URL of “%3$s” in %4$s: two types or taxonomies cannot share a URL.', 'estrategia-web' ), $value, $lang, $seen[ $value ][1], $seen[ $value ][0] );
+				}
+				$seen[ $value ] ??= array( $file, $name );
+			}
+		}
+		return array_map( 'array_values', $errors );
+	}
+
+	/** The slug when the file gives none: the name without the prefix, «-» for «_». */
+	private static function default_slug( string $name, string $prefix ): string {
+		return str_replace( '_', '-', substr( $name, strlen( $prefix ) ) );
+	}
+
+	/**
 	 * The definition with every default filled in: what the registrar, the
 	 * WPML config and the editor panel read. Call it only on a VALID one.
 	 */
@@ -176,7 +230,7 @@ final class Schema {
 		foreach ( $def['taxonomies'] ?? array() as $tax ) {
 			$taxonomies[] = is_string( $tax ) ? $tax : array(
 				'name'              => $tax['name'],
-				'slug'              => $tax['slug'] ?? str_replace( '_', '-', substr( $tax['name'], strlen( $def['prefix'] ) ) ),
+				'slug'              => $tax['slug'] ?? self::default_slug( $tax['name'], $def['prefix'] ),
 				'labels'            => $tax['labels'],
 				'hierarchical'      => $tax['hierarchical'] ?? true,
 				'public'            => $tax['public'] ?? true,
@@ -188,7 +242,8 @@ final class Schema {
 		return array(
 			'prefix'        => $def['prefix'],
 			'name'          => $def['name'],
-			'slug'          => $def['slug'] ?? str_replace( '_', '-', substr( $def['name'], strlen( $def['prefix'] ) ) ),
+			// A string or locale → string, as in the file: the registrar picks the site language's (Schema::text).
+			'slug'          => $def['slug'] ?? self::default_slug( $def['name'], $def['prefix'] ),
 			'labels'        => $def['labels'],
 			'description'   => $def['description'] ?? '',
 			'icon'          => $def['icon'] ?? 'dashicons-admin-post',
@@ -484,16 +539,57 @@ final class Schema {
 		return $errors;
 	}
 
+	/**
+	 * A slug is a string, or an object locale → string like the labels
+	 * ({"ca": "restaurants", "es": "restaurantes"}): one URL base per language
+	 * (with WPML, class-wpml.php sync_slugs()). Each one: ASCII lowercase,
+	 * digits, «-» and «/» — a URL path that needs no encoding.
+	 */
 	private static function check_slug( $slug, string $where ): array {
 		if ( null === $slug ) {
 			return array();
 		}
+		$one = static fn( $s ): bool => is_string( $s ) && (bool) preg_match( '#^[a-z0-9][a-z0-9-]*(/[a-z0-9][a-z0-9-]*)*$#', $s );
+		if ( is_array( $slug ) && $slug && ! array_is_list( $slug ) ) {
+			foreach ( $slug as $locale => $value ) {
+				if ( ! preg_match( '/^[a-z]{2,3}(_[A-Z]{2})?$/', (string) $locale ) || ! $one( $value ) ) {
+					/* translators: %s: where in the file */
+					return array( sprintf( __( '%s must be a URL path (lowercase ASCII letters, digits, “-” and “/”, no slashes at the ends) or an object of locale → such a path.', 'estrategia-web' ), $where ) );
+				}
+			}
+			return array();
+		}
 		// Slashes allowed: «carta/vins» is a valid rewrite base.
-		if ( ! is_string( $slug ) || ! preg_match( '#^[a-z0-9][a-z0-9-]*(/[a-z0-9][a-z0-9-]*)*$#', $slug ) ) {
+		if ( ! $one( $slug ) ) {
 			/* translators: %s: where in the file */
-			return array( sprintf( __( '%s must be lowercase letters, digits, “-” and “/” (a URL path without slashes at the ends).', 'estrategia-web' ), $where ) );
+			return array( sprintf( __( '%s must be a URL path (lowercase ASCII letters, digits, “-” and “/”, no slashes at the ends) or an object of locale → such a path.', 'estrategia-web' ), $where ) );
 		}
 		return array();
+	}
+
+	/**
+	 * The slug given for ONE language, with no fallback: null when the
+	 * definition does not say (WPML then uses the original, the site
+	 * language's). $keys: the WPML language code and its locale («es»,
+	 * «es_ES»). A plain-string slug says nothing per language: null.
+	 *
+	 * @param string|array<string,string> $slug
+	 * @param string[]                    $keys
+	 */
+	public static function slug_in( $slug, array $keys ): ?string {
+		if ( ! is_array( $slug ) ) {
+			return null;
+		}
+		foreach ( $keys as $key ) {
+			if ( is_string( $key ) && '' !== $key && isset( $slug[ $key ] ) ) {
+				return $slug[ $key ];
+			}
+			$lang = is_string( $key ) ? strtolower( explode( '_', $key )[0] ) : '';
+			if ( '' !== $lang && isset( $slug[ $lang ] ) ) {
+				return $slug[ $lang ];
+			}
+		}
+		return null;
 	}
 
 	private static function check_labels( $labels, string $where, bool $required ): array {

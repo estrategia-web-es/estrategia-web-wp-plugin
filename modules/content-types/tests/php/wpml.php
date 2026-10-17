@@ -8,6 +8,7 @@
  *     php wpml.php config      what goes into WPML's config array
  *     php wpml.php wpml        the copy on save, with WPML
  *     php wpml.php no-wpml     the same, without WPML: nothing is asked
+ *     php wpml.php slugs       the slug translations to write (slug_plan)
  *
  * The double does what WPML does where it matters: its
  * wpml_sync_custom_field WRITES the meta into each translation with
@@ -143,8 +144,28 @@ if ( 'config' === ( $argv[1] ?? '' ) ) {
 	exit;
 }
 
+if ( 'slugs' === ( $argv[1] ?? '' ) ) {
+	// The slug translations sync_slugs() would write: Gastronòmicament
+	// (Catalan by default, four languages), Lavandería (Spanish, two), a
+	// type registered by someone else (not ours), and wpml ignore.
+	$types                        = Loader::types();
+	$types['gment_wine']          = array( 'slug' => array( 'es' => 'vinos', 'en_GB' => 'wines' ), 'wpml' => 'display-as-translated', 'taxonomies' => array( 'gment_cuisine' ) );
+	$types['gment_plain']         = array( 'slug' => 'plain', 'wpml' => 'translate', 'taxonomies' => array() );
+	$types['gment_ignored']       = array( 'slug' => array( 'es' => 'ignorado', 'en' => 'ignored' ), 'wpml' => 'ignore', 'taxonomies' => array() );
+	$types['gment_someone_else']  = array( 'slug' => array( 'es' => 'otro', 'en' => 'other' ), 'wpml' => 'translate', 'taxonomies' => array() );
+	$ours                         = array( 'gment_restaurant', 'gment_cuisine', 'gment_wine', 'gment_plain', 'gment_ignored' );
+	echo json_encode(
+		array(
+			'ca' => Wpml::slug_plan( $types, $ours, 'ca', array( 'ca' => 'ca', 'es' => 'es_ES', 'en' => 'en_US', 'de' => 'de_DE' ) ),
+			'es' => Wpml::slug_plan( $types, $ours, 'es', array( 'es' => 'es_ES', 'en' => 'en_GB' ) ),
+		),
+		JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+	);
+	exit;
+}
+
 $out                       = array();
-$out['phone_new']          = syncs( static fn() => update_post_meta( 10, 'gment_phone', '971 00 00 01' ) );
+$out['phone_new']         = syncs( static fn() => update_post_meta( 10, 'gment_phone', '971 00 00 01' ) );
 $out['phone_changed']      = syncs( static fn() => update_post_meta( 10, 'gment_phone', '971 00 00 02' ) );
 $out['phone_in_ca']        = $GLOBALS['meta'][11]['gment_phone'] ?? null;
 $out['price']              = syncs( static fn() => update_post_meta( 10, 'gment_price_range', '€€€' ) );

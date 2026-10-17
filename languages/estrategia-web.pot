@@ -143,37 +143,37 @@ msgid ""
 "motion."
 msgstr ""
 
-#: modules/carousel/blocks/carousel/render.php:154
+#: modules/carousel/blocks/carousel/render.php:159
 msgid "Carousel"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/render.php:174
+#: modules/carousel/blocks/carousel/render.php:179
 msgid "Pause carousel"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/render.php:175
+#: modules/carousel/blocks/carousel/render.php:180
 msgid "Play carousel"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/render.php:182
+#: modules/carousel/blocks/carousel/render.php:187
 msgctxt "ARIA role description"
 msgid "carousel"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/render.php:235
+#: modules/carousel/blocks/carousel/render.php:240
 msgid "Previous slide"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/render.php:245
+#: modules/carousel/blocks/carousel/render.php:250
 msgid "Next slide"
 msgstr ""
 
-#: modules/carousel/blocks/carousel/render.php:256
+#: modules/carousel/blocks/carousel/render.php:261
 msgid "Choose slide"
 msgstr ""
 
 #. translators: %d: slide number.
-#: modules/carousel/blocks/carousel/render.php:262
+#: modules/carousel/blocks/carousel/render.php:267
 #, php-format
 msgid "Go to slide %d"
 msgstr ""
@@ -808,41 +808,41 @@ msgstr ""
 msgid "URL:"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:70
+#: modules/content-types/includes/admin/class-page.php:79
 msgid "WPML:"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:72
+#: modules/content-types/includes/admin/class-page.php:81
 msgid "Not registered (see the errors above)."
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:77
+#: modules/content-types/includes/admin/class-page.php:86
 msgid "Taxonomies:"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:80
+#: modules/content-types/includes/admin/class-page.php:89
 msgid "Field"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:80
+#: modules/content-types/includes/admin/class-page.php:89
 msgid "Meta key"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:80
+#: modules/content-types/includes/admin/class-page.php:89
 msgid "Required"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:80
+#: modules/content-types/includes/admin/class-page.php:89
 #: modules/redirects/includes/admin/class-page.php:268
 #: modules/redirects/includes/admin/class-tables.php:35
 msgid "Type"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:80
+#: modules/content-types/includes/admin/class-page.php:89
 msgid "WPML"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:87
+#: modules/content-types/includes/admin/class-page.php:96
 msgid "yes"
 msgstr ""
 
@@ -864,25 +864,25 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:56
+#: modules/content-types/includes/class-fields-panel.php:58
 #: modules/site/includes/class-meta-panel.php:213
 msgid "Changed in the original language: it is copied to the translations."
 msgstr ""
 
 #. translators: %s: singular name of a content type, e.g. Restaurant
-#: modules/content-types/includes/class-fields-panel.php:70
+#: modules/content-types/includes/class-fields-panel.php:72
 #, php-format
 msgid "%s details"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:72
+#: modules/content-types/includes/class-fields-panel.php:74
 msgid ""
 "Fields that are the same in every language are copied to the translations "
 "when you save; the others are translated in each language."
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:176
-#: modules/content-types/includes/class-fields-panel.php:182
+#: modules/content-types/includes/class-fields-panel.php:178
+#: modules/content-types/includes/class-fields-panel.php:184
 #: modules/site/includes/class-meta-panel.php:335
 msgid "— None —"
 msgstr ""
@@ -893,15 +893,31 @@ msgstr ""
 msgid "Not valid JSON: %s."
 msgstr ""
 
+#. translators: %s: list of field names
+#: modules/content-types/includes/class-registrar.php:140
+#, php-format
+msgid ""
+"Not published: it has been saved as a draft. Fill in these fields to publish "
+"it: %s."
+msgstr ""
+
+#. translators: %s: list of field names
+#: modules/content-types/includes/class-registrar.php:142
+#, php-format
+msgid ""
+"These fields cannot be empty in a published item, so they keep their "
+"previous value: %s."
+msgstr ""
+
 #. translators: %s: post type name
-#: modules/content-types/includes/class-registrar.php:51
+#: modules/content-types/includes/class-registrar.php:162
 #, php-format
 msgid ""
 "The type “%s” is already registered by other code: this file is ignored."
 msgstr ""
 
 #. translators: %s: taxonomy name
-#: modules/content-types/includes/class-registrar.php:83
+#: modules/content-types/includes/class-registrar.php:194
 #, php-format
 msgid ""
 "The taxonomy “%s” is already registered by other code: it is not registered "
@@ -910,22 +926,22 @@ msgstr ""
 
 #. translators: %s: singular name of a taxonomy, e.g. Cuisine
 #. translators: %s: singular name of a content type, e.g. Restaurant
-#: modules/content-types/includes/class-registrar.php:98
-#: modules/content-types/includes/class-registrar.php:167
+#: modules/content-types/includes/class-registrar.php:209
+#: modules/content-types/includes/class-registrar.php:292
 #, php-format
 msgid "Add %s"
 msgstr ""
 
 #. translators: %s: singular name of a taxonomy
 #. translators: %s: singular name of a content type
-#: modules/content-types/includes/class-registrar.php:100
-#: modules/content-types/includes/class-registrar.php:169
+#: modules/content-types/includes/class-registrar.php:211
+#: modules/content-types/includes/class-registrar.php:294
 #, php-format
 msgid "Edit %s"
 msgstr ""
 
 #. translators: 1: field name, 2: post type name
-#: modules/content-types/includes/class-registrar.php:152
+#: modules/content-types/includes/class-registrar.php:277
 #, php-format
 msgid ""
 "The relation “%1$s” points to the type “%2$s”, which is not registered: it "
@@ -933,27 +949,27 @@ msgid ""
 msgstr ""
 
 #. translators: %s: singular name of a content type
-#: modules/content-types/includes/class-registrar.php:171
+#: modules/content-types/includes/class-registrar.php:296
 #, php-format
 msgid "View %s"
 msgstr ""
 
 #. translators: %s: plural name of a content type, e.g. Restaurants
-#: modules/content-types/includes/class-registrar.php:173
+#: modules/content-types/includes/class-registrar.php:298
 #, php-format
 msgid "Search %s"
 msgstr ""
 
-#: modules/content-types/includes/class-registrar.php:174
+#: modules/content-types/includes/class-registrar.php:299
 msgid "Nothing found."
 msgstr ""
 
-#: modules/content-types/includes/class-registrar.php:175
+#: modules/content-types/includes/class-registrar.php:300
 msgid "Nothing found in the trash."
 msgstr ""
 
 #. translators: %s: list of field names
-#: modules/content-types/includes/class-registrar.php:238
+#: modules/content-types/includes/class-registrar.php:362
 #, php-format
 msgid "Fill in these fields before publishing: %s."
 msgstr ""
@@ -1023,7 +1039,7 @@ msgid "The name “%1$s” is already declared in %2$s."
 msgstr ""
 
 #. translators: 1: field name, 2: WPML mode, 3: another file name, 4: WPML mode there
-#: modules/content-types/includes/class-schema.php:144
+#: modules/content-types/includes/class-schema.php:147
 #, php-format
 msgid ""
 "The field “%1$s” has wpml “%2$s” here and “%4$s” in %3$s: WPML keeps one "
@@ -1031,108 +1047,116 @@ msgid ""
 msgstr ""
 
 #. translators: %s: taxonomy name
-#: modules/content-types/includes/class-schema.php:153
+#: modules/content-types/includes/class-schema.php:156
 #, php-format
 msgid ""
 "The taxonomy “%s” is not declared in any file (declare it as an object in "
 "one of them)."
 msgstr ""
 
-#: modules/content-types/includes/class-schema.php:271
+#. translators: 1: a URL slug, 2: a language code, 3: type or taxonomy name, 4: a file name
+#: modules/content-types/includes/class-schema.php:201
+#, php-format
+msgid ""
+"The slug “%1$s” (language “%2$s”) is already the URL of “%3$s” in %4$s: two "
+"types or taxonomies cannot share a URL."
+msgstr ""
+
+#: modules/content-types/includes/class-schema.php:326
 msgid "“taxonomies” must be a list."
 msgstr ""
 
 #. translators: %d: position in the list, from 1
-#: modules/content-types/includes/class-schema.php:276
+#: modules/content-types/includes/class-schema.php:331
 #, php-format
 msgid "taxonomies[%d]"
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:280
+#: modules/content-types/includes/class-schema.php:335
 #, php-format
 msgid "%s: a reference must be a taxonomy name."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:286
+#: modules/content-types/includes/class-schema.php:341
 #, php-format
 msgid "%s: must be a taxonomy name or an object."
 msgstr ""
 
 #. translators: 1: where in the file, 2: a key
-#: modules/content-types/includes/class-schema.php:296
+#: modules/content-types/includes/class-schema.php:351
 #, php-format
 msgid "%1$s.%2$s must be true or false."
 msgstr ""
 
 #. translators: 1: where in the file, 2: allowed values
-#: modules/content-types/includes/class-schema.php:301
-#: modules/content-types/includes/class-schema.php:351
+#: modules/content-types/includes/class-schema.php:356
+#: modules/content-types/includes/class-schema.php:406
 #, php-format
 msgid "%1$s.wpml must be one of: %2$s."
 msgstr ""
 
-#: modules/content-types/includes/class-schema.php:309
+#: modules/content-types/includes/class-schema.php:364
 msgid "“fields” must be a list."
 msgstr ""
 
 #. translators: %d: position in the list, from 1
-#: modules/content-types/includes/class-schema.php:315
+#: modules/content-types/includes/class-schema.php:370
 #, php-format
 msgid "fields[%d]"
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:318
+#: modules/content-types/includes/class-schema.php:373
 #, php-format
 msgid "%s: must be an object."
 msgstr ""
 
 #. translators: %s: field name
-#: modules/content-types/includes/class-schema.php:327
+#: modules/content-types/includes/class-schema.php:382
 #, php-format
 msgid "The field “%s” is declared twice."
 msgstr ""
 
 #. translators: 1: where in the file, 2: allowed values
-#: modules/content-types/includes/class-schema.php:334
+#: modules/content-types/includes/class-schema.php:389
 #, php-format
 msgid "%1$s.type must be one of: %2$s."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:339
+#: modules/content-types/includes/class-schema.php:394
 #, php-format
 msgid "%s.label is required (a string or an object of locale → string)."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:343
+#: modules/content-types/includes/class-schema.php:398
 #, php-format
 msgid "%s.help must be a string or an object of locale → string."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:347
+#: modules/content-types/includes/class-schema.php:402
 #, php-format
 msgid "%s.required must be true or false."
 msgstr ""
 
 #. translators: 1: where in the file, 2: a key, 3: a field type
-#: modules/content-types/includes/class-schema.php:358
+#: modules/content-types/includes/class-schema.php:413
 #, php-format
 msgid "%1$s.%2$s is only for fields of type “%3$s”."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:376
+#: modules/content-types/includes/class-schema.php:431
 #, php-format
 msgid "%s: a select needs “options”, a non-empty list."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:383
+#: modules/content-types/includes/class-schema.php:438
 #, php-format
 msgid ""
 "%s.options: each option is a non-empty string or {\"value\": \"…\", "
@@ -1140,68 +1164,68 @@ msgid ""
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:390
+#: modules/content-types/includes/class-schema.php:445
 #, php-format
 msgid "%s.options: two options have the same value."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:394
+#: modules/content-types/includes/class-schema.php:449
 #, php-format
 msgid "%s.default must be the value of one of the options."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:402
+#: modules/content-types/includes/class-schema.php:457
 #, php-format
 msgid "%s: a relation needs “post_type”, a post type name or a list of them."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:406
+#: modules/content-types/includes/class-schema.php:461
 #, php-format
 msgid "%s: a relation cannot have a default (it is the ID of a post)."
 msgstr ""
 
 #. translators: 1: where in the file, 2: min or max
-#: modules/content-types/includes/class-schema.php:412
+#: modules/content-types/includes/class-schema.php:467
 #, php-format
 msgid "%1$s.%2$s must be a number."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:417
+#: modules/content-types/includes/class-schema.php:472
 #, php-format
 msgid "%s.integer must be true or false."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:421
+#: modules/content-types/includes/class-schema.php:476
 #, php-format
 msgid "%s: min is greater than max."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:426
+#: modules/content-types/includes/class-schema.php:481
 #, php-format
 msgid ""
 "%s.default must be a number within min and max (a whole number if “integer”)."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:431
+#: modules/content-types/includes/class-schema.php:486
 #, php-format
 msgid "%s: a boolean cannot be required (“no” is an answer)."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:435
+#: modules/content-types/includes/class-schema.php:490
 #, php-format
 msgid "%s.default must be true or false."
 msgstr ""
 
 #. translators: 1: where in the file, 2: true_label or false_label
-#: modules/content-types/includes/class-schema.php:441
+#: modules/content-types/includes/class-schema.php:496
 #, php-format
 msgid ""
 "%1$s.%2$s must be a string (\"\" to show nothing) or an object of locale → "
@@ -1209,76 +1233,77 @@ msgid ""
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:447
+#: modules/content-types/includes/class-schema.php:502
 #, php-format
 msgid "%s: an image cannot have a default (it is the ID of an attachment)."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:451
+#: modules/content-types/includes/class-schema.php:506
 #, php-format
 msgid "%s.default must be a string."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:454
+#: modules/content-types/includes/class-schema.php:509
 #, php-format
 msgid "%s.default must be a date as YYYY-MM-DD."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:467
+#: modules/content-types/includes/class-schema.php:522
 #, php-format
 msgid "%s must be lowercase letters, digits and “_”, starting with a letter."
 msgstr ""
 
 #. translators: 1: where in the file, 2: the name, 3: max length, 4: its length
-#: modules/content-types/includes/class-schema.php:472
+#: modules/content-types/includes/class-schema.php:527
 #, php-format
 msgid ""
 "%1$s “%2$s” is longer than %3$d characters (%4$d): WordPress would cut it."
 msgstr ""
 
 #. translators: 1: where in the file, 2: the name, 3: the prefix
-#: modules/content-types/includes/class-schema.php:476
+#: modules/content-types/includes/class-schema.php:531
 #, php-format
 msgid "%1$s “%2$s” must start with the prefix “%3$s”."
 msgstr ""
 
 #. translators: 1: where in the file, 2: the name, 3: a reserved prefix
-#: modules/content-types/includes/class-schema.php:481
+#: modules/content-types/includes/class-schema.php:536
 #, php-format
 msgid "%1$s “%2$s” uses the reserved prefix “%3$s”."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:494
+#: modules/content-types/includes/class-schema.php:557
+#: modules/content-types/includes/class-schema.php:565
 #, php-format
 msgid ""
-"%s must be lowercase letters, digits, “-” and “/” (a URL path without "
-"slashes at the ends)."
+"%s must be a URL path (lowercase ASCII letters, digits, “-” and “/”, no "
+"slashes at the ends) or an object of locale → such a path."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:502
+#: modules/content-types/includes/class-schema.php:598
 #, php-format
 msgid "%s is required: {\"singular\": …, \"plural\": …}."
 msgstr ""
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:506
+#: modules/content-types/includes/class-schema.php:602
 #, php-format
 msgid "%s must be an object: {\"singular\": …, \"plural\": …}."
 msgstr ""
 
 #. translators: 1: where in the file, 2: singular or plural
-#: modules/content-types/includes/class-schema.php:512
+#: modules/content-types/includes/class-schema.php:608
 #, php-format
 msgid "%1$s.%2$s is required: a string or an object of locale → string."
 msgstr ""
 
 #. translators: 1: a key, 2: allowed keys
-#: modules/content-types/includes/class-schema.php:539
+#: modules/content-types/includes/class-schema.php:635
 #, php-format
 msgid "Unknown key “%1$s”. Allowed: %2$s."
 msgstr ""

@@ -67,7 +67,16 @@ final class Page {
 			echo '<div class="card" style="max-width:none" data-type="' . esc_attr( $name ) . '">';
 			printf( '<h3>%s <code>%s</code></h3>', esc_html( Schema::text( $def['labels']['plural'], $locale ) ), esc_html( $name ) );
 			echo '<p>' . esc_html__( 'File:', 'estrategia-web' ) . ' <code>' . esc_html( $loaded['files'][ $name ] ) . '</code><br>';
-			echo esc_html__( 'URL:', 'estrategia-web' ) . ' <code>/' . esc_html( $def['slug'] ) . '/</code> · ' . esc_html__( 'WPML:', 'estrategia-web' ) . ' ' . esc_html( $def['wpml'] );
+			echo esc_html__( 'URL:', 'estrategia-web' ) . ' <code>/' . esc_html( Registrar::slug( $def['slug'] ) ) . '/</code>';
+			if ( is_array( $def['slug'] ) ) {
+				// The per-language ones: WPML slug translations (class-wpml.php sync_slugs()).
+				$per_lang = array();
+				foreach ( $def['slug'] as $lang => $slug ) {
+					$per_lang[] = $lang . ': /' . $slug . '/';
+				}
+				echo ' (' . esc_html( implode( ' · ', $per_lang ) ) . ')';
+			}
+			echo ' · ' . esc_html__( 'WPML:', 'estrategia-web' ) . ' ' . esc_html( $def['wpml'] );
 			if ( ! $registered ) {
 				echo '<br><strong>' . esc_html__( 'Not registered (see the errors above).', 'estrategia-web' ) . '</strong>';
 			}

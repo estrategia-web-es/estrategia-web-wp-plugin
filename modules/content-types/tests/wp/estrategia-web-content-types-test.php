@@ -97,7 +97,8 @@ add_action(
 						'registered' => \EstrategiaWeb\ContentTypes\Registrar::registered(),
 						'errors'     => (object) $errors,
 						'hash'       => get_option( \EstrategiaWeb\ContentTypes\Registrar::HASH_OPTION ),
-						'rules'      => array_values( array_filter( array_keys( $rules ), static fn( $r ) => str_starts_with( $r, 'restaurants' ) || str_starts_with( $r, 'wines' ) || str_starts_with( $r, 'cuisine' ) ) ),
+						// The slugs of the fixtures, in every language they have (the site speaks es_ES: restaurantes, cocina, bodegas).
+						'rules'      => array_values( array_filter( array_keys( $rules ), static fn( $r ) => (bool) preg_match( '#^(restaurant|wines|cuisine|cocina|cuina|bodegas|wineries|cellers)#', $r ) ) ),
 						'meta'       => $meta,
 						'taxonomy'   => taxonomy_exists( 'gment_cuisine' ) ? get_taxonomy( 'gment_cuisine' )->object_type : null,
 					);

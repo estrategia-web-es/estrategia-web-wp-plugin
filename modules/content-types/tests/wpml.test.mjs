@@ -73,6 +73,22 @@ test("no copy: «translate» fields, writes in the translation, other types", ()
   assert.deepEqual(wpml.page_same_key, [], "a page with the same key is not ours");
 });
 
+test("slugs per language: what goes into WPML's slug translation, original = the default language's", () => {
+  const slugs = run("slugs");
+  assert.deepEqual(slugs.ca, [
+    { kind: "post", name: "gment_restaurant", original: "restaurants", translations: { es: "restaurantes", en: "restaurants", de: "restaurants" } },
+    { kind: "taxonomy", name: "gment_cuisine", original: "cuina", translations: { es: "cocina", en: "cuisine", de: "kueche" } },
+    // No "ca" in the file: the original falls back like a label (en, en_US, then the first: «vinos»). en_GB is not this
+    // site's English (en_US) and de is not named: no translation, so WPML's screen keeps whatever it has.
+    { kind: "post", name: "gment_wine", original: "vinos", translations: { es: "vinos" } },
+  ], "a plain-string slug, wpml ignore and a type someone else registered are left alone");
+  assert.deepEqual(slugs.es, [
+    { kind: "post", name: "gment_restaurant", original: "restaurantes", translations: { en: "restaurants" } },
+    { kind: "taxonomy", name: "gment_cuisine", original: "cocina", translations: { en: "cuisine" } },
+    { kind: "post", name: "gment_wine", original: "vinos", translations: { en: "wines" } },
+  ], "en_GB in the file matches the language en whose locale is en_GB");
+});
+
 test("without WPML nothing is asked", () => {
   for (const [key, value] of Object.entries(without)) {
     if (Array.isArray(value)) assert.deepEqual(value, [], key);

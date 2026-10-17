@@ -23,7 +23,10 @@ msgid ""
 "Each module adds one feature to the site. A module that is off loads "
 "nothing, and turning it off does not delete anything it saved: turning it on "
 "again brings it back as it was."
-msgstr "Cada mòdul afegeix una funció al web. Un mòdul desactivat no carrega res, i desactivar-lo no esborra res del que va desar: quan el tornes a activar, torna tal com estava."
+msgstr ""
+"Cada mòdul afegeix una funció al web. Un mòdul desactivat no carrega res, i "
+"desactivar-lo no esborra res del que va desar: quan el tornes a activar, "
+"torna tal com estava."
 
 #: includes/admin/class-modules-page.php:99
 #: includes/admin/class-modules-page.php:139
@@ -65,7 +68,9 @@ msgctxt "block description"
 msgid ""
 "Horizontal scrolling row of any blocks, with previous/next arrows and "
 "optional dots."
-msgstr "Fila amb desplaçament horitzontal de qualsevol bloc, amb fletxes d'anterior i següent i punts opcionals."
+msgstr ""
+"Fila amb desplaçament horitzontal de qualsevol bloc, amb fletxes d'anterior "
+"i següent i punts opcionals."
 
 #: modules/carousel/blocks/carousel/block.json
 msgctxt "block keyword"
@@ -110,7 +115,9 @@ msgstr "En bucle"
 msgid ""
 "After the last slide, go back to the first one (and from the first to the "
 "last)."
-msgstr "Després de l'última diapositiva, torna a la primera (i de la primera, a l'última)."
+msgstr ""
+"Després de l'última diapositiva, torna a la primera (i de la primera, a "
+"l'última)."
 
 #: modules/carousel/blocks/carousel/edit.js:81
 msgid "Visible on mobile"
@@ -132,39 +139,41 @@ msgstr "Reproducció automàtica"
 msgid ""
 "Off by default for accessibility. Ignored when the visitor asks for reduced "
 "motion."
-msgstr "Desactivada per defecte per accessibilitat. No s'aplica si el visitant demana reduir el moviment."
+msgstr ""
+"Desactivada per defecte per accessibilitat. No s'aplica si el visitant "
+"demana reduir el moviment."
 
-#: modules/carousel/blocks/carousel/render.php:154
+#: modules/carousel/blocks/carousel/render.php:159
 msgid "Carousel"
 msgstr "Carrusel"
 
-#: modules/carousel/blocks/carousel/render.php:174
+#: modules/carousel/blocks/carousel/render.php:179
 msgid "Pause carousel"
 msgstr "Pausa el carrusel"
 
-#: modules/carousel/blocks/carousel/render.php:175
+#: modules/carousel/blocks/carousel/render.php:180
 msgid "Play carousel"
 msgstr "Reprèn el carrusel"
 
-#: modules/carousel/blocks/carousel/render.php:182
+#: modules/carousel/blocks/carousel/render.php:187
 msgctxt "ARIA role description"
 msgid "carousel"
 msgstr "carrusel"
 
-#: modules/carousel/blocks/carousel/render.php:235
+#: modules/carousel/blocks/carousel/render.php:240
 msgid "Previous slide"
 msgstr "Diapositiva anterior"
 
-#: modules/carousel/blocks/carousel/render.php:245
+#: modules/carousel/blocks/carousel/render.php:250
 msgid "Next slide"
 msgstr "Diapositiva següent"
 
-#: modules/carousel/blocks/carousel/render.php:256
+#: modules/carousel/blocks/carousel/render.php:261
 msgid "Choose slide"
 msgstr "Tria la diapositiva"
 
 #. translators: %d: slide number.
-#: modules/carousel/blocks/carousel/render.php:262
+#: modules/carousel/blocks/carousel/render.php:267
 #, php-format
 msgid "Go to slide %d"
 msgstr "Vés a la diapositiva %d"
@@ -180,7 +189,10 @@ msgid ""
 "Carousel block: a horizontal scrolling row of any blocks (or the posts of a "
 "Query) with arrows, optional dots, infinite loop and autoplay only if asked "
 "for."
-msgstr "Bloc de carrusel: una fila amb desplaçament horitzontal de qualsevol bloc (o les entrades d'una consulta), amb fletxes, punts opcionals, bucle infinit i reproducció automàtica només si es demana."
+msgstr ""
+"Bloc de carrusel: una fila amb desplaçament horitzontal de qualsevol bloc (o "
+"les entrades d'una consulta), amb fletxes, punts opcionals, bucle infinit i "
+"reproducció automàtica només si es demana."
 
 #: modules/comments-off/module.php
 msgctxt "module name"
@@ -193,7 +205,10 @@ msgid ""
 "Turns comments off everywhere: closed on every post, no Comments menu, "
 "dashboard widget or toolbar item, no comment blocks on the site and no "
 "comment feeds."
-msgstr "Desactiva els comentaris a tot el web: tancats a totes les entrades, sense el menú Comentaris, el giny del tauler ni l'element de la barra d'eines, sense blocs de comentaris al web i sense canals de comentaris."
+msgstr ""
+"Desactiva els comentaris a tot el web: tancats a totes les entrades, sense "
+"el menú Comentaris, el giny del tauler ni l'element de la barra d'eines, "
+"sense blocs de comentaris al web i sense canals de comentaris."
 
 #: modules/comments-off/module.php:146
 msgid "Comments are closed."
@@ -209,7 +224,9 @@ msgctxt "block description"
 msgid ""
 "Reopens the cookie consent notice. Renders nothing when the site declares no "
 "optional cookie categories."
-msgstr "Torna a obrir l'avís de galetes. No mostra res si el lloc no declara categories de galetes opcionals."
+msgstr ""
+"Torna a obrir l'avís de galetes. No mostra res si el lloc no declara "
+"categories de galetes opcionals."
 
 #: modules/consent/blocks/consent/block.json
 msgctxt "block keyword"
@@ -245,7 +262,10 @@ msgid ""
 "Table of the site's cookies grouped by category (name, provider, purpose and "
 "duration), from the list confirmed in Estrategia Web → Cookies. For the "
 "cookie policy page."
-msgstr "Taula de les galetes del web per categoria (nom, proveïdor, finalitat i durada), treta de la llista confirmada a Estrategia Web → Galetes. Per a la pàgina de la política de galetes."
+msgstr ""
+"Taula de les galetes del web per categoria (nom, proveïdor, finalitat i "
+"durada), treta de la llista confirmada a Estrategia Web → Galetes. Per a la "
+"pàgina de la política de galetes."
 
 #: modules/consent/blocks/cookie-table/block.json
 msgctxt "block keyword"
@@ -296,13 +316,17 @@ msgstr "S'ha suprimit la galeta."
 msgid ""
 "Not saved: check the cookie name (exact name, or a prefix ending in *) and "
 "that the list is not full."
-msgstr "No s'ha desat: revisa el nom de la galeta (el nom exacte, o un prefix acabat en *) i que la llista no estigui plena."
+msgstr ""
+"No s'ha desat: revisa el nom de la galeta (el nom exacte, o un prefix acabat "
+"en *) i que la llista no estigui plena."
 
 #: modules/consent/includes/admin/class-cookies-page.php:157
 msgid ""
 "The active theme brings its own cookie notice: these settings do not apply "
 "to it."
-msgstr "El tema actiu porta el seu propi avís de galetes: aquests paràmetres no s'hi apliquen."
+msgstr ""
+"El tema actiu porta el seu propi avís de galetes: aquests paràmetres no s'hi "
+"apliquen."
 
 #: modules/consent/includes/admin/class-cookies-page.php:160
 msgid "Cookie notice"
@@ -321,7 +345,9 @@ msgid ""
 "Changing the categories shows the notice again to every visitor: they are "
 "being asked about something new. Without any category, the notice does not "
 "appear."
-msgstr "Canviar les categories torna a mostrar l'avís a tots els visitants: se'ls pregunta per una cosa nova. Sense cap categoria, l'avís no surt."
+msgstr ""
+"Canviar les categories torna a mostrar l'avís a tots els visitants: se'ls "
+"pregunta per una cosa nova. Sense cap categoria, l'avís no surt."
 
 #: modules/consent/includes/admin/class-cookies-page.php:183
 msgid "Cookie detector"
@@ -332,7 +358,10 @@ msgid ""
 "When a visitor accepts cookies, their browser sends the NAMES (never the "
 "values) of the cookies it sees on this site, at most once a week or when the "
 "list changes. New names appear below as pending."
-msgstr "Quan un visitant accepta les galetes, el seu navegador envia els NOMS (mai els valors) de les galetes que veu en aquest web, com a màxim un cop per setmana o quan canvia la llista. Els noms nous surten a sota com a pendents."
+msgstr ""
+"Quan un visitant accepta les galetes, el seu navegador envia els NOMS (mai "
+"els valors) de les galetes que veu en aquest web, com a màxim un cop per "
+"setmana o quan canvia la llista. Els noms nous surten a sota com a pendents."
 
 #: modules/consent/includes/admin/class-cookies-page.php:192
 msgid "Save notice settings"
@@ -345,7 +374,10 @@ msgid ""
 "The notice does not ask about «%1$s», but these confirmed cookies belong to "
 "it: %2$s. Either the notice should ask about it (above), or the cookies "
 "should not be set."
-msgstr "L'avís no pregunta per «%1$s», però aquestes galetes confirmades són d'aquesta categoria: %2$s. O l'avís pregunta per ella (a dalt), o aquestes galetes no s'haurien de posar."
+msgstr ""
+"L'avís no pregunta per «%1$s», però aquestes galetes confirmades són "
+"d'aquesta categoria: %2$s. O l'avís pregunta per ella (a dalt), o aquestes "
+"galetes no s'haurien de posar."
 
 #: modules/consent/includes/admin/class-cookies-page.php:216
 msgid "Cookies of this site"
@@ -357,7 +389,11 @@ msgid ""
 "«Cookie table» or shortcode [estrategia_web_cookie_table]). Proposals come "
 "from our own list and from the Open Cookie Database: check them. A name "
 "ending in * covers every cookie that starts like that."
-msgstr "Només les galetes confirmades surten a la taula de galetes de la política (bloc «Taula de galetes» o codi curt [estrategia_web_cookie_table]). Les propostes surten de la nostra llista i de l'Open Cookie Database: revisa-les. Un nom acabat en * cobreix totes les galetes que comencen així."
+msgstr ""
+"Només les galetes confirmades surten a la taula de galetes de la política "
+"(bloc «Taula de galetes» o codi curt [estrategia_web_cookie_table]). Les "
+"propostes surten de la nostra llista i de l'Open Cookie Database: revisa-"
+"les. Un nom acabat en * cobreix totes les galetes que comencen així."
 
 #: modules/consent/includes/admin/class-cookies-page.php:221
 msgid "Confirm all pending proposals"
@@ -403,7 +439,9 @@ msgstr "Accions"
 msgid ""
 "No cookies yet. They appear when a visitor accepts the notice, or add them "
 "below."
-msgstr "Encara no hi ha galetes. Surten quan un visitant accepta l'avís, o afegeix-les a sota."
+msgstr ""
+"Encara no hi ha galetes. Surten quan un visitant accepta l'avís, o afegeix-"
+"les a sota."
 
 #. translators: %s: a concrete cookie name.
 #: modules/consent/includes/admin/class-cookies-page.php:250
@@ -445,7 +483,10 @@ msgid ""
 "For third-party cookies the detector cannot see (for example, the ones "
 "Google sets on its own domain when a map loads). Empty fields are filled "
 "with the proposal, if there is one."
-msgstr "Per a les galetes de tercers que el detector no pot veure (per exemple, les que posa Google al seu propi domini quan es carrega un mapa). Els camps buits s'emplenen amb la proposta, si n'hi ha."
+msgstr ""
+"Per a les galetes de tercers que el detector no pot veure (per exemple, les "
+"que posa Google al seu propi domini quan es carrega un mapa). Els camps "
+"buits s'emplenen amb la proposta, si n'hi ha."
 
 #: modules/consent/includes/admin/class-cookies-page.php:292
 #: modules/social/includes/class-admin.php:90
@@ -457,7 +498,9 @@ msgstr "Nom"
 msgid ""
 "Like «2 years», «30 minutes» or «session» to have it translated "
 "automatically; anything else is shown as written."
-msgstr "Com ara «2 years», «30 minutes» o «session» perquè es tradueixi tot sol; qualsevol altra cosa surt tal com s'escriu."
+msgstr ""
+"Com ara «2 years», «30 minutes» o «session» perquè es tradueixi tot sol; "
+"qualsevol altra cosa surt tal com s'escriu."
 
 #: modules/consent/includes/admin/class-cookies-page.php:298
 msgid "Add cookie"
@@ -468,7 +511,9 @@ msgstr "Afegeix la galeta"
 #, php-format
 msgid ""
 "Proposals use data from the %1$s, licensed under %2$s (extract of %3$s)."
-msgstr "Les propostes fan servir dades de l'%1$s, amb llicència %2$s (extracte del %3$s)."
+msgstr ""
+"Les propostes fan servir dades de l'%1$s, amb llicència %2$s (extracte del "
+"%3$s)."
 
 #: modules/consent/includes/class-consent.php:266
 msgid "Analytics"
@@ -486,7 +531,9 @@ msgstr "Mapes i contingut de tercers"
 msgid ""
 "Load embedded maps and other content served by third parties, which may set "
 "their own cookies."
-msgstr "Carreguen mapes i altre contingut servit per tercers, que poden instal·lar les seves pròpies galetes."
+msgstr ""
+"Carreguen mapes i altre contingut servit per tercers, que poden instal·lar "
+"les seves pròpies galetes."
 
 #: modules/consent/includes/class-consent.php:274
 msgid "Advertising"
@@ -504,7 +551,9 @@ msgstr "Preferències"
 msgid ""
 "Remember choices that change how the site behaves or looks, such as the "
 "region or recently viewed items."
-msgstr "Recorden eleccions que canvien com funciona o com es veu el web, com ara la regió o el que has vist darrerament."
+msgstr ""
+"Recorden eleccions que canvien com funciona o com es veu el web, com ara la "
+"regió o el que has vist darrerament."
 
 #. translators: %s: name of the company that built the site (a brand, not translated).
 #: modules/consent/includes/class-consent.php:375
@@ -515,7 +564,9 @@ msgstr "Powered by %s"
 #: modules/consent/includes/class-consent.php:408
 msgid ""
 "Cookie notice: detector on or off, and categories added by the administrator."
-msgstr "Avís de galetes: detector activat o desactivat i categories que afegeix l'administrador."
+msgstr ""
+"Avís de galetes: detector activat o desactivat i categories que afegeix "
+"l'administrador."
 
 #: modules/consent/includes/class-consent.php:435
 msgid "Link text (empty: “Cookie settings”)"
@@ -526,7 +577,10 @@ msgid ""
 "We use our own and third-party cookies for the purposes listed below. You "
 "can accept them, reject them or choose which ones to allow. Necessary "
 "cookies are always active."
-msgstr "Utilitzem galetes pròpies i de tercers per a les finalitats que s'indiquen. Les pots acceptar, rebutjar o triar quines permets. Les galetes necessàries sempre estan actives."
+msgstr ""
+"Utilitzem galetes pròpies i de tercers per a les finalitats que s'indiquen. "
+"Les pots acceptar, rebutjar o triar quines permets. Les galetes necessàries "
+"sempre estan actives."
 
 #: modules/consent/includes/class-consent.php:531
 msgid "Privacy and cookie policy"
@@ -546,7 +600,9 @@ msgstr "Necessàries"
 msgid ""
 "Required for the site to work, including remembering this choice. Always "
 "active."
-msgstr "Imprescindibles perquè el lloc funcioni, també per recordar aquesta elecció. Sempre actives."
+msgstr ""
+"Imprescindibles perquè el lloc funcioni, també per recordar aquesta elecció. "
+"Sempre actives."
 
 #: modules/consent/includes/class-consent.php:556
 msgid "Save choices"
@@ -576,7 +632,10 @@ msgstr "(s'obre en una pestanya nova)"
 msgid ""
 "Cookie settings: this site declares no optional cookie categories, so there "
 "is no notice to reopen and this link is not shown."
-msgstr "Configura les galetes: aquest lloc no declara categories de galetes opcionals, així que no hi ha cap avís per tornar a obrir i l'enllaç no es mostra."
+msgstr ""
+"Configura les galetes: aquest lloc no declara categories de galetes "
+"opcionals, així que no hi ha cap avís per tornar a obrir i l'enllaç no es "
+"mostra."
 
 #: modules/consent/includes/class-consent.php:600
 msgid "Cookie settings"
@@ -594,7 +653,9 @@ msgstr "Recorda la teva elecció a l'avís de galetes."
 msgid ""
 "Previous name of the cookie that remembers your choice in the cookie notice; "
 "it is replaced on the next visit."
-msgstr "Nom anterior de la galeta que recorda la teva elecció a l'avís de galetes; se substitueix a la visita següent."
+msgstr ""
+"Nom anterior de la galeta que recorda la teva elecció a l'avís de galetes; "
+"se substitueix a la visita següent."
 
 #: modules/consent/includes/class-cookie-registry.php:151
 #: modules/consent/includes/class-cookie-registry.php:157
@@ -614,13 +675,17 @@ msgstr "Manté la sessió dels usuaris del web (editors i administradors)."
 msgid ""
 "Remembers the dashboard settings of the site’s users (editors and "
 "administrators)."
-msgstr "Recorda els paràmetres del tauler dels usuaris del web (editors i administradors)."
+msgstr ""
+"Recorda els paràmetres del tauler dels usuaris del web (editors i "
+"administradors)."
 
 #: modules/consent/includes/class-cookie-registry.php:190
 msgid ""
 "Statistics: recognises a returning visitor (an anonymous identifier). Only "
 "after accepting analytics."
-msgstr "Estadístiques: reconeix un visitant que torna (amb un identificador anònim). Només després d'acceptar l'analítica."
+msgstr ""
+"Estadístiques: reconeix un visitant que torna (amb un identificador anònim). "
+"Només després d'acceptar l'analítica."
 
 #: modules/consent/includes/class-cookie-registry.php:196
 msgid "Statistics: groups the pages viewed in the same visit."
@@ -637,13 +702,17 @@ msgstr "Estadístiques: recorda que es van acceptar les galetes d'analítica."
 #: modules/consent/includes/class-cookie-registry.php:214
 msgid ""
 "Remembers your name and email for the next comment, only if you ask for it."
-msgstr "Recorda el teu nom i el teu correu per al pròxim comentari, només si ho demanes."
+msgstr ""
+"Recorda el teu nom i el teu correu per al pròxim comentari, només si ho "
+"demanes."
 
 #: modules/consent/includes/class-cookie-registry.php:355
 msgid ""
 "Invalid cookie name. Use the exact name, or a prefix ending in * for a "
 "family of cookies (e.g. _ga_*)."
-msgstr "El nom de la galeta no és vàlid. Fes servir el nom exacte, o un prefix acabat en * per a una família de galetes (p. ex. _ga_*)."
+msgstr ""
+"El nom de la galeta no és vàlid. Fes servir el nom exacte, o un prefix "
+"acabat en * per a una família de galetes (p. ex. _ga_*)."
 
 #: modules/consent/includes/class-cookie-registry.php:360
 msgid "The cookie list is full. Delete the cookies you do not need."
@@ -713,7 +782,9 @@ msgstr[1] "%d anys"
 msgid ""
 "Cookie table: there are no confirmed cookies yet. Confirm them in Estrategia "
 "Web → Cookies and they will appear here."
-msgstr "Taula de galetes: encara no hi ha galetes confirmades. Confirma-les a Estrategia Web → Galetes i sortiran aquí."
+msgstr ""
+"Taula de galetes: encara no hi ha galetes confirmades. Confirma-les a "
+"Estrategia Web → Galetes i sortiran aquí."
 
 #: modules/consent/module.php
 msgctxt "module name"
@@ -727,7 +798,12 @@ msgid ""
 "categories), the «Cookie settings» link block and the consent API for PHP "
 "and JavaScript, plus a cookie list fed by a detector and a cookie table "
 "block for the cookie policy."
-msgstr "Avís de galetes propi (Accepta / Rebutja / Configura, amb categories declarables), el bloc de l'enllaç «Configura les galetes» i l'API del consentiment per a PHP i JavaScript, a més d'una llista de galetes que alimenta un detector i un bloc amb la taula de galetes per a la política de galetes."
+msgstr ""
+"Avís de galetes propi (Accepta / Rebutja / Configura, amb categories "
+"declarables), el bloc de l'enllaç «Configura les galetes» i l'API del "
+"consentiment per a PHP i JavaScript, a més d'una llista de galetes que "
+"alimenta un detector i un bloc amb la taula de galetes per a la política de "
+"galetes."
 
 #: modules/content-types/assets/fields-panel.js:53
 #: modules/map/blocks/map/edit.js:123 modules/site/assets/meta-panel.js:47
@@ -751,7 +827,10 @@ msgid ""
 "Content types, taxonomies and fields declared in JSON files of the site. "
 "This screen only shows them: they are changed in the files, in the site’s "
 "repository."
-msgstr "Tipus de contingut, taxonomies i camps declarats en fitxers JSON del web. Aquesta pantalla només els mostra: es canvien als fitxers, al repositori del web."
+msgstr ""
+"Tipus de contingut, taxonomies i camps declarats en fitxers JSON del web. "
+"Aquesta pantalla només els mostra: es canvien als fitxers, al repositori del "
+"web."
 
 #: modules/content-types/includes/admin/class-page.php:37
 msgid "Folders searched"
@@ -777,7 +856,9 @@ msgstr "Tipus declarats"
 msgid ""
 "None. Add a JSON file to one of the folders above (see the example in "
 "modules/content-types/examples/)."
-msgstr "Cap. Afegeix un fitxer JSON a una de les carpetes de dalt (hi ha un exemple a modules/content-types/examples/)."
+msgstr ""
+"Cap. Afegeix un fitxer JSON a una de les carpetes de dalt (hi ha un exemple "
+"a modules/content-types/examples/)."
 
 #: modules/content-types/includes/admin/class-page.php:61
 msgid "copy"
@@ -799,41 +880,41 @@ msgstr "Fitxer:"
 msgid "URL:"
 msgstr "URL:"
 
-#: modules/content-types/includes/admin/class-page.php:70
+#: modules/content-types/includes/admin/class-page.php:79
 msgid "WPML:"
 msgstr "WPML:"
 
-#: modules/content-types/includes/admin/class-page.php:72
+#: modules/content-types/includes/admin/class-page.php:81
 msgid "Not registered (see the errors above)."
 msgstr "No registrat (consulta els errors de dalt)."
 
-#: modules/content-types/includes/admin/class-page.php:77
+#: modules/content-types/includes/admin/class-page.php:86
 msgid "Taxonomies:"
 msgstr "Taxonomies:"
 
-#: modules/content-types/includes/admin/class-page.php:80
+#: modules/content-types/includes/admin/class-page.php:89
 msgid "Field"
 msgstr "Camp"
 
-#: modules/content-types/includes/admin/class-page.php:80
+#: modules/content-types/includes/admin/class-page.php:89
 msgid "Meta key"
 msgstr "Clau de la meta"
 
-#: modules/content-types/includes/admin/class-page.php:80
+#: modules/content-types/includes/admin/class-page.php:89
 msgid "Required"
 msgstr "Obligatori"
 
-#: modules/content-types/includes/admin/class-page.php:80
+#: modules/content-types/includes/admin/class-page.php:89
 #: modules/redirects/includes/admin/class-page.php:268
 #: modules/redirects/includes/admin/class-tables.php:35
 msgid "Type"
 msgstr "Tipus"
 
-#: modules/content-types/includes/admin/class-page.php:80
+#: modules/content-types/includes/admin/class-page.php:89
 msgid "WPML"
 msgstr "WPML"
 
-#: modules/content-types/includes/admin/class-page.php:87
+#: modules/content-types/includes/admin/class-page.php:96
 msgid "yes"
 msgstr "sí"
 
@@ -855,25 +936,27 @@ msgstr "Sí"
 msgid "No"
 msgstr "No"
 
-#: modules/content-types/includes/class-fields-panel.php:56
+#: modules/content-types/includes/class-fields-panel.php:58
 #: modules/site/includes/class-meta-panel.php:213
 msgid "Changed in the original language: it is copied to the translations."
 msgstr "Es canvia a l'idioma original: es copia a les traduccions."
 
 #. translators: %s: singular name of a content type, e.g. Restaurant
-#: modules/content-types/includes/class-fields-panel.php:70
+#: modules/content-types/includes/class-fields-panel.php:72
 #, php-format
 msgid "%s details"
 msgstr "%s: dades"
 
-#: modules/content-types/includes/class-fields-panel.php:72
+#: modules/content-types/includes/class-fields-panel.php:74
 msgid ""
 "Fields that are the same in every language are copied to the translations "
 "when you save; the others are translated in each language."
-msgstr "Els camps que són iguals en tots els idiomes es copien a les traduccions quan deses; els altres es tradueixen en cada idioma."
+msgstr ""
+"Els camps que són iguals en tots els idiomes es copien a les traduccions "
+"quan deses; els altres es tradueixen en cada idioma."
 
-#: modules/content-types/includes/class-fields-panel.php:176
-#: modules/content-types/includes/class-fields-panel.php:182
+#: modules/content-types/includes/class-fields-panel.php:178
+#: modules/content-types/includes/class-fields-panel.php:184
 #: modules/site/includes/class-meta-panel.php:335
 msgid "— None —"
 msgstr "— Cap —"
@@ -884,67 +967,91 @@ msgstr "— Cap —"
 msgid "Not valid JSON: %s."
 msgstr "No és un JSON vàlid: %s."
 
+#. translators: %s: list of field names
+#: modules/content-types/includes/class-registrar.php:140
+#, php-format
+msgid ""
+"Not published: it has been saved as a draft. Fill in these fields to publish "
+"it: %s."
+msgstr ""
+"No s'ha publicat: s'ha desat com a esborrany. Emplena aquests camps per "
+"publicar-lo: %s."
+
+#. translators: %s: list of field names
+#: modules/content-types/includes/class-registrar.php:142
+#, php-format
+msgid ""
+"These fields cannot be empty in a published item, so they keep their "
+"previous value: %s."
+msgstr ""
+"Aquests camps no poden quedar buits en un element publicat, així que "
+"conserven el valor anterior: %s."
+
 #. translators: %s: post type name
-#: modules/content-types/includes/class-registrar.php:51
+#: modules/content-types/includes/class-registrar.php:162
 #, php-format
 msgid ""
 "The type “%s” is already registered by other code: this file is ignored."
-msgstr "El tipus «%s» ja el registra un altre codi: aquest fitxer no es fa servir."
+msgstr ""
+"El tipus «%s» ja el registra un altre codi: aquest fitxer no es fa servir."
 
 #. translators: %s: taxonomy name
-#: modules/content-types/includes/class-registrar.php:83
+#: modules/content-types/includes/class-registrar.php:194
 #, php-format
 msgid ""
 "The taxonomy “%s” is already registered by other code: it is not registered "
 "again."
-msgstr "La taxonomia «%s» ja la registra un altre codi: no es torna a registrar."
+msgstr ""
+"La taxonomia «%s» ja la registra un altre codi: no es torna a registrar."
 
 #. translators: %s: singular name of a taxonomy, e.g. Cuisine
 #. translators: %s: singular name of a content type, e.g. Restaurant
-#: modules/content-types/includes/class-registrar.php:98
-#: modules/content-types/includes/class-registrar.php:167
+#: modules/content-types/includes/class-registrar.php:209
+#: modules/content-types/includes/class-registrar.php:292
 #, php-format
 msgid "Add %s"
 msgstr "Afegeix %s"
 
 #. translators: %s: singular name of a taxonomy
 #. translators: %s: singular name of a content type
-#: modules/content-types/includes/class-registrar.php:100
-#: modules/content-types/includes/class-registrar.php:169
+#: modules/content-types/includes/class-registrar.php:211
+#: modules/content-types/includes/class-registrar.php:294
 #, php-format
 msgid "Edit %s"
 msgstr "Edita %s"
 
 #. translators: 1: field name, 2: post type name
-#: modules/content-types/includes/class-registrar.php:152
+#: modules/content-types/includes/class-registrar.php:277
 #, php-format
 msgid ""
 "The relation “%1$s” points to the type “%2$s”, which is not registered: it "
 "can only store 0."
-msgstr "La relació «%1$s» apunta al tipus «%2$s», que no està registrat: només podrà desar 0."
+msgstr ""
+"La relació «%1$s» apunta al tipus «%2$s», que no està registrat: només podrà "
+"desar 0."
 
 #. translators: %s: singular name of a content type
-#: modules/content-types/includes/class-registrar.php:171
+#: modules/content-types/includes/class-registrar.php:296
 #, php-format
 msgid "View %s"
 msgstr "Mostra %s"
 
 #. translators: %s: plural name of a content type, e.g. Restaurants
-#: modules/content-types/includes/class-registrar.php:173
+#: modules/content-types/includes/class-registrar.php:298
 #, php-format
 msgid "Search %s"
 msgstr "Cerca %s"
 
-#: modules/content-types/includes/class-registrar.php:174
+#: modules/content-types/includes/class-registrar.php:299
 msgid "Nothing found."
 msgstr "No s'ha trobat res."
 
-#: modules/content-types/includes/class-registrar.php:175
+#: modules/content-types/includes/class-registrar.php:300
 msgid "Nothing found in the trash."
 msgstr "No hi ha res a la paperera."
 
 #. translators: %s: list of field names
-#: modules/content-types/includes/class-registrar.php:238
+#: modules/content-types/includes/class-registrar.php:362
 #, php-format
 msgid "Fill in these fields before publishing: %s."
 msgstr "Emplena aquests camps abans de publicar: %s."
@@ -957,7 +1064,9 @@ msgstr "El fitxer no és un objecte JSON."
 msgid ""
 "“prefix” must be 2 to 9 lowercase letters or digits followed by “_” (e.g. "
 "“gment_”)."
-msgstr "«prefix» ha de tenir de 2 a 9 lletres minúscules o xifres seguides de «_» (per exemple, «gment_»)."
+msgstr ""
+"«prefix» ha de tenir de 2 a 9 lletres minúscules o xifres seguides de "
+"«_» (per exemple, «gment_»)."
 
 #. translators: %s: a prefix such as eweb_
 #: modules/content-types/includes/class-schema.php:66
@@ -965,7 +1074,9 @@ msgstr "«prefix» ha de tenir de 2 a 9 lletres minúscules o xifres seguides de
 msgid ""
 "The prefix “%s” is reserved (Estrategia Web or WordPress). Choose the site’s "
 "own prefix."
-msgstr "El prefix «%s» està reservat (Estrategia Web o WordPress). Tria el prefix propi del web."
+msgstr ""
+"El prefix «%s» està reservat (Estrategia Web o WordPress). Tria el prefix "
+"propi del web."
 
 #: modules/content-types/includes/class-schema.php:74
 msgid "“description” must be a string or an object of locale → string."
@@ -1014,262 +1125,288 @@ msgid "The name “%1$s” is already declared in %2$s."
 msgstr "El nom «%1$s» ja està declarat a %2$s."
 
 #. translators: 1: field name, 2: WPML mode, 3: another file name, 4: WPML mode there
-#: modules/content-types/includes/class-schema.php:144
+#: modules/content-types/includes/class-schema.php:147
 #, php-format
 msgid ""
 "The field “%1$s” has wpml “%2$s” here and “%4$s” in %3$s: WPML keeps one "
 "mode per meta key."
-msgstr "El camp «%1$s» té wpml «%2$s» aquí i «%4$s» a %3$s: WPML desa un sol mode per clau de meta."
+msgstr ""
+"El camp «%1$s» té wpml «%2$s» aquí i «%4$s» a %3$s: WPML desa un sol mode "
+"per clau de meta."
 
 #. translators: %s: taxonomy name
-#: modules/content-types/includes/class-schema.php:153
+#: modules/content-types/includes/class-schema.php:156
 #, php-format
 msgid ""
 "The taxonomy “%s” is not declared in any file (declare it as an object in "
 "one of them)."
-msgstr "La taxonomia «%s» no està declarada en cap fitxer (declara-la com a objecte en un d'ells)."
+msgstr ""
+"La taxonomia «%s» no està declarada en cap fitxer (declara-la com a objecte "
+"en un d'ells)."
 
-#: modules/content-types/includes/class-schema.php:271
+#. translators: 1: a URL slug, 2: a language code, 3: type or taxonomy name, 4: a file name
+#: modules/content-types/includes/class-schema.php:201
+#, php-format
+msgid ""
+"The slug “%1$s” (language “%2$s”) is already the URL of “%3$s” in %4$s: two "
+"types or taxonomies cannot share a URL."
+msgstr ""
+"L'àlies «%1$s» (idioma «%2$s») ja és l'URL de «%3$s» a %4$s: dos tipus o "
+"taxonomies no poden compartir URL."
+
+#: modules/content-types/includes/class-schema.php:326
 msgid "“taxonomies” must be a list."
 msgstr "«taxonomies» ha de ser una llista."
 
 #. translators: %d: position in the list, from 1
-#: modules/content-types/includes/class-schema.php:276
+#: modules/content-types/includes/class-schema.php:331
 #, php-format
 msgid "taxonomies[%d]"
 msgstr "taxonomies[%d]"
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:280
+#: modules/content-types/includes/class-schema.php:335
 #, php-format
 msgid "%s: a reference must be a taxonomy name."
 msgstr "%s: una referència ha de ser el nom d'una taxonomia."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:286
+#: modules/content-types/includes/class-schema.php:341
 #, php-format
 msgid "%s: must be a taxonomy name or an object."
 msgstr "%s: ha de ser el nom d'una taxonomia o un objecte."
 
 #. translators: 1: where in the file, 2: a key
-#: modules/content-types/includes/class-schema.php:296
+#: modules/content-types/includes/class-schema.php:351
 #, php-format
 msgid "%1$s.%2$s must be true or false."
 msgstr "%1$s.%2$s ha de ser true o false."
 
 #. translators: 1: where in the file, 2: allowed values
-#: modules/content-types/includes/class-schema.php:301
-#: modules/content-types/includes/class-schema.php:351
+#: modules/content-types/includes/class-schema.php:356
+#: modules/content-types/includes/class-schema.php:406
 #, php-format
 msgid "%1$s.wpml must be one of: %2$s."
 msgstr "%1$s.wpml ha de ser un d'aquests: %2$s."
 
-#: modules/content-types/includes/class-schema.php:309
+#: modules/content-types/includes/class-schema.php:364
 msgid "“fields” must be a list."
 msgstr "«fields» ha de ser una llista."
 
 #. translators: %d: position in the list, from 1
-#: modules/content-types/includes/class-schema.php:315
+#: modules/content-types/includes/class-schema.php:370
 #, php-format
 msgid "fields[%d]"
 msgstr "fields[%d]"
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:318
+#: modules/content-types/includes/class-schema.php:373
 #, php-format
 msgid "%s: must be an object."
 msgstr "%s: ha de ser un objecte."
 
 #. translators: %s: field name
-#: modules/content-types/includes/class-schema.php:327
+#: modules/content-types/includes/class-schema.php:382
 #, php-format
 msgid "The field “%s” is declared twice."
 msgstr "El camp «%s» està declarat dues vegades."
 
 #. translators: 1: where in the file, 2: allowed values
-#: modules/content-types/includes/class-schema.php:334
+#: modules/content-types/includes/class-schema.php:389
 #, php-format
 msgid "%1$s.type must be one of: %2$s."
 msgstr "%1$s.type ha de ser un d'aquests: %2$s."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:339
+#: modules/content-types/includes/class-schema.php:394
 #, php-format
 msgid "%s.label is required (a string or an object of locale → string)."
 msgstr "%s.label és obligatori (un text o un objecte idioma → text)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:343
+#: modules/content-types/includes/class-schema.php:398
 #, php-format
 msgid "%s.help must be a string or an object of locale → string."
 msgstr "%s.help ha de ser un text o un objecte idioma → text."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:347
+#: modules/content-types/includes/class-schema.php:402
 #, php-format
 msgid "%s.required must be true or false."
 msgstr "%s.required ha de ser true o false."
 
 #. translators: 1: where in the file, 2: a key, 3: a field type
-#: modules/content-types/includes/class-schema.php:358
+#: modules/content-types/includes/class-schema.php:413
 #, php-format
 msgid "%1$s.%2$s is only for fields of type “%3$s”."
 msgstr "%1$s.%2$s només val per a camps de tipus «%3$s»."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:376
+#: modules/content-types/includes/class-schema.php:431
 #, php-format
 msgid "%s: a select needs “options”, a non-empty list."
 msgstr "%s: un select necessita «options», una llista no buida."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:383
+#: modules/content-types/includes/class-schema.php:438
 #, php-format
 msgid ""
 "%s.options: each option is a non-empty string or {\"value\": \"…\", "
 "\"label\": …}."
-msgstr "%s.options: cada opció és un text no buit o {\"value\": \"…\", \"label\": …}."
+msgstr ""
+"%s.options: cada opció és un text no buit o {\"value\": \"…\", \"label\": …}."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:390
+#: modules/content-types/includes/class-schema.php:445
 #, php-format
 msgid "%s.options: two options have the same value."
 msgstr "%s.options: dues opcions tenen el mateix valor."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:394
+#: modules/content-types/includes/class-schema.php:449
 #, php-format
 msgid "%s.default must be the value of one of the options."
 msgstr "%s.default ha de ser el valor d'una de les opcions."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:402
+#: modules/content-types/includes/class-schema.php:457
 #, php-format
 msgid "%s: a relation needs “post_type”, a post type name or a list of them."
-msgstr "%s: una relació necessita «post_type», el nom d'un tipus o una llista de noms."
+msgstr ""
+"%s: una relació necessita «post_type», el nom d'un tipus o una llista de "
+"noms."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:406
+#: modules/content-types/includes/class-schema.php:461
 #, php-format
 msgid "%s: a relation cannot have a default (it is the ID of a post)."
-msgstr "%s: una relació no pot tenir valor per defecte (és l'ID d'una entrada)."
+msgstr ""
+"%s: una relació no pot tenir valor per defecte (és l'ID d'una entrada)."
 
 #. translators: 1: where in the file, 2: min or max
-#: modules/content-types/includes/class-schema.php:412
+#: modules/content-types/includes/class-schema.php:467
 #, php-format
 msgid "%1$s.%2$s must be a number."
 msgstr "%1$s.%2$s ha de ser un nombre."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:417
+#: modules/content-types/includes/class-schema.php:472
 #, php-format
 msgid "%s.integer must be true or false."
 msgstr "%s.integer ha de ser true o false."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:421
+#: modules/content-types/includes/class-schema.php:476
 #, php-format
 msgid "%s: min is greater than max."
 msgstr "%s: min és més gran que max."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:426
+#: modules/content-types/includes/class-schema.php:481
 #, php-format
 msgid ""
 "%s.default must be a number within min and max (a whole number if “integer”)."
-msgstr "%s.default ha de ser un nombre entre min i max (enter si porta «integer»)."
+msgstr ""
+"%s.default ha de ser un nombre entre min i max (enter si porta «integer»)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:431
+#: modules/content-types/includes/class-schema.php:486
 #, php-format
 msgid "%s: a boolean cannot be required (“no” is an answer)."
 msgstr "%s: un booleà no pot ser obligatori («no» també és una resposta)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:435
+#: modules/content-types/includes/class-schema.php:490
 #, php-format
 msgid "%s.default must be true or false."
 msgstr "%s.default ha de ser true o false."
 
 #. translators: 1: where in the file, 2: true_label or false_label
-#: modules/content-types/includes/class-schema.php:441
+#: modules/content-types/includes/class-schema.php:496
 #, php-format
 msgid ""
 "%1$s.%2$s must be a string (\"\" to show nothing) or an object of locale → "
 "string."
-msgstr "%1$s.%2$s ha de ser un text (\"\" per no mostrar res) o un objecte idioma → text."
+msgstr ""
+"%1$s.%2$s ha de ser un text (\"\" per no mostrar res) o un objecte idioma → "
+"text."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:447
+#: modules/content-types/includes/class-schema.php:502
 #, php-format
 msgid "%s: an image cannot have a default (it is the ID of an attachment)."
 msgstr "%s: una imatge no pot tenir valor per defecte (és l'ID d'un adjunt)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:451
+#: modules/content-types/includes/class-schema.php:506
 #, php-format
 msgid "%s.default must be a string."
 msgstr "%s.default ha de ser un text."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:454
+#: modules/content-types/includes/class-schema.php:509
 #, php-format
 msgid "%s.default must be a date as YYYY-MM-DD."
 msgstr "%s.default ha de ser una data AAAA-MM-DD."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:467
+#: modules/content-types/includes/class-schema.php:522
 #, php-format
 msgid "%s must be lowercase letters, digits and “_”, starting with a letter."
-msgstr "%s només pot tenir lletres minúscules, xifres i «_», i ha de començar per una lletra."
+msgstr ""
+"%s només pot tenir lletres minúscules, xifres i «_», i ha de començar per "
+"una lletra."
 
 #. translators: 1: where in the file, 2: the name, 3: max length, 4: its length
-#: modules/content-types/includes/class-schema.php:472
+#: modules/content-types/includes/class-schema.php:527
 #, php-format
 msgid ""
 "%1$s “%2$s” is longer than %3$d characters (%4$d): WordPress would cut it."
 msgstr "%1$s «%2$s» passa de %3$d caràcters (%4$d): WordPress el tallaria."
 
 #. translators: 1: where in the file, 2: the name, 3: the prefix
-#: modules/content-types/includes/class-schema.php:476
+#: modules/content-types/includes/class-schema.php:531
 #, php-format
 msgid "%1$s “%2$s” must start with the prefix “%3$s”."
 msgstr "%1$s «%2$s» ha de començar pel prefix «%3$s»."
 
 #. translators: 1: where in the file, 2: the name, 3: a reserved prefix
-#: modules/content-types/includes/class-schema.php:481
+#: modules/content-types/includes/class-schema.php:536
 #, php-format
 msgid "%1$s “%2$s” uses the reserved prefix “%3$s”."
 msgstr "%1$s «%2$s» fa servir el prefix reservat «%3$s»."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:494
+#: modules/content-types/includes/class-schema.php:557
+#: modules/content-types/includes/class-schema.php:565
 #, php-format
 msgid ""
-"%s must be lowercase letters, digits, “-” and “/” (a URL path without "
-"slashes at the ends)."
-msgstr "%s només pot tenir lletres minúscules, xifres, «-» i «/» (una ruta d'URL sense barres als extrems)."
+"%s must be a URL path (lowercase ASCII letters, digits, “-” and “/”, no "
+"slashes at the ends) or an object of locale → such a path."
+msgstr ""
+"%s ha de ser un camí d'URL (lletres ASCII minúscules, xifres, «-» i «/», "
+"sense barres als extrems) o un objecte de locale → un camí així."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:502
+#: modules/content-types/includes/class-schema.php:598
 #, php-format
 msgid "%s is required: {\"singular\": …, \"plural\": …}."
 msgstr "%s és obligatori: {\"singular\": …, \"plural\": …}."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:506
+#: modules/content-types/includes/class-schema.php:602
 #, php-format
 msgid "%s must be an object: {\"singular\": …, \"plural\": …}."
 msgstr "%s ha de ser un objecte: {\"singular\": …, \"plural\": …}."
 
 #. translators: 1: where in the file, 2: singular or plural
-#: modules/content-types/includes/class-schema.php:512
+#: modules/content-types/includes/class-schema.php:608
 #, php-format
 msgid "%1$s.%2$s is required: a string or an object of locale → string."
 msgstr "%1$s.%2$s és obligatori: un text o un objecte idioma → text."
 
 #. translators: 1: a key, 2: allowed keys
-#: modules/content-types/includes/class-schema.php:539
+#: modules/content-types/includes/class-schema.php:635
 #, php-format
 msgid "Unknown key “%1$s”. Allowed: %2$s."
 msgstr "Clau desconeguda «%1$s». S'admeten: %2$s."
@@ -1285,7 +1422,10 @@ msgid ""
 "Each site declares its own content types, taxonomies and simple fields in "
 "JSON files of its repository, with the editor panel, Block Bindings and WPML "
 "generated."
-msgstr "Cada web declara els seus propis tipus de contingut, taxonomies i camps senzills en fitxers JSON del seu repositori; el tauler de l'editor, els Block Bindings i WPML es generen sols."
+msgstr ""
+"Cada web declara els seus propis tipus de contingut, taxonomies i camps "
+"senzills en fitxers JSON del seu repositori; el tauler de l'editor, els "
+"Block Bindings i WPML es generen sols."
 
 #: modules/external-links/module.php
 msgctxt "module name"
@@ -1297,7 +1437,10 @@ msgctxt "module description"
 msgid ""
 "Links to another domain open in a new tab, with rel=\"noopener\" and a "
 "hidden «(opens in a new tab)» for screen readers."
-msgstr "Els enllaços a un altre domini s'obren en una pestanya nova, amb rel=\"noopener\" i un «(s'obre en una pestanya nova)» ocult per als lectors de pantalla."
+msgstr ""
+"Els enllaços a un altre domini s'obren en una pestanya nova, amb "
+"rel=\"noopener\" i un «(s'obre en una pestanya nova)» ocult per als lectors "
+"de pantalla."
 
 #: modules/featured-images/module.php
 msgctxt "module name"
@@ -1310,7 +1453,10 @@ msgid ""
 "Featured images with a fixed width in px download a file of that size, and a "
 "logo whose alt text only repeats the title shown next to it is marked as "
 "decorative."
-msgstr "Les imatges destacades d'amplada fixa en px baixen un fitxer d'aquesta mida, i un logotip amb un text alternatiu que només repeteix el títol que es veu al costat es marca com a decoratiu."
+msgstr ""
+"Les imatges destacades d'amplada fixa en px baixen un fitxer d'aquesta mida, "
+"i un logotip amb un text alternatiu que només repeteix el títol que es veu "
+"al costat es marca com a decoratiu."
 
 #: modules/forms/assets/editor.js:58 modules/forms/assets/editor.js:416
 msgid "Message"
@@ -1331,7 +1477,10 @@ msgid ""
 "New message sent from {{page_url}} on {{submission_date}}:\n"
 "\n"
 "{{all_fields}}"
-msgstr "Missatge nou enviat des de {{page_url}} el {{submission_date}}:\n\n{{all_fields}}"
+msgstr ""
+"Missatge nou enviat des de {{page_url}} el {{submission_date}}:\n"
+"\n"
+"{{all_fields}}"
 
 #: modules/forms/assets/editor.js:75
 msgid "Acknowledgement to the sender"
@@ -1352,7 +1501,14 @@ msgid ""
 "{{all_fields}}\n"
 "\n"
 "{{site_name}}"
-msgstr "Hola, {{name}}:\n\nGràcies per escriure'ns. Hem rebut el teu missatge i et respondrem aviat.\n\n{{all_fields}}\n\n{{site_name}}"
+msgstr ""
+"Hola, {{name}}:\n"
+"\n"
+"Gràcies per escriure'ns. Hem rebut el teu missatge i et respondrem aviat.\n"
+"\n"
+"{{all_fields}}\n"
+"\n"
+"{{site_name}}"
 
 #: modules/forms/assets/editor.js:102
 msgid "Name in the submissions log"
@@ -1366,7 +1522,9 @@ msgstr "Identificador del formulari"
 msgid ""
 "Groups the submissions of this form in the log, in every language. Change it "
 "only if two copies of the form must be counted apart."
-msgstr "Agrupa els enviaments d'aquest formulari al registre, en tots els idiomes. Canvia'l només si dues còpies del formulari s'han de comptar per separat."
+msgstr ""
+"Agrupa els enviaments d'aquest formulari al registre, en tots els idiomes. "
+"Canvia'l només si dues còpies del formulari s'han de comptar per separat."
 
 #: modules/forms/assets/editor.js:117
 msgid "Messages"
@@ -1385,7 +1543,9 @@ msgstr "Etiqueta"
 msgid ""
 "The text between braces becomes the link to the privacy policy. Empty: the "
 "default text."
-msgstr "El text entre claus es converteix en l'enllaç a la política de privadesa. Buit: el text per defecte."
+msgstr ""
+"El text entre claus es converteix en l'enllaç a la política de privadesa. "
+"Buit: el text per defecte."
 
 #: modules/forms/assets/editor.js:161
 msgid "Name (key)"
@@ -1395,7 +1555,9 @@ msgstr "Nom (clau)"
 msgid ""
 "Used in the email markers, e.g. {{name}}, and in the log. Lowercase letters, "
 "numbers, - and _."
-msgstr "Es fa servir als marcadors dels correus, p. ex. {{name}}, i al registre. Minúscules, nombres, - i _."
+msgstr ""
+"Es fa servir als marcadors dels correus, p. ex. {{name}}, i al registre. "
+"Minúscules, nombres, - i _."
 
 #: modules/forms/assets/editor.js:183
 msgid "First option (empty value)"
@@ -1413,7 +1575,9 @@ msgstr "Emplenament automàtic"
 msgid ""
 "What the browser may fill in: name, organization, email, tel, street-"
 "address… Empty: email and phone fields still get email and tel."
-msgstr "El que pot emplenar el navegador: name, organization, email, tel, street-address… Buit: els camps de correu i telèfon porten igualment email i tel."
+msgstr ""
+"El que pot emplenar el navegador: name, organization, email, tel, street-"
+"address… Buit: els camps de correu i telèfon porten igualment email i tel."
 
 #: modules/forms/assets/editor.js:203
 msgid "Options"
@@ -1431,7 +1595,9 @@ msgstr "Opció preseleccionada"
 msgid ""
 "In a synced pattern, set it per page in the pattern block instead. A link "
 "can also choose it with ?af_ followed by the field name."
-msgstr "En un patró sincronitzat es fixa per pàgina, al bloc del patró. Un enllaç també la pot triar amb ?af_ seguit del nom del camp."
+msgstr ""
+"En un patró sincronitzat es fixa per pàgina, al bloc del patró. Un enllaç "
+"també la pot triar amb ?af_ seguit del nom del camp."
 
 #: modules/forms/assets/editor.js:214
 msgid "None"
@@ -1453,7 +1619,9 @@ msgstr "URL de la política de privadesa"
 msgid ""
 "Empty: the privacy policy page set in Settings → Privacy (translated, with "
 "WPML)."
-msgstr "Buit: la pàgina de política de privadesa de Paràmetres → Privadesa (traduïda, amb WPML)."
+msgstr ""
+"Buit: la pàgina de política de privadesa de Paràmetres → Privadesa "
+"(traduïda, amb WPML)."
 
 #: modules/forms/assets/editor.js:249
 msgid "Width"
@@ -1483,7 +1651,9 @@ msgstr "Nom d'aquest avís"
 msgid ""
 "Addresses separated by commas, or a marker such as {{email}}. Empty: the "
 "site administrator email."
-msgstr "Adreces separades per comes, o un marcador com ara {{email}}. Buit: el correu de l'administrador del web."
+msgstr ""
+"Adreces separades per comes, o un marcador com ara {{email}}. Buit: el "
+"correu de l'administrador del web."
 
 #: modules/forms/assets/editor.js:411 modules/forms/assets/editor.js:429
 msgid "To"
@@ -1518,7 +1688,9 @@ msgctxt "block description"
 msgid ""
 "A checkbox. As a privacy consent it is always required and links to the "
 "privacy policy."
-msgstr "Una casella. Com a consentiment de privadesa sempre és obligatòria i enllaça a la política de privadesa."
+msgstr ""
+"Una casella. Com a consentiment de privadesa sempre és obligatòria i enllaça "
+"a la política de privadesa."
 
 #: modules/forms/blocks/checkbox/block.json
 msgctxt "block title"
@@ -1539,7 +1711,9 @@ msgstr "Camp de correu"
 msgctxt "block description"
 msgid ""
 "A form built with blocks. Its fields go inside; its email notifications too."
-msgstr "Un formulari fet amb blocs. A dins hi van els seus camps, i també els seus avisos per correu."
+msgstr ""
+"Un formulari fet amb blocs. A dins hi van els seus camps, i també els seus "
+"avisos per correu."
 
 #: modules/forms/blocks/form/block.json
 msgctxt "block title"
@@ -1567,7 +1741,10 @@ msgctxt "block description"
 msgid ""
 "An email sent on every submission. Add one per recipient group: the site "
 "team, an acknowledgement to the sender… Never shown to visitors."
-msgstr "Un correu que s'envia amb cada enviament. Afegeix-ne un per grup de destinataris: l'equip del web, un justificant al remitent… Els visitants no el veuen mai."
+msgstr ""
+"Un correu que s'envia amb cada enviament. Afegeix-ne un per grup de "
+"destinataris: l'equip del web, un justificant al remitent… Els visitants no "
+"el veuen mai."
 
 #: modules/forms/blocks/notification/block.json
 msgctxt "block title"
@@ -1593,7 +1770,9 @@ msgstr "Botó d'enviar"
 msgctxt "block description"
 msgid ""
 "The button that sends the form. Styled by the theme like any other button."
-msgstr "El botó que envia el formulari. L'estil el posa el tema, com qualsevol altre botó."
+msgstr ""
+"El botó que envia el formulari. L'estil el posa el tema, com qualsevol altre "
+"botó."
 
 #: modules/forms/blocks/tel/block.json
 msgctxt "block description"
@@ -1787,7 +1966,9 @@ msgstr "No tens permís per fer això."
 msgid ""
 "Fields, notifications and messages of each form are set in the form block, "
 "in the editor. Here only what is common to all forms."
-msgstr "Els camps, els avisos i els missatges de cada formulari es configuren al seu bloc, a l'editor. Aquí només hi ha el que és comú a tots."
+msgstr ""
+"Els camps, els avisos i els missatges de cada formulari es configuren al seu "
+"bloc, a l'editor. Aquí només hi ha el que és comú a tots."
 
 #: modules/forms/includes/admin/class-admin.php:270
 msgid "Submission log"
@@ -1799,7 +1980,8 @@ msgstr "Conserva els enviaments durant (dies)"
 
 #: modules/forms/includes/admin/class-admin.php:275
 msgid "0 keeps them forever. Older submissions are deleted once a day."
-msgstr "0 els conserva per sempre. Els més antics se suprimeixen un cop al dia."
+msgstr ""
+"0 els conserva per sempre. Els més antics se suprimeixen un cop al dia."
 
 #. translators: 1: date of the last purge, 2: deleted submissions.
 #: modules/forms/includes/admin/class-admin.php:279
@@ -1836,7 +2018,10 @@ msgid ""
 "Leave empty to use the built-in text, already translated. If you fill them "
 "in and the site uses WPML, translate them in WPML → String Translation "
 "(domain estrategia-web-forms)."
-msgstr "Deixa'ls buits per fer servir el text incorporat, ja traduït. Si els emplenes i el web fa servir WPML, es tradueixen a WPML → Traducció de cadenes (domini estrategia-web-forms)."
+msgstr ""
+"Deixa'ls buits per fer servir el text incorporat, ja traduït. Si els "
+"emplenes i el web fa servir WPML, es tradueixen a WPML → Traducció de "
+"cadenes (domini estrategia-web-forms)."
 
 #: modules/forms/includes/admin/class-admin.php:303
 msgid "Success message"
@@ -1881,7 +2066,8 @@ msgstr "Algun ha fallat"
 #: modules/forms/includes/class-blocks.php:80
 msgid ""
 "The message could not be sent. Please check your connection and try again."
-msgstr "No s'ha pogut enviar el missatge. Comprova la connexió i torna-ho a provar."
+msgstr ""
+"No s'ha pogut enviar el missatge. Comprova la connexió i torna-ho a provar."
 
 #: modules/forms/includes/class-blocks.php:103
 msgid "Leave this field empty"
@@ -1920,11 +2106,14 @@ msgstr "Aquest formulari ja no està disponible. Torna a carregar la pàgina."
 
 #: modules/forms/includes/class-rest.php:118
 msgid "The form was sent too quickly. Please wait a few seconds and try again."
-msgstr "El formulari s'ha enviat massa de pressa. Espera uns segons i torna-ho a provar."
+msgstr ""
+"El formulari s'ha enviat massa de pressa. Espera uns segons i torna-ho a "
+"provar."
 
 #: modules/forms/includes/class-rest.php:119
 msgid "The form has expired. Please reload the page and try again."
-msgstr "El formulari ha caducat. Torna a carregar la pàgina i torna-ho a provar."
+msgstr ""
+"El formulari ha caducat. Torna a carregar la pàgina i torna-ho a provar."
 
 #: modules/forms/includes/class-rest.php:127
 msgid "Too many messages from your connection. Please try again later."
@@ -1936,7 +2125,8 @@ msgstr "Gràcies. El teu missatge s'ha enviat."
 
 #: modules/forms/includes/class-settings.php:106
 msgid "The message could not be sent. Please check the form and try again."
-msgstr "No s'ha pogut enviar el missatge. Revisa el formulari i torna-ho a provar."
+msgstr ""
+"No s'ha pogut enviar el missatge. Revisa el formulari i torna-ho a provar."
 
 #: modules/forms/includes/class-validator.php:54
 msgid "You must check this box to continue."
@@ -1967,7 +2157,9 @@ msgctxt "module description"
 msgid ""
 "Block-based forms with several email notifications made from templates, a "
 "log of everything sent and WPML support."
-msgstr "Formularis fets amb blocs, amb diversos avisos per correu fets amb plantilles, registre de tot el que s'envia i compatibles amb WPML."
+msgstr ""
+"Formularis fets amb blocs, amb diversos avisos per correu fets amb "
+"plantilles, registre de tot el que s'envia i compatibles amb WPML."
 
 #: modules/forms/module.php
 msgctxt "module name"
@@ -1988,7 +2180,11 @@ msgid ""
 "An empty field loads nothing. Whatever is filled in waits for the cookie "
 "notice: Analytics needs «Analytics», Ads needs «Advertising», and Tag "
 "Manager asks for both. Logged-in editors and administrators are not measured."
-msgstr "Un camp buit no carrega res. El que s'empleni espera l'avís de galetes: Analytics necessita «Analítica», Ads necessita «Publicitat» i Tag Manager demana les dues. Els editors i els administradors amb la sessió iniciada no es mesuren."
+msgstr ""
+"Un camp buit no carrega res. El que s'empleni espera l'avís de galetes: "
+"Analytics necessita «Analítica», Ads necessita «Publicitat» i Tag Manager "
+"demana les dues. Els editors i els administradors amb la sessió iniciada no "
+"es mesuren."
 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:58
 msgid "Google Analytics 4"
@@ -2015,11 +2211,15 @@ msgid ""
 "Optional. Conversion ID and label («send_to» of the conversion). Counted "
 "each time a form of the site is sent correctly, if the visitor accepted "
 "«Advertising»."
-msgstr "Opcional. ID i etiqueta de la conversió (el «send_to» de la conversió). Es compta cada vegada que s'envia correctament un formulari del web, si el visitant ha acceptat «Publicitat»."
+msgstr ""
+"Opcional. ID i etiqueta de la conversió (el «send_to» de la conversió). Es "
+"compta cada vegada que s'envia correctament un formulari del web, si el "
+"visitant ha acceptat «Publicitat»."
 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:61
 msgid "Container ID. The tags inside the container follow Consent Mode."
-msgstr "ID del contenidor. Les etiquetes del contenidor segueixen el Consent Mode."
+msgstr ""
+"ID del contenidor. Les etiquetes del contenidor segueixen el Consent Mode."
 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:61
 msgid "Google Tag Manager"
@@ -2033,18 +2233,23 @@ msgstr "Càrrega"
 msgid ""
 "Basic (recommended): nothing is requested from Google until the visitor "
 "accepts."
-msgstr "Bàsic (recomanat): no es demana res a Google fins que el visitant accepta."
+msgstr ""
+"Bàsic (recomanat): no es demana res a Google fins que el visitant accepta."
 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:73
 msgid ""
 "Advanced: Google loads from the start with consent denied and sends "
 "cookieless pings. Better measurement, but data reaches Google before the "
 "visitor decides: decide it with the client."
-msgstr "Avançat: Google es carrega des del principi amb el consentiment denegat i envia avisos sense galetes. Mesura millor, però arriben dades a Google abans que el visitant decideixi: decideix-ho amb el client."
+msgstr ""
+"Avançat: Google es carrega des del principi amb el consentiment denegat i "
+"envia avisos sense galetes. Mesura millor, però arriben dades a Google abans "
+"que el visitant decideixi: decideix-ho amb el client."
 
 #: modules/google-tags/includes/class-google-tags.php:119
 msgid "Google tags: GA4, Ads and Tag Manager IDs and the loading mode."
-msgstr "Etiquetes de Google: els ID de GA4, Ads i Tag Manager i el mode de càrrega."
+msgstr ""
+"Etiquetes de Google: els ID de GA4, Ads i Tag Manager i el mode de càrrega."
 
 #. translators: %s: the value that was not saved.
 #: modules/google-tags/includes/class-google-tags.php:150
@@ -2058,7 +2263,10 @@ msgid ""
 "Google Analytics 4, Google Ads (with an optional conversion for form "
 "submissions) and Google Tag Manager behind the cookie notice, with Consent "
 "Mode v2. An empty field loads nothing."
-msgstr "Google Analytics 4, Google Ads (amb una conversió opcional per enviament de formulari) i Google Tag Manager darrere l'avís de galetes, amb Consent Mode v2. Un camp buit no carrega res."
+msgstr ""
+"Google Analytics 4, Google Ads (amb una conversió opcional per enviament de "
+"formulari) i Google Tag Manager darrere l'avís de galetes, amb Consent Mode "
+"v2. Un camp buit no carrega res."
 
 #: modules/google-tags/module.php
 msgctxt "module name"
@@ -2070,7 +2278,9 @@ msgctxt "block description"
 msgid ""
 "Current language with a drop-down list of the other languages, linking to "
 "the same page translated. Uses WPML; without WPML it shows nothing."
-msgstr "Idioma actual amb una llista desplegable dels altres idiomes, que enllaça a la mateixa pàgina traduïda. Fa servir WPML; sense WPML no mostra res."
+msgstr ""
+"Idioma actual amb una llista desplegable dels altres idiomes, que enllaça a "
+"la mateixa pàgina traduïda. Fa servir WPML; sense WPML no mostra res."
 
 #: modules/language-switcher/blocks/language-switcher/block.json
 msgctxt "block title"
@@ -2115,7 +2325,10 @@ msgctxt "module description"
 msgid ""
 "Language switcher block for WPML: the current language and links to the same "
 "page in the others, as a drop-down or inline. Without WPML it shows nothing."
-msgstr "Bloc selector d'idioma per a WPML: l'idioma actual i enllaços a la mateixa pàgina en els altres, en una llista desplegable o en línia. Sense WPML no mostra res."
+msgstr ""
+"Bloc selector d'idioma per a WPML: l'idioma actual i enllaços a la mateixa "
+"pàgina en els altres, en una llista desplegable o en línia. Sense WPML no "
+"mostra res."
 
 #: modules/map/blocks/map/block.json
 msgctxt "block title"
@@ -2127,7 +2340,9 @@ msgctxt "block description"
 msgid ""
 "Static image with the address. The Google Maps embed only loads after the "
 "visitor asks for it."
-msgstr "Imatge estàtica amb l'adreça. El mapa de Google Maps només es carrega quan el visitant el demana."
+msgstr ""
+"Imatge estàtica amb l'adreça. El mapa de Google Maps només es carrega quan "
+"el visitant el demana."
 
 #: modules/map/blocks/map/block.json
 msgctxt "block keyword"
@@ -2181,7 +2396,10 @@ msgstr "Mapa estàtic"
 msgid ""
 "An OpenStreetMap image made with tools/static-map.mjs, shown under the place "
 "details until the visitor loads Google Maps. It must be served by this site."
-msgstr "Una imatge d'OpenStreetMap feta amb tools/static-map.mjs; es veu sota les dades del lloc fins que el visitant carrega Google Maps. L'ha de servir aquest lloc."
+msgstr ""
+"Una imatge d'OpenStreetMap feta amb tools/static-map.mjs; es veu sota les "
+"dades del lloc fins que el visitant carrega Google Maps. L'ha de servir "
+"aquest lloc."
 
 #: modules/map/blocks/map/edit.js:72
 msgid "A theme path (assets/maps/place.webp) or a URL of this site."
@@ -2201,7 +2419,8 @@ msgstr "Imatge estàtica"
 
 #: modules/map/blocks/map/edit.js:100
 msgid "Optional. Without an image the map shows a box with the place details."
-msgstr "Opcional. Sense imatge, el mapa mostra un requadre amb les dades del lloc."
+msgstr ""
+"Opcional. Sense imatge, el mapa mostra un requadre amb les dades del lloc."
 
 #: modules/map/blocks/map/edit.js:102
 msgid "Use the featured image of the post"
@@ -2218,7 +2437,9 @@ msgstr "Text alternatiu de la imatge"
 #: modules/map/blocks/map/render.php:188
 msgid ""
 "Map: add the address and the Google Maps embed URL in the block settings."
-msgstr "Mapa: afegeix l'adreça i l'URL per incrustar de Google Maps als paràmetres del bloc."
+msgstr ""
+"Mapa: afegeix l'adreça i l'URL per incrustar de Google Maps als paràmetres "
+"del bloc."
 
 #. translators: %s: postal address.
 #: modules/map/blocks/map/render.php:210
@@ -2248,7 +2469,9 @@ msgstr "Mostra el mapa"
 msgid ""
 "The map is served by Google. Loading it sends your IP address to Google, "
 "which may set its own cookies."
-msgstr "El mapa el serveix Google. Quan es carrega, la teva adreça IP s'envia a Google, que pot instal·lar les seves pròpies galetes."
+msgstr ""
+"El mapa el serveix Google. Quan es carrega, la teva adreça IP s'envia a "
+"Google, que pot instal·lar les seves pròpies galetes."
 
 #. translators: 1: place name (or its address), 2: «(opens in a new tab)». The text before the colon must be the visible text of the link.
 #: modules/map/blocks/map/render.php:338
@@ -2270,7 +2493,10 @@ msgctxt "module description"
 msgid ""
 "Two-click map block: a static image with the address; the Google Maps embed "
 "only loads after the visitor asks for it (or accepted the maps cookies)."
-msgstr "Bloc de mapa en dos clics: una imatge estàtica amb l'adreça; el mapa de Google Maps només es carrega quan el visitant el demana (o si ha acceptat les galetes de mapes)."
+msgstr ""
+"Bloc de mapa en dos clics: una imatge estàtica amb l'adreça; el mapa de "
+"Google Maps només es carrega quan el visitant el demana (o si ha acceptat "
+"les galetes de mapes)."
 
 #: modules/matomo/includes/class-admin-fields.php:26
 msgid "Statistics (Matomo)"
@@ -2280,7 +2506,9 @@ msgstr "Estadístiques (Matomo)"
 msgid ""
 "Without the Matomo address or the site ID nothing is added to the site. "
 "Logged-in editors and administrators are not counted."
-msgstr "Sense l'adreça de Matomo o sense l'ID del lloc no s'afegeix res al web. Els editors i els administradors amb la sessió iniciada no es compten."
+msgstr ""
+"Sense l'adreça de Matomo o sense l'ID del lloc no s'afegeix res al web. Els "
+"editors i els administradors amb la sessió iniciada no es compten."
 
 #: modules/matomo/includes/class-admin-fields.php:30
 msgid "Matomo address"
@@ -2302,7 +2530,9 @@ msgstr "Sense galetes (recomanat): no cal preguntar res al visitant."
 msgid ""
 "Hybrid: without cookies until the visitor accepts «Analytics» in the cookie "
 "notice."
-msgstr "Híbrid: sense galetes fins que el visitant accepta «Analítica» a l'avís de galetes."
+msgstr ""
+"Híbrid: sense galetes fins que el visitant accepta «Analítica» a l'avís de "
+"galetes."
 
 #: modules/matomo/module.php
 msgctxt "module name"
@@ -2314,7 +2544,9 @@ msgctxt "module description"
 msgid ""
 "Matomo tracking code, cookieless or hybrid (no cookies until the visitor "
 "accepts analytics in the cookie notice)."
-msgstr "Codi de seguiment de Matomo, sense galetes o híbrid (sense galetes fins que el visitant accepta l'analítica a l'avís de galetes)."
+msgstr ""
+"Codi de seguiment de Matomo, sense galetes o híbrid (sense galetes fins que "
+"el visitant accepta l'analítica a l'avís de galetes)."
 
 #: modules/redirects/includes/admin/class-page.php:43
 #: modules/redirects/includes/admin/class-page.php:176
@@ -2331,7 +2563,10 @@ msgid ""
 "Redirect saved, but that source is a page that exists on the website: the "
 "redirect only works on addresses that give a 404. It will start working when "
 "the page is deleted or unpublished."
-msgstr "S'ha desat la redirecció, però aquest origen és una pàgina que existeix al web: les redireccions només actuen en adreces que donen 404. Començarà a funcionar quan la pàgina se suprimeixi o es despubliqui."
+msgstr ""
+"S'ha desat la redirecció, però aquest origen és una pàgina que existeix al "
+"web: les redireccions només actuen en adreces que donen 404. Començarà a "
+"funcionar quan la pàgina se suprimeixi o es despubliqui."
 
 #: modules/redirects/includes/admin/class-page.php:156
 msgid "Deleted."
@@ -2376,7 +2611,10 @@ msgid ""
 "Also active: %s. Both act on the same addresses and the other one usually "
 "goes first. Keep the rules in only one of them, or turn this module off in "
 "Estrategia Web → Modules."
-msgstr "També està actiu: %s. Tots dos actuen sobre les mateixes adreces i l'altre sol anar primer. Mantén les regles només en un, o desactiva aquest mòdul a Estrategia Web → Mòduls."
+msgstr ""
+"També està actiu: %s. Tots dos actuen sobre les mateixes adreces i l'altre "
+"sol anar primer. Mantén les regles només en un, o desactiva aquest mòdul a "
+"Estrategia Web → Mòduls."
 
 #: modules/redirects/includes/admin/class-page.php:196
 msgid "Edit redirect"
@@ -2396,7 +2634,10 @@ msgid ""
 "The old path, without the domain. Upper case, a final slash and any extra ?"
 "parameters are ignored when matching; ?p=123 and ?page_id=123 are the same, "
 "and so are %3F and ?."
-msgstr "El camí antic, sense el domini. En comparar no compten les majúscules, la barra final ni els ?paràmetres de més; ?p=123 i ?page_id=123 són el mateix, i també %3F i ?."
+msgstr ""
+"El camí antic, sense el domini. En comparar no compten les majúscules, la "
+"barra final ni els ?paràmetres de més; ?p=123 i ?page_id=123 són el mateix, "
+"i també %3F i ?."
 
 #: modules/redirects/includes/admin/class-page.php:270
 msgid "301 — moved permanently"
@@ -2419,7 +2660,9 @@ msgstr "Destinació"
 msgid ""
 "A path on this website (/new-page/) or a full address (https://…). Empty for "
 "410."
-msgstr "Un camí d'aquest web (/pagina-nova/) o una adreça completa (https://…). Buit per a 410."
+msgstr ""
+"Un camí d'aquest web (/pagina-nova/) o una adreça completa (https://…). Buit "
+"per a 410."
 
 #: modules/redirects/includes/admin/class-page.php:281
 msgid "Note"
@@ -2458,7 +2701,10 @@ msgstr "dies"
 msgid ""
 "Only the path is recorded (and ?p= of old WordPress addresses), with a "
 "counter and dates: no IP address, browser or other personal data."
-msgstr "Només es registra el camí (i el ?p= de les adreces antigues de WordPress), amb un comptador i dates: ni adreça IP, ni navegador, ni altres dades personals."
+msgstr ""
+"Només es registra el camí (i el ?p= de les adreces antigues de WordPress), "
+"amb un comptador i dates: ni adreça IP, ni navegador, ni altres dades "
+"personals."
 
 #: modules/redirects/includes/admin/class-page.php:303
 msgid "Save settings"
@@ -2497,7 +2743,10 @@ msgid ""
 "A CSV with the columns origen, destino, tipo and motivo (or source, target, "
 "type, note). A source that already has a redirect is updated; nothing is "
 "deleted."
-msgstr "Un CSV amb les columnes origen, destino, tipo i motivo (o source, target, type, note). Un origen que ja té redirecció s'actualitza; no se suprimeix res."
+msgstr ""
+"Un CSV amb les columnes origen, destino, tipo i motivo (o source, target, "
+"type, note). Un origen que ja té redirecció s'actualitza; no se suprimeix "
+"res."
 
 #: modules/redirects/includes/admin/class-page.php:349
 msgid "Test only: show what would happen without saving"
@@ -2576,7 +2825,9 @@ msgstr "L'origen és buit."
 msgid ""
 "The source is an address of another website. Write the path only (/old-"
 "page/)."
-msgstr "L'origen és una adreça d'un altre web. Escriu només el camí (/pagina-antiga/)."
+msgstr ""
+"L'origen és una adreça d'un altre web. Escriu només el camí (/pagina-"
+"antiga/)."
 
 #: modules/redirects/includes/class-importer.php:139
 msgid "The home page itself cannot be redirected."
@@ -2594,7 +2845,9 @@ msgstr "Una redirecció 301 o 302 necessita una destinació."
 msgid ""
 "The destination must be a path starting with / or a full http(s) address, "
 "without spaces."
-msgstr "La destinació ha de ser un camí que comenci per / o una adreça http(s) completa, sense espais."
+msgstr ""
+"La destinació ha de ser un camí que comenci per / o una adreça http(s) "
+"completa, sense espais."
 
 #: modules/redirects/includes/class-importer.php:147
 msgid "The destination is the same as the source."
@@ -2613,7 +2866,9 @@ msgctxt "module description"
 msgid ""
 "Editable 301, 302 and 410 redirects with hit counters, CSV import and "
 "export, and an optional 404 log."
-msgstr "Redireccions 301, 302 i 410 editables, amb comptador de visites, importació i exportació CSV i un registre de 404 opcional."
+msgstr ""
+"Redireccions 301, 302 i 410 editables, amb comptador de visites, importació "
+"i exportació CSV i un registre de 404 opcional."
 
 #: modules/redirects/module.php
 msgctxt "module name"
@@ -2659,7 +2914,9 @@ msgid ""
 "These details appear wherever a block is linked to them (Block Bindings, "
 "source «Company details»). Change them here and they change across the whole "
 "site."
-msgstr "Aquestes dades surten allà on un bloc hi estigui enllaçat (Block Bindings, font «Dades de l'empresa»). Si les canvies aquí, canvien a tot el web."
+msgstr ""
+"Aquestes dades surten allà on un bloc hi estigui enllaçat (Block Bindings, "
+"font «Dades de l'empresa»). Si les canvies aquí, canvien a tot el web."
 
 #: modules/site/includes/admin/class-admin.php:90
 msgid "Company"
@@ -2670,7 +2927,9 @@ msgid ""
 "As it appears in the legal notice, without «Registered in». Example: "
 "Registro Mercantil de Mallorca, tomo 1234, folio 56, hoja PM-7890, "
 "inscripción 1.ª"
-msgstr "Tal com apareix a l'avís legal, sense «Inscrita a». Exemple: Registre Mercantil de Mallorca, tom 1234, foli 56, full PM-7890, inscripció 1a"
+msgstr ""
+"Tal com apareix a l'avís legal, sense «Inscrita a». Exemple: Registre "
+"Mercantil de Mallorca, tom 1234, foli 56, full PM-7890, inscripció 1a"
 
 #: modules/site/includes/admin/class-admin.php:103
 msgid "Contact"
@@ -2698,7 +2957,9 @@ msgstr "Les xarxes socials es modifiquen a Estrategia Web › Xarxes socials."
 msgid ""
 "Only the checked types appear in the menu and on the site. Unchecking a type "
 "does not delete its content: it comes back when it is checked again."
-msgstr "Només els tipus marcats apareixen al menú i al web. Desmarcar un tipus no n'esborra el contingut: torna quan es torna a marcar."
+msgstr ""
+"Només els tipus marcats apareixen al menú i al web. Desmarcar un tipus no "
+"n'esborra el contingut: torna quan es torna a marcar."
 
 #: modules/site/includes/admin/class-admin.php:135
 msgid "Media"
@@ -3204,31 +3465,41 @@ msgstr "Google Maps › Comparteix › Copia l'enllaç."
 
 #: modules/site/includes/class-meta-panel.php:187
 msgid "Google Maps › Share › Embed a map. You can paste the whole iframe code."
-msgstr "Google Maps › Comparteix › Insereix un mapa. Pots enganxar tot el codi de l'iframe."
+msgstr ""
+"Google Maps › Comparteix › Insereix un mapa. Pots enganxar tot el codi de "
+"l'iframe."
 
 #: modules/site/includes/class-meta-panel.php:188
 msgid ""
 "Map picture shown before Google Maps loads (privacy: Google only loads after "
 "a click)."
-msgstr "Imatge del mapa que es veu abans que es carregui Google Maps (privadesa: Google només es carrega després d'un clic)."
+msgstr ""
+"Imatge del mapa que es veu abans que es carregui Google Maps (privadesa: "
+"Google només es carrega després d'un clic)."
 
 #: modules/site/includes/class-meta-panel.php:189
 msgid ""
 "Only if the picture is not in the media library: a theme path (assets/maps/"
 "place.webp) or a URL of this site. The picture above wins."
-msgstr "Només si la imatge no és a la mediateca: un camí del tema (assets/maps/seu.webp) o un URL d'aquest lloc. Si hi ha imatge a dalt, mana aquesta."
+msgstr ""
+"Només si la imatge no és a la mediateca: un camí del tema (assets/maps/seu."
+"webp) o un URL d'aquest lloc. Si hi ha imatge a dalt, mana aquesta."
 
 #: modules/site/includes/class-meta-panel.php:190
 msgid ""
 "What the client does, e.g. “holiday rental agency”. It is translated; the "
 "name is not."
-msgstr "A què es dedica el client, p. ex. «agència de lloguer turístic». Es tradueix; el nom, no."
+msgstr ""
+"A què es dedica el client, p. ex. «agència de lloguer turístic». Es "
+"tradueix; el nom, no."
 
 #: modules/site/includes/class-meta-panel.php:223
 msgid ""
 "Phone, links and map are copied to the translations when you save; address "
 "and opening hours are translated in each language."
-msgstr "El telèfon, els enllaços i el mapa es copien a les traduccions quan deses; l'adreça i l'horari es tradueixen en cada idioma."
+msgstr ""
+"El telèfon, els enllaços i el mapa es copien a les traduccions quan deses; "
+"l'adreça i l'horari es tradueixen en cada idioma."
 
 #: modules/site/includes/class-meta-panel.php:327
 msgid "No rating"
@@ -3244,7 +3515,8 @@ msgstr "Logotip (sencer, no es retalla mai)"
 
 #: modules/site/includes/class-settings.php:161
 msgid "Company details and site options of the Estrategia Web Site plugin."
-msgstr "Dades de l'empresa i opcions del web de l'extensió Estrategia Web Site."
+msgstr ""
+"Dades de l'empresa i opcions del web de l'extensió Estrategia Web Site."
 
 #: modules/site/includes/class-settings.php:283
 msgid "The email address is not valid. The previous one has been kept."
@@ -3254,7 +3526,9 @@ msgstr "L'adreça de correu electrònic no és vàlida. S'ha mantingut l'anterio
 msgid ""
 "The WhatsApp number is not valid (international format, digits only). The "
 "previous one has been kept."
-msgstr "El número de WhatsApp no és vàlid (format internacional, només xifres). S'ha mantingut l'anterior."
+msgstr ""
+"El número de WhatsApp no és vàlid (format internacional, només xifres). S'ha "
+"mantingut l'anterior."
 
 #. translators: %s: the field name.
 #: modules/site/includes/class-settings.php:370
@@ -3262,7 +3536,8 @@ msgstr "El número de WhatsApp no és vàlid (format internacional, només xifre
 msgid ""
 "The address in «%s» is not a valid web address. The previous one has been "
 "kept."
-msgstr "L'adreça de «%s» no és una adreça web vàlida. S'ha mantingut l'anterior."
+msgstr ""
+"L'adreça de «%s» no és una adreça web vàlida. S'ha mantingut l'anterior."
 
 #: modules/site/includes/class-svg.php:91
 msgid "You are not allowed to upload SVG files."
@@ -3271,7 +3546,8 @@ msgstr "No tens permís per pujar fitxers SVG."
 #: modules/site/includes/class-svg.php:98
 msgid ""
 "This SVG file could not be read or is not safe, so it has not been uploaded."
-msgstr "Aquest fitxer SVG no s'ha pogut llegir o no és segur, així que no s'ha pujat."
+msgstr ""
+"Aquest fitxer SVG no s'ha pogut llegir o no és segur, així que no s'ha pujat."
 
 #: modules/site/module.php
 msgctxt "module name"
@@ -3284,7 +3560,11 @@ msgid ""
 "Company details with Block Bindings and the [estrategia_web_company] "
 "shortcode, the usual content types of a corporate site (clients, "
 "testimonials, locations, projects, portfolio) and sanitised SVG uploads."
-msgstr "Dades de l'empresa amb Block Bindings i el codi curt [estrategia_web_company], els tipus de contingut habituals d'un web corporatiu (clients, opinions, seus, projectes, portafolis) i pujada d'SVG sanejada."
+msgstr ""
+"Dades de l'empresa amb Block Bindings i el codi curt "
+"[estrategia_web_company], els tipus de contingut habituals d'un web "
+"corporatiu (clients, opinions, seus, projectes, portafolis) i pujada d'SVG "
+"sanejada."
 
 #: modules/social/blocks/social-links/block.json
 msgctxt "block title"
@@ -3296,7 +3576,9 @@ msgctxt "block description"
 msgid ""
 "The site's social network links, from Estrategia Web › Social networks. "
 "Icons take the text colour."
-msgstr "Els enllaços a les xarxes socials del web, d'Estrategia Web › Xarxes socials. Les icones prenen el color del text."
+msgstr ""
+"Els enllaços a les xarxes socials del web, d'Estrategia Web › Xarxes "
+"socials. Les icones prenen el color del text."
 
 #: modules/social/blocks/social-links/block.json
 msgctxt "block keyword"
@@ -3369,7 +3651,10 @@ msgid ""
 "The links shown by the “Social networks” block, in this order. The icon is "
 "guessed from the link; choose one only if it gets it wrong, or use your own "
 "SVG from the media library."
-msgstr "Els enllaços que mostra el bloc «Xarxes socials», en aquest ordre. La icona s'endevina a partir de l'enllaç; tria'n una només si s'equivoca, o fes servir el teu propi SVG de la mediateca."
+msgstr ""
+"Els enllaços que mostra el bloc «Xarxes socials», en aquest ordre. La icona "
+"s'endevina a partir de l'enllaç; tria'n una només si s'equivoca, o fes "
+"servir el teu propi SVG de la mediateca."
 
 #: modules/social/includes/class-admin.php:89
 #: modules/social/includes/class-admin.php:122
@@ -3393,7 +3678,9 @@ msgstr "Afegeix una xarxa"
 msgid ""
 "To remove a network without JavaScript, empty its link. Your own SVG can "
 "only be uploaded if “Allow SVG uploads” is on in Company details."
-msgstr "Per treure una xarxa sense JavaScript, buida'n l'enllaç. Només es pot pujar un SVG propi si «Permet pujar SVG» està marcat a «Dades de l'empresa»."
+msgstr ""
+"Per treure una xarxa sense JavaScript, buida'n l'enllaç. Només es pot pujar "
+"un SVG propi si «Permet pujar SVG» està marcat a «Dades de l'empresa»."
 
 #: modules/social/includes/class-admin.php:108
 msgid "Automatic (from the link)"
@@ -3420,7 +3707,9 @@ msgctxt "module description"
 msgid ""
 "Free, ordered list of social network links (name, link, icon from an "
 "included collection or your own SVG) and a block that shows them."
-msgstr "Llista lliure i ordenada d'enllaços a xarxes socials (nom, enllaç i icona d'una col·lecció inclosa o un SVG propi) i un bloc que els mostra."
+msgstr ""
+"Llista lliure i ordenada d'enllaços a xarxes socials (nom, enllaç i icona "
+"d'una col·lecció inclosa o un SVG propi) i un bloc que els mostra."
 
 #: modules/social/module.php
 msgctxt "module name"
@@ -3435,7 +3724,9 @@ msgstr "Pujades d'imatges"
 msgid ""
 "Applies to images uploaded from now on. Images already in the library do not "
 "change."
-msgstr "S'aplica a les imatges que es pugin a partir d'ara. Les que ja són a la mediateca no canvien."
+msgstr ""
+"S'aplica a les imatges que es pugin a partir d'ara. Les que ja són a la "
+"mediateca no canvien."
 
 #: modules/uploads/includes/class-uploads.php:206
 msgid "Maximum upload size (MB)"
@@ -3444,7 +3735,9 @@ msgstr "Mida màxima de pujada (MB)"
 #: modules/uploads/includes/class-uploads.php:212
 msgid ""
 "The server limit still applies if it is lower. 0 = only the server limit."
-msgstr "Si el límit del servidor és més baix, mana aquest. 0 = només el límit del servidor."
+msgstr ""
+"Si el límit del servidor és més baix, mana aquest. 0 = només el límit del "
+"servidor."
 
 #: modules/uploads/includes/class-uploads.php:221
 msgid "Scale down images larger than (px)"
@@ -3452,7 +3745,9 @@ msgstr "Redueix les imatges més grans de (px)"
 
 #: modules/uploads/includes/class-uploads.php:227
 msgid "Longest side. WordPress default: 2560. 0 = never scale down."
-msgstr "Costat més llarg. El valor per defecte de WordPress: 2560. 0 = no les redueixis mai."
+msgstr ""
+"Costat més llarg. El valor per defecte de WordPress: 2560. 0 = no les "
+"redueixis mai."
 
 #: modules/uploads/includes/class-uploads.php:236
 msgid "Original file"
@@ -3461,7 +3756,9 @@ msgstr "Fitxer original"
 #: modules/uploads/includes/class-uploads.php:242
 msgid ""
 "Delete the original after scaling it down (only the scaled copy is kept)."
-msgstr "Suprimeix l'original després de reduir-lo (només es conserva la còpia reduïda)."
+msgstr ""
+"Suprimeix l'original després de reduir-lo (només es conserva la còpia "
+"reduïda)."
 
 #: modules/uploads/module.php
 msgctxt "module name"
@@ -3473,14 +3770,18 @@ msgctxt "module description"
 msgid ""
 "Phone photos can be uploaded (up to 20 MB by default); WordPress scales them "
 "down to 2560 px and only the scaled copy is kept on disk."
-msgstr "Permet pujar fotos del mòbil (fins a 20 MB per defecte); WordPress les redueix a 2560 px i al disc només es conserva la còpia reduïda."
+msgstr ""
+"Permet pujar fotos del mòbil (fins a 20 MB per defecte); WordPress les "
+"redueix a 2560 px i al disc només es conserva la còpia reduïda."
 
 #: modules/webp/module.php
 msgctxt "module description"
 msgid ""
 "Image sizes generated from JPEG and PNG uploads are saved as WebP (quality "
 "75)."
-msgstr "Les mides que es generen en pujar un JPEG o un PNG es desen en WebP (qualitat 75)."
+msgstr ""
+"Les mides que es generen en pujar un JPEG o un PNG es desen en WebP "
+"(qualitat 75)."
 
 #: modules/webp/module.php
 msgctxt "module name"
@@ -3492,7 +3793,9 @@ msgctxt "block description"
 msgid ""
 "Floating button that opens a WhatsApp chat with a predefined message. Meant "
 "for the footer template part."
-msgstr "Botó flotant que obre un xat de WhatsApp amb un missatge predefinit. Pensat per a la part del peu."
+msgstr ""
+"Botó flotant que obre un xat de WhatsApp amb un missatge predefinit. Pensat "
+"per a la part del peu."
 
 #: modules/whatsapp/blocks/whatsapp/block.json
 msgctxt "block title"
@@ -3529,7 +3832,9 @@ msgstr "Nom accessible (buit: «Escriu-nos per WhatsApp»)"
 msgid ""
 "WhatsApp button: set the phone number in the block settings or in the "
 "estrategia_web_whatsapp_phone site option."
-msgstr "Botó de WhatsApp: posa el número de telèfon als paràmetres del bloc o a l'opció del lloc estrategia_web_whatsapp_phone."
+msgstr ""
+"Botó de WhatsApp: posa el número de telèfon als paràmetres del bloc o a "
+"l'opció del lloc estrategia_web_whatsapp_phone."
 
 #: modules/whatsapp/blocks/whatsapp/render.php:62
 msgid "Chat on WhatsApp"
@@ -3540,7 +3845,9 @@ msgctxt "module description"
 msgid ""
 "Floating button that opens a WhatsApp chat with a predefined message. The "
 "number and the message are site options, not per page."
-msgstr "Botó flotant que obre un xat de WhatsApp amb un missatge predefinit. El número i el missatge són opcions del lloc, no de cada pàgina."
+msgstr ""
+"Botó flotant que obre un xat de WhatsApp amb un missatge predefinit. El "
+"número i el missatge són opcions del lloc, no de cada pàgina."
 
 #: modules/whatsapp/module.php
 msgctxt "module name"
@@ -3565,4 +3872,6 @@ msgctxt "module description"
 msgid ""
 "With WPML, /en/ shows the translated front page instead of the latest posts. "
 "Without WPML it does nothing."
-msgstr "Amb WPML, /en/ mostra la pàgina d'inici traduïda en lloc de les darreres entrades. Sense WPML no fa res."
+msgstr ""
+"Amb WPML, /en/ mostra la pàgina d'inici traduïda en lloc de les darreres "
+"entrades. Sense WPML no fa res."
