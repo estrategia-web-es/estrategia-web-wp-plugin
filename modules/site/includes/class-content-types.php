@@ -124,7 +124,8 @@ final class Content_Types {
 					),
 				),
 				'meta'     => array(
-					'client_url'       => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Client website', 'estrategia-web' ) ),
+					// Unreleased: «client_url» up to 1.4.3 (Unprefixed_Meta, alias until 2.0.0).
+					'estrategia_web_client_url' => array( 'type' => 'string', 'sanitize' => 'url', 'label' => __( 'Client website', 'estrategia-web' ) ),
 					// 0.2.0. 'contain' = the image is a LOGO (not cropped); see post_class().
 					'estrategia_web_client_image_fit' => array( 'type' => 'string', 'sanitize' => 'fit', 'default' => 'cover', 'label' => __( 'Image fit (cover for a photo, contain for a logo)', 'estrategia-web' ) ),
 					// Unpublished. What used to go in brackets in the title («Portic
@@ -154,9 +155,10 @@ final class Content_Types {
 				),
 				'meta'     => array(
 					'estrategia_web_testimonial_author' => array( 'type' => 'string', 'sanitize' => 'text', 'label' => __( 'Author', 'estrategia-web' ) ),
-					'testimonial_role'   => array( 'type' => 'string', 'sanitize' => 'text', 'label' => __( 'Author role or company', 'estrategia-web' ) ),
+					// Unreleased: «testimonial_role» and «testimonial_client» up to 1.4.3 (Unprefixed_Meta).
+					'estrategia_web_testimonial_role' => array( 'type' => 'string', 'sanitize' => 'text', 'label' => __( 'Author role or company', 'estrategia-web' ) ),
 					'estrategia_web_testimonial_rating' => array( 'type' => 'integer', 'sanitize' => 'rating', 'label' => __( 'Rating (1 to 5)', 'estrategia-web' ) ),
-					'testimonial_client' => array( 'type' => 'integer', 'sanitize' => 'client', 'label' => __( 'Related client', 'estrategia-web' ) ),
+					'estrategia_web_testimonial_client' => array( 'type' => 'integer', 'sanitize' => 'client', 'label' => __( 'Related client', 'estrategia-web' ) ),
 				),
 			),
 			'location'    => array(

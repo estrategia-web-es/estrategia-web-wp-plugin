@@ -41,7 +41,8 @@ test("deleting the phone on the original is copied too", () => {
 });
 
 test("client and testimonial: their «copy» fields too", () => {
-  assert.deepEqual(wpml.client_url, ["20:client_url"]);
+  assert.deepEqual(wpml.client_url, ["20:estrategia_web_client_url"]);
+  assert.deepEqual(wpml.testimonial_client, ["30:estrategia_web_testimonial_client"]);
   assert.deepEqual(wpml.client_fit, ["20:estrategia_web_client_image_fit"]);
   assert.deepEqual(wpml.testimonial_stars, ["30:estrategia_web_testimonial_rating"]);
 });

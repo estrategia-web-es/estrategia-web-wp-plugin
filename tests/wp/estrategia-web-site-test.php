@@ -471,5 +471,75 @@ add_action(
 			'POST',
 			static fn( WP_REST_Request $r ) => \EstrategiaWeb\Site\Prefix_Migration::run( (bool) $r->get_param( 'dry' ) )
 		);
+
+		// Unreleased: a site from BEFORE the meta prefix (client_url,
+		// testimonial_role, testimonial_client), seeded via SQL (REST no longer
+		// accepts the old keys): a client and a testimonial with the old rows, a
+		// client with both, a PAGE with its own «client_url» (someone else's),
+		// and a page whose Query loops bind the old keys (core/post-meta).
+		$route(
+			'/legacy-meta',
+			'POST',
+			static function () {
+				global $wpdb;
+				$client      = \EstrategiaWeb\Site\Type_Names::name( 'client' );
+				$testimonial = \EstrategiaWeb\Site\Type_Names::name( 'testimonial' );
+				$insert      = static function ( string $type, string $title, string $slug, string $content = '' ) use ( $wpdb ): int {
+					$wpdb->insert( $wpdb->posts, array( 'post_type' => $type, 'post_title' => $title, 'post_name' => $slug, 'post_status' => 'publish', 'post_content' => $content, 'post_date' => current_time( 'mysql' ), 'post_date_gmt' => current_time( 'mysql', true ), 'post_modified' => current_time( 'mysql' ), 'post_modified_gmt' => current_time( 'mysql', true ), 'post_author' => 1, 'menu_order' => 1 ) ); // phpcs:ignore
+					return (int) $wpdb->insert_id;
+				};
+				$meta = static function ( int $id, string $key, $value ) use ( $wpdb ): void {
+					$wpdb->insert( $wpdb->postmeta, array( 'post_id' => $id, 'meta_key' => $key, 'meta_value' => $value ) ); // phpcs:ignore
+				};
+				$c = $insert( $client, 'Cliente con web', 'cliente-con-web' );
+				$meta( $c, 'client_url', 'https://antes.test/' );
+				$both = $insert( $client, 'Cliente con las dos', 'cliente-con-las-dos' );
+				$meta( $both, 'client_url', 'https://vieja.test/' );
+				$meta( $both, 'estrategia_web_client_url', 'https://nueva.test/' );
+				$t = $insert( $testimonial, 'Opinión con cargo', 'opinion-con-cargo', '<!-- wp:paragraph --><p>Muy bien</p><!-- /wp:paragraph -->' );
+				$meta( $t, 'testimonial_role', 'Gerente del Hotel Antes' );
+				$meta( $t, 'testimonial_client', (string) $c );
+				$foreign = $insert( 'page', 'Página ajena', 'pagina-ajena' );
+				$meta( $foreign, 'client_url', 'https://ajeno.test/' );
+				$loop = static fn( string $type, string $body ) => '<!-- wp:query {"queryId":7,"query":{"perPage":10,"pages":0,"offset":0,"postType":"' . $type . '","order":"asc","orderBy":"title","inherit":false}} --><div class="wp-block-query"><!-- wp:post-template -->' . $body . '<!-- /wp:post-template --></div><!-- /wp:query -->';
+				$content = $loop( $client, '<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"core/post-meta","args":{"key":"client_url"}}}}} --><p>sin web</p><!-- /wp:paragraph -->' )
+					. $loop( $testimonial, '<!-- wp:paragraph {"metadata":{"bindings":{"content":{"args":{"key":"testimonial_role"},"source":"core/post-meta"}}}} --><p>sin cargo</p><!-- /wp:paragraph -->' );
+				$page = $insert( 'page', 'Fichas de antes', 'fichas-de-antes', $content );
+				wp_cache_flush();
+				return array( 'client' => $c, 'both' => $both, 'testimonial' => $t, 'foreign' => $foreign, 'page' => $page );
+			}
+		);
+
+		// The meta rows exactly as they are in the database (no alias).
+		$route(
+			'/raw-meta/(?P<id>\d+)',
+			'GET',
+			static function ( WP_REST_Request $r ) {
+				global $wpdb;
+				$rows = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key NOT LIKE '\\_%%' ORDER BY meta_key", (int) $r['id'] ), ARRAY_A ); // phpcs:ignore
+				return (object) array_column( $rows, 'meta_value', 'meta_key' );
+			}
+		);
+
+		// get_post_meta() as a theme would call it (goes through the alias).
+		$route(
+			'/get-meta',
+			'POST',
+			static fn( WP_REST_Request $r ) => array( 'value' => get_post_meta( (int) $r->get_param( 'id' ), (string) $r->get_param( 'key' ), true ) )
+		);
+
+		// The raw content of a post (what the migrator left).
+		$route(
+			'/raw-content/(?P<id>\d+)',
+			'GET',
+			static fn( WP_REST_Request $r ) => array( 'content' => (string) get_post_field( 'post_content', (int) $r['id'], 'raw' ) )
+		);
+
+		// The meta prefix migrator (includes/class-meta-prefix-migration.php), dry or for real.
+		$route(
+			'/meta-prefix-migration',
+			'POST',
+			static fn( WP_REST_Request $r ) => \EstrategiaWeb\Site\Meta_Prefix_Migration::run( (bool) $r->get_param( 'dry' ) )
+		);
 	}
 );
