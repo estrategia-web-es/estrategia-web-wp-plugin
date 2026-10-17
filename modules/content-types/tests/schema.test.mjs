@@ -189,12 +189,15 @@ test("content-types.schema.json says the same as the PHP validator (no drift)", 
   assert.deepEqual(keys(schema.properties), [...lists.type_keys].sort(), "type keys");
   assert.deepEqual(keys(schema.$defs.taxonomy.properties), [...lists.taxonomy_keys].sort(), "taxonomy keys");
   assert.deepEqual(keys(schema.$defs.field.properties), [...lists.field_keys].sort(), "field keys");
-  assert.deepEqual(keys(schema.$defs.labels.properties), [...lists.label_keys].sort(), "label keys");
+  assert.deepEqual(keys(schema.$defs.labels.properties), [...lists.label_keys].sort(), "label keys (a taxonomy's)");
+  assert.deepEqual(keys(schema.$defs.typeLabels.properties), [...lists.type_label_keys].sort(), "label keys (a type's, with the optional ones)");
+  assert.deepEqual(schema.$defs.typeLabels.required, lists.label_keys, "a type's required labels");
   assert.deepEqual(schema.$defs.field.properties.type.enum, lists.field_types, "field types");
   assert.deepEqual(schema.properties.supports.items.enum, lists.supports, "supports");
   assert.deepEqual(schema.$defs.field.properties.wpml.enum, lists.field_wpml, "field wpml");
   assert.deepEqual(schema.$defs.typeWpml.enum, lists.type_wpml, "type wpml");
-  assert.deepEqual([...schema.properties.prefix.not.enum].sort(), [...lists.reserved].sort(), "reserved prefixes");
+  assert.deepEqual([...schema.then.properties.prefix.not.enum].sort(), [...lists.reserved].sort(), "reserved prefixes (refused unless the definition comes from a template)");
+  assert.deepEqual(schema.if, { not: { required: ["template"] } });
   assert.equal(schema.properties.name.maxLength, lists.max_type);
   assert.equal(schema.$defs.taxonomy.properties.name.maxLength, lists.max_taxonomy);
   assert.equal(schema.$defs.field.properties.name.maxLength, lists.max_field);

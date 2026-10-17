@@ -70,6 +70,45 @@ add_action(
 				},
 			)
 		);
+		// The constructor (17-10-2026): deletes every stored definition (and its revisions) and every gment_ post. Its tests start and end with it.
+		register_rest_route(
+			$ns,
+			'/constructor-reset',
+			array(
+				'methods'             => 'POST',
+				'permission_callback' => '__return_true',
+				'callback'            => static function () {
+					global $wpdb;
+					$ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s OR post_type LIKE 'gment\\_%%'", \EstrategiaWeb\ContentTypes\Store::POST_TYPE ) ); // phpcs:ignore
+					foreach ( $ids as $id ) {
+						wp_delete_post( (int) $id, true );
+					}
+					\EstrategiaWeb\ContentTypes\Store::forget();
+					return array( 'deleted' => count( $ids ) );
+				},
+			)
+		);
+		// What the database holds for one definition: its row, its revisions and the meta of one post (to see that a removed field kept its data).
+		register_rest_route(
+			$ns,
+			'/constructor-raw',
+			array(
+				'methods'             => 'GET',
+				'permission_callback' => '__return_true',
+				'callback'            => static function ( WP_REST_Request $r ) {
+					$row  = \EstrategiaWeb\ContentTypes\Store::get( (string) $r['name'] );
+					$post = (int) $r['post'];
+					return array(
+						'row'       => $row,
+						'revisions' => $row ? count( wp_get_post_revisions( $row['id'] ) ) : 0,
+						'meta'      => $post ? array_map( static fn( $v ) => $v[0], get_post_meta( $post ) ) : null,
+						'exists'    => post_type_exists( (string) $r['name'] ),
+						'entries'   => \EstrategiaWeb\ContentTypes\Store::entries( (string) $r['name'] ),
+						'rules'     => array_values( array_filter( array_keys( (array) get_option( 'rewrite_rules', array() ) ), static fn( $k ) => str_starts_with( $k, (string) $r['slug'] ) ) ),
+					);
+				},
+			)
+		);
 		register_rest_route(
 			$ns,
 			'/state',

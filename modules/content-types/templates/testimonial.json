@@ -1,0 +1,45 @@
+{
+  "$schema": "../content-types.schema.json",
+  "template": "testimonial",
+  "prefix": "eweb_",
+  "name": "eweb_testimonial",
+  "slug": { "en": "testimonials", "es": "opiniones", "ca": "opinions" },
+  "labels": {
+    "singular": { "en": "Testimonial", "es": "Opinión", "ca": "Opinió" },
+    "plural": { "en": "Testimonials", "es": "Opiniones", "ca": "Opinions" },
+    "details": { "en": "Testimonial details", "es": "Datos de la opinión", "ca": "Dades de l'opinió" },
+    "featured_image": { "en": "Author photo", "es": "Foto del autor", "ca": "Foto de l'autor" },
+    "set_featured_image": { "en": "Set author photo", "es": "Poner foto del autor", "ca": "Posa la foto de l'autor" }
+  },
+  "icon": "dashicons-format-quote",
+  "supports": ["title", "editor", "thumbnail", "page-attributes", "custom-fields"],
+  "menu_position": 22,
+  "wpml": "display-as-translated",
+  "fields": [
+    {
+      "name": "estrategia_web_testimonial_author",
+      "type": "text",
+      "label": { "en": "Author", "es": "Autor", "ca": "Autor" },
+      "wpml": "copy"
+    },
+    {
+      "name": "testimonial_role",
+      "type": "text",
+      "label": { "en": "Author role or company", "es": "Cargo o empresa del autor", "ca": "Càrrec o empresa de l'autor" },
+      "wpml": "translate"
+    },
+    {
+      "name": "estrategia_web_testimonial_rating",
+      "type": "rating",
+      "label": { "en": "Rating (1 to 5)", "es": "Valoración (1 a 5)", "ca": "Valoració (de 1 a 5)" },
+      "wpml": "copy"
+    },
+    {
+      "name": "testimonial_client",
+      "type": "relation",
+      "post_type": "eweb_client",
+      "label": { "en": "Related client", "es": "Cliente relacionado", "ca": "Client relacionat" },
+      "wpml": "copy"
+    }
+  ]
+}

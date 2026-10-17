@@ -31,12 +31,27 @@ final class Schema {
 	/** Prefixes a site may NOT use. eweb_ is Estrategia Web's own types; wp_ and _ are WordPress's. */
 	public const RESERVED_PREFIXES = array( 'eweb_', 'estrategia_web_', 'wp_', 'ew_' );
 
-	public const TYPE_KEYS = array( '$schema', 'prefix', 'name', 'slug', 'labels', 'description', 'icon', 'supports', 'public', 'has_archive', 'show_in_rest', 'hierarchical', 'menu_position', 'wpml', 'taxonomies', 'fields' );
+	public const TYPE_KEYS = array( '$schema', 'template', 'prefix', 'name', 'slug', 'labels', 'description', 'icon', 'supports', 'public', 'has_archive', 'show_in_rest', 'hierarchical', 'menu_position', 'wpml', 'taxonomies', 'fields' );
 	public const TAXONOMY_KEYS = array( 'name', 'slug', 'labels', 'hierarchical', 'public', 'show_in_rest', 'show_admin_column', 'wpml' );
 	public const FIELD_KEYS = array( 'name', 'type', 'label', 'help', 'required', 'default', 'wpml', 'options', 'post_type', 'min', 'max', 'integer', 'true_label', 'false_label' );
+	/** Required in every «labels» (a type's and a taxonomy's). */
 	public const LABEL_KEYS = array( 'singular', 'plural' );
+	/**
+	 * Optional, a TYPE's labels only (17-10-2026, for the plugin's templates:
+	 * Lavandería's admin had to read the same after the move). details: the
+	 * title of the fields panel (default «<Singular> details»);
+	 * featured_image / set_featured_image: what WordPress calls the featured
+	 * image of this type («Static map image» on a location).
+	 */
+	public const TYPE_LABEL_KEYS = array( 'singular', 'plural', 'details', 'featured_image', 'set_featured_image' );
 
-	public const FIELD_TYPES = array( 'text', 'textarea', 'number', 'url', 'email', 'tel', 'image', 'date', 'select', 'relation', 'boolean' );
+	/**
+	 * rating, embed and local_image (17-10-2026): the special sanitizers of the
+	 * old modules/site types, now field types any definition can use — a
+	 * rating 0–5 shown as stars, a map embed that accepts the whole <iframe>,
+	 * an image of THIS site given by path or URL. See Registrar::sanitizer().
+	 */
+	public const FIELD_TYPES = array( 'text', 'textarea', 'number', 'url', 'email', 'tel', 'image', 'date', 'select', 'relation', 'boolean', 'rating', 'embed', 'local_image' );
 	public const SUPPORTS = array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields', 'comments', 'revisions', 'page-attributes', 'post-formats' );
 	public const FIELD_WPML = array( 'copy', 'translate', 'ignore' );
 	public const TYPE_WPML = array( 'translate', 'display-as-translated', 'ignore' );
@@ -48,28 +63,85 @@ final class Schema {
 	 * The errors of ONE definition (empty: valid). Cross-file checks (the same
 	 * name in two files) are in check_all().
 	 *
-	 * @param mixed $def What json_decode( …, true ) returned.
+	 * A definition made from one of the plugin's TEMPLATES (it carries
+	 * "template": "testimonial"; templates/ and class-templates.php) is
+	 * validated against that template, which the caller passes: the names the
+	 * template ships (eweb_testimonial, estrategia_web_testimonial_author…)
+	 * keep the plugin's reserved prefixes and their old shapes — renaming them
+	 * would orphan the data already stored under them — and the type name
+	 * must stay the template's. Anything the site ADDS (a new field) follows
+	 * the usual rules with the definition's own prefix. Boundary case, with a
+	 * name: «client_url», from before 1.0.0, has no prefix at all; it passes
+	 * because the template ships it, not because it looks right.
+	 *
+	 * @param mixed      $def      What json_decode( …, true ) returned.
+	 * @param array|null $template The RAW template it names, if it names one that exists.
 	 * @return string[]
 	 */
-	public static function validate( $def ): array {
+	public static function validate( $def, ?array $template = null ): array {
 		if ( ! is_array( $def ) || array_is_list( $def ) ) {
 			return array( __( 'The file is not a JSON object.', 'estrategia-web' ) );
 		}
 		$errors = self::unknown_keys( $def, self::TYPE_KEYS, '' );
 
-		$prefix = $def['prefix'] ?? null;
-		if ( ! is_string( $prefix ) || ! preg_match( '/^[a-z][a-z0-9]{1,8}_$/', $prefix ) ) {
-			$errors[] = __( '“prefix” must be 2 to 9 lowercase letters or digits followed by “_” (e.g. “gment_”).', 'estrategia-web' );
-			$prefix   = null;
-		} elseif ( in_array( $prefix, self::RESERVED_PREFIXES, true ) ) {
-			/* translators: %s: a prefix such as eweb_ */
-			$errors[] = sprintf( __( 'The prefix “%s” is reserved (Estrategia Web or WordPress). Choose the site’s own prefix.', 'estrategia-web' ), $prefix );
-			$prefix   = null;
+		$from = $def['template'] ?? null;
+		if ( null !== $from && ( ! is_string( $from ) || ! $template ) ) {
+			/* translators: %s: a template key such as testimonial */
+			$errors[] = sprintf( __( '“template”: there is no template “%s” in the plugin.', 'estrategia-web' ), self::show( $from ) );
+			$template = null;
 		}
+		if ( null === $from ) {
+			$template = null; // A template is only applied when the definition says it comes from one.
+		}
+		self::$exempt = $template ? self::shipped_names( $template ) : array();
+		try {
+			$prefix = $def['prefix'] ?? null;
+			if ( ! is_string( $prefix ) || ! preg_match( '/^[a-z][a-z0-9]{1,8}_$/', $prefix ) ) {
+				$errors[] = __( '“prefix” must be 2 to 9 lowercase letters or digits followed by “_” (e.g. “gment_”).', 'estrategia-web' );
+				$prefix   = null;
+			} elseif ( in_array( $prefix, self::RESERVED_PREFIXES, true ) && ! ( $template && ( $template['prefix'] ?? null ) === $prefix ) ) {
+				/* translators: %s: a prefix such as eweb_ */
+				$errors[] = sprintf( __( 'The prefix “%s” is reserved (Estrategia Web or WordPress). Choose the site’s own prefix.', 'estrategia-web' ), $prefix );
+				$prefix   = null;
+			}
+			if ( $template && isset( $def['name'] ) && $def['name'] !== ( $template['name'] ?? null ) ) {
+				/* translators: 1: a type name, 2: a template key */
+				$errors[] = sprintf( __( '“name” must be “%1$s”: it is the type of the template “%2$s”.', 'estrategia-web' ), (string) ( $template['name'] ?? '' ), (string) $from );
+			}
+			// A template's own prefix is reserved, and it is the one its additions use: not an error there.
+			self::$own_reserved = null !== $prefix && in_array( $prefix, self::RESERVED_PREFIXES, true ) ? $prefix : '';
+			return self::validate_body( $def, $prefix, $errors );
+		} finally {
+			self::$exempt       = array();
+			self::$own_reserved = '';
+		}
+	}
 
+	/** Names a template ships: exempt from the prefix rules (see validate()). Static: validate() is the only writer. */
+	private static array $exempt = array();
+	private static string $own_reserved = '';
+
+	/** @return string[] The type, taxonomy and field names a raw template declares. */
+	public static function shipped_names( array $template ): array {
+		$names = array( (string) ( $template['name'] ?? '' ) );
+		foreach ( (array) ( $template['taxonomies'] ?? array() ) as $tax ) {
+			if ( is_array( $tax ) && isset( $tax['name'] ) ) {
+				$names[] = (string) $tax['name'];
+			}
+		}
+		foreach ( (array) ( $template['fields'] ?? array() ) as $field ) {
+			if ( is_array( $field ) && isset( $field['name'] ) ) {
+				$names[] = (string) $field['name'];
+			}
+		}
+		return array_values( array_filter( $names ) );
+	}
+
+	/** validate() after the prefix and the template: every key but those two. */
+	private static function validate_body( array $def, ?string $prefix, array $errors ): array {
 		$errors = array_merge( $errors, self::check_name( $def['name'] ?? null, $prefix, self::MAX_TYPE, 'name' ) );
 		$errors = array_merge( $errors, self::check_slug( $def['slug'] ?? null, 'slug' ) );
-		$errors = array_merge( $errors, self::check_labels( $def['labels'] ?? null, 'labels', true ) );
+		$errors = array_merge( $errors, self::check_labels( $def['labels'] ?? null, 'labels', true, self::TYPE_LABEL_KEYS ) );
 		if ( isset( $def['description'] ) && ! self::is_text( $def['description'] ) ) {
 			$errors[] = __( '“description” must be a string or an object of locale → string.', 'estrategia-web' );
 		}
@@ -240,6 +312,7 @@ final class Schema {
 			);
 		}
 		return array(
+			'template'      => $def['template'] ?? null,
 			'prefix'        => $def['prefix'],
 			'name'          => $def['name'],
 			// A string or locale → string, as in the file: the registrar picks the site language's (Schema::text).
@@ -264,7 +337,7 @@ final class Schema {
 		$type = $field['type'];
 		$meta = match ( $type ) {
 			'number'           => ! empty( $field['integer'] ) ? 'integer' : 'number',
-			'image', 'relation' => 'integer',
+			'image', 'relation', 'rating' => 'integer',
 			'boolean'          => 'boolean',
 			default            => 'string',
 		};
@@ -496,6 +569,11 @@ final class Schema {
 					$errors[] = sprintf( __( '%1$s.%2$s must be a string ("" to show nothing) or an object of locale → string.', 'estrategia-web' ), $where, $key );
 				}
 			}
+		} elseif ( 'rating' === $type ) {
+			if ( $has && ( ! is_int( $def ) || $def < 0 || $def > 5 ) ) {
+				/* translators: %s: where in the file */
+				$errors[] = sprintf( __( '%s.default must be a whole number from 0 (no rating) to 5.', 'estrategia-web' ), $where );
+			}
 		} elseif ( 'image' === $type ) {
 			if ( $has ) {
 				/* translators: %s: where in the file */
@@ -526,12 +604,15 @@ final class Schema {
 			/* translators: 1: where in the file, 2: the name, 3: max length, 4: its length */
 			$errors[] = sprintf( __( '%1$s “%2$s” is longer than %3$d characters (%4$d): WordPress would cut it.', 'estrategia-web' ), $where, $name, $max, strlen( $name ) );
 		}
+		if ( in_array( $name, self::$exempt, true ) ) {
+			return $errors; // Shipped by the template (see validate()).
+		}
 		if ( null !== $prefix && ( ! str_starts_with( $name, $prefix ) || strlen( $name ) === strlen( $prefix ) ) ) {
 			/* translators: 1: where in the file, 2: the name, 3: the prefix */
 			$errors[] = sprintf( __( '%1$s “%2$s” must start with the prefix “%3$s”.', 'estrategia-web' ), $where, $name, $prefix );
 		}
 		foreach ( self::RESERVED_PREFIXES as $reserved ) {
-			if ( str_starts_with( $name, $reserved ) ) {
+			if ( str_starts_with( $name, $reserved ) && $reserved !== self::$own_reserved ) {
 				/* translators: 1: where in the file, 2: the name, 3: a reserved prefix */
 				$errors[] = sprintf( __( '%1$s “%2$s” uses the reserved prefix “%3$s”.', 'estrategia-web' ), $where, $name, $reserved );
 			}
@@ -592,7 +673,8 @@ final class Schema {
 		return null;
 	}
 
-	private static function check_labels( $labels, string $where, bool $required ): array {
+	/** @param string[] $allowed Every key it may have: the required LABEL_KEYS, plus TYPE_LABEL_KEYS' optional ones for a type. */
+	private static function check_labels( $labels, string $where, bool $required, array $allowed = self::LABEL_KEYS ): array {
 		if ( null === $labels ) {
 			/* translators: %s: where in the file */
 			return $required ? array( sprintf( __( '%s is required: {"singular": …, "plural": …}.', 'estrategia-web' ), $where ) ) : array();
@@ -601,11 +683,17 @@ final class Schema {
 			/* translators: %s: where in the file */
 			return array( sprintf( __( '%s must be an object: {"singular": …, "plural": …}.', 'estrategia-web' ), $where ) );
 		}
-		$errors = self::unknown_keys( $labels, self::LABEL_KEYS, $where . '.' );
+		$errors = self::unknown_keys( $labels, $allowed, $where . '.' );
 		foreach ( self::LABEL_KEYS as $key ) {
 			if ( ! isset( $labels[ $key ] ) || ! self::is_text( $labels[ $key ] ) ) {
 				/* translators: 1: where in the file, 2: singular or plural */
 				$errors[] = sprintf( __( '%1$s.%2$s is required: a string or an object of locale → string.', 'estrategia-web' ), $where, $key );
+			}
+		}
+		foreach ( array_diff( $allowed, self::LABEL_KEYS ) as $key ) {
+			if ( isset( $labels[ $key ] ) && ! self::is_text( $labels[ $key ] ) ) {
+				/* translators: 1: where in the file, 2: a label key such as details */
+				$errors[] = sprintf( __( '%1$s.%2$s must be a string or an object of locale → string.', 'estrategia-web' ), $where, $key );
 			}
 		}
 		return $errors;

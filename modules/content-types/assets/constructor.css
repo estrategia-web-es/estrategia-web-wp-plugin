@@ -1,0 +1,25 @@
+/* «Estrategia Web → Content types» (assets/constructor.js). Only layout: colours and controls are WordPress's own. */
+.ewct-alert { margin: 1em 0; padding: 0.5em 1em; }
+.ewct-alert:focus { outline: 2px solid #2271b1; outline-offset: 2px; }
+.ewct-alert h2 { margin: 0.5em 0; font-size: 1.1em; }
+.ewct-status:not(:empty) { margin: 1em 0; font-weight: 600; }
+.ewct-types .ewct-actions { white-space: normal; }
+.ewct-types .ewct-actions .button { margin: 0 4px 4px 0; }
+.ewct-templates li { margin-bottom: 0.5em; }
+.ewct-import, .ewct-json { margin: 1em 0; max-width: 60em; }
+.ewct-import summary, .ewct-json summary { cursor: pointer; font-weight: 600; }
+.ewct-form { max-width: 60em; }
+.ewct-section { border: 1px solid #c3c4c7; background: #fff; padding: 0.5em 1.5em 1em; margin: 0 0 1.5em; }
+.ewct-section > legend { font-size: 1.2em; font-weight: 600; padding: 0 0.5em; }
+.ewct-item { border: 1px solid #dcdcde; padding: 0.5em 1em; margin: 1em 0; }
+.ewct-item > legend { font-weight: 600; padding: 0 0.5em; }
+.ewct-supports { margin: 1em 0; }
+.ewct-supports > legend { font-weight: 600; }
+.ewct-control { margin: 0.75em 0; }
+.ewct-control label { display: block; font-weight: 600; margin-bottom: 0.25em; }
+.ewct-control .description { margin-top: 0.25em; }
+.ewct-check { margin: 0.4em 0; }
+.ewct-languages { display: grid; grid-template-columns: repeat(auto-fit, minmax(16em, 1fr)); gap: 0 1.5em; }
+.ewct-languages .regular-text { width: 100%; }
+.ewct-row-buttons { margin-top: 1em; }
+input[readonly] { background: #f0f0f1; }

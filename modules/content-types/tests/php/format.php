@@ -13,6 +13,7 @@
  *           (70 = «the translation»); 8 → null (a draft); with types ≠ gment_restaurant, null
  *   image   5 → {id: 5, url https://x.test/photo-<size>.jpg, alt 'Façana "nova"', title "Foto"}; else null
  *   yes / no "Sí" / "No"
+ *   theme_file  "assets/x.webp" → https://x.test/theme/assets/x.webp
  *
  * How to maintain: a new env key in Bindings::env() gets its fake here; the
  * WordPress functions Field_Format calls are shimmed below (as simply as the
@@ -53,6 +54,7 @@ foreach ( $cases as $case ) {
 		'number' => static fn( $n, $decimals ) => "N:$n|$decimals",
 		'post'   => static fn( $id, $types ) => 7 === $id && in_array( 'gment_restaurant', $types, true ) ? array( 'id' => 70, 'title' => "Ca n'Andreu & Co", 'url' => 'https://x.test/ca/restaurants/ca-nandreu/' ) : null,
 		'image'  => static fn( $id, $size ) => 5 === $id ? array( 'id' => 5, 'url' => "https://x.test/photo-$size.jpg", 'alt' => 'Façana "nova"', 'title' => 'Foto' ) : null,
+		'theme_file' => static fn( $path ) => "https://x.test/theme/$path",
 	);
 	$out[] = Field_Format::format( Schema::normalize_field( $case['field'] ), $case['raw'], $case['attribute'] ?? 'content', $case['args'] ?? array(), $env, $case['html'] ?? true );
 }

@@ -50,7 +50,8 @@ test("types and taxonomies: translate=1, display-as-translated=1+1 (never 2: WPM
   assert.deepEqual(cfg["custom-types"]["custom-type"], [
     { value: "gment_restaurant", attr: { translate: "1" } },
     { value: "gment_wine", attr: { translate: "1", "display-as-translated": "1" } },
-  ]);
+    { value: "eweb_content_type", attr: { translate: "0" } },
+  ], "and the definitions' own post type (class-store.php), never translated");
   assert.deepEqual(cfg.taxonomies.taxonomy, [{ value: "gment_cuisine", attr: { translate: "1" } }]);
   assert.equal(config.not_array, "x", "something that is not an array goes back untouched");
 });

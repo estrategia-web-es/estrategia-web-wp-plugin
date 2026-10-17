@@ -117,14 +117,16 @@ test("wine: number, boolean, date and relation travel with their types; publishi
   assert.equal(emptied.json.meta.gment_alcohol, 0, "back to the default");
 });
 
-test("the «Content types» screen lists the declared types and the rejected files with their errors, and edits nothing", async () => {
+// 17-10-2026: the screen is the constructor now (assets/constructor.js); a type from a FILE is still listed read-only.
+test("the «Content types» screen lists the types from files read-only and the rejected files with their errors", async () => {
   await p.goto(BASE + "/wp-admin/admin.php?page=estrategia-web-content-types");
-  const card = p.locator('[data-type="gment_restaurant"]');
-  assert.equal(await card.count(), 1);
-  assert.match(await card.textContent(), /gment_phone/);
+  const row = p.locator('tr[data-type="gment_restaurant"]');
+  await row.waitFor({ timeout: 15000 });
+  assert.match(await row.textContent(), /restaurants/);
+  assert.equal(await row.locator('[data-action="edit"]').count(), 0, "a file is not edited here");
+  assert.equal(await row.locator('[data-action="copy"]').count(), 1, "it can be copied to the panel");
   assert.match(await p.locator('[data-file="gment_too_long.json"]').textContent(), /gment_restaurant_menu/);
   assert.equal(await p.locator('[data-file="gment_not_json.json"]').count(), 1);
-  assert.equal(await p.locator(".estrategia-web-content-types form, .estrategia-web-content-types input").count(), 0, "read-only");
 });
 
 test("no JavaScript errors in the editor", () => {

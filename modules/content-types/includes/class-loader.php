@@ -1,24 +1,39 @@
 <?php
 /**
- * WHERE THE DEFINITIONS LIVE, and reading them: every *.json in
+ * WHERE THE DEFINITIONS LIVE, and reading them. Two sources, in this order:
  *
- *   1. <active theme>/content-types/          the child theme (stylesheet dir)
- *   2. <parent theme>/content-types/          only if it is a different folder
- *   3. any folder added with the filter estrategia_web_content_types_dirs
- *      (a site plugin or mu-plugin: `add_filter( 'estrategia_web_content_types_dirs',
- *      fn( $dirs ) => [ ...$dirs, __DIR__ . '/content-types' ] );`)
+ *   1. THE DATABASE (17-10-2026, the main one): the definitions created in
+ *      «Estrategia Web → Content types», copied from a template or loaded
+ *      from the site's repo (class-store.php). Only the ACTIVE ones.
+ *   2. JSON FILES, read-only (the first way, 15-10-2026): every *.json in
+ *        <active theme>/content-types/   the child theme (stylesheet dir)
+ *        <parent theme>/content-types/   only if it is a different folder
+ *        any folder added with the filter estrategia_web_content_types_dirs
+ *        (`add_filter( 'estrategia_web_content_types_dirs',
+ *        fn( $dirs ) => [ ...$dirs, __DIR__ . '/content-types' ] );`)
  *
- * Why the theme by default: it is the part of each site that already lives in
- * the site's repo and is deployed as code. The catch, said out loud: a type
- * whose file lives in the theme is NOT registered if the theme changes. The
- * content stays in the database (nothing is deleted) but disappears from the
- * admin and its URLs give 404 until the new theme carries the folder. A site
- * that may change themes keeps its definitions in a site plugin via the filter.
+ * WHY THE FILES STAY, as the second way (decided 17-10-2026): a plugin of
+ * someone else (or a site that wants a type the client must NOT touch) can
+ * still declare one as code, with nothing to load into each database. They
+ * are shown in the panel as «file» and cannot be edited there.
+ * THE BOUNDARY CASE, with a name: the same type name in the database AND in
+ * a file. The database wins — it is what the person edited last — and the
+ * file is listed as overridden (not registered). Importing a theme's JSON
+ * into the panel is therefore how a file-type becomes editable: then the
+ * file can be deleted from the theme.
+ * The catch of the theme folder, said out loud: a type whose file lives in
+ * the theme is NOT registered if the theme changes (its content stays, its
+ * URLs give 404 until the new theme carries the folder). Definitions in the
+ * database do not have that problem.
  *
- * Files are read once per request (static cache). A file that is not valid
- * JSON, or fails Schema::validate() or Schema::check_all(), is NOT registered
- * at all — never half — and its errors are listed in
- * «Estrategia Web → Content types».
+ * Read once per request (static cache; Store::save() and the theme switch
+ * forget it). A definition that is not valid JSON, or fails
+ * Schema::validate() (with its template, if it comes from one) or
+ * Schema::check_all() — across BOTH sources — is NOT registered at all,
+ * never half, and its errors are listed in «Estrategia Web → Content types».
+ *
+ * A source is named by a string: the file path for a file, and
+ * «database:<type name>» for a row of the database (is_database()).
  */
 
 namespace EstrategiaWeb\ContentTypes;
@@ -26,6 +41,8 @@ namespace EstrategiaWeb\ContentTypes;
 defined( 'ABSPATH' ) || exit;
 
 final class Loader {
+
+	public const DB_SOURCE = 'database:';
 
 	/** @var array{types:array<string,array>,errors:array<string,string[]>,files:array<string,string>}|null */
 	private static ?array $cache = null;
@@ -45,10 +62,15 @@ final class Loader {
 		return array_values( array_unique( array_map( static fn( $d ) => rtrim( wp_normalize_path( (string) $d ), '/' ), $dirs ) ) );
 	}
 
+	/** Whether a source name is a row of the database (and not a file). */
+	public static function is_database( string $source ): bool {
+		return str_starts_with( $source, self::DB_SOURCE );
+	}
+
 	/**
 	 * @return array{types:array<string,array>,errors:array<string,string[]>,files:array<string,string>}
-	 *   types: type name => NORMALIZED definition (only valid files);
-	 *   errors: file => its errors; files: type name => file.
+	 *   types: type name => NORMALIZED definition (only valid ones);
+	 *   errors: source => its errors; files: type name => its source.
 	 */
 	public static function load(): array {
 		if ( null !== self::$cache ) {
@@ -56,6 +78,24 @@ final class Loader {
 		}
 		$valid  = array();
 		$errors = array();
+		$taken  = array(); // Type names the database already defines.
+		foreach ( Store::all() as $name => $row ) {
+			if ( ! $row['active'] ) {
+				continue;
+			}
+			$source = self::DB_SOURCE . $name;
+			if ( null === $row['definition'] ) {
+				$errors[ $source ] = array( __( 'The stored definition is not valid JSON.', 'estrategia-web' ) );
+				continue;
+			}
+			$taken[ $name ] = true;
+			$found          = Schema::validate( $row['definition'], Templates::for_definition( $row['definition'] ) );
+			if ( $found ) {
+				$errors[ $source ] = $found;
+				continue;
+			}
+			$valid[ $source ] = $row['definition'];
+		}
 		foreach ( self::dirs() as $dir ) {
 			foreach ( is_dir( $dir ) ? (array) glob( $dir . '/*.json' ) : array() as $file ) {
 				$file = wp_normalize_path( $file );
@@ -67,7 +107,12 @@ final class Loader {
 					$errors[ $file ] = array( sprintf( __( 'Not valid JSON: %s.', 'estrategia-web' ), json_last_error_msg() ) );
 					continue;
 				}
-				$found = Schema::validate( $def );
+				if ( is_array( $def ) && isset( $def['name'] ) && is_string( $def['name'] ) && isset( $taken[ $def['name'] ] ) ) {
+					/* translators: %s: post type name */
+					$errors[ $file ] = array( sprintf( __( 'The type “%s” is defined in the database (Estrategia Web → Content types), which wins: this file is ignored.', 'estrategia-web' ), $def['name'] ) );
+					continue;
+				}
+				$found = Schema::validate( $def, Templates::for_definition( $def ) );
 				if ( $found ) {
 					$errors[ $file ] = $found;
 					continue;
@@ -75,17 +120,22 @@ final class Loader {
 				$valid[ $file ] = $def;
 			}
 		}
-		foreach ( Schema::check_all( $valid ) as $file => $found ) {
-			$errors[ $file ] = $found;
-			unset( $valid[ $file ] );
+		foreach ( Schema::check_all( $valid ) as $source => $found ) {
+			$errors[ $source ] = $found;
+			unset( $valid[ $source ] );
 		}
 		$types = array();
 		$files = array();
-		foreach ( $valid as $file => $def ) {
+		foreach ( $valid as $source => $def ) {
 			$types[ $def['name'] ] = Schema::normalize( $def );
-			$files[ $def['name'] ] = $file;
+			$files[ $def['name'] ]  = $source;
 		}
-		return self::$cache = array( 'types' => $types, 'errors' => $errors, 'files' => $files );
+		return self::$cache = array( 'types' => $types, 'errors' => $errors, 'files' => $files, 'raw' => $valid );
+	}
+
+	/** @return array<string,array> Source => RAW definition, the valid ones (what Schema::check_all() compares a new one with). */
+	public static function raw(): array {
+		return self::load()['raw'];
 	}
 
 	/** @return array<string,array> Type name => normalized definition. */
@@ -104,7 +154,7 @@ final class Loader {
 		self::$cache['errors'][ $file ][] = $error;
 	}
 
-	/** Forget what was read (tests, and after the theme switches). */
+	/** Forget what was read (tests, a saved definition, and after the theme switches). */
 	public static function forget(): void {
 		self::$cache = null;
 	}
