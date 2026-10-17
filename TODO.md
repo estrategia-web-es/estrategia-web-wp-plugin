@@ -84,19 +84,10 @@ since 1.1.0, not at the «Estrategia Web → Modules» screen either.
 ---
 
 
-## Three unprefixed meta keys, before WordPress.org
-**Date:** 15-10-2026 · **Due:** before submitting it to WordPress.org
+## 2.0.0: remove the unprefixed meta aliases
+**Date:** 17-10-2026 · **Due:** 2.0.0
 
-The post types got a prefix in 1.2.0 (`eweb_client`…; branch prefijo-tipos).
-Three META keys from before 1.0.0 remain unprefixed: `client_url`,
-`testimonial_role` and `testimonial_client` (the rest are
-`estrategia_web_…`). Same problem the post types had: another plugin may use
-`client_url`. Fix: one more step in `Prefix_Migration` (meta of the `eweb_*`
-types), `wpml-config.xml`, `Meta_Panel::WPML_*`, the content's
-`core/post-meta` bindings and the tests. It was not done together with the
-types because the brief of 15-10-2026 said «metas no cambian» (meta keys do
-not change). David decides.
-
+Remove `Unprefixed_Meta` (modules/site/includes/class-unprefixed-meta.php) and `Meta_Prefix_Migration` (includes/class-meta-prefix-migration.php), together with `Unprefixed_Names` and `Prefix_Migration`, once every site has run the meta migrator (17-10-2026: only Lavandería, with no rows to rename). In Lavandería, remove despliegue/prefijo-metas.php and its part in prefijo-tipos.mjs / desplegar.mjs.
 ## Repo remote (row 24)
 **Date:** 02-10-2026 · **Due:** before installing it on the first site
 
