@@ -1,15 +1,19 @@
 <?php
 /**
- * Module Name: Company data and content types
- * Description: Company details with Block Bindings and the [estrategia_web_company] shortcode, the usual content types of a corporate site (clients, testimonials, locations, projects, portfolio) and sanitised SVG uploads.
+ * Module Name: Company data
+ * Description: Company details with Block Bindings and the [estrategia_web_company] shortcode, the details of one location as a Block Bindings source, and sanitised SVG uploads.
  * Default: on
  * Requires:
  *
  * What the «Estrategia Web Site» plugin was up to 1.0.0, minus whatever could
  * be split off without rewriting it (cookie notice, WebP, external links,
  * WPML front page, Matomo: each one is its own module). Own screen: «Company
- * data» (includes/admin/class-admin.php). And in the editor of a location, a
- * client or a testimonial, the panel with its fields (includes/class-meta-panel.php).
+ * data» (includes/admin/class-admin.php).
+ *
+ * THE CONTENT TYPES LEFT THIS MODULE on 17-10-2026: clients, testimonials,
+ * locations, projects and portfolio are definitions of the content-types
+ * module now (its templates, same names), with their editor panel and their
+ * WPML config. What is still here and why: includes/class-content-types.php.
  *
  * Why SVG is still here and not in its own module: its setting lives in the
  * same option (estrategia_web_site, Settings class) and on the same screen as
@@ -51,14 +55,9 @@ require_once __DIR__ . '/includes/class-svg.php';
 require_once __DIR__ . '/includes/class-legacy-names.php';
 require_once __DIR__ . '/includes/class-unprefixed-names.php';
 require_once __DIR__ . '/includes/class-unprefixed-meta.php';
-require_once __DIR__ . '/includes/class-meta-panel.php';
 require_once __DIR__ . '/includes/admin/class-admin.php';
 
-// The ordering trap: content types are registered on init with whatever the
-// option says in THAT load; translations (core, init 1) come first because
-// the labels and slugs come from gettext.
 add_action( 'init', array( Settings::class, 'register' ) );
-add_action( 'init', array( Content_Types::class, 'register' ) );
 add_action( 'init', array( Bindings::class, 'register' ) );
 add_action( 'init', array( Location::class, 'register' ) );
 add_action( 'init', array( Shortcode::class, 'register' ) );
@@ -67,20 +66,12 @@ Unprefixed_Names::boot(); // The unprefixed types and taxonomies from before 1.2
 Unprefixed_Meta::boot(); // client_url, testimonial_role, testimonial_client: read aliases of their prefixed names (until 2.0.0).
 add_action( 'enqueue_block_editor_assets', array( Bindings::class, 'enqueue_editor' ) );
 add_filter( 'post_class', array( Content_Types::class, 'post_class' ), 10, 3 );
-add_action( 'update_option_' . Settings::OPTION, array( Content_Types::class, 'maybe_flush' ), 10, 2 );
-add_action( 'add_option_' . Settings::OPTION, static fn( $name, $value ) => Content_Types::maybe_flush( array(), $value ), 10, 2 );
 Svg::boot();
-Meta_Panel::boot(); // Unpublished: «Location/Client/Testimonial data» in the editor.
 
-// On plugin activation: the types registered and their URLs up to date. On
-// deactivation, their URLs stop existing (the content stays).
-add_action(
-	'estrategia_web_activate',
-	static function (): void {
-		Content_Types::register();
-		flush_rewrite_rules( false );
-	}
-);
+// On plugin activation: the URLs up to date (the content-types module has
+// registered its types by now). On deactivation, their URLs stop existing
+// (the content stays).
+add_action( 'estrategia_web_activate', static fn() => flush_rewrite_rules( false ) );
 add_action( 'estrategia_web_deactivate', static fn() => delete_option( 'rewrite_rules' ) );
 
 if ( is_admin() ) {

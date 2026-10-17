@@ -21,14 +21,16 @@ import path from "node:path";
 const r = spawnSync("php", [path.join(import.meta.dirname, "php", "meta-prefix.php")], { encoding: "utf8" });
 assert.equal(r.status, 0, "php did not run: " + (r.error?.message || r.stderr || r.stdout));
 const out = JSON.parse(r.stdout);
-const types = fs.readFileSync(path.join(import.meta.dirname, "..", "includes", "class-content-types.php"), "utf8");
+// Since 17-10-2026 the types are the content-types module's templates: the metas are registered from there.
+const TEMPLATES = path.join(import.meta.dirname, "..", "..", "content-types", "templates");
+const types = ["client", "testimonial"].map((k) => fs.readFileSync(path.join(TEMPLATES, k + ".json"), "utf8")).join("\n");
 
-test("the map: the three old keys, each to estrategia_web_<old>, and Content_Types registers the new ones", () => {
+test("the map: the three old keys, each to estrategia_web_<old>, and the templates register the new ones", () => {
   assert.deepEqual(Object.keys(out.map).sort(), ["client_url", "testimonial_client", "testimonial_role"]);
   for (const [old, now] of Object.entries(out.map)) {
     assert.equal(now, "estrategia_web_" + old);
-    assert.match(types, new RegExp(`'${now}'\\s*=>\\s*array\\(`), `${now} is not registered`);
-    assert.doesNotMatch(types, new RegExp(`'${old}'\\s*=>\\s*array\\(`), `${old} is still registered`);
+    assert.match(types, new RegExp(`"name":\\s*"${now}"`), `${now} is not in the templates`);
+    assert.doesNotMatch(types, new RegExp(`"name":\\s*"${old}"`), `${old} is still in the templates`);
   }
   assert.deepEqual(Object.keys(out.types).sort(), Object.keys(out.map).sort(), "each old key says its type");
   assert.ok(out.post_types.includes("testimonial") && out.post_types.length === 2, "new and pre-1.2.0 type names: " + out.post_types);

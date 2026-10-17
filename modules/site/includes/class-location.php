@@ -176,6 +176,7 @@ final class Location {
 	}
 
 	private static function enabled(): bool {
-		return in_array( self::TYPE, Settings::enabled_types(), true );
+		// Registered by the content-types module (its location template) since 17-10-2026, not by «enabled_types».
+		return post_type_exists( Type_Names::name( self::TYPE ) );
 	}
 }

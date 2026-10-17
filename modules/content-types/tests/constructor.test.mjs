@@ -122,14 +122,17 @@ test("errors: 400 with the validator's list and nothing written; a duplicate is 
   assert.match(r2.json.data.errors.join(" "), /gment_level/);
 });
 
-test("templates: refused while modules/site registers the type; added, it is the same type, names and labels as before", async () => {
+test("templates: «enabled_types» still switches them (Site_Types); added from the panel, the same type, names and labels as before", async () => {
   await saveCompany({ enabled_types: ["client"] });
-  const list = await ew();
-  assert.equal(list.json.templates.find((t) => t.key === "client").taken, true);
-  const taken = await ew("/templates/client", { method: "POST" });
-  assert.equal(taken.status, 400, taken.text);
-  assert.match(taken.json.data.errors.join(" "), /eweb_client/);
+  const client = await ew("/eweb_client");
+  assert.equal(client.status, 200, "enabled_types added the client template: " + client.text);
+  assert.equal(client.json.active, true);
+  assert.deepEqual(client.json.definition.slug, { en: "clients", es: "clientes", ca: "clients" }, "a NEW type (no entries): the template's slugs per language");
+  assert.equal((await wp("/types/eweb_client")).status, 200);
   await saveCompany({ enabled_types: [] });
+  assert.equal((await ew("/eweb_client")).json.active, false, "taken out of enabled_types: switched off, not deleted");
+  assert.equal((await wp("/types/eweb_client")).status, 404);
+  await ew("/eweb_client", { method: "DELETE" });
 
   for (const key of ["client", "testimonial", "location"]) {
     const r = await ew("/templates/" + key, { method: "POST" });
@@ -145,7 +148,7 @@ test("templates: refused while modules/site registers the type; added, it is the
   assert.equal(state.meta.eweb_testimonial.estrategia_web_testimonial_rating.type, "integer");
   assert.equal(state.meta.eweb_location.estrategia_web_location_phone.label, "Teléfono");
   assert.equal((await raw("eweb_location", "&slug=sedes")).rules.length > 0, true, "/sedes/, the es slug, as the old gettext one");
-  assert.equal((await ew("/eweb_client")).json.definition.slug, "clientes", "stored with the site language's slug");
+  assert.deepEqual((await ew("/eweb_client")).json.definition.slug, { en: "clients", es: "clientes", ca: "clients" }, "stored with its slug per language; registered: the site language's");
   const tax = await wp("/taxonomies/eweb_client_sector");
   assert.equal(tax.status, 200);
   assert.equal(tax.json.name, "Sectores");
@@ -260,4 +263,26 @@ test("a type defined in a file and in the database: the database wins and the fi
   const state = await ct("/state");
   assert.match((state.errors["gment_wine.json"] || []).join(" "), /base de datos|database/);
   await ct("/setup", { method: "POST", body: { on: false } });
+});
+
+test("the migration of a 1.4.x site: its enabled types and the ones with entries, with the URLs it serves today; once", async () => {
+  await ct("/constructor-reset", { method: "POST" });
+  const legacy = await ct("/constructor-legacy", { method: "POST", body: { option: { enabled_types: ["client", "location"], rewrite_slugs: { location: "centros" } }, testimonials: 2 } });
+  assert.equal((await wp("/types/eweb_client")).status, 200, "this request migrates and registers in the same load");
+  const list = (await ew()).json.types;
+  const by = Object.fromEntries(list.map((t) => [t.name, t]));
+  assert.deepEqual(Object.keys(by).sort(), ["eweb_client", "eweb_location", "eweb_testimonial"], "project and portfolio: neither enabled nor with entries");
+  assert.equal(by.eweb_client.active, true);
+  assert.equal(by.eweb_location.active, true);
+  assert.equal(by.eweb_testimonial.active, false, "entries but not enabled: stored switched off, as before (not registered)");
+  assert.deepEqual(by.eweb_client.definition.slug, { es: "clientes" }, "the URL it served (the es gettext slug), not the template's per-language set");
+  assert.deepEqual(by.eweb_client.definition.taxonomies[0].slug, { es: "sector" });
+  assert.deepEqual(by.eweb_location.definition.slug, { es: "centros" }, "a slug fixed in rewrite_slugs is kept");
+  assert.ok((await raw("eweb_testimonial")).entries >= 2, "entries untouched (2 here, plus the one an earlier test left)");
+  assert.equal((await wp("/types/eweb_testimonial")).status, 404);
+  // Once: a definition deleted afterwards is not brought back by the migration.
+  assert.equal((await ew("/eweb_location", { method: "DELETE" })).status, 200);
+  await wp("/types");
+  assert.equal((await ew("/eweb_location")).status, 404, "not migrated again");
+  assert.equal(legacy.testimonials.length, 2); // after(): reset() deletes them with the rest of the eweb_ posts.
 });

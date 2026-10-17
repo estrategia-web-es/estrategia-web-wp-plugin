@@ -77,7 +77,12 @@ final class Settings {
 
 	public const OPTION = 'estrategia_web_site';
 
-	/** The content types that can be enabled. Order = menu order. */
+	/**
+	 * The content types «enabled_types» can switch on. Since 17-10-2026 they
+	 * are registered by the content-types module from its templates, and this
+	 * key is a switch read there (class-site-types.php): adding a key adds or
+	 * switches on its definition, removing it switches it off.
+	 */
 	public const TYPES = array( 'client', 'testimonial', 'location', 'project', 'portfolio' );
 
 	public const SOCIAL = array( 'facebook', 'instagram', 'linkedin', 'x', 'youtube', 'tiktok' );
@@ -134,7 +139,7 @@ final class Settings {
 		),
 		'enabled_types'    => array(),
 		'allow_svg'        => false,
-		// 0.2.0. Empty = the usual translated slug. See Content_Types::slug().
+		// 0.2.0. Empty = the usual translated slug. Since 17-10-2026 only read when a type's definition is first stored (Site_Types::current_slug()); then the definition's slug rules.
 		'rewrite_slugs'    => array(
 			'client'             => '',
 			'client_sector'      => '',

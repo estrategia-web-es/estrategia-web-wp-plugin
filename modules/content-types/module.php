@@ -2,7 +2,7 @@
 /**
  * Module Name: Content types
  * Description: Build your own content types, taxonomies and fields from the panel (or start from a template: clients, testimonials, locations, projects, portfolio), with the editor panel, Block Bindings and WPML generated.
- * Default: off
+ * Default: on
  * Requires:
  *
  * THE CONSTRUCTOR (17-10-2026, David: «la idea del constructor es poder
@@ -19,7 +19,13 @@
  *
  * TEMPLATES (includes/class-templates.php, templates/*.json): the five types
  * modules/site used to register in PHP, as definitions with the same names.
- * «Add testimonials» copies one into the database.
+ * «Add testimonials» copies one into the database. A site that had them
+ * registered by modules/site gets them stored ONCE, with the URLs it serves
+ * today, and «enabled_types» still switches them: includes/class-site-types.php.
+ *
+ * DEFAULT: ON since that move (17-10-2026, decided by David): the types of
+ * every corporate site live here now. With no definitions it registers
+ * nothing; what a site sees is the «Content types» screen.
  *
  * JSON FILES, the first way (15-10-2026), stay as a READ-ONLY second
  * source: <child theme>/content-types/*.json and any folder added with the
@@ -199,6 +205,7 @@ require_once __DIR__ . '/includes/class-fields-panel.php';
 require_once __DIR__ . '/includes/class-field-format.php';
 require_once __DIR__ . '/includes/class-bindings.php';
 require_once __DIR__ . '/includes/class-rest.php';
+require_once __DIR__ . '/includes/class-site-types.php';
 
 Store::boot();
 Registrar::boot();
@@ -206,6 +213,7 @@ Wpml::boot();
 Fields_Panel::boot();
 Bindings::boot();
 Rest::boot();
+Site_Types::boot(); // modules/site's old types → definitions, once; «enabled_types» still switches them.
 
 // Another theme, other folders: read again and let the hash decide the flush.
 add_action( 'after_switch_theme', array( Loader::class, 'forget' ) );
