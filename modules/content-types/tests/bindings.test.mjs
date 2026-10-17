@@ -113,7 +113,7 @@ test("wine: relation → the restaurant's title and link, image → URL (in the 
   const { status, text } = await html(page.url);
   assert.equal(status, 200);
   assert.equal(inner(text, "winery"), "Ca n&#8217;Andreu", "the title, as WordPress renders it (get_the_title)");
-  assert.equal(inner(text, "winery-link"), `<a href="${BASE}/restaurants/ca-nandreu/">Ca n&#8217;Andreu</a>`);
+  assert.equal(inner(text, "winery-link"), `<a href="${BASE}/restaurantes/ca-nandreu/">Ca n&#8217;Andreu</a>`);
   const thumb = (await wp(`/media/${pic.id}`)).json.media_details.sizes.thumbnail?.source_url ?? pic.source_url;
   const img = text.match(/<figure[^>]*ct-image[^>]*>[\s\S]*?<\/figure>/)?.[0] ?? "";
   assert.ok(img.includes(`src="${thumb}"`), "the image URL, in the size asked for: " + img);

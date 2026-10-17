@@ -67,6 +67,8 @@ defined( 'ABSPATH' ) || exit;
 final class Wpml {
 
 	public const PENDING_OPTION = 'estrategia_web_content_types_wpml_pending';
+	/** Fingerprint of the slug translations last written into WPML (sync_slugs()). */
+	public const SLUGS_OPTION = 'estrategia_web_content_types_wpml_slugs';
 
 	private const MODE = array(
 		'translate'             => array( 'translate' => '1' ),
@@ -82,6 +84,128 @@ final class Wpml {
 			add_action( $hook, array( self::class, 'sync' ), 10, 3 );
 		}
 		add_action( 'admin_init', array( self::class, 'import_if_pending' ), 99 );
+		// After Registrar (init 5) and its flush (99): the types exist and WPML ST is up (it starts at init -1000).
+		add_action( 'init', array( self::class, 'sync_slugs' ), 100 );
+	}
+
+	/**
+	 * What sync_slugs() writes into WPML, from the definitions. Pure.
+	 *
+	 * One entry per type or taxonomy THIS module registered whose slug is an
+	 * object (a plain string says nothing per language and is left alone) and
+	 * whose wpml is not «ignore» (WPML only translates the slug of a
+	 * translatable type). original: the slug in the default language, the one
+	 * Registrar::slug() registers. translations: language code → slug, only
+	 * the languages the file names (Schema::slug_in(), no fallback) and not
+	 * the default one; a language the file does not name is left to WPML's
+	 * screen, where someone may have typed it.
+	 *
+	 * @param array<string,array>  $types      Normalized definitions.
+	 * @param string[]             $registered Registrar::registered().
+	 * @param array<string,string> $languages  WPML active language code => its locale.
+	 * @return list<array{kind:string,name:string,original:string,translations:array<string,string>}>
+	 */
+	public static function slug_plan( array $types, array $registered, string $default_lang, array $languages ): array {
+		$plan  = array();
+		$items = array();
+		foreach ( $types as $name => $def ) {
+			$items[] = array( 'post', $name, $def['slug'], $def['wpml'] );
+			foreach ( $def['taxonomies'] as $tax ) {
+				if ( is_array( $tax ) ) {
+					$items[] = array( 'taxonomy', $tax['name'], $tax['slug'], $tax['wpml'] );
+				}
+			}
+		}
+		$default_locale = $languages[ $default_lang ] ?? $default_lang;
+		foreach ( $items as [ $kind, $name, $slug, $mode ] ) {
+			if ( ! is_array( $slug ) || 'ignore' === $mode || ! in_array( $name, $registered, true ) ) {
+				continue;
+			}
+			$translations = array();
+			foreach ( $languages as $code => $locale ) {
+				$value = $code === $default_lang ? null : Schema::slug_in( $slug, array( $code, $locale ) );
+				if ( null !== $value ) {
+					$translations[ $code ] = $value;
+				}
+			}
+			$plan[] = array(
+				'kind'         => $kind,
+				'name'         => $name,
+				'original'     => Schema::text( $slug, $default_locale ),
+				'translations' => $translations,
+			);
+		}
+		return $plan;
+	}
+
+	/**
+	 * SLUGS PER LANGUAGE (17-10-2026): the slug objects of the definitions
+	 * become WPML slug translations, so /es/restaurantes/… and
+	 * /en/restaurants/… are both real URLs and the language switcher links
+	 * each language's.
+	 *
+	 * HOW WPML KEEPS THEM (read in WPML String Translation 3.x, classes/
+	 * slug-translation/): a string in the «WordPress» context named
+	 * «URL slug: <type>» (a taxonomy: «URL <taxonomy> tax slug») whose value is
+	 * the REGISTERED slug and whose language is the original's, with one
+	 * translation per language; plus the switches — the option
+	 * wpml_base_slug_translation (global), sitepress setting
+	 * posts_slug_translation[types][<type>] and the option
+	 * wpml_tax_slug_translation_settings[types][<taxonomy>]. WPML then
+	 * rewrites the permalinks (post_type_link, pre_term_link), the archive
+	 * link and the stored rewrite rules on the fly (option_rewrite_rules):
+	 * no flush is needed for a translation.
+	 *
+	 * THE WAY IN: WPML's public action wpml_activate_slug_translation (it
+	 * turns the switches on and registers the string if it is missing) and
+	 * icl_register_string / icl_add_string_translation, String Translation's
+	 * functions, for the values. NOT the screen (WPML › Settings › Slug
+	 * translations): that one is a form post. The string is registered first
+	 * with the DEFAULT language as source, because for post types WPML's own
+	 * registration leaves the source to the «strings language» setting, which
+	 * on a site whose default is Catalan may be English.
+	 *
+	 * WHEN: only when what would be written changes (hash in SLUGS_OPTION:
+	 * the plan and the default language), so a normal request writes nothing.
+	 * A change in WPML's screen is kept until the JSON changes; then the JSON
+	 * wins for the languages it names.
+	 *
+	 * Needs String Translation: without it WPML has no slug translation, and
+	 * every language uses the registered (default language's) slug.
+	 */
+	public static function sync_slugs(): void {
+		if ( ! self::active() || ! function_exists( 'icl_register_string' ) || ! function_exists( 'icl_add_string_translation' ) || ! has_action( 'wpml_activate_slug_translation' ) ) {
+			return;
+		}
+		$default = (string) apply_filters( 'wpml_default_language', null );
+		$langs   = array();
+		foreach ( (array) apply_filters( 'wpml_active_languages', null, array( 'skip_missing' => 0 ) ) as $code => $lang ) {
+			$langs[ (string) $code ] = is_array( $lang ) ? (string) ( $lang['default_locale'] ?? '' ) : '';
+		}
+		if ( '' === $default || ! $langs ) {
+			return;
+		}
+		$plan = self::slug_plan( Loader::types(), Registrar::registered(), $default, $langs );
+		$hash = md5( (string) wp_json_encode( array( $plan, $default ) ) );
+		if ( get_option( self::SLUGS_OPTION ) === $hash ) {
+			return;
+		}
+		foreach ( $plan as $item ) {
+			$string = 'post' === $item['kind'] ? 'URL slug: ' . $item['name'] : 'URL ' . $item['name'] . ' tax slug';
+			$id     = (int) icl_register_string( 'WordPress', $string, $item['original'], false, $default );
+			do_action( 'wpml_activate_slug_translation', $item['name'], $item['original'], $item['kind'] );
+			foreach ( $id ? $item['translations'] : array() as $code => $slug ) {
+				icl_add_string_translation( $id, $code, $slug, defined( 'ICL_TM_COMPLETE' ) ? ICL_TM_COMPLETE : 10 );
+			}
+			// WPML caches each slug with its translations (per request, or for longer with an object cache).
+			if ( class_exists( 'WPML_Slug_Translation_Records_Factory' ) ) {
+				$records = ( new \WPML_Slug_Translation_Records_Factory() )->create( $item['kind'] );
+				if ( $records && method_exists( $records, 'flush_cache' ) ) {
+					$records->flush_cache();
+				}
+			}
+		}
+		update_option( self::SLUGS_OPTION, $hash, true );
 	}
 
 	/**

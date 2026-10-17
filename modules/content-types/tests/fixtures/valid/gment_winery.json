@@ -1,0 +1,13 @@
+{
+  "$schema": "../../../content-types.schema.json",
+  "prefix": "gment_",
+  "name": "gment_winery",
+  "slug": { "ca": "cellers", "es": "bodegas", "en": "wineries" },
+  "labels": { "singular": { "es": "Bodega", "en": "Winery" }, "plural": { "es": "Bodegas", "en": "Wineries" } },
+  "supports": ["title", "thumbnail"],
+  "fields": [
+    { "name": "gment_winery_town", "type": "text", "label": { "es": "Municipio", "en": "Town" }, "required": true },
+    { "name": "gment_winery_founded", "type": "number", "label": { "es": "Fundada", "en": "Founded" }, "integer": true, "required": true },
+    { "name": "gment_winery_web", "type": "url", "label": "Web" }
+  ]
+}

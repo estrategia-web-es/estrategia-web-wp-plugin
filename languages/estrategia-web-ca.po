@@ -999,41 +999,41 @@ msgstr "Fitxer:"
 msgid "URL:"
 msgstr "URL:"
 
-#: modules/content-types/includes/admin/class-page.php:70
+#: modules/content-types/includes/admin/class-page.php:79
 msgid "WPML:"
 msgstr "WPML:"
 
-#: modules/content-types/includes/admin/class-page.php:72
+#: modules/content-types/includes/admin/class-page.php:81
 msgid "Not registered (see the errors above)."
 msgstr "No registrat (consulta els errors de dalt)."
 
-#: modules/content-types/includes/admin/class-page.php:77
+#: modules/content-types/includes/admin/class-page.php:86
 msgid "Taxonomies:"
 msgstr "Taxonomies:"
 
-#: modules/content-types/includes/admin/class-page.php:80
+#: modules/content-types/includes/admin/class-page.php:89
 msgid "Field"
 msgstr "Camp"
 
-#: modules/content-types/includes/admin/class-page.php:80
+#: modules/content-types/includes/admin/class-page.php:89
 msgid "Meta key"
 msgstr "Clau de la meta"
 
-#: modules/content-types/includes/admin/class-page.php:80
+#: modules/content-types/includes/admin/class-page.php:89
 msgid "Required"
 msgstr "Obligatori"
 
-#: modules/content-types/includes/admin/class-page.php:80
+#: modules/content-types/includes/admin/class-page.php:89
 #: modules/redirects/includes/admin/class-page.php:268
 #: modules/redirects/includes/admin/class-tables.php:35
 msgid "Type"
 msgstr "Tipus"
 
-#: modules/content-types/includes/admin/class-page.php:80
+#: modules/content-types/includes/admin/class-page.php:89
 msgid "WPML"
 msgstr "WPML"
 
-#: modules/content-types/includes/admin/class-page.php:87
+#: modules/content-types/includes/admin/class-page.php:96
 msgid "yes"
 msgstr "sí"
 
@@ -1055,18 +1055,18 @@ msgstr "Sí"
 msgid "No"
 msgstr "No"
 
-#: modules/content-types/includes/class-fields-panel.php:56
+#: modules/content-types/includes/class-fields-panel.php:58
 #: modules/site/includes/class-meta-panel.php:213
 msgid "Changed in the original language: it is copied to the translations."
 msgstr "Es canvia a l'idioma original: es copia a les traduccions."
 
 #. translators: %s: singular name of a content type, e.g. Restaurant
-#: modules/content-types/includes/class-fields-panel.php:70
+#: modules/content-types/includes/class-fields-panel.php:72
 #, php-format
 msgid "%s details"
 msgstr "%s: dades"
 
-#: modules/content-types/includes/class-fields-panel.php:72
+#: modules/content-types/includes/class-fields-panel.php:74
 msgid ""
 "Fields that are the same in every language are copied to the translations "
 "when you save; the others are translated in each language."
@@ -1074,8 +1074,8 @@ msgstr ""
 "Els camps que són iguals en tots els idiomes es copien a les traduccions "
 "quan deses; els altres es tradueixen en cada idioma."
 
-#: modules/content-types/includes/class-fields-panel.php:176
-#: modules/content-types/includes/class-fields-panel.php:182
+#: modules/content-types/includes/class-fields-panel.php:178
+#: modules/content-types/includes/class-fields-panel.php:184
 #: modules/site/includes/class-meta-panel.php:335
 msgid "— None —"
 msgstr "— Cap —"
@@ -1086,8 +1086,28 @@ msgstr "— Cap —"
 msgid "Not valid JSON: %s."
 msgstr "No és un JSON vàlid: %s."
 
+#. translators: %s: list of field names
+#: modules/content-types/includes/class-registrar.php:140
+#, php-format
+msgid ""
+"Not published: it has been saved as a draft. Fill in these fields to publish "
+"it: %s."
+msgstr ""
+"No s'ha publicat: s'ha desat com a esborrany. Emplena aquests camps per "
+"publicar-lo: %s."
+
+#. translators: %s: list of field names
+#: modules/content-types/includes/class-registrar.php:142
+#, php-format
+msgid ""
+"These fields cannot be empty in a published item, so they keep their "
+"previous value: %s."
+msgstr ""
+"Aquests camps no poden quedar buits en un element publicat, així que "
+"conserven el valor anterior: %s."
+
 #. translators: %s: post type name
-#: modules/content-types/includes/class-registrar.php:51
+#: modules/content-types/includes/class-registrar.php:162
 #, php-format
 msgid ""
 "The type “%s” is already registered by other code: this file is ignored."
@@ -1095,7 +1115,7 @@ msgstr ""
 "El tipus «%s» ja el registra un altre codi: aquest fitxer no es fa servir."
 
 #. translators: %s: taxonomy name
-#: modules/content-types/includes/class-registrar.php:83
+#: modules/content-types/includes/class-registrar.php:194
 #, php-format
 msgid ""
 "The taxonomy “%s” is already registered by other code: it is not registered "
@@ -1105,22 +1125,22 @@ msgstr ""
 
 #. translators: %s: singular name of a taxonomy, e.g. Cuisine
 #. translators: %s: singular name of a content type, e.g. Restaurant
-#: modules/content-types/includes/class-registrar.php:98
-#: modules/content-types/includes/class-registrar.php:167
+#: modules/content-types/includes/class-registrar.php:209
+#: modules/content-types/includes/class-registrar.php:292
 #, php-format
 msgid "Add %s"
 msgstr "Afegeix %s"
 
 #. translators: %s: singular name of a taxonomy
 #. translators: %s: singular name of a content type
-#: modules/content-types/includes/class-registrar.php:100
-#: modules/content-types/includes/class-registrar.php:169
+#: modules/content-types/includes/class-registrar.php:211
+#: modules/content-types/includes/class-registrar.php:294
 #, php-format
 msgid "Edit %s"
 msgstr "Edita %s"
 
 #. translators: 1: field name, 2: post type name
-#: modules/content-types/includes/class-registrar.php:152
+#: modules/content-types/includes/class-registrar.php:277
 #, php-format
 msgid ""
 "The relation “%1$s” points to the type “%2$s”, which is not registered: it "
@@ -1130,27 +1150,27 @@ msgstr ""
 "desar 0."
 
 #. translators: %s: singular name of a content type
-#: modules/content-types/includes/class-registrar.php:171
+#: modules/content-types/includes/class-registrar.php:296
 #, php-format
 msgid "View %s"
 msgstr "Mostra %s"
 
 #. translators: %s: plural name of a content type, e.g. Restaurants
-#: modules/content-types/includes/class-registrar.php:173
+#: modules/content-types/includes/class-registrar.php:298
 #, php-format
 msgid "Search %s"
 msgstr "Cerca %s"
 
-#: modules/content-types/includes/class-registrar.php:174
+#: modules/content-types/includes/class-registrar.php:299
 msgid "Nothing found."
 msgstr "No s'ha trobat res."
 
-#: modules/content-types/includes/class-registrar.php:175
+#: modules/content-types/includes/class-registrar.php:300
 msgid "Nothing found in the trash."
 msgstr "No hi ha res a la paperera."
 
 #. translators: %s: list of field names
-#: modules/content-types/includes/class-registrar.php:238
+#: modules/content-types/includes/class-registrar.php:362
 #, php-format
 msgid "Fill in these fields before publishing: %s."
 msgstr "Emplena aquests camps abans de publicar: %s."
@@ -1224,7 +1244,7 @@ msgid "The name “%1$s” is already declared in %2$s."
 msgstr "El nom «%1$s» ja està declarat a %2$s."
 
 #. translators: 1: field name, 2: WPML mode, 3: another file name, 4: WPML mode there
-#: modules/content-types/includes/class-schema.php:144
+#: modules/content-types/includes/class-schema.php:147
 #, php-format
 msgid ""
 "The field “%1$s” has wpml “%2$s” here and “%4$s” in %3$s: WPML keeps one "
@@ -1234,7 +1254,7 @@ msgstr ""
 "per clau de meta."
 
 #. translators: %s: taxonomy name
-#: modules/content-types/includes/class-schema.php:153
+#: modules/content-types/includes/class-schema.php:156
 #, php-format
 msgid ""
 "The taxonomy “%s” is not declared in any file (declare it as an object in "
@@ -1243,101 +1263,111 @@ msgstr ""
 "La taxonomia «%s» no està declarada en cap fitxer (declara-la com a objecte "
 "en un d'ells)."
 
-#: modules/content-types/includes/class-schema.php:271
+#. translators: 1: a URL slug, 2: a language code, 3: type or taxonomy name, 4: a file name
+#: modules/content-types/includes/class-schema.php:201
+#, php-format
+msgid ""
+"The slug “%1$s” (language “%2$s”) is already the URL of “%3$s” in %4$s: two "
+"types or taxonomies cannot share a URL."
+msgstr ""
+"L'àlies «%1$s» (idioma «%2$s») ja és l'URL de «%3$s» a %4$s: dos tipus o "
+"taxonomies no poden compartir URL."
+
+#: modules/content-types/includes/class-schema.php:326
 msgid "“taxonomies” must be a list."
 msgstr "«taxonomies» ha de ser una llista."
 
 #. translators: %d: position in the list, from 1
-#: modules/content-types/includes/class-schema.php:276
+#: modules/content-types/includes/class-schema.php:331
 #, php-format
 msgid "taxonomies[%d]"
 msgstr "taxonomies[%d]"
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:280
+#: modules/content-types/includes/class-schema.php:335
 #, php-format
 msgid "%s: a reference must be a taxonomy name."
 msgstr "%s: una referència ha de ser el nom d'una taxonomia."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:286
+#: modules/content-types/includes/class-schema.php:341
 #, php-format
 msgid "%s: must be a taxonomy name or an object."
 msgstr "%s: ha de ser el nom d'una taxonomia o un objecte."
 
 #. translators: 1: where in the file, 2: a key
-#: modules/content-types/includes/class-schema.php:296
+#: modules/content-types/includes/class-schema.php:351
 #, php-format
 msgid "%1$s.%2$s must be true or false."
 msgstr "%1$s.%2$s ha de ser true o false."
 
 #. translators: 1: where in the file, 2: allowed values
-#: modules/content-types/includes/class-schema.php:301
-#: modules/content-types/includes/class-schema.php:351
+#: modules/content-types/includes/class-schema.php:356
+#: modules/content-types/includes/class-schema.php:406
 #, php-format
 msgid "%1$s.wpml must be one of: %2$s."
 msgstr "%1$s.wpml ha de ser un d'aquests: %2$s."
 
-#: modules/content-types/includes/class-schema.php:309
+#: modules/content-types/includes/class-schema.php:364
 msgid "“fields” must be a list."
 msgstr "«fields» ha de ser una llista."
 
 #. translators: %d: position in the list, from 1
-#: modules/content-types/includes/class-schema.php:315
+#: modules/content-types/includes/class-schema.php:370
 #, php-format
 msgid "fields[%d]"
 msgstr "fields[%d]"
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:318
+#: modules/content-types/includes/class-schema.php:373
 #, php-format
 msgid "%s: must be an object."
 msgstr "%s: ha de ser un objecte."
 
 #. translators: %s: field name
-#: modules/content-types/includes/class-schema.php:327
+#: modules/content-types/includes/class-schema.php:382
 #, php-format
 msgid "The field “%s” is declared twice."
 msgstr "El camp «%s» està declarat dues vegades."
 
 #. translators: 1: where in the file, 2: allowed values
-#: modules/content-types/includes/class-schema.php:334
+#: modules/content-types/includes/class-schema.php:389
 #, php-format
 msgid "%1$s.type must be one of: %2$s."
 msgstr "%1$s.type ha de ser un d'aquests: %2$s."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:339
+#: modules/content-types/includes/class-schema.php:394
 #, php-format
 msgid "%s.label is required (a string or an object of locale → string)."
 msgstr "%s.label és obligatori (un text o un objecte idioma → text)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:343
+#: modules/content-types/includes/class-schema.php:398
 #, php-format
 msgid "%s.help must be a string or an object of locale → string."
 msgstr "%s.help ha de ser un text o un objecte idioma → text."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:347
+#: modules/content-types/includes/class-schema.php:402
 #, php-format
 msgid "%s.required must be true or false."
 msgstr "%s.required ha de ser true o false."
 
 #. translators: 1: where in the file, 2: a key, 3: a field type
-#: modules/content-types/includes/class-schema.php:358
+#: modules/content-types/includes/class-schema.php:413
 #, php-format
 msgid "%1$s.%2$s is only for fields of type “%3$s”."
 msgstr "%1$s.%2$s només val per a camps de tipus «%3$s»."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:376
+#: modules/content-types/includes/class-schema.php:431
 #, php-format
 msgid "%s: a select needs “options”, a non-empty list."
 msgstr "%s: un select necessita «options», una llista no buida."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:383
+#: modules/content-types/includes/class-schema.php:438
 #, php-format
 msgid ""
 "%s.options: each option is a non-empty string or {\"value\": \"…\", "
@@ -1346,19 +1376,19 @@ msgstr ""
 "%s.options: cada opció és un text no buit o {\"value\": \"…\", \"label\": …}."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:390
+#: modules/content-types/includes/class-schema.php:445
 #, php-format
 msgid "%s.options: two options have the same value."
 msgstr "%s.options: dues opcions tenen el mateix valor."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:394
+#: modules/content-types/includes/class-schema.php:449
 #, php-format
 msgid "%s.default must be the value of one of the options."
 msgstr "%s.default ha de ser el valor d'una de les opcions."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:402
+#: modules/content-types/includes/class-schema.php:457
 #, php-format
 msgid "%s: a relation needs “post_type”, a post type name or a list of them."
 msgstr ""
@@ -1366,32 +1396,32 @@ msgstr ""
 "noms."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:406
+#: modules/content-types/includes/class-schema.php:461
 #, php-format
 msgid "%s: a relation cannot have a default (it is the ID of a post)."
 msgstr ""
 "%s: una relació no pot tenir valor per defecte (és l'ID d'una entrada)."
 
 #. translators: 1: where in the file, 2: min or max
-#: modules/content-types/includes/class-schema.php:412
+#: modules/content-types/includes/class-schema.php:467
 #, php-format
 msgid "%1$s.%2$s must be a number."
 msgstr "%1$s.%2$s ha de ser un nombre."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:417
+#: modules/content-types/includes/class-schema.php:472
 #, php-format
 msgid "%s.integer must be true or false."
 msgstr "%s.integer ha de ser true o false."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:421
+#: modules/content-types/includes/class-schema.php:476
 #, php-format
 msgid "%s: min is greater than max."
 msgstr "%s: min és més gran que max."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:426
+#: modules/content-types/includes/class-schema.php:481
 #, php-format
 msgid ""
 "%s.default must be a number within min and max (a whole number if “integer”)."
@@ -1399,19 +1429,19 @@ msgstr ""
 "%s.default ha de ser un nombre entre min i max (enter si porta «integer»)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:431
+#: modules/content-types/includes/class-schema.php:486
 #, php-format
 msgid "%s: a boolean cannot be required (“no” is an answer)."
 msgstr "%s: un booleà no pot ser obligatori («no» també és una resposta)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:435
+#: modules/content-types/includes/class-schema.php:490
 #, php-format
 msgid "%s.default must be true or false."
 msgstr "%s.default ha de ser true o false."
 
 #. translators: 1: where in the file, 2: true_label or false_label
-#: modules/content-types/includes/class-schema.php:441
+#: modules/content-types/includes/class-schema.php:496
 #, php-format
 msgid ""
 "%1$s.%2$s must be a string (\"\" to show nothing) or an object of locale → "
@@ -1421,25 +1451,25 @@ msgstr ""
 "text."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:447
+#: modules/content-types/includes/class-schema.php:502
 #, php-format
 msgid "%s: an image cannot have a default (it is the ID of an attachment)."
 msgstr "%s: una imatge no pot tenir valor per defecte (és l'ID d'un adjunt)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:451
+#: modules/content-types/includes/class-schema.php:506
 #, php-format
 msgid "%s.default must be a string."
 msgstr "%s.default ha de ser un text."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:454
+#: modules/content-types/includes/class-schema.php:509
 #, php-format
 msgid "%s.default must be a date as YYYY-MM-DD."
 msgstr "%s.default ha de ser una data AAAA-MM-DD."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:467
+#: modules/content-types/includes/class-schema.php:522
 #, php-format
 msgid "%s must be lowercase letters, digits and “_”, starting with a letter."
 msgstr ""
@@ -1447,54 +1477,55 @@ msgstr ""
 "una lletra."
 
 #. translators: 1: where in the file, 2: the name, 3: max length, 4: its length
-#: modules/content-types/includes/class-schema.php:472
+#: modules/content-types/includes/class-schema.php:527
 #, php-format
 msgid ""
 "%1$s “%2$s” is longer than %3$d characters (%4$d): WordPress would cut it."
 msgstr "%1$s «%2$s» passa de %3$d caràcters (%4$d): WordPress el tallaria."
 
 #. translators: 1: where in the file, 2: the name, 3: the prefix
-#: modules/content-types/includes/class-schema.php:476
+#: modules/content-types/includes/class-schema.php:531
 #, php-format
 msgid "%1$s “%2$s” must start with the prefix “%3$s”."
 msgstr "%1$s «%2$s» ha de començar pel prefix «%3$s»."
 
 #. translators: 1: where in the file, 2: the name, 3: a reserved prefix
-#: modules/content-types/includes/class-schema.php:481
+#: modules/content-types/includes/class-schema.php:536
 #, php-format
 msgid "%1$s “%2$s” uses the reserved prefix “%3$s”."
 msgstr "%1$s «%2$s» fa servir el prefix reservat «%3$s»."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:494
+#: modules/content-types/includes/class-schema.php:557
+#: modules/content-types/includes/class-schema.php:565
 #, php-format
 msgid ""
-"%s must be lowercase letters, digits, “-” and “/” (a URL path without "
-"slashes at the ends)."
+"%s must be a URL path (lowercase ASCII letters, digits, “-” and “/”, no "
+"slashes at the ends) or an object of locale → such a path."
 msgstr ""
-"%s només pot tenir lletres minúscules, xifres, «-» i «/» (una ruta d'URL "
-"sense barres als extrems)."
+"%s ha de ser un camí d'URL (lletres ASCII minúscules, xifres, «-» i «/», "
+"sense barres als extrems) o un objecte de locale → un camí així."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:502
+#: modules/content-types/includes/class-schema.php:598
 #, php-format
 msgid "%s is required: {\"singular\": …, \"plural\": …}."
 msgstr "%s és obligatori: {\"singular\": …, \"plural\": …}."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:506
+#: modules/content-types/includes/class-schema.php:602
 #, php-format
 msgid "%s must be an object: {\"singular\": …, \"plural\": …}."
 msgstr "%s ha de ser un objecte: {\"singular\": …, \"plural\": …}."
 
 #. translators: 1: where in the file, 2: singular or plural
-#: modules/content-types/includes/class-schema.php:512
+#: modules/content-types/includes/class-schema.php:608
 #, php-format
 msgid "%1$s.%2$s is required: a string or an object of locale → string."
 msgstr "%1$s.%2$s és obligatori: un text o un objecte idioma → text."
 
 #. translators: 1: a key, 2: allowed keys
-#: modules/content-types/includes/class-schema.php:539
+#: modules/content-types/includes/class-schema.php:635
 #, php-format
 msgid "Unknown key “%1$s”. Allowed: %2$s."
 msgstr "Clau desconeguda «%1$s». S'admeten: %2$s."
@@ -2978,22 +3009,22 @@ msgid "Clients"
 msgstr "Clients"
 
 #: modules/site/includes/admin/class-admin.php:47
-#: modules/site/includes/class-content-types.php:141
+#: modules/site/includes/class-content-types.php:142
 msgid "Testimonials"
 msgstr "Opinions"
 
 #: modules/site/includes/admin/class-admin.php:48
-#: modules/site/includes/class-content-types.php:167
+#: modules/site/includes/class-content-types.php:169
 msgid "Locations"
 msgstr "Seus"
 
 #: modules/site/includes/admin/class-admin.php:49
-#: modules/site/includes/class-content-types.php:199
+#: modules/site/includes/class-content-types.php:201
 msgid "Projects"
 msgstr "Projectes"
 
 #: modules/site/includes/admin/class-admin.php:50
-#: modules/site/includes/class-content-types.php:231
+#: modules/site/includes/class-content-types.php:233
 msgid "Portfolio"
 msgstr "Portafolis"
 
@@ -3074,13 +3105,13 @@ msgid "Company registry"
 msgstr "Inscripció registral"
 
 #: modules/site/includes/class-company.php:111
-#: modules/site/includes/class-content-types.php:184
+#: modules/site/includes/class-content-types.php:186
 #: modules/social/includes/class-icons.php:82
 msgid "Email"
 msgstr "Correu electrònic"
 
 #: modules/site/includes/class-company.php:112
-#: modules/site/includes/class-content-types.php:183
+#: modules/site/includes/class-content-types.php:185
 msgid "Phone"
 msgstr "Telèfon"
 
@@ -3097,12 +3128,12 @@ msgid "WhatsApp message"
 msgstr "Missatge de WhatsApp"
 
 #: modules/site/includes/class-company.php:116
-#: modules/site/includes/class-content-types.php:182
+#: modules/site/includes/class-content-types.php:184
 msgid "Address"
 msgstr "Adreça"
 
 #: modules/site/includes/class-company.php:117
-#: modules/site/includes/class-content-types.php:185
+#: modules/site/includes/class-content-types.php:187
 msgid "Opening hours"
 msgstr "Horari"
 
@@ -3238,294 +3269,294 @@ msgstr "Tots els sectors"
 msgid "No sectors found."
 msgstr "No s'ha trobat cap sector."
 
-#: modules/site/includes/class-content-types.php:127
+#: modules/site/includes/class-content-types.php:128
 msgid "Client website"
 msgstr "Web del client"
 
-#: modules/site/includes/class-content-types.php:129
+#: modules/site/includes/class-content-types.php:130
 msgid "Image fit (cover for a photo, contain for a logo)"
 msgstr "Encaix de la imatge (cover per a una foto, contain per a un logotip)"
 
-#: modules/site/includes/class-content-types.php:133
+#: modules/site/includes/class-content-types.php:134
 msgid "Business type"
 msgstr "Tipus de negoci"
 
-#: modules/site/includes/class-content-types.php:138
+#: modules/site/includes/class-content-types.php:139
 msgctxt "URL slug"
 msgid "testimonials"
 msgstr "opinions"
 
-#: modules/site/includes/class-content-types.php:142
+#: modules/site/includes/class-content-types.php:143
 msgid "Testimonial"
 msgstr "Opinió"
 
-#: modules/site/includes/class-content-types.php:143
+#: modules/site/includes/class-content-types.php:144
 msgid "Add testimonial"
 msgstr "Afegeix una opinió"
 
-#: modules/site/includes/class-content-types.php:144
+#: modules/site/includes/class-content-types.php:145
 msgid "Edit testimonial"
 msgstr "Edita l'opinió"
 
-#: modules/site/includes/class-content-types.php:145
+#: modules/site/includes/class-content-types.php:146
 msgid "New testimonial"
 msgstr "Opinió nova"
 
-#: modules/site/includes/class-content-types.php:146
+#: modules/site/includes/class-content-types.php:147
 msgid "View testimonial"
 msgstr "Mostra l'opinió"
 
-#: modules/site/includes/class-content-types.php:147
+#: modules/site/includes/class-content-types.php:148
 msgid "View testimonials"
 msgstr "Mostra les opinions"
 
-#: modules/site/includes/class-content-types.php:148
+#: modules/site/includes/class-content-types.php:149
 msgid "Search testimonials"
 msgstr "Cerca opinions"
 
-#: modules/site/includes/class-content-types.php:149
+#: modules/site/includes/class-content-types.php:150
 msgid "No testimonials found."
 msgstr "No s'ha trobat cap opinió."
 
-#: modules/site/includes/class-content-types.php:150
+#: modules/site/includes/class-content-types.php:151
 msgid "No testimonials found in Trash."
 msgstr "No s'ha trobat cap opinió a la paperera."
 
-#: modules/site/includes/class-content-types.php:151
+#: modules/site/includes/class-content-types.php:152
 msgid "All testimonials"
 msgstr "Totes les opinions"
 
-#: modules/site/includes/class-content-types.php:152
+#: modules/site/includes/class-content-types.php:153
 msgid "Author photo"
 msgstr "Foto de l'autor"
 
-#: modules/site/includes/class-content-types.php:153
+#: modules/site/includes/class-content-types.php:154
 msgid "Set author photo"
 msgstr "Posa la foto de l'autor"
 
-#: modules/site/includes/class-content-types.php:156
+#: modules/site/includes/class-content-types.php:157
 msgid "Author"
 msgstr "Autor"
 
-#: modules/site/includes/class-content-types.php:157
+#: modules/site/includes/class-content-types.php:159
 msgid "Author role or company"
 msgstr "Càrrec o empresa de l'autor"
 
-#: modules/site/includes/class-content-types.php:158
+#: modules/site/includes/class-content-types.php:160
 msgid "Rating (1 to 5)"
 msgstr "Valoració (de 1 a 5)"
 
-#: modules/site/includes/class-content-types.php:159
+#: modules/site/includes/class-content-types.php:161
 msgid "Related client"
 msgstr "Client relacionat"
 
-#: modules/site/includes/class-content-types.php:164
+#: modules/site/includes/class-content-types.php:166
 msgctxt "URL slug"
 msgid "locations"
 msgstr "seus"
 
-#: modules/site/includes/class-content-types.php:168
+#: modules/site/includes/class-content-types.php:170
 msgid "Location"
 msgstr "Seu"
 
-#: modules/site/includes/class-content-types.php:169
+#: modules/site/includes/class-content-types.php:171
 msgid "Add location"
 msgstr "Afegeix una seu"
 
-#: modules/site/includes/class-content-types.php:170
+#: modules/site/includes/class-content-types.php:172
 msgid "Edit location"
 msgstr "Edita la seu"
 
-#: modules/site/includes/class-content-types.php:171
+#: modules/site/includes/class-content-types.php:173
 msgid "New location"
 msgstr "Seu nova"
 
-#: modules/site/includes/class-content-types.php:172
+#: modules/site/includes/class-content-types.php:174
 msgid "View location"
 msgstr "Mostra la seu"
 
-#: modules/site/includes/class-content-types.php:173
+#: modules/site/includes/class-content-types.php:175
 msgid "View locations"
 msgstr "Mostra les seus"
 
-#: modules/site/includes/class-content-types.php:174
+#: modules/site/includes/class-content-types.php:176
 msgid "Search locations"
 msgstr "Cerca seus"
 
-#: modules/site/includes/class-content-types.php:175
+#: modules/site/includes/class-content-types.php:177
 msgid "No locations found."
 msgstr "No s'ha trobat cap seu."
 
-#: modules/site/includes/class-content-types.php:176
+#: modules/site/includes/class-content-types.php:178
 msgid "No locations found in Trash."
 msgstr "No s'ha trobat cap seu a la paperera."
 
-#: modules/site/includes/class-content-types.php:177
+#: modules/site/includes/class-content-types.php:179
 msgid "All locations"
 msgstr "Totes les seus"
 
-#: modules/site/includes/class-content-types.php:178
+#: modules/site/includes/class-content-types.php:180
 msgid "Static map image"
 msgstr "Imatge estàtica del mapa"
 
-#: modules/site/includes/class-content-types.php:179
+#: modules/site/includes/class-content-types.php:181
 msgid "Set static map image"
 msgstr "Posa la imatge estàtica del mapa"
 
-#: modules/site/includes/class-content-types.php:186
+#: modules/site/includes/class-content-types.php:188
 msgid "Google Maps link"
 msgstr "Enllaç a Google Maps"
 
-#: modules/site/includes/class-content-types.php:188
+#: modules/site/includes/class-content-types.php:190
 msgid "Map embed URL"
 msgstr "URL per incrustar el mapa"
 
-#: modules/site/includes/class-content-types.php:190
+#: modules/site/includes/class-content-types.php:192
 msgid "Static map image (theme path or URL of this site)"
 msgstr "Imatge del mapa estàtic (camí del tema o URL d'aquest web)"
 
-#: modules/site/includes/class-content-types.php:191
+#: modules/site/includes/class-content-types.php:193
 msgid "Static map image (media library ID)"
 msgstr "Imatge del mapa estàtic (ID de la mediateca)"
 
-#: modules/site/includes/class-content-types.php:196
+#: modules/site/includes/class-content-types.php:198
 msgctxt "URL slug"
 msgid "projects"
 msgstr "projectes"
 
-#: modules/site/includes/class-content-types.php:200
+#: modules/site/includes/class-content-types.php:202
 msgid "Project"
 msgstr "Projecte"
 
-#: modules/site/includes/class-content-types.php:201
+#: modules/site/includes/class-content-types.php:203
 msgid "Add project"
 msgstr "Afegeix un projecte"
 
-#: modules/site/includes/class-content-types.php:202
+#: modules/site/includes/class-content-types.php:204
 msgid "Edit project"
 msgstr "Edita el projecte"
 
-#: modules/site/includes/class-content-types.php:203
+#: modules/site/includes/class-content-types.php:205
 msgid "New project"
 msgstr "Projecte nou"
 
-#: modules/site/includes/class-content-types.php:204
+#: modules/site/includes/class-content-types.php:206
 msgid "View project"
 msgstr "Mostra el projecte"
 
-#: modules/site/includes/class-content-types.php:205
+#: modules/site/includes/class-content-types.php:207
 msgid "View projects"
 msgstr "Mostra els projectes"
 
-#: modules/site/includes/class-content-types.php:206
+#: modules/site/includes/class-content-types.php:208
 msgid "Search projects"
 msgstr "Cerca projectes"
 
-#: modules/site/includes/class-content-types.php:207
+#: modules/site/includes/class-content-types.php:209
 msgid "No projects found."
 msgstr "No s'ha trobat cap projecte."
 
-#: modules/site/includes/class-content-types.php:208
+#: modules/site/includes/class-content-types.php:210
 msgid "No projects found in Trash."
 msgstr "No s'ha trobat cap projecte a la paperera."
 
-#: modules/site/includes/class-content-types.php:209
+#: modules/site/includes/class-content-types.php:211
 msgid "All projects"
 msgstr "Tots els projectes"
 
-#: modules/site/includes/class-content-types.php:213
+#: modules/site/includes/class-content-types.php:215
 msgctxt "URL slug"
 msgid "project-category"
 msgstr "categoria-projecte"
 
-#: modules/site/includes/class-content-types.php:215
+#: modules/site/includes/class-content-types.php:217
 msgid "Project categories"
 msgstr "Categories de projecte"
 
-#: modules/site/includes/class-content-types.php:216
+#: modules/site/includes/class-content-types.php:218
 msgid "Project category"
 msgstr "Categoria de projecte"
 
-#: modules/site/includes/class-content-types.php:217
-#: modules/site/includes/class-content-types.php:249
+#: modules/site/includes/class-content-types.php:219
+#: modules/site/includes/class-content-types.php:251
 msgid "Add category"
 msgstr "Afegeix una categoria"
 
-#: modules/site/includes/class-content-types.php:218
-#: modules/site/includes/class-content-types.php:250
+#: modules/site/includes/class-content-types.php:220
+#: modules/site/includes/class-content-types.php:252
 msgid "Edit category"
 msgstr "Edita la categoria"
 
-#: modules/site/includes/class-content-types.php:219
-#: modules/site/includes/class-content-types.php:251
+#: modules/site/includes/class-content-types.php:221
+#: modules/site/includes/class-content-types.php:253
 msgid "Search categories"
 msgstr "Cerca categories"
 
-#: modules/site/includes/class-content-types.php:220
-#: modules/site/includes/class-content-types.php:252
+#: modules/site/includes/class-content-types.php:222
+#: modules/site/includes/class-content-types.php:254
 msgid "All categories"
 msgstr "Totes les categories"
 
-#: modules/site/includes/class-content-types.php:221
-#: modules/site/includes/class-content-types.php:253
+#: modules/site/includes/class-content-types.php:223
+#: modules/site/includes/class-content-types.php:255
 msgid "No categories found."
 msgstr "No s'ha trobat cap categoria."
 
-#: modules/site/includes/class-content-types.php:228
+#: modules/site/includes/class-content-types.php:230
 msgctxt "URL slug"
 msgid "portfolio"
 msgstr "portafolis"
 
-#: modules/site/includes/class-content-types.php:232
+#: modules/site/includes/class-content-types.php:234
 msgid "Portfolio item"
 msgstr "Treball del portafolis"
 
-#: modules/site/includes/class-content-types.php:233
+#: modules/site/includes/class-content-types.php:235
 msgid "Add portfolio item"
 msgstr "Afegeix un treball"
 
-#: modules/site/includes/class-content-types.php:234
+#: modules/site/includes/class-content-types.php:236
 msgid "Edit portfolio item"
 msgstr "Edita el treball"
 
-#: modules/site/includes/class-content-types.php:235
+#: modules/site/includes/class-content-types.php:237
 msgid "New portfolio item"
 msgstr "Treball nou"
 
-#: modules/site/includes/class-content-types.php:236
+#: modules/site/includes/class-content-types.php:238
 msgid "View portfolio item"
 msgstr "Mostra el treball"
 
-#: modules/site/includes/class-content-types.php:237
+#: modules/site/includes/class-content-types.php:239
 msgid "View portfolio"
 msgstr "Mostra el portafolis"
 
-#: modules/site/includes/class-content-types.php:238
+#: modules/site/includes/class-content-types.php:240
 msgid "Search portfolio"
 msgstr "Cerca al portafolis"
 
-#: modules/site/includes/class-content-types.php:239
+#: modules/site/includes/class-content-types.php:241
 msgid "No portfolio items found."
 msgstr "No hi ha cap treball al portafolis."
 
-#: modules/site/includes/class-content-types.php:240
+#: modules/site/includes/class-content-types.php:242
 msgid "No portfolio items found in Trash."
 msgstr "No hi ha cap treball a la paperera."
 
-#: modules/site/includes/class-content-types.php:241
+#: modules/site/includes/class-content-types.php:243
 msgid "All portfolio items"
 msgstr "Tots els treballs"
 
-#: modules/site/includes/class-content-types.php:245
+#: modules/site/includes/class-content-types.php:247
 msgctxt "URL slug"
 msgid "portfolio-category"
 msgstr "categoria-portafolis"
 
-#: modules/site/includes/class-content-types.php:247
+#: modules/site/includes/class-content-types.php:249
 msgid "Portfolio categories"
 msgstr "Categories del portafolis"
 
-#: modules/site/includes/class-content-types.php:248
+#: modules/site/includes/class-content-types.php:250
 msgid "Portfolio category"
 msgstr "Categoria del portafolis"
 
@@ -3942,11 +3973,11 @@ msgctxt "module name"
 msgid "WhatsApp button"
 msgstr "Botó de WhatsApp"
 
-#: modules/whatsapp/module.php:52
+#: modules/whatsapp/module.php:55
 msgid "WhatsApp phone number in international format, digits only."
 msgstr "Número de WhatsApp en format internacional, només xifres."
 
-#: modules/whatsapp/module.php:63
+#: modules/whatsapp/module.php:66
 msgid "Predefined WhatsApp message."
 msgstr "Missatge predefinit de WhatsApp."
 
@@ -3963,3 +3994,20 @@ msgid ""
 msgstr ""
 "Amb WPML, /en/ mostra la pàgina d'inici traduïda en lloc de les darreres "
 "entrades. Sense WPML no fa res."
+
+#, php-format
+#~ msgid ""
+#~ "%s must be lowercase letters, digits, “-” and “/” (a URL path without "
+#~ "slashes at the ends)."
+#~ msgstr ""
+#~ "%s només pot tenir lletres minúscules, xifres, «-» i «/» (una ruta d'URL "
+#~ "sense barres als extrems)."
+
+#~ msgid ""
+#~ "For third-party cookies the detector cannot see (for example, the ones "
+#~ "Google sets on its own domain when a map loads). Empty fields are filled "
+#~ "with the proposal, if there is one."
+#~ msgstr ""
+#~ "Per a les galetes de tercers que el detector no pot veure (per exemple, "
+#~ "les que posa Google al seu propi domini quan es carrega un mapa). Els "
+#~ "camps buits s'emplenen amb la proposta, si n'hi ha."

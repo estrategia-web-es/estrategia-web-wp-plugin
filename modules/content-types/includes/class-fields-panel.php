@@ -16,7 +16,9 @@
  * gives it the CLASSIC screen, where the panel does not exist. For it, the
  * same fields go into a meta box (render_meta_box / save_meta_box) with a
  * nonce, edit_post and the same sanitizer (update_post_meta goes through
- * register_post_meta). Same as modules/site's client.
+ * register_post_meta). Same as modules/site's client. «required» there:
+ * Registrar::check_required_classic() (a draft with a notice; a published
+ * post keeps the previous value).
  *
  * With WPML, in a TRANSLATION the «copy» fields are locked with the note
  * «changed in the original language»: WPML would overwrite them.
@@ -162,8 +164,8 @@ final class Fields_Panel {
 		$config = self::config( $post->post_type, $post_id );
 		$input  = isset( $_POST['estrategia_web_ct'] ) && is_array( $_POST['estrategia_web_ct'] ) ? wp_unslash( $_POST['estrategia_web_ct'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- sanitized on save (sanitize_meta).
 		foreach ( $config ? $config['fields'] : array() as $field ) {
-			if ( $field['disabled'] || ! array_key_exists( $field['key'], $input ) ) {
-				continue; // Locked (WPML) or not sent: left alone.
+			if ( $field['disabled'] || ! array_key_exists( $field['key'], $input ) || isset( Registrar::kept()[ $field['key'] ] ) ) {
+				continue; // Locked (WPML), not sent, or a required one emptied on a published post (Registrar::check_required_classic()): left alone.
 			}
 			update_post_meta( $post_id, $field['key'], is_scalar( $input[ $field['key'] ] ) ? $input[ $field['key'] ] : '' );
 		}

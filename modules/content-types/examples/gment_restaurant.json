@@ -2,7 +2,7 @@
   "$schema": "../content-types.schema.json",
   "prefix": "gment_",
   "name": "gment_restaurant",
-  "slug": "restaurants",
+  "slug": { "ca": "restaurants", "es": "restaurantes", "en": "restaurants", "de": "restaurants" },
   "labels": {
     "singular": { "ca": "Restaurant", "es": "Restaurante", "en": "Restaurant" },
     "plural": { "ca": "Restaurants", "es": "Restaurantes", "en": "Restaurants" }
@@ -13,7 +13,7 @@
   "taxonomies": [
     {
       "name": "gment_cuisine",
-      "slug": "cuisine",
+      "slug": { "ca": "cuina", "es": "cocina", "en": "cuisine", "de": "kueche" },
       "labels": {
         "singular": { "ca": "Tipus de cuina", "es": "Tipo de cocina", "en": "Cuisine" },
         "plural": { "ca": "Tipus de cuina", "es": "Tipos de cocina", "en": "Cuisines" }

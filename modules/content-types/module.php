@@ -25,7 +25,13 @@
  *                  `node tools/buscar-colisiones.mjs '[\x27\x22]xxx_'`.
  *                  eweb_, estrategia_web_, ew_ and wp_ are refused.
  *   name           the post type, starts with prefix, ≤ 20 characters
- *   slug, labels {singular, plural}, description, icon, supports, public,
+ *   slug           a string or locale → string ({"ca": "restaurants",
+ *                  "es": "restaurantes"}); ASCII lowercase, digits, - and /;
+ *                  never the same as another type's or taxonomy's in the
+ *                  same language. Registered: the SITE language's. With
+ *                  WPML + String Translation, the rest become WPML slug
+ *                  translations (class-wpml.php, sync_slugs()).
+ *   labels {singular, plural}, description, icon, supports, public,
  *   has_archive, show_in_rest, hierarchical, menu_position,
  *   wpml           translate | display-as-translated | ignore
  *   taxonomies[]   an object (declared here; name ≤ 32) or the name of one
@@ -47,8 +53,11 @@
  * with core/post-meta in templates); the «<Singular> details» panel in the
  * block editor (class-fields-panel.php, a meta box on the classic screen);
  * the WPML config, through WPML's filter, plus the copy on save
- * (class-wpml.php); a 400 on publish when a required field is empty; and a
- * rewrite flush only when the definitions change (hash).
+ * (class-wpml.php) and the slug of each language as a WPML slug translation;
+ * «required»: a 400 on publish in the block editor, and on the classic
+ * screen a draft with a notice (or, if already published, the previous
+ * value kept: Registrar::check_required_classic()); and a rewrite flush only
+ * when the definitions or the site language change (hash).
  *
  * SHOWING A FIELD (16-10-2026): core/post-meta shows what is STORED — a
  * select's value («€€»), an image or a relation as an ID, a boolean as 1.
@@ -62,11 +71,12 @@
  *
  * Tests: modules/content-types/tests/ — level 1: schema.test.mjs (validator,
  * name limits, PHP ↔ JSON Schema drift), wpml.test.mjs (the WPML config and
- * the copy on save, with a WPML double), format.test.mjs (the content-field
+ * the copy on save and the slug translations, with a WPML double), format.test.mjs (the content-field
  * rules per type); level 2: register.test.mjs (registration, REST,
  * sanitizers, required, URLs, binding, admin screen), bindings.test.mjs
  * (content-field rendered in Queries); level 3: editor-panel.test.mjs (the
- * panel saves), bindings-editor.test.mjs (content-field in the editor). The test site reads the
+ * panel saves), bindings-editor.test.mjs (content-field in the editor),
+ * classic-required.test.mjs («required» on the classic screen). The test site reads the
  * definitions in tests/fixtures/ (its mu-plugin, tests/wp/).
  *
  * =========================================================================
@@ -126,6 +136,17 @@
  *     before measuring a «copy». And with WPML's setup not completed, WPML
  *     does not even load wpml_sync_custom_field: nothing is copied, and it
  *     looks like this module failing (measured, class-wpml.php).
+ *   · SLUGS PER LANGUAGE: the registered slug is ALWAYS the site language's,
+ *     never the request's (Plugin::url_slug() says why: the rewrite rules
+ *     are stored once). The other languages live in WPML, not in the rules:
+ *     WPML rewrites permalinks and rules on the fly from its «URL slug: …»
+ *     strings. A file that changes the default-language slug changes the
+ *     original of that string, and WPML then marks every translation
+ *     «needs update» — and stops using them — until sync_slugs() writes
+ *     them again (it does, in the same request: the hash changed). A
+ *     language the file does not name is left to WPML's screen. Without
+ *     String Translation every language uses the registered slug.
+ *     The real-WPML check: lavanderia-mallorca/tests/content-types-slugs-wpml.test.mjs.
  *   · Moving the existing eweb_ types (client, location…) to this system is
  *     NOT done here: TODO.md says how.
  */
