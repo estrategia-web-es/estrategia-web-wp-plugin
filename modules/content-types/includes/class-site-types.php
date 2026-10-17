@@ -144,14 +144,14 @@ final class Site_Types {
 			$def   = $row['definition'];
 			$dirty = false;
 			if ( ( $old_slugs[ $key ] ?? '' ) !== ( $new_slugs[ $key ] ?? '' ) ) {
-				$def['slug'] = self::with_site_slug( $def['slug'] ?? null, $new_slugs[ $key ] ?? '', $template['slug'] );
+				$def['slug'] = self::with_site_slug( $def['slug'] ?? null, $new_slugs[ $key ] ?? self::gettext_slug( $key, $template['slug'] ), $template['slug'] );
 				$dirty       = true;
 			}
 			foreach ( $def['taxonomies'] ?? array() as $i => $tax ) {
 				$tax_key = is_array( $tax ) ? substr( $tax['name'], strlen( $def['prefix'] ) ) : '';
 				if ( '' !== $tax_key && ( $old_slugs[ $tax_key ] ?? '' ) !== ( $new_slugs[ $tax_key ] ?? '' ) ) {
 					$original = self::template_taxonomy_slug( $template, $tax['name'] ) ?? $tax_key;
-					$def['taxonomies'][ $i ]['slug'] = self::with_site_slug( $tax['slug'] ?? null, $new_slugs[ $tax_key ] ?? '', $original );
+					$def['taxonomies'][ $i ]['slug'] = self::with_site_slug( $tax['slug'] ?? null, $new_slugs[ $tax_key ] ?? self::gettext_slug( $tax_key, $original ), $original );
 					$dirty = true;
 				}
 			}
@@ -177,11 +177,36 @@ final class Site_Types {
 	 */
 	private static function with_site_slug( $slug, string $fixed, $template_slug ) {
 		$value = '' !== $fixed ? $fixed : Schema::text( $template_slug, \EstrategiaWeb\Plugin::site_locale() );
-		if ( ! is_array( $slug ) ) {
-			return $value;
+		if ( is_array( $slug ) ) {
+			$slug[ Rest::languages()[0] ] = $value;
+			return $slug;
 		}
-		$slug[ Rest::languages()[0] ] = $value;
-		return $slug;
+		return $value;
+	}
+
+	/**
+	 * THE SLUG modules/site REGISTERED for a key: its gettext translation into
+	 * the SITE language (Plugin::url_slug() picks that file whatever the
+	 * request's language). Kept as gettext on purpose, not read from the
+	 * template: it is what a 1.4.x site really served in ANY locale — the
+	 * template only knows en, es and ca — and these msgids are also what
+	 * tests/catalan.test.mjs and tests/wplang.test.mjs measure url_slug() with.
+	 * A key that is not one of these: the template's slug in that locale.
+	 *
+	 * @param string|array<string,string> $template_slug
+	 */
+	public static function gettext_slug( string $key, $template_slug ): string {
+		$slugs = array(
+			'client'             => _x( 'clients', 'URL slug', 'estrategia-web' ),
+			'client_sector'      => _x( 'client-sector', 'URL slug', 'estrategia-web' ),
+			'testimonial'        => _x( 'testimonials', 'URL slug', 'estrategia-web' ),
+			'location'           => _x( 'locations', 'URL slug', 'estrategia-web' ),
+			'project'            => _x( 'projects', 'URL slug', 'estrategia-web' ),
+			'project_category'   => _x( 'project-category', 'URL slug', 'estrategia-web' ),
+			'portfolio'          => _x( 'portfolio', 'URL slug', 'estrategia-web' ),
+			'portfolio_category' => _x( 'portfolio-category', 'URL slug', 'estrategia-web' ),
+		);
+		return $slugs[ $key ] ?? Schema::text( $template_slug, \EstrategiaWeb\Plugin::site_locale() );
 	}
 
 	/** The slug a template gives one of its taxonomies, or null. */
@@ -238,7 +263,7 @@ final class Site_Types {
 	public static function current_slug( string $key, string $name, $template_slug, string $kind ): array {
 		$option = get_option( self::OPTION, array() );
 		$fixed  = is_array( $option ) ? (string) ( ( (array) ( $option['rewrite_slugs'] ?? array() ) )[ $key ] ?? '' ) : '';
-		$base   = '' !== $fixed ? $fixed : Schema::text( $template_slug, \EstrategiaWeb\Plugin::site_locale() );
+		$base   = '' !== $fixed ? $fixed : self::gettext_slug( $key, $template_slug );
 		/** The old site module's filter, kept for what it registered (documented in modules/site's README section). */
 		$base  = (string) apply_filters( 'estrategia_web_site_rewrite_slug', $base, $key );
 		$langs = Rest::languages();

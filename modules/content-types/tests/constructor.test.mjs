@@ -281,7 +281,9 @@ test("the migration of a 1.4.x site: its enabled types and the ones with entries
   assert.ok((await raw("eweb_testimonial")).entries >= 2, "entries untouched (2 here, plus the one an earlier test left)");
   assert.equal((await wp("/types/eweb_testimonial")).status, 404);
   // Once: a definition deleted afterwards is not brought back by the migration.
-  assert.equal((await ew("/eweb_location", { method: "DELETE" })).status, 200);
+  for (const loc of (await wp("/eweb_location?status=any&context=edit&per_page=100")).json || []) await wp(`/eweb_location/${loc.id}?force=true`, { method: "DELETE" }); // An earlier test's location.
+  const del = await ew("/eweb_location", { method: "DELETE" });
+  assert.equal(del.status, 200, del.text);
   await wp("/types");
   assert.equal((await ew("/eweb_location")).status, 404, "not migrated again");
   assert.equal(legacy.testimonials.length, 2); // after(): reset() deletes them with the rest of the eweb_ posts.

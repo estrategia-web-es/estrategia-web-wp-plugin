@@ -2019,6 +2019,46 @@ msgstr ""
 msgid "Unknown key “%1$s”. Allowed: %2$s."
 msgstr ""
 
+#: modules/content-types/includes/class-site-types.php:200
+msgctxt "URL slug"
+msgid "clients"
+msgstr ""
+
+#: modules/content-types/includes/class-site-types.php:201
+msgctxt "URL slug"
+msgid "client-sector"
+msgstr ""
+
+#: modules/content-types/includes/class-site-types.php:202
+msgctxt "URL slug"
+msgid "testimonials"
+msgstr ""
+
+#: modules/content-types/includes/class-site-types.php:203
+msgctxt "URL slug"
+msgid "locations"
+msgstr ""
+
+#: modules/content-types/includes/class-site-types.php:204
+msgctxt "URL slug"
+msgid "projects"
+msgstr ""
+
+#: modules/content-types/includes/class-site-types.php:205
+msgctxt "URL slug"
+msgid "project-category"
+msgstr ""
+
+#: modules/content-types/includes/class-site-types.php:206
+msgctxt "URL slug"
+msgid "portfolio"
+msgstr ""
+
+#: modules/content-types/includes/class-site-types.php:207
+msgctxt "URL slug"
+msgid "portfolio-category"
+msgstr ""
+
 #: modules/content-types/includes/class-store.php:78
 msgid "Content type definitions"
 msgstr ""

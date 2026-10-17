@@ -2256,6 +2256,46 @@ msgstr "%1$s.%2$s tiene que ser un texto o un objeto locale → texto."
 msgid "Unknown key “%1$s”. Allowed: %2$s."
 msgstr "Clave desconocida «%1$s». Se admiten: %2$s."
 
+#: modules/content-types/includes/class-site-types.php:200
+msgctxt "URL slug"
+msgid "clients"
+msgstr "clientes"
+
+#: modules/content-types/includes/class-site-types.php:201
+msgctxt "URL slug"
+msgid "client-sector"
+msgstr "sector"
+
+#: modules/content-types/includes/class-site-types.php:202
+msgctxt "URL slug"
+msgid "testimonials"
+msgstr "opiniones"
+
+#: modules/content-types/includes/class-site-types.php:203
+msgctxt "URL slug"
+msgid "locations"
+msgstr "sedes"
+
+#: modules/content-types/includes/class-site-types.php:204
+msgctxt "URL slug"
+msgid "projects"
+msgstr "proyectos"
+
+#: modules/content-types/includes/class-site-types.php:205
+msgctxt "URL slug"
+msgid "project-category"
+msgstr "categoria-proyecto"
+
+#: modules/content-types/includes/class-site-types.php:206
+msgctxt "URL slug"
+msgid "portfolio"
+msgstr "portfolio"
+
+#: modules/content-types/includes/class-site-types.php:207
+msgctxt "URL slug"
+msgid "portfolio-category"
+msgstr "categoria-portfolio"
+
 #
 #: modules/content-types/includes/class-store.php:78
 msgid "Content type definitions"
@@ -3788,14 +3828,19 @@ msgstr "Las redes sociales se editan en Estrategia Web › Redes sociales."
 msgid ""
 "Clients, testimonials, locations, projects and portfolio are added and "
 "switched on and off in Estrategia Web › Content types."
-msgstr "Los clientes, opiniones, sedes, proyectos y portfolio se añaden, encienden y apagan en Estrategia Web › Tipos de contenido."
+msgstr ""
+"Los clientes, opiniones, sedes, proyectos y portfolio se añaden, encienden y "
+"apagan en Estrategia Web › Tipos de contenido."
 
 #: modules/site/includes/admin/class-admin.php:123
 msgid ""
 "The Content types module is off: clients, testimonials, locations, projects "
 "and portfolio are not registered (their content is kept). Switch it on in "
 "Estrategia Web › Modules."
-msgstr "El módulo Tipos de contenido está apagado: los clientes, opiniones, sedes, proyectos y portfolio no se registran (su contenido se conserva). Enciéndelo en Estrategia Web › Módulos."
+msgstr ""
+"El módulo Tipos de contenido está apagado: los clientes, opiniones, sedes, "
+"proyectos y portfolio no se registran (su contenido se conserva). Enciéndelo "
+"en Estrategia Web › Módulos."
 
 #: modules/site/includes/admin/class-admin.php:126
 msgid "Media"
@@ -3934,21 +3979,24 @@ msgstr ""
 "Este fichero SVG no se ha podido leer o no es seguro, así que no se ha "
 "subido."
 
-#: modules/site/module.php
 #
+#: modules/site/module.php
 msgctxt "module name"
 msgid "Company data"
 msgstr "Datos de la empresa"
 
 #
-#: modules/site/module.php
 #
+#: modules/site/module.php
 msgctxt "module description"
 msgid ""
 "Company details with Block Bindings and the [estrategia_web_company] "
 "shortcode, the details of one location as a Block Bindings source, and "
 "sanitised SVG uploads."
-msgstr "Datos de la empresa con Block Bindings y el shortcode [estrategia_web_company], los datos de una sede como fuente de Block Bindings y subida de SVG saneados."
+msgstr ""
+"Datos de la empresa con Block Bindings y el shortcode "
+"[estrategia_web_company], los datos de una sede como fuente de Block "
+"Bindings y subida de SVG saneados."
 
 #: modules/social/blocks/social-links/block.json
 msgctxt "block title"
@@ -4263,10 +4311,6 @@ msgstr ""
 #~ "Solo los tipos marcados aparecen en el menú y en la web. Desmarcar un "
 #~ "tipo no borra su contenido: vuelve al marcarlo otra vez."
 
-#~ msgctxt "URL slug"
-#~ msgid "clients"
-#~ msgstr "clientes"
-
 #~ msgid "Client"
 #~ msgstr "Cliente"
 
@@ -4303,10 +4347,6 @@ msgstr ""
 #~ msgid "Set logo or photo"
 #~ msgstr "Poner logo o foto"
 
-#~ msgctxt "URL slug"
-#~ msgid "client-sector"
-#~ msgstr "sector"
-
 #~ msgid "Sectors"
 #~ msgstr "Sectores"
 
@@ -4336,10 +4376,6 @@ msgstr ""
 
 #~ msgid "Business type"
 #~ msgstr "Tipo de negocio"
-
-#~ msgctxt "URL slug"
-#~ msgid "testimonials"
-#~ msgstr "opiniones"
 
 #~ msgid "Testimonial"
 #~ msgstr "Opinión"
@@ -4386,10 +4422,6 @@ msgstr ""
 #~ msgid "Related client"
 #~ msgstr "Cliente relacionado"
 
-#~ msgctxt "URL slug"
-#~ msgid "locations"
-#~ msgstr "sedes"
-
 #~ msgid "Location"
 #~ msgstr "Sede"
 
@@ -4432,10 +4464,6 @@ msgstr ""
 #~ msgid "Static map image (media library ID)"
 #~ msgstr "Imagen del mapa estático (ID de la mediateca)"
 
-#~ msgctxt "URL slug"
-#~ msgid "projects"
-#~ msgstr "proyectos"
-
 #~ msgid "Project"
 #~ msgstr "Proyecto"
 
@@ -4466,10 +4494,6 @@ msgstr ""
 #~ msgid "All projects"
 #~ msgstr "Todos los proyectos"
 
-#~ msgctxt "URL slug"
-#~ msgid "project-category"
-#~ msgstr "categoria-proyecto"
-
 #~ msgid "Project categories"
 #~ msgstr "Categorías de proyecto"
 
@@ -4490,10 +4514,6 @@ msgstr ""
 
 #~ msgid "No categories found."
 #~ msgstr "No hay categorías."
-
-#~ msgctxt "URL slug"
-#~ msgid "portfolio"
-#~ msgstr "portfolio"
 
 #~ msgid "Portfolio item"
 #~ msgstr "Trabajo del portfolio"
@@ -4524,10 +4544,6 @@ msgstr ""
 
 #~ msgid "All portfolio items"
 #~ msgstr "Todos los trabajos"
-
-#~ msgctxt "URL slug"
-#~ msgid "portfolio-category"
-#~ msgstr "categoria-portfolio"
 
 #~ msgid "Portfolio categories"
 #~ msgstr "Categorías del portfolio"
