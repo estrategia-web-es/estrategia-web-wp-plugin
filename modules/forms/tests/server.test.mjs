@@ -154,6 +154,29 @@ test("without JS: 303 redirect to the page with the result", async () => {
   assert.equal((await submissions()).length, 0);
 });
 
+// Seen failing on 17-10-2026 with two mutants in Blocks::announce(): without
+// the «announced» mark (the reload fired it again) and announcing errors too.
+test("without JS, OK: the page that comes back fires «estrategia-web:form-sent» ONCE (for the Ads conversion); an error never", async () => {
+  await reset();
+  const signal = /<script class="estrategia-web-forms-sent"[^>]*>\s*document\.dispatchEvent\(new CustomEvent\('estrategia-web:form-sent',\{detail:\{"form":"af-contacto","returned":true\}\}\)\);\s*(\/\*[^*]*\*\/\s*)?<\/script>/;
+  let { hidden } = await loadForm(page.url);
+  await waitMinTime();
+  const ok = await submit(hidden, GOOD, { js: false });
+  assert.equal(ok.status, 303);
+  const first = await (await fetch(ok.location)).text();
+  const around = (html) => (html.match(/[\s\S]{0,200}estrategia-web-forms-sent[\s\S]{0,300}/) || html.match(/af-contacto-status[\s\S]{0,400}/) || [""])[0];
+  assert.ok(signal.test(first), "the return page carries the signal:\n" + around(first));
+  assert.equal(first.match(/estrategia-web:form-sent/g).length, 1, "once in the page");
+  const again = await (await fetch(ok.location)).text();
+  assert.match(again, /Thank you|Gracias/, "the message is still there on reload");
+  assert.ok(!again.includes("estrategia-web-forms-sent"), "but the signal is not: the conversion would count twice");
+
+  ({ hidden } = await loadForm(page.url));
+  await waitMinTime();
+  const bad = await submit(hidden, { ...GOOD, mensaje: "" }, { js: false });
+  assert.ok(!(await (await fetch(bad.location)).text()).includes("estrategia-web-forms-sent"), "an error is not a conversion");
+});
+
 test("scheduled purge: deletes what is older than the retention and leaves the rest", async () => {
   await reset();
   await settings({ retention_days: 30 });
