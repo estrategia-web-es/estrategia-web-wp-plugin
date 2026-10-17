@@ -36,6 +36,7 @@ $out = match ( $argv[1] ?? '' ) {
 		'taxonomy_keys' => Schema::TAXONOMY_KEYS,
 		'field_keys'    => Schema::FIELD_KEYS,
 		'label_keys'    => Schema::LABEL_KEYS,
+		'type_label_keys' => Schema::TYPE_LABEL_KEYS,
 		'field_types'   => Schema::FIELD_TYPES,
 		'supports'      => Schema::SUPPORTS,
 		'field_wpml'    => Schema::FIELD_WPML,

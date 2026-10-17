@@ -59,21 +59,25 @@ test("editor: a paragraph bound to estrategia-web-site/company:phone SHOWS the p
   assert.deepEqual(errors, [], "no JavaScript errors in the editor");
 });
 
-test("«Datos de la empresa» screen: saves, warns about the mistyped email, and unticking the last type disables it", async () => {
+// Since 17-10-2026 the content types are switched on and off in «Content types» (content-types module): the screen
+// links there and does not send enabled_types, which therefore stays as it was.
+test("«Datos de la empresa» screen: saves, warns about the mistyped email, links to Content types and leaves enabled_types alone", async () => {
+  const before = (await wp("/settings")).json.estrategia_web_site;
   await p.goto(`${BASE}/wp-admin/admin.php?page=estrategia-web-site`);
   assert.equal(await p.locator("h1").first().textContent(), "Datos de la empresa");
   await p.fill("#estrategia-web-site-company_name", "Company from the screen");
   await p.fill("#estrategia-web-site-email", "this-is-not-an-email");
   // type=email: the browser would block the submit; it is removed to test the server.
   await p.evaluate(() => (document.getElementById("estrategia-web-site-email").type = "text"));
-  await p.uncheck('input[name="estrategia_web_site[enabled_types][]"][value="client"]');
+  assert.equal(await p.locator('input[name="estrategia_web_site[enabled_types][]"]').count(), 0, "no type checkboxes any more");
+  assert.equal(await p.locator('.wrap a[href*="page=estrategia-web-content-types"]').count(), 1, "the link to Content types");
   await Promise.all([p.waitForURL(/settings-updated/), p.click("#submit")]);
 
   assert.match(await p.locator(".notice, .error, .updated").allTextContents().then((t) => t.join(" ")), /correo electrónico no es válido/);
   const saved = (await wp("/settings")).json.estrategia_web_site;
   assert.equal(saved.company_name, "Company from the screen");
   assert.equal(saved.email, "hola@ejemplo.test", "the good email was kept");
-  assert.deepEqual(saved.enabled_types, [], "the hidden input makes «none» arrive");
+  assert.deepEqual(saved.enabled_types, before.enabled_types, "the screen does not touch enabled_types");
   assert.equal(saved.phone, "971 12 34 56", "what was not touched stays the same");
 });
 

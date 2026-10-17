@@ -1,7 +1,6 @@
-// NIVEL: 1 — no browser or emulator. That wpml-config.xml declares what the code registers: the translation mode of every type and taxonomy of the site module (Content_Types::WPML_MODES, under its Type_Names name) and, in <admin-texts>, the company details of Settings::WPML_TRANSLATE; and that every company detail is decided (translate or same).
+// NIVEL: 1 — no browser or emulator. That wpml-config.xml declares what the code registers: in <admin-texts>, the company details of Settings::WPML_TRANSLATE, every company detail decided (translate or same), and valid attributes; and that the types of Type_Names are NOT in it any more (since 17-10-2026 the content-types templates declare them, display-as-translated).
 //
-// Reads the files as text (no WordPress), like meta-panel.test.mjs does for
-// the metas. The check with real WPML (String Translation offering the
+// Reads the files as text (no WordPress). The check with real WPML (String Translation offering the
 // strings, /en/ showing the translation) lives in Lavandería
 // (tests/company-data-wpml.test.mjs), because Playground has no WPML.
 //
@@ -22,7 +21,6 @@ const read = (rel) => fs.readFileSync(path.join(ROOT, rel), "utf8");
 // The XML without its comments: they quote entries as examples.
 const xml = read("wpml-config.xml").replace(/<!--[\s\S]*?-->/g, "");
 const names = read("modules/site/includes/class-type-names.php");
-const types = read("modules/site/includes/class-content-types.php");
 const settings = read("modules/site/includes/class-settings.php");
 const company = read("modules/site/includes/class-company.php");
 
@@ -32,9 +30,14 @@ const list = (src, name) => [...constBody(src, name).matchAll(/'([a-z_]+)'/g)].m
 const PREFIX = names.match(/const PREFIX = '([a-z_]+)';/)?.[1];
 const KEYS = list(names, "KEYS");
 const TAXONOMIES = list(names, "TAXONOMIES");
-const MODES = Object.fromEntries([...constBody(types, "WPML_MODES").matchAll(/'([a-z_]+)'\s*=>\s*'([a-z-]+)'/g)].map((m) => [m[1], m[2]]));
-// The XML spelling of each mode. NOT translate="2": WPML's XSD only admits 0|1 and a file that fails it loses its <admin-texts> (see the XML).
-const MODE_ATTR = { translate: 'translate="1"', "display-as-translated": 'translate="1" display-as-translated="1"', ignore: 'translate="0"' };
+// Since 17-10-2026 the modes are the content-types templates' (they declare WPML through its filter, not this XML).
+const TEMPLATES = path.join(ROOT, "modules/content-types/templates");
+const MODES = {};
+for (const f of fs.readdirSync(TEMPLATES).filter((x) => x.endsWith(".json"))) {
+  const t = JSON.parse(fs.readFileSync(path.join(TEMPLATES, f), "utf8"));
+  MODES[t.name.slice(PREFIX.length)] = t.wpml;
+  for (const tax of t.taxonomies || []) if (typeof tax === "object") MODES[tax.name.slice(PREFIX.length)] = tax.wpml;
+}
 
 const declared = (tag) => Object.fromEntries([...xml.matchAll(new RegExp(`<${tag} ([^>]*)>([a-z_]+)</${tag}>`, "g"))].map((m) => [m[2], m[1].trim()]));
 
@@ -55,15 +58,15 @@ test("the lists are read (if this fails, the test is not looking at anything)", 
   assert.ok(siteTexts.length > 0, "no <key name=\"estrategia_web_site\"> in <admin-texts>");
 });
 
-test("every type and taxonomy of Type_Names has its mode in Content_Types::WPML_MODES, and nothing else", () => {
+test("every type and taxonomy of Type_Names has its template, display-as-translated (the 1.4.3 criterion, kept)", () => {
   assert.deepEqual(Object.keys(MODES).sort(), [...KEYS].sort());
-  for (const [key, mode] of Object.entries(MODES)) assert.ok(mode in MODE_ATTR, `${key}: unknown mode «${mode}»`);
+  for (const [key, mode] of Object.entries(MODES)) assert.equal(mode, "display-as-translated", key);
 });
 
-test("the XML declares every type and taxonomy, under its registered name, with the mode of WPML_MODES", () => {
-  const want = (isTax) => Object.fromEntries(KEYS.filter((k) => TAXONOMIES.includes(k) === isTax).map((k) => [PREFIX + k, MODE_ATTR[MODES[k]]]));
-  assert.deepEqual(declared("custom-type"), want(false), "<custom-types>");
-  assert.deepEqual(declared("taxonomy"), want(true), "<taxonomies>");
+test("the XML no longer declares those types, taxonomies or metas: the content-types module does, from each definition (two sources would fight)", () => {
+  assert.deepEqual(Object.keys(declared("custom-type")).filter((n) => n.startsWith(PREFIX)), [], "<custom-types>");
+  assert.deepEqual(Object.keys(declared("taxonomy")).filter((n) => n.startsWith(PREFIX)), [], "<taxonomies>");
+  assert.doesNotMatch(xml, /<custom-field[^>]*>estrategia_web_(location|client|testimonial)_/, "<custom-fields>");
 });
 
 test("every translate attribute is one WPML's XSD admits (0 or 1): an invalid one drops the whole file's <admin-texts> silently", () => {

@@ -38,7 +38,7 @@
  *
  * How to maintain:
  * - THE PREFIX LIVES ONLY HERE (PREFIX). Everything else asks for it with
- *   name(): Content_Types, Location, Meta_Panel, the Unprefixed_Names alias,
+ *   name(): Content_Types, Location, the Unprefixed_Names alias,
  *   the migrator (includes/class-prefix-migration.php) and the public function
  *   estrategia_web_type_name() used by the themes' patterns.
  *   Outside the plugin there is ONE copy, and it checks itself:

@@ -40,6 +40,11 @@ final class Fields_Panel {
 		add_filter( 'estrategia_web_editor_script_handles', static fn( $handles ) => array_merge( (array) $handles, array( self::HANDLE ) ) );
 	}
 
+	/** The choices of a rating field: the same here (classic screen) and in fields-panel.js (it gets them in config). */
+	public static function rating_options(): array {
+		return array( 0 => __( 'No rating', 'estrategia-web' ), 1 => '★ (1)', 2 => '★★ (2)', 3 => '★★★ (3)', 4 => '★★★★ (4)', 5 => '★★★★★ (5)' );
+	}
+
 	/** What assets/fields-panel.js receives for a type, or null if it is not one of ours or has no fields. */
 	public static function config( string $type, int $post_id = 0 ): ?array {
 		$def = Loader::type( $type );
@@ -61,7 +66,9 @@ final class Fields_Panel {
 				'integer'   => 'integer' === $field['meta_type'],
 				'min'       => $field['min'],
 				'max'       => $field['max'],
-				'options'   => array_map( static fn( $o ) => array( 'value' => $o['value'], 'label' => Schema::text( $o['label'], $locale ) ), $field['options'] ),
+				'options'   => 'rating' === $field['type']
+					? array_map( static fn( $v, $l ) => array( 'value' => (string) $v, 'label' => $l ), array_keys( self::rating_options() ), self::rating_options() )
+					: array_map( static fn( $o ) => array( 'value' => $o['value'], 'label' => Schema::text( $o['label'], $locale ) ), $field['options'] ),
 				'postTypes' => $field['post_type'],
 				'default'   => $field['default'],
 			);
@@ -69,7 +76,7 @@ final class Fields_Panel {
 		return array(
 			'postType' => $type,
 			/* translators: %s: singular name of a content type, e.g. Restaurant */
-			'title'    => sprintf( __( '%s details', 'estrategia-web' ), Schema::text( $def['labels']['singular'], $locale ) ),
+			'title'    => isset( $def['labels']['details'] ) ? Schema::text( $def['labels']['details'], $locale ) : sprintf( __( '%s details', 'estrategia-web' ), Schema::text( $def['labels']['singular'], $locale ) ),
 			'fields'   => $fields,
 			'note'     => Wpml::active() && ! $locked && Wpml::copy_keys( $def ) ? __( 'Fields that are the same in every language are copied to the translations when you save; the others are translated in each language.', 'estrategia-web' ) : '',
 		);
@@ -124,10 +131,12 @@ final class Fields_Panel {
 			echo '<tr data-meta-key="' . esc_attr( $field['key'] ) . '"><th scope="row"><label for="' . esc_attr( $id ) . '">' . esc_html( $label ) . '</label></th><td>';
 			switch ( $field['kind'] ) {
 				case 'textarea':
+				case 'embed':
 					printf( '<textarea class="large-text" rows="3" id="%s" name="%s"%s>%s</textarea>', esc_attr( $id ), esc_attr( $name ), $attrs, esc_textarea( (string) $value ) ); // phpcs:ignore WordPress.Security.EscapeOutput
 					break;
 				case 'select':
 				case 'relation':
+				case 'rating':
 					printf( '<select id="%s" name="%s"%s>', esc_attr( $id ), esc_attr( $name ), $attrs ); // phpcs:ignore WordPress.Security.EscapeOutput
 					foreach ( self::options( $field ) as $v => $text ) {
 						printf( '<option value="%s"%s>%s</option>', esc_attr( (string) $v ), selected( (string) $value, (string) $v, false ), esc_html( $text ) );
@@ -173,6 +182,9 @@ final class Fields_Panel {
 
 	/** Options of a select or a relation on the classic screen (the same as fields-panel.js). */
 	private static function options( array $field ): array {
+		if ( 'rating' === $field['kind'] ) {
+			return self::rating_options();
+		}
 		if ( 'select' === $field['kind'] ) {
 			// «None» only when it can be stored: with a default, '' becomes the default.
 			$out = $field['required'] || '' !== $field['default'] ? array() : array( '' => __( '— None —', 'estrategia-web' ) );

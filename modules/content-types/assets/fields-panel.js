@@ -73,7 +73,11 @@
 		const common = { label: labelOf( field ), help: field.help, disabled: field.disabled, __nextHasNoMarginBottom: true };
 		switch ( field.kind ) {
 			case 'textarea':
+			case 'embed':
 				return h( TextareaControl, { ...common, value: value || '', rows: 3, onChange } );
+			case 'rating':
+				// The choices (No rating, ★ … ★★★★★) come from PHP: Fields_Panel::rating_options().
+				return h( SelectControl, { ...common, __next40pxDefaultSize: true, value: String( value || 0 ), options: field.options, onChange: ( v ) => onChange( parseInt( v, 10 ) || 0 ) } );
 			case 'select': {
 				const none = ! field.required && field.default === '' ? [ { value: '', label: __( '— None —', 'estrategia-web' ) } ] : [];
 				return h( SelectControl, { ...common, __next40pxDefaultSize: true, value: value === undefined || value === null ? field.default : String( value ), options: none.concat( field.options ), onChange } );

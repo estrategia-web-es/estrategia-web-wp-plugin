@@ -127,6 +127,8 @@ final class Bindings {
 			'number' => static fn( float $n, int $decimals ): string => number_format_i18n( $n, $decimals ),
 			'post'   => array( self::class, 'related' ),
 			'image'  => array( self::class, 'image' ),
+			// local_image: a theme path, child first and then parent.
+			'theme_file' => static fn( string $path ): string => get_theme_file_uri( $path ),
 		);
 	}
 
@@ -191,6 +193,8 @@ final class Bindings {
 			'source'     => self::SOURCE,
 			'locale'     => str_replace( '_', '-', Plugin::locale() ),
 			'dateFormat' => (string) get_option( 'date_format' ),
+			// local_image: the CHILD theme (get_theme_file_uri() also tries the parent; the editor copy does not).
+			'themeUrl'   => get_stylesheet_directory_uri(),
 			'types'      => $types,
 		);
 		wp_add_inline_script( self::HANDLE, 'window.estrategiaWebContentField = ' . wp_json_encode( $data ) . ';', 'before' );

@@ -77,7 +77,15 @@ function delete_post_meta( int $id, string $key ): void {
 	do_action( 'deleted_post_meta', array( 1 ), $id, $key, '' );
 }
 
+// No definitions in the database here (class-store.php): the double answers none.
+function get_posts( $args = array() ) {
+	return array();
+}
+define( 'ESTRATEGIA_WEB_CONTENT_TYPES_DIR', dirname( __DIR__, 2 ) . '/' );
+
 require __DIR__ . '/../../includes/class-schema.php';
+require __DIR__ . '/../../includes/class-store.php';
+require __DIR__ . '/../../includes/class-templates.php';
 require __DIR__ . '/../../includes/class-loader.php';
 require __DIR__ . '/../../includes/class-registrar.php';
 require __DIR__ . '/../../includes/class-wpml.php';

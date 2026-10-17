@@ -239,6 +239,8 @@ final class Wpml {
 				$fields[ $field['name'] ] ??= array( 'value' => $field['name'], 'attr' => $attr );
 			}
 		}
+		// The definitions themselves (class-store.php): one per type for every language, never translated.
+		$ctypes[] = array( 'value' => Store::POST_TYPE, 'attr' => array( 'translate' => '0' ) );
 		return array(
 			'custom-fields' => array( 'custom-field' => array_values( $fields ) ),
 			'custom-types'  => array( 'custom-type' => $ctypes ),

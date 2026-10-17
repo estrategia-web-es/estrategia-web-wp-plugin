@@ -167,7 +167,7 @@ final class Registrar {
 			$result   = register_post_type(
 				$name,
 				array(
-					'labels'        => self::labels( $singular, $plural ),
+					'labels'        => self::labels( $singular, $plural ) + self::optional_labels( $def['labels'], $locale ),
 					'description'   => Schema::text( $def['description'], $locale ),
 					'public'        => $def['public'],
 					'show_in_rest'  => $def['show_in_rest'],
@@ -301,6 +301,17 @@ final class Registrar {
 		);
 	}
 
+	/** The featured image labels a definition gives (Schema::TYPE_LABEL_KEYS), in WordPress's names. */
+	private static function optional_labels( array $labels, string $locale ): array {
+		$out = array();
+		foreach ( array( 'featured_image', 'set_featured_image' ) as $key ) {
+			if ( isset( $labels[ $key ] ) ) {
+				$out[ $key ] = Schema::text( $labels[ $key ], $locale );
+			}
+		}
+		return $out;
+	}
+
 	/**
 	 * The sanitizer of a field. What cannot be stored becomes the empty value
 	 * (or the default, for a select): never an error, like modules/site.
@@ -318,6 +329,9 @@ final class Registrar {
 			'relation' => static fn( $v ) => ( (int) $v > 0 && in_array( get_post_type( (int) $v ), $field['post_type'], true ) ) ? (int) $v : 0,
 			'select'   => static fn( $v ) => in_array( (string) $v, array_column( $field['options'], 'value' ), true ) ? (string) $v : (string) $default,
 			'boolean'  => static fn( $v ) => rest_sanitize_boolean( $v ),
+			'rating'      => static fn( $v ) => Sanitize::rating( $v ),
+			'embed'       => static fn( $v ) => Sanitize::embed( $v ),
+			'local_image' => static fn( $v ) => Sanitize::local_image( (string) $v ),
 			'number'   => static function ( $v ) use ( $field, $default ) {
 				if ( ! is_numeric( $v ) ) {
 					return $default;

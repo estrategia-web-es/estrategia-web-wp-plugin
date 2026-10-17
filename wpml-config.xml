@@ -126,97 +126,20 @@
 		</gutenberg-block>
 	</gutenberg-blocks>
 	<!--
-		Site module (unpublished): the location, client and testimonial metas.
-		The criterion (copy = the same in every language; translate = text
-		that is read) and the edge case are in
-		modules/site/includes/class-meta-panel.php; Meta_Panel::WPML_COPY /
-		WPML_TRANSLATE say the same, and the test
-		modules/site/tests/meta-panel.test.mjs fails if they do not match.
+		The types of a corporate site (clients, testimonials, locations,
+		projects, portfolio) and their metas are NOT declared here since
+		17-10-2026: they are definitions of the content-types module (its
+		templates), which gives WPML their config through the wpml_config_array
+		filter from each definition — the type and taxonomy «wpml» (all
+		display-as-translated in the templates) and each field's copy /
+		translate (modules/content-types/includes/class-wpml.php). A site that
+		changes a mode does it in its definition, in the panel.
+		The criterion for the templates' modes is in their files
+		(modules/content-types/templates/) and in tests/constructor-pure.test.mjs.
+		The trap that stays: WPML's XSD only admits translate="0" or "1" in
+		this file (a "2" drops the WHOLE file, admin texts included, with no
+		error); modules/site/tests/wpml-config.test.mjs checks the attributes.
 	-->
-	<custom-fields>
-		<custom-field action="copy">estrategia_web_location_phone</custom-field>
-		<custom-field action="copy">estrategia_web_location_email</custom-field>
-		<custom-field action="copy">estrategia_web_location_map_url</custom-field>
-		<custom-field action="copy">estrategia_web_location_map_embed</custom-field>
-		<custom-field action="copy">estrategia_web_location_static_map</custom-field>
-		<custom-field action="copy">estrategia_web_location_static_map_id</custom-field>
-		<custom-field action="translate">estrategia_web_location_address</custom-field>
-		<custom-field action="translate">estrategia_web_location_schedule</custom-field>
-		<custom-field action="copy">estrategia_web_client_url</custom-field>
-		<custom-field action="copy">estrategia_web_client_image_fit</custom-field>
-		<custom-field action="translate">estrategia_web_client_business_type</custom-field>
-		<custom-field action="copy">estrategia_web_testimonial_author</custom-field>
-		<custom-field action="translate">estrategia_web_testimonial_role</custom-field>
-		<custom-field action="copy">estrategia_web_testimonial_rating</custom-field>
-		<custom-field action="copy">estrategia_web_testimonial_client</custom-field>
-	</custom-fields>
-	<!--
-		Site module (1.4.3): the translation mode of the plugin's types and
-		taxonomies, under their REGISTERED name (Type_Names: «eweb_» + key).
-		Until 1.4.2 nothing was declared and each site set it by hand in
-		WPML › Settings (Lavandería: content/semilla/cargar.mjs, WPML_MODES).
-
-		translate="1" display-as-translated="1" is «Translatable - use
-		translation if available or fallback to default language»: WPML turns
-		it into mode 2 when it reads the file
-		(WPML_Config_Display_As_Translated), the same mode the content-types
-		module writes for its «display-as-translated»
-		(modules/content-types/includes/class-wpml.php).
-
-		THE TRAP THAT COST AN AFTERNOON (16-10-2026, WPML 5.0.2): writing
-		translate="2" here, as the array of the content-types filter does,
-		LOOKS like it works — the types end up in mode 2 — but WPML's XSD
-		(res/xsd/wpml-config.xsd) only admits 0 or 1, and String Translation
-		validates the file before reading <admin-texts>: with one invalid
-		attribute the WHOLE file is dropped and no admin text of this plugin
-		is registered (not even the social links), with no error anywhere.
-		modules/site/tests/wpml-config.test.mjs checks the attributes. The
-		filter is not affected: it never goes through the XSD.
-
-		The criterion: ALL of them are display-as-translated. They are lists
-		of items (clients, testimonials, locations, projects) shown in Query
-		Loops and archives; with «translatable, only the translation» a site
-		that adds a language sees every list EMPTY in it until each item is
-		translated, and «not translatable» would not let anything be
-		translated. Display-as-translated shows every item from day one in the
-		default language, and translating it (the address and schedule of a
-		location, the role in a testimonial) replaces it. The texts of each
-		item are still translated or copied by the <custom-fields> above.
-
-		Edge case, by name: a testimonial. It is a quote, usually left in the
-		language it was written in; it shows as it is in /en/ and is only
-		translated if someone wants to. A site where an untranslated item must
-		NOT show in another language (a catalogue with prices that differ per
-		country) changes that type: see the next paragraph.
-
-		What declaring it does: WPML LOCKS the setting on its screen
-		(WPML › Settings, post types; «controlled by a wpml-config.xml file»).
-		A site that needs another mode for one type either ticks WPML's
-		«unlock» for that type on that screen (custom_posts_unlocked_option)
-		or, better because it stays in code, changes it from its theme with
-		the wpml_config_array filter. And WPML applies it when it re-reads the
-		files (opening WPML or Plugins in the admin, WPML_Config::load_config_run;
-		Lavandería's deployer forces it), not on the next request.
-
-		How to maintain: a new type or taxonomy of Content_Types goes in here,
-		in Content_Types::WPML_MODES and in Type_Names::KEYS, in the same
-		commit; modules/site/tests/wpml-config.test.mjs fails if they do not
-		match. The types of each site (content-types module) do NOT go here:
-		that module declares them through the filter, from each definition's
-		«wpml».
-	-->
-	<custom-types>
-		<custom-type translate="1" display-as-translated="1">eweb_client</custom-type>
-		<custom-type translate="1" display-as-translated="1">eweb_testimonial</custom-type>
-		<custom-type translate="1" display-as-translated="1">eweb_location</custom-type>
-		<custom-type translate="1" display-as-translated="1">eweb_project</custom-type>
-		<custom-type translate="1" display-as-translated="1">eweb_portfolio</custom-type>
-	</custom-types>
-	<taxonomies>
-		<taxonomy translate="1" display-as-translated="1">eweb_client_sector</taxonomy>
-		<taxonomy translate="1" display-as-translated="1">eweb_project_category</taxonomy>
-		<taxonomy translate="1" display-as-translated="1">eweb_portfolio_category</taxonomy>
-	</taxonomies>
 	<!--
 		Social module (unpublished): name and link of each network, by
 		POSITION in the list («*» is the index). Reordering the list shifts the

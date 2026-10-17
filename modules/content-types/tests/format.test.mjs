@@ -153,3 +153,26 @@ test("text and textarea: escaped, line breaks as <br>; no HTML gets through", ()
     ["x", "id", {}, "ca", ""],
   ]);
 });
+
+// 17-10-2026, the field types of the old modules/site types (templates/). Seen red: without the rating case in Field_Format::format() it gave "" for 4; and a site path
+// (/wp-content/…) came out "" while it went through esc_url_raw (the shim, like WordPress for a scheme it is not given, refuses it).
+test("rating, embed, local_image: the number (nothing for 0), the embed URL, and an image of this site resolved from the theme", () => {
+  check({ name: "gment_stars", type: "rating", label: "Valoració" }, [
+    [4, "content", {}, "ca", "4"],
+    [0, "content", {}, "ca", ""],
+    [9, "content", {}, "ca", "5"],
+    [4, "url", {}, "ca", ""],
+  ]);
+  check({ name: "gment_map", type: "embed", label: "Mapa" }, [
+    ["https://www.google.com/maps/embed?pb=1", "url", {}, "ca", "https://www.google.com/maps/embed?pb=1"],
+    ["https://www.google.com/maps/embed?pb=1", "content", {}, "ca", "https://www.google.com/maps/embed?pb=1"],
+    ["", "url", {}, "ca", ""],
+  ]);
+  check({ name: "gment_static", type: "local_image", label: "Mapa estàtic" }, [
+    ["assets/maps/seu.webp", "url", {}, "ca", "https://x.test/theme/assets/maps/seu.webp"],
+    ["/wp-content/uploads/mapa.webp", "url", {}, "ca", "/wp-content/uploads/mapa.webp"],
+    ["https://x.test/a.webp", "url", {}, "ca", "https://x.test/a.webp"],
+    ["assets/maps/seu.webp", "content", {}, "ca", "assets/maps/seu.webp"],
+    ["assets/maps/seu.webp", "id", {}, "ca", ""],
+  ]);
+});

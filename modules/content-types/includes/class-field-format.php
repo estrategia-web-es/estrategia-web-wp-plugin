@@ -93,7 +93,28 @@ final class Field_Format {
 				}
 				return 'textarea' === $field['type'] && $html ? nl2br( esc_html( $str ), false ) : $e( $str );
 
+			case 'rating':
+				// The number, like core/post-meta: «★★★★» would be read out as «black star» four times. 0 is «no rating».
+				return 'text' === $kind && (int) $str > 0 ? $e( (string) min( 5, (int) $str ) ) : '';
+
+			case 'local_image':
+				if ( 'id' === $kind || '' === $str ) {
+					return '';
+				}
+				if ( 'url' !== $kind ) {
+					return $e( $str );
+				}
+				// Stored already checked (Sanitize::local_image): a same-site URL, a site path or a THEME path.
+				if ( preg_match( '#^/[^/]#', $str ) ) {
+					return $str; // A site path: the sanitizer only lets URL-safe characters through.
+				}
+				if ( preg_match( '#^(https?:)?//#i', $str ) ) {
+					return esc_url_raw( $str, array( 'http', 'https' ) );
+				}
+				return isset( $env['theme_file'] ) ? esc_url_raw( (string) call_user_func( $env['theme_file'], $str ) ) : '';
+
 			case 'url':
+			case 'embed':
 			case 'email':
 			case 'tel':
 				$href = self::href( $field['type'], $str );

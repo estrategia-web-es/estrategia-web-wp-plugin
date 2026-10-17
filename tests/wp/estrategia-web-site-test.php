@@ -345,6 +345,15 @@ add_action(
 				delete_option( 'icl_sitepress_settings#custom_posts_sync_option' ); // Those from legacy-types (1.2.0).
 				delete_option( 'WPML(setup/translate-everything-taxonomies)' );
 				delete_option( 'rank_math_known_post_types' );
+				// 17-10-2026: the site's types are definitions of the content-types module. As freshly installed: none, not migrated.
+				foreach ( $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'eweb_content_type'" ) as $def_id ) { // phpcs:ignore
+					wp_delete_post( (int) $def_id, true );
+				}
+				delete_option( 'estrategia_web_content_types_site_types' );
+				delete_option( 'estrategia_web_content_types_hash' );
+				if ( class_exists( \EstrategiaWeb\ContentTypes\Store::class ) ) {
+					\EstrategiaWeb\ContentTypes\Store::forget();
+				}
 				// With and without prefix (1.2.0): the migrator test seeds rows with the old names.
 				$renamed = \EstrategiaWeb\Site\Type_Names::renamed();
 				$names   = array_merge( array_keys( $renamed ), array_values( $renamed ) );

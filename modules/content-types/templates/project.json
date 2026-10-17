@@ -1,0 +1,28 @@
+{
+  "$schema": "../content-types.schema.json",
+  "template": "project",
+  "prefix": "eweb_",
+  "name": "eweb_project",
+  "slug": { "en": "projects", "es": "proyectos", "ca": "projectes" },
+  "labels": {
+    "singular": { "en": "Project", "es": "Proyecto", "ca": "Projecte" },
+    "plural": { "en": "Projects", "es": "Proyectos", "ca": "Projectes" }
+  },
+  "icon": "dashicons-portfolio",
+  "supports": ["title", "editor", "thumbnail", "excerpt", "page-attributes", "custom-fields", "revisions"],
+  "menu_position": 24,
+  "wpml": "display-as-translated",
+  "taxonomies": [
+    {
+      "name": "eweb_project_category",
+      "slug": { "en": "project-category", "es": "categoria-proyecto", "ca": "categoria-projecte" },
+      "labels": {
+        "singular": { "en": "Project category", "es": "Categoría de proyecto", "ca": "Categoria de projecte" },
+        "plural": { "en": "Project categories", "es": "Categorías de proyecto", "ca": "Categories de projecte" }
+      },
+      "hierarchical": true,
+      "wpml": "display-as-translated"
+    }
+  ],
+  "fields": []
+}

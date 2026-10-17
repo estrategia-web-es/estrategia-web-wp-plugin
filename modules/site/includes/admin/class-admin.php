@@ -9,9 +9,11 @@
  *   Checkboxes carry a hidden field in front so that «unchecked» arrives
  *   (Settings::sanitize merges with what is saved: whatever does not arrive
  *   does not change).
- * - Edge case: empty enabled_types. It arrives as [''] thanks to the hidden
- *   field, and sanitize turns it into []. Without the hidden field it would not
- *   arrive and the last type could not be disabled.
+ * - enabled_types is NOT on the screen since 17-10-2026: the content types are
+ *   switched on and off in «Estrategia Web → Content types» (content-types
+ *   module); the key stays in the option, writable over REST, as a switch
+ *   (modules/content-types/includes/class-site-types.php). The screen does
+ *   not send it, and sanitize() keeps what is stored.
  * - The trap: the settings_fields() group has to be the same as the first
  *   argument of register_setting ('estrategia_web_site'), or options.php
  *   answers «the option is not in the allowed list».
@@ -38,16 +40,6 @@ final class Admin {
 			array( self::class, 'render' ),
 			'dashicons-building',
 			3
-		);
-	}
-
-	private static function type_labels(): array {
-		return array(
-			'client'      => __( 'Clients', 'estrategia-web' ),
-			'testimonial' => __( 'Testimonials', 'estrategia-web' ),
-			'location'    => __( 'Locations', 'estrategia-web' ),
-			'project'     => __( 'Projects', 'estrategia-web' ),
-			'portfolio'   => __( 'Portfolio', 'estrategia-web' ),
 		);
 	}
 
@@ -121,16 +113,15 @@ final class Admin {
 				<?php endif; ?>
 
 				<h2><?php esc_html_e( 'Content types', 'estrategia-web' ); ?></h2>
-				<p><?php esc_html_e( 'Only the checked types appear in the menu and on the site. Unchecking a type does not delete its content: it comes back when it is checked again.', 'estrategia-web' ); ?></p>
-				<input type="hidden" name="<?php echo esc_attr( Settings::OPTION . '[enabled_types][]' ); ?>" value="">
-				<fieldset>
-					<?php foreach ( self::type_labels() as $type => $label ) : ?>
-						<label style="display:block;margin:.4em 0">
-							<input type="checkbox" name="<?php echo esc_attr( Settings::OPTION . '[enabled_types][]' ); ?>" value="<?php echo esc_attr( $type ); ?>" <?php checked( in_array( $type, (array) $data['enabled_types'], true ) ); ?>>
-							<?php echo esc_html( $label ); ?>
-						</label>
-					<?php endforeach; ?>
-				</fieldset>
+				<?php
+				// 17-10-2026: clients, testimonials, locations… are made and switched on and off in the
+				// content-types module's screen. The screen no longer sends enabled_types (sanitize() keeps it).
+				if ( class_exists( \EstrategiaWeb\ContentTypes\Page::class ) ) :
+					?>
+					<p><a href="<?php echo esc_url( admin_url( 'admin.php?page=' . \EstrategiaWeb\ContentTypes\Page::SLUG ) ); ?>"><?php esc_html_e( 'Clients, testimonials, locations, projects and portfolio are added and switched on and off in Estrategia Web › Content types.', 'estrategia-web' ); ?></a></p>
+				<?php else : ?>
+					<div class="notice notice-warning inline"><p><?php esc_html_e( 'The Content types module is off: clients, testimonials, locations, projects and portfolio are not registered (their content is kept). Switch it on in Estrategia Web › Modules.', 'estrategia-web' ); ?></p></div>
+				<?php endif; ?>
 
 				<h2><?php esc_html_e( 'Media', 'estrategia-web' ); ?></h2>
 				<input type="hidden" name="<?php echo esc_attr( Settings::OPTION . '[allow_svg]' ); ?>" value="0">

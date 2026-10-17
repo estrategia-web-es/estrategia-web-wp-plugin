@@ -6,13 +6,19 @@
   "type": "object",
   "additionalProperties": false,
   "required": ["prefix", "name", "labels"],
+  "if": { "not": { "required": ["template"] } },
+  "then": { "properties": { "prefix": { "not": { "enum": ["eweb_", "estrategia_web_", "ew_", "wp_"] } } } },
   "properties": {
     "$schema": { "type": "string" },
-    "prefix": {
-      "description": "The site's own prefix, checked with tools/buscar-colisiones.mjs. Every name in the file starts with it. eweb_, estrategia_web_, ew_ and wp_ are reserved.",
+    "template": {
+      "description": "Set by the plugin when the definition is copied from one of its templates (client, testimonial, location, project, portfolio). The names the template ships keep the plugin's prefixes; the type name cannot change. Not for hand-written files.",
       "type": "string",
-      "pattern": "^[a-z][a-z0-9]{1,8}_$",
-      "not": { "enum": ["eweb_", "estrategia_web_", "ew_", "wp_"] }
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "prefix": {
+      "description": "The site's own prefix, checked with tools/buscar-colisiones.mjs. Every name in the file starts with it. eweb_, estrategia_web_, ew_ and wp_ are reserved (except in a definition made from a template).",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]{1,8}_$"
     },
     "name": {
       "description": "The registered post type (the REST route /wp/v2/<name>). Starts with prefix. At most 20 characters: WordPress cuts it silently.",
@@ -21,7 +27,7 @@
       "maxLength": 20
     },
     "slug": { "$ref": "#/$defs/slug", "description": "Public URL base (and archive). Default: the name without the prefix, with - for _." },
-    "labels": { "$ref": "#/$defs/labels" },
+    "labels": { "$ref": "#/$defs/typeLabels" },
     "description": { "$ref": "#/$defs/text" },
     "icon": { "type": "string", "pattern": "^dashicons-[a-z0-9-]+$", "description": "A Dashicons class, e.g. dashicons-food." },
     "supports": {
@@ -85,6 +91,18 @@
         "plural": { "$ref": "#/$defs/text" }
       }
     },
+    "typeLabels": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["singular", "plural"],
+      "properties": {
+        "singular": { "$ref": "#/$defs/text" },
+        "plural": { "$ref": "#/$defs/text" },
+        "details": { "$ref": "#/$defs/text", "description": "Title of the fields panel in the editor. Default: «<Singular> details»." },
+        "featured_image": { "$ref": "#/$defs/text", "description": "What the featured image is called for this type (e.g. «Static map image»)." },
+        "set_featured_image": { "$ref": "#/$defs/text", "description": "Its button (e.g. «Set static map image»)." }
+      }
+    },
     "typeWpml": { "enum": ["translate", "display-as-translated", "ignore"], "default": "display-as-translated" },
     "taxonomy": {
       "type": "object",
@@ -118,7 +136,10 @@
       "required": ["name", "type", "label"],
       "properties": {
         "name": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "maxLength": 64, "description": "The meta key. Starts with prefix." },
-        "type": { "enum": ["text", "textarea", "number", "url", "email", "tel", "image", "date", "select", "relation", "boolean"] },
+        "type": {
+          "enum": ["text", "textarea", "number", "url", "email", "tel", "image", "date", "select", "relation", "boolean", "rating", "embed", "local_image"],
+          "description": "rating: 0 (none) to 5, picked as stars. embed: a map or video embed URL; pasting the whole <iframe> keeps its src. local_image: an image of THIS site by theme path (assets/maps/x.webp), site path or same-domain URL."
+        },
         "label": { "$ref": "#/$defs/text" },
         "help": { "$ref": "#/$defs/text" },
         "required": { "type": "boolean", "description": "Publishing with it empty is refused: a 400 in the block editor; on the classic screen (types without editor) the post stays a draft, or keeps the previous value if it was already published." },
@@ -142,6 +163,7 @@
         { "if": { "properties": { "type": { "const": "relation" } } }, "then": { "required": ["post_type"], "not": { "required": ["default"] } }, "else": { "not": { "required": ["post_type"] } } },
         { "if": { "properties": { "type": { "const": "number" } } }, "else": { "not": { "anyOf": [{ "required": ["min"] }, { "required": ["max"] }, { "required": ["integer"] }] } } },
         { "if": { "properties": { "type": { "const": "image" } } }, "then": { "not": { "required": ["default"] } } },
+        { "if": { "properties": { "type": { "const": "rating" } } }, "then": { "properties": { "default": { "type": "integer", "minimum": 0, "maximum": 5 } } } },
         { "if": { "properties": { "type": { "const": "boolean" } } }, "then": { "properties": { "default": { "type": "boolean" }, "required": { "const": false } } }, "else": { "not": { "anyOf": [{ "required": ["true_label"] }, { "required": ["false_label"] }] } } }
       ]
     }

@@ -1,26 +1,45 @@
 <?php
 /**
- * Module Name: Content types from JSON
- * Description: Each site declares its own content types, taxonomies and simple fields in JSON files of its repository, with the editor panel, Block Bindings and WPML generated.
- * Default: off
+ * Module Name: Content types
+ * Description: Build your own content types, taxonomies and fields from the panel (or start from a template: clients, testimonials, locations, projects, portfolio), with the editor panel, Block Bindings and WPML generated.
+ * Default: on
  * Requires:
  *
- * «ACF style» without a database: the definitions are JSON files in the
- * site's repo (like ACF's «local JSON»), versioned and deployed as code. The
- * client cannot break a type from the admin; the admin screen
- * (Estrategia Web → Content types) only LISTS what is declared and the
- * validation errors. First site: Gastronòmicament (restaurant, recipe,
- * product, winery). Decided by David on 15-10-2026.
+ * THE CONSTRUCTOR (17-10-2026, David: «la idea del constructor es poder
+ * crear tus propios tipos… para mí es dato: un JSON en content»). Each
+ * definition is DATA of its site: a JSON stored in the database
+ * (includes/class-store.php), made and edited in «Estrategia Web → Content
+ * types» (includes/admin/class-page.php + assets/constructor.js) through the
+ * REST route estrategia-web/v1/content-types (includes/class-rest.php, which
+ * validates and protects what is published: includes/class-changes.php).
+ * A site's repo keeps them in content/ as JSON, like its pages and settings:
+ * its content load puts them into a new or local site through that route,
+ * and its «download the content» script brings them back. In production the
+ * database rules: a load never overwrites a definition edited in the panel.
  *
- * WHERE THE FILES GO: <child theme>/content-types/*.json by default, and any
- * folder added with the filter estrategia_web_content_types_dirs (a site
- * plugin). Why, and the catch of keeping them in the theme: class-loader.php.
+ * TEMPLATES (includes/class-templates.php, templates/*.json): the five types
+ * modules/site used to register in PHP, as definitions with the same names.
+ * «Add testimonials» copies one into the database. A site that had them
+ * registered by modules/site gets them stored ONCE, with the URLs it serves
+ * today, and «enabled_types» still switches them: includes/class-site-types.php.
+ *
+ * DEFAULT: ON since that move (17-10-2026, decided by David): the types of
+ * every corporate site live here now. With no definitions it registers
+ * nothing; what a site sees is the «Content types» screen.
+ *
+ * JSON FILES, the first way (15-10-2026), stay as a READ-ONLY second
+ * source: <child theme>/content-types/*.json and any folder added with the
+ * filter estrategia_web_content_types_dirs. Why they stay, and what wins when
+ * a name is in both: class-loader.php. First site with files:
+ * Gastronòmicament (restaurant, recipe, product, winery).
  *
  * THE SCHEMA, in short (the full list: content-types.schema.json, which is
  * also what the code editor uses for autocomplete — put
  * "$schema": "<path to it>" at the top of each file):
  *
- *   one file = one post type
+ *   one definition = one post type
+ *   template       set when copied from a template (the names it ships keep
+ *                  the plugin's prefixes; Schema::validate())
  *   prefix         the site's own, «xxx_», checked with
  *                  `node tools/buscar-colisiones.mjs '[\x27\x22]xxx_'`.
  *                  eweb_, estrategia_web_, ew_ and wp_ are refused.
@@ -31,7 +50,9 @@
  *                  same language. Registered: the SITE language's. With
  *                  WPML + String Translation, the rest become WPML slug
  *                  translations (class-wpml.php, sync_slugs()).
- *   labels {singular, plural}, description, icon, supports, public,
+ *   labels         {singular, plural} required; details (panel title),
+ *                  featured_image, set_featured_image optional
+ *   description, icon, supports, public,
  *   has_archive, show_in_rest, hierarchical, menu_position,
  *   wpml           translate | display-as-translated | ignore
  *   taxonomies[]   an object (declared here; name ≤ 32) or the name of one
@@ -42,7 +63,9 @@
  *                  true_label/false_label (boolean: what the binding shows; "" = nothing)
  *   Field types: text, textarea, number, url, email, tel, image (attachment
  *   ID), date (YYYY-MM-DD), select, relation (ID of a post of a given type),
- *   boolean. Labels, help and option labels are a string or an object
+ *   boolean, rating (0–5, stars), embed (a map embed; the whole <iframe>
+ *   may be pasted), local_image (an image of this site by theme path, site
+ *   path or same-host URL). Labels, help and option labels are a string or an object
  *   locale → string ({"ca": "…", "es": "…", "en": "…"}).
  *   NO repeaters and NO groups, on purpose: a recipe's ingredients go as
  *   blocks in the content. Example: examples/gment_restaurant.json.
@@ -78,14 +101,25 @@
  * panel saves), bindings-editor.test.mjs (content-field in the editor),
  * classic-required.test.mjs («required» on the classic screen). The test site reads the
  * definitions in tests/fixtures/ (its mu-plugin, tests/wp/).
+ * The constructor (17-10-2026): level 1 constructor-pure.test.mjs (the
+ * templates validate, the template rules, Changes); level 2
+ * constructor.test.mjs (the REST route, registration from the database,
+ * templates, protections, redirects, export/import); level 3
+ * constructor-editor.test.mjs (create «Restaurantes» with three fields in
+ * the panel, and its type and panel appear).
  *
  * =========================================================================
  * HOW TO MAINTAIN
  * =========================================================================
  *
  * - Who and when: whoever needs a field type or a key the schema does not
- *   have. A site that needs a TYPE does not touch this module: it adds a
- *   JSON file to its own repo.
+ *   have. A site that needs a TYPE does not touch this module: it makes it
+ *   in the panel (and its repo gets the JSON in content/ when its content is
+ *   brought down).
+ *
+ * - A key a person should set from the panel also needs its control in
+ *   assets/constructor.js and its text in Page::strings() (a key without a
+ *   control is kept, and editable in the panel's JSON box).
  *
  * - A NEW FIELD TYPE is seven places, in the same commit, and the level 1 test
  *   fails if the first two disagree:
@@ -147,8 +181,9 @@
  *     language the file does not name is left to WPML's screen. Without
  *     String Translation every language uses the registered slug.
  *     The real-WPML check: lavanderia-mallorca/tests/content-types-slugs-wpml.test.mjs.
- *   · Moving the existing eweb_ types (client, location…) to this system is
- *     NOT done here: TODO.md says how.
+ *   · A definition saved from the panel is registered from the NEXT request
+ *     (types register at init 5, REST runs later): «Saved. The changes are
+ *     visible from the next page you open» says so on purpose.
  */
 
 namespace EstrategiaWeb\ContentTypes;
@@ -159,17 +194,26 @@ define( 'ESTRATEGIA_WEB_CONTENT_TYPES_DIR', __DIR__ . '/' );
 define( 'ESTRATEGIA_WEB_CONTENT_TYPES_URL', plugin_dir_url( __FILE__ ) );
 
 require_once __DIR__ . '/includes/class-schema.php';
+require_once __DIR__ . '/includes/class-sanitize.php';
+require_once __DIR__ . '/includes/class-store.php';
+require_once __DIR__ . '/includes/class-templates.php';
 require_once __DIR__ . '/includes/class-loader.php';
+require_once __DIR__ . '/includes/class-changes.php';
 require_once __DIR__ . '/includes/class-registrar.php';
 require_once __DIR__ . '/includes/class-wpml.php';
 require_once __DIR__ . '/includes/class-fields-panel.php';
 require_once __DIR__ . '/includes/class-field-format.php';
 require_once __DIR__ . '/includes/class-bindings.php';
+require_once __DIR__ . '/includes/class-rest.php';
+require_once __DIR__ . '/includes/class-site-types.php';
 
+Store::boot();
 Registrar::boot();
 Wpml::boot();
 Fields_Panel::boot();
 Bindings::boot();
+Rest::boot();
+Site_Types::boot(); // modules/site's old types → definitions, once; «enabled_types» still switches them.
 
 // Another theme, other folders: read again and let the hash decide the flush.
 add_action( 'after_switch_theme', array( Loader::class, 'forget' ) );

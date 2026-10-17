@@ -1,0 +1,28 @@
+{
+  "$schema": "../content-types.schema.json",
+  "template": "portfolio",
+  "prefix": "eweb_",
+  "name": "eweb_portfolio",
+  "slug": { "en": "portfolio", "es": "portfolio", "ca": "portafolis" },
+  "labels": {
+    "singular": { "en": "Portfolio item", "es": "Trabajo del portfolio", "ca": "Treball del portafolis" },
+    "plural": { "en": "Portfolio", "es": "Portfolio", "ca": "Portafolis" }
+  },
+  "icon": "dashicons-images-alt2",
+  "supports": ["title", "editor", "thumbnail", "excerpt", "page-attributes", "custom-fields", "revisions"],
+  "menu_position": 25,
+  "wpml": "display-as-translated",
+  "taxonomies": [
+    {
+      "name": "eweb_portfolio_category",
+      "slug": { "en": "portfolio-category", "es": "categoria-portfolio", "ca": "categoria-portafolis" },
+      "labels": {
+        "singular": { "en": "Portfolio category", "es": "Categoría del portfolio", "ca": "Categoria del portafolis" },
+        "plural": { "en": "Portfolio categories", "es": "Categorías del portfolio", "ca": "Categories del portafolis" }
+      },
+      "hierarchical": true,
+      "wpml": "display-as-translated"
+    }
+  ],
+  "fields": []
+}

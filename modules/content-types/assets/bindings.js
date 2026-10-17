@@ -79,7 +79,19 @@
 					return kind === 'url' ? str : '';
 				}
 				return field.kind === 'textarea' && html ? escape( str ).replace( /\r?\n/g, '<br>' ) : escape( str );
+			case 'rating':
+				// The number, not stars (Field_Format: a screen reader reads «black star» four times). 0 = no rating.
+				return kind === 'text' && parseInt( str, 10 ) > 0 ? escape( String( Math.min( 5, parseInt( str, 10 ) ) ) ) : '';
+			case 'local_image':
+				if ( kind === 'id' || ! str ) {
+					return '';
+				}
+				if ( kind !== 'url' ) {
+					return escape( str );
+				}
+				return /^(https?:)?\//i.test( str ) ? str : config.themeUrl + '/' + str.replace( /^\.\//, '' );
 			case 'url':
+			case 'embed':
 			case 'email':
 			case 'tel': {
 				const h = href( field.kind, str );

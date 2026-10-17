@@ -27,7 +27,8 @@ stored and what it does, to this plugin.
 
 | Module (folder) | What it does | Default |
 |---|---|---|
-| `site` | company details (Block Bindings, `[estrategia_web_company]`), content types (clients, testimonials, locations, projects, portfolio) and sanitized SVG: sections 1 to 4 below | on |
+| `site` | company details (Block Bindings, `[estrategia_web_company]`), the details of one location (Block Bindings) and sanitized SVG: sections 1 to 4 below; the content types (clients, testimonials, locations, projects, portfolio) are `content-types` templates since 17-10-2026 | on |
+| `content-types` | the constructor: each site's own content types, fields and taxonomies, made in the panel or from templates (section «content-types module») | on (since 17-10-2026) |
 | `matomo` | Matomo code, cookieless or hybrid (unreleased: previously inside `site`; requires `site`, stores in its option): section 5 | on |
 | `consent` | the cookie notice and its API; (unreleased) cookie register with detector and table for the policy: sections 6 and 6 bis | on |
 | `google-tags` | (unreleased) GA4, Google Ads and Tag Manager with Consent Mode v2; requires `consent`: section 6 ter | **off** |
@@ -91,7 +92,7 @@ code, with the prefix of its row.
 
 | What | Prefix | Today's names |
 |---|---|---|
-| Post types | `eweb_` (≤ 20 characters in total) | `eweb_client`, `eweb_testimonial`, `eweb_location`, `eweb_project`, `eweb_portfolio` (unreleased, 1.2.0; unprefixed up to 1.1.0) |
+| Post types | `eweb_` (≤ 20 characters in total) | `eweb_client`, `eweb_testimonial`, `eweb_location`, `eweb_project`, `eweb_portfolio` (unreleased, 1.2.0; unprefixed up to 1.1.0); `eweb_content_type` (private: the content-types module's definitions, one per type) |
 | Taxonomies | `eweb_` | `eweb_client_sector`, `eweb_project_category`, `eweb_portfolio_category` (same) |
 | Blocks | `estrategia-web/`, `estrategia-web-site/`, `estrategia-web-forms/` | `estrategia-web/carousel`, `/map`, `/whatsapp`, `/language-switcher`, `/social-links`, `/cookie-table`; `estrategia-web-site/consent`; `estrategia-web-forms/form`, `/text`, `/email`, `/tel`, `/textarea`, `/select`, `/checkbox`, `/submit`, `/notification` |
 | Options | `estrategia_web_` | `estrategia_web_site`, `estrategia_web_modules`, `estrategia_web_modules_known`, `estrategia_web_forms_settings`, `estrategia_web_forms_db_version`, `estrategia_web_forms_last_purge`, `estrategia_web_forms_migrations_log`, `estrategia_web_cookies`, `estrategia_web_cookies_settings`, `estrategia_web_google_tags`, `estrategia_web_map_google_seen`, `estrategia_web_redirects_settings`, `estrategia_web_redirects_db_version`, `estrategia_web_social_links`, `estrategia_web_uploads`, `estrategia_web_whatsapp_phone`, `estrategia_web_whatsapp_message`, `estrategia_web_content_types_hash`, `estrategia_web_content_types_wpml_pending`, `estrategia_web_content_types_wpml_slugs` |
@@ -100,7 +101,7 @@ code, with the prefix of its row.
 | Transients and cron | `estrategia_web_` | `estrategia_web_redirects_report_*`, `estrategia_web_cs_*` (detector limit); events `estrategia_web_forms_purge`, `estrategia_web_redirects_purge` |
 | Cookies | `estrategia_web_` | `estrategia_web_consent` (the old `armazon_consent` is read and carried over) |
 | Hooks (filters and actions) | `estrategia_web_` | those of each section; the live list: `grep -rhoE "(apply_filters\|do_action)\( *'estrategia_web[a-z_]*'" modules includes` |
-| REST routes | `estrategia-web/v1`, `estrategia-web-forms/v1` | `estrategia-web/v1/cookies`, `/cookies/seen`; `estrategia-web-forms/v1/submit`, `/token`; the post types' routes are core's, `/wp/v2/eweb_client`… (aliases of `/wp/v2/client`… until 2.0.0) |
+| REST routes | `estrategia-web/v1`, `estrategia-web-forms/v1` | `estrategia-web/v1/cookies`, `/cookies/seen`, `/content-types`, `/content-types/<name>`, `/content-types/templates/<key>`; `estrategia-web-forms/v1/submit`, `/token`; the post types' routes are core's, `/wp/v2/eweb_client`… (aliases of `/wp/v2/client`… until 2.0.0) |
 | Block Bindings sources | `estrategia-web-site/`, `estrategia-web/` | `estrategia-web-site/company`, `estrategia-web-site/location`, `estrategia-web/content-field` (content-types module) |
 | Shortcodes | `estrategia_web_` | `[estrategia_web_company]`, `[estrategia_web_consent_settings]`, `[estrategia_web_cookie_table]` |
 | Global functions (for themes) | `estrategia_web_` | `estrategia_web_type_name()` (1.2.0) |
@@ -289,6 +290,16 @@ The address of each location inside a Query Loop (`"postType":"location"`):
 ```
 
 ### 3. Content types
+
+**Since 17-10-2026 they are templates of the content-types module** (see
+«content-types module: the constructor»): same type, taxonomy and meta names
+as in the table below, stored as definitions in each site's database and
+edited in **Estrategia Web → Content types**. A site that had them gets them
+stored once, with the URLs it serves today; `enabled_types` and
+`rewrite_slugs` still switch them on and set the site language's slug
+(`modules/content-types/includes/class-site-types.php`). The editor panel and
+the WPML config come from the definition. What follows is the contract as it
+was, and still is, for those names.
 
 Each one is registered **only if it is in `enabled_types`**. Disabling it
 **deletes nothing**: its posts stay in the database and come back as they
@@ -973,6 +984,18 @@ still on 1.4.3 (Lavandería: `despliegue/prefijo-tipos.mjs` carries both).
 
 Pending: [TODO.md](TODO.md).
 
+## content-types module: the constructor
+
+Content types are **data of each site**: one definition per type, stored in the database (private post type `eweb_content_type`, the JSON as its content, with revisions), made and edited in **Estrategia Web → Content types**: names and address per language, supports, taxonomies and fields (text, textarea, number, url, email, tel, image, date, select, relation, boolean, rating, embed, local_image, with required, default, help, options and the WPML mode). Export and import a definition as JSON from the same screen.
+
+- **Templates**: clients, testimonials, locations, projects and portfolio, with the same type, taxonomy and meta names as the `site` module's (`modules/content-types/templates/`). «Add …» copies one into the database; from then on it is the site's.
+- **What is protected**: the internal name cannot change once there are entries; removing a field keeps its data (adding it back with the same name shows it again); changing an address warns and creates the 301s in the `redirects` module (or warns that the old addresses will give 404 if it is off); a type with entries cannot be deleted — switch it off instead (its menu and addresses go, its entries stay).
+- **REST**, administrators only: `GET|POST /wp-json/estrategia-web/v1/content-types`, `GET|POST|DELETE …/content-types/<name>`, `POST …/content-types/templates/<key>`. A write is `{"definition": {…}, "active": true, "confirm": true}`; without `confirm`, a change that moves published things answers 409 with the list of warnings.
+- **In the site's repo**: the definitions go in its content as JSON, loaded into a new or local site through that route and brought back from the server (Lavandería: `content/semilla/tipos-contenido/`, phase `tipos` of `cargar.mjs`, and `despliegue/bajar-contenido.mjs`). In production the database rules: a load never overwrites a definition edited in the panel.
+- **JSON files in the theme** (`<child theme>/content-types/*.json`, filter `estrategia_web_content_types_dirs`) still work, read-only; a definition with the same name in the database wins.
+
+The schema: `modules/content-types/content-types.schema.json`. How to maintain it: the header of `modules/content-types/module.php`.
+
 ## content-types module: showing a field with `estrategia-web/content-field`
 
 `core/post-meta` shows what is stored: `€€` instead of the option's label, an image or a related post as its ID, a boolean as `1`. The source `estrategia-web/content-field` shows the field formatted by its type, for the post in context (each row of a Query, or the post of a single template):
@@ -992,6 +1015,9 @@ Pending: [TODO.md](TODO.md).
 | date | the site's date format (`"format": "d/m/Y"` to change it) | — | — |
 | number | localized, with the decimals that were stored (`"decimals": 2`) | — | — |
 | url, email, tel | as they are (`"link": true`: a link) | the URL, `mailto:…`, `tel:…` | — |
+| embed | the URL | the URL | — |
+| rating | the number, 1 to 5 (nothing for 0) | — | — |
+| local_image | the stored path | the image URL (a theme path resolved in the child theme, then the parent) | — |
 | text, textarea | escaped (textarea: line breaks as `<br>`) | — | — |
 
 The related post and the image are those of the request's language (WPML). Empty, invalid or unpublished gives nothing. A button binds `url` and `text` to the same field, without `link`. How to maintain it, in the header of `modules/content-types/module.php`.
