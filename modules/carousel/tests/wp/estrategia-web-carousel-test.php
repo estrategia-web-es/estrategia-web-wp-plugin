@@ -47,9 +47,15 @@ if ( ! defined( 'ESTRATEGIA_WEB_BLOCKS_TESTING' ) || true !== ESTRATEGIA_WEB_BLO
 // A carousel in a two-row GRID, like Lavandería's client strip
 // (carousel-infinite.test.mjs), and 23 cards in 12 columns
 // (carousel-any-count.test.mjs): the bottom row has 11.
+// ONLY on those two pages: printed everywhere, the class name in the CSS made
+// tests/modules-page.test.mjs (which checks that a disabled carousel leaves no
+// «estrategia-web-carousel__track» in the HTML) fail (17-10-2026).
 add_action(
 	'wp_head',
 	static function () {
+		if ( ! is_page( array( 'prueba-carrusel-bucle', 'prueba-carrusel-impar' ) ) ) {
+			return;
+		}
 		echo '<style>.rejilla-prueba .estrategia-web-carousel__track{display:grid;grid-template-columns:repeat(3,70%);}</style>';
 		echo '<style>.rejilla-impar .estrategia-web-carousel__track{display:grid;grid-template-columns:repeat(12,170px);gap:12px}</style>';
 	}
