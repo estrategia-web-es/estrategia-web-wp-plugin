@@ -47,21 +47,12 @@ open is below, in its own section.
 - The Google Maps catalogue entries (NID, __Secure-ENID, AEC, SOCS) come from Google's general cookie list; a measurement on 17-10-2026 (Chromium, from Spain, no Google session) saw the embed set NO cookies. Re-check if Google publishes embed-specific cookies.
 - Lavandería still uses its hand-written policy tables; switching to the cookie-table block is a content decision for David.
 - The map's «rendered» flag never goes back: a site that removes its maps keeps the google-maps proposals (mark them Ignored or delete the option).
-## content-types: open points
-**Date:** 16-10-2026 · **Due:** before Gastronòmicament goes live (the first two)
+## content-types: open points after the constructor
+**Date:** 17-10-2026 · **Due:** —
 
-- «required» is only enforced through REST (block editor); the classic
-  screen (types without «editor») publishes anyway.
-- URL slugs per language (WPML slug translation) are not handled; the slug is
-  one string.
-- Move the `eweb_` types (client, testimonial, location, project,
-  portfolio) to content-types: one JSON per type inside the plugin (a folder
-  added with `estrategia_web_content_types_dirs`), keeping the same type,
-  taxonomy and meta names so nothing is migrated in the database. The special
-  sanitizers (rating, fit, embed, local_image, client) need field types or a
-  «sanitize» key first; then remove their definitions from `modules/site`
-  (`Content_Types`, `Meta_Panel`) and from `wpml-config.xml`.
-
+- Lavandería's `footer-social.test.mjs` failed once in a full sequence and passes alone: cause unknown.
+- `estrategia_web_testimonial_client` empty reads `null` over REST (likely WPML `post-ids`); nothing visible changes.
+- `bajar-contenido.mjs` has not yet brought the definitions back from production (it reads production over ssh).
 ## Forms: level 4
 **Date:** 01-10-2026 · **Due:** —
 
