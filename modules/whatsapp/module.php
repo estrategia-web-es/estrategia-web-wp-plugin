@@ -32,7 +32,10 @@
  * A new text option here goes there too (modules/site/tests/wpml-config.test.mjs
  * checks this one).
  *
- * Tests: in the theme repo (armazon-wp-padre/tests/whatsapp.test.mjs).
+ * Tests: in tests/ of this module (since 17-10-2026; before, in the theme
+ * repo), level 3, with their page and the site options seeded by
+ * tests/wp/estrategia-web-whatsapp-test.php and the shared harness in the
+ * plugin's tests/browser.mjs.
  */
 
 namespace EstrategiaWeb\Whatsapp;
