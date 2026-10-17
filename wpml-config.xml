@@ -83,13 +83,13 @@
 		<custom-field action="copy">estrategia_web_location_static_map_id</custom-field>
 		<custom-field action="translate">estrategia_web_location_address</custom-field>
 		<custom-field action="translate">estrategia_web_location_schedule</custom-field>
-		<custom-field action="copy">client_url</custom-field>
+		<custom-field action="copy">estrategia_web_client_url</custom-field>
 		<custom-field action="copy">estrategia_web_client_image_fit</custom-field>
 		<custom-field action="translate">estrategia_web_client_business_type</custom-field>
 		<custom-field action="copy">estrategia_web_testimonial_author</custom-field>
-		<custom-field action="translate">testimonial_role</custom-field>
+		<custom-field action="translate">estrategia_web_testimonial_role</custom-field>
 		<custom-field action="copy">estrategia_web_testimonial_rating</custom-field>
-		<custom-field action="copy">testimonial_client</custom-field>
+		<custom-field action="copy">estrategia_web_testimonial_client</custom-field>
 	</custom-fields>
 	<!--
 		Site module (1.4.3): the translation mode of the plugin's types and

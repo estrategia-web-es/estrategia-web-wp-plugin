@@ -27,7 +27,11 @@ const php = Object.fromEntries([...constant("WPML_COPY").map((k) => [k, "copy"])
 const fromXml = Object.fromEntries([...xml.matchAll(/<custom-field action="(copy|translate)">([a-z_]+)<\/custom-field>/g)].map((m) => [m[2], m[1]]));
 
 test("the metas are read (if this fails, the test is not looking at anything)", () => {
-  assert.ok(metaKeys.includes("estrategia_web_location_phone") && metaKeys.includes("estrategia_web_client_business_type") && metaKeys.includes("testimonial_role"), metaKeys.join(", "));
+  assert.ok(metaKeys.includes("estrategia_web_location_phone") && metaKeys.includes("estrategia_web_client_business_type") && metaKeys.includes("estrategia_web_testimonial_role"), metaKeys.join(", "));
+});
+
+test("every meta carries the prefix (WordPress.org; the three old ones are Unprefixed_Meta's aliases)", () => {
+  assert.deepEqual(metaKeys.filter((k) => !k.startsWith("estrategia_web_")), []);
 });
 
 test("every location, client and testimonial meta is decided (copy or translate), and only once", () => {

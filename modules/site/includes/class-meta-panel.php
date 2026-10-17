@@ -36,7 +36,7 @@
  *   «Monday to Friday»), business type, role of a testimonial's author.
  * - Edge case by name: the AUTHOR of a testimonial. It is a proper name
  *   («Marta G.»), so «copy»; if a site ever signs as «Client from Palma», it
- *   would have to switch to «translate». And the client website (client_url):
+ *   would have to switch to «translate». And the client website (estrategia_web_client_url):
  *   «copy», even though there are sites with /en/; whoever wants it per
  *   language changes it here and in the XML.
  * WPML::COPY and WPML::TRANSLATE below are the list; wpml-config.xml has to
@@ -120,11 +120,11 @@ final class Meta_Panel {
 		'estrategia_web_location_map_embed',
 		'estrategia_web_location_static_map',
 		'estrategia_web_location_static_map_id',
-		'client_url',
+		'estrategia_web_client_url',
 		'estrategia_web_client_image_fit',
 		'estrategia_web_testimonial_author',
 		'estrategia_web_testimonial_rating',
-		'testimonial_client',
+		'estrategia_web_testimonial_client',
 	);
 
 	/** Fields translated in each language. The same in wpml-config.xml. */
@@ -132,7 +132,7 @@ final class Meta_Panel {
 		'estrategia_web_location_address',
 		'estrategia_web_location_schedule',
 		'estrategia_web_client_business_type',
-		'testimonial_role',
+		'estrategia_web_testimonial_role',
 	);
 
 	public static function boot(): void {
