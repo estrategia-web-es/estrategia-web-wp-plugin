@@ -9,6 +9,11 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## Unreleased
+
+- **Cookies: third-party services the plugin itself loads now declare their known cookies.** The map (once a map with a Google embed has been rendered), Google tags (GA4 / Ads) and Matomo in hybrid mode declare their service with the new `estrategia_web_cookie_services` filter; the cookies of each service (catalogue in `modules/consent/includes/class-cookie-services.php`, taken from Google's and Matomo's own documentation, source and date in comments) appear on Estrategia Web → Cookies as pending «Declared by the plugin» proposals and, once confirmed, in the policy table. Existing rows are never overwritten; pending rows of a service no longer declared are removed. New option `estrategia_web_map_google_seen`.
+- **Google tags: the form conversion also counts a submission sent WITHOUT JavaScript.** The page that comes back (`?af_result=…`) fires `estrategia-web:form-sent` with `detail.returned`, once per submission; the conversion waits until Advertising is granted on that page and is never sent without it.
+
 ## 1.4.3 — 16-10-2026
 
 - **Carousel: the infinite loop works with any number of cards in a multi-row grid.** A short last row (e.g. 23 clients in rows of 12) used to stop the rotation and the loop rewound from the last column to the first; now each card is placed in its grid cell and the gap travels with its column (option (a), David, 16-10-2026). No clones, nothing new in the accessibility tree. Test: parent theme `tests/carousel-any-count.test.mjs`.

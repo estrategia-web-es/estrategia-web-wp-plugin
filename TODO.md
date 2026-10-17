@@ -41,15 +41,12 @@ open is below, in its own section.
 
 (Nothing pending from David's list. Whatever new he asks for goes here.)
 
-## Cookies: what the detector does not cover
-**Date:** 14-10-2026 · **Due:** —
+## Cookies: third-party services, open points
+**Date:** 17-10-2026 · **Due:** —
 
-- The Google Ads conversion of a form sent WITHOUT JavaScript (the redirect
-  with `af_result`) is not counted.
-- The policy table does not include third-party cookies nobody adds by hand
-  (the google.com ones from the map iframe): the detector does not see them.
-  Lavandería keeps its hand-written policy tables for that reason.
-
+- The Google Maps catalogue entries (NID, __Secure-ENID, AEC, SOCS) come from Google's general cookie list; a measurement on 17-10-2026 (Chromium, from Spain, no Google session) saw the embed set NO cookies. Re-check if Google publishes embed-specific cookies.
+- Lavandería still uses its hand-written policy tables; switching to the cookie-table block is a content decision for David.
+- The map's «rendered» flag never goes back: a site that removes its maps keeps the google-maps proposals (mark them Ignored or delete the option).
 ## content-types: open points
 **Date:** 16-10-2026 · **Due:** before Gastronòmicament goes live (the first two)
 
