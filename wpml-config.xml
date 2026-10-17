@@ -6,64 +6,123 @@
 	nothing. That is why there is ONE for all modules (1.1.0; until then it
 	belonged to the forms plugin): a module with attributes to translate adds
 	its <gutenberg-block> entries here, in the same commit as the module. It is
-	one of the three shared files (see includes/class-modules.php). What
-	follows belongs to the forms module.
+	one of the three shared files (see includes/class-modules.php).
+
+	What a <key> does (WPML 5, measured 17-10-2026 on Lavandería local): when
+	a page is sent to translation, WPML reads these attributes from the block
+	comment of every block of that type and offers each value as a field of
+	the translation job (Advanced or Classic Translation Editor); when the job
+	is completed, it rebuilds the translated page FROM THE ORIGINAL, replacing
+	only these values. So an attribute that is NOT declared is copied as it
+	is from the original, on every translation update: a manual change on the
+	translated page lasts until the next update. «label» is the field title
+	the translator sees; type="link" makes it a link field (a URL that may
+	change per language). Without WPML, or for a block not listed, nothing.
+
+	The criterion: an attribute goes in if a PERSON reads it, on the page or
+	in an email (a label, a placeholder, a message, an aria-label, an alt
+	text), or if it is a URL that may change per language (the privacy page,
+	a map in another language). It stays out if it is a key, a number, an
+	enum, an id or a technical value: translating it would break something or
+	mean nothing. Declaring it does not force anyone to translate it: left
+	untranslated, the translated page shows the original.
 
 	How to maintain:
-	- A new attribute that a person reads (visitor or recipient of an email)
-	  goes in here in the same commit as in block.json.
-	- Edge case: the recipient of a notification («to») is NOT translated, so
-	  the translator cannot redirect the emails. If a site needs a different
-	  recipient per language, it is set by hand on the translated page.
-	  «name» and «formId» are not translated either: they are keys, and
-	  translating them would split the submissions log and the placeholders.
-	  The dropdown's «defaultOption» is not either: it is the POSITION of the
-	  option, and since «options» is translated line by line without changing
-	  the order, the translated page preselects the same option on its own
-	  (see includes/class-preselect.php). A translator who reorders the
-	  options shifts it.
-	- The trap: the texts used by default when the attribute is empty (the
-	  «Enviar» button, the consent) do NOT go through here, they come from the
-	  .po. If they are filled in on the original site, then they do have to be
-	  translated here.
+	- A new string attribute in a block.json goes in here OR into EXCLUDED of
+	  tests/wpml-blocks.test.mjs, with its reason, in the same commit; that
+	  level 1 test fails otherwise (and if something here no longer exists in
+	  the block.json). Number, boolean and enum attributes are left out by
+	  the test on their own.
+	- Edge cases, by name:
+	  · The recipient of a notification («to», «replyTo») is NOT translated,
+	    so the translator cannot redirect the emails. If a site needs a
+	    different recipient per language, it is set by hand on the translated
+	    page (and redone after each translation update, see above).
+	  · «name» and «formId» are not translated either: they are keys, and
+	    translating them would split the submissions log and the markers.
+	  · The dropdown's «defaultOption» is not either: it is the POSITION of
+	    the option, and since «options» is translated line by line without
+	    changing the order, the translated page preselects the same option on
+	    its own (see modules/forms/includes/class-preselect.php). A translator
+	    who reorders the options shifts it.
+	  · The phone of the WhatsApp button and of the map: the same number in
+	    every language.
+	  · The form's «title» IS translated although the page does not show it:
+	    it is the default subject of the emails («Site: title») that the
+	    sender of the acknowledgement reads.
+	- The traps:
+	  · The texts used by default when the attribute is empty (the «Send»
+	    button, the consent, the WhatsApp label) do NOT go through here, they
+	    come from the .po. If they are filled in on the original site, then
+	    they do have to be translated here.
+	  · An attribute bound with Block Bindings (the map bound to a location,
+	    the WhatsApp message bound to the company details) shows the bound
+	    value whatever its saved value is: it is translated where the source
+	    lives (the location post, String Translation), not here.
+	  · The aliases with the names from before 1.0.0 (armazon-forms/…,
+	    armazon-site/consent, armazon/…) are NOT declared: the migrator
+	    rewrote that content (Lavandería, the only site that had it); an old
+	    block left over shows its original text in every language.
+	  · Every attribute of a <key> must be one WPML's XSD admits (label, type,
+	    sub-type, encoding, search-method…): one invalid attribute drops the
+	    WHOLE file (see the custom-types comment below).
 -->
 <wpml-config>
 	<gutenberg-blocks>
-		<gutenberg-block type="estrategia-web-forms/form" translate="1">
-			<key name="successMessage" />
-			<key name="errorMessage" />
+		<gutenberg-block type="estrategia-web-forms/form" translate="1" label="Form">
+			<key name="title" label="Form title (default email subject)" />
+			<key name="successMessage" label="Success message" />
+			<key name="errorMessage" label="Error message" />
 		</gutenberg-block>
-		<gutenberg-block type="estrategia-web-forms/text" translate="1">
-			<key name="label" />
-			<key name="placeholder" />
+		<gutenberg-block type="estrategia-web-forms/text" translate="1" label="Form: text field">
+			<key name="label" label="Field label" />
+			<key name="placeholder" label="Field placeholder" />
 		</gutenberg-block>
-		<gutenberg-block type="estrategia-web-forms/email" translate="1">
-			<key name="label" />
-			<key name="placeholder" />
+		<gutenberg-block type="estrategia-web-forms/email" translate="1" label="Form: email field">
+			<key name="label" label="Field label" />
+			<key name="placeholder" label="Field placeholder" />
 		</gutenberg-block>
-		<gutenberg-block type="estrategia-web-forms/tel" translate="1">
-			<key name="label" />
-			<key name="placeholder" />
+		<gutenberg-block type="estrategia-web-forms/tel" translate="1" label="Form: phone field">
+			<key name="label" label="Field label" />
+			<key name="placeholder" label="Field placeholder" />
 		</gutenberg-block>
-		<gutenberg-block type="estrategia-web-forms/textarea" translate="1">
-			<key name="label" />
-			<key name="placeholder" />
+		<gutenberg-block type="estrategia-web-forms/textarea" translate="1" label="Form: long text field">
+			<key name="label" label="Field label" />
+			<key name="placeholder" label="Field placeholder" />
 		</gutenberg-block>
-		<gutenberg-block type="estrategia-web-forms/select" translate="1">
-			<key name="label" />
-			<key name="placeholder" />
-			<key name="options" />
+		<gutenberg-block type="estrategia-web-forms/select" translate="1" label="Form: dropdown">
+			<key name="label" label="Field label" />
+			<key name="placeholder" label="First option (placeholder)" />
+			<key name="options" label="Options, one per line (keep the order)" />
 		</gutenberg-block>
-		<gutenberg-block type="estrategia-web-forms/checkbox" translate="1">
-			<key name="label" />
-			<key name="privacyUrl" />
+		<gutenberg-block type="estrategia-web-forms/checkbox" translate="1" label="Form: checkbox">
+			<key name="label" label="Checkbox text" />
+			<key name="privacyUrl" label="Privacy policy URL" type="link" />
 		</gutenberg-block>
-		<gutenberg-block type="estrategia-web-forms/submit" translate="1">
-			<key name="text" />
+		<gutenberg-block type="estrategia-web-forms/submit" translate="1" label="Form: send button">
+			<key name="text" label="Button text" />
 		</gutenberg-block>
-		<gutenberg-block type="estrategia-web-forms/notification" translate="1">
-			<key name="subject" />
-			<key name="body" />
+		<gutenberg-block type="estrategia-web-forms/notification" translate="1" label="Form: email notification">
+			<key name="subject" label="Email subject" />
+			<key name="body" label="Email body" />
+		</gutenberg-block>
+		<gutenberg-block type="estrategia-web/whatsapp" translate="1" label="WhatsApp button">
+			<key name="message" label="Pre-filled message" />
+			<key name="label" label="Button label (screen readers)" />
+		</gutenberg-block>
+		<gutenberg-block type="estrategia-web/map" translate="1" label="Map">
+			<key name="placeName" label="Place name" />
+			<key name="address" label="Address" />
+			<key name="hours" label="Opening hours" />
+			<key name="imageAlt" label="Image alternative text" />
+			<key name="embedUrl" label="Google Maps embed URL" type="link" />
+			<key name="mapsUrl" label="Google Maps link" type="link" />
+		</gutenberg-block>
+		<gutenberg-block type="estrategia-web/carousel" translate="1" label="Carousel">
+			<key name="label" label="Carousel name (screen readers)" />
+		</gutenberg-block>
+		<gutenberg-block type="estrategia-web-site/consent" translate="1" label="Cookie settings link">
+			<key name="label" label="Link text" />
 		</gutenberg-block>
 	</gutenberg-blocks>
 	<!--
