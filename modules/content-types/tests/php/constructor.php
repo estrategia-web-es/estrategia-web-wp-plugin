@@ -8,6 +8,7 @@
  *     php constructor.php templates   stdin: {locale}                   → {key: {errors, slug, taxonomy_slugs}} every template, materialized
  *     php constructor.php changes     stdin: {old|null, new, counts}    → Changes::check() on the NORMALIZED pair
  *     php constructor.php redirects   stdin: {paths, from, to}          → Changes::redirect_paths()
+ *     php constructor.php missing     stdin: {def}                      → {missing: Templates::missing_fields(), added: Templates::add_missing()}
  *     php constructor.php lists       (no stdin)                        → Schema lists for the drift check
  *
  * How to maintain: a new mode is a new `case`. Only __() is shimmed: if a
@@ -57,6 +58,10 @@ switch ( $argv[1] ?? '' ) {
 		break;
 	case 'redirects':
 		$out = (object) Changes::redirect_paths( $in['paths'], $in['from'], $in['to'] );
+		break;
+	case 'missing':
+		// What the constructor offers and what a deploy script would store.
+		$out = array( 'missing' => Templates::missing_fields( $in['def'] ), 'added' => Templates::add_missing( $in['def'] ) );
 		break;
 	case 'lists':
 		$out = array( 'label_keys' => Schema::LABEL_KEYS, 'type_label_keys' => Schema::TYPE_LABEL_KEYS, 'field_types' => Schema::FIELD_TYPES );

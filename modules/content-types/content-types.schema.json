@@ -137,8 +137,8 @@
       "properties": {
         "name": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "maxLength": 64, "description": "The meta key. Starts with prefix." },
         "type": {
-          "enum": ["text", "textarea", "number", "url", "email", "tel", "image", "date", "select", "relation", "boolean", "rating", "embed", "local_image"],
-          "description": "rating: 0 (none) to 5, picked as stars. embed: a map or video embed URL; pasting the whole <iframe> keeps its src. local_image: an image of THIS site by theme path (assets/maps/x.webp), site path or same-domain URL."
+          "enum": ["text", "textarea", "number", "url", "email", "tel", "image", "date", "select", "relation", "boolean", "rating", "embed", "local_image", "hours"],
+          "description": "rating: 0 (none) to 5, picked as stars. embed: a map or video embed URL; pasting the whole <iframe> keeps its src. local_image: an image of THIS site by theme path (assets/maps/x.webp), site path or same-domain URL. hours: opening hours per day, stored as JSON text {\"mo\":[\"08:00-14:00\",\"16:00-20:00\"],…} (mo…su; closed days left out)."
         },
         "label": { "$ref": "#/$defs/text" },
         "help": { "$ref": "#/$defs/text" },
@@ -164,6 +164,7 @@
         { "if": { "properties": { "type": { "const": "number" } } }, "else": { "not": { "anyOf": [{ "required": ["min"] }, { "required": ["max"] }, { "required": ["integer"] }] } } },
         { "if": { "properties": { "type": { "const": "image" } } }, "then": { "not": { "required": ["default"] } } },
         { "if": { "properties": { "type": { "const": "rating" } } }, "then": { "properties": { "default": { "type": "integer", "minimum": 0, "maximum": 5 } } } },
+        { "if": { "properties": { "type": { "const": "hours" } } }, "then": { "properties": { "default": { "type": "string" } } } },
         { "if": { "properties": { "type": { "const": "boolean" } } }, "then": { "properties": { "default": { "type": "boolean" }, "required": { "const": false } } }, "else": { "not": { "anyOf": [{ "required": ["true_label"] }, { "required": ["false_label"] }] } } }
       ]
     }

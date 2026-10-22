@@ -97,6 +97,79 @@ final class Templates {
 		return $template;
 	}
 
+	/**
+	 * NEW FIELDS OF A TEMPLATE, for a site that copied it before they existed
+	 * (22-10-2026: the location template got the address by parts, the
+	 * structured hours, the coordinates and the business type for
+	 * modules/local-business; Lavandería had its copy since 17-10-2026).
+	 *
+	 * The decision: they are OFFERED, never added by themselves. The copy is
+	 * the site's (header of this file): a plugin update that wrote into it
+	 * would bring back a field the site removed on purpose, and the client's
+	 * panel would change under them. So the constructor shows «The template
+	 * has N new fields» with a button that puts them into the definition
+	 * being edited (assets/constructor.js), and the person saves. A deploy
+	 * that needs them on a published site does the same in a script, with
+	 * add_missing() and Store::save() (Lavandería: despliegue/negocio-local.php).
+	 *
+	 * «Missing» = a field of the template whose NAME the definition does not
+	 * have. A field the site changed (another label, wpml) is NOT missing: it
+	 * is the site's version. Boundary case, with a name: a site that REMOVED
+	 * the template's «Opening hours (for search engines)» on purpose is offered
+	 * it again on every visit to its editor; the button is never pressed for
+	 * it, and nothing changes by itself.
+	 *
+	 * @return array<int, array{after: ?string, field: array}> Each missing field with
+	 *         the template field before it (null: first) — where add_missing() puts it.
+	 */
+	public static function missing_fields( $def ): array {
+		$template = self::for_definition( $def );
+		if ( ! $template || ! is_array( $def['fields'] ?? null ) ) {
+			return array();
+		}
+		$have = array();
+		foreach ( $def['fields'] as $field ) {
+			if ( is_array( $field ) && isset( $field['name'] ) ) {
+				$have[ (string) $field['name'] ] = true;
+			}
+		}
+		$out    = array();
+		$before = null;
+		foreach ( (array) ( $template['fields'] ?? array() ) as $field ) {
+			if ( ! isset( $have[ $field['name'] ] ) ) {
+				$out[] = array( 'after' => $before, 'field' => $field );
+			}
+			$before = $field['name'];
+		}
+		return $out;
+	}
+
+	/**
+	 * The definition with the template's missing fields put in: each one right
+	 * after the field that precedes it in the template (if the definition
+	 * has it; otherwise after the last one put in, or at the end). The fields
+	 * the definition has stay exactly as they are, in their order.
+	 */
+	public static function add_missing( array $def ): array {
+		$fields = array_values( (array) ( $def['fields'] ?? array() ) );
+		foreach ( self::missing_fields( $def ) as $missing ) {
+			$at = count( $fields );
+			if ( null === $missing['after'] ) {
+				$at = 0;
+			} else {
+				foreach ( $fields as $i => $field ) {
+					if ( ( $field['name'] ?? null ) === $missing['after'] ) {
+						$at = $i + 1;
+						break;
+					}
+				}
+			}
+			array_splice( $fields, $at, 0, array( $missing['field'] ) );
+		}
+		$def['fields'] = $fields;
+		return $def;
+	}
+
 	/** The template that registers a type name, or null («eweb_client» → client's). */
 	public static function by_type( string $type ): ?array {
 		foreach ( self::all() as $template ) {

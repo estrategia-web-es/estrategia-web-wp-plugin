@@ -350,6 +350,8 @@ final class Rest {
 			'errors'     => $loaded['errors'][ $where ] ?? array(),
 			'definition' => $def,
 			'modified'   => $row ? $row['modified'] : '',
+			// What the constructor offers to add (Templates::missing_fields()); only to a copy in the database, which is the editable one.
+			'missingFields' => $row && is_array( $def ) ? Templates::missing_fields( $def ) : array(),
 		);
 	}
 

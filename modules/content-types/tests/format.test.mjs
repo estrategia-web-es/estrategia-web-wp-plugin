@@ -176,3 +176,18 @@ test("rating, embed, local_image: the number (nothing for 0), the embed URL, and
     ["assets/maps/seu.webp", "id", {}, "ca", ""],
   ]);
 });
+
+// 22-10-2026. Seen red: without the hours case in Field_Format::format() every row gave "".
+test("hours: one line per run of days with the same hours, <br> in HTML and «; » in an attribute", () => {
+  const hours = { name: "gment_hours", type: "hours", label: "Horari" };
+  const week = '{"mo":["08:00-16:00"],"tu":["08:00-16:00"],"we":["08:00-16:00"],"th":["08:00-16:00"],"fr":["08:00-16:00"],"sa":["09:00-13:00","17:00-20:00"]}';
+  check(hours, [
+    [week, "content", {}, "ca", "dl.–dv.: T08:00–T16:00<br>ds.: T09:00–T13:00, T17:00–T20:00"],
+    ['{"su":["10:00-14:00"]}', "content", {}, "ca", "dg.: T10:00–T14:00"],
+    ["", "content", {}, "ca", ""],
+    [week, "url", {}, "ca", ""],
+    [week, "id", {}, "ca", ""],
+  ]);
+  const got = run([{ field: hours, raw: week, attribute: "alt", html: false }]);
+  assert.deepEqual(got, ["dl.–dv.: T08:00–T16:00; ds.: T09:00–T13:00, T17:00–T20:00"]);
+});

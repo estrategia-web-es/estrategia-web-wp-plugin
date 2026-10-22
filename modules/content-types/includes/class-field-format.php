@@ -29,6 +29,10 @@
  *   image     the alt text («title»: the image's title)    the image URL           the attachment ID
  *             ("size" arg: thumbnail, medium, large…; default full)
  *   relation  the related post's title; with "link": <a>  its permalink           its ID
+ *   hours     one line per run of days with the same     —                       —
+ *             hours («Mon–Sat: 8:00–16:00»), <br> between
+ *             them («; » in an attribute); day names and
+ *             the time format of the site's language
  *
  * Empty, invalid or unpublished ⇒ "" (never the raw ID or "1").
  *
@@ -73,6 +77,8 @@ final class Field_Format {
 	 *   number  fn( float $n, int $decimals ): string
 	 *   post    fn( int $id, string[] $types ): ?array{id:int,title:string,url:string}
 	 *   image   fn( int $id, string $size ): ?array{id:int,url:string,alt:string,title:string}
+	 *   days    string[7]  short day names, Monday first (hours)
+	 *   time    fn( string $hhmm ): string  the site's time format (hours)
 	 * @param bool   $html      true: the value goes into HTML (escaped here); false: into an HTML attribute (plain).
 	 */
 	public static function format( array $field, $raw, string $attribute, array $args, array $env, bool $html = true ): string {
@@ -112,6 +118,13 @@ final class Field_Format {
 					return esc_url_raw( $str, array( 'http', 'https' ) );
 				}
 				return isset( $env['theme_file'] ) ? esc_url_raw( (string) call_user_func( $env['theme_file'], $str ) ) : '';
+
+			case 'hours':
+				if ( 'text' !== $kind ) {
+					return '';
+				}
+				$lines = Hours::summary( $raw, (array) ( $env['days'] ?? array() ), $env['time'] ?? static fn( $t ) => $t );
+				return $html ? implode( '<br>', array_map( 'esc_html', $lines ) ) : implode( '; ', $lines );
 
 			case 'url':
 			case 'embed':

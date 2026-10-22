@@ -554,9 +554,45 @@
 			);
 		}
 
+		/*
+		 * NEW FIELDS OF THE TEMPLATE (22-10-2026): a type copied from a template
+		 * before the template got more fields is OFFERED them, never given them
+		 * by itself (why: Templates::missing_fields()). The button puts them
+		 * into the draft after the field that precedes each in the template,
+		 * as Templates::add_missing() does; the person saves as always.
+		 */
+		const offer = el( 'div', { 'data-template-fields': '' } );
+		function offerSection() {
+			const fields = draft.fields || [];
+			const missing = ( ( item && item.missingFields ) || [] ).filter( ( m ) => ! fields.some( ( f ) => f && f.name === m.field.name ) );
+			if ( ! missing.length ) {
+				return [];
+			}
+			const names = missing.map( ( m ) => text( m.field.label, mainLang() ) || m.field.name ).join( ', ' );
+			return [
+				el(
+					'div',
+					{ class: 'notice notice-info inline' },
+					el( 'p', {}, fill( t.templateNewFields, missing.length, names ) ),
+					el( 'p', {}, button( t.templateAddFields, () => {
+						draft.fields = draft.fields || [];
+						let first = null;
+						for ( const m of missing ) {
+							const after = m.after === null ? -1 : draft.fields.findIndex( ( f ) => f && f.name === m.after );
+							const at = m.after === null ? 0 : after >= 0 ? after + 1 : draft.fields.length;
+							draft.fields.splice( at, 0, JSON.parse( JSON.stringify( m.field ) ) );
+							first = first === null ? at : Math.min( first, at );
+						}
+						paint( 'field-' + first );
+					}, { 'data-action': 'add-template-fields' } ) )
+				),
+			];
+		}
+
 		/** Repaints the sections; focus goes to the first control of what was just added or changed. */
 		function paint( focus ) {
 			draft.labels = draft.labels || { singular: {}, plural: {} };
+			offer.replaceChildren( ...offerSection() );
 			sections.replaceChildren( typeSection(), taxonomySection(), fieldSection() );
 			refreshJson();
 			if ( focus === 'taxonomy' ) {
@@ -575,6 +611,7 @@
 			el(
 				'form',
 				{ class: 'ewct-form', novalidate: true, onsubmit: ( e ) => { e.preventDefault(); save( item, draft, false ); } },
+				offer,
 				sections,
 				el(
 					'details',

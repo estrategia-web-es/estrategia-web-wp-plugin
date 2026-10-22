@@ -45,6 +45,16 @@ final class Fields_Panel {
 		return array( 0 => __( 'No rating', 'estrategia-web' ), 1 => '★ (1)', 2 => '★★ (2)', 3 => '★★★ (3)', 4 => '★★★★ (4)', 5 => '★★★★★ (5)' );
 	}
 
+	/** @return string[] The seven day names of an «hours» field, Monday first, in the editor's language. */
+	public static function day_names(): array {
+		global $wp_locale;
+		$out = array();
+		foreach ( array( 1, 2, 3, 4, 5, 6, 0 ) as $n ) {
+			$out[] = $wp_locale ? (string) $wp_locale->get_weekday( $n ) : array( 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' )[ $n ];
+		}
+		return $out;
+	}
+
 	/** What assets/fields-panel.js receives for a type, or null if it is not one of ours or has no fields. */
 	public static function config( string $type, int $post_id = 0 ): ?array {
 		$def = Loader::type( $type );
@@ -78,6 +88,7 @@ final class Fields_Panel {
 			/* translators: %s: singular name of a content type, e.g. Restaurant */
 			'title'    => isset( $def['labels']['details'] ) ? Schema::text( $def['labels']['details'], $locale ) : sprintf( __( '%s details', 'estrategia-web' ), Schema::text( $def['labels']['singular'], $locale ) ),
 			'fields'   => $fields,
+			'days'     => self::day_names(),
 			'note'     => Wpml::active() && ! $locked && Wpml::copy_keys( $def ) ? __( 'Fields that are the same in every language are copied to the translations when you save; the others are translated in each language.', 'estrategia-web' ) : '',
 		);
 	}
@@ -147,6 +158,23 @@ final class Fields_Panel {
 					// The hidden 0 first: an unticked box sends nothing.
 					printf( '<input type="hidden" name="%s" value="0"><input type="checkbox" id="%s" name="%s" value="1"%s%s>', esc_attr( $name ), esc_attr( $id ), esc_attr( $name ), checked( (bool) $value, true, false ), $attrs ); // phpcs:ignore WordPress.Security.EscapeOutput
 					break;
+				case 'hours':
+					// On the classic screen, one line per day: «08:00-14:00, 16:00-20:00»; empty = closed.
+					echo '<fieldset><legend class="screen-reader-text">' . esc_html( $label ) . '</legend>';
+					foreach ( Hours::DAYS as $i => $day ) {
+						$day_id = $id . '-' . $day;
+						printf(
+							'<p><label for="%1$s" style="display:inline-block;min-width:8em">%2$s</label> <input type="text" class="regular-text" id="%1$s" name="%3$s[%4$s]" value="%5$s" placeholder="09:00-14:00, 16:00-20:00"%6$s></p>',
+							esc_attr( $day_id ),
+							esc_html( $config['days'][ $i ] ?? $day ),
+							esc_attr( $name ),
+							esc_attr( $day ),
+							esc_attr( Hours::to_line( $value, $day ) ),
+							$attrs // phpcs:ignore WordPress.Security.EscapeOutput
+						);
+					}
+					echo '</fieldset>';
+					break;
 				case 'image':
 					// On the classic screen, the attachment number (Media › the image › its ID).
 					printf( '<input type="number" min="0" class="small-text" id="%s" name="%s" value="%d"%s>', esc_attr( $id ), esc_attr( $name ), (int) $value, $attrs ); // phpcs:ignore WordPress.Security.EscapeOutput
@@ -176,7 +204,12 @@ final class Fields_Panel {
 			if ( $field['disabled'] || ! array_key_exists( $field['key'], $input ) || isset( Registrar::kept()[ $field['key'] ] ) ) {
 				continue; // Locked (WPML), not sent, or a required one emptied on a published post (Registrar::check_required_classic()): left alone.
 			}
-			update_post_meta( $post_id, $field['key'], is_scalar( $input[ $field['key'] ] ) ? $input[ $field['key'] ] : '' );
+			$value = $input[ $field['key'] ];
+			if ( 'hours' === $field['kind'] && is_array( $value ) ) {
+				// One line per day (render_meta_box) → day → ranges; the sanitizer makes it the stored JSON.
+				$value = array_map( static fn( $line ) => Hours::from_line( (string) $line ), array_intersect_key( $value, array_flip( Hours::DAYS ) ) );
+			}
+			update_post_meta( $post_id, $field['key'], is_scalar( $value ) || 'hours' === $field['kind'] ? $value : '' );
 		}
 	}
 

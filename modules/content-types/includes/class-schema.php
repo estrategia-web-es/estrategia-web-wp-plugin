@@ -20,6 +20,8 @@ namespace EstrategiaWeb\ContentTypes;
 
 defined( 'ABSPATH' ) || exit;
 
+require_once __DIR__ . '/class-hours.php'; // check_type_rules() validates an «hours» default with it (also in the level 1 tests, which load this file alone).
+
 final class Schema {
 
 	/** WordPress cuts a post type name at 20 characters and a taxonomy at 32. */
@@ -50,8 +52,10 @@ final class Schema {
 	 * old modules/site types, now field types any definition can use — a
 	 * rating 0–5 shown as stars, a map embed that accepts the whole <iframe>,
 	 * an image of THIS site given by path or URL. See Registrar::sanitizer().
+	 * hours (22-10-2026): opening hours per day of the week, stored as JSON
+	 * text (class-hours.php); modules/local-business turns it into schema.org.
 	 */
-	public const FIELD_TYPES = array( 'text', 'textarea', 'number', 'url', 'email', 'tel', 'image', 'date', 'select', 'relation', 'boolean', 'rating', 'embed', 'local_image' );
+	public const FIELD_TYPES = array( 'text', 'textarea', 'number', 'url', 'email', 'tel', 'image', 'date', 'select', 'relation', 'boolean', 'rating', 'embed', 'local_image', 'hours' );
 	public const SUPPORTS = array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields', 'comments', 'revisions', 'page-attributes', 'post-formats' );
 	public const FIELD_WPML = array( 'copy', 'translate', 'ignore' );
 	public const TYPE_WPML = array( 'translate', 'display-as-translated', 'ignore' );
@@ -580,6 +584,9 @@ final class Schema {
 				/* translators: %s: where in the file */
 				$errors[] = sprintf( __( '%s: an image cannot have a default (it is the ID of an attachment).', 'estrategia-web' ), $where );
 			}
+		} elseif ( 'hours' === $type && $has && ( ! is_string( $def ) || Hours::sanitize( $def ) !== $def ) ) {
+			/* translators: %s: where in the file */
+			$errors[] = sprintf( __( '%s.default must be opening hours as stored, e.g. {"mo":["08:00-14:00"]}, or "".', 'estrategia-web' ), $where );
 		} elseif ( $has && ! is_string( $def ) ) {
 			/* translators: %s: where in the file */
 			$errors[] = sprintf( __( '%s.default must be a string.', 'estrategia-web' ), $where );

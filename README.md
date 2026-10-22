@@ -41,6 +41,7 @@ stored and what it does, to this plugin.
 | `whatsapp` | `estrategia-web/whatsapp` block and its two options | on |
 | `language-switcher` | `estrategia-web/language-switcher` block (WPML) | on |
 | `social` | free list of networks (**Estrategia Web → Social networks**, option `estrategia_web_social_links`) and `estrategia-web/social-links` block; requires `site`. All of it in the header of [modules/social/module.php](modules/social/module.php) | on (unreleased) |
+| `local-business` | (unreleased) schema.org structured data: the Organization on the front page and a LocalBusiness on each location's page and on the pages tied to one (address, hours, coordinates), inside Rank Math's or Yoast's graph when they are there; requires `site` and `content-types`: section «local-business module» | on |
 | `redirects` | 301/302/410 redirects editable in **Estrategia Web → Redirects**, CSV import/export, optional 404 log, `wp estrategia-web redirects import\|list\|export`: [modules/redirects/module.php](modules/redirects/module.php) | **off** |
 
 **On by default: the ones Lavandería already used** (also `matomo`, which
@@ -986,9 +987,11 @@ Pending: [TODO.md](TODO.md).
 
 ## content-types module: the constructor
 
-Content types are **data of each site**: one definition per type, stored in the database (private post type `eweb_content_type`, the JSON as its content, with revisions), made and edited in **Estrategia Web → Content types**: names and address per language, supports, taxonomies and fields (text, textarea, number, url, email, tel, image, date, select, relation, boolean, rating, embed, local_image, with required, default, help, options and the WPML mode). Export and import a definition as JSON from the same screen.
+Content types are **data of each site**: one definition per type, stored in the database (private post type `eweb_content_type`, the JSON as its content, with revisions), made and edited in **Estrategia Web → Content types**: names and address per language, supports, taxonomies and fields (text, textarea, number, url, email, tel, image, date, select, relation, boolean, rating, embed, local_image, hours, with required, default, help, options and the WPML mode). Export and import a definition as JSON from the same screen.
 
 - **Templates**: clients, testimonials, locations, projects and portfolio, with the same type, taxonomy and meta names as the `site` module's (`modules/content-types/templates/`). «Add …» copies one into the database; from then on it is the site's.
+- **New fields of a template** (unreleased): when a template gets fields a site's copy does not have (the location template's address by parts, structured hours, coordinates and type of business, 22-10-2026), the constructor **offers** them on that type («The template this type comes from has new fields… Add the new fields of the template»), each after its template neighbour; nothing is added by itself. A deploy script does the same with `Templates::add_missing()`.
+- **The `hours` field type** (unreleased): opening hours per day of the week, several ranges a day, stored as JSON text `{"mo":["08:00-14:00","16:00-20:00"],"sa":["09:00-13:00"]}` (closed days left out; `""` = empty). Bad ranges are dropped, overlapping ones merged. In the editor: a group per day with time inputs, «Add hours» and «Same as the day before»; on the classic screen, one line per day.
 - **What is protected**: the internal name cannot change once there are entries; removing a field keeps its data (adding it back with the same name shows it again); changing an address warns and creates the 301s in the `redirects` module (or warns that the old addresses will give 404 if it is off); a type with entries cannot be deleted — switch it off instead (its menu and addresses go, its entries stay).
 - **REST**, administrators only: `GET|POST /wp-json/estrategia-web/v1/content-types`, `GET|POST|DELETE …/content-types/<name>`, `POST …/content-types/templates/<key>`. A write is `{"definition": {…}, "active": true, "confirm": true}`; without `confirm`, a change that moves published things answers 409 with the list of warnings.
 - **In the site's repo**: the definitions go in its content as JSON, loaded into a new or local site through that route and brought back from the server (Lavandería: `content/semilla/tipos-contenido/`, phase `tipos` of `cargar.mjs`, and `despliegue/bajar-contenido.mjs`). In production the database rules: a load never overwrites a definition edited in the panel.
@@ -1018,6 +1021,25 @@ The schema: `modules/content-types/content-types.schema.json`. How to maintain i
 | embed | the URL | the URL | — |
 | rating | the number, 1 to 5 (nothing for 0) | — | — |
 | local_image | the stored path | the image URL (a theme path resolved in the child theme, then the parent) | — |
+| hours | one line per run of days with the same hours («lun–sáb: 8:00–16:00»), in the request's language and the site's time format | — | — |
 | text, textarea | escaped (textarea: line breaks as `<br>`) | — | — |
 
 The related post and the image are those of the request's language (WPML). Empty, invalid or unpublished gives nothing. A button binds `url` and `text` to the same field, without `link`. How to maintain it, in the header of `modules/content-types/module.php`.
+
+## local-business module: schema.org for the company and its locations (unreleased)
+
+JSON-LD so search engines can show the business (address, phone, hours, map) from the site itself.
+
+| Page | What it gets |
+|---|---|
+| front page | `Organization`: name (Company details, or the site title), url, logo (the site logo), telephone, email, `sameAs` (the social module's web links), and each location as a `department` |
+| a location's own page, and a page **tied** to one (its content binds a block to it by slug with `estrategia-web-site/location`, also inside a group or a synced pattern) | that location as a `LocalBusiness` (its type, see below): name, `address` (`PostalAddress` by parts), telephone (the company's if it has none), email, `openingHoursSpecification`, `geo`, `url` = the page being read, `image` (featured image, static map, logo), `@id` = `<its permalink>#localbusiness`, `parentOrganization` → the Organization |
+
+- **The data**: fields of the location template — `estrategia_web_location_street`, `_postal_code`, `_locality`, `_region`, `_country` (ISO 3166, default `ES`), `_hours` (type `hours`), `_latitude`, `_longitude` (0 = not given), `_business_type` (`company` = the company's). All «copy» in WPML (a postal address is not translated). The free texts «Address» and «Opening hours» stay for what the page shows.
+- **Type of business**: **Company details › Search engines (schema.org)**, option `estrategia_web_local_business_type` (also over `/wp/v2/settings`), one of a closed list of schema.org LocalBusiness subtypes (`LocalBusiness` by default; `DryCleaningOrLaundry`, `Restaurant`, `Store`…); a location may set its own.
+- **A location is left out** (no node, not half a one) without a name, a street and a town or postal code.
+- **With Rank Math or Yoast**: our nodes go into **their** graph (`rank_math/json_ld`, `wpseo_schema_graph`): their Organization is completed with what it lacks, never duplicated, and our locations point to its `@id`. If their local SEO already publishes a LocalBusiness on a page, ours steps aside on that page. Their settings are never touched. **Without them**: our own `<script type="application/ld+json" class="estrategia-web-local-business">`.
+- **Out, on purpose**: ratings and reviews (Google ignores a business's ratings of itself), events, offers.
+- **Filter** `estrategia_web_local_business_graph`: `[Organization|null, LocalBusiness[]]` before printing or merging.
+
+Tests: `modules/local-business/tests/graph.test.mjs` (level 1: the nodes against Google's rules — `tests/google-rules.mjs`, which the sites' tests import too —, the merge, the type list against the template) and `output.test.mjs` (level 2: alone, with Rank Math doubles with and without its local SEO, with a Yoast double). The hours field: `modules/content-types/tests/hours.test.mjs` (level 1) and `hours-editor.test.mjs` (level 3, with the constructor's offer of new template fields). How to maintain it: the header of `modules/local-business/module.php`.

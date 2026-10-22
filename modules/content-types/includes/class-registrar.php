@@ -332,6 +332,7 @@ final class Registrar {
 			'rating'      => static fn( $v ) => Sanitize::rating( $v ),
 			'embed'       => static fn( $v ) => Sanitize::embed( $v ),
 			'local_image' => static fn( $v ) => Sanitize::local_image( (string) $v ),
+			'hours'       => static fn( $v ) => Hours::sanitize( $v ),
 			'number'   => static function ( $v ) use ( $field, $default ) {
 				if ( ! is_numeric( $v ) ) {
 					return $default;

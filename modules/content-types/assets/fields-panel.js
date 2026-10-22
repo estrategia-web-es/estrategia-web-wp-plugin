@@ -69,6 +69,130 @@
 		return h( SelectControl, { label: labelOf( field ), help: field.help, disabled: field.disabled, value: String( value || 0 ), options, onChange: ( v ) => onChange( parseInt( v, 10 ) || 0 ), __nextHasNoMarginBottom: true, __next40pxDefaultSize: true } );
 	}
 
+	/*
+	 * hours (22-10-2026): one group per day, each range two time inputs. The
+	 * value travels as the JSON text that is stored ({"mo":["08:00-14:00"]});
+	 * the server sanitizes it on save (includes/class-hours.php), so a range
+	 * that would be dropped there is marked HERE before saving, with the same
+	 * rule as Hours::error(): HH:MM-HH:MM and opening ≠ closing.
+	 * Accessibility: each day is a fieldset with its name as legend; each
+	 * input says its day and range number in its label; the warning is tied
+	 * to the range with aria-describedby.
+	 */
+	const DAYS = [ 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su' ];
+	const TIME = /^([01]\d|2[0-3]):[0-5]\d$/;
+	const parseWeek = ( value ) => {
+		try {
+			const week = value ? JSON.parse( value ) : {};
+			return week && typeof week === 'object' && ! Array.isArray( week ) ? week : {};
+		} catch ( e ) {
+			return {};
+		}
+	};
+	const rangeError = ( range ) => {
+		const [ open, close ] = String( range ).split( '-' );
+		if ( ! TIME.test( open || '' ) || ! TIME.test( close || '' ) ) {
+			return __( 'Incomplete: this range will not be saved.', 'estrategia-web' );
+		}
+		return open === close ? __( 'Opening and closing are the same time: this range will not be saved.', 'estrategia-web' ) : '';
+	};
+
+	function HoursField( { field, value, onChange } ) {
+		const week = parseWeek( value );
+		const names = config.days || DAYS;
+		const save = ( next ) => {
+			const out = {};
+			DAYS.forEach( ( d ) => {
+				if ( Array.isArray( next[ d ] ) && next[ d ].length ) {
+					out[ d ] = next[ d ];
+				}
+			} );
+			onChange( Object.keys( out ).length ? JSON.stringify( out ) : '' );
+		};
+		const setDay = ( day, ranges ) => save( { ...week, [ day ]: ranges } );
+		const timeInput = ( day, i, part, ranges ) => {
+			const [ open, close ] = String( ranges[ i ] ).split( '-' );
+			const id = idOf( field ) + '-' + day + '-' + i + '-' + part;
+			/* translators: 1: a day of the week, 2: the number of the range in that day */
+			const label = ( part === 0 ? __( '%1$s, range %2$d: opens', 'estrategia-web' ) : __( '%1$s, range %2$d: closes', 'estrategia-web' ) ).replace( '%1$s', names[ DAYS.indexOf( day ) ] ).replace( '%2$d', i + 1 );
+			return h(
+				'span',
+				{ style: { display: 'inline-flex', flexDirection: 'column', marginRight: '8px' } },
+				h( 'label', { htmlFor: id, className: 'screen-reader-text' }, label ),
+				h( 'input', {
+					type: 'time',
+					id,
+					value: ( part === 0 ? open : close ) || '',
+					disabled: field.disabled,
+					'aria-describedby': rangeError( ranges[ i ] ) ? id.replace( /-\d$/, '' ) + '-error' : undefined,
+					onChange: ( e ) => {
+						const next = ranges.slice();
+						next[ i ] = part === 0 ? e.target.value + '-' + ( close || '' ) : ( open || '' ) + '-' + e.target.value;
+						setDay( day, next );
+					},
+				} )
+			);
+		};
+		return h(
+			'fieldset',
+			{ id: idOf( field ), className: 'estrategia-web-hours' },
+			h( 'legend', { style: { fontWeight: 600, marginBottom: '4px' } }, labelOf( field ) ),
+			field.help ? h( 'p', { className: 'components-base-control__help', style: { marginTop: 0 } }, field.help ) : null,
+			DAYS.map( ( day, d ) => {
+				const ranges = Array.isArray( week[ day ] ) ? week[ day ] : [];
+				return h(
+					'fieldset',
+					{ key: day, 'data-day': day, style: { border: 0, padding: 0, margin: '0 0 8px' } },
+					h( 'legend', { style: { fontWeight: 500 } }, names[ d ] ),
+					ranges.length ? null : h( 'p', { style: { margin: '2px 0', color: '#757575' } }, __( 'Closed', 'estrategia-web' ) ),
+					ranges.map( ( range, i ) => {
+						const error = rangeError( range );
+						return h(
+							'div',
+							{ key: i, 'data-range': i, style: { marginBottom: '4px' } },
+							timeInput( day, i, 0, ranges ),
+							timeInput( day, i, 1, ranges ),
+							field.disabled
+								? null
+								: h( Button, {
+										variant: 'link',
+										isDestructive: true,
+										/* translators: 1: a day of the week, 2: the number of the range in that day */
+										label: __( 'Remove %1$s, range %2$d', 'estrategia-web' ).replace( '%1$s', names[ d ] ).replace( '%2$d', i + 1 ),
+										onClick: () => setDay( day, ranges.filter( ( x, j ) => j !== i ) ),
+								  }, __( 'Remove', 'estrategia-web' ) ),
+							error ? h( 'p', { id: idOf( field ) + '-' + day + '-' + i + '-error', role: 'status', style: { color: '#cc1818', margin: '2px 0' } }, error ) : null
+						);
+					} ),
+					field.disabled
+						? null
+						: h(
+								'div',
+								null,
+								h( Button, {
+									variant: 'secondary',
+									size: 'small',
+									'data-action': 'add-range',
+									/* translators: %s: a day of the week. Keep the words of «Add hours» in it: it is the button's visible text. */
+									label: __( 'Add hours on %s', 'estrategia-web' ).replace( '%s', names[ d ] ),
+									onClick: () => setDay( day, ranges.concat( [ ranges.length ? '16:00-20:00' : '09:00-14:00' ] ) ),
+								}, __( 'Add hours', 'estrategia-web' ) ),
+								d > 0
+									? h( Button, {
+											variant: 'tertiary',
+											size: 'small',
+											'data-action': 'copy-previous',
+											/* translators: %s: a day of the week. Keep the words of «Same as the day before» in it: it is the button's visible text. */
+											label: __( '%s: same as the day before', 'estrategia-web' ).replace( '%s', names[ d ] ),
+											onClick: () => setDay( day, ( Array.isArray( week[ DAYS[ d - 1 ] ] ) ? week[ DAYS[ d - 1 ] ] : [] ).slice() ),
+									  }, __( 'Same as the day before', 'estrategia-web' ) )
+									: null
+						  )
+				);
+			} )
+		);
+	}
+
 	function Field( { field, value, onChange } ) {
 		const common = { label: labelOf( field ), help: field.help, disabled: field.disabled, __nextHasNoMarginBottom: true };
 		switch ( field.kind ) {
@@ -99,6 +223,8 @@
 				return h( RelationField, { field, value, onChange } );
 			case 'image':
 				return h( ImageField, { field, value, onChange } );
+			case 'hours':
+				return h( HoursField, { field, value, onChange } );
 			default: {
 				const types = { url: 'url', email: 'email', tel: 'tel', date: 'date' };
 				return h( TextControl, { ...common, __next40pxDefaultSize: true, type: types[ field.kind ] || 'text', value: value || '', onChange } );
