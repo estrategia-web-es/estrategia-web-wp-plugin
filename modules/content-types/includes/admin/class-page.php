@@ -117,6 +117,9 @@ final class Page {
 			/* translators: %s: a template name, e.g. Testimonials */
 			'addTemplate'      => __( 'Add %s', 'estrategia-web' ),
 			'templateAdded'    => __( 'Already added', 'estrategia-web' ),
+			/* translators: 1: how many fields, 2: their names, comma separated */
+			'templateNewFields' => __( 'The template this type comes from has new fields (%1$d): %2$s. They are not added by themselves: add them here and save.', 'estrategia-web' ),
+			'templateAddFields' => __( 'Add the new fields of the template', 'estrategia-web' ),
 			'templateTaken'    => __( 'Not available: a type with this name is registered elsewhere (Company details › Content types).', 'estrategia-web' ),
 			'broken'           => __( 'Files with errors (not registered)', 'estrategia-web' ),
 			'dirs'             => __( 'Folders searched for JSON files', 'estrategia-web' ),
