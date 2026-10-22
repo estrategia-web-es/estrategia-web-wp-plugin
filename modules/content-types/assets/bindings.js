@@ -65,6 +65,41 @@
 		return Math.min( 6, fraction.length );
 	};
 
+	// hours: Hours::summary()'s copy. The value is ALREADY sanitized (it is what
+	// is stored), so no rules here: runs of consecutive days with the same ranges.
+	const DAYS = [ 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su' ];
+	const hoursSummary = ( str ) => {
+		let week = {};
+		try {
+			week = str ? JSON.parse( str ) || {} : {};
+		} catch ( e ) {
+			return [];
+		}
+		const time = ( t ) => ( wp.date && config.timeFormat ? wp.date.format( config.timeFormat, '1970-01-01T' + t + ':00' ) : t );
+		const names = config.days || DAYS;
+		const lines = [];
+		let start = null;
+		let key = null;
+		const flush = ( from, to ) => {
+			const days = from === to ? names[ from ] : names[ from ] + '–' + names[ to ];
+			lines.push( days + ': ' + week[ DAYS[ from ] ].map( ( r ) => r.split( '-' ).map( time ).join( '–' ) ).join( ', ' ) );
+		};
+		DAYS.forEach( ( day, i ) => {
+			const k = Array.isArray( week[ day ] ) && week[ day ].length ? JSON.stringify( week[ day ] ) : null;
+			if ( k !== key ) {
+				if ( key !== null ) {
+					flush( start, i - 1 );
+				}
+				start = i;
+				key = k;
+			}
+		} );
+		if ( key !== null ) {
+			flush( start, 6 );
+		}
+		return lines;
+	};
+
 	// The same rules as Field_Format::format(). undefined = «not known (yet)».
 	// html: the attribute is the block's HTML (escaped here) or an HTML attribute (plain): see PHP's is_html().
 	const format = ( select, field, raw, attribute, args, html ) => {
@@ -79,6 +114,13 @@
 					return kind === 'url' ? str : '';
 				}
 				return field.kind === 'textarea' && html ? escape( str ).replace( /\r?\n/g, '<br>' ) : escape( str );
+			case 'hours': {
+				if ( kind !== 'text' ) {
+					return '';
+				}
+				const lines = hoursSummary( str );
+				return html ? lines.map( escapeHtml ).join( '<br>' ) : lines.join( '; ' );
+			}
 			case 'rating':
 				// The number, not stars (Field_Format: a screen reader reads «black star» four times). 0 = no rating.
 				return kind === 'text' && parseInt( str, 10 ) > 0 ? escape( String( Math.min( 5, parseInt( str, 10 ) ) ) ) : '';

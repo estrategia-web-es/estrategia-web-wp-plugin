@@ -129,7 +129,20 @@ final class Bindings {
 			'image'  => array( self::class, 'image' ),
 			// local_image: a theme path, child first and then parent.
 			'theme_file' => static fn( string $path ): string => get_theme_file_uri( $path ),
+			// hours: the request language's short day names, Monday first, and the site's time format.
+			'days'   => self::day_names(),
+			'time'   => static fn( string $hhmm ): string => (string) wp_date( (string) get_option( 'time_format' ), (int) strtotime( '1970-01-01 ' . $hhmm . ':00 UTC' ), new \DateTimeZone( 'UTC' ) ),
 		);
+	}
+
+	/** @return string[] Seven short day names in the request's language, Monday first. */
+	public static function day_names(): array {
+		global $wp_locale;
+		$out = array();
+		foreach ( array( 1, 2, 3, 4, 5, 6, 0 ) as $n ) {
+			$out[] = $wp_locale ? (string) $wp_locale->get_weekday_abbrev( $wp_locale->get_weekday( $n ) ) : array( 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' )[ $n ];
+		}
+		return $out;
 	}
 
 	/**
@@ -193,6 +206,9 @@ final class Bindings {
 			'source'     => self::SOURCE,
 			'locale'     => str_replace( '_', '-', Plugin::locale() ),
 			'dateFormat' => (string) get_option( 'date_format' ),
+			// hours: the same day names and time format as the site (env()).
+			'days'       => self::day_names(),
+			'timeFormat' => (string) get_option( 'time_format' ),
 			// local_image: the CHILD theme (get_theme_file_uri() also tries the parent; the editor copy does not).
 			'themeUrl'   => get_stylesheet_directory_uri(),
 			'types'      => $types,

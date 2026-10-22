@@ -40,7 +40,9 @@ const CONTRACT = {
   location: {
     name: "eweb_location",
     taxonomies: [],
-    fields: ["estrategia_web_location_address", "estrategia_web_location_phone", "estrategia_web_location_email", "estrategia_web_location_schedule", "estrategia_web_location_map_url", "estrategia_web_location_map_embed", "estrategia_web_location_static_map", "estrategia_web_location_static_map_id"],
+    fields: ["estrategia_web_location_address", "estrategia_web_location_phone", "estrategia_web_location_email", "estrategia_web_location_schedule", "estrategia_web_location_map_url", "estrategia_web_location_map_embed", "estrategia_web_location_static_map", "estrategia_web_location_static_map_id",
+      // 22-10-2026, for modules/local-business (schema.org): the address by parts, the structured hours, the coordinates and the type.
+      "estrategia_web_location_street", "estrategia_web_location_postal_code", "estrategia_web_location_locality", "estrategia_web_location_region", "estrategia_web_location_country", "estrategia_web_location_hours", "estrategia_web_location_latitude", "estrategia_web_location_longitude", "estrategia_web_location_business_type"],
   },
   project: { name: "eweb_project", taxonomies: ["eweb_project_category"], fields: [] },
   portfolio: { name: "eweb_portfolio", taxonomies: ["eweb_portfolio_category"], fields: [] },
@@ -84,6 +86,16 @@ test("the templates keep the old names: type, taxonomies and meta keys (nothing 
       estrategia_web_location_map_embed: "copy",
       estrategia_web_location_static_map: "copy",
       estrategia_web_location_static_map_id: "copy",
+      // A postal address is not translated (the post office reads it in the local language): copied, like the hours and the coordinates.
+      estrategia_web_location_street: "copy",
+      estrategia_web_location_postal_code: "copy",
+      estrategia_web_location_locality: "copy",
+      estrategia_web_location_region: "copy",
+      estrategia_web_location_country: "copy",
+      estrategia_web_location_hours: "copy",
+      estrategia_web_location_latitude: "copy",
+      estrategia_web_location_longitude: "copy",
+      estrategia_web_location_business_type: "copy",
     },
     "the same copy / translate as wpml-config.xml and Meta_Panel::WPML_*"
   );
@@ -138,6 +150,37 @@ test("the new field types: rating (0–5), embed, local_image; and the optional 
   const tax = def({ type: "text" });
   tax.taxonomies = [{ name: "gment_kind", labels: { singular: "Kind", plural: "Kinds", details: "x" } }];
   hasError(tax, /Unknown key “taxonomies\[1\]\.labels\.details”/);
+});
+
+// 22-10-2026. Seen red: with the hours branch out of Schema::check_type_rules(), the invalid default passed.
+test("the hours field type: a default must be hours as stored", () => {
+  const def = (field) => ({ prefix: "gment_", name: "gment_shop", labels: { singular: "Shop", plural: "Shops" }, fields: [{ name: "gment_h", label: "Hours", type: "hours", ...field }] });
+  assert.deepEqual(errors(def({})), []);
+  assert.deepEqual(errors(def({ default: '{"mo":["08:00-14:00"]}' })), []);
+  assert.deepEqual(errors(def({ default: "" })), []);
+  hasError(def({ default: "Mo-Fr 8-14" }), /default must be opening hours as stored/);
+  hasError(def({ default: '{"mo":["14:00-08:00","08:00-09:00"],"tu":[]}' }), /default must be opening hours as stored/, "not canonical (unsorted, an empty day)");
+});
+
+// 22-10-2026. Seen red: with add_missing() appending at the end, the new fields went after the site's own «Parking».
+test("new fields of a template: offered by name, put in after their template neighbour, the site's own fields untouched", () => {
+  const stored = resolved("location");
+  // A site that copied the template on 17-10-2026: the first eight fields, one of them changed, plus one of its own.
+  stored.fields = stored.fields.slice(0, 8);
+  stored.fields[0].label = { es: "Dirección (como se ve)" };
+  const own = { name: "eweb_location_parking", type: "boolean", label: "Parking" };
+  stored.fields.push(own);
+  const { missing, added } = php("missing", { def: stored });
+  const NEW = ["estrategia_web_location_street", "estrategia_web_location_postal_code", "estrategia_web_location_locality", "estrategia_web_location_region", "estrategia_web_location_country", "estrategia_web_location_hours", "estrategia_web_location_latitude", "estrategia_web_location_longitude", "estrategia_web_location_business_type"];
+  assert.deepEqual(missing.map((m) => m.field.name), NEW);
+  assert.equal(missing[0].after, "estrategia_web_location_static_map_id");
+  assert.deepEqual(added.fields.map((f) => f.name), [...stored.fields.slice(0, 8).map((f) => f.name), ...NEW, own.name], "after the template's last old field, before the site's own one");
+  assert.deepEqual(added.fields[0], stored.fields[0], "the site's version of a template field is kept");
+  assert.deepEqual(added.fields.at(-1), own, "and so is its own field");
+  assert.deepEqual(errors(added), [], "what a deploy would store validates");
+  assert.deepEqual(php("missing", { def: added }).missing, [], "idempotent: nothing more to offer");
+  const plain = { prefix: "gment_", name: "gment_shop", labels: { singular: "Shop", plural: "Shops" }, fields: [] };
+  assert.deepEqual(php("missing", { def: plain }).missing, [], "a definition without a template is offered nothing");
 });
 
 test("Changes: what is refused, what is warned, and the URLs that move", () => {

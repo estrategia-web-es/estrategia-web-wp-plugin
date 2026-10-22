@@ -65,7 +65,8 @@
  *   ID), date (YYYY-MM-DD), select, relation (ID of a post of a given type),
  *   boolean, rating (0–5, stars), embed (a map embed; the whole <iframe>
  *   may be pasted), local_image (an image of this site by theme path, site
- *   path or same-host URL). Labels, help and option labels are a string or an object
+ *   path or same-host URL), hours (opening hours per day of the week, JSON
+ *   text: includes/class-hours.php). Labels, help and option labels are a string or an object
  *   locale → string ({"ca": "…", "es": "…", "en": "…"}).
  *   NO repeaters and NO groups, on purpose: a recipe's ingredients go as
  *   blocks in the content. Example: examples/gment_restaurant.json.
@@ -193,6 +194,7 @@ defined( 'ABSPATH' ) || exit;
 define( 'ESTRATEGIA_WEB_CONTENT_TYPES_DIR', __DIR__ . '/' );
 define( 'ESTRATEGIA_WEB_CONTENT_TYPES_URL', plugin_dir_url( __FILE__ ) );
 
+require_once __DIR__ . '/includes/class-hours.php';
 require_once __DIR__ . '/includes/class-schema.php';
 require_once __DIR__ . '/includes/class-sanitize.php';
 require_once __DIR__ . '/includes/class-store.php';

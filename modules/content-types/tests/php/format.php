@@ -14,6 +14,7 @@
  *   image   5 → {id: 5, url https://x.test/photo-<size>.jpg, alt 'Façana "nova"', title "Foto"}; else null
  *   yes / no "Sí" / "No"
  *   theme_file  "assets/x.webp" → https://x.test/theme/assets/x.webp
+ *   days    dl. dt. dc. dj. dv. ds. dg. (Catalan, Monday first)    time  "T<HH:MM>"
  *
  * How to maintain: a new env key in Bindings::env() gets its fake here; the
  * WordPress functions Field_Format calls are shimmed below (as simply as the
@@ -55,6 +56,8 @@ foreach ( $cases as $case ) {
 		'post'   => static fn( $id, $types ) => 7 === $id && in_array( 'gment_restaurant', $types, true ) ? array( 'id' => 70, 'title' => "Ca n'Andreu & Co", 'url' => 'https://x.test/ca/restaurants/ca-nandreu/' ) : null,
 		'image'  => static fn( $id, $size ) => 5 === $id ? array( 'id' => 5, 'url' => "https://x.test/photo-$size.jpg", 'alt' => 'Façana "nova"', 'title' => 'Foto' ) : null,
 		'theme_file' => static fn( $path ) => "https://x.test/theme/$path",
+		'days'   => array( 'dl.', 'dt.', 'dc.', 'dj.', 'dv.', 'ds.', 'dg.' ),
+		'time'   => static fn( $hhmm ) => "T$hhmm",
 	);
 	$out[] = Field_Format::format( Schema::normalize_field( $case['field'] ), $case['raw'], $case['attribute'] ?? 'content', $case['args'] ?? array(), $env, $case['html'] ?? true );
 }

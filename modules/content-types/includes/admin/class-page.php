@@ -207,6 +207,7 @@ final class Page {
 				'rating'      => __( 'Rating (stars)', 'estrategia-web' ),
 				'embed'       => __( 'Embedded map or video', 'estrategia-web' ),
 				'local_image' => __( 'Image of this site by path', 'estrategia-web' ),
+				'hours'       => __( 'Opening hours (days and times)', 'estrategia-web' ),
 			),
 			'supportNames'     => array(
 				'title'           => __( 'Title', 'estrategia-web' ),
