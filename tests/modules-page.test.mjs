@@ -11,8 +11,8 @@ import { BASE, reset, seedPage, testApi, html, wp } from "./lib.mjs";
 // The modules that exist and are neither test modules nor Default: off with
 // their own test (redirects, google-tags). A new module goes in here and, if
 // it starts off, also in OFF.
-// content-types: Default: on since 17-10-2026 (the site's types are its templates).
-const ALL = ["carousel", "comments-off", "consent", "content-types", "external-links", "featured-images", "forms", "language-switcher", "map", "matomo", "site", "social", "uploads", "webp", "whatsapp", "wpml-front-page"];
+// content-types: Default: on since 17-10-2026 (the site's types are its templates). local-business: on, 22-10-2026.
+const ALL = ["carousel", "comments-off", "consent", "content-types", "external-links", "featured-images", "forms", "language-switcher", "local-business", "map", "matomo", "site", "social", "uploads", "webp", "whatsapp", "wpml-front-page"];
 // Those that start off (Default: off): with no saved option they are not loaded.
 const OFF = ["comments-off"];
 const ON = ALL.filter((s) => !OFF.includes(s));
