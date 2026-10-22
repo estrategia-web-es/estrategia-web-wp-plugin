@@ -9,6 +9,12 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 1.6.0 — 22-10-2026
+
+- **New module `local-business`** (Default: on; David, 22-10-2026): schema.org JSON-LD — the Organization on the front page (with the locations as departments) and a LocalBusiness on each location's page and on pages tied to one by an `estrategia-web-site/location` binding (address by parts, hours, geo, page url, image, parentOrganization), per WPML language. Merged into Rank Math's (`rank_math/json_ld`) or Yoast's (`wpseo_schema_graph`) graph without duplicating their Organization; steps aside where their local SEO already publishes a LocalBusiness; its own script otherwise. Type of business: Company details (option `estrategia_web_local_business_type`, 68 LocalBusiness subtypes) and per location. Filter `estrategia_web_local_business_graph`. No ratings: Google does not accept self-serving reviews.
+- **content-types: new field type `hours`** (opening hours per weekday, several ranges, stored as JSON text; editor panel with time inputs, one line per day on the classic screen; the `content-field` binding shows «Mon–Sat: 8:00–16:00»).
+- **content-types: the location template has new fields** (street, postal code, locality, region, country, hours, latitude, longitude, business type). Sites that copied it earlier are OFFERED them in Content types («Add the new fields of the template»); nothing is added by itself.
+
 ## 1.5.0 — 17-10-2026
 
 - **content-types: the constructor** (David, 17-10-2026: «una definición de tipo es dato»). Definitions are data of each site (private post type `eweb_content_type`, one per type, with revisions), made in «Estrategia Web → Content types» (names and URL per language, supports, taxonomies, fields) with JSON export/import; REST `estrategia-web/v1/content-types` (administrators). Templates: clients, testimonials, locations, projects, portfolio, added with one click and then editable. Field types `rating`, `embed`, `local_image`. Protections: the internal name is fixed once there are entries, removed fields keep their data, URL changes create 301s per language (redirects module, or a warning), a type with entries can only be switched off.

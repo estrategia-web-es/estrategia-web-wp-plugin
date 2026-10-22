@@ -47,6 +47,14 @@ open is below, in its own section.
 - The Google Maps catalogue entries (NID, __Secure-ENID, AEC, SOCS) come from Google's general cookie list; a measurement on 17-10-2026 (Chromium, from Spain, no Google session) saw the embed set NO cookies. Re-check if Google publishes embed-specific cookies.
 - Lavandería still uses its hand-written policy tables; switching to the cookie-table block is a content decision for David.
 - The map's «rendered» flag never goes back: a site that removes its maps keeps the google-maps proposals (mark them Ignored or delete the option).
+## local-business: after publishing
+**Date:** 22-10-2026 · **Due:** —
+
+- Rich Results test of the live site once deployed and Lavandería's `despliegue/negocio-local.php` has run (/, /autoservicio/, /lavanderia-industrial/ and /en/); only a double of Rank Math's filter was tested locally.
+- A test for the `hours` field on the classic screen (no template uses it today).
+- Lavandería: `despliegue/bajar-contenido.mjs` does not bring back the locations' new fields (street, hours, coordinates) edited in the panel.
+- Maioris: «Calle Imperial, 2» (the website) or «Local 12» (its Google Business profile)? Carlos decides; then both say the same.
+
 ## content-types: open points after the constructor
 **Date:** 17-10-2026 · **Due:** —
 
