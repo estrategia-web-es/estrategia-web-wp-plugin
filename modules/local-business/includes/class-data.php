@@ -32,11 +32,17 @@
  * - Boundary case, with a name: a location whose «Type of business» is
  *   «The company's» (the template's default) takes the company's type
  *   («Company details › Type of business»).
- * - The trap: Location::by_slug() and the get_posts() here use
+ * - The trap that cost the English pages (measured 22-10-2026 with real
+ *   WPML): a WP_Query by «name» on an /en/ request gets «AND ID = <the
+ *   English copy's id>» added by WPML (its parse_query, which
+ *   suppress_filters does not stop) next to «post_name = 'maioris'», and
+ *   finds NOTHING. tied_to() looks the slug up with get_page_by_path(),
+ *   plain SQL, and then takes the translation itself.
+ * - The other one: the get_posts() of all_locations() uses
  *   suppress_filters, so WPML does not narrow them to the request's language
  *   — and the English copies (maioris-en) come back TOO in the list of all
  *   locations. all_locations() keeps one per original, in the request's
- *   language; without that the front page had four departments.
+ *   language; without that the front page would list four departments.
  */
 
 namespace EstrategiaWeb\LocalBusiness;
@@ -173,8 +179,9 @@ final class Data {
 		$slugs = self::bound_slugs( parse_blocks( (string) $post->post_content ), array() );
 		$out   = array();
 		foreach ( array_unique( $slugs ) as $slug ) {
-			$location = Location::by_slug( $slug );
-			if ( $location ) {
+			// get_page_by_path() and not Location::by_slug(): see «The trap» (WPML and a slug query on /en/).
+			$location = post_type_exists( self::location_type() ) ? get_page_by_path( sanitize_title( $slug ), OBJECT, self::location_type() ) : null;
+			if ( $location instanceof \WP_Post && 'publish' === $location->post_status ) {
 				$out[] = self::translated( $location );
 			}
 		}
