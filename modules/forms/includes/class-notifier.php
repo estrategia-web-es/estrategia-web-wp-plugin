@@ -69,7 +69,7 @@ final class Notifier {
 		$text = Markers::replace( $body, $markers['text'] );
 		$html = Markers::replace( nl2br( esc_html( $body ), false ), $markers['html'] );
 
-		$headers  = array( 'Content-Type: text/html; charset=UTF-8' );
+		$headers  = array( 'Content-Type: text/html; charset=UTF-8', 'From: ' . self::from() );
 		$reply_to = Markers::single_line( Markers::replace( (string) $n['reply_to'], $markers['text'] ) );
 		if ( '' !== $reply_to && is_email( $reply_to ) ) {
 			$headers[] = 'Reply-To: ' . $reply_to;
@@ -171,6 +171,23 @@ final class Notifier {
 		ob_start();
 		include $template;
 		return (string) ob_get_clean();
+	}
+
+	/**
+	 * «Site name <address>». The NAME is the site's: without it WordPress signs
+	 * as «WordPress», which is what the client's team and the visitor saw in
+	 * their inbox (Lavandería, 22-10-2026). The ADDRESS is WordPress's own
+	 * default, wordpress@ + the domain without www: it is the one the host's
+	 * SPF already covers, so nothing changes for deliverability. An SMTP
+	 * plugin's wp_mail_from / wp_mail_from_name filters still win, because
+	 * wp_mail() applies them after reading this header.
+	 */
+	public static function from(): string {
+		$name = trim( str_replace( array( '"', '<', '>', ',', ';' ), '', Markers::single_line( wp_specialchars_decode( (string) get_option( 'blogname' ), ENT_QUOTES ) ) ) );
+		$host = strtolower( (string) wp_parse_url( network_home_url(), PHP_URL_HOST ) );
+		$host = str_starts_with( $host, 'www.' ) ? substr( $host, 4 ) : $host;
+		$from = 'wordpress@' . $host;
+		return '' !== $name ? $name . ' <' . $from . '>' : $from;
 	}
 
 	private static function text_footer( string $lang ): string {

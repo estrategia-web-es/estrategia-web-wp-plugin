@@ -128,6 +128,9 @@ test("good submission: logged with everything and the N notifications go out wit
   assert.deepEqual(team.to, [TEAM]);
   assert.equal(team.subject, "Nuevo mensaje de Ana");
   assert.ok(team.headers.includes("Reply-To: ana@ejemplo.test"), "reply-to comes from the email field");
+  for (const m of [team, ack]) {
+    assert.ok(m.headers.some((h) => /^From: Sitio de pruebas <wordpress@[^>]+>$/.test(h)), "signed with the site name, not «WordPress»:\n" + m.headers.join("\n"));
+  }
   assert.match(team.html, new RegExp(`Desde ${SITE}/contacto/`));
   assert.match(team.html, /Sitio de pruebas/);
   assert.match(team.html, /<th[^>]*>Teléfono<\/th><td[^>]*>\+34 600 000 000<\/td>/, "{{todos_los_campos}} as an HTML table");

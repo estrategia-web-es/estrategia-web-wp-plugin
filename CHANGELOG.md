@@ -9,6 +9,10 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 1.6.1 — 24-10-2026
+
+- **forms: the notifications are signed with the site name** («Lavandería Mallorca <wordpress@lavanderiamallorca.com>») instead of WordPress's «WordPress». The address does not change (WordPress's default, already covered by the host's SPF), and an SMTP plugin's `wp_mail_from` / `wp_mail_from_name` still win. Nothing to change on the sites.
+
 ## 1.6.0 — 22-10-2026
 
 - **New module `local-business`** (Default: on; David, 22-10-2026): schema.org JSON-LD — the Organization on the front page (with the locations as departments) and a LocalBusiness on each location's page and on pages tied to one by an `estrategia-web-site/location` binding (address by parts, hours, geo, page url, image, parentOrganization), per WPML language. Merged into Rank Math's (`rank_math/json_ld`) or Yoast's (`wpseo_schema_graph`) graph without duplicating their Organization; steps aside where their local SEO already publishes a LocalBusiness; its own script otherwise. Type of business: Company details (option `estrategia_web_local_business_type`, 68 LocalBusiness subtypes) and per location. Filter `estrategia_web_local_business_graph`. No ratings: Google does not accept self-serving reviews.
