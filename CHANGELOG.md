@@ -12,6 +12,7 @@ four blocks, in the theme README (armazon-wp-padre, «Versions»).
 ## 1.6.1 — 24-10-2026
 
 - **forms: the notifications are signed with the site name** («Lavandería Mallorca <wordpress@lavanderiamallorca.com>») instead of WordPress's «WordPress». The address does not change (WordPress's default, already covered by the host's SPF), and an SMTP plugin's `wp_mail_from` / `wp_mail_from_name` still win. Nothing to change on the sites.
+- **Prefix migration: one false warning less.** Its dry run listed the option `estrategia_web_content_types_site_types` («names client, testimonial, location»): that is content-types' already-migrated mark and it holds template keys, not post types.
 
 ## 1.6.0 — 22-10-2026
 

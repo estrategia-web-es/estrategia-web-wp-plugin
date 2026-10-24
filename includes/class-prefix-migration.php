@@ -561,7 +561,10 @@ final class Prefix_Migration {
 		global $wpdb;
 		// estrategia_web_site speaks in keys on purpose (Type_Names): it is not a leftover.
 		// Nor are the ones migrated by steps 6 and 7: on a dry run they still name them.
-		$skip  = array_merge( array( 'rewrite_rules', 'estrategia_web_site', 'rank_math_known_post_types' ), array_keys( self::wpml_targets() ) );
+		// Nor content-types' «already migrated» mark (Site_Types::MIGRATED): it lists
+		// TEMPLATE keys (client, testimonial, location), which are not post types.
+		// It showed in red in Lavandería's dry runs (seen 24-10-2026).
+		$skip  = array_merge( array( 'rewrite_rules', 'estrategia_web_site', 'estrategia_web_content_types_site_types', 'rank_math_known_post_types' ), array_keys( self::wpml_targets() ) );
 		$like  = array();
 		$regex = array();
 		foreach ( array_keys( $map ) as $old ) {
