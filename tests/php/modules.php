@@ -102,6 +102,11 @@ echo json_encode(
 		'core_no_known'      => $core_wanted( array( 'social' ), null ),
 		'core_resolved'      => Modules::resolve( $core, $core_wanted( array( 'social' ), array( 'site', 'forms', 'social' ) ) ),
 		'real_without_site'  => Modules::resolve( $available, Modules::wanted( $available, array( 'social', 'matomo' ), array_keys( $available ) ) )[0],
+		// 1.7.0: wpml-front-page was removed; a site's saved list and _known still name it.
+		'removed_module'     => Modules::resolve(
+			$available,
+			Modules::wanted( $available, array( 'forms', 'wpml-front-page', 'language-switcher' ), array_merge( array_keys( $available ), array( 'wpml-front-page' ) ) )
+		),
 		'grouped_fake'       => Modules::grouped( $grouping ),
 		'grouped_real'       => Modules::grouped( $available ),
 		'categories'         => Modules::CATEGORIES,

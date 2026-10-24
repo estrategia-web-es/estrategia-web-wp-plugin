@@ -824,7 +824,5 @@ Gracias por escribirnos. Hemos recibido tu mensaje y te responderemos pronto.
 		'module name' . "\x04" . 'WhatsApp button' => 'Botón de WhatsApp',
 		'WhatsApp phone number in international format, digits only.' => 'Número de WhatsApp en formato internacional, solo dígitos.',
 		'Predefined WhatsApp message.' => 'Mensaje predefinido de WhatsApp.',
-		'module name' . "\x04" . 'Translated front page (WPML)' => 'Portada traducida (WPML)',
-		'module description' . "\x04" . 'With WPML, /en/ shows the translated front page instead of the latest posts. Without WPML it does nothing.' => 'Con WPML, /en/ enseña la portada traducida en vez de las últimas entradas. Sin WPML no hace nada.',
 	),
 );

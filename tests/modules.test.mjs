@@ -25,7 +25,7 @@ test("every folder in modules/ is a module with a name (a misspelled header cann
 
 test("what Lavandería uses today is on by default and loads with nothing blocked", () => {
   const [loaded, blocked] = out.real_default;
-  for (const slug of ["site", "consent", "forms", "carousel", "map", "whatsapp", "language-switcher", "webp", "external-links", "wpml-front-page"]) {
+  for (const slug of ["site", "consent", "forms", "carousel", "map", "whatsapp", "language-switcher", "webp", "external-links"]) {
     assert.ok(loaded.includes(slug), `${slug} would not load on a site without the saved option`);
   }
   assert.deepEqual(blocked, []);
@@ -45,6 +45,13 @@ test("edge case: a module NEW to the site (not in _known) comes in with its Defa
 
 test("saved slugs that no longer exist are ignored", () => {
   assert.deepEqual(out.unknown_dropped, ["a"]);
+});
+
+test("1.7.0: a saved list (and _known) still naming the removed «wpml-front-page» loads the rest and blocks nothing", () => {
+  const [loaded, blocked] = out.removed_module;
+  assert.ok(!("wpml-front-page" in out.available), "the folder is gone");
+  assert.deepEqual([...loaded].sort(), ["forms", "language-switcher", "site"]);
+  assert.equal(Object.keys(blocked).length, 0);
 });
 
 test("without _known (list written by hand), the list rules entirely: no Default is added", () => {
@@ -73,7 +80,7 @@ test("1.7.0: only «site» is core, and every other module has a known Category"
     Contact: ["forms", "social", "whatsapp"],
     "Privacy & analytics": ["consent", "google-tags", "matomo"],
     SEO: ["external-links", "local-business", "redirects"],
-    Languages: ["language-switcher", "wpml-front-page"],
+    Languages: ["language-switcher"],
     "Media & performance": ["uploads", "webp"],
   };
   for (const [slug, m] of Object.entries(out.available)) {

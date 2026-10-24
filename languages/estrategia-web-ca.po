@@ -3026,7 +3026,10 @@ msgid ""
 "The forms on this site and where they are. A form is edited in its block: "
 "open the page or pattern it is in. Its name and identifier are the ones the "
 "submissions log shows."
-msgstr "Els formularis del lloc i on són. Un formulari s'edita al seu bloc: obre la pàgina o el patró on és. El seu nom i el seu identificador són els que mostra el registre d'enviaments."
+msgstr ""
+"Els formularis del lloc i on són. Un formulari s'edita al seu bloc: obre la "
+"pàgina o el patró on és. El seu nom i el seu identificador són els que "
+"mostra el registre d'enviaments."
 
 #: modules/forms/includes/admin/class-forms-list.php:223
 msgid "Where it is"
@@ -3039,7 +3042,9 @@ msgstr "També en"
 #: modules/forms/includes/admin/class-forms-list.php:232
 msgid ""
 "There are no forms yet. Add a «Form» block to a page or a synced pattern."
-msgstr "Encara no hi ha formularis. Afegeix un bloc «Formulari» a una pàgina o a un patró sincronitzat."
+msgstr ""
+"Encara no hi ha formularis. Afegeix un bloc «Formulari» a una pàgina o a un "
+"patró sincronitzat."
 
 #: modules/forms/includes/admin/class-forms-list.php:237
 msgid "(no name)"
@@ -3363,7 +3368,7 @@ msgstr ""
 "pàgina en els altres, en una llista desplegable o en línia. Sense WPML no "
 "mostra res."
 
-#: modules/language-switcher/module.php modules/wpml-front-page/module.php
+#: modules/language-switcher/module.php
 msgctxt "module category"
 msgid "Languages"
 msgstr "Idiomes"
@@ -4267,7 +4272,9 @@ msgstr "Per treure una xarxa sense JavaScript, buida'n l'enllaç."
 msgid ""
 "Your own SVG can only be uploaded if “Allow SVG uploads” is on in Settings › "
 "Media."
-msgstr "Només es pot pujar un SVG propi si «Permet pujar SVG» està marcat a Paràmetres › Multimèdia."
+msgstr ""
+"Només es pot pujar un SVG propi si «Permet pujar SVG» està marcat a "
+"Paràmetres › Multimèdia."
 
 #: modules/social/includes/class-admin.php:109
 msgid "Automatic (from the link)"
@@ -4454,19 +4461,17 @@ msgstr "Número de WhatsApp en format internacional, només xifres."
 msgid "Predefined WhatsApp message."
 msgstr "Missatge predefinit de WhatsApp."
 
-#: modules/wpml-front-page/module.php
-msgctxt "module name"
-msgid "Translated front page (WPML)"
-msgstr "Pàgina d'inici traduïda (WPML)"
+#~ msgctxt "module name"
+#~ msgid "Translated front page (WPML)"
+#~ msgstr "Pàgina d'inici traduïda (WPML)"
 
-#: modules/wpml-front-page/module.php
-msgctxt "module description"
-msgid ""
-"With WPML, /en/ shows the translated front page instead of the latest posts. "
-"Without WPML it does nothing."
-msgstr ""
-"Amb WPML, /en/ mostra la pàgina d'inici traduïda en lloc de les darreres "
-"entrades. Sense WPML no fa res."
+#~ msgctxt "module description"
+#~ msgid ""
+#~ "With WPML, /en/ shows the translated front page instead of the latest "
+#~ "posts. Without WPML it does nothing."
+#~ msgstr ""
+#~ "Amb WPML, /en/ mostra la pàgina d'inici traduïda en lloc de les darreres "
+#~ "entrades. Sense WPML no fa res."
 
 #~ msgid "Google"
 #~ msgstr "Google"

@@ -109,7 +109,7 @@ switched on; turning a module off does not delete anything it stored.
 | With a carousel home page | `carousel` |
 | With WhatsApp | `whatsapp` |
 | With social networks in the footer | `social` |
-| Bilingual with WPML | `language-switcher`, `wpml-front-page` |
+| Bilingual with WPML | `language-switcher` (and WPML's step 1 done: section 5) |
 | Cookieless analytics (Matomo) | `matomo` |
 | Google Analytics, Ads or Tag Manager | `google-tags` (off by default; needs `consent`) |
 | Site replacing another one (old URLs) | `redirects` (off by default; if Rank Math already handles redirects, only one of the two) |
@@ -122,7 +122,7 @@ The full list and what each one does: [README](../README.md#modules),
 no clients or branches; its types are different ones, 8.1), `consent`,
 `webp`, `uploads` (and its 2560 px resize and WebP matter for the import,
 8.2), `external-links`, `featured-images`, `forms` (Contacte), `social`,
-`language-switcher` and `wpml-front-page` (four languages, 8.4), `redirects`
+`language-switcher` (four languages, 8.4), `redirects`
 **on** (the old URLs, 8.2), `matomo` or `google-tags` depending on what it
 measures with today. `comments-off` **off**: it has comments (8.5). No `map`
 or `whatsapp` until they are asked for.
@@ -170,8 +170,18 @@ shared template with the blanks marked.
 
 ## 5. WPML: yes or no
 
-- **No** (monolingual): it is not installed; the `language-switcher` and
-  `wpml-front-page` modules do nothing without it.
+- **No** (monolingual): it is not installed; the `language-switcher`
+  module does nothing without it.
+- **With WPML, its step 1 must be done** (`existing_content_language_verified`
+  = 1 in `icl_sitepress_settings`), or WPML does not translate the front
+  page: `/en/` redirects to `/en/home/`. WPML only hooks its public filters
+  (`pre_option_page_on_front` among them) when BOTH `setup_complete` and
+  `existing_content_language_verified` are set, and `finish_installation()`
+  sets only the first (Lavandería's content seed did exactly that until
+  24-10-2026). Check it with
+  `wp eval 'echo get_option("icl_sitepress_settings")["existing_content_language_verified"];'`
+  (it must print 1). Up to 1.6.1 the plugin's `wpml-front-page` module
+  papered over it; it was removed in 1.7.0.
 - **Yes**: default language Spanish, second language by directory
   (`/en/`). The types `eweb_location`, `eweb_client`, `eweb_testimonial` and
   the taxonomy `eweb_client_sector` translatable «showing the original if
@@ -331,7 +341,7 @@ and its readers: that is the client's call under its GDPR).
 
 - **WPML with four languages** (ca, es, en, de): only tested with two.
   What has to be checked: the switcher (`language-switcher`) with four, the
-  translated home page (`wpml-front-page`), the loader (`cargar.mjs` has
+  translated home page (WPML itself, with step 1 done: section 5), the loader (`cargar.mjs` has
   English hard-coded: `LANG = 'en'`) and translated slugs (the /en/ trap:
   URL rules are rebuilt with the request's language; README and
   `Prefix_Migration::run`).

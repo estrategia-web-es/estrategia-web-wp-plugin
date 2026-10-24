@@ -3055,7 +3055,10 @@ msgid ""
 "The forms on this site and where they are. A form is edited in its block: "
 "open the page or pattern it is in. Its name and identifier are the ones the "
 "submissions log shows."
-msgstr "Los formularios del sitio y dónde están. Un formulario se edita en su bloque: abre la página o el patrón donde está. Su nombre y su identificador son los que muestra el registro de envíos."
+msgstr ""
+"Los formularios del sitio y dónde están. Un formulario se edita en su "
+"bloque: abre la página o el patrón donde está. Su nombre y su identificador "
+"son los que muestra el registro de envíos."
 
 #: modules/forms/includes/admin/class-forms-list.php:223
 msgid "Where it is"
@@ -3068,7 +3071,9 @@ msgstr "También en"
 #: modules/forms/includes/admin/class-forms-list.php:232
 msgid ""
 "There are no forms yet. Add a «Form» block to a page or a synced pattern."
-msgstr "Todavía no hay formularios. Añade un bloque «Formulario» a una página o a un patrón sincronizado."
+msgstr ""
+"Todavía no hay formularios. Añade un bloque «Formulario» a una página o a un "
+"patrón sincronizado."
 
 #: modules/forms/includes/admin/class-forms-list.php:237
 msgid "(no name)"
@@ -3395,7 +3400,7 @@ msgstr ""
 "Bloque selector de idioma para WPML: el idioma actual y enlaces a la misma "
 "página en los demás, en desplegable o en línea. Sin WPML no pinta nada."
 
-#: modules/language-switcher/module.php modules/wpml-front-page/module.php
+#: modules/language-switcher/module.php
 msgctxt "module category"
 msgid "Languages"
 msgstr "Idiomas"
@@ -4305,7 +4310,9 @@ msgstr "Para quitar una red sin JavaScript, vacía su enlace."
 msgid ""
 "Your own SVG can only be uploaded if “Allow SVG uploads” is on in Settings › "
 "Media."
-msgstr "Solo se puede subir un SVG propio si «Permitir subir SVG» está marcado en Ajustes › Medios."
+msgstr ""
+"Solo se puede subir un SVG propio si «Permitir subir SVG» está marcado en "
+"Ajustes › Medios."
 
 #: modules/social/includes/class-admin.php:109
 msgid "Automatic (from the link)"
@@ -4489,19 +4496,17 @@ msgstr "Número de WhatsApp en formato internacional, solo dígitos."
 msgid "Predefined WhatsApp message."
 msgstr "Mensaje predefinido de WhatsApp."
 
-#: modules/wpml-front-page/module.php
-msgctxt "module name"
-msgid "Translated front page (WPML)"
-msgstr "Portada traducida (WPML)"
+#~ msgctxt "module name"
+#~ msgid "Translated front page (WPML)"
+#~ msgstr "Portada traducida (WPML)"
 
-#: modules/wpml-front-page/module.php
-msgctxt "module description"
-msgid ""
-"With WPML, /en/ shows the translated front page instead of the latest posts. "
-"Without WPML it does nothing."
-msgstr ""
-"Con WPML, /en/ enseña la portada traducida en vez de las últimas entradas. "
-"Sin WPML no hace nada."
+#~ msgctxt "module description"
+#~ msgid ""
+#~ "With WPML, /en/ shows the translated front page instead of the latest "
+#~ "posts. Without WPML it does nothing."
+#~ msgstr ""
+#~ "Con WPML, /en/ enseña la portada traducida en vez de las últimas "
+#~ "entradas. Sin WPML no hace nada."
 
 #~ msgid "Google"
 #~ msgstr "Google"

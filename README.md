@@ -34,7 +34,6 @@ stored and what it does, to this plugin.
 | `google-tags` | (unreleased) GA4, Google Ads and Tag Manager with Consent Mode v2; requires `consent`: section 6 ter | **off** |
 | `webp` | image sizes in WebP: section 7 | on |
 | `external-links` | links to another domain in a new tab: section 8 | on |
-| `wpml-front-page` | with WPML, `/en/` shows the translated front page | on |
 | `forms` | block-based forms, email notifications and submission log: [modules/forms/README.md](modules/forms/README.md) | on |
 | `carousel` | `estrategia-web/carousel` block | on |
 | `map` | `estrategia-web/map` block (two-click map) | on |
@@ -53,6 +52,12 @@ nor its assets) and **deletes nothing** of what it stored.
 
 **`site` is core since 1.7.0**: always loaded (header `Core: yes`), not on
 the Modules screen, even if a saved `estrategia_web_modules` lacks it.
+
+**`wpml-front-page` was removed in 1.7.0**: it papered over a WPML set up
+without its step 1 (`existing_content_language_verified`), with which WPML
+does not translate the front page. What to check on a WPML site:
+[docs/web-nueva.md](docs/web-nueva.md), «5. WPML: yes or no». A saved list
+that still names it is harmless: unknown slugs are ignored.
 
 ### The admin (1.7.0)
 

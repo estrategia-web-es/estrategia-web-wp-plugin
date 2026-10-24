@@ -3072,7 +3072,7 @@ msgid ""
 "page in the others, as a drop-down or inline. Without WPML it shows nothing."
 msgstr ""
 
-#: modules/language-switcher/module.php modules/wpml-front-page/module.php
+#: modules/language-switcher/module.php
 msgctxt "module category"
 msgid "Languages"
 msgstr ""
@@ -4070,16 +4070,4 @@ msgstr ""
 
 #: modules/whatsapp/module.php:67
 msgid "Predefined WhatsApp message."
-msgstr ""
-
-#: modules/wpml-front-page/module.php
-msgctxt "module name"
-msgid "Translated front page (WPML)"
-msgstr ""
-
-#: modules/wpml-front-page/module.php
-msgctxt "module description"
-msgid ""
-"With WPML, /en/ shows the translated front page instead of the latest posts. "
-"Without WPML it does nothing."
 msgstr ""

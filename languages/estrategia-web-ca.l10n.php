@@ -824,7 +824,5 @@ Gràcies per escriure\'ns. Hem rebut el teu missatge i et respondrem aviat.
 		'module name' . "\x04" . 'WhatsApp button' => 'Botó de WhatsApp',
 		'WhatsApp phone number in international format, digits only.' => 'Número de WhatsApp en format internacional, només xifres.',
 		'Predefined WhatsApp message.' => 'Missatge predefinit de WhatsApp.',
-		'module name' . "\x04" . 'Translated front page (WPML)' => 'Pàgina d\'inici traduïda (WPML)',
-		'module description' . "\x04" . 'With WPML, /en/ shows the translated front page instead of the latest posts. Without WPML it does nothing.' => 'Amb WPML, /en/ mostra la pàgina d\'inici traduïda en lloc de les darreres entrades. Sense WPML no fa res.',
 	),
 );
