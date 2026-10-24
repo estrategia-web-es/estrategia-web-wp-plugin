@@ -4,6 +4,7 @@
  * Description: Build your own content types, taxonomies and fields from the panel (or start from a template: clients, testimonials, locations, projects, portfolio), with the editor panel, Block Bindings and WPML generated.
  * Default: on
  * Requires:
+ * Category: Content
  *
  * THE CONSTRUCTOR (17-10-2026, David: «la idea del constructor es poder
  * crear tus propios tipos… para mí es dato: un JSON en content»). Each

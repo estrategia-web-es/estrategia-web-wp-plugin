@@ -1,7 +1,9 @@
 <?php
 /**
- * Admin screens: «Forms → Submissions» (list, filter by form, view one,
- * export CSV, delete with confirmation) and «Forms → Settings».
+ * Admin screens: «Forms → Forms» (1.7.0, first: the list of the site's
+ * forms, includes/admin/class-forms-list.php), «Forms → Submissions» (list,
+ * filter by form, view one, export CSV, delete with confirmation) and
+ * «Forms → Settings».
  *
  * Notifications are NOT configured here but in the form block (the editor
  * sidebar): see README, «Why the notifications live in the block».
@@ -51,6 +53,10 @@ final class Admin {
 		);
 		add_submenu_page( self::PAGE, __( 'Form submissions', 'estrategia-web' ), __( 'Submissions', 'estrategia-web' ), self::capability(), self::PAGE, array( self::class, 'render_submissions' ) );
 		add_submenu_page( self::PAGE, __( 'Form settings', 'estrategia-web' ), __( 'Settings', 'estrategia-web' ), 'manage_options', self::SETTINGS_PAGE, array( self::class, 'render_settings' ) );
+		// 1.7.0: «Forms» FIRST (position 0). WordPress makes the top-level item open its
+		// first submenu item, so «Forms» in the sidebar now opens this list; Submissions
+		// keeps its slug, and every link to it (bookmarks, the CSV, «view» links) still works.
+		add_submenu_page( self::PAGE, __( 'Forms', 'estrategia-web' ), __( 'Forms', 'estrategia-web' ), self::capability(), Forms_List::PAGE, array( Forms_List::class, 'render' ), 0 );
 	}
 
 	public static function register_settings(): void {

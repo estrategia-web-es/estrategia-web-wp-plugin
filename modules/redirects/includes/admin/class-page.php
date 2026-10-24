@@ -17,7 +17,7 @@
 
 namespace EstrategiaWeb\Redirects\Admin;
 
-use EstrategiaWeb\Admin\Modules_Page;
+use EstrategiaWeb\Admin\Menu;
 use EstrategiaWeb\Redirects\Conflicts;
 use EstrategiaWeb\Redirects\Importer;
 use EstrategiaWeb\Redirects\Rules;
@@ -39,7 +39,7 @@ final class Page {
 	}
 
 	public static function menu(): void {
-		$parent = class_exists( Modules_Page::class ) ? Modules_Page::MENU : 'tools.php';
+		$parent = class_exists( Menu::class ) ? Menu::PARENT : 'tools.php';
 		$hook   = add_submenu_page( $parent, __( 'Redirects', 'estrategia-web' ), __( 'Redirects', 'estrategia-web' ), 'manage_options', self::SLUG, array( self::class, 'render' ) );
 		if ( $hook ) {
 			add_action( 'load-' . $hook, array( self::class, 'handle' ) );

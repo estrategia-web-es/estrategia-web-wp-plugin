@@ -120,14 +120,16 @@ test("reopen: a link to #estrategia-web-consent and an element with the class op
 test("Cookies screen: what was detected shows as pending with its suggestion; once confirmed, it shows in the policy", async () => {
   const ctx = await browser.newContext({ viewport: { width: 1400, height: 1000 } });
   const page = await ctx.newPage();
-  await page.goto(BASE + "/wp-admin/admin.php?page=estrategia-web-cookies");
+  // 1.7.0: the screen is the «Cookies» tab of Estrategia Web › Settings.
+  const screen = BASE + "/wp-admin/admin.php?page=estrategia-web-settings&tab=cookies";
+  await page.goto(screen);
   if (page.url().includes("wp-login.php")) {
     await page.fill("#user_login", "admin");
     await page.fill("#user_pass", "password");
     await Promise.all([page.waitForURL(/wp-admin/), page.click("#wp-submit")]);
-    await page.goto(BASE + "/wp-admin/admin.php?page=estrategia-web-cookies");
+    await page.goto(screen);
   }
-  await page.getByRole("heading", { name: "Cookies", level: 1 }).waitFor();
+  await page.locator('.nav-tab-active[data-tab="cookies"]').waitFor();
   const row = page.locator("tr", { has: page.locator("code", { hasText: /^estrategia_web_consent$/ }) });
   assert.equal(await row.locator('select[name="status"]').inputValue(), "pending");
   assert.equal(await row.locator('select[name="category"]').inputValue(), "necessary");

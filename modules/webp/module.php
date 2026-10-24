@@ -4,6 +4,7 @@
  * Description: Image sizes generated from JPEG and PNG uploads are saved as WebP (quality 75).
  * Default: on
  * Requires:
+ * Category: Media & performance
  *
  * The minimal module example: header, one require and one boot. What it
  * does and the trap with already uploaded images, in includes/class-webp.php.

@@ -4,6 +4,7 @@
  * Description: Editable 301, 302 and 410 redirects with hit counters, CSV import and export, and an optional 404 log.
  * Default: off
  * Requires:
+ * Category: SEO
  *
  * Editable redirects under «Estrategia Web → Redirects»: source, target,
  * type (301, 302, 410), active, hit counter and last hit. CSV import and

@@ -70,7 +70,9 @@ test("«Datos de la empresa» screen: saves, warns about the mistyped email, lin
   // type=email: the browser would block the submit; it is removed to test the server.
   await p.evaluate(() => (document.getElementById("estrategia-web-site-email").type = "text"));
   assert.equal(await p.locator('input[name="estrategia_web_site[enabled_types][]"]').count(), 0, "no type checkboxes any more");
-  assert.equal(await p.locator('.wrap a[href*="page=estrategia-web-content-types"]').count(), 1, "the link to Content types");
+  // 1.7.0: only Company and Contact here; Content types and Social networks are in the menu, SVG in Settings › Media.
+  assert.equal(await p.locator('#adminmenu a[href*="page=estrategia-web-content-types"]').count(), 1, "Content types is in the menu");
+  assert.equal(await p.locator('.wrap input[name="estrategia_web_site[allow_svg]"]').count(), 0, "SVG is not on this screen any more");
   await Promise.all([p.waitForURL(/settings-updated/), p.click("#submit")]);
 
   assert.match(await p.locator(".notice, .error, .updated").allTextContents().then((t) => t.join(" ")), /correo electrónico no es válido/);

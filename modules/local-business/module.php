@@ -4,6 +4,7 @@
  * Description: Tells search engines about the company and its locations with schema.org (Organization and LocalBusiness: address, hours, coordinates), inside Rank Math's or Yoast's graph when they are there.
  * Default: on
  * Requires: site, content-types
+ * Category: SEO
  *
  * WHAT IT DOES (22-10-2026, asked by David for every site): JSON-LD
  * structured data, so Google can show the business — address, phone,

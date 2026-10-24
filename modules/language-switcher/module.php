@@ -4,6 +4,7 @@
  * Description: Language switcher block for WPML: the current language and links to the same page in the others, as a drop-down or inline. Without WPML it shows nothing.
  * Default: on
  * Requires:
+ * Category: Languages
  *
  * Block estrategia-web/language-switcher. Up to 1.0.0 the parent theme
  * registered it (see modules/carousel/module.php: the same move). Everything

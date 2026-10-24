@@ -56,6 +56,40 @@ test("dependencies: whatever needs something that is off is not loaded, and the 
   assert.deepEqual(out.resolve_chain, [[], { m: ["k"], z: ["m"] }], "z needs m, m needs k (off): both drop");
 });
 
+test("1.7.0 edge case: a CORE module missing from the saved list is still loaded (and what requires it too)", () => {
+  assert.deepEqual([...out.core_saved_without].sort(), ["forms", "site"], "saved [forms] after the screen stopped sending site");
+  assert.deepEqual(out.core_saved_empty, ["site"], "everything switched off: site stays");
+  assert.deepEqual([...out.core_no_known].sort(), ["site", "social"], "a list written by hand, without _known");
+  assert.deepEqual(out.core_resolved[0], ["site", "social"]);
+  assert.equal(Object.keys(out.core_resolved[1]).length, 0, "social (Requires: site) is not blocked");
+  for (const slug of ["site", "social", "matomo"]) assert.ok(out.real_without_site.includes(slug), `real headers: ${slug} loads with a saved list without site`);
+});
+
+test("1.7.0: only «site» is core, and every other module has a known Category", () => {
+  const core = Object.entries(out.available).filter(([, m]) => m.core).map(([s]) => s);
+  assert.deepEqual(core, ["site"]);
+  const expected = {
+    Content: ["carousel", "comments-off", "content-types", "featured-images", "map"],
+    Contact: ["forms", "social", "whatsapp"],
+    "Privacy & analytics": ["consent", "google-tags", "matomo"],
+    SEO: ["external-links", "local-business", "redirects"],
+    Languages: ["language-switcher", "wpml-front-page"],
+    "Media & performance": ["uploads", "webp"],
+  };
+  for (const [slug, m] of Object.entries(out.available)) {
+    if (m.core) continue;
+    assert.notEqual(m.category, "Other", `${slug}: no Category header, or a misspelled one`);
+    assert.ok(expected[m.category]?.includes(slug), `${slug} is in «${m.category}»; David's list says otherwise`);
+  }
+});
+
+test("1.7.0 grouping: fixed category order, alphabetical by name inside, unknown → Other (last), core and empty ones left out", () => {
+  assert.deepEqual(out.grouped_fake, { Content: ["alpha", "zeta"], SEO: ["beta"], Languages: ["lang"], Other: ["none", "odd"] });
+  assert.deepEqual(Object.keys(out.grouped_fake), ["Content", "SEO", "Languages", "Other"], "the order of CATEGORIES, not the order of arrival");
+  assert.deepEqual(Object.keys(out.grouped_real), out.categories, "the real modules fill every category, in order, and none is in Other");
+  assert.ok(!Object.values(out.grouped_real).flat().includes("site"), "site is not on the Modules screen");
+});
+
 test("what another module needs is loaded first, and a cycle does not hang", () => {
   assert.deepEqual(out.resolve_order[0], ["zeta", "alpha"]);
   assert.deepEqual([...out.resolve_cycle[0]].sort(), ["x", "y"]);

@@ -28,10 +28,10 @@ after(async () => {
 
 const rows = () => p.locator(".estrategia-web-social__row");
 
-test("“Company details” no longer has the fixed network fields: it links to “Social networks”", async () => {
+test("“Company details” no longer has the fixed network fields: “Social networks” is in the Estrategia Web menu", async () => {
   await p.goto(`${BASE}/wp-admin/admin.php?page=estrategia-web-site`);
   assert.equal(await p.locator('input[name^="estrategia_web_site[social]"]').count(), 0);
-  assert.match(await p.locator('a[href*="page=estrategia-web-social"]').first().textContent(), /Redes sociales/);
+  assert.match(await p.locator('#adminmenu a[href*="page=estrategia-web-social"]').first().textContent(), /Redes sociales/);
 });
 
 test("“Social networks” screen: starts from the company ones (migrated), adds, moves up, removes and saves in the order on screen", async () => {

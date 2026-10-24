@@ -19,7 +19,7 @@
  *   in Links::sanitize_item and the schema; admin.js is not touched if the
  *   name follows the form estrategia_web_social_links[n][field].
  * - Edge case: the custom SVG is picked from the media library, which only
- *   allows UPLOADING SVG if “Company details → Allow SVG” is ticked (and the
+ *   allows UPLOADING SVG if “Settings › Media › Allow SVG” is ticked (and the
  *   user is allowed: site module, class-svg.php). The screen says so.
  * - The trap: the settings_fields() group must be Links::GROUP, the same as
  *   in register_setting, or options.php answers “the option is not in the
@@ -28,7 +28,8 @@
 
 namespace EstrategiaWeb\Social;
 
-use EstrategiaWeb\Admin\Modules_Page;
+use EstrategiaWeb\Admin\Menu;
+use EstrategiaWeb\Admin\Settings_Page;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -42,7 +43,7 @@ final class Admin {
 	}
 
 	public static function menu(): void {
-		add_submenu_page( Modules_Page::MENU, __( 'Social networks', 'estrategia-web' ), __( 'Social networks', 'estrategia-web' ), 'manage_options', self::PAGE, array( self::class, 'render' ) );
+		add_submenu_page( Menu::PARENT, __( 'Social networks', 'estrategia-web' ), __( 'Social networks', 'estrategia-web' ), 'manage_options', self::PAGE, array( self::class, 'render' ) );
 	}
 
 	public static function enqueue( string $hook ): void {
@@ -98,7 +99,7 @@ final class Admin {
 		self::row( $index, array( 'name' => '', 'url' => '', 'icon' => '', 'icon_id' => 0 ) ); // The empty one, for adding.
 		echo '</tbody></table>';
 		echo '<p><button type="button" class="button estrategia-web-social__add" hidden>' . esc_html__( 'Add network', 'estrategia-web' ) . '</button></p>';
-		echo '<p class="description">' . esc_html__( 'To remove a network without JavaScript, empty its link. Your own SVG can only be uploaded if “Allow SVG uploads” is on in Company details.', 'estrategia-web' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'To remove a network without JavaScript, empty its link.', 'estrategia-web' ) . ' <a href="' . esc_url( Settings_Page::url( 'media' ) ) . '">' . esc_html__( 'Your own SVG can only be uploaded if “Allow SVG uploads” is on in Settings › Media.', 'estrategia-web' ) . '</a></p>';
 		submit_button();
 		echo '</form></div>';
 	}

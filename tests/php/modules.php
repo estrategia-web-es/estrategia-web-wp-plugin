@@ -57,6 +57,25 @@ $chain = array(
 	'k' => array( 'default' => false, 'requires' => array() ),
 );
 
+// 1.7.0: a core module (site) that the saved list may lack.
+$core        = array(
+	'site'   => array( 'default' => true, 'core' => true, 'requires' => array() ),
+	'forms'  => array( 'default' => true, 'requires' => array() ),
+	'social' => array( 'default' => true, 'requires' => array( 'site' ) ),
+);
+$core_wanted = static fn( $saved, $known ) => Modules::wanted( $core, $saved, $known );
+
+// Grouping: names out of order, an unknown category, a core one, an empty category.
+$grouping = array(
+	'zeta'  => array( 'name' => 'Zeta', 'category' => 'Content' ),
+	'alpha' => array( 'name' => 'alpha', 'category' => 'Content' ),
+	'beta'  => array( 'name' => 'Beta', 'category' => 'SEO' ),
+	'odd'   => array( 'name' => 'Odd', 'category' => 'Contnet' ),
+	'none'  => array( 'name' => 'None' ),
+	'core'  => array( 'name' => 'Core', 'category' => 'Content', 'core' => true ),
+	'lang'  => array( 'name' => 'Lang', 'category' => 'Languages' ),
+);
+
 echo json_encode(
 	array(
 		'folders'          => $folders,
@@ -77,6 +96,15 @@ echo json_encode(
 		),
 		'resolve_chain'    => Modules::resolve( $chain, array( 'z', 'm' ) ),
 		'resolve_cycle'    => Modules::resolve( $cycle, array( 'y', 'x' ) ),
+		// 1.7.0: core modules and categories.
+		'core_saved_without' => $core_wanted( array( 'forms' ), array( 'site', 'forms', 'social' ) ),
+		'core_saved_empty'   => $core_wanted( array(), array( 'site', 'forms', 'social' ) ),
+		'core_no_known'      => $core_wanted( array( 'social' ), null ),
+		'core_resolved'      => Modules::resolve( $core, $core_wanted( array( 'social' ), array( 'site', 'forms', 'social' ) ) ),
+		'real_without_site'  => Modules::resolve( $available, Modules::wanted( $available, array( 'social', 'matomo' ), array_keys( $available ) ) )[0],
+		'grouped_fake'       => Modules::grouped( $grouping ),
+		'grouped_real'       => Modules::grouped( $available ),
+		'categories'         => Modules::CATEGORIES,
 	),
 	JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
 );

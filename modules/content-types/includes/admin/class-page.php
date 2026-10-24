@@ -35,7 +35,7 @@
 
 namespace EstrategiaWeb\ContentTypes;
 
-use EstrategiaWeb\Admin\Modules_Page;
+use EstrategiaWeb\Admin\Menu;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -50,7 +50,7 @@ final class Page {
 	}
 
 	public static function menu(): void {
-		add_submenu_page( Modules_Page::MENU, __( 'Content types', 'estrategia-web' ), __( 'Content types', 'estrategia-web' ), 'manage_options', self::SLUG, array( self::class, 'render' ) );
+		add_submenu_page( Menu::PARENT, __( 'Content types', 'estrategia-web' ), __( 'Content types', 'estrategia-web' ), 'manage_options', self::SLUG, array( self::class, 'render' ) );
 	}
 
 	public static function enqueue( string $hook ): void {

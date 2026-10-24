@@ -1,8 +1,10 @@
 <?php
 /**
  * The core: what is ALWAYS loaded, whichever modules are on.
- * Translations, the module loader, the shared block helpers and the
- * «Estrategia Web → Modules» screen. Nothing specific to a module lives here.
+ * Translations, the module loader, the shared block helpers and the admin
+ * frame (1.7.0): the «Estrategia Web» menu (admin/class-menu.php), the
+ * Settings page with its tab registry (admin/class-settings-page.php) and
+ * the Modules screen. Nothing specific to a module lives here.
  *
  * Hooks it offers to modules:
  * - estrategia_web_activate / estrategia_web_deactivate: when the WHOLE
@@ -44,6 +46,8 @@ final class Plugin {
 		Modules::load();
 		Blocks::boot();
 		if ( is_admin() ) {
+			Admin\Menu::boot(); // 1.7.0: the «Estrategia Web» menu, its order and the old URLs.
+			Admin\Settings_Page::boot();
 			Admin\Modules_Page::boot();
 		}
 	}

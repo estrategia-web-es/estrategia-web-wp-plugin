@@ -4,9 +4,11 @@
  * Description: Google Analytics 4, Google Ads (with an optional conversion for form submissions) and Google Tag Manager behind the cookie notice, with Consent Mode v2. An empty field loads nothing.
  * Default: off
  * Requires: consent
+ * Category: Privacy & analytics
  *
  * What it does, in full, in the header of includes/class-google-tags.php. In
- * short: three fields (G-…, AW-…, GTM-…) under «Estrategia Web → Google»; an
+ * short: three fields (G-…, AW-…, GTM-…) under «Estrategia Web › Settings ›
+ * Analytics» (1.7.0; before, «Estrategia Web → Google»); an
  * empty field = none of that is loaded. In the <head>, BEFORE anything else,
  * Consent Mode v2 with everything «denied»; and Google's scripts are NOT
  * requested until the visitor accepts Analytics or Advertising in the notice

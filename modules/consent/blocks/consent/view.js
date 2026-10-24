@@ -124,7 +124,11 @@ const cookieNames = () =>
 const scanCookies = () => {
 	const detector = state.detector;
 	const names = cookieNames();
-	if ( ! detector || ! detector.url || ! names.length ) {
+	// 1.7.0: a logged-in user's browser carries dashboard-only cookies. The server
+	// already leaves «detector» out for them; the body class is the second check
+	// (both are rendered server-side; a cached page is never a logged-in one:
+	// includes/class-cookie-rest.php, «Logged-in users»).
+	if ( ! detector || ! detector.url || ! names.length || document.body.classList.contains( 'logged-in' ) ) {
 		return;
 	}
 	const key = names.join( ',' );
@@ -148,7 +152,10 @@ const scanCookies = () => {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify( { names } ),
-			credentials: 'omit',
+			// same-origin (1.7.0, was «omit»): so the server can see a logged-in
+			// cookie and drop the report. Only to this same site, which receives
+			// these cookies with every page anyway.
+			credentials: 'same-origin',
 			keepalive: true,
 		} )
 		.catch( () => {} );

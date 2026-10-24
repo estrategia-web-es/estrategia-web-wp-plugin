@@ -4,6 +4,7 @@
  * Description: Block-based forms with several email notifications made from templates, a log of everything sent and WPML support.
  * Default: on
  * Requires:
+ * Category: Contact
  *
  * What used to be the «Estrategia Web Forms» plugin up to 1.0.0 (repo
  * armazon-wp-formularios, archived on 14-10-2026). Its full documentation
@@ -52,6 +53,7 @@ require_once __DIR__ . '/includes/class-rest.php';
 require_once __DIR__ . '/includes/class-cron.php';
 require_once __DIR__ . '/includes/admin/class-submissions-table.php';
 require_once __DIR__ . '/includes/admin/class-admin.php';
+require_once __DIR__ . '/includes/admin/class-forms-list.php'; // 1.7.0: Forms → Forms, the list of the site's forms.
 
 // Idempotent on every load: that way it also works when the module is switched on.
 add_action( 'plugins_loaded', array( Migrations::class, 'maybe_run' ) );

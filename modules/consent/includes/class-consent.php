@@ -469,7 +469,10 @@ final class Consent {
 				// see an old version and send again on every page. The «version»
 				// that counts is the visitor's list of NAMES: it is sent if it
 				// changes or after «days» days.
-				'detector'     => $settings['detector'] ? array(
+				// 1.7.0: never for a logged-in user (their browser carries dashboard
+				// cookies). Why this is safe with page caches: class-cookie-rest.php,
+				// «Logged-in users».
+				'detector'     => $settings['detector'] && ! is_user_logged_in() ? array(
 					'url'   => rest_url( Cookie_Rest::NAMESPACE . '/cookies/seen' ),
 					'days'  => (int) apply_filters( 'estrategia_web_cookies_report_days', 7 ),
 					'delay' => 4000,

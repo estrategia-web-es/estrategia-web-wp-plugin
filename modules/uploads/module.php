@@ -4,12 +4,14 @@
  * Description: Phone photos can be uploaded (up to 20 MB by default); WordPress scales them down to 2560 px and only the scaled copy is kept on disk.
  * Default: on
  * Requires:
+ * Category: Media & performance
  *
  * Replaces Lavandería's MU-plugin wp-content/mu-plugins/estrategia-web-subidas.php
  * (12-10-2026), with the same defaults: 20 MB upload limit, 2560 px
  * scale-down threshold (WordPress' big_image_size_threshold) and deleting the
  * huge original once WordPress has scaled it down. The three values are
- * changed in "Settings → Media → Image uploads". What each one does, and its
+ * changed in "Estrategia Web › Settings › Media" (1.7.0; before, a section
+ * of WordPress's Settings → Media). What each one does, and its
  * pitfalls, in includes/class-uploads.php.
  *
  * Why it ships on: it replaces what the site using it (Lavandería) ALREADY

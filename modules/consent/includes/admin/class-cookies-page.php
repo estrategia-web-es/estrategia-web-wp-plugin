@@ -1,8 +1,12 @@
 <?php
 /**
- * «Estrategia Web → Cookies» screen (manage_options): the cookie registry
+ * «Estrategia Web › Settings › Cookies» (manage_options): the cookie registry
  * (includes/class-cookie-registry.php) and the notice settings that are not
- * code.
+ * code. Up to 1.6.1 it was its own screen (page=estrategia-web-cookies, which
+ * now redirects to the tab: Menu::LEGACY in includes/admin/class-menu.php at
+ * the root). Since 1.7.0 it is a section of the Settings page's registry
+ * (includes/admin/class-settings-page.php) WITHOUT declared options: it keeps
+ * its own forms (see the trap) and the page prints it after its shared form.
  *
  * What is there, top to bottom:
  * 1. Which categories the notice asks about: the ones declared by the CODE
@@ -41,26 +45,37 @@
 
 namespace EstrategiaWeb\Site;
 
-use EstrategiaWeb\Admin\Modules_Page;
+use EstrategiaWeb\Admin\Settings_Page;
 
 defined( 'ABSPATH' ) || exit;
 
 final class Cookies_Page {
 
+	/** The slug of the old screen (1.6.1), redirected to the Cookies tab. */
 	public const PAGE   = 'estrategia-web-cookies';
+	public const TAB    = 'cookies';
 	public const ACTION = 'estrategia_web_cookies';
 
 	public static function boot(): void {
-		add_action( 'admin_menu', array( self::class, 'menu' ), 20 ); // After the «Estrategia Web» menu (10).
+		add_action( Settings_Page::HOOK, array( self::class, 'register' ) );
 		add_action( 'admin_post_' . self::ACTION, array( self::class, 'handle' ) );
 	}
 
-	public static function menu(): void {
-		add_submenu_page( Modules_Page::MENU, __( 'Cookies', 'estrategia-web' ), __( 'Cookies', 'estrategia-web' ), 'manage_options', self::PAGE, array( self::class, 'render' ) );
+	/** On Settings_Page::HOOK: the Cookies tab, first, with this section. */
+	public static function register(): void {
+		Settings_Page::add_tab( self::TAB, __( 'Cookies', 'estrategia-web' ), 10 );
+		Settings_Page::add_section(
+			self::TAB,
+			array(
+				'id'     => 'cookies',
+				'render' => array( self::class, 'render' ),
+			)
+		);
 	}
 
-	private static function url( array $args = array() ): string {
-		return add_query_arg( array_merge( array( 'page' => self::PAGE ), $args ), admin_url( 'admin.php' ) );
+	/** The tab's URL (where every form of this section comes back to). */
+	public static function url( array $args = array() ): string {
+		return Settings_Page::url( self::TAB, $args );
 	}
 
 	/** Saves whatever comes from any of the screen's forms. */
@@ -151,9 +166,9 @@ final class Cookies_Page {
 		$ocd      = Cookie_Registry::ocd();
 		$notice   = sanitize_key( wp_unslash( $_GET['notice'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		$date     = static fn( int $t ): string => $t ? wp_date( get_option( 'date_format' ), $t ) : '—';
+		// No .wrap or <h1>: the Settings page prints them, with its tabs.
 		?>
-		<div class="wrap">
-			<h1><?php esc_html_e( 'Cookies', 'estrategia-web' ); ?></h1>
+		<div class="estrategia-web-cookies">
 			<?php if ( 'saved' === $notice || 'deleted' === $notice ) : ?>
 				<div class="notice notice-success is-dismissible"><p><?php echo 'deleted' === $notice ? esc_html__( 'Cookie deleted.', 'estrategia-web' ) : esc_html__( 'Changes saved.', 'estrategia-web' ); ?></p></div>
 			<?php elseif ( str_starts_with( $notice, 'error-' ) ) : ?>

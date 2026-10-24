@@ -4,6 +4,7 @@
  * Description: Two-click map block: a static image with the address; the Google Maps embed only loads after the visitor asks for it (or accepted the maps cookies).
  * Default: on
  * Requires:
+ * Category: Content
  *
  * The estrategia-web/map block. Up to 1.0.0 the parent theme registered it
  * (see modules/carousel/module.php: the same move). Everything it does is in

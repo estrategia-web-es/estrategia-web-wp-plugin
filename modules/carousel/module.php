@@ -4,6 +4,7 @@
  * Description: Carousel block: a horizontal scrolling row of any blocks (or the posts of a Query) with arrows, optional dots, infinite loop and autoplay only if asked for.
  * Default: on
  * Requires:
+ * Category: Content
  *
  * The estrategia-web/carousel block. Up to 1.0.0 the parent theme
  * registered it; WordPress.org does not allow a theme to register blocks, so

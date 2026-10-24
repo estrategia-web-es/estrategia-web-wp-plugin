@@ -21,6 +21,28 @@
  *     ≤ 128; the registry does not go beyond Cookie_Registry::MAX_ENTRIES.
  *   - Origin: if an Origin header arrives, it must be the site's.
  *   - With the detector off (Cookies screen) it replies 403 and records nothing.
+ *   - LOGGED-IN USERS (1.7.0, seen in Lavandería production on 24-10-2026:
+ *     an administrator who accepted the notice sent wp-settings-1,
+ *     wp-settings-time-1 and wp-wpml_current_admin_language_<hash>, cookies
+ *     only the dashboard sets, and they landed as «pending»). Stopped at BOTH
+ *     ends: the page of a logged-in user carries no detector configuration
+ *     (Consent::state(), and view.js also checks the «logged-in» body class),
+ *     and this route replies 202 and records nothing when the request
+ *     carries a valid logged-in cookie (view.js sends with credentials
+ *     «same-origin» since 1.7.0 so that it does; before, «omit»).
+ *     THE TRAP: is_user_logged_in() is ALWAYS false here. The report has no
+ *     nonce (see above), and without one WordPress's REST cookie check
+ *     (rest_cookie_check_errors) sets the current user to 0 even with a
+ *     perfectly valid cookie. So the cookie itself is validated
+ *     (wp_validate_auth_cookie( '', 'logged_in' )). And if a browser sent no
+ *     cookie at all (an old cached view.js with «omit», a privacy extension)
+ *     the server cannot know: the page-side stop is the one that holds.
+ *     Why the page-side stop is safe with page caches: SiteGround's, WP
+ *     Super Cache, W3TC and the like never store or serve a page for a
+ *     request with a logged-in cookie, so a cached page was always rendered
+ *     for an anonymous visitor and never carries a logged-in user's state.
+ *     (A cache that DID store logged-in pages for everyone would leak the
+ *     admin bar too: that cache is broken, not this.)
  *   The worst an attacker can do: fill the pending list with made-up names
  *   (at most MAX_ENTRIES), which do not show in the policy until someone
  *   confirms them, and can be deleted on the screen.
@@ -131,6 +153,12 @@ final class Cookie_Rest {
 		if ( ! Consent::active() || ! Cookie_Registry::settings()['detector'] ) {
 			return new \WP_Error( 'estrategia_web_detector_off', 'Detector off.', array( 'status' => 403 ) );
 		}
+		if ( self::from_logged_in_user() ) {
+			// 1.7.0: an editor's browser carries dashboard-only cookies (wp-settings-*,
+			// wp-wpml_current_admin_language_*). Same 202 as always, nothing recorded,
+			// and the rate is not spent. See «Logged-in users» in the header.
+			return new \WP_REST_Response( array( 'ok' => true ), 202 );
+		}
 		$origin = (string) $request->get_header( 'origin' );
 		if ( '' !== $origin && wp_parse_url( $origin, PHP_URL_HOST ) !== wp_parse_url( home_url(), PHP_URL_HOST ) ) {
 			return new \WP_Error( 'estrategia_web_detector_origin', 'Wrong origin.', array( 'status' => 403 ) );
@@ -151,6 +179,15 @@ final class Cookie_Rest {
 		$names = array_slice( array_filter( (array) $request->get_param( 'names' ), 'is_string' ), 0, self::MAX_NAMES );
 		Cookie_Registry::record_seen( $names );
 		return new \WP_REST_Response( array( 'ok' => true ), 202 );
+	}
+
+	/**
+	 * Whether the report comes from a logged-in user's browser: a VALID
+	 * logged-in cookie in the request. Not is_user_logged_in(): see the trap
+	 * in the header (REST resets the user to 0 when there is no nonce).
+	 */
+	public static function from_logged_in_user(): bool {
+		return (bool) wp_validate_auth_cookie( '', 'logged_in' );
 	}
 
 	public static function index(): array {

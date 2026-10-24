@@ -4,8 +4,17 @@
  *
  * The three settings live in ONE option, estrategia_web_uploads:
  *   { max_mb: 20, threshold: 2560, delete_original: true }
- * They are edited in "Settings → Media" (own section) and over REST
+ * They are edited in "Estrategia Web › Settings › Media" (1.7.0; up to
+ * 1.6.1, a section of WordPress's own Settings → Media) and over REST
  * (/wp/v2/settings, show_in_rest). If the option does not exist, DEFAULTS apply.
+ *
+ * Its settings group is its OWN (estrategia_web_uploads), not WordPress's
+ * «media» (1.7.0). The trap that moved it: options.php saves every option of
+ * a group and one missing from the POST arrives as null; with the fields no
+ * longer on WordPress's Media screen, saving that screen would have sent
+ * null and sanitize_form() would have reset the three values to DEFAULTS.
+ * The Settings page adds the option to its Media tab's group by itself
+ * (render_section() declares it: includes/admin/class-settings-page.php).
  *
  * - max_mb → upload_size_limit filter. It is a CAP: the lower of this and
  *   what the server's PHP allows wins (raising it above PHP does nothing,
@@ -48,7 +57,21 @@ final class Uploads {
 		add_filter( 'big_image_size_threshold', array( self::class, 'threshold' ) );
 		add_filter( 'wp_generate_attachment_metadata', array( self::class, 'delete_original' ), 20, 2 );
 		add_action( 'init', array( self::class, 'register_setting' ) );
-		add_action( 'admin_init', array( self::class, 'settings_fields' ) );
+		add_action( \EstrategiaWeb\Admin\Settings_Page::HOOK, array( self::class, 'settings_section' ) );
+	}
+
+	/** On Settings_Page::HOOK: the Media tab and this section (after site's SVG, 10). */
+	public static function settings_section(): void {
+		\EstrategiaWeb\Admin\Settings_Page::add_tab( 'media', __( 'Media', 'estrategia-web' ), 30 );
+		\EstrategiaWeb\Admin\Settings_Page::add_section(
+			'media',
+			array(
+				'id'       => 'uploads',
+				'priority' => 20,
+				'options'  => array( self::OPTION ),
+				'render'   => array( self::class, 'render_section' ),
+			)
+		);
 	}
 
 	/**
@@ -155,7 +178,7 @@ final class Uploads {
 
 	public static function register_setting(): void {
 		register_setting(
-			'media',
+			self::OPTION, // Its own group, not «media»: see the header.
 			self::OPTION,
 			array(
 				'type'              => 'object',
@@ -190,60 +213,39 @@ final class Uploads {
 		return self::sanitize( $value );
 	}
 
-	public static function settings_fields(): void {
-		add_settings_section(
-			'estrategia_web_uploads',
-			__( 'Image uploads', 'estrategia-web' ),
-			static function () {
-				echo '<p>' . esc_html__( 'Applies to images uploaded from now on. Images already in the library do not change.', 'estrategia-web' ) . '</p>';
-				echo '<input type="hidden" name="' . esc_attr( self::OPTION ) . '[_form]" value="1">';
-			},
-			'media'
-		);
+	/**
+	 * The section of Settings › Media: the three fields, inside the tab's
+	 * shared form (the page prints <form> and settings_fields()). The hidden
+	 * _form tells sanitize_form() that an absent checkbox means «no».
+	 */
+	public static function render_section(): void {
 		$settings = self::settings();
-		add_settings_field(
-			'estrategia_web_uploads_max_mb',
-			__( 'Maximum upload size (MB)', 'estrategia-web' ),
-			static function () use ( $settings ) {
-				printf(
-					'<input type="number" min="0" step="1" class="small-text" id="estrategia_web_uploads_max_mb" name="%1$s[max_mb]" value="%2$d"> <p class="description">%3$s</p>',
-					esc_attr( self::OPTION ),
-					(int) $settings['max_mb'],
-					esc_html__( 'The server limit still applies if it is lower. 0 = only the server limit.', 'estrategia-web' )
-				);
-			},
-			'media',
-			'estrategia_web_uploads',
-			array( 'label_for' => 'estrategia_web_uploads_max_mb' )
-		);
-		add_settings_field(
-			'estrategia_web_uploads_threshold',
-			__( 'Scale down images larger than (px)', 'estrategia-web' ),
-			static function () use ( $settings ) {
-				printf(
-					'<input type="number" min="0" step="1" class="small-text" id="estrategia_web_uploads_threshold" name="%1$s[threshold]" value="%2$d"> <p class="description">%3$s</p>',
-					esc_attr( self::OPTION ),
-					(int) $settings['threshold'],
-					esc_html__( 'Longest side. WordPress default: 2560. 0 = never scale down.', 'estrategia-web' )
-				);
-			},
-			'media',
-			'estrategia_web_uploads',
-			array( 'label_for' => 'estrategia_web_uploads_threshold' )
-		);
-		add_settings_field(
-			'estrategia_web_uploads_delete_original',
-			__( 'Original file', 'estrategia-web' ),
-			static function () use ( $settings ) {
-				printf(
-					'<label><input type="checkbox" name="%1$s[delete_original]" value="1"%2$s> %3$s</label>',
-					esc_attr( self::OPTION ),
-					checked( $settings['delete_original'], true, false ),
-					esc_html__( 'Delete the original after scaling it down (only the scaled copy is kept).', 'estrategia-web' )
-				);
-			},
-			'media',
-			'estrategia_web_uploads'
-		);
+		?>
+		<h2><?php esc_html_e( 'Image uploads', 'estrategia-web' ); ?></h2>
+		<p><?php esc_html_e( 'Applies to images uploaded from now on. Images already in the library do not change.', 'estrategia-web' ); ?></p>
+		<input type="hidden" name="<?php echo esc_attr( self::OPTION ); ?>[_form]" value="1">
+		<table class="form-table" role="presentation">
+			<tr>
+				<th scope="row"><label for="estrategia_web_uploads_max_mb"><?php esc_html_e( 'Maximum upload size (MB)', 'estrategia-web' ); ?></label></th>
+				<td>
+					<input type="number" min="0" step="1" class="small-text" id="estrategia_web_uploads_max_mb" name="<?php echo esc_attr( self::OPTION ); ?>[max_mb]" value="<?php echo (int) $settings['max_mb']; ?>">
+					<p class="description"><?php esc_html_e( 'The server limit still applies if it is lower. 0 = only the server limit.', 'estrategia-web' ); ?></p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><label for="estrategia_web_uploads_threshold"><?php esc_html_e( 'Scale down images larger than (px)', 'estrategia-web' ); ?></label></th>
+				<td>
+					<input type="number" min="0" step="1" class="small-text" id="estrategia_web_uploads_threshold" name="<?php echo esc_attr( self::OPTION ); ?>[threshold]" value="<?php echo (int) $settings['threshold']; ?>">
+					<p class="description"><?php esc_html_e( 'Longest side. WordPress default: 2560. 0 = never scale down.', 'estrategia-web' ); ?></p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><?php esc_html_e( 'Original file', 'estrategia-web' ); ?></th>
+				<td>
+					<label><input type="checkbox" name="<?php echo esc_attr( self::OPTION ); ?>[delete_original]" value="1" <?php checked( $settings['delete_original'] ); ?>> <?php esc_html_e( 'Delete the original after scaling it down (only the scaled copy is kept).', 'estrategia-web' ); ?></label>
+				</td>
+			</tr>
+		</table>
+		<?php
 	}
 }

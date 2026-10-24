@@ -4,6 +4,7 @@
  * Description: Free, ordered list of social network links (name, link, icon from an included collection or your own SVG) and a block that shows them.
  * Default: on
  * Requires: site
+ * Category: Contact
  *
  * Three pieces:
  * - The list: option estrategia_web_social_links (includes/class-links.php,

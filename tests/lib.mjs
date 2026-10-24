@@ -98,6 +98,104 @@ export function png(w = 4, h = 2, [r, g, b] = [200, 30, 30]) {
   return Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), chunk("IHDR", ihdr), chunk("IDAT", data), chunk("IEND", Buffer.alloc(0))]);
 }
 
+/**
+ * A wp-admin session WITHOUT a browser (1.7.0): logs in through wp-login.php
+ * as Playground's admin (admin / password) and keeps the cookies by hand.
+ * For level 2 tests of admin screens that are plain HTML and forms
+ * (redirects, which tabs exist, options.php saves). Anything that needs the
+ * screen's JavaScript is level 3.
+ *
+ *   const s = await adminSession();
+ *   const r = await s.get("/wp-admin/admin.php?page=…");      // { status, location, text }
+ *   await s.submit(r.text, "options.php", { "estrategia_web_site[phone]": "1" });
+ *
+ * - get() does NOT follow redirects: `location` says where it would go.
+ * - submit() takes the HTML of a page, finds the FIRST <form> whose action
+ *   ends like `action` (default «options.php»), sends ALL its fields as
+ *   the browser would (inputs with a name, checked checkboxes/radios only,
+ *   textareas, selects' selected option) with `changes` on top, and does not
+ *   follow the redirect either. It is a regex reader, enough for WordPress's
+ *   own markup: a form with a field it cannot read is a level 3 test.
+ * - cookie: the Cookie header, to send it with a plain fetch.
+ */
+export async function adminSession(user = "admin", password = "password") {
+  const jar = new Map([["wordpress_test_cookie", "WP%20Cookie%20check"]]);
+  const keep = (res) => {
+    for (const c of res.headers.getSetCookie?.() ?? []) {
+      const [pair] = c.split(";");
+      const i = pair.indexOf("=");
+      const name = pair.slice(0, i).trim();
+      const value = pair.slice(i + 1).trim();
+      if (value === "deleted" || /expires=Thu, 01[- ]Jan[- ]1970/i.test(c)) jar.delete(name);
+      else jar.set(name, value);
+    }
+  };
+  const cookie = () => [...jar].map(([k, v]) => `${k}=${v}`).join("; ");
+  const request = async (path, init = {}) => {
+    const res = await fetch(path.startsWith("http") ? path : BASE + path, { redirect: "manual", ...init, headers: { Cookie: cookie(), ...(init.headers || {}) } });
+    keep(res);
+    return { status: res.status, location: res.headers.get("location") || "", text: await res.text() };
+  };
+  const login = await request("/wp-login.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ log: user, pwd: password, "wp-submit": "Log In", testcookie: "1", redirect_to: BASE + "/wp-admin/" }).toString(),
+  });
+  if (login.status !== 302 || ![...jar.keys()].some((k) => k.startsWith("wordpress_logged_in_"))) {
+    throw new Error("could not log in as " + user + ": " + login.status);
+  }
+  // As a browser reads an attribute. Numeric entities matter: WordPress writes «&» as &#038; (esc_attr), and
+  // without decoding it the referer of settings_fields() lost «&tab=…» (seen in red, 24-10-2026).
+  const decode = (s) =>
+    s
+      .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+      .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+      .replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+  const attr = (tag, name) => {
+    const m = tag.match(new RegExp(`\\s${name}\\s*=\\s*("([^"]*)"|'([^']*)')`, "i"));
+    return m ? decode(m[2] ?? m[3]) : null;
+  };
+  const fields = (form) => {
+    const out = [];
+    for (const [tag] of form.matchAll(/<input\b[^>]*>/gi)) {
+      const name = attr(tag, "name");
+      const type = (attr(tag, "type") || "text").toLowerCase();
+      if (!name || ["submit", "button", "image", "file", "reset"].includes(type)) continue;
+      if ((type === "checkbox" || type === "radio") && !/\schecked\b/i.test(tag)) continue;
+      out.push([name, attr(tag, "value") ?? (type === "checkbox" ? "on" : "")]);
+    }
+    for (const m of form.matchAll(/<textarea\b([^>]*)>([\s\S]*?)<\/textarea>/gi)) {
+      const name = attr(m[1], "name");
+      if (name) out.push([name, decode(m[2])]);
+    }
+    for (const m of form.matchAll(/<select\b([^>]*)>([\s\S]*?)<\/select>/gi)) {
+      const name = attr(m[1], "name");
+      const options = [...m[2].matchAll(/<option\b[^>]*>/gi)].map(([o]) => o);
+      const chosen = options.find((o) => /\sselected\b/i.test(o)) ?? options[0];
+      if (name && chosen) out.push([name, attr(chosen, "value") ?? ""]);
+    }
+    return out;
+  };
+  return {
+    cookie,
+    get: (path) => request(path),
+    async submit(page, action = "options.php", changes = {}) {
+      const form = [...page.matchAll(/<form\b([^>]*)>([\s\S]*?)<\/form>/gi)].find((m) => (attr(m[1], "action") || "").endsWith(action));
+      if (!form) throw new Error("no form with action …" + action);
+      const body = new URLSearchParams();
+      const changed = new Set(Object.keys(changes));
+      for (const [k, v] of fields(form[2])) if (!changed.has(k)) body.append(k, v);
+      for (const [k, v] of Object.entries(changes)) for (const one of [].concat(v)) body.append(k, one);
+      const target = attr(form[1], "action");
+      return request(target.startsWith("http") ? target : BASE + "/wp-admin/" + target, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString(),
+      });
+    },
+  };
+}
+
 export const html = async (url) => {
   const res = await fetch(url);
   return { status: res.status, text: await res.text() };

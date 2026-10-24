@@ -13,7 +13,7 @@
 // set through /setup; never lower the real limits to make it pass.
 import { test, beforeEach, after } from "node:test";
 import assert from "node:assert/strict";
-import { BASE, credentials, html, reset, seedPage, testApi, wp } from "../../../tests/lib.mjs";
+import { BASE, adminSession, credentials, html, reset, seedPage, testApi, wp } from "../../../tests/lib.mjs";
 
 const cookiesTest = async (path, body) => {
   const res = await fetch(BASE + "/wp-json/estrategia-web-cookies-test/v1" + path, {
@@ -91,6 +91,29 @@ test("detector: hourly cap for the whole site, more than 60 names = 400, foreign
   assert.equal(off.status, 200, off.text);
   assert.equal((await report(["b3"])).status, 403);
   assert.ok(!(await front()).includes('"detector":{'), "when off, the page does not carry the detector configuration");
+});
+
+// 1.7.0 (Lavandería production, 24-10-2026: an admin's wp-settings-* and
+// wp-wpml_current_admin_language_* landed as pending). Both ends, see
+// «Logged-in users» in includes/class-cookie-rest.php. Seen in red
+// (24-10-2026) with from_logged_in_user() forced to false: «nothing
+// recorded: wp-settings-*, wp-wpml_current_admin_language_d41d8».
+test("detector: a logged-in user's report adds nothing and their page has no detector; an anonymous one still adds as pending", async () => {
+  await setupConsent({ categories: ["maps"] });
+  await cookiesTest("/setup", { interval: 0 });
+  const session = await adminSession();
+  const logged = await report(["wp-settings-1", "wp-wpml_current_admin_language_d41d8"], { Cookie: session.cookie(), Origin: BASE });
+  assert.equal(logged.status, 202, "same answer as always: nothing revealed");
+  const raw = (await cookiesTest("/raw")).raw ?? {};
+  assert.ok(!("wp-settings-1" in raw) && !Object.keys(raw).some((k) => k.startsWith("wp-wpml_current_admin")), "nothing recorded: " + Object.keys(raw).join(", "));
+
+  const page = (await session.get("/?nocache=" + Date.now())).text;
+  assert.ok(page.includes("estrategia-web-consent"), "the logged-in page does have the notice");
+  assert.ok(!page.includes('"detector":{'), "but no detector configuration");
+
+  const anonymous = await report(["_ga"]);
+  assert.equal(anonymous.status, 202);
+  assert.equal((await cookiesTest("/raw")).raw["_ga"].status, "pending", "anonymous reports still come in");
 });
 
 test("detector: the page with the notice carries the detector URL, the period and the delay", async () => {

@@ -131,11 +131,12 @@ or `whatsapp` until they are asked for.
 
 In this order (later steps use earlier ones):
 
-1. **Estrategia Web › Company data**: trade name and legal name, tax ID
-   (CIF), company registry entry, phone numbers, email, address, opening
-   hours, map, WhatsApp; **which content types the site uses** (clients,
-   testimonials, branches, projects, portfolio); SVG yes/no; Matomo (URL,
-   site id, mode). If the site has a `/clientes/` **page** and the clients
+1. **Estrategia Web › Company details** (the menu opens on it): trade name
+   and legal name, tax ID (CIF), company registry entry, phone numbers,
+   email, address, opening hours, map, WhatsApp, type of business. **Which
+   content types the site uses** (clients, testimonials, branches, projects,
+   portfolio): **Estrategia Web › Content types**. SVG yes/no: **Settings ›
+   Media**; Matomo (URL, site id, mode): **Settings › Analytics** (1.7.0). If the site has a `/clientes/` **page** and the clients
    type, the type's archive would override it: set a different slug in
    `rewrite_slugs` (README,
    [«3. Content types»](../README.md#3-content-types)).
@@ -146,12 +147,12 @@ In this order (later steps use earlier ones):
    image setting if it is one), sector; the testimonial with author and
    rating.
 4. **Estrategia Web › Social networks**: the list (name, link, icon).
-5. **Estrategia Web › Cookies**: review what the detector finds and add
+5. **Estrategia Web › Settings › Cookies**: review what the detector finds and add
    what it cannot see (third-party ones inside an iframe). The policy table
    comes from the `estrategia-web/cookie-table` block.
-6. **Google** (if `google-tags`): GA4, Ads, Tag Manager.
-7. **Estrategia Web › Forms › Settings**: sender and recipients.
-8. **Settings › Media › Image uploads**: maximum size, pixel threshold and
+6. **Estrategia Web › Settings › Analytics** (Google part if `google-tags`): GA4, Ads, Tag Manager.
+7. **Forms › Settings**: sender and recipients; **Forms › Forms** lists every form and where it is.
+8. **Estrategia Web › Settings › Media › Image uploads** (1.7.0; before, WordPress's Settings › Media): maximum size, pixel threshold and
    whether the original is deleted.
 9. **Estrategia Web › Redirects** (if `redirects`): import the CSV of the
    old URLs.

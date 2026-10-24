@@ -4,6 +4,7 @@
  * Description: Matomo tracking code, cookieless or hybrid (no cookies until the visitor accepts analytics in the cookie notice).
  * Default: on
  * Requires: site
+ * Category: Privacy & analytics
  *
  * What each mode does and its pitfalls: header of includes/class-matomo.php.
  *
@@ -17,9 +18,10 @@
  *   change. Hence «Requires: site»: Settings belongs to site.
  * - The <script> id (estrategia-web-site-matomo) and the filters
  *   (estrategia_web_site_matomo_track): the sites have tests that check them.
- * The fields are rendered on the «Company details» screen (site's), on the
- * estrategia_web_site_settings_sections hook: with this module off they do not
- * show up, and what was saved stays.
+ * The fields are in «Estrategia Web › Settings › Analytics» (1.7.0; up to
+ * 1.6.1, on the «Company details» screen): includes/class-admin-fields.php.
+ * With this module off they do not show up (and with google-tags off too,
+ * the Analytics tab disappears), and what was saved stays.
  *
  * On by default, knowingly: it reaches sites that ALREADY had Matomo inside
  * site (Lavandería: hybrid, id 87). With «on», it switches itself on when
@@ -50,4 +52,4 @@ require_once __DIR__ . '/includes/class-matomo.php';
 require_once __DIR__ . '/includes/class-admin-fields.php';
 
 Matomo::boot();
-add_action( 'estrategia_web_site_settings_sections', array( Admin_Fields::class, 'render' ), 10, 2 );
+add_action( \EstrategiaWeb\Admin\Settings_Page::HOOK, array( Admin_Fields::class, 'register' ) ); // 1.7.0: Settings › Analytics.

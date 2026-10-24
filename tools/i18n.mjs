@@ -20,8 +20,10 @@
 //   - block.json in modules/*/blocks/*: title, description and keywords,
 //     with the contexts from core's block-i18n.json.
 //   - Header of modules/*/module.php: "Module Name" (context "module
-//     name") and "Description" ("module description"), which the Modules
-//     screen translates with _x(). xgettext does not see them: they are written by hand.
+//     name"), "Description" ("module description") and, since 1.7.0,
+//     "Category" ("module category", plus «Other», which no header says),
+//     which the Modules screen translates with _x(). xgettext does not see
+//     them: they are written by hand.
 //
 // There is NO editor JSON (WordPress' <domain>-<locale>-<md5>.json): the
 // plugin core passes the same PHP translations inline to the editor
@@ -109,7 +111,10 @@ function extract() {
     const header = (key) => (head.match(new RegExp(`^[ \\t/*#@]*${key}:(.*)$`, "mi")) || [, ""])[1].replace(/\s*(?:\*\/|\?>).*$/, "").trim();
     add(file, "module name", header("Module Name"));
     add(file, "module description", header("Description"));
+    add(file, "module category", header("Category")); // 1.7.0: the Modules screen's groups.
   }
+  // «Other» has no header that says it (it is where a module WITHOUT Category goes): Modules::OTHER.
+  add("includes/class-modules.php", "module category", "Other");
   let extra = 'msgid ""\nmsgstr ""\n"Content-Type: text/plain; charset=UTF-8\\n"\n\n';
   for (const e of seen.values()) extra += `#: ${e.refs.join(" ")}\nmsgctxt ${q(e.ctx)}\nmsgid ${q(e.msgid)}\nmsgstr ""\n\n`;
   fs.writeFileSync(path.join(tmp, "extra.pot"), extra);

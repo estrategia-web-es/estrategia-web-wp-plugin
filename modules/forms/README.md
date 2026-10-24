@@ -38,7 +38,13 @@ no WPML) is in
    markers.
 3. **Log**: each submission is stored with form, page, date, language, data,
    result of each notification (sent / failed and reason), truncated IP and
-   browser. **Forms → Submissions** screen: list, filter by form, detail
+   browser. **Forms → Forms** (1.7.0, the first item: the menu opens on
+   it): every form on the site — pages, posts, synced patterns and the
+   pages that use them, drafts —, with its name and identifier in the log,
+   its notifications and recipients, and an Edit link; with WPML, one row per
+   form in the default language and the languages it is also in
+   ([includes/admin/class-forms-list.php](includes/admin/class-forms-list.php)).
+   **Forms → Submissions** screen (same URL as before): list, filter by form, detail
    view, CSV export and delete with confirmation. Configurable retention with
    a daily purge.
 4. **Security**: submission through its own REST endpoint with a signed

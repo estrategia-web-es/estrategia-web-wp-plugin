@@ -4,6 +4,7 @@
  * Description: Floating button that opens a WhatsApp chat with a predefined message. The number and the message are site options, not per page.
  * Default: on
  * Requires:
+ * Category: Contact
  *
  * Block estrategia-web/whatsapp. Until 1.0.0 the parent theme registered it,
  * with its two options (see modules/carousel/module.php: the same move).

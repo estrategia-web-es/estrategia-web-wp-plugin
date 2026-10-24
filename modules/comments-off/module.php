@@ -4,6 +4,7 @@
  * Description: Turns comments off everywhere: closed on every post, no Comments menu, dashboard widget or toolbar item, no comment blocks on the site and no comment feeds.
  * Default: off
  * Requires:
+ * Category: Content
  *
  * For business sites without a blog (Lavandería: comments had already been
  * closed by hand with WP-CLI). Everything happens on the fly, with filters:

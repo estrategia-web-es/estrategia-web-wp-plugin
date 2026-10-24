@@ -15,7 +15,7 @@ archived) and four blocks registered by the theme. **The public names of
 filters): what changed is where the code lives. The general framework is in
 [armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md](E:/Repositories/armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md).
 
-- Slug, folder and text domain: `estrategia-web` (`estrategia-web/estrategia-web.php`) · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · version **1.1.0**
+- Slug, folder and text domain: `estrategia-web` (`estrategia-web/estrategia-web.php`) · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · version **1.7.0**
 - The repo is still called `armazon-wp-sitio`; the plugin folder on a site is `estrategia-web/`.
 - No dependencies, no `node_modules`, no build step.
 
@@ -51,9 +51,38 @@ changes what the visitor sees or what the site requires (`redirects`,
 Math. A module that is off **loads nothing** (not its PHP, nor its blocks,
 nor its assets) and **deletes nothing** of what it stored.
 
+**`site` is core since 1.7.0**: always loaded (header `Core: yes`), not on
+the Modules screen, even if a saved `estrategia_web_modules` lacks it.
+
+### The admin (1.7.0)
+
+One top-level item, **Estrategia Web**, at position 3 (right after the
+Dashboard), that opens on Company details:
+
+| Submenu | URL (`admin.php?page=…`) | What |
+|---|---|---|
+| Company details | `estrategia-web-site` | Company and Contact (and local-business's type of business) |
+| Content types | `estrategia-web-content-types` | content-types module |
+| Social networks | `estrategia-web-social` | social module |
+| Settings | `estrategia-web-settings&tab=…` | tabs **Cookies** (consent), **Analytics** (google-tags + matomo), **Media** (SVG + uploads); a tab only if its module is on |
+| Redirects | `estrategia-web-redirects` | redirects module |
+| Modules | `estrategia-web` | always last, grouped by the modules' `Category` |
+
+**Forms** keeps its own top-level item: **Forms** (the list of the site's
+forms, where each one is, its notifications), **Submissions**, **Settings**.
+
+Old URLs: `estrategia-web-cookies` and `estrategia-web-google` redirect to
+their tab; `estrategia-web-site`, `estrategia-web` and
+`estrategia-web-forms` did not change. A module adds a Settings tab or
+section through the registry in
+[includes/admin/class-settings-page.php](includes/admin/class-settings-page.php)
+(its header: how, the edge case of two screens saving one option, and the
+trap); the menu order and the old URLs, in
+[includes/admin/class-menu.php](includes/admin/class-menu.php).
+
 **How to add a module:** a `modules/<slug>/` folder with its `module.php`,
 which carries a header (name, description, whether it is on by default, what
-it depends on). It is discovered on its own: there is no central list.
+it depends on, its category). It is discovered on its own: there is no central list.
 Everything you need to know —fields, the edge case of a new module on a site
 that already existed, the traps— is in the header of
 [includes/class-modules.php](includes/class-modules.php). The minimal example
@@ -67,6 +96,8 @@ is [modules/webp/module.php](modules/webp/module.php); the complete one,
       class-blocks.php            autoRegister labels, editor translations, armazon/… aliases
       class-armazon-migration.php the migrator from «Armazón» (for all the pieces)
       class-prefix-migration.php  the migrator of the post type prefix (1.2.0)
+      admin/class-menu.php          the «Estrategia Web» menu, its order and the old URLs (1.7.0)
+      admin/class-settings-page.php «Estrategia Web › Settings» and its tab registry (1.7.0)
       admin/class-modules-page.php  the «Estrategia Web → Modules» screen
     modules/<slug>/             module.php (header + bootstrap), includes/, blocks/, assets/, tests/, uninstall.php
     languages/                  estrategia-web.pot · estrategia-web-es_ES.po · .l10n.php (one for everything)
@@ -124,7 +155,10 @@ not change once published on a site (it would be a whole new migration).
 
 ### 1. Company details — option `estrategia_web_site`
 
-**Company details** screen (its own menu, capability `manage_options`). A
+**Estrategia Web › Company details** screen (capability `manage_options`;
+since 1.7.0 only the company and contact keys: `allow_svg` is saved from
+Settings › Media and `matomo_*` from Settings › Analytics, into this same
+option — each screen sends only its keys and the merge keeps the rest). A
 single option (array), registered with the Settings API and exposed in REST
 with its schema: `GET/POST /wp/v2/settings` → key `estrategia_web_site`.
 
@@ -552,7 +586,7 @@ During the parent theme's page transitions (0.7.5) it stays still
 (`marketing`), plus maps (`maps`). The slugs do not change (the notice's
 revision is their hash); the aliases `analytics`, `advertising` and `ads` are
 accepted. The code declares them with the filter and, in addition, the
-administrator in **Estrategia Web → Cookies** (option
+administrator in **Estrategia Web › Settings › Cookies** (option
 `estrategia_web_cookies_settings`, key `ask`). The panel can also be
 reopened from any link to `#estrategia-web-consent` or an element with the
 class `estrategia-web-consent-open` (useful in the footer menu).
@@ -589,7 +623,7 @@ header:
   appear on the screen as pending «Declared by the plugin», without anyone
   typing them. That covers the ones the detector cannot see (google.com,
   doubleclick.net). How a new module adds its service: that file's header.
-- **Estrategia Web → Cookies screen**: pending / confirmed / ignored;
+- **Estrategia Web › Settings › Cookies** (1.7.0; before, its own screen): pending / confirmed / ignored;
   editable category, provider, purpose and duration; adding third-party ones
   by hand; and a warning if there are confirmed cookies in a category the
   notice does not ask about. Administration also via REST
@@ -604,8 +638,9 @@ header:
 ### 6 ter. Google tags — `google-tags` module (unreleased)
 
 Off by default. GA4 (`G-…`), Google Ads (`AW-…`, with an optional form
-submission conversion) and Tag Manager (`GTM-…`) in **Estrategia Web →
-Google** (option `estrategia_web_google_tags`, also via `/wp/v2/settings`).
+submission conversion) and Tag Manager (`GTM-…`) in **Estrategia Web ›
+Settings › Analytics** (1.7.0; before, «Estrategia Web → Google») (option
+`estrategia_web_google_tags`, also via `/wp/v2/settings`).
 Empty field = nothing is loaded. Consent Mode v2: `default` all denied before
 any tag and `update` on choosing (Analytics → `analytics_storage`;
 Advertising → `ad_storage`, `ad_user_data`, `ad_personalization`). **Basic
@@ -750,7 +785,11 @@ tests expect English; their `reset()` marks it and goes back to `en_US` (see
 | [consent/consent-browser](modules/consent/tests/consent-browser.test.mjs) | 3 | cookie notice (0.5.0): it appears; accepting and rejecting weigh the same; rejecting stores the cookie and persists; the link (new and alias) reopens it with focus inside and Escape closes it; JS contract (event, `has`, `get`, `categories`, `grant`, `open`) and deferred scripts; a cookie from the parent's notice is still valid; «Powered by» visible, smaller than the buttons and with measured AA contrast; (0.5.1) when open it is the first thing when tabbing, no trap, and Escape does not close it without choosing; ≥ 16 px between the text and the buttons at 402 and 1512 with Lavandería's `:root :where(p)` |
 | [consent/cookies-pure](modules/consent/tests/cookies-pure.test.mjs) | 1 | cookie register without WordPress: exact before pattern and longest prefix; `wp-wpml_current_language` necessary; GA with `_ga_*`; Matomo's `_pk_id.*` and not Piwik's; names without values or HTML; row cap; aliases and order of the categories; attribution of the extract; the third-party services catalogue (valid names, categories, durations) and its merge (pending, the administrator's rows untouched, removal of pending rows when a service goes) |
 | [consent/cookie-services](modules/consent/tests/cookie-services.test.mjs) | 2 | each module declares only what its configuration loads (GA4 yes; GTM, cookieless Matomo, a map never shown, no); a rendered map, Ads and hybrid Matomo bring their cookies as pending; confirmed, into the policy table; Ads off removes only its pending rows |
-| [consent/cookies](modules/consent/tests/cookies.test.mjs) | 2 | detector: names only, 202, 429 per client and per hour, 400 with more than 60, 403 from another origin or when off; admin route by permissions; policy table (only confirmed, by category, in Spanish, block and shortcode, empty prints nothing); «Preferences» added by the administrator and aliases when declaring, without changing the usual revision |
+| [admin-pure](tests/admin-pure.test.mjs) | 1 | (1.7.0) the Settings tab registry (`layout()`: order, sections, options, empty tabs out), the submenu order (Modules last, unknown pages before it) and where the old URLs go |
+| [menu](tests/menu.test.mjs) | 2 | (1.7.0) the «Estrategia Web» item right after the Dashboard and its submenu order; old URLs (`estrategia-web-cookies`, `-google` redirect to their tab; `-site` and `estrategia-web` unchanged); `site` loads with a saved list that lacks it; the Modules screen grouped, without `site` |
+| [settings-page](tests/settings-page.test.mjs) | 2 | (1.7.0) each tab iff its module is on; saving Media, Company details and Analytics does not wipe the other screens' keys of `estrategia_web_site`; saving WordPress's Settings → Media does not reset uploads |
+| [forms/forms-list](modules/forms/tests/forms-list.test.mjs) | 2 | (1.7.0) «Forms → Forms»: a form inside a synced pattern and the pages using it, notifications with their recipients, drafts; a mention in text is not a form; the Forms menu opens on the list |
+| [consent/cookies](modules/consent/tests/cookies.test.mjs) | 2 | detector: names only, 202, 429 per client and per hour, 400 with more than 60, 403 from another origin or when off; (1.7.0) a logged-in user's report records nothing and their page carries no detector; admin route by permissions; policy table (only confirmed, by category, in Spanish, block and shortcode, empty prints nothing); «Preferences» added by the administrator and aliases when declaring, without changing the usual revision |
 | [consent/cookies-browser](modules/consent/tests/cookies-browser.test.mjs) | 3 | on accepting, the browser sends only names (it checks the request body) and does not repeat; rejecting sends nothing; reopening from a link and a class; the Cookies screen confirms and the table shows it |
 | [google-tags/google-tags](modules/google-tags/tests/google-tags.test.mjs) | 2 | off by default; empty prints nothing; `default` denied first and no Google `<script src>`; categories per tag; conversion only with its account; invalid ids 400; without `consent` it does not load |
 | [google-tags/google-tags-browser](modules/google-tags/tests/google-tags-browser.test.mjs) | 3 | basic: nothing to Google without accepting, when rejecting or with maps only; on accepting gtag.js and only `analytics_storage`; withdrawing deletes `_ga*`; Ads and form conversion; conversion of a form sent without JavaScript (once, waiting for Advertising); advanced loads earlier |
@@ -806,7 +845,8 @@ Here, only the plugin:
 Copy the folder to `wp-content/plugins/estrategia-web/` **without `tests/`,
 `modules/*/tests/` or `tools/`**, activate it, and in **Estrategia Web →
 Modules** switch off whatever that site does not use (by default, everything
-is on). Then, in **Company details**, fill in the details and tick the types.
+is on). Then, in **Estrategia Web › Company details**, fill in the details,
+and the types in **Estrategia Web › Content types**.
 The `tests/wp/` files open REST routes without permissions: they are only
 loaded with the blueprint's mu-plugin and its `ESTRATEGIA_WEB_*_TESTING`
 constants (double key), but there is no reason for them to be on the server.

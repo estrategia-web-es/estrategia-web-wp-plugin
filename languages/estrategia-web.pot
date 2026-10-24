@@ -17,52 +17,74 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: includes/admin/class-modules-page.php:58
-#: includes/admin/class-modules-page.php:59
+#: includes/admin/class-menu.php:80 includes/admin/class-menu.php:88
+#: modules/site/includes/admin/class-admin.php:116
+#: modules/site/includes/class-bindings.php:51
+#: modules/site/includes/class-legacy-names.php:109
+#: modules/site/includes/class-settings.php:165
+msgid "Company details"
+msgstr ""
+
+#: includes/admin/class-menu.php:81
 msgid "Estrategia Web"
 msgstr ""
 
-#: includes/admin/class-modules-page.php:66
-#: includes/admin/class-modules-page.php:81
+#: includes/admin/class-modules-page.php:72
+#: includes/admin/class-modules-page.php:93
 msgid "Modules"
 msgstr ""
 
-#: includes/admin/class-modules-page.php:82
+#: includes/admin/class-modules-page.php:94
 msgid ""
 "Each module adds one feature to the site. A module that is off loads "
 "nothing, and turning it off does not delete anything it saved: turning it on "
 "again brings it back as it was."
 msgstr ""
 
-#: includes/admin/class-modules-page.php:99
-#: includes/admin/class-modules-page.php:139
+#: includes/admin/class-modules-page.php:115
+#: includes/admin/class-modules-page.php:157
 msgid "On"
 msgstr ""
 
-#: includes/admin/class-modules-page.php:100
+#: includes/admin/class-modules-page.php:116
 msgid "Module"
 msgstr ""
 
-#: includes/admin/class-modules-page.php:101
-#: modules/consent/includes/admin/class-cookies-page.php:235
+#: includes/admin/class-modules-page.php:117
+#: modules/consent/includes/admin/class-cookies-page.php:250
 #: modules/content-types/includes/admin/class-page.php:88
 msgid "Status"
 msgstr ""
 
 #. translators: %s: names of other modules, comma separated.
-#: includes/admin/class-modules-page.php:125
+#: includes/admin/class-modules-page.php:143
 #, php-format
 msgid "Needs: %s."
 msgstr ""
 
 #. translators: %s: names of the modules that are missing.
-#: includes/admin/class-modules-page.php:135
+#: includes/admin/class-modules-page.php:153
 #, php-format
 msgid "Not loaded: turn on %s."
 msgstr ""
 
-#: includes/admin/class-modules-page.php:141
+#: includes/admin/class-modules-page.php:159
 msgid "Off"
+msgstr ""
+
+#: includes/admin/class-settings-page.php:211
+#: includes/admin/class-settings-page.php:228
+#: modules/forms/includes/admin/class-admin.php:55
+msgid "Settings"
+msgstr ""
+
+#: includes/admin/class-settings-page.php:229
+msgid "Settings sections"
+msgstr ""
+
+#: includes/class-modules.php
+msgctxt "module category"
+msgid "Other"
 msgstr ""
 
 #: modules/carousel/blocks/carousel/block.json
@@ -192,6 +214,13 @@ msgid ""
 "for."
 msgstr ""
 
+#: modules/carousel/module.php modules/comments-off/module.php
+#: modules/content-types/module.php modules/featured-images/module.php
+#: modules/map/module.php
+msgctxt "module category"
+msgid "Content"
+msgstr ""
+
 #: modules/comments-off/module.php
 msgctxt "module name"
 msgid "No comments"
@@ -205,7 +234,7 @@ msgid ""
 "comment feeds."
 msgstr ""
 
-#: modules/comments-off/module.php:146
+#: modules/comments-off/module.php:147
 msgid "Comments are closed."
 msgstr ""
 
@@ -270,86 +299,85 @@ msgstr ""
 msgid "Heading level of each category"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:59
-#: modules/consent/includes/admin/class-cookies-page.php:156
-#: modules/consent/includes/class-consent.php:527
-#: modules/matomo/includes/class-admin-fields.php:41
+#: modules/consent/includes/admin/class-cookies-page.php:66
+#: modules/consent/includes/class-consent.php:530
+#: modules/matomo/includes/class-admin-fields.php:67
 msgid "Cookies"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:69
+#: modules/consent/includes/admin/class-cookies-page.php:84
 msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:129
+#: modules/consent/includes/admin/class-cookies-page.php:144
 #: modules/forms/includes/admin/class-submissions-table.php:115
 msgid "Pending"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:130
+#: modules/consent/includes/admin/class-cookies-page.php:145
 msgid "Confirmed"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:131
+#: modules/consent/includes/admin/class-cookies-page.php:146
 msgid "Ignored"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:158
+#: modules/consent/includes/admin/class-cookies-page.php:173
 msgid "Changes saved."
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:158
+#: modules/consent/includes/admin/class-cookies-page.php:173
 msgid "Cookie deleted."
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:160
+#: modules/consent/includes/admin/class-cookies-page.php:175
 msgid ""
 "Not saved: check the cookie name (exact name, or a prefix ending in *) and "
 "that the list is not full."
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:163
+#: modules/consent/includes/admin/class-cookies-page.php:178
 msgid ""
 "The active theme brings its own cookie notice: these settings do not apply "
 "to it."
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:166
+#: modules/consent/includes/admin/class-cookies-page.php:181
 msgid "Cookie notice"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:171
+#: modules/consent/includes/admin/class-cookies-page.php:186
 msgid "Categories the notice asks about"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:180
+#: modules/consent/includes/admin/class-cookies-page.php:195
 msgid "declared by the code (theme or a module)"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:185
+#: modules/consent/includes/admin/class-cookies-page.php:200
 msgid ""
 "Changing the categories shows the notice again to every visitor: they are "
 "being asked about something new. Without any category, the notice does not "
 "appear."
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:189
+#: modules/consent/includes/admin/class-cookies-page.php:204
 msgid "Cookie detector"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:193
+#: modules/consent/includes/admin/class-cookies-page.php:208
 msgid ""
 "When a visitor accepts cookies, their browser sends the NAMES (never the "
 "values) of the cookies it sees on this site, at most once a week or when the "
 "list changes. New names appear below as pending."
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:198
+#: modules/consent/includes/admin/class-cookies-page.php:213
 msgid "Save notice settings"
 msgstr ""
 
 #. translators: 1: category name, 2: list of cookie names.
-#: modules/consent/includes/admin/class-cookies-page.php:214
+#: modules/consent/includes/admin/class-cookies-page.php:229
 #, php-format
 msgid ""
 "The notice does not ask about «%1$s», but these confirmed cookies belong to "
@@ -357,11 +385,11 @@ msgid ""
 "should not be set."
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:222
+#: modules/consent/includes/admin/class-cookies-page.php:237
 msgid "Cookies of this site"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:223
+#: modules/consent/includes/admin/class-cookies-page.php:238
 msgid ""
 "Only confirmed cookies appear in the cookie table of the policy (block "
 "«Cookie table» or shortcode [estrategia_web_cookie_table]). Proposals come "
@@ -369,7 +397,7 @@ msgid ""
 "ending in * covers every cookie that starts like that."
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:224
+#: modules/consent/includes/admin/class-cookies-page.php:239
 msgid ""
 "The cookies «Declared by the plugin» belong to third-party services that the "
 "active modules load (the Google map, Google tags, Matomo): the detector "
@@ -379,89 +407,89 @@ msgid ""
 "service."
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:228
+#: modules/consent/includes/admin/class-cookies-page.php:243
 msgid "Confirm all pending proposals"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:234
+#: modules/consent/includes/admin/class-cookies-page.php:249
 #: modules/consent/includes/class-cookie-table.php:163
 msgid "Cookie"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:236
-#: modules/consent/includes/admin/class-cookies-page.php:312
+#: modules/consent/includes/admin/class-cookies-page.php:251
+#: modules/consent/includes/admin/class-cookies-page.php:327
 msgid "Category"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:237
-#: modules/consent/includes/admin/class-cookies-page.php:313
+#: modules/consent/includes/admin/class-cookies-page.php:252
+#: modules/consent/includes/admin/class-cookies-page.php:328
 #: modules/consent/includes/class-cookie-table.php:164
 msgid "Provider"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:238
-#: modules/consent/includes/admin/class-cookies-page.php:314
+#: modules/consent/includes/admin/class-cookies-page.php:253
+#: modules/consent/includes/admin/class-cookies-page.php:329
 #: modules/consent/includes/class-cookie-table.php:165
 msgid "Purpose"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:239
-#: modules/consent/includes/admin/class-cookies-page.php:315
+#: modules/consent/includes/admin/class-cookies-page.php:254
+#: modules/consent/includes/admin/class-cookies-page.php:330
 #: modules/consent/includes/class-cookie-table.php:166
 msgid "Duration"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:240
+#: modules/consent/includes/admin/class-cookies-page.php:255
 msgid "Seen"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:241
+#: modules/consent/includes/admin/class-cookies-page.php:256
 #: modules/content-types/includes/admin/class-page.php:90
 msgid "Actions"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:246
+#: modules/consent/includes/admin/class-cookies-page.php:261
 msgid ""
 "No cookies yet. They appear when a visitor accepts the notice, or add them "
 "below."
 msgstr ""
 
 #. translators: %s: a concrete cookie name.
-#: modules/consent/includes/admin/class-cookies-page.php:257
+#: modules/consent/includes/admin/class-cookies-page.php:272
 #, php-format
 msgid "e.g. %s"
 msgstr ""
 
 #. translators: %s: name of a third-party service, e.g. «Google Maps (map block)».
-#: modules/consent/includes/admin/class-cookies-page.php:276
+#: modules/consent/includes/admin/class-cookies-page.php:291
 #, php-format
 msgid "Declared by the plugin: %s"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:279
+#: modules/consent/includes/admin/class-cookies-page.php:294
 msgid ""
 "Its module no longer loads this service: delete the cookie if the site does "
 "not use it any more."
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:284
+#: modules/consent/includes/admin/class-cookies-page.php:299
 msgid "Added by hand"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:287
+#: modules/consent/includes/admin/class-cookies-page.php:302
 msgid "Proposal: Open Cookie Database"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:289
+#: modules/consent/includes/admin/class-cookies-page.php:304
 msgid "Proposal: Estrategia Web"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:297
+#: modules/consent/includes/admin/class-cookies-page.php:312
 #: modules/content-types/includes/admin/class-page.php:188
 msgid "Save"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:298
+#: modules/consent/includes/admin/class-cookies-page.php:313
 #: modules/content-types/includes/admin/class-page.php:104
 #: modules/forms/includes/admin/class-submissions-table.php:39
 #: modules/forms/includes/admin/class-submissions-table.php:86
@@ -471,42 +499,44 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:306
+#: modules/consent/includes/admin/class-cookies-page.php:321
 msgid "Add a cookie by hand"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:307
+#: modules/consent/includes/admin/class-cookies-page.php:322
 msgid ""
 "For third-party cookies the detector cannot see and no module declares (for "
 "example, a video or a chat embedded by hand). Empty fields are filled with "
 "the proposal, if there is one."
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:311
+#: modules/consent/includes/admin/class-cookies-page.php:326
 #: modules/content-types/includes/admin/class-page.php:84
-#: modules/social/includes/class-admin.php:90
-#: modules/social/includes/class-admin.php:131
+#: modules/social/includes/class-admin.php:91
+#: modules/social/includes/class-admin.php:132
 msgid "Name"
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:315
+#: modules/consent/includes/admin/class-cookies-page.php:330
 msgid ""
 "Like «2 years», «30 minutes» or «session» to have it translated "
 "automatically; anything else is shown as written."
 msgstr ""
 
-#: modules/consent/includes/admin/class-cookies-page.php:317
+#: modules/consent/includes/admin/class-cookies-page.php:332
 msgid "Add cookie"
 msgstr ""
 
 #. translators: 1: link to the Open Cookie Database, 2: licence name, 3: date.
-#: modules/consent/includes/admin/class-cookies-page.php:324
+#: modules/consent/includes/admin/class-cookies-page.php:339
 #, php-format
 msgid ""
 "Proposals use data from the %1$s, licensed under %2$s (extract of %3$s)."
 msgstr ""
 
 #: modules/consent/includes/class-consent.php:266
+#: modules/google-tags/includes/admin/class-google-tags-page.php:40
+#: modules/matomo/includes/class-admin-fields.php:35
 msgid "Analytics"
 msgstr ""
 
@@ -557,50 +587,50 @@ msgstr ""
 msgid "Link text (empty: “Cookie settings”)"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:508
+#: modules/consent/includes/class-consent.php:511
 msgid ""
 "We use our own and third-party cookies for the purposes listed below. You "
 "can accept them, reject them or choose which ones to allow. Necessary "
 "cookies are always active."
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:531
+#: modules/consent/includes/class-consent.php:534
 msgid "Privacy and cookie policy"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:537
+#: modules/consent/includes/class-consent.php:540
 msgid "Cookie categories"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:540
+#: modules/consent/includes/class-consent.php:543
 #: modules/consent/includes/class-cookie-table.php:53
 msgid "Necessary"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:540
+#: modules/consent/includes/class-consent.php:543
 #: modules/consent/includes/class-cookie-table.php:54
 msgid ""
 "Required for the site to work, including remembering this choice. Always "
 "active."
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:556
+#: modules/consent/includes/class-consent.php:559
 msgid "Save choices"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:560
+#: modules/consent/includes/class-consent.php:563
 msgid "Accept all"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:561
+#: modules/consent/includes/class-consent.php:564
 msgid "Reject all"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:562
+#: modules/consent/includes/class-consent.php:565
 msgid "Configure"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:567
+#: modules/consent/includes/class-consent.php:570
 #: modules/external-links/includes/class-external-links.php:101
 #: modules/map/blocks/map/render.php:343 modules/map/blocks/map/render.php:347
 #: modules/social/blocks/social-links/render.php:74
@@ -608,13 +638,13 @@ msgstr ""
 msgid "(opens in a new tab)"
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:594
+#: modules/consent/includes/class-consent.php:597
 msgid ""
 "Cookie settings: this site declares no optional cookie categories, so there "
 "is no notice to reopen and this link is not shown."
 msgstr ""
 
-#: modules/consent/includes/class-consent.php:600
+#: modules/consent/includes/class-consent.php:603
 msgid "Cookie settings"
 msgstr ""
 
@@ -837,6 +867,12 @@ msgid ""
 "block for the cookie policy."
 msgstr ""
 
+#: modules/consent/module.php modules/google-tags/module.php
+#: modules/matomo/module.php
+msgctxt "module category"
+msgid "Privacy & analytics"
+msgstr ""
+
 #: modules/content-types/assets/fields-panel.js:53
 #: modules/map/blocks/map/edit.js:123
 msgid "Choose image"
@@ -898,7 +934,6 @@ msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:53
 #: modules/content-types/includes/admin/class-page.php:73
-#: modules/site/includes/admin/class-admin.php:115
 msgid "Content types"
 msgstr ""
 
@@ -974,6 +1009,7 @@ msgid "Not registered: it has errors"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:99
+#: modules/forms/includes/admin/class-forms-list.php:204
 #: modules/redirects/includes/admin/class-tables.php:89
 msgid "Edit"
 msgstr ""
@@ -1084,9 +1120,9 @@ msgid "Folders searched for JSON files"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:126
-#: modules/forms/includes/admin/class-admin.php:123
-#: modules/forms/includes/admin/class-admin.php:128
-#: modules/forms/includes/admin/class-admin.php:171
+#: modules/forms/includes/admin/class-admin.php:129
+#: modules/forms/includes/admin/class-admin.php:134
+#: modules/forms/includes/admin/class-admin.php:177
 msgid "Back to the list"
 msgstr ""
 
@@ -1298,17 +1334,17 @@ msgid "Text when no (empty: «No»)"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:182
-#: modules/social/includes/class-admin.php:66
+#: modules/social/includes/class-admin.php:67
 msgid "Move up"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:183
-#: modules/social/includes/class-admin.php:67
+#: modules/social/includes/class-admin.php:68
 msgid "Move down"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:184
-#: modules/social/includes/class-admin.php:68
+#: modules/social/includes/class-admin.php:69
 msgid "Remove"
 msgstr ""
 
@@ -1349,7 +1385,7 @@ msgid "Save anyway"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:195
-#: modules/forms/includes/admin/class-admin.php:188
+#: modules/forms/includes/admin/class-admin.php:194
 msgid "Cancel"
 msgstr ""
 
@@ -1393,7 +1429,7 @@ msgid "Image"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:206
-#: modules/forms/includes/admin/class-admin.php:151
+#: modules/forms/includes/admin/class-admin.php:157
 #: modules/forms/includes/admin/class-submissions-table.php:30
 msgid "Date"
 msgstr ""
@@ -1463,7 +1499,7 @@ msgid "Revisions"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:225
-#: modules/social/includes/class-admin.php:92
+#: modules/social/includes/class-admin.php:93
 msgid "Order"
 msgstr ""
 
@@ -1476,14 +1512,14 @@ msgid "Content field"
 msgstr ""
 
 #: modules/content-types/includes/class-bindings.php:123
-#: modules/forms/includes/admin/class-admin.php:132
+#: modules/forms/includes/admin/class-admin.php:138
 #: modules/forms/includes/class-notifier.php:159
 #: modules/redirects/includes/admin/class-tables.php:113
 msgid "Yes"
 msgstr ""
 
 #: modules/content-types/includes/class-bindings.php:124
-#: modules/forms/includes/admin/class-admin.php:132
+#: modules/forms/includes/admin/class-admin.php:138
 #: modules/forms/includes/class-notifier.php:159
 #: modules/redirects/includes/admin/class-tables.php:113
 msgid "No"
@@ -2165,6 +2201,12 @@ msgid ""
 "hidden «(opens in a new tab)» for screen readers."
 msgstr ""
 
+#: modules/external-links/module.php modules/local-business/module.php
+#: modules/redirects/module.php
+msgctxt "module category"
+msgid "SEO"
+msgstr ""
+
 #: modules/featured-images/module.php
 msgctxt "module name"
 msgid "Featured image tuning"
@@ -2499,132 +2541,133 @@ msgctxt "block description"
 msgid "Several lines of text."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:44
-#: modules/forms/includes/admin/class-admin.php:52
-#: modules/forms/includes/admin/class-admin.php:98
+#: modules/forms/includes/admin/class-admin.php:46
+#: modules/forms/includes/admin/class-admin.php:54
+#: modules/forms/includes/admin/class-admin.php:104
 msgid "Form submissions"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:45
+#: modules/forms/includes/admin/class-admin.php:47
+#: modules/forms/includes/admin/class-admin.php:59
+#: modules/forms/includes/admin/class-forms-list.php:217
 msgid "Forms"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:52
+#: modules/forms/includes/admin/class-admin.php:54
 msgid "Submissions"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:53
-#: modules/forms/includes/admin/class-admin.php:266
+#: modules/forms/includes/admin/class-admin.php:55
+#: modules/forms/includes/admin/class-admin.php:272
 msgid "Form settings"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:53
-msgid "Settings"
-msgstr ""
-
-#: modules/forms/includes/admin/class-admin.php:70
-#: modules/forms/includes/admin/class-admin.php:259
+#: modules/forms/includes/admin/class-admin.php:76
+#: modules/forms/includes/admin/class-admin.php:265
+#: modules/forms/includes/admin/class-forms-list.php:211
 msgid "You are not allowed to see this page."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:99
+#: modules/forms/includes/admin/class-admin.php:105
 msgid "Export CSV"
 msgstr ""
 
 #. translators: %d: number of deleted submissions.
-#: modules/forms/includes/admin/class-admin.php:105
+#: modules/forms/includes/admin/class-admin.php:111
 #, php-format
 msgid "%d submission deleted."
 msgid_plural "%d submissions deleted."
 msgstr[0] ""
 msgstr[1] ""
 
-#: modules/forms/includes/admin/class-admin.php:122
+#: modules/forms/includes/admin/class-admin.php:128
 msgid "Submission not found"
 msgstr ""
 
 #. translators: %d: submission number.
-#: modules/forms/includes/admin/class-admin.php:127
+#: modules/forms/includes/admin/class-admin.php:133
 #, php-format
 msgid "Submission #%d"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:130
+#: modules/forms/includes/admin/class-admin.php:136
 #: modules/forms/includes/admin/class-submissions-table.php:32
 msgid "Data"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:137
+#: modules/forms/includes/admin/class-admin.php:143
+#: modules/forms/includes/admin/class-forms-list.php:224
 #: modules/forms/includes/admin/class-submissions-table.php:34
 msgid "Notifications"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:138
+#: modules/forms/includes/admin/class-admin.php:144
 msgid "Notification"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:138
+#: modules/forms/includes/admin/class-admin.php:144
 msgid "Recipients"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:138
+#: modules/forms/includes/admin/class-admin.php:144
 msgid "Result"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:140
+#: modules/forms/includes/admin/class-admin.php:146
 #: modules/forms/includes/admin/class-submissions-table.php:114
 msgid "Failed"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:140
+#: modules/forms/includes/admin/class-admin.php:146
 msgid "Sent"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:144
+#: modules/forms/includes/admin/class-admin.php:150
 msgid "This form has no notifications."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:148
+#: modules/forms/includes/admin/class-admin.php:154
 msgid "Details"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:150
+#: modules/forms/includes/admin/class-admin.php:156
+#: modules/forms/includes/admin/class-forms-list.php:222
 #: modules/forms/includes/admin/class-submissions-table.php:31
 msgid "Form"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:152
+#: modules/forms/includes/admin/class-admin.php:158
 msgid "Page"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:153
+#: modules/forms/includes/admin/class-admin.php:159
 #: modules/forms/includes/admin/class-submissions-table.php:33
 #: modules/language-switcher/blocks/language-switcher/render.php:86
 msgid "Language"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:154
+#: modules/forms/includes/admin/class-admin.php:160
 msgid "IP (truncated)"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:155
+#: modules/forms/includes/admin/class-admin.php:161
 msgid "User agent"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:162
+#: modules/forms/includes/admin/class-admin.php:168
 msgid "Delete this submission"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:169
+#: modules/forms/includes/admin/class-admin.php:175
 msgid "Delete submissions"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:171
+#: modules/forms/includes/admin/class-admin.php:177
 msgid "No submissions selected."
 msgstr ""
 
 #. translators: %d: number of submissions.
-#: modules/forms/includes/admin/class-admin.php:177
+#: modules/forms/includes/admin/class-admin.php:183
 #, php-format
 msgid ""
 "You are about to permanently delete %d submission. This cannot be undone."
@@ -2633,80 +2676,132 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: modules/forms/includes/admin/class-admin.php:187
+#: modules/forms/includes/admin/class-admin.php:193
 msgid "Yes, delete"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:193
-#: modules/forms/includes/admin/class-admin.php:204
+#: modules/forms/includes/admin/class-admin.php:199
+#: modules/forms/includes/admin/class-admin.php:210
 msgid "You are not allowed to do this."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:267
+#: modules/forms/includes/admin/class-admin.php:273
 msgid ""
 "Fields, notifications and messages of each form are set in the form block, "
 "in the editor. Here only what is common to all forms."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:270
+#: modules/forms/includes/admin/class-admin.php:276
 msgid "Submission log"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:273
+#: modules/forms/includes/admin/class-admin.php:279
 msgid "Keep submissions for (days)"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:275
+#: modules/forms/includes/admin/class-admin.php:281
 msgid "0 keeps them forever. Older submissions are deleted once a day."
 msgstr ""
 
 #. translators: 1: date of the last purge, 2: deleted submissions.
-#: modules/forms/includes/admin/class-admin.php:279
+#: modules/forms/includes/admin/class-admin.php:285
 #, php-format
 msgid "Last purge: %1$s, %2$d deleted."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:285
+#: modules/forms/includes/admin/class-admin.php:291
 msgid "Anti-spam"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:288
+#: modules/forms/includes/admin/class-admin.php:294
 msgid "Minimum filling time (seconds)"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:292
+#: modules/forms/includes/admin/class-admin.php:298
 msgid "Submissions allowed per IP"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:294
+#: modules/forms/includes/admin/class-admin.php:300
 msgid "every (minutes)"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:296
+#: modules/forms/includes/admin/class-admin.php:302
 msgid "0 submissions disables the limit."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:299
+#: modules/forms/includes/admin/class-admin.php:305
 msgid "Default texts"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:300
+#: modules/forms/includes/admin/class-admin.php:306
 msgid ""
 "Leave empty to use the built-in text, already translated. If you fill them "
 "in and the site uses WPML, translate them in WPML → String Translation "
 "(domain estrategia-web-forms)."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:303
+#: modules/forms/includes/admin/class-admin.php:309
 msgid "Success message"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:307
+#: modules/forms/includes/admin/class-admin.php:313
 msgid "Error message"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:311
+#: modules/forms/includes/admin/class-admin.php:317
 msgid "Email footer"
+msgstr ""
+
+#. translators: %d: post ID.
+#: modules/forms/includes/admin/class-forms-list.php:201
+#, php-format
+msgid "(no title, #%d)"
+msgstr ""
+
+#: modules/forms/includes/admin/class-forms-list.php:218
+msgid ""
+"The forms on this site and where they are. A form is edited in its block: "
+"open the page or pattern it is in. Its name and identifier are the ones the "
+"submissions log shows."
+msgstr ""
+
+#: modules/forms/includes/admin/class-forms-list.php:223
+msgid "Where it is"
+msgstr ""
+
+#: modules/forms/includes/admin/class-forms-list.php:226
+msgid "Also in"
+msgstr ""
+
+#: modules/forms/includes/admin/class-forms-list.php:232
+msgid ""
+"There are no forms yet. Add a «Form» block to a page or a synced pattern."
+msgstr ""
+
+#: modules/forms/includes/admin/class-forms-list.php:237
+msgid "(no name)"
+msgstr ""
+
+#: modules/forms/includes/admin/class-forms-list.php:246
+msgid "Used in:"
+msgstr ""
+
+#: modules/forms/includes/admin/class-forms-list.php:253
+msgid "No page uses this pattern."
+msgstr ""
+
+#. translators: %d: number of email notifications.
+#: modules/forms/includes/admin/class-forms-list.php:262
+#, php-format
+msgid "%d notification"
+msgid_plural "%d notifications"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: position of the notification in the form.
+#: modules/forms/includes/admin/class-forms-list.php:270
+#, php-format
+msgid "Notification %d"
 msgstr ""
 
 #: modules/forms/includes/admin/class-submissions-table.php:56
@@ -2828,73 +2923,74 @@ msgid ""
 "log of everything sent and WPML support."
 msgstr ""
 
+#: modules/forms/module.php modules/social/module.php
+#: modules/whatsapp/module.php
+msgctxt "module category"
+msgid "Contact"
+msgstr ""
+
 #: modules/forms/module.php
 msgctxt "module name"
 msgid "Forms"
 msgstr ""
 
-#: modules/google-tags/includes/admin/class-google-tags-page.php:29
-msgid "Google"
-msgstr ""
-
-#: modules/google-tags/includes/admin/class-google-tags-page.php:29
-#: modules/google-tags/includes/admin/class-google-tags-page.php:51
+#: modules/google-tags/includes/admin/class-google-tags-page.php:67
 msgid "Google tags"
 msgstr ""
 
-#: modules/google-tags/includes/admin/class-google-tags-page.php:52
+#: modules/google-tags/includes/admin/class-google-tags-page.php:68
 msgid ""
 "An empty field loads nothing. Whatever is filled in waits for the cookie "
 "notice: Analytics needs «Analytics», Ads needs «Advertising», and Tag "
 "Manager asks for both. Logged-in editors and administrators are not measured."
 msgstr ""
 
-#: modules/google-tags/includes/admin/class-google-tags-page.php:58
+#: modules/google-tags/includes/admin/class-google-tags-page.php:71
 msgid "Google Analytics 4"
 msgstr ""
 
-#: modules/google-tags/includes/admin/class-google-tags-page.php:58
+#: modules/google-tags/includes/admin/class-google-tags-page.php:71
 msgid "Measurement ID of the GA4 web stream."
 msgstr ""
 
-#: modules/google-tags/includes/admin/class-google-tags-page.php:59
+#: modules/google-tags/includes/admin/class-google-tags-page.php:72
 msgid "Conversion ID of the Google Ads account."
 msgstr ""
 
-#: modules/google-tags/includes/admin/class-google-tags-page.php:59
+#: modules/google-tags/includes/admin/class-google-tags-page.php:72
 msgid "Google Ads"
 msgstr ""
 
-#: modules/google-tags/includes/admin/class-google-tags-page.php:60
+#: modules/google-tags/includes/admin/class-google-tags-page.php:73
 msgid "Conversion: form sent"
 msgstr ""
 
-#: modules/google-tags/includes/admin/class-google-tags-page.php:60
+#: modules/google-tags/includes/admin/class-google-tags-page.php:73
 msgid ""
 "Optional. Conversion ID and label («send_to» of the conversion). Counted "
 "each time a form of the site is sent correctly, if the visitor accepted "
 "«Advertising»."
 msgstr ""
 
-#: modules/google-tags/includes/admin/class-google-tags-page.php:61
+#: modules/google-tags/includes/admin/class-google-tags-page.php:74
 msgid "Container ID. The tags inside the container follow Consent Mode."
 msgstr ""
 
-#: modules/google-tags/includes/admin/class-google-tags-page.php:61
+#: modules/google-tags/includes/admin/class-google-tags-page.php:74
 msgid "Google Tag Manager"
 msgstr ""
 
-#: modules/google-tags/includes/admin/class-google-tags-page.php:64
+#: modules/google-tags/includes/admin/class-google-tags-page.php:77
 msgid "Loading"
 msgstr ""
 
-#: modules/google-tags/includes/admin/class-google-tags-page.php:69
+#: modules/google-tags/includes/admin/class-google-tags-page.php:82
 msgid ""
 "Basic (recommended): nothing is requested from Google until the visitor "
 "accepts."
 msgstr ""
 
-#: modules/google-tags/includes/admin/class-google-tags-page.php:73
+#: modules/google-tags/includes/admin/class-google-tags-page.php:86
 msgid ""
 "Advanced: Google loads from the start with consent denied and sends "
 "cookieless pings. Better measurement, but data reaches Google before the "
@@ -2974,6 +3070,11 @@ msgctxt "module description"
 msgid ""
 "Language switcher block for WPML: the current language and links to the same "
 "page in the others, as a drop-down or inline. Without WPML it shows nothing."
+msgstr ""
+
+#: modules/language-switcher/module.php modules/wpml-front-page/module.php
+msgctxt "module category"
+msgid "Languages"
 msgstr ""
 
 #: modules/local-business/includes/class-settings.php:44
@@ -3187,33 +3288,33 @@ msgid ""
 "only loads after the visitor asks for it (or accepted the maps cookies)."
 msgstr ""
 
-#: modules/matomo/includes/class-admin-fields.php:26
+#: modules/matomo/includes/class-admin-fields.php:52
 msgid "Statistics (Matomo)"
 msgstr ""
 
-#: modules/matomo/includes/class-admin-fields.php:27
+#: modules/matomo/includes/class-admin-fields.php:53
 msgid ""
 "Without the Matomo address or the site ID nothing is added to the site. "
 "Logged-in editors and administrators are not counted."
 msgstr ""
 
-#: modules/matomo/includes/class-admin-fields.php:30
+#: modules/matomo/includes/class-admin-fields.php:56
 msgid "Matomo address"
 msgstr ""
 
-#: modules/matomo/includes/class-admin-fields.php:33
+#: modules/matomo/includes/class-admin-fields.php:59
 msgid "Example: https://stats.example.com/"
 msgstr ""
 
-#: modules/matomo/includes/class-admin-fields.php:37
+#: modules/matomo/includes/class-admin-fields.php:63
 msgid "Site ID"
 msgstr ""
 
-#: modules/matomo/includes/class-admin-fields.php:46
+#: modules/matomo/includes/class-admin-fields.php:72
 msgid "Without cookies (recommended): nothing to ask the visitor."
 msgstr ""
 
-#: modules/matomo/includes/class-admin-fields.php:50
+#: modules/matomo/includes/class-admin-fields.php:76
 msgid ""
 "Hybrid: without cookies until the visitor accepts «Analytics» in the cookie "
 "notice."
@@ -3522,74 +3623,51 @@ msgctxt "module name"
 msgid "Redirects"
 msgstr ""
 
-#: modules/site/includes/admin/class-admin.php:36
-#: modules/site/includes/admin/class-admin.php:37
-#: modules/site/includes/admin/class-admin.php:76
-#: modules/site/includes/class-bindings.php:51
-#: modules/site/includes/class-legacy-names.php:109
-#: modules/site/includes/class-settings.php:165
-msgid "Company details"
+#: modules/site/includes/admin/class-admin.php:54
+#: modules/uploads/includes/class-uploads.php:65
+msgid "Media"
 msgstr ""
 
-#: modules/site/includes/admin/class-admin.php:77
+#: modules/site/includes/admin/class-admin.php:70
+msgid "SVG images"
+msgstr ""
+
+#: modules/site/includes/admin/class-admin.php:73
+msgid "SVG uploads"
+msgstr ""
+
+#: modules/site/includes/admin/class-admin.php:78
+msgid "Allow SVG uploads (administrators only; files are sanitized)"
+msgstr ""
+
+#: modules/site/includes/admin/class-admin.php:117
 msgid ""
 "These details appear wherever a block is linked to them (Block Bindings, "
 "source «Company details»). Change them here and they change across the whole "
 "site."
 msgstr ""
 
-#: modules/site/includes/admin/class-admin.php:82
+#: modules/site/includes/admin/class-admin.php:122
 msgid "Company"
 msgstr ""
 
-#: modules/site/includes/admin/class-admin.php:88
+#: modules/site/includes/admin/class-admin.php:128
 msgid ""
 "As it appears in the legal notice, without «Registered in». Example: "
 "Registro Mercantil de Mallorca, tomo 1234, folio 56, hoja PM-7890, "
 "inscripción 1.ª"
 msgstr ""
 
-#: modules/site/includes/admin/class-admin.php:95
+#: modules/site/includes/admin/class-admin.php:135
 msgid "Contact"
 msgstr ""
 
-#: modules/site/includes/admin/class-admin.php:101
+#: modules/site/includes/admin/class-admin.php:141
 msgid "International format, digits only, without +. Example: 34600000000."
 msgstr ""
 
-#: modules/site/includes/admin/class-admin.php:102
+#: modules/site/includes/admin/class-admin.php:142
 msgid "Text that appears already written when the chat opens."
-msgstr ""
-
-#: modules/site/includes/admin/class-admin.php:111
-#: modules/social/includes/class-admin.php:45
-#: modules/social/includes/class-admin.php:82
-msgid "Social networks"
-msgstr ""
-
-#: modules/site/includes/admin/class-admin.php:112
-msgid "Social networks are edited in Estrategia Web › Social networks."
-msgstr ""
-
-#: modules/site/includes/admin/class-admin.php:121
-msgid ""
-"Clients, testimonials, locations, projects and portfolio are added and "
-"switched on and off in Estrategia Web › Content types."
-msgstr ""
-
-#: modules/site/includes/admin/class-admin.php:123
-msgid ""
-"The Content types module is off: clients, testimonials, locations, projects "
-"and portfolio are not registered (their content is kept). Switch it on in "
-"Estrategia Web › Modules."
-msgstr ""
-
-#: modules/site/includes/admin/class-admin.php:126
-msgid "Media"
-msgstr ""
-
-#: modules/site/includes/admin/class-admin.php:130
-msgid "Allow SVG uploads (administrators only; files are sanitized)"
 msgstr ""
 
 #: modules/site/includes/class-company.php:107
@@ -3777,54 +3855,63 @@ msgstr ""
 msgid "%1$s of %2$s"
 msgstr ""
 
-#: modules/social/includes/class-admin.php:69
-msgid "Own SVG…"
+#: modules/social/includes/class-admin.php:46
+#: modules/social/includes/class-admin.php:83
+msgid "Social networks"
 msgstr ""
 
 #: modules/social/includes/class-admin.php:70
-msgid "Remove own SVG"
+msgid "Own SVG…"
 msgstr ""
 
 #: modules/social/includes/class-admin.php:71
-msgid "Choose an SVG icon"
+msgid "Remove own SVG"
 msgstr ""
 
 #: modules/social/includes/class-admin.php:72
+msgid "Choose an SVG icon"
+msgstr ""
+
+#: modules/social/includes/class-admin.php:73
 msgid "Use this icon"
 msgstr ""
 
-#: modules/social/includes/class-admin.php:83
+#: modules/social/includes/class-admin.php:84
 msgid ""
 "The links shown by the “Social networks” block, in this order. The icon is "
 "guessed from the link; choose one only if it gets it wrong, or use your own "
 "SVG from the media library."
 msgstr ""
 
-#: modules/social/includes/class-admin.php:89
-#: modules/social/includes/class-admin.php:122
+#: modules/social/includes/class-admin.php:90
+#: modules/social/includes/class-admin.php:123
 msgid "Icon"
 msgstr ""
 
-#: modules/social/includes/class-admin.php:91
-#: modules/social/includes/class-admin.php:139
+#: modules/social/includes/class-admin.php:92
+#: modules/social/includes/class-admin.php:140
 msgid "Link"
 msgstr ""
 
-#: modules/social/includes/class-admin.php:100
+#: modules/social/includes/class-admin.php:101
 msgid "Add network"
 msgstr ""
 
-#: modules/social/includes/class-admin.php:101
-msgid ""
-"To remove a network without JavaScript, empty its link. Your own SVG can "
-"only be uploaded if “Allow SVG uploads” is on in Company details."
+#: modules/social/includes/class-admin.php:102
+msgid "To remove a network without JavaScript, empty its link."
 msgstr ""
 
-#: modules/social/includes/class-admin.php:108
+#: modules/social/includes/class-admin.php:102
+msgid ""
+"Your own SVG can only be uploaded if “Allow SVG uploads” is on in Settings › "
+"Media."
+msgstr ""
+
+#: modules/social/includes/class-admin.php:109
 msgid "Automatic (from the link)"
 msgstr ""
 
-#: modules/social/includes/class-admin.php:134
+#: modules/social/includes/class-admin.php:135
 msgid "Empty: the icon name"
 msgstr ""
 
@@ -3852,38 +3939,38 @@ msgctxt "module name"
 msgid "Social networks"
 msgstr ""
 
-#: modules/uploads/includes/class-uploads.php:196
+#: modules/uploads/includes/class-uploads.php:224
 msgid "Image uploads"
 msgstr ""
 
-#: modules/uploads/includes/class-uploads.php:198
+#: modules/uploads/includes/class-uploads.php:225
 msgid ""
 "Applies to images uploaded from now on. Images already in the library do not "
 "change."
 msgstr ""
 
-#: modules/uploads/includes/class-uploads.php:206
+#: modules/uploads/includes/class-uploads.php:229
 msgid "Maximum upload size (MB)"
 msgstr ""
 
-#: modules/uploads/includes/class-uploads.php:212
+#: modules/uploads/includes/class-uploads.php:232
 msgid ""
 "The server limit still applies if it is lower. 0 = only the server limit."
 msgstr ""
 
-#: modules/uploads/includes/class-uploads.php:221
+#: modules/uploads/includes/class-uploads.php:236
 msgid "Scale down images larger than (px)"
 msgstr ""
 
-#: modules/uploads/includes/class-uploads.php:227
+#: modules/uploads/includes/class-uploads.php:239
 msgid "Longest side. WordPress default: 2560. 0 = never scale down."
 msgstr ""
 
-#: modules/uploads/includes/class-uploads.php:236
+#: modules/uploads/includes/class-uploads.php:243
 msgid "Original file"
 msgstr ""
 
-#: modules/uploads/includes/class-uploads.php:242
+#: modules/uploads/includes/class-uploads.php:245
 msgid ""
 "Delete the original after scaling it down (only the scaled copy is kept)."
 msgstr ""
@@ -3891,6 +3978,11 @@ msgstr ""
 #: modules/uploads/module.php
 msgctxt "module name"
 msgid "Image uploads"
+msgstr ""
+
+#: modules/uploads/module.php modules/webp/module.php
+msgctxt "module category"
+msgid "Media & performance"
 msgstr ""
 
 #: modules/uploads/module.php
@@ -3972,11 +4064,11 @@ msgctxt "module name"
 msgid "WhatsApp button"
 msgstr ""
 
-#: modules/whatsapp/module.php:55
+#: modules/whatsapp/module.php:56
 msgid "WhatsApp phone number in international format, digits only."
 msgstr ""
 
-#: modules/whatsapp/module.php:66
+#: modules/whatsapp/module.php:67
 msgid "Predefined WhatsApp message."
 msgstr ""
 

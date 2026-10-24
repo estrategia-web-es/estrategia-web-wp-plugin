@@ -4,6 +4,7 @@
  * Description: Own cookie consent notice (Accept / Reject / Settings with declarable categories), the «Cookie settings» link block and the consent API for PHP and JavaScript, plus a cookie list fed by a detector and a cookie table block for the cookie policy.
  * Default: on
  * Requires:
+ * Category: Privacy & analytics
  *
  * It was part of «Estrategia Web Site» (since its 0.5.0; before that, of the
  * theme). Everything it does and how to maintain it, in the header of

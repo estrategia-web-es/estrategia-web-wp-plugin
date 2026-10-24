@@ -4,6 +4,7 @@
  * Description: Featured images with a fixed width in px download a file of that size, and a logo whose alt text only repeats the title shown next to it is marked as decorative.
  * Default: on
  * Requires:
+ * Category: Content
  *
  * Born with the client cards on Lavandería's home page (14-10-2026): a
  * core/post-featured-image inside a Query, at 82×54 px, served a 300×224

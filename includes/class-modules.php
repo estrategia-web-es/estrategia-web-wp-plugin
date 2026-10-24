@@ -22,6 +22,7 @@
  *         * Description: Editable 301/302/410 redirects with CSV import.
  *         * Default:     off
  *         * Requires:    site
+ *         * Category:    SEO
  *         *
  *         * (here: what it does and how to maintain it)
  *         *\/
@@ -36,6 +37,17 @@
  *      case below: it decides what happens on sites that ALREADY exist.
  *    - Requires: slugs of other modules, comma separated. If one is missing
  *      (off or nonexistent), this one is not loaded and the screen says why.
+ *    - Category (1.7.0): the group it is listed under on the Modules screen,
+ *      in ENGLISH and exactly one of CATEGORIES below («Content», «Contact»,
+ *      «Privacy & analytics», «SEO», «Languages», «Media & performance»).
+ *      Translated with the context «module category». Missing or misspelled
+ *      → «Other» (no error: tests/modules.test.mjs is what catches it).
+ *    - Core (1.7.0): `yes` for a module that is part of the core: it is
+ *      ALWAYS loaded, whatever the saved list says, and it is not on the
+ *      Modules screen (it cannot be switched off). Today only «site» (the
+ *      company data: social, matomo and local-business require it, and the
+ *      «Estrategia Web» menu opens on its screen). A new core module is a
+ *      decision about every site, not a convenience: almost nothing is core.
  *
  * 3. Below the header, the module's code: its own constants if it needs
  *    them (ESTRATEGIA_WEB_<SLUG>_DIR = __DIR__ . '/'), require_once of its
@@ -102,6 +114,13 @@
  *     just new ones. Anything that changes something visible (a notice, a
  *     block that renders by itself, redirects) starts with Default: off.
  *
+ * EDGE CASE, by name: a CORE module missing from the saved list. Every
+ * site that saved the Modules screen before 1.7.0 has «site» in its list;
+ * from 1.7.0 the screen no longer sends it, so the next save leaves it out.
+ * wanted() adds the core modules always, before looking at the list, so a
+ * saved ["forms"] still loads site (tests/modules.test.mjs, level 1, and
+ * tests/menu.test.mjs, level 2, with a real option).
+ *
  * Dependencies: resolved on every load, not on save. Every module with a
  * Requires that is not present is removed from the list, and this repeats
  * until nothing changes (A needs B, B needs C which is off: B and A drop).
@@ -137,8 +156,10 @@
  *   is a fatal error. If the relationship is optional, class_exists() first
  *   (see modules/site, which does not know whether consent is there).
  *
- * Tests: tests/modules.test.mjs (level 1: headers and resolution) and
- * tests/modules-page.test.mjs (level 2: turning a module off removes its block).
+ * Tests: tests/modules.test.mjs (level 1: headers, resolution, core modules
+ * and the grouping by category), tests/modules-page.test.mjs (level 2:
+ * turning a module off removes its block) and tests/menu.test.mjs (level 2:
+ * site loads even when the saved list lacks it).
  */
 
 namespace EstrategiaWeb;
@@ -159,7 +180,20 @@ final class Modules {
 		'description' => 'Description',
 		'default'     => 'Default',
 		'requires'    => 'Requires',
+		'category'    => 'Category',
+		'core'        => 'Core',
 	);
+
+	/**
+	 * The categories of the Modules screen, IN THIS ORDER (1.7.0). The value
+	 * is the English text of the Category header and the msgid (context
+	 * «module category»). A new category goes in here, in the place it should
+	 * be shown, and in both .po files.
+	 */
+	public const CATEGORIES = array( 'Content', 'Contact', 'Privacy & analytics', 'SEO', 'Languages', 'Media & performance' );
+
+	/** Where a module without a known Category goes. Always last. */
+	public const OTHER = 'Other';
 
 	/** @var array<string, array{name: string, description: string, default: bool, requires: string[], file: string}>|null */
 	private static ?array $available = null;
@@ -209,13 +243,47 @@ final class Modules {
 		if ( '' === trim( (string) $data['name'] ) ) {
 			return null;
 		}
+		$category = trim( (string) $data['category'] );
 		return array(
 			'name'        => trim( (string) $data['name'] ),
 			'description' => trim( (string) $data['description'] ),
 			'default'     => 'on' === strtolower( trim( (string) $data['default'] ) ),
 			'requires'    => array_values( array_filter( array_map( 'trim', explode( ',', (string) $data['requires'] ) ) ) ),
+			'category'    => in_array( $category, self::CATEGORIES, true ) ? $category : self::OTHER,
+			'core'        => 'yes' === strtolower( trim( (string) $data['core'] ) ),
 			'file'        => $file,
 		);
+	}
+
+	/**
+	 * The modules of the Modules screen, grouped: categories in the order of
+	 * CATEGORIES (then «Other»), and inside each one alphabetical by NAME.
+	 * Core modules are left out (they cannot be switched off). Empty
+	 * categories are left out.
+	 *
+	 * Pure function, like wanted(): the screen passes the names already
+	 * translated, so the order is alphabetical in the reader's language.
+	 *
+	 * @param array<string, array{name: string, category?: string, core?: bool}> $available Modules on disk.
+	 * @return array<string, string[]> category => slugs.
+	 */
+	public static function grouped( array $available ): array {
+		$groups = array_fill_keys( array_merge( self::CATEGORIES, array( self::OTHER ) ), array() );
+		foreach ( $available as $slug => $module ) {
+			if ( ! empty( $module['core'] ) ) {
+				continue;
+			}
+			$category              = in_array( $module['category'] ?? '', self::CATEGORIES, true ) ? $module['category'] : self::OTHER;
+			$groups[ $category ][] = (string) $slug;
+		}
+		foreach ( $groups as $category => $slugs ) {
+			usort(
+				$slugs,
+				static fn( $a, $b ) => strnatcasecmp( (string) $available[ $a ]['name'], (string) $available[ $b ]['name'] ) ?: strcmp( $a, $b )
+			);
+			$groups[ $category ] = $slugs;
+		}
+		return array_filter( $groups );
 	}
 
 	/**
@@ -229,10 +297,12 @@ final class Modules {
 	 * @return string[]
 	 */
 	public static function wanted( array $available, $saved, $known ): array {
-		$defaults = array_keys( array_filter( $available, static fn( $m ) => ! empty( $m['default'] ) ) );
+		$core     = array_keys( array_filter( $available, static fn( $m ) => ! empty( $m['core'] ) ) );
+		$defaults = array_keys( array_filter( $available, static fn( $m ) => ! empty( $m['default'] ) || ! empty( $m['core'] ) ) );
 		if ( ! is_array( $saved ) ) {
 			return $defaults;
 		}
+		$saved = array_merge( $core, $saved ); // Core: always, whatever the list says (the edge case above).
 		// Without _known (the list was written by hand in the database), the list rules entirely.
 		$known  = is_array( $known ) ? $known : array_keys( $available );
 		$wanted = array_intersect( array_map( 'strval', $saved ), array_keys( $available ) );
@@ -310,6 +380,11 @@ final class Modules {
 		 * @param string[] $loaded Loaded slugs, in order.
 		 */
 		do_action( 'estrategia_web_modules_loaded', self::$loaded );
+	}
+
+	/** Whether a module is core (header «Core: yes»): always loaded, not on the Modules screen. */
+	public static function is_core( string $slug ): bool {
+		return ! empty( self::available()[ $slug ]['core'] );
 	}
 
 	/** Whether a module was loaded in this request. */
