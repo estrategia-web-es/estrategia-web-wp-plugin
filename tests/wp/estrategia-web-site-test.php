@@ -47,13 +47,31 @@ if ( ! defined( 'ESTRATEGIA_WEB_SITE_TESTING' ) || true !== ESTRATEGIA_WEB_SITE_
 	return;
 }
 
+/**
+ * Whether REAL WPML runs in this request: tests/run.mjs mounted the local copy,
+ * tests/wp/setup-wpml.php activated it, and the request is not one of the
+ * ?wpml-double ones (which switch it off, below).
+ */
+function estrategia_web_test_real_wpml(): bool {
+	return ! isset( $_GET['wpml-double'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		&& is_dir( WP_PLUGIN_DIR . '/sitepress-multilingual-cms' )
+		&& in_array( 'sitepress-multilingual-cms/sitepress.php', (array) get_option( 'active_plugins', array() ), true );
+}
+
 // WPLANG does not work: sanitize_option() rejects it if the core language pack is not downloaded.
 // Except with ?wpml-double=<code>: then nothing forces the locale (WordPress
 // says en_US, as with WPLANG empty) and a WPML double says the language
 // (1.4.0, tests/wplang.test.mjs).
+// With REAL WPML (tests/wp/estrategia-web-wpml-test.php) nothing is forced
+// either: WPML gives each request its language's locale (es_ES by default,
+// en_US in /en/), and forcing es_ES here would leave /en/ in Spanish.
 if ( ! isset( $_GET['wpml-double'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	add_filter( 'locale', static fn() => 'es_ES' );
+	if ( ! estrategia_web_test_real_wpml() ) {
+		add_filter( 'locale', static fn() => 'es_ES' );
+	}
 } else {
+	// The double is the only WPML of this request: a real one, if mounted, is not loaded.
+	add_filter( 'option_active_plugins', static fn( $plugins ) => array_values( array_filter( (array) $plugins, static fn( $p ) => ! str_starts_with( (string) $p, 'sitepress-multilingual-cms/' ) && ! str_starts_with( (string) $p, 'wpml-string-translation/' ) ) ) );
 	/*
 	 * A WPML DOUBLE with what Lavandería production did on 15-10-2026: Spanish
 	 * by default, English in /en/, WPLANG empty. Only the public surface the

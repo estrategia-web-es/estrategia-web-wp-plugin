@@ -4,7 +4,8 @@
 // the REST API saves the meta AFTER save_post, where WPML copies, so the
 // translation kept the old value. The check with REAL WPML (and its control)
 // is told in the header of includes/class-wpml.php; this is the one that
-// runs on every commit, because Playground has no WPML.
+// runs on every commit, with no WordPress (the slugs with real WPML:
+// slugs-wpml.test.mjs, level 2).
 //
 // If there is no `php` on the PATH the test FAILS (it is not skipped).
 //

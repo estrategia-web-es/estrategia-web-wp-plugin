@@ -5,9 +5,9 @@
  * request to Google before the click; after "Ver mapa" (show map), yes. There
  * is no notice nor window.estrategiaWebConsent, and the map does not miss it
  * (no errors).
- * "Accepting maps in the notice loads it without a click" is tested where the
- * notice is: modules/consent (contract) and the site
- * (Lavandería's tests/consent-maps.test.mjs, parent + plugin together).
+ * "Accepting maps in the notice loads it without a click" is tested with the
+ * notice on: map-consent.test.mjs (since 25-10-2026), and on the live site by
+ * Lavandería's tests/consent-maps.test.mjs.
  *
  * REQUESTS to *.google.com are checked, not occurrences of the text
  * "google.com" in the HTML: the "Abrir en Google Maps" link is there by design.

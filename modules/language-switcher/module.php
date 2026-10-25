@@ -10,10 +10,10 @@
  * registered it (see modules/carousel/module.php: the same move). Everything
  * it does, in the header of blocks/language-switcher/render.php.
  *
- * Tests: there are none here (WPML is paid and not in the plugin's
- * Playground); the real one is Lavandería's,
- * lavanderia-mallorca/tests/language-switcher.test.mjs, with its local copy
- * of WPML.
+ * Tests: tests/language-switcher.test.mjs (the served markup) and
+ * tests/language-switcher-browser.test.mjs (opening and closing), against
+ * the plugin's WordPress with real WPML (tests/run.mjs, «WPML»). They came
+ * from Lavandería on 25-10-2026.
  */
 
 namespace EstrategiaWeb\LanguageSwitcher;

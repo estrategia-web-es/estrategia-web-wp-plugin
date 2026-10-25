@@ -7,8 +7,9 @@
 //
 // Reads the files as text (no WordPress, no WPML). The check with real WPML
 // (the attributes offered as strings of the page's translation package, and
-// /en/ showing them translated after the job is completed) lives in
-// Lavandería (tests/wpml-blocks.test.mjs), because Playground has no WPML.
+// /en/ showing them translated after the job is completed) is
+// tests/wpml-blocks-translated.test.mjs (level 2, the WordPress with WPML;
+// in Lavandería until 25-10-2026).
 //
 // How to maintain: a new string attribute in a block.json goes into the XML
 // or into EXCLUDED, in the same commit. EXCLUDED holds only what a person

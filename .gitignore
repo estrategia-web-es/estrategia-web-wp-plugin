@@ -4,5 +4,7 @@ secretos/
 languages/.tmp-*/
 *.log
 tests/.playground.log
+# WPML for the test WordPress (tests/run.mjs, «WPML»): paid and licensed, never in git.
+tests/fixtures/wpml/
 .DS_Store
 Thumbs.db

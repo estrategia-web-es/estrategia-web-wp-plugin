@@ -39,8 +39,9 @@
  * How to maintain:
  * - Who: whoever touches the header of a site with WPML. When: adding a
  *   language needs no change (it comes from WPML); when changing the markup,
- *   in the same commit, tests/language-switcher.test.mjs of the child theme
- *   that uses it.
+ *   in the same commit, the module's tests/language-switcher*.test.mjs (and
+ *   the header selector of a child theme that styles it, like Lavandería's
+ *   tests/language-switcher-html.test.mjs).
  * - Edge case: the code shown is WPML's in upper case («ES»); if a site wants
  *   «Español», attribute display: name. Flags NO: they are countries, not
  *   languages.

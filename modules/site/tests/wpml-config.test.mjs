@@ -1,8 +1,8 @@
 // NIVEL: 1 — no browser or emulator. That wpml-config.xml declares what the code registers: in <admin-texts>, the company details of Settings::WPML_TRANSLATE, every company detail decided (translate or same), and valid attributes; and that the types of Type_Names are NOT in it any more (since 17-10-2026 the content-types templates declare them, display-as-translated).
 //
 // Reads the files as text (no WordPress). The check with real WPML (String Translation offering the
-// strings, /en/ showing the translation) lives in Lavandería
-// (tests/company-data-wpml.test.mjs), because Playground has no WPML.
+// strings, /en/ showing the translation) is company-data-wpml.test.mjs
+// (level 2, the plugin's WordPress with WPML; in Lavandería until 25-10-2026).
 //
 // Seen red (16-10-2026): with eweb_location switched to translate="1" in the
 // XML, «the XML declares every type…» fails naming it; with «schedule»

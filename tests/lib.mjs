@@ -200,3 +200,62 @@ export const html = async (url) => {
   const res = await fetch(url);
   return { status: res.status, text: await res.text() };
 };
+
+/**
+ * The page at `url` as a visitor gets it (no cookies, no JavaScript), parsed
+ * with jsdom (portal-hs's, like Playwright) to use querySelector on the HTML
+ * THE SERVER SENDS. jsdom runs no scripts and lays nothing out: no positions,
+ * no computed styles, no innerText; whatever needs those is level 3. The
+ * empty VirtualConsole silences its complaints about CSS it does not know.
+ * Returns { status, text, document }.
+ */
+export async function page(url) {
+  const { JSDOM, VirtualConsole } = createRequire("E:/Repositories/portal-hs/package.json")("jsdom");
+  const res = await fetch(url.startsWith("http") ? url : BASE + url);
+  const text = await res.text();
+  return { status: res.status, text, document: new JSDOM(text, { url: res.url, virtualConsole: new VirtualConsole() }).window.document };
+}
+
+/**
+ * REAL WPML (25-10-2026): the routes of tests/wp/estrategia-web-wpml-test.php.
+ * Throws with the route's message on any error (a WPML internal that changed
+ * answers 500 saying which).
+ *
+ *   await requireWpml();                               first line of every WPML test: FAILS without it
+ *   await wpml("/translate", { kind: "post", type: "page", original: id, title, slug, content })
+ */
+export async function wpml(path, body) {
+  const res = await fetch(BASE + "/wp-json/estrategia-web-wpml-test/v1" + path, {
+    method: body ? "POST" : "GET",
+    headers: body ? { "Content-Type": "application/json" } : {},
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const text = await res.text();
+  if (!res.ok) throw new Error(`wpml ${path} -> ${res.status} ${text.slice(0, 400)}`);
+  return JSON.parse(text);
+}
+
+/**
+ * The test needs real WPML: it FAILS (never skips) when this WordPress has
+ * none, saying how to get it. The rule and why: header of tests/run.mjs, «WPML».
+ */
+export async function requireWpml({ st = true } = {}) {
+  const res = await fetch(BASE + "/wp-json/estrategia-web-wpml-test/v1/state");
+  if (res.status === 404) {
+    throw new Error("this WordPress has no WPML: this test needs the local copy (tests/run.mjs, «WPML»: EW_WPML_DIR or tests/fixtures/wpml/)");
+  }
+  const state = await res.json();
+  if (st && !state.st) throw new Error("WPML without String Translation: this test needs wpml-string-translation in the local copy");
+  if (!state.setup_complete || !state.verified) throw new Error("WPML half installed (tests/wp/setup-wpml.php did not finish): " + JSON.stringify(state));
+  return state;
+}
+
+/** wp-admin opened once as the administrator: String Translation builds its .mo and its tables only after that (see the WPML tests). */
+export async function openWpmlScreen(path = "/wp-admin/admin.php?page=wpml-string-translation%2Fmenu%2Fstring-translation.php") {
+  const s = await adminSession();
+  // A fresh WPML may redirect the first wp-admin request (its upgrade or welcome steps): followed, as a browser would.
+  let r = await s.get(path);
+  for (let hops = 0; r.status >= 300 && r.status < 400 && r.location && hops < 5; hops++) r = await s.get(r.location);
+  if (r.status !== 200) throw new Error(`${path} -> ${r.status} ${r.location}`);
+  return r;
+}

@@ -182,7 +182,7 @@
  *     them again (it does, in the same request: the hash changed). A
  *     language the file does not name is left to WPML's screen. Without
  *     String Translation every language uses the registered slug.
- *     The real-WPML check: lavanderia-mallorca/tests/content-types-slugs-wpml.test.mjs.
+ *     The real-WPML check: tests/slugs-wpml.test.mjs (since 25-10-2026, the plugin's WPML WordPress).
  *   · A definition saved from the panel is registered from the NEXT request
  *     (types register at init 5, REST runs later): «Saved. The changes are
  *     visible from the next page you open» says so on purpose.

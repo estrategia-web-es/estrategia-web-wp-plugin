@@ -22,8 +22,9 @@
  * Tests: in tests/ of this module (since 17-10-2026; before, in the theme
  * repo), level 3, in Playground's default theme, with their pages seeded by
  * tests/wp/estrategia-web-map-test.php and the shared harness in the
- * plugin's tests/browser.mjs. With the cookie notice they are in
- * modules/consent and in Lavandería (tests/consent-maps.test.mjs).
+ * plugin's tests/browser.mjs. With the cookie notice: tests/map-consent*.test.mjs
+ * (since 25-10-2026), modules/consent, and on the live site Lavandería's
+ * tests/consent-maps.test.mjs (its deployer runs it against production).
  */
 
 namespace EstrategiaWeb\Map;
