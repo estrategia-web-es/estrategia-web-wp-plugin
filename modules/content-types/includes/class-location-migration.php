@@ -425,6 +425,12 @@ final class Location_Migration {
 				$def[ $k ] = $template[ $k ];
 			}
 		}
+		// The location's featured image was labelled «Static map image» up to 1.7.0: a second place for the
+		// static map, next to the field. It is the location's photo now; a label the site changed is kept.
+		if ( 'location' === $template['template'] && 'Static map image' === ( $def['labels']['featured_image']['en'] ?? null ) ) {
+			$def['labels']['featured_image']     = $template['labels']['featured_image'];
+			$def['labels']['set_featured_image'] = $template['labels']['set_featured_image'];
+		}
 		if ( in_array( 'editor', (array) ( $template['supports'] ?? array() ), true ) && isset( $def['supports'] ) && ! in_array( 'editor', $def['supports'], true ) ) {
 			array_splice( $def['supports'], 1, 0, array( 'editor' ) );
 		}
@@ -434,7 +440,7 @@ final class Location_Migration {
 	/** @return array<int,array{key:string,before:mixed,after:mixed}> */
 	private static function definition_diff( array $before, array $after ): array {
 		$out = array();
-		foreach ( array( 'supports', 'fields_box', 'groups' ) as $k ) {
+		foreach ( array( 'labels', 'supports', 'fields_box', 'groups' ) as $k ) {
 			if ( ( $before[ $k ] ?? null ) !== ( $after[ $k ] ?? null ) ) {
 				$out[] = array( 'key' => $k, 'before' => $before[ $k ] ?? null, 'after' => $after[ $k ] ?? null );
 			}

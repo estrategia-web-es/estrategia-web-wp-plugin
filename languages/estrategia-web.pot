@@ -52,7 +52,7 @@ msgstr ""
 
 #: includes/admin/class-modules-page.php:117
 #: modules/consent/includes/admin/class-cookies-page.php:250
-#: modules/content-types/includes/admin/class-page.php:88
+#: modules/content-types/includes/admin/class-types-table.php:61
 msgid "Status"
 msgstr ""
 
@@ -74,6 +74,7 @@ msgstr ""
 
 #: includes/admin/class-settings-page.php:211
 #: includes/admin/class-settings-page.php:228
+#: modules/content-types/includes/admin/class-page.php:268
 #: modules/forms/includes/admin/class-admin.php:55
 msgid "Settings"
 msgstr ""
@@ -444,7 +445,6 @@ msgid "Seen"
 msgstr ""
 
 #: modules/consent/includes/admin/class-cookies-page.php:256
-#: modules/content-types/includes/admin/class-page.php:90
 msgid "Actions"
 msgstr ""
 
@@ -485,12 +485,12 @@ msgid "Proposal: Estrategia Web"
 msgstr ""
 
 #: modules/consent/includes/admin/class-cookies-page.php:312
-#: modules/content-types/includes/admin/class-page.php:188
+#: modules/content-types/includes/admin/class-page.php:364
 msgid "Save"
 msgstr ""
 
 #: modules/consent/includes/admin/class-cookies-page.php:313
-#: modules/content-types/includes/admin/class-page.php:104
+#: modules/content-types/includes/admin/class-types-table.php:121
 #: modules/forms/includes/admin/class-submissions-table.php:39
 #: modules/forms/includes/admin/class-submissions-table.php:86
 #: modules/redirects/includes/admin/class-tables.php:56
@@ -511,7 +511,8 @@ msgid ""
 msgstr ""
 
 #: modules/consent/includes/admin/class-cookies-page.php:326
-#: modules/content-types/includes/admin/class-page.php:84
+#: modules/content-types/includes/admin/class-page.php:322
+#: modules/content-types/includes/admin/class-types-table.php:56
 #: modules/social/includes/class-admin.php:91
 #: modules/social/includes/class-admin.php:132
 msgid "Name"
@@ -922,580 +923,744 @@ msgstr ""
 msgid "Same as the day before"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:53
-#: modules/content-types/includes/admin/class-page.php:73
+#: modules/content-types/includes/admin/class-page.php:97
+#: modules/content-types/includes/admin/class-page.php:189
 msgid "Content types"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:74
-msgid ""
-"Your own content types — restaurants, courses, team members… — with their "
-"fields, taxonomies and addresses. They are saved in this site’s database."
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:75
-msgid "Loading…"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:76
-msgid "This screen needs JavaScript."
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:82
-msgid "Types"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:83
-msgid ""
-"There are no content types yet. Add one, start from a template or import a "
-"JSON file."
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:85
-#: modules/content-types/includes/admin/class-page.php:137
-msgid "Internal name"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:86
-msgid "URL"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:87
-msgid "Where it is defined"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:89
-msgid "Entries"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:91
-msgid "This panel"
-msgstr ""
-
-#. translators: %s: a template name, e.g. Testimonials
-#: modules/content-types/includes/admin/class-page.php:93
+#. translators: %s: internal name of a content type
+#: modules/content-types/includes/admin/class-page.php:169
 #, php-format
-msgid "This panel (from the template “%s”)"
+msgid "Template added as “%s”. You can change it here."
 msgstr ""
 
-#. translators: %s: a file path
-#: modules/content-types/includes/admin/class-page.php:95
+#. translators: %s: internal name of a content type
+#: modules/content-types/includes/admin/class-page.php:171
 #, php-format
-msgid "File (read-only): %s"
+msgid "Content type “%s” activated."
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:96
-#: modules/redirects/includes/admin/class-page.php:285
-#: modules/redirects/includes/admin/class-tables.php:38
-msgid "Active"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:97
-msgid "Switched off"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:98
-msgid "Not registered: it has errors"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:99
-#: modules/forms/includes/admin/class-forms-list.php:204
-#: modules/redirects/includes/admin/class-tables.php:89
-msgid "Edit"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:100
-msgid "Export JSON"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:101
-msgid "Copy to this panel"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:102
-msgid "Switch off"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:103
-msgid "Switch on"
-msgstr ""
-
-#. translators: %s: a content type name
-#: modules/content-types/includes/admin/class-page.php:106
+#. translators: %s: internal name of a content type
+#: modules/content-types/includes/admin/class-page.php:173
 #, php-format
 msgid ""
-"Switch off “%s”? Its menu and its addresses disappear; its entries stay and "
-"come back when you switch it on."
+"Content type “%s” deactivated. Its entries stay and come back when you "
+"activate it."
 msgstr ""
 
-#. translators: %s: a content type name
-#: modules/content-types/includes/admin/class-page.php:108
+#. translators: %s: internal name of a content type
+#: modules/content-types/includes/admin/class-page.php:175
 #, php-format
-msgid "Delete the definition of “%s”? This cannot be undone."
+msgid "Content type “%s” deleted."
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:109
-msgid "Add content type"
+#. translators: %s: internal name of a content type
+#: modules/content-types/includes/admin/class-page.php:177
+#, php-format
+msgid ""
+"There is no content type “%s” (it may have been deleted or renamed). These "
+"are the ones there are."
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:110
-msgid "Import JSON"
+#: modules/content-types/includes/admin/class-page.php:190
+#: modules/redirects/includes/admin/class-page.php:177
+msgid "Add new"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:111
-msgid "JSON file"
+#: modules/content-types/includes/admin/class-page.php:192
+msgid "Add from template"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:112
-msgid "Or paste the JSON here"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:113
-#: modules/redirects/includes/admin/class-page.php:343
-msgid "Import"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:114
-msgid "That is not valid JSON."
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:115
-msgid "Templates"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:116
+#: modules/content-types/includes/admin/class-page.php:193
 msgid ""
 "Ready-made types of a corporate site. Adding one copies it into this panel, "
 "where you can change it."
 msgstr ""
 
-#. translators: %s: a template name, e.g. Testimonials
-#. translators: %s: singular name of a taxonomy, e.g. Cuisine
-#. translators: %s: singular name of a content type, e.g. Restaurant
-#: modules/content-types/includes/admin/class-page.php:118
-#: modules/content-types/includes/class-registrar.php:209
-#: modules/content-types/includes/class-registrar.php:297
-#, php-format
-msgid "Add %s"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:119
+#: modules/content-types/includes/admin/class-page.php:195
 msgid "Already added"
 msgstr ""
 
-#. translators: 1: how many fields, 2: their names, comma separated
-#: modules/content-types/includes/admin/class-page.php:121
-#, php-format
-msgid ""
-"The template this type comes from has new fields (%1$d): %2$s. They are not "
-"added by themselves: add them here and save."
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:122
-msgid "Add the new fields of the template"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:123
+#: modules/content-types/includes/admin/class-page.php:195
 msgid ""
 "Not available: a type with this name is registered elsewhere (Company "
 "details › Content types)."
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:124
+#: modules/content-types/includes/admin/class-page.php:207
+msgid "Import JSON"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:210
+msgid ""
+"Your own content types — restaurants, courses, team members… — with their "
+"fields, taxonomies and addresses. They are saved in this site’s database."
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:215
 msgid "Files with errors (not registered)"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:125
+#: modules/content-types/includes/admin/class-page.php:225
 msgid "Folders searched for JSON files"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:126
+#: modules/content-types/includes/admin/class-page.php:230
+#: modules/content-types/includes/admin/class-page.php:250
+msgid "This screen needs JavaScript."
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:234
+msgid "New content type"
+msgstr ""
+
+#. translators: %s: a content type name
+#: modules/content-types/includes/admin/class-page.php:240
+#: modules/content-types/includes/admin/class-page.php:267
+#, php-format
+msgid "Edit “%s”"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:246
 #: modules/forms/includes/admin/class-admin.php:129
 #: modules/forms/includes/admin/class-admin.php:134
 #: modules/forms/includes/admin/class-admin.php:177
 msgid "Back to the list"
 msgstr ""
 
+#: modules/content-types/includes/admin/class-page.php:249
+msgid "Loading…"
+msgstr ""
+
 #. translators: %s: a content type name
-#: modules/content-types/includes/admin/class-page.php:128
+#: modules/content-types/includes/admin/class-page.php:257
 #, php-format
-msgid "Edit “%s”"
+msgid ""
+"Deactivate “%s”? Its menu and its addresses disappear; its entries stay and "
+"come back when you activate it."
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:129
-msgid "New content type"
+#. translators: %s: a content type name
+#: modules/content-types/includes/admin/class-page.php:259
+#, php-format
+msgid "Delete the definition of “%s”? This cannot be undone."
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:130
-msgid "The type"
+#: modules/content-types/includes/admin/class-page.php:260
+msgid "JSON file"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:261
+msgid "That is not valid JSON."
+msgstr ""
+
+#. translators: 1: how many fields, 2: their names, comma separated
+#: modules/content-types/includes/admin/class-page.php:263
+#, php-format
+msgid ""
+"The template this type comes from has new fields (%1$d): %2$s. They are not "
+"added by themselves: add them here and save."
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:264
+msgid "Add the new fields of the template"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:265
+msgid ""
+"This type is defined in a file, which is read-only. Saving here creates its "
+"copy in this panel, which wins from then on."
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:269
+msgid "General"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:270
+msgid "URLs & languages"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:271
+msgid "Advanced"
 msgstr ""
 
 #. translators: %s: a language code such as es
-#: modules/content-types/includes/admin/class-page.php:132
+#: modules/content-types/includes/admin/class-page.php:273
 #, php-format
 msgid "Name, plural (%s)"
 msgstr ""
 
 #. translators: %s: a language code such as es
-#: modules/content-types/includes/admin/class-page.php:134
+#: modules/content-types/includes/admin/class-page.php:275
 #, php-format
 msgid "Name, singular (%s)"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:135
+#: modules/content-types/includes/admin/class-page.php:276
 msgid "Prefix"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:136
+#: modules/content-types/includes/admin/class-page.php:277
 msgid ""
 "The site’s own, 2 to 9 letters or digits and “_” (e.g. “gment_”). Every "
 "internal name starts with it."
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:138
+#: modules/content-types/includes/admin/class-page.php:278
+#: modules/content-types/includes/admin/class-types-table.php:57
+msgid "Internal name"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:279
 msgid ""
 "Lowercase letters, digits and “_”, at most 20 characters. It cannot be "
 "changed once there are entries."
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:139
+#: modules/content-types/includes/admin/class-page.php:280
 msgid "Address (URL)"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:140
+#: modules/content-types/includes/admin/class-page.php:281
 msgid ""
 "The part of the address after the domain: /restaurants/. Changing it moves "
 "the published addresses."
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:141
+#: modules/content-types/includes/admin/class-page.php:282
+msgid ""
+"The address of this type in the other languages of the site. Empty: the "
+"first language’s is used."
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:283
+msgid "The site has one language: the address is set in General."
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:284
 msgid "Menu icon"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:142
+#: modules/content-types/includes/admin/class-page.php:285
 msgid "A Dashicons name, e.g. dashicons-food."
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:143
+#: modules/content-types/includes/admin/class-page.php:286
+msgid "Position in the menu"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:287
+msgid ""
+"A whole number: 5 below Posts, 20 below Pages, 25 below Comments. Empty: at "
+"the end."
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:288
 msgid "What the editor offers"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:144
+#: modules/content-types/includes/admin/class-page.php:289
 msgid "Public (has its own pages on the site)"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:145
+#: modules/content-types/includes/admin/class-page.php:290
 msgid "Has a list page at its address"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:146
+#: modules/content-types/includes/admin/class-page.php:291
 msgid "Translation (WPML)"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:147
-#: modules/content-types/includes/admin/class-page.php:173
+#: modules/content-types/includes/admin/class-page.php:292
+#: modules/content-types/includes/admin/class-page.php:349
 msgid "Translate"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:148
+#: modules/content-types/includes/admin/class-page.php:293
 msgid "Translate, and show the original until it is translated"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:149
+#: modules/content-types/includes/admin/class-page.php:294
 msgid "Do not translate"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:150
+#: modules/content-types/includes/admin/class-page.php:295
+msgid "Where the fields are edited"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:296
+msgid "In the editor’s sidebar (the «details» panel)"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:297
+msgid "In a wide box under the content, with its groups"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:298
+msgid ""
+"A type without «Content (block editor)» always gets the box under the "
+"content."
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:299
+msgid "Field groups"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:300
+msgid ""
+"Sections of the box under the content. A field joins one in its settings "
+"(«Group»); fields without a group go first."
+msgstr ""
+
+#. translators: %d: position of a group in the list
+#: modules/content-types/includes/admin/class-page.php:302
+#, php-format
+msgid "Group %d"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:303
+msgid "Add group"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:304
+msgid "Key"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:305
+msgid ""
+"Lowercase letters, digits and “_”, starting with a letter. The fields refer "
+"to it."
+msgstr ""
+
+#. translators: %s: a language code such as es
+#: modules/content-types/includes/admin/class-page.php:307
+#, php-format
+msgid "Title (%s)"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:308
+msgid "Closed when the screen opens"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:309
+msgid "Group"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:310
+msgid "No group"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:311
 msgid "Taxonomies"
 msgstr ""
 
 #. translators: %d: position of a taxonomy in the list
-#: modules/content-types/includes/admin/class-page.php:152
+#: modules/content-types/includes/admin/class-page.php:313
 #, php-format
 msgid "Taxonomy %d"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:153
+#: modules/content-types/includes/admin/class-page.php:314
 msgid "Add taxonomy"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:154
+#: modules/content-types/includes/admin/class-page.php:315
 msgid "Hierarchical (like categories)"
 msgstr ""
 
 #. translators: %s: a taxonomy name
-#: modules/content-types/includes/admin/class-page.php:156
+#: modules/content-types/includes/admin/class-page.php:317
 #, php-format
 msgid "Uses the taxonomy “%s”, declared elsewhere."
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:157
+#: modules/content-types/includes/admin/class-page.php:318
+#: modules/content-types/includes/admin/class-types-table.php:59
 msgid "Fields"
 msgstr ""
 
-#. translators: 1: position of a field in the list, 2: its label
-#: modules/content-types/includes/admin/class-page.php:159
-#, php-format
-msgid "Field %1$d: %2$s"
+#: modules/content-types/includes/admin/class-page.php:319
+msgid "No fields yet."
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:160
-msgid "Add field"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:161
-msgid "Internal name (meta key)"
-msgstr ""
-
-#: modules/content-types/includes/admin/class-page.php:162
+#: modules/content-types/includes/admin/class-page.php:320
 msgid ""
-"It cannot be renamed: its data is stored under this name. To change it, "
-"remove the field and add a new one."
+"Open a field to change it. To reorder, drag a row by its handle, or use Alt "
+"+ Up or Down arrow on a field (or its Move buttons)."
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:163
+#: modules/content-types/includes/admin/class-page.php:321
+msgid "Label"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:323
+#: modules/content-types/includes/admin/class-page.php:339
 #: modules/redirects/includes/admin/class-page.php:268
 #: modules/redirects/includes/admin/class-tables.php:35
 msgid "Type"
 msgstr ""
 
+#: modules/content-types/includes/admin/class-page.php:324
+msgid "(no label)"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:325
+msgid "Drag to reorder"
+msgstr ""
+
+#. translators: %s: a field label
+#: modules/content-types/includes/admin/class-page.php:327
+#, php-format
+msgid "Move “%s” up"
+msgstr ""
+
+#. translators: %s: a field label
+#: modules/content-types/includes/admin/class-page.php:329
+#, php-format
+msgid "Move “%s” down"
+msgstr ""
+
+#. translators: %s: a field label
+#: modules/content-types/includes/admin/class-page.php:331
+#, php-format
+msgid "Remove “%s”"
+msgstr ""
+
+#. translators: 1: a field label, 2: its new position, 3: how many fields
+#: modules/content-types/includes/admin/class-page.php:333
+#, php-format
+msgid "“%1$s” moved to position %2$d of %3$d."
+msgstr ""
+
+#. translators: %s: a field label
+#: modules/content-types/includes/admin/class-page.php:335
+#, php-format
+msgid "“%s” removed. Save to keep the change."
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:336
+msgid "Add field"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:337
+msgid "Internal name (meta key)"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-page.php:338
+msgid ""
+"It cannot be renamed: its data is stored under this name. To change it, "
+"remove the field and add a new one."
+msgstr ""
+
 #. translators: %s: a language code such as es
-#: modules/content-types/includes/admin/class-page.php:165
+#: modules/content-types/includes/admin/class-page.php:341
 #, php-format
 msgid "Label (%s)"
 msgstr ""
 
 #. translators: %s: a language code such as es
-#: modules/content-types/includes/admin/class-page.php:167
+#: modules/content-types/includes/admin/class-page.php:343
 #, php-format
 msgid "Help (%s)"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:168
+#: modules/content-types/includes/admin/class-page.php:344
 msgid "Required to publish"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:169
+#: modules/content-types/includes/admin/class-page.php:345
 msgid "Default value"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:170
+#: modules/content-types/includes/admin/class-page.php:346
 msgid "In translations"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:171
+#: modules/content-types/includes/admin/class-page.php:347
 msgid "Automatic (texts translated, the rest copied)"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:172
+#: modules/content-types/includes/admin/class-page.php:348
 msgid "Copy from the original"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:174
+#: modules/content-types/includes/admin/class-page.php:350
 msgid "Ignore"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:175
+#: modules/content-types/includes/admin/class-page.php:351
 msgid "Options, one per line: value | label"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:176
+#: modules/content-types/includes/admin/class-page.php:352
 msgid "Related types (internal names, separated by commas)"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:177
+#: modules/content-types/includes/admin/class-page.php:353
 msgid "Minimum"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:178
+#: modules/content-types/includes/admin/class-page.php:354
 msgid "Maximum"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:179
+#: modules/content-types/includes/admin/class-page.php:355
 msgid "Whole numbers only"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:180
+#: modules/content-types/includes/admin/class-page.php:356
 msgid "Text when yes (empty: «Yes»)"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:181
+#: modules/content-types/includes/admin/class-page.php:357
 msgid "Text when no (empty: «No»)"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:182
+#: modules/content-types/includes/admin/class-page.php:358
 #: modules/social/includes/class-admin.php:67
 msgid "Move up"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:183
+#: modules/content-types/includes/admin/class-page.php:359
 #: modules/social/includes/class-admin.php:68
 msgid "Move down"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:184
-#: modules/content-types/includes/class-fields-panel.php:176
+#: modules/content-types/includes/admin/class-page.php:360
+#: modules/content-types/includes/class-fields-panel.php:192
 #: modules/social/includes/class-admin.php:69
 msgid "Remove"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:185
+#: modules/content-types/includes/admin/class-page.php:361
 msgid "JSON (advanced)"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:186
+#: modules/content-types/includes/admin/class-page.php:362
 msgid ""
 "The whole definition. Change it here to set what the form does not show, "
 "then apply it."
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:187
+#: modules/content-types/includes/admin/class-page.php:363
 msgid "Apply the JSON to the form"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:189
+#: modules/content-types/includes/admin/class-page.php:365
 msgid "Saving…"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:190
+#: modules/content-types/includes/admin/class-page.php:366
 msgid "Saved. The changes are visible from the next page you open."
 msgstr ""
 
 #. translators: %d: number of redirects
-#: modules/content-types/includes/admin/class-page.php:192
+#: modules/content-types/includes/admin/class-page.php:368
 #, php-format
 msgid "Redirects created for the old addresses: %d."
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:193
+#: modules/content-types/includes/admin/class-page.php:369
 msgid "Before saving"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:194
+#: modules/content-types/includes/admin/class-page.php:370
 msgid "Save anyway"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:195
+#: modules/content-types/includes/admin/class-page.php:371
 #: modules/forms/includes/admin/class-admin.php:194
 msgid "Cancel"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:196
+#: modules/content-types/includes/admin/class-page.php:372
 msgid "Nothing was saved"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:197
+#: modules/content-types/includes/admin/class-page.php:373
 msgid "The list could not be loaded."
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:199
+#: modules/content-types/includes/admin/class-page.php:375
 msgid "Text"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:200
+#: modules/content-types/includes/admin/class-page.php:376
 msgid "Text, several lines"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:201
+#: modules/content-types/includes/admin/class-page.php:377
 msgid "Number"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:202
+#: modules/content-types/includes/admin/class-page.php:378
 msgid "Web address"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:203
+#: modules/content-types/includes/admin/class-page.php:379
 #: modules/site/includes/class-company.php:133
 #: modules/social/includes/class-icons.php:82
 msgid "Email"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:204
+#: modules/content-types/includes/admin/class-page.php:380
 #: modules/site/includes/class-company.php:134
 msgid "Phone"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:205
+#: modules/content-types/includes/admin/class-page.php:381
 msgid "Image"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:206
+#: modules/content-types/includes/admin/class-page.php:382
 #: modules/forms/includes/admin/class-admin.php:157
 #: modules/forms/includes/admin/class-submissions-table.php:30
 msgid "Date"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:207
+#: modules/content-types/includes/admin/class-page.php:383
 msgid "Choice from a list"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:208
+#: modules/content-types/includes/admin/class-page.php:384
 msgid "Link to another entry"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:209
+#: modules/content-types/includes/admin/class-page.php:385
 msgid "Yes / no"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:210
+#: modules/content-types/includes/admin/class-page.php:386
 msgid "Rating (stars)"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:211
+#: modules/content-types/includes/admin/class-page.php:387
 msgid "Embedded map or video"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:212
+#: modules/content-types/includes/admin/class-page.php:388
 msgid "Image of this site by path"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:213
+#: modules/content-types/includes/admin/class-page.php:389
 msgid "Opening hours (days and times)"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:216
+#: modules/content-types/includes/admin/class-page.php:392
 msgid "Title"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:217
+#: modules/content-types/includes/admin/class-page.php:393
 msgid "Content (block editor)"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:218
+#: modules/content-types/includes/admin/class-page.php:394
 msgid "Author"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:219
+#: modules/content-types/includes/admin/class-page.php:395
 msgid "Featured image"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:220
+#: modules/content-types/includes/admin/class-page.php:396
 msgid "Excerpt"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:221
+#: modules/content-types/includes/admin/class-page.php:397
 msgid "Trackbacks"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:222
+#: modules/content-types/includes/admin/class-page.php:398
 msgid "Custom fields"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:223
+#: modules/content-types/includes/admin/class-page.php:399
 msgid "Comments"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:224
+#: modules/content-types/includes/admin/class-page.php:400
 msgid "Revisions"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:225
+#: modules/content-types/includes/admin/class-page.php:401
 #: modules/social/includes/class-admin.php:93
 msgid "Order"
 msgstr ""
 
-#: modules/content-types/includes/admin/class-page.php:226
+#: modules/content-types/includes/admin/class-page.php:402
 msgid "Formats"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-types-table.php:58
+msgid "URL"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-types-table.php:60
+msgid "Where it is defined"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-types-table.php:62
+msgid "Entries"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-types-table.php:72
+msgid ""
+"There are no content types yet. Add one, start from a template or import a "
+"JSON file."
+msgstr ""
+
+#: modules/content-types/includes/admin/class-types-table.php:114
+#: modules/forms/includes/admin/class-forms-list.php:204
+#: modules/redirects/includes/admin/class-tables.php:89
+msgid "Edit"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-types-table.php:115
+#: modules/redirects/includes/admin/class-tables.php:54
+msgid "Activate"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-types-table.php:115
+#: modules/redirects/includes/admin/class-tables.php:55
+msgid "Deactivate"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-types-table.php:117
+msgid "Copy to this panel"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-types-table.php:119
+msgid "Export JSON"
+msgstr ""
+
+#. translators: %s: a file path
+#: modules/content-types/includes/admin/class-types-table.php:143
+#, php-format
+msgid "File (read-only): %s"
+msgstr ""
+
+#. translators: %s: a template name, e.g. Testimonials
+#: modules/content-types/includes/admin/class-types-table.php:148
+#, php-format
+msgid "This panel (from the template “%s”)"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-types-table.php:151
+msgid "This panel"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-types-table.php:157
+msgid "Not registered: it has errors"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-types-table.php:159
+#: modules/redirects/includes/admin/class-page.php:285
+#: modules/redirects/includes/admin/class-tables.php:38
+msgid "Active"
+msgstr ""
+
+#: modules/content-types/includes/admin/class-types-table.php:159
+msgid "Inactive"
 msgstr ""
 
 #: modules/content-types/includes/class-bindings.php:68
@@ -1585,24 +1750,24 @@ msgid ""
 "when you save; the others are translated in each language."
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:174
+#: modules/content-types/includes/class-fields-panel.php:190
 msgid "Choose image"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:175
+#: modules/content-types/includes/class-fields-panel.php:191
 msgid "Replace image"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:177
+#: modules/content-types/includes/class-fields-panel.php:193
 msgid "Copy Monday to every day"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:178
+#: modules/content-types/includes/class-fields-panel.php:194
 msgid "Monday’s hours copied to every day."
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:332
-#: modules/content-types/includes/class-fields-panel.php:338
+#: modules/content-types/includes/class-fields-panel.php:348
+#: modules/content-types/includes/class-fields-panel.php:354
 msgid "— None —"
 msgstr ""
 
@@ -1675,6 +1840,14 @@ msgstr ""
 msgid ""
 "The taxonomy “%s” is already registered by other code: it is not registered "
 "again."
+msgstr ""
+
+#. translators: %s: singular name of a taxonomy, e.g. Cuisine
+#. translators: %s: singular name of a content type, e.g. Restaurant
+#: modules/content-types/includes/class-registrar.php:209
+#: modules/content-types/includes/class-registrar.php:297
+#, php-format
+msgid "Add %s"
 msgstr ""
 
 #. translators: %s: singular name of a taxonomy
@@ -2354,11 +2527,6 @@ msgstr ""
 
 #: modules/forms/assets/editor.js:120 modules/forms/assets/editor.js:127
 msgid "Empty: the default message from Forms → Settings."
-msgstr ""
-
-#: modules/forms/assets/editor.js:150 modules/forms/assets/editor.js:311
-#: modules/forms/assets/editor.js:320
-msgid "Label"
 msgstr ""
 
 #: modules/forms/assets/editor.js:153
@@ -3433,10 +3601,6 @@ msgstr ""
 msgid "The 404 log is empty."
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:177
-msgid "Add new"
-msgstr ""
-
 #: modules/redirects/includes/admin/class-page.php:178
 msgid "404 log"
 msgstr ""
@@ -3563,6 +3727,10 @@ msgstr ""
 msgid "Line %1$d (%2$s): %3$s"
 msgstr ""
 
+#: modules/redirects/includes/admin/class-page.php:343
+msgid "Import"
+msgstr ""
+
 #: modules/redirects/includes/admin/class-page.php:344
 msgid ""
 "A CSV with the columns origen, destino, tipo and motivo (or source, target, "
@@ -3593,14 +3761,6 @@ msgstr ""
 
 #: modules/redirects/includes/admin/class-tables.php:37
 msgid "Last hit"
-msgstr ""
-
-#: modules/redirects/includes/admin/class-tables.php:54
-msgid "Activate"
-msgstr ""
-
-#: modules/redirects/includes/admin/class-tables.php:55
-msgid "Deactivate"
 msgstr ""
 
 #: modules/redirects/includes/admin/class-tables.php:78
@@ -3857,18 +4017,18 @@ msgstr ""
 msgid "Company details and site options of the Estrategia Web Site plugin."
 msgstr ""
 
-#: modules/site/includes/class-settings.php:315
+#: modules/site/includes/class-settings.php:320
 msgid "The email address is not valid. The previous one has been kept."
 msgstr ""
 
-#: modules/site/includes/class-settings.php:328
+#: modules/site/includes/class-settings.php:333
 msgid ""
 "The WhatsApp number is not valid (international format, digits only). The "
 "previous one has been kept."
 msgstr ""
 
 #. translators: %s: the field name.
-#: modules/site/includes/class-settings.php:402
+#: modules/site/includes/class-settings.php:407
 #, php-format
 msgid ""
 "The address in «%s» is not a valid web address. The previous one has been "

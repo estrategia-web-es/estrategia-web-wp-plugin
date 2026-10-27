@@ -121,8 +121,24 @@ final class Fields_Panel {
 		}
 		$post   = get_post();
 		$config = self::config( (string) $screen->post_type, $post ? (int) $post->ID : 0 );
-		if ( ! $config || $config['box'] ) {
-			return; // «fields_box: main»: the fields are in the meta box, not in the sidebar (one place to edit them).
+		if ( $config && $config['box'] ) {
+			// «fields_box: main»: the fields are in the meta box, not in the sidebar (one place to edit them).
+			// THE TRAP (seen in site/tests/meta-panel-editor.test.mjs, 27-10-2026): WordPress 7.1 puts the
+			// meta boxes in a «Meta boxes» drawer at the bottom of the editor, CLOSED until the person opens
+			// it — the page looked as empty as before. It is opened here, two-thirds of the screen high the
+			// first time. Both are the user's editor preferences (core/edit-post metaBoxesMainIsOpen and
+			// metaBoxesMainOpenHeight), shared by every post type: a page with an SEO plugin's meta box
+			// also finds the drawer open after this. A height the person chose is kept.
+			wp_add_inline_script(
+				'wp-edit-post',
+				'wp.domReady(function(){var p=wp.data.select("core/preferences"),d=wp.data.dispatch("core/preferences");'
+				. 'if(!p.get("core/edit-post","metaBoxesMainIsOpen")){d.set("core/edit-post","metaBoxesMainIsOpen",true);}'
+				. 'if(!p.get("core/edit-post","metaBoxesMainOpenHeight")){d.set("core/edit-post","metaBoxesMainOpenHeight",Math.round(window.innerHeight*0.66));}});'
+			);
+			return;
+		}
+		if ( ! $config ) {
+			return;
 		}
 		wp_enqueue_script(
 			self::HANDLE,

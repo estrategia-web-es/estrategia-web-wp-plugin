@@ -8,8 +8,8 @@
     "singular": { "en": "Location", "es": "Sede", "ca": "Seu" },
     "plural": { "en": "Locations", "es": "Sedes", "ca": "Seus" },
     "details": { "en": "Location details", "es": "Datos de la sede", "ca": "Dades de la seu" },
-    "featured_image": { "en": "Static map image", "es": "Imagen estática del mapa", "ca": "Imatge estàtica del mapa" },
-    "set_featured_image": { "en": "Set static map image", "es": "Poner imagen estática del mapa", "ca": "Posa la imatge estàtica del mapa" }
+    "featured_image": { "en": "Location photo", "es": "Foto de la sede", "ca": "Foto de la seu" },
+    "set_featured_image": { "en": "Set location photo", "es": "Poner foto de la sede", "ca": "Posa una foto de la seu" }
   },
   "icon": "dashicons-location",
   "supports": ["title", "editor", "thumbnail", "excerpt", "page-attributes", "custom-fields"],
