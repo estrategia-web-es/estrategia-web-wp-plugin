@@ -327,6 +327,7 @@ msgstr "Cookies"
 
 #
 #: modules/consent/includes/admin/class-cookies-page.php:84
+#: modules/forms/includes/class-form-post-type.php:148
 msgid "Sorry, you are not allowed to do that."
 msgstr "No tienes permiso para hacer esto."
 
@@ -1132,7 +1133,7 @@ msgid "Not registered: it has errors"
 msgstr "No registrado: tiene errores"
 
 #: modules/content-types/includes/admin/class-page.php:99
-#: modules/forms/includes/admin/class-forms-list.php:204
+#: modules/forms/includes/admin/class-forms-list.php:239
 #: modules/redirects/includes/admin/class-tables.php:89
 msgid "Edit"
 msgstr "Editar"
@@ -2709,6 +2710,24 @@ msgstr "administrador de la web"
 msgid "Not shown to visitors. Edit it in the side panel."
 msgstr "No lo ven los visitantes. Se edita en el panel lateral."
 
+#: modules/forms/assets/editor.js:466
+msgid "Choose a form"
+msgstr "Elige un formulario"
+
+#: modules/forms/assets/editor.js:469
+msgid "not published"
+msgstr "sin publicar"
+
+#: modules/forms/assets/editor.js:481
+msgid "Edit this form"
+msgstr "Editar este formulario"
+
+#: modules/forms/assets/editor.js:494
+msgid ""
+"Choose which of the site's forms to show here. Forms are created and edited "
+"in Forms → Forms."
+msgstr "Elige qué formulario del sitio se muestra aquí. Los formularios se crean y se editan en Formularios → Formularios."
+
 #: modules/forms/blocks/checkbox/block.json
 msgctxt "block description"
 msgid ""
@@ -2733,34 +2752,48 @@ msgctxt "block title"
 msgid "Email field"
 msgstr "Campo de correo"
 
-#: modules/forms/blocks/form/block.json
-msgctxt "block description"
-msgid ""
-"A form built with blocks. Its fields go inside; its email notifications too."
-msgstr ""
-"Un formulario hecho con bloques. Dentro van sus campos, y también sus avisos "
-"por correo."
-
+#: modules/forms/blocks/form-ref/block.json
 #: modules/forms/blocks/form/block.json
 msgctxt "block title"
 msgid "Form"
 msgstr "Formulario"
 
+#: modules/forms/blocks/form-ref/block.json
+msgctxt "block description"
+msgid ""
+"Shows one of the site's forms. The form itself is edited in Forms → Forms."
+msgstr "Muestra uno de los formularios del sitio. El formulario se edita en Formularios → Formularios."
+
+#: modules/forms/blocks/form-ref/block.json
 #: modules/forms/blocks/form/block.json
 #: modules/whatsapp/blocks/whatsapp/block.json
 msgctxt "block keyword"
 msgid "contact"
 msgstr "contacto"
 
+#: modules/forms/blocks/form-ref/block.json
 #: modules/forms/blocks/form/block.json
 msgctxt "block keyword"
 msgid "email"
 msgstr "correo"
 
+#: modules/forms/blocks/form-ref/block.json
 #: modules/forms/blocks/form/block.json
 msgctxt "block keyword"
 msgid "form"
 msgstr "formulario"
+
+#: modules/forms/blocks/form-ref/block.json
+msgctxt "block keyword"
+msgid "quote"
+msgstr "presupuesto"
+
+#: modules/forms/blocks/form/block.json
+msgctxt "block description"
+msgid ""
+"The form itself, edited in Forms → Forms. Its fields go inside; its email "
+"notifications too. Pages show it with the «Form» block."
+msgstr "El formulario en sí, que se edita en Formularios → Formularios. Dentro van sus campos, y también sus avisos por correo. Las páginas lo muestran con el bloque «Formulario»."
 
 #: modules/forms/blocks/notification/block.json
 msgctxt "block description"
@@ -2836,7 +2869,8 @@ msgstr "Envíos de formularios"
 
 #: modules/forms/includes/admin/class-admin.php:47
 #: modules/forms/includes/admin/class-admin.php:59
-#: modules/forms/includes/admin/class-forms-list.php:217
+#: modules/forms/includes/admin/class-forms-list.php:254
+#: modules/forms/includes/class-form-post-type.php:84
 msgid "Forms"
 msgstr "Formularios"
 
@@ -2851,7 +2885,7 @@ msgstr "Ajustes de formularios"
 
 #: modules/forms/includes/admin/class-admin.php:76
 #: modules/forms/includes/admin/class-admin.php:265
-#: modules/forms/includes/admin/class-forms-list.php:211
+#: modules/forms/includes/admin/class-forms-list.php:246
 msgid "You are not allowed to see this page."
 msgstr "No tienes permiso para ver esta página."
 
@@ -2883,7 +2917,7 @@ msgid "Data"
 msgstr "Datos"
 
 #: modules/forms/includes/admin/class-admin.php:143
-#: modules/forms/includes/admin/class-forms-list.php:224
+#: modules/forms/includes/admin/class-forms-list.php:273
 #: modules/forms/includes/admin/class-submissions-table.php:34
 msgid "Notifications"
 msgstr "Avisos"
@@ -2918,8 +2952,9 @@ msgid "Details"
 msgstr "Detalles"
 
 #: modules/forms/includes/admin/class-admin.php:156
-#: modules/forms/includes/admin/class-forms-list.php:222
+#: modules/forms/includes/admin/class-forms-list.php:271
 #: modules/forms/includes/admin/class-submissions-table.php:31
+#: modules/forms/includes/class-form-post-type.php:85
 msgid "Form"
 msgstr "Formulario"
 
@@ -2929,7 +2964,7 @@ msgstr "Página"
 
 #: modules/forms/includes/admin/class-admin.php:159
 #: modules/forms/includes/admin/class-submissions-table.php:33
-#: modules/language-switcher/blocks/language-switcher/render.php:86
+#: modules/language-switcher/blocks/language-switcher/render.php:87
 msgid "Language"
 msgstr "Idioma"
 
@@ -3045,50 +3080,75 @@ msgid "Email footer"
 msgstr "Pie de los correos"
 
 #. translators: %d: post ID.
-#: modules/forms/includes/admin/class-forms-list.php:201
+#: modules/forms/includes/admin/class-forms-list.php:236
 #, php-format
 msgid "(no title, #%d)"
 msgstr "(sin título, n.º %d)"
 
-#: modules/forms/includes/admin/class-forms-list.php:218
-msgid ""
-"The forms on this site and where they are. A form is edited in its block: "
-"open the page or pattern it is in. Its name and identifier are the ones the "
-"submissions log shows."
-msgstr ""
-"Los formularios del sitio y dónde están. Un formulario se edita en su "
-"bloque: abre la página o el patrón donde está. Su nombre y su identificador "
-"son los que muestra el registro de envíos."
+#: modules/forms/includes/admin/class-forms-list.php:256
+#: modules/forms/includes/class-form-post-type.php:86
+#: modules/forms/includes/class-form-post-type.php:87
+msgid "Add form"
+msgstr "Añadir formulario"
 
-#: modules/forms/includes/admin/class-forms-list.php:223
+#: modules/forms/includes/admin/class-forms-list.php:259
+msgid ""
+"The forms on this site and where they are used. Edit a form here; to show it "
+"on a page, add the «Form» block and choose it. Its name and identifier are "
+"the ones the submissions log shows."
+msgstr "Los formularios del sitio y dónde se usan. Edita aquí cada formulario; para mostrarlo en una página, añade el bloque «Formulario» y elígelo. Su nombre y su identificador son los que muestra el registro de envíos."
+
+#. translators: %d: number of forms written inside pages or patterns.
+#: modules/forms/includes/admin/class-forms-list.php:264
+#, php-format
+msgid ""
+"%d form is still written inside a page or a pattern. Move it to its own form "
+"with the command «wp estrategia-web migrate-forms» (try it first with --dry-"
+"run)."
+msgid_plural ""
+"%d forms are still written inside a page or a pattern. Move them to their "
+"own forms with the command «wp estrategia-web migrate-forms» (try it first "
+"with --dry-run)."
+msgstr[0] "%d formulario sigue escrito dentro de una página o un patrón. Pásalo a un formulario propio con la orden «wp estrategia-web migrate-forms» (pruébala antes con --dry-run)."
+msgstr[1] "%d formularios siguen escritos dentro de una página o un patrón. Pásalos a formularios propios con la orden «wp estrategia-web migrate-forms» (pruébala antes con --dry-run)."
+
+#: modules/forms/includes/admin/class-forms-list.php:272
 msgid "Where it is"
 msgstr "Dónde está"
 
-#: modules/forms/includes/admin/class-forms-list.php:226
+#: modules/forms/includes/admin/class-forms-list.php:275
 msgid "Also in"
 msgstr "También en"
 
-#: modules/forms/includes/admin/class-forms-list.php:232
+#: modules/forms/includes/admin/class-forms-list.php:281
 msgid ""
-"There are no forms yet. Add a «Form» block to a page or a synced pattern."
-msgstr ""
-"Todavía no hay formularios. Añade un bloque «Formulario» a una página o a un "
-"patrón sincronizado."
+"There are no forms yet. Add one with «Add form», then show it on a page with "
+"the «Form» block."
+msgstr "Todavía no hay formularios. Crea uno con «Añadir formulario» y muéstralo en una página con el bloque «Formulario»."
 
-#: modules/forms/includes/admin/class-forms-list.php:237
+#: modules/forms/includes/admin/class-forms-list.php:286
 msgid "(no name)"
 msgstr "(sin nombre)"
 
-#: modules/forms/includes/admin/class-forms-list.php:246
+#: modules/forms/includes/admin/class-forms-list.php:295
+#: modules/forms/includes/admin/class-forms-list.php:323
 msgid "Used in:"
 msgstr "Se usa en:"
 
-#: modules/forms/includes/admin/class-forms-list.php:253
+#: modules/forms/includes/admin/class-forms-list.php:313
+msgid "Not used on any page yet."
+msgstr "Todavía no se usa en ninguna página."
+
+#: modules/forms/includes/admin/class-forms-list.php:317
+msgid "Written inside this content (not migrated)."
+msgstr "Escrito dentro de este contenido (sin migrar)."
+
+#: modules/forms/includes/admin/class-forms-list.php:330
 msgid "No page uses this pattern."
 msgstr "Ninguna página usa este patrón."
 
 #. translators: %d: number of email notifications.
-#: modules/forms/includes/admin/class-forms-list.php:262
+#: modules/forms/includes/admin/class-forms-list.php:339
 #, php-format
 msgid "%d notification"
 msgid_plural "%d notifications"
@@ -3096,7 +3156,7 @@ msgstr[0] "%d aviso"
 msgstr[1] "%d avisos"
 
 #. translators: %d: position of the notification in the form.
-#: modules/forms/includes/admin/class-forms-list.php:270
+#: modules/forms/includes/admin/class-forms-list.php:347
 #, php-format
 msgid "Notification %d"
 msgstr "Aviso %d"
@@ -3129,31 +3189,59 @@ msgstr "Todos enviados"
 msgid "Some failed"
 msgstr "Alguno falló"
 
-#: modules/forms/includes/class-blocks.php:80
+#: modules/forms/includes/class-blocks.php:81
 msgid ""
 "The message could not be sent. Please check your connection and try again."
 msgstr ""
 "No se ha podido enviar el mensaje. Comprueba tu conexión y vuelve a "
 "intentarlo."
 
-#: modules/forms/includes/class-blocks.php:103
+#: modules/forms/includes/class-blocks.php:104
 msgid "Leave this field empty"
 msgstr "Deja este campo vacío"
 
-#: modules/forms/includes/class-blocks.php:195
+#: modules/forms/includes/class-blocks.php:232
 msgid "Choose an option"
 msgstr "Elige una opción"
 
-#: modules/forms/includes/class-blocks.php:221
+#: modules/forms/includes/class-blocks.php:258
 msgid "Send"
 msgstr "Enviar"
 
 #. translators: the text between braces becomes the link to the privacy policy.
 #. translators: the text between braces becomes the link to the privacy policy; {text|url} links to that url.
-#: modules/forms/includes/class-blocks.php:270
-#: modules/forms/includes/class-blocks.php:296
+#: modules/forms/includes/class-blocks.php:307
+#: modules/forms/includes/class-blocks.php:333
 msgid "I have read and accept the {privacy policy}."
 msgstr "He leído y acepto la {política de privacidad}."
+
+#: modules/forms/includes/class-form-post-type.php:88
+msgid "Edit form"
+msgstr "Editar formulario"
+
+#: modules/forms/includes/class-form-post-type.php:89
+msgid "New form"
+msgstr "Nuevo formulario"
+
+#: modules/forms/includes/class-form-post-type.php:90
+msgid "Search forms"
+msgstr "Buscar formularios"
+
+#: modules/forms/includes/class-form-post-type.php:91
+msgid "No forms found."
+msgstr "No hay formularios."
+
+#: modules/forms/includes/class-form-post-type.php:92
+msgid "No forms found in Trash."
+msgstr "No hay formularios en la papelera."
+
+#: modules/forms/includes/class-form-post-type.php:93
+msgid "Form published."
+msgstr "Formulario publicado."
+
+#: modules/forms/includes/class-form-post-type.php:94
+msgid "Form updated."
+msgstr "Formulario actualizado."
 
 #: modules/forms/includes/class-notifier.php:61
 msgid "No valid recipient."
@@ -3382,7 +3470,7 @@ msgstr "wpml"
 msgid "Show the current language as (code: “ES”, name: “Español”)"
 msgstr "Mostrar el idioma actual como (code: «ES», name: «Español»)"
 
-#: modules/language-switcher/blocks/language-switcher/render.php:116
+#: modules/language-switcher/blocks/language-switcher/render.php:117
 msgid "Language:"
 msgstr "Idioma:"
 
@@ -4597,17 +4685,8 @@ msgstr "Mensaje predefinido de WhatsApp."
 #~ msgid "Add sector"
 #~ msgstr "Añadir sector"
 
-#~ msgid "Edit sector"
-#~ msgstr "Editar sector"
-
-#~ msgid "Search sectors"
-#~ msgstr "Buscar sectores"
-
 #~ msgid "All sectors"
 #~ msgstr "Todos los sectores"
-
-#~ msgid "No sectors found."
-#~ msgstr "No hay sectores."
 
 #~ msgid "Client website"
 #~ msgstr "Web del cliente"
@@ -4728,9 +4807,6 @@ msgstr "Mensaje predefinido de WhatsApp."
 
 #~ msgid "No projects found."
 #~ msgstr "No hay proyectos."
-
-#~ msgid "No projects found in Trash."
-#~ msgstr "No hay proyectos en la papelera."
 
 #~ msgid "All projects"
 #~ msgstr "Todos los proyectos"

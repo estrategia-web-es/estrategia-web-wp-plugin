@@ -317,6 +317,7 @@ msgid "Cookies"
 msgstr "Galetes"
 
 #: modules/consent/includes/admin/class-cookies-page.php:84
+#: modules/forms/includes/class-form-post-type.php:148
 msgid "Sorry, you are not allowed to do that."
 msgstr "No tens permís per fer això."
 
@@ -1111,7 +1112,7 @@ msgid "Not registered: it has errors"
 msgstr "No registrat: té errors"
 
 #: modules/content-types/includes/admin/class-page.php:99
-#: modules/forms/includes/admin/class-forms-list.php:204
+#: modules/forms/includes/admin/class-forms-list.php:239
 #: modules/redirects/includes/admin/class-tables.php:89
 msgid "Edit"
 msgstr "Edita"
@@ -2677,6 +2678,24 @@ msgstr "administrador del web"
 msgid "Not shown to visitors. Edit it in the side panel."
 msgstr "Els visitants no el veuen. Es modifica al tauler lateral."
 
+#: modules/forms/assets/editor.js:466
+msgid "Choose a form"
+msgstr "Tria un formulari"
+
+#: modules/forms/assets/editor.js:469
+msgid "not published"
+msgstr "sense publicar"
+
+#: modules/forms/assets/editor.js:481
+msgid "Edit this form"
+msgstr "Edita aquest formulari"
+
+#: modules/forms/assets/editor.js:494
+msgid ""
+"Choose which of the site's forms to show here. Forms are created and edited "
+"in Forms → Forms."
+msgstr "Tria quin formulari del lloc es mostra aquí. Els formularis es creen i s'editen a Formularis → Formularis."
+
 #: modules/forms/blocks/checkbox/block.json
 msgctxt "block description"
 msgid ""
@@ -2701,34 +2720,48 @@ msgctxt "block title"
 msgid "Email field"
 msgstr "Camp de correu"
 
-#: modules/forms/blocks/form/block.json
-msgctxt "block description"
-msgid ""
-"A form built with blocks. Its fields go inside; its email notifications too."
-msgstr ""
-"Un formulari fet amb blocs. A dins hi van els seus camps, i també els seus "
-"avisos per correu."
-
+#: modules/forms/blocks/form-ref/block.json
 #: modules/forms/blocks/form/block.json
 msgctxt "block title"
 msgid "Form"
 msgstr "Formulari"
 
+#: modules/forms/blocks/form-ref/block.json
+msgctxt "block description"
+msgid ""
+"Shows one of the site's forms. The form itself is edited in Forms → Forms."
+msgstr "Mostra un dels formularis del lloc. El formulari s'edita a Formularis → Formularis."
+
+#: modules/forms/blocks/form-ref/block.json
 #: modules/forms/blocks/form/block.json
 #: modules/whatsapp/blocks/whatsapp/block.json
 msgctxt "block keyword"
 msgid "contact"
 msgstr "contacte"
 
+#: modules/forms/blocks/form-ref/block.json
 #: modules/forms/blocks/form/block.json
 msgctxt "block keyword"
 msgid "email"
 msgstr "correu"
 
+#: modules/forms/blocks/form-ref/block.json
 #: modules/forms/blocks/form/block.json
 msgctxt "block keyword"
 msgid "form"
 msgstr "formulari"
+
+#: modules/forms/blocks/form-ref/block.json
+msgctxt "block keyword"
+msgid "quote"
+msgstr "pressupost"
+
+#: modules/forms/blocks/form/block.json
+msgctxt "block description"
+msgid ""
+"The form itself, edited in Forms → Forms. Its fields go inside; its email "
+"notifications too. Pages show it with the «Form» block."
+msgstr "El formulari pròpiament dit, que s'edita a Formularis → Formularis. A dins hi van els seus camps, i també els seus avisos per correu. Les pàgines el mostren amb el bloc «Formulari»."
 
 #: modules/forms/blocks/notification/block.json
 msgctxt "block description"
@@ -2806,7 +2839,8 @@ msgstr "Enviaments de formularis"
 
 #: modules/forms/includes/admin/class-admin.php:47
 #: modules/forms/includes/admin/class-admin.php:59
-#: modules/forms/includes/admin/class-forms-list.php:217
+#: modules/forms/includes/admin/class-forms-list.php:254
+#: modules/forms/includes/class-form-post-type.php:84
 msgid "Forms"
 msgstr "Formularis"
 
@@ -2821,7 +2855,7 @@ msgstr "Paràmetres dels formularis"
 
 #: modules/forms/includes/admin/class-admin.php:76
 #: modules/forms/includes/admin/class-admin.php:265
-#: modules/forms/includes/admin/class-forms-list.php:211
+#: modules/forms/includes/admin/class-forms-list.php:246
 msgid "You are not allowed to see this page."
 msgstr "No tens permís per veure aquesta pàgina."
 
@@ -2853,7 +2887,7 @@ msgid "Data"
 msgstr "Dades"
 
 #: modules/forms/includes/admin/class-admin.php:143
-#: modules/forms/includes/admin/class-forms-list.php:224
+#: modules/forms/includes/admin/class-forms-list.php:273
 #: modules/forms/includes/admin/class-submissions-table.php:34
 msgid "Notifications"
 msgstr "Avisos"
@@ -2888,8 +2922,9 @@ msgid "Details"
 msgstr "Detalls"
 
 #: modules/forms/includes/admin/class-admin.php:156
-#: modules/forms/includes/admin/class-forms-list.php:222
+#: modules/forms/includes/admin/class-forms-list.php:271
 #: modules/forms/includes/admin/class-submissions-table.php:31
+#: modules/forms/includes/class-form-post-type.php:85
 msgid "Form"
 msgstr "Formulari"
 
@@ -2899,7 +2934,7 @@ msgstr "Pàgina"
 
 #: modules/forms/includes/admin/class-admin.php:159
 #: modules/forms/includes/admin/class-submissions-table.php:33
-#: modules/language-switcher/blocks/language-switcher/render.php:86
+#: modules/language-switcher/blocks/language-switcher/render.php:87
 msgid "Language"
 msgstr "Idioma"
 
@@ -3016,50 +3051,75 @@ msgid "Email footer"
 msgstr "Peu dels correus"
 
 #. translators: %d: post ID.
-#: modules/forms/includes/admin/class-forms-list.php:201
+#: modules/forms/includes/admin/class-forms-list.php:236
 #, php-format
 msgid "(no title, #%d)"
 msgstr "(sense títol, núm. %d)"
 
-#: modules/forms/includes/admin/class-forms-list.php:218
-msgid ""
-"The forms on this site and where they are. A form is edited in its block: "
-"open the page or pattern it is in. Its name and identifier are the ones the "
-"submissions log shows."
-msgstr ""
-"Els formularis del lloc i on són. Un formulari s'edita al seu bloc: obre la "
-"pàgina o el patró on és. El seu nom i el seu identificador són els que "
-"mostra el registre d'enviaments."
+#: modules/forms/includes/admin/class-forms-list.php:256
+#: modules/forms/includes/class-form-post-type.php:86
+#: modules/forms/includes/class-form-post-type.php:87
+msgid "Add form"
+msgstr "Afegeix un formulari"
 
-#: modules/forms/includes/admin/class-forms-list.php:223
+#: modules/forms/includes/admin/class-forms-list.php:259
+msgid ""
+"The forms on this site and where they are used. Edit a form here; to show it "
+"on a page, add the «Form» block and choose it. Its name and identifier are "
+"the ones the submissions log shows."
+msgstr "Els formularis del lloc i on s'usen. Edita aquí cada formulari; per mostrar-lo en una pàgina, afegeix el bloc «Formulari» i tria'l. El seu nom i el seu identificador són els que mostra el registre d'enviaments."
+
+#. translators: %d: number of forms written inside pages or patterns.
+#: modules/forms/includes/admin/class-forms-list.php:264
+#, php-format
+msgid ""
+"%d form is still written inside a page or a pattern. Move it to its own form "
+"with the command «wp estrategia-web migrate-forms» (try it first with --dry-"
+"run)."
+msgid_plural ""
+"%d forms are still written inside a page or a pattern. Move them to their "
+"own forms with the command «wp estrategia-web migrate-forms» (try it first "
+"with --dry-run)."
+msgstr[0] "%d formulari encara és escrit dins una pàgina o un patró. Passa'l a un formulari propi amb l'ordre «wp estrategia-web migrate-forms» (prova-la abans amb --dry-run)."
+msgstr[1] "%d formularis encara són escrits dins una pàgina o un patró. Passa'ls a formularis propis amb l'ordre «wp estrategia-web migrate-forms» (prova-la abans amb --dry-run)."
+
+#: modules/forms/includes/admin/class-forms-list.php:272
 msgid "Where it is"
 msgstr "On és"
 
-#: modules/forms/includes/admin/class-forms-list.php:226
+#: modules/forms/includes/admin/class-forms-list.php:275
 msgid "Also in"
 msgstr "També en"
 
-#: modules/forms/includes/admin/class-forms-list.php:232
+#: modules/forms/includes/admin/class-forms-list.php:281
 msgid ""
-"There are no forms yet. Add a «Form» block to a page or a synced pattern."
-msgstr ""
-"Encara no hi ha formularis. Afegeix un bloc «Formulari» a una pàgina o a un "
-"patró sincronitzat."
+"There are no forms yet. Add one with «Add form», then show it on a page with "
+"the «Form» block."
+msgstr "Encara no hi ha formularis. Crea'n un amb «Afegeix un formulari» i mostra'l en una pàgina amb el bloc «Formulari»."
 
-#: modules/forms/includes/admin/class-forms-list.php:237
+#: modules/forms/includes/admin/class-forms-list.php:286
 msgid "(no name)"
 msgstr "(sense nom)"
 
-#: modules/forms/includes/admin/class-forms-list.php:246
+#: modules/forms/includes/admin/class-forms-list.php:295
+#: modules/forms/includes/admin/class-forms-list.php:323
 msgid "Used in:"
 msgstr "S'utilitza a:"
 
-#: modules/forms/includes/admin/class-forms-list.php:253
+#: modules/forms/includes/admin/class-forms-list.php:313
+msgid "Not used on any page yet."
+msgstr "Encara no s'usa en cap pàgina."
+
+#: modules/forms/includes/admin/class-forms-list.php:317
+msgid "Written inside this content (not migrated)."
+msgstr "Escrit dins aquest contingut (sense migrar)."
+
+#: modules/forms/includes/admin/class-forms-list.php:330
 msgid "No page uses this pattern."
 msgstr "Cap pàgina no utilitza aquest patró."
 
 #. translators: %d: number of email notifications.
-#: modules/forms/includes/admin/class-forms-list.php:262
+#: modules/forms/includes/admin/class-forms-list.php:339
 #, php-format
 msgid "%d notification"
 msgid_plural "%d notifications"
@@ -3067,7 +3127,7 @@ msgstr[0] "%d avís"
 msgstr[1] "%d avisos"
 
 #. translators: %d: position of the notification in the form.
-#: modules/forms/includes/admin/class-forms-list.php:270
+#: modules/forms/includes/admin/class-forms-list.php:347
 #, php-format
 msgid "Notification %d"
 msgstr "Avís %d"
@@ -3100,30 +3160,58 @@ msgstr "Tots enviats"
 msgid "Some failed"
 msgstr "Algun ha fallat"
 
-#: modules/forms/includes/class-blocks.php:80
+#: modules/forms/includes/class-blocks.php:81
 msgid ""
 "The message could not be sent. Please check your connection and try again."
 msgstr ""
 "No s'ha pogut enviar el missatge. Comprova la connexió i torna-ho a provar."
 
-#: modules/forms/includes/class-blocks.php:103
+#: modules/forms/includes/class-blocks.php:104
 msgid "Leave this field empty"
 msgstr "Deixa aquest camp buit"
 
-#: modules/forms/includes/class-blocks.php:195
+#: modules/forms/includes/class-blocks.php:232
 msgid "Choose an option"
 msgstr "Tria una opció"
 
-#: modules/forms/includes/class-blocks.php:221
+#: modules/forms/includes/class-blocks.php:258
 msgid "Send"
 msgstr "Envia"
 
 #. translators: the text between braces becomes the link to the privacy policy.
 #. translators: the text between braces becomes the link to the privacy policy; {text|url} links to that url.
-#: modules/forms/includes/class-blocks.php:270
-#: modules/forms/includes/class-blocks.php:296
+#: modules/forms/includes/class-blocks.php:307
+#: modules/forms/includes/class-blocks.php:333
 msgid "I have read and accept the {privacy policy}."
 msgstr "He llegit i accepto la {política de privadesa}."
+
+#: modules/forms/includes/class-form-post-type.php:88
+msgid "Edit form"
+msgstr "Edita el formulari"
+
+#: modules/forms/includes/class-form-post-type.php:89
+msgid "New form"
+msgstr "Formulari nou"
+
+#: modules/forms/includes/class-form-post-type.php:90
+msgid "Search forms"
+msgstr "Cerca formularis"
+
+#: modules/forms/includes/class-form-post-type.php:91
+msgid "No forms found."
+msgstr "No s'ha trobat cap formulari."
+
+#: modules/forms/includes/class-form-post-type.php:92
+msgid "No forms found in Trash."
+msgstr "No s'ha trobat cap formulari a la paperera."
+
+#: modules/forms/includes/class-form-post-type.php:93
+msgid "Form published."
+msgstr "S'ha publicat el formulari."
+
+#: modules/forms/includes/class-form-post-type.php:94
+msgid "Form updated."
+msgstr "S'ha actualitzat el formulari."
 
 #: modules/forms/includes/class-notifier.php:61
 msgid "No valid recipient."
@@ -3349,7 +3437,7 @@ msgstr "wpml"
 msgid "Show the current language as (code: “ES”, name: “Español”)"
 msgstr "Mostra l'idioma actual com a (code: «CA», name: «Català»)"
 
-#: modules/language-switcher/blocks/language-switcher/render.php:116
+#: modules/language-switcher/blocks/language-switcher/render.php:117
 msgid "Language:"
 msgstr "Idioma:"
 
@@ -4562,17 +4650,8 @@ msgstr "Missatge predefinit de WhatsApp."
 #~ msgid "Add sector"
 #~ msgstr "Afegeix un sector"
 
-#~ msgid "Edit sector"
-#~ msgstr "Edita el sector"
-
-#~ msgid "Search sectors"
-#~ msgstr "Cerca sectors"
-
 #~ msgid "All sectors"
 #~ msgstr "Tots els sectors"
-
-#~ msgid "No sectors found."
-#~ msgstr "No s'ha trobat cap sector."
 
 #~ msgid "Client website"
 #~ msgstr "Web del client"
@@ -4694,9 +4773,6 @@ msgstr "Missatge predefinit de WhatsApp."
 
 #~ msgid "No projects found."
 #~ msgstr "No s'ha trobat cap projecte."
-
-#~ msgid "No projects found in Trash."
-#~ msgstr "No s'ha trobat cap projecte a la paperera."
 
 #~ msgid "All projects"
 #~ msgstr "Tots els projectes"

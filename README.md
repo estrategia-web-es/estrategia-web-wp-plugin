@@ -15,7 +15,7 @@ archived) and four blocks registered by the theme. **The public names of
 filters): what changed is where the code lives. The general framework is in
 [armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md](E:/Repositories/armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md).
 
-- Slug, folder and text domain: `estrategia-web` (`estrategia-web/estrategia-web.php`) · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · version **1.7.0**
+- Slug, folder and text domain: `estrategia-web` (`estrategia-web/estrategia-web.php`) · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · version **1.9.0**
 - The repo is still called `armazon-wp-sitio`; the plugin folder on a site is `estrategia-web/`.
 - No dependencies, no `node_modules`, no build step.
 
@@ -74,7 +74,8 @@ Dashboard), that opens on Company details:
 | Modules | `estrategia-web` | always last, grouped by the modules' `Category` |
 
 **Forms** keeps its own top-level item: **Forms** (the list of the site's
-forms, where each one is, its notifications), **Submissions**, **Settings**.
+forms, where each one is, its notifications; since 1.9.0 the form posts,
+with «Add form» and where each one is used), **Submissions**, **Settings**.
 
 Old URLs: `estrategia-web-cookies` and `estrategia-web-google` redirect to
 their tab; `estrategia-web-site`, `estrategia-web` and
@@ -129,9 +130,9 @@ code, with the prefix of its row.
 
 | What | Prefix | Today's names |
 |---|---|---|
-| Post types | `eweb_` (≤ 20 characters in total) | `eweb_client`, `eweb_testimonial`, `eweb_location`, `eweb_project`, `eweb_portfolio` (unreleased, 1.2.0; unprefixed up to 1.1.0); `eweb_content_type` (private: the content-types module's definitions, one per type) |
+| Post types | `eweb_` (≤ 20 characters in total) | `eweb_client`, `eweb_testimonial`, `eweb_location`, `eweb_project`, `eweb_portfolio` (unreleased, 1.2.0; unprefixed up to 1.1.0); `eweb_content_type` (private: the content-types module's definitions, one per type); `eweb_form` (1.9.0, not public: the forms module's form posts, REST base `eweb-forms`) |
 | Taxonomies | `eweb_` | `eweb_client_sector`, `eweb_project_category`, `eweb_portfolio_category` (same) |
-| Blocks | `estrategia-web/`, `estrategia-web-site/`, `estrategia-web-forms/` | `estrategia-web/carousel`, `/map`, `/whatsapp`, `/language-switcher`, `/social-links`, `/cookie-table`; `estrategia-web-site/consent`; `estrategia-web-forms/form`, `/text`, `/email`, `/tel`, `/textarea`, `/select`, `/checkbox`, `/submit`, `/notification` |
+| Blocks | `estrategia-web/`, `estrategia-web-site/`, `estrategia-web-forms/` | `estrategia-web/carousel`, `/map`, `/whatsapp`, `/language-switcher`, `/social-links`, `/cookie-table`; `estrategia-web-site/consent`; `estrategia-web-forms/form`, `/text`, `/email`, `/tel`, `/textarea`, `/select`, `/checkbox`, `/submit`, `/notification`, `/form-ref` (1.9.0) |
 | Options | `estrategia_web_` | `estrategia_web_site`, `estrategia_web_modules`, `estrategia_web_modules_known`, `estrategia_web_forms_settings`, `estrategia_web_forms_db_version`, `estrategia_web_forms_last_purge`, `estrategia_web_forms_migrations_log`, `estrategia_web_cookies`, `estrategia_web_cookies_settings`, `estrategia_web_google_tags`, `estrategia_web_map_google_seen`, `estrategia_web_redirects_settings`, `estrategia_web_redirects_db_version`, `estrategia_web_social_links`, `estrategia_web_uploads`, `estrategia_web_whatsapp_phone`, `estrategia_web_whatsapp_message`, `estrategia_web_content_types_hash`, `estrategia_web_content_types_wpml_pending`, `estrategia_web_content_types_wpml_slugs` |
 | Post meta | `estrategia_web_` | those of section 3, all of them (unreleased: `client_url`, `testimonial_role` and `testimonial_client`, from before 1.0.0, became `estrategia_web_…`; the old keys are read aliases until 2.0.0, see «Names») |
 | Tables | `{prefix}estrategia_web_` | `estrategia_web_forms_submissions`, `estrategia_web_forms_definitions`, `estrategia_web_redirects` |
@@ -794,6 +795,10 @@ tests expect English; their `reset()` marks it and goes back to `en_US` (see
 | [menu](tests/menu.test.mjs) | 2 | (1.7.0) the «Estrategia Web» item right after the Dashboard and its submenu order; old URLs (`estrategia-web-cookies`, `-google` redirect to their tab; `-site` and `estrategia-web` unchanged); `site` loads with a saved list that lacks it; the Modules screen grouped, without `site` |
 | [settings-page](tests/settings-page.test.mjs) | 2 | (1.7.0) each tab iff its module is on; saving Media, Company details and Analytics does not wipe the other screens' keys of `estrategia_web_site`; saving WordPress's Settings → Media does not reset uploads |
 | [forms/forms-list](modules/forms/tests/forms-list.test.mjs) | 2 | (1.7.0) «Forms → Forms»: a form inside a synced pattern and the pages using it, notifications with their recipients, drafts; a mention in text is not a form; the Forms menu opens on the list |
+| [forms/form-migration-plan](modules/forms/tests/form-migration-plan.test.mjs) | 1 | (1.9.0) the forms migrator's plan without WordPress: form trees in a content (in groups, self-closing, pre-1.0.0 names; `form-ref` is not one), one form post per identifier and language (never unified across identifiers), a copied form reported and compared, translations by identifier, an existing form post reused, broken delimiters left alone, the replacement byte for byte |
+| [forms/form-ref](modules/forms/tests/form-ref.test.mjs) | 2 | (1.9.0) the «Form» reference block renders the same `<form>` as the inline tree, submits and logs like it (with and without JS), passes a synced pattern's preselection on, renders nothing for a draft or a wrong reference; `/wp/v2/eweb-forms` only for whoever edits pages |
+| [forms/form-migration](modules/forms/tests/form-migration.test.mjs) | 2 | (1.9.0) `migrate-forms`: dry run writes nothing; real run creates one form post per identifier (a copy reported), replaces each tree byte for byte, keeps the original in `_eweb_forms_migration_backup`; after it the pages render, the preselection holds, submissions join the old ones, «Forms → Forms» shows where each form is used; second run «ya» |
+| [forms/form-migration-wpml](modules/forms/tests/form-migration-wpml.test.mjs) | 2, WPML | (1.9.0) the migrated Contacto/Contact: `eweb_form` translatable, es and en form posts in one translation group, each page its language's form, a reference to the Spanish form post shows the English one under `/en/` |
 | [consent/cookies](modules/consent/tests/cookies.test.mjs) | 2 | detector: names only, 202, 429 per client and per hour, 400 with more than 60, 403 from another origin or when off; (1.7.0) a logged-in user's report records nothing and their page carries no detector; admin route by permissions; policy table (only confirmed, by category, in Spanish, block and shortcode, empty prints nothing); «Preferences» added by the administrator and aliases when declaring, without changing the usual revision |
 | [consent/cookies-browser](modules/consent/tests/cookies-browser.test.mjs) | 3 | on accepting, the browser sends only names (it checks the request body) and does not repeat; rejecting sends nothing; reopening from a link and a class; the Cookies screen confirms and the table shows it |
 | [google-tags/google-tags](modules/google-tags/tests/google-tags.test.mjs) | 2 | off by default; empty prints nothing; `default` denied first and no Google `<script src>`; categories per tag; conversion only with its account; invalid ids 400; without `consent` it does not load |

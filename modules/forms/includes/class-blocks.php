@@ -38,6 +38,7 @@ final class Blocks {
 		'checkbox'     => 'render_field',
 		'submit'       => 'render_submit',
 		'notification' => 'render_nothing',
+		'form-ref'     => 'render_form_ref', // 1.9.0: a form post (eweb_form) shown in a page.
 	);
 
 	public const RESULT_PARAM = 'af_result';
@@ -49,7 +50,7 @@ final class Blocks {
 		wp_register_script(
 			'estrategia-web-forms-editor',
 			ESTRATEGIA_WEB_FORMS_URL . 'assets/editor.js',
-			array( 'wp-blocks', 'wp-block-editor', 'wp-components', 'wp-element', 'wp-i18n', 'wp-data' ),
+			array( 'wp-blocks', 'wp-block-editor', 'wp-components', 'wp-element', 'wp-i18n', 'wp-data', 'wp-core-data', 'wp-server-side-render', 'wp-url' ),
 			ESTRATEGIA_WEB_FORMS_VERSION,
 			true
 		);
@@ -112,6 +113,42 @@ final class Blocks {
 		</form>
 		<?php
 		return (string) ob_get_clean() . self::announce( $dom_id, $result );
+	}
+
+	/**
+	 * The «Formulario» reference block (1.9.0): renders the form post it
+	 * points to, in the current language (Form_Post_Type::resolve()),
+	 * EXACTLY as the same tree rendered inline: the post's blocks become
+	 * this block's inner blocks and are rendered as such, the way core's
+	 * synced pattern (core/block) does it in WordPress 7.1. Not with
+	 * do_blocks() or render_block() on the side, and that is the point:
+	 * - the context reaches the form's blocks. A reference inside a synced
+	 *   pattern gets the pattern's «pattern/overrides» (core/block PROVIDES it
+	 *   to its inner blocks since 7.x, it is no longer a global filter), and
+	 *   the dropdown's per-page preselection (class-preselect.php, source 3)
+	 *   keeps working. Lavandería's quote form lives exactly like that.
+	 * - The Interactivity API, the snapshot (Definitions, post_id = the page
+	 *   being viewed), the token, the honeypot, the no-JS return: all of it
+	 *   is render_form(), untouched.
+	 * Nothing (empty string) when the reference points nowhere: no form, not
+	 * published, or the same form already being rendered higher up (a loop).
+	 * In the editor the block shows its own picker (assets/editor.js).
+	 */
+	public static function render_form_ref( array $attributes, string $content, \WP_Block $block ): string {
+		static $rendering = array();
+		$id = Form_Post_Type::resolve( (int) ( $attributes['ref'] ?? 0 ) );
+		if ( ! $id || isset( $rendering[ $id ] ) ) {
+			return '';
+		}
+		$rendering[ $id ] = true;
+
+		$block->parsed_block['innerBlocks']  = parse_blocks( (string) get_post_field( 'post_content', $id, 'raw' ) );
+		$block->parsed_block['innerContent'] = array_fill( 0, count( $block->parsed_block['innerBlocks'] ), null );
+		$block->refresh_context_dependents();
+		$html = $block->render( array( 'dynamic' => false ) );
+
+		unset( $rendering[ $id ] );
+		return $html;
 	}
 
 	/**

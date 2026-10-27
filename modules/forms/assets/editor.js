@@ -434,4 +434,81 @@
 		},
 		save: () => null,
 	} );
+
+	/* ------------------------------------------------------------------ */
+	/* Form reference (1.9.0)                                              */
+	/* ------------------------------------------------------------------ */
+
+	// A page shows a form post (eweb_form) with this block: a picker, the
+	// form as the site will render it (server side, disabled) and a link to
+	// edit it. The form itself is edited in its own post, never here. Rules
+	// and the render: includes/class-form-post-type.php and
+	// Blocks::render_form_ref().
+	const { Disabled, Placeholder, Spinner, ExternalLink } = wp.components;
+	const ServerSideRender = wp.serverSideRender;
+	const { addQueryArgs } = wp.url;
+
+	registerBlockType( 'estrategia-web-forms/form-ref', {
+		edit( { attributes, setAttributes } ) {
+			const forms = useSelect(
+				( select ) =>
+					select( 'core' ).getEntityRecords( 'postType', 'eweb_form', {
+						per_page: -1,
+						status: 'publish,draft,pending,future,private',
+						orderby: 'title',
+						order: 'asc',
+						_fields: 'id,title,status',
+					} ),
+				[]
+			);
+			const blockProps = useBlockProps();
+			const titleOf = ( f ) => ( f.title && f.title.rendered ) || '#' + f.id;
+			const options = [ { value: '0', label: __( 'Choose a form', 'estrategia-web' ) } ].concat(
+				( forms || [] ).map( ( f ) => ( {
+					value: String( f.id ),
+					label: titleOf( f ) + ( f.status !== 'publish' ? ' (' + __( 'not published', 'estrategia-web' ) + ')' : '' ),
+				} ) )
+			);
+			const picker = h( SelectControl, {
+				key: 'picker',
+				label: __( 'Form', 'estrategia-web' ),
+				value: String( attributes.ref || 0 ),
+				options,
+				onChange: ( v ) => setAttributes( { ref: parseInt( v, 10 ) || 0 } ),
+				__nextHasNoMarginBottom: true,
+			} );
+			const editLink = attributes.ref
+				? h( ExternalLink, { key: 'edit', href: addQueryArgs( 'post.php', { post: attributes.ref, action: 'edit' } ) }, __( 'Edit this form', 'estrategia-web' ) )
+				: null;
+			const newLink = h( ExternalLink, { key: 'new', href: addQueryArgs( 'post-new.php', { post_type: 'eweb_form' } ) }, __( 'Add form', 'estrategia-web' ) );
+
+			if ( ! attributes.ref ) {
+				return h(
+					'div',
+					blockProps,
+					h(
+						Placeholder,
+						{
+							icon: 'feedback',
+							label: __( 'Form', 'estrategia-web' ),
+							instructions: __( 'Choose which of the site\'s forms to show here. Forms are created and edited in Forms → Forms.', 'estrategia-web' ),
+						},
+						forms === null ? h( Spinner ) : picker,
+						h( 'p', { style: { width: '100%' } }, newLink )
+					)
+				);
+			}
+			return h(
+				'div',
+				blockProps,
+				h(
+					InspectorControls,
+					{ key: 'inspector' },
+					h( PanelBody, { title: __( 'Form', 'estrategia-web' ) }, picker, h( 'p', { key: 'links' }, editLink, ' · ', newLink ) )
+				),
+				h( Disabled, { key: 'preview' }, h( ServerSideRender, { block: 'estrategia-web-forms/form-ref', attributes: { ref: attributes.ref } } ) )
+			);
+		},
+		save: () => null,
+	} );
 } )( window.wp );

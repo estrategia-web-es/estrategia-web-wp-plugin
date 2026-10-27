@@ -6,7 +6,7 @@
 	"title": "Form",
 	"category": "widgets",
 	"icon": "feedback",
-	"description": "A form built with blocks. Its fields go inside; its email notifications too.",
+	"description": "The form itself, edited in Forms → Forms. Its fields go inside; its email notifications too. Pages show it with the «Form» block.",
 	"keywords": [ "contact", "form", "email" ],
 	"textdomain": "estrategia-web",
 	"attributes": {
@@ -20,6 +20,7 @@
 	},
 	"supports": {
 		"html": false,
+		"inserter": false,
 		"align": [ "wide", "full" ],
 		"spacing": { "margin": true, "padding": true },
 		"interactivity": true

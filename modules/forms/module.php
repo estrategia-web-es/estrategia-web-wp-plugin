@@ -15,7 +15,10 @@
  * estrategia-web-forms/…, REST routes estrategia-web-forms/v1/…, tables
  * {prefix}estrategia_web_forms_submissions and …_definitions, options
  * estrategia_web_forms_*, the WPML string context «estrategia-web-forms»
- * and the «Formularios» menu.
+ * and the «Formularios» menu. Since 1.9.0 also: the post type eweb_form
+ * (REST base eweb-forms), the reference block estrategia-web-forms/form-ref,
+ * the meta _eweb_forms_migration_backup and the WP-CLI command
+ * «estrategia-web migrate-forms».
  *
  * Constants: ESTRATEGIA_WEB_FORMS_DIR and _URL point to THIS folder;
  * ESTRATEGIA_WEB_FORMS_VERSION is the plugin's. The DATABASE version is
@@ -49,6 +52,8 @@ require_once __DIR__ . '/includes/class-submissions.php';
 require_once __DIR__ . '/includes/class-validator.php';
 require_once __DIR__ . '/includes/class-notifier.php';
 require_once __DIR__ . '/includes/class-blocks.php';
+require_once __DIR__ . '/includes/class-form-post-type.php'; // 1.9.0: the form as a post of its own (eweb_form).
+require_once __DIR__ . '/includes/class-form-migration.php'; // 1.9.0: wp estrategia-web migrate-forms.
 require_once __DIR__ . '/includes/class-rest.php';
 require_once __DIR__ . '/includes/class-cron.php';
 require_once __DIR__ . '/includes/admin/class-submissions-table.php';
@@ -60,6 +65,7 @@ add_action( 'plugins_loaded', array( Migrations::class, 'maybe_run' ) );
 add_action( 'init', array( Cron::class, 'schedule' ) );
 
 add_action( 'init', array( Blocks::class, 'register' ) );
+Form_Post_Type::boot();
 Legacy_Names::boot(); // The armazon-forms/… blocks as aliases (until 2.0.0).
 add_action( 'rest_api_init', array( Rest::class, 'register_routes' ) );
 add_action( Cron::HOOK, array( Cron::class, 'purge' ) );

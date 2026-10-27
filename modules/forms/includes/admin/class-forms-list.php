@@ -4,6 +4,16 @@
  * of the Forms menu. Read only: a form is edited where it lives (the block,
  * in the editor), and this page says WHERE that is and what it does.
  *
+ * SINCE 1.9.0 a form lives in a form post (eweb_form,
+ * class-form-post-type.php), so this is the list of form posts: they come
+ * first (the type sorts before page and wp_block), with «Add form» at the
+ * top, an Edit link, and «Used in»: the posts whose content has a
+ * «Formulario» reference block pointing to it (or, with WPML, to any of its
+ * translations) and, when one of those is a synced pattern, the pages using
+ * that pattern. The forms still written INSIDE a page or a pattern (a site
+ * that has not run «wp estrategia-web migrate-forms» yet) are still listed,
+ * after, with a notice saying how to move them.
+ *
  * What it lists: every post of ANY type (pages, posts, synced patterns
  * — wp_block —, template parts saved in the database…) in publish, draft,
  * pending, future or private, never revisions or trash, whose content has a
@@ -40,7 +50,11 @@
  *   «ref» match is checked with a regex for the same reason: ref 12 must not
  *   match ref 123.
  * - Tests: modules/forms/tests/forms-list.test.mjs (level 2: a form inside a
- *   synced pattern, the pages that use it, its notifications).
+ *   synced pattern, the pages that use it, its notifications) and, for the
+ *   form posts and «Used in», modules/forms/tests/form-migration.test.mjs.
+ * - Edge case (1.9.0): a reference inside a synced pattern. «Used in» names
+ *   the pattern and, under it, the pages using the pattern (one level, the
+ *   same rule as above).
  */
 
 namespace EstrategiaWeb\Forms;
@@ -130,6 +144,26 @@ final class Forms_List {
 	}
 
 	/**
+	 * The posts that show one of these form posts through a reference
+	 * block (1.9.0). Same LIKE-then-regex rule as pattern_users().
+	 *
+	 * @param int[] $form_ids The form post and its translations.
+	 * @return array<int, object{ID: int, post_title: string, post_type: string, post_status: string}>
+	 */
+	public static function form_users( array $form_ids ): array {
+		global $wpdb;
+		$form_ids = array_values( array_unique( array_filter( array_map( 'intval', $form_ids ) ) ) );
+		if ( ! $form_ids ) {
+			return array();
+		}
+		$statuses = implode( ',', array_fill( 0, count( self::STATUSES ), '%s' ) );
+		$like     = '%' . $wpdb->esc_like( '<!-- wp:' . Form_Post_Type::REF_BLOCK . ' {"ref":' ) . '%';
+		$posts    = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_title, post_type, post_status, post_content FROM {$wpdb->posts} WHERE post_type <> 'revision' AND post_status IN ($statuses) AND post_content LIKE %s ORDER BY post_type, post_title, ID", array_merge( self::STATUSES, array( $like ) ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery
+		$regex    = '/<!--\s+wp:' . preg_quote( Form_Post_Type::REF_BLOCK, '/' ) . '\s+\{"ref":(' . implode( '|', $form_ids ) . ')[,}]/';
+		return array_values( array_filter( (array) $posts, static fn( $p ) => (bool) preg_match( $regex, (string) $p->post_content ) ) );
+	}
+
+	/**
 	 * WPML: one row per form in the default language, with the languages it
 	 * is also in. Pure function.
 	 *
@@ -168,6 +202,7 @@ final class Forms_List {
 			$langs = array_values( array_unique( $langs ) );
 			sort( $langs );
 			$main['translations'] = $langs;
+			$main['ids']          = array_values( array_unique( array_map( static fn( $m ) => (int) $m['post_id'], $members ) ) ); // 1.9.0: every language's post, for «Used in».
 			$out[]                = $main;
 		}
 		return $out;
@@ -178,7 +213,7 @@ final class Forms_List {
 		$rows    = self::find();
 		$default = Language::wpml_active() ? apply_filters( 'wpml_default_language', null ) : null;
 		if ( ! is_string( $default ) || '' === $default ) {
-			return array_map( static fn( $r ) => $r + array( 'translations' => array() ), $rows );
+			return array_map( static fn( $r ) => $r + array( 'translations' => array(), 'ids' => array( $r['post_id'] ) ), $rows );
 		}
 		foreach ( $rows as $i => $row ) {
 			$details              = apply_filters( 'wpml_post_language_details', null, $row['post_id'] );
@@ -210,12 +245,26 @@ final class Forms_List {
 		if ( ! current_user_can( Admin::capability() ) ) {
 			wp_die( esc_html__( 'You are not allowed to see this page.', 'estrategia-web' ), 403 );
 		}
-		$rows = self::rows();
-		$wpml = Language::wpml_active();
+		$rows   = self::rows();
+		$wpml   = Language::wpml_active();
+		$inline = count( array_filter( $rows, static fn( $r ) => Form_Post_Type::TYPE !== $r['post_type'] ) );
+		$add    = current_user_can( 'edit_pages' ) ? admin_url( 'post-new.php?post_type=' . Form_Post_Type::TYPE ) : '';
 		?>
 		<div class="wrap estrategia-web-forms-list">
-			<h1><?php esc_html_e( 'Forms', 'estrategia-web' ); ?></h1>
-			<p><?php esc_html_e( 'The forms on this site and where they are. A form is edited in its block: open the page or pattern it is in. Its name and identifier are the ones the submissions log shows.', 'estrategia-web' ); ?></p>
+			<h1 class="wp-heading-inline"><?php esc_html_e( 'Forms', 'estrategia-web' ); ?></h1>
+			<?php if ( $add ) : ?>
+				<a class="page-title-action" href="<?php echo esc_url( $add ); ?>"><?php esc_html_e( 'Add form', 'estrategia-web' ); ?></a>
+			<?php endif; ?>
+			<hr class="wp-header-end">
+			<p><?php esc_html_e( 'The forms on this site and where they are used. Edit a form here; to show it on a page, add the «Form» block and choose it. Its name and identifier are the ones the submissions log shows.', 'estrategia-web' ); ?></p>
+			<?php if ( $inline ) : ?>
+				<div class="notice notice-warning inline estrategia-web-forms-list__inline-notice"><p>
+					<?php
+					/* translators: %d: number of forms written inside pages or patterns. */
+					echo esc_html( sprintf( _n( '%d form is still written inside a page or a pattern. Move it to its own form with the command «wp estrategia-web migrate-forms» (try it first with --dry-run).', '%d forms are still written inside a page or a pattern. Move them to their own forms with the command «wp estrategia-web migrate-forms» (try it first with --dry-run).', $inline, 'estrategia-web' ), $inline ) );
+					?>
+				</p></div>
+			<?php endif; ?>
 			<table class="widefat striped">
 				<thead>
 					<tr>
@@ -229,7 +278,7 @@ final class Forms_List {
 				</thead>
 				<tbody>
 				<?php if ( ! $rows ) : ?>
-					<tr><td colspan="<?php echo $wpml ? 4 : 3; ?>"><?php esc_html_e( 'There are no forms yet. Add a «Form» block to a page or a synced pattern.', 'estrategia-web' ); ?></td></tr>
+					<tr><td colspan="<?php echo $wpml ? 4 : 3; ?>"><?php esc_html_e( 'There are no forms yet. Add one with «Add form», then show it on a page with the «Form» block.', 'estrategia-web' ); ?></td></tr>
 				<?php endif; ?>
 				<?php foreach ( $rows as $row ) : ?>
 					<tr data-form-id="<?php echo esc_attr( $row['form_id'] ); ?>" data-post-id="<?php echo (int) $row['post_id']; ?>">
@@ -239,6 +288,34 @@ final class Forms_List {
 						</td>
 						<td class="estrategia-web-forms-list__where">
 							<?php echo self::place( $row['post_id'], $row['post_title'], $row['post_type'], $row['post_status'] ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in place(). ?>
+							<?php if ( Form_Post_Type::TYPE === $row['post_type'] ) : ?>
+								<?php $users = self::form_users( $row['ids'] ?? array( $row['post_id'] ) ); ?>
+								<div class="estrategia-web-forms-list__users">
+									<?php if ( $users ) : ?>
+										<?php esc_html_e( 'Used in:', 'estrategia-web' ); ?>
+										<ul style="margin:.3em 0 0 1.2em;list-style:disc">
+											<?php foreach ( $users as $user ) : ?>
+												<li data-post-id="<?php echo (int) $user->ID; ?>"><?php echo self::place( (int) $user->ID, (string) $user->post_title, (string) $user->post_type, (string) $user->post_status ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+													<?php if ( 'wp_block' === $user->post_type ) : ?>
+														<?php $pages = self::pattern_users( (int) $user->ID ); ?>
+														<?php if ( $pages ) : ?>
+															<ul style="margin:.2em 0 0 1.2em;list-style:circle">
+																<?php foreach ( $pages as $page ) : ?>
+																	<li data-post-id="<?php echo (int) $page->ID; ?>"><?php echo self::place( (int) $page->ID, (string) $page->post_title, (string) $page->post_type, (string) $page->post_status ); // phpcs:ignore WordPress.Security.EscapeOutput ?></li>
+																<?php endforeach; ?>
+															</ul>
+														<?php endif; ?>
+													<?php endif; ?>
+												</li>
+											<?php endforeach; ?>
+										</ul>
+									<?php else : ?>
+										<span class="description"><?php esc_html_e( 'Not used on any page yet.', 'estrategia-web' ); ?></span>
+									<?php endif; ?>
+								</div>
+							<?php else : ?>
+								<div class="description estrategia-web-forms-list__inline"><?php esc_html_e( 'Written inside this content (not migrated).', 'estrategia-web' ); ?></div>
+							<?php endif; ?>
 							<?php if ( 'wp_block' === $row['post_type'] ) : ?>
 								<?php $users = self::pattern_users( $row['post_id'] ); ?>
 								<div class="estrategia-web-forms-list__users">
