@@ -123,6 +123,19 @@ test("merge: a host that already has a local business on the page → ours steps
   assert.deepEqual(one("merge", host, ORG, [LB]).graph, host);
 });
 
+// 1.8.0. Seen red (27-10-2026) before organization() read «hours»: no openingHoursSpecification.
+test("a site WITHOUT locations: the company's hours make the Organization its type of business too, with its hours (and the host's Organization gets the type)", () => {
+  const HOURS = JSON.stringify({ tu: ["13:00-16:00", "20:00-23:30"], we: ["13:00-16:00", "20:00-23:30"] });
+  const org = one("organization", { ...COMPANY, hours: HOURS, type: "Restaurant" });
+  assert.deepEqual(org["@type"], ["Organization", "Restaurant"]);
+  assert.deepEqual(org.openingHoursSpecification.map((s) => [s.dayOfWeek, s.opens, s.closes]), [[["Tuesday", "Wednesday"], "13:00", "16:00"], [["Tuesday", "Wednesday"], "20:00", "23:30"]]);
+  assert.equal(one("organization", { ...COMPANY, hours: "", type: "Restaurant" })["@type"], "Organization", "no hours: a plain Organization, as before");
+  const host = { publisher: { "@type": ["Person", "Organization"], "@id": "https://x.test/#person", name: "RM" } };
+  const { graph } = one("merge", host, org, []);
+  assert.deepEqual(graph.publisher["@type"], ["Person", "Organization", "Restaurant"], "hours need a LocalBusiness type: it joins theirs");
+  assert.ok(graph.publisher.openingHoursSpecification);
+});
+
 test("standalone: one @graph, or nothing at all", () => {
   const g = one("standalone", ORG, [LB]);
   assert.equal(g["@context"], "https://schema.org");

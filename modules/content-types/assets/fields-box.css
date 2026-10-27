@@ -1,0 +1,59 @@
+/*
+ * The fields meta box (includes/class-fields-panel.php) — 1.8.0. Wide: the
+ * fields in a grid of columns that fold to one on a narrow screen; long
+ * ones (textarea, hours, image) take the whole row. How to maintain: a
+ * field kind that needs the whole row goes in render_fields()' $wide list,
+ * not here.
+ */
+.estrategia-web-ct-box .estrategia-web-ct-fields {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+	gap: 12px 24px;
+	padding: 8px 0 12px;
+}
+.estrategia-web-ct-box .estrategia-web-ct-field--wide {
+	grid-column: 1 / -1;
+}
+.estrategia-web-ct-box .estrategia-web-ct-field > label,
+.estrategia-web-ct-box .estrategia-web-ct-hours legend {
+	display: block;
+	font-weight: 600;
+	margin-bottom: 4px;
+}
+.estrategia-web-ct-box .estrategia-web-ct-field input:not([type="checkbox"]):not([type="hidden"]):not(.small-text),
+.estrategia-web-ct-box .estrategia-web-ct-field select,
+.estrategia-web-ct-box .estrategia-web-ct-field textarea {
+	width: 100%;
+	max-width: 40rem;
+}
+.estrategia-web-ct-box .estrategia-web-ct-group {
+	border-top: 1px solid #dcdcde;
+	padding-top: 4px;
+}
+.estrategia-web-ct-box .estrategia-web-ct-group > summary {
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 600;
+	padding: 8px 0;
+}
+.estrategia-web-ct-box .estrategia-web-ct-day {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	margin: 4px 0;
+}
+.estrategia-web-ct-box .estrategia-web-ct-day label {
+	min-width: 8em;
+}
+.estrategia-web-ct-box .estrategia-web-ct-image__preview {
+	display: block;
+	max-width: 240px;
+	height: auto;
+	margin-bottom: 8px;
+}
+.estrategia-web-ct-box .estrategia-web-ct-preview {
+	background: #f6f7f7;
+	border-left: 4px solid #72aee6;
+	padding: 8px 12px;
+	margin: 0 0 12px;
+}

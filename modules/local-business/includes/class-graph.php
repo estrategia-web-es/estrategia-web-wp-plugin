@@ -64,13 +64,20 @@ defined( 'ABSPATH' ) || exit;
 final class Graph {
 
 	/**
-	 * @param array $company id, name, url, logo, telephone, email, same_as[]
+	 * @param array $company id, name, url, logo, telephone, email, same_as[]; hours (stored «hours» JSON) and
+	 *                       type (a Types::ALL name), only for a site without locations (1.8.0)
 	 * @param array $departments LocalBusiness nodes (local_business() of each location, without parent)
 	 */
 	public static function organization( array $company, array $departments = array() ): array {
+		// 1.8.0: a site WITHOUT locations (a restaurant: the company is the business) gives its
+		// Company details hours here; the node is then also its type of business, the only kind
+		// schema.org lets have opening hours (Data::company() passes them only with no locations).
+		$hours = Hours::specification( $company['hours'] ?? '' );
+		$type  = $hours ? array_values( array_unique( array( 'Organization', Types::valid( $company['type'] ?? null ) ?? Types::DEFAULT ) ) ) : 'Organization';
 		return self::compact(
 			array(
-				'@type'      => 'Organization',
+				'@type'      => $type,
+				'openingHoursSpecification' => $hours,
 				'@id'        => (string) ( $company['id'] ?? '' ),
 				'name'       => (string) ( $company['name'] ?? '' ),
 				'url'        => (string) ( $company['url'] ?? '' ),
@@ -153,6 +160,10 @@ final class Graph {
 				if ( '@id' !== $key && '@type' !== $key && ! array_key_exists( $key, $theirs ) ) {
 					$theirs[ $key ] = $value;
 				}
+			}
+			if ( isset( $org['openingHoursSpecification'] ) && is_array( $org['@type'] ) ) {
+				// Hours need a LocalBusiness type: ours (Organization + the business type) joins theirs.
+				$theirs['@type'] = array_values( array_unique( array_merge( (array) ( $theirs['@type'] ?? array() ), $org['@type'] ) ) );
 			}
 			$host[ $host_org ] = $theirs;
 			$id                = (string) ( $theirs['@id'] ?? '' );

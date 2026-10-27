@@ -15,6 +15,12 @@
  *
  * Keys: `title`, the type's location_* fields (Content_Types) and the derived
  * `estrategia_web_location_phone_href` (tel:) and `estrategia_web_location_email_href` (mailto:).
+ * Since 1.8.0 also the DERIVED ones under their old meta names (the data is
+ * stored once; content-types' Location_Fields makes these from it):
+ * `estrategia_web_location_address` (text from the address parts),
+ * `_schedule` (text from the «hours» field), `_map_url` and `_map_embed`
+ * (from the map query) and `_static_map` (the media library image's URL).
+ * core/post-meta cannot show them: bind them through THIS source.
  * Text and URLs are rendered the same as in the company source
  * (Bindings::format): line breaks to <br> in text, esc_url_raw with
  * tel/mailto/http(s) in url/href.
@@ -47,6 +53,8 @@
  */
 
 namespace EstrategiaWeb\Site;
+
+use EstrategiaWeb\ContentTypes\Location_Fields;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -124,12 +132,30 @@ final class Location {
 			case 'estrategia_web_location_email_href':
 				return Links::mailto( $meta( 'estrategia_web_location_email' ) );
 		}
+		// 1.8.0: the old stored texts are DERIVED now, under the same keys (Location_Fields).
+		if ( class_exists( Location_Fields::class ) && in_array( $key, Location_Fields::LEGACY, true ) ) {
+			return match ( array_search( $key, Location_Fields::LEGACY, true ) ) {
+				'address'    => Location_Fields::address_text( $post ),
+				'schedule'   => Location_Fields::hours_text( $post ),
+				'map_url'    => Location_Fields::maps_url( $post ),
+				'map_embed'  => Location_Fields::embed_url( $post ),
+				'static_map' => Location_Fields::static_map_url( $post ),
+			};
+		}
 		return in_array( $key, Content_Types::meta_keys( self::TYPE ), true ) ? $meta( $key ) : '';
 	}
 
 	/** @return array<string,string> Human-readable name of each key, in order: the editor builds the list from this. */
 	public static function labels(): array {
+		$derived = class_exists( Location_Fields::class ) ? array(
+			'estrategia_web_location_address'    => __( 'Address (text)', 'estrategia-web' ),
+			'estrategia_web_location_schedule'   => __( 'Opening hours (text)', 'estrategia-web' ),
+			'estrategia_web_location_map_url'    => __( 'Google Maps link', 'estrategia-web' ),
+			'estrategia_web_location_map_embed'  => __( 'Map embed URL', 'estrategia-web' ),
+			'estrategia_web_location_static_map' => __( 'Static map image (URL)', 'estrategia-web' ),
+		) : array();
 		return array( 'title' => __( 'Location name', 'estrategia-web' ) )
+			+ $derived
 			+ Content_Types::meta_fields( self::TYPE )
 			+ array(
 				'estrategia_web_location_phone_href' => __( 'Phone (link)', 'estrategia-web' ),

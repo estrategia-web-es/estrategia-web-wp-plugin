@@ -241,7 +241,12 @@ final class Registrar {
 					)
 				);
 			}
-			if ( array_filter( $def['fields'], static fn( $f ) => $f['required'] ) ) {
+			// «fields_box: main» (1.8.0): the fields travel in the meta box's form, AFTER the REST save, so
+			// REST would refuse a publish whose required field is filled in right there. Its «required» is
+			// the classic one (check_required_classic(), on the meta box's save). Boundary case: the FIRST
+			// publish in the block editor is already done when the meta box posts, so an empty required
+			// field is «kept» (the notice asks for it), not turned into a draft.
+			if ( 'main' !== $def['fields_box'] && array_filter( $def['fields'], static fn( $f ) => $f['required'] ) ) {
 				add_filter( 'rest_pre_insert_' . $name, array( self::class, 'check_required' ), 10, 2 );
 			}
 		}

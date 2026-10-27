@@ -15,83 +15,57 @@
   "supports": ["title", "editor", "thumbnail", "excerpt", "page-attributes", "custom-fields"],
   "menu_position": 23,
   "wpml": "display-as-translated",
+  "fields_box": "main",
+  "groups": [
+    { "key": "contact", "label": { "en": "Contact", "es": "Contacto", "ca": "Contacte" } },
+    { "key": "address", "label": { "en": "Address", "es": "Dirección", "ca": "Adreça" } },
+    { "key": "hours", "label": { "en": "Opening hours", "es": "Horario", "ca": "Horari" } },
+    { "key": "map", "label": { "en": "Map", "es": "Mapa", "ca": "Mapa" } },
+    { "key": "google", "label": { "en": "For Google", "es": "Para Google", "ca": "Per a Google" }, "collapsed": true }
+  ],
   "fields": [
-    {
-      "name": "estrategia_web_location_address",
-      "type": "textarea",
-      "label": { "en": "Address", "es": "Dirección", "ca": "Adreça" },
-      "wpml": "translate"
-    },
     {
       "name": "estrategia_web_location_phone",
       "type": "tel",
       "label": { "en": "Phone", "es": "Teléfono", "ca": "Telèfon" },
-      "wpml": "copy"
+      "wpml": "copy",
+      "group": "contact"
     },
     {
       "name": "estrategia_web_location_email",
       "type": "email",
       "label": { "en": "Email", "es": "Correo electrónico", "ca": "Correu electrònic" },
-      "wpml": "copy"
-    },
-    {
-      "name": "estrategia_web_location_schedule",
-      "type": "textarea",
-      "label": { "en": "Opening hours", "es": "Horario", "ca": "Horari" },
-      "wpml": "translate"
-    },
-    {
-      "name": "estrategia_web_location_map_url",
-      "type": "url",
-      "label": { "en": "Google Maps link", "es": "Enlace a Google Maps", "ca": "Enllaç a Google Maps" },
-      "help": { "en": "Google Maps › Share › Copy link.", "es": "Google Maps › Compartir › Copiar enlace.", "ca": "Google Maps › Comparteix › Copia l'enllaç." },
-      "wpml": "copy"
-    },
-    {
-      "name": "estrategia_web_location_map_embed",
-      "type": "embed",
-      "label": { "en": "Map embed URL", "es": "URL para incrustar el mapa", "ca": "URL per incrustar el mapa" },
-      "help": { "en": "Google Maps › Share › Embed a map. You can paste the whole iframe code.", "es": "Google Maps › Compartir › Insertar un mapa. Puedes pegar el código del iframe entero.", "ca": "Google Maps › Comparteix › Insereix un mapa. Pots enganxar tot el codi de l'iframe." },
-      "wpml": "copy"
-    },
-    {
-      "name": "estrategia_web_location_static_map",
-      "type": "local_image",
-      "label": { "en": "Static map image (theme path or URL of this site)", "es": "Imagen del mapa estático (ruta del tema o URL de esta web)", "ca": "Imatge del mapa estàtic (camí del tema o URL d'aquest web)" },
-      "help": { "en": "Only if the picture is not in the media library: a theme path (assets/maps/place.webp) or a URL of this site. The picture above wins.", "es": "Solo si la imagen no está en la mediateca: una ruta del tema (assets/maps/sede.webp) o una URL de este sitio. Si hay imagen arriba, manda esa.", "ca": "Només si la imatge no és a la mediateca: un camí del tema (assets/maps/seu.webp) o un URL d'aquest lloc. Si hi ha imatge a dalt, mana aquesta." },
-      "wpml": "copy"
-    },
-    {
-      "name": "estrategia_web_location_static_map_id",
-      "type": "image",
-      "label": { "en": "Static map image (media library ID)", "es": "Imagen del mapa estático (ID de la mediateca)", "ca": "Imatge del mapa estàtic (ID de la mediateca)" },
-      "help": { "en": "Map picture shown before Google Maps loads (privacy: Google only loads after a click).", "es": "Imagen del mapa que se ve antes de cargar Google Maps (privacidad: Google solo se carga tras un clic).", "ca": "Imatge del mapa que es veu abans que es carregui Google Maps (privadesa: Google només es carrega després d'un clic)." },
-      "wpml": "copy"
+      "wpml": "copy",
+      "group": "contact"
     },
     {
       "name": "estrategia_web_location_street",
-      "type": "text",
-      "label": { "en": "Street address (for search engines)", "es": "Calle y número (para buscadores)", "ca": "Carrer i número (per als cercadors)" },
-      "help": { "en": "The address by parts is what Google reads (schema.org); the «Address» above is what the page shows. E.g. Calle Camp Franc, 11, Nave 14.", "es": "La dirección por partes es la que lee Google (schema.org); la «Dirección» de arriba es la que se ve en la página. P. ej. Calle Camp Franc, 11, Nave 14.", "ca": "L'adreça per parts és la que llegeix Google (schema.org); l'«Adreça» de dalt és la que es veu a la pàgina. P. ex. Carrer del Camp Franc, 11, Nau 14." },
-      "wpml": "copy"
+      "type": "textarea",
+      "label": { "en": "Street", "es": "Calle", "ca": "Carrer" },
+      "help": { "en": "One or two lines, as the page shows them: «Centro Comercial Maioris» and «Calle Imperial, 2, Local 12». Postal code and town go below.", "es": "Una o dos líneas, como se ven en la página: «Centro Comercial Maioris» y «Calle Imperial, 2, Local 12». El código postal y el municipio van debajo.", "ca": "Una o dues línies, com es veuen a la pàgina: «Centre Comercial Maioris» i «Carrer Imperial, 2, Local 12». El codi postal i el municipi van a sota." },
+      "wpml": "translate",
+      "group": "address"
     },
     {
       "name": "estrategia_web_location_postal_code",
       "type": "text",
       "label": { "en": "Postal code", "es": "Código postal", "ca": "Codi postal" },
-      "wpml": "copy"
+      "wpml": "copy",
+      "group": "address"
     },
     {
       "name": "estrategia_web_location_locality",
       "type": "text",
       "label": { "en": "Town or city", "es": "Municipio", "ca": "Municipi" },
-      "wpml": "copy"
+      "wpml": "copy",
+      "group": "address"
     },
     {
       "name": "estrategia_web_location_region",
       "type": "text",
       "label": { "en": "Province or region", "es": "Provincia o región", "ca": "Província o regió" },
-      "wpml": "copy"
+      "wpml": "copy",
+      "group": "address"
     },
     {
       "name": "estrategia_web_location_country",
@@ -99,14 +73,32 @@
       "label": { "en": "Country (two-letter code)", "es": "País (código de dos letras)", "ca": "País (codi de dues lletres)" },
       "help": { "en": "ISO 3166 code: ES for Spain, FR, PT, DE…", "es": "Código ISO 3166: ES para España, FR, PT, DE…", "ca": "Codi ISO 3166: ES per a Espanya, FR, PT, DE…" },
       "default": "ES",
-      "wpml": "copy"
+      "wpml": "copy",
+      "group": "address"
     },
     {
       "name": "estrategia_web_location_hours",
       "type": "hours",
-      "label": { "en": "Opening hours (for search engines)", "es": "Horario (para buscadores)", "ca": "Horari (per als cercadors)" },
-      "help": { "en": "Day by day, what Google reads (schema.org). The «Opening hours» text above is what the page shows: change both.", "es": "Día a día, lo que lee Google (schema.org). El texto «Horario» de arriba es lo que se ve en la página: cambia los dos.", "ca": "Dia a dia, el que llegeix Google (schema.org). El text «Horari» de dalt és el que es veu a la pàgina: canvia'ls tots dos." },
-      "wpml": "copy"
+      "label": { "en": "Opening hours", "es": "Horario", "ca": "Horari" },
+      "help": { "en": "Day by day. The page shows it as a sentence («Open every day / 8:00am – 11:00pm») and Google reads it as it is.", "es": "Día a día. La página lo enseña como frase («Abierto todos los días / De 8:00 a 23:00») y Google lo lee tal cual.", "ca": "Dia a dia. La pàgina el mostra com a frase («Obert cada dia / De 8:00 a 23:00») i Google el llegeix tal qual." },
+      "wpml": "copy",
+      "group": "hours"
+    },
+    {
+      "name": "estrategia_web_location_map_query",
+      "type": "text",
+      "label": { "en": "What to search on Google Maps", "es": "Qué buscar en Google Maps", "ca": "Què cal cercar a Google Maps" },
+      "help": { "en": "The exact name of the Google Business profile (it shows the business's card) or, without one, the address. The map and «Open in Google Maps» are made from it.", "es": "El nombre exacto de la ficha de Google Business (enseña la ficha del negocio) o, si no hay, la dirección. El mapa y «Abrir en Google Maps» salen de aquí.", "ca": "El nom exacte de la fitxa de Google Business (mostra la fitxa del negoci) o, si no n'hi ha, l'adreça. El mapa i «Obre a Google Maps» surten d'aquí." },
+      "wpml": "copy",
+      "group": "map"
+    },
+    {
+      "name": "estrategia_web_location_static_map_id",
+      "type": "image",
+      "label": { "en": "Static map image", "es": "Imagen del mapa estático", "ca": "Imatge del mapa estàtic" },
+      "help": { "en": "Map picture shown before Google Maps loads (privacy: Google only loads after a click). From the media library.", "es": "Imagen del mapa que se ve antes de cargar Google Maps (privacidad: Google solo se carga tras un clic). De la mediateca.", "ca": "Imatge del mapa que es veu abans que es carregui Google Maps (privadesa: Google només es carrega després d'un clic). De la mediateca." },
+      "wpml": "copy",
+      "group": "map"
     },
     {
       "name": "estrategia_web_location_latitude",
@@ -115,7 +107,8 @@
       "help": { "en": "Google Maps › right-click on the place: the first of the two numbers (39.5379694). Empty or 0: not given.", "es": "Google Maps › clic derecho sobre el sitio: el primero de los dos números (39.5379694). Vacío o 0: no se da.", "ca": "Google Maps › clic dret sobre el lloc: el primer dels dos nombres (39.5379694). Buit o 0: no es dona." },
       "min": -90,
       "max": 90,
-      "wpml": "copy"
+      "wpml": "copy",
+      "group": "google"
     },
     {
       "name": "estrategia_web_location_longitude",
@@ -124,7 +117,8 @@
       "help": { "en": "The second of the two numbers (2.7349615).", "es": "El segundo de los dos números (2.7349615).", "ca": "El segon dels dos nombres (2.7349615)." },
       "min": -180,
       "max": 180,
-      "wpml": "copy"
+      "wpml": "copy",
+      "group": "google"
     },
     {
       "name": "estrategia_web_location_business_type",
@@ -136,7 +130,8 @@
         "LocalBusiness", "AccountingService", "Attorney", "AutoRepair", "AutomotiveBusiness", "Bakery", "BarOrPub", "BeautySalon", "BedAndBreakfast", "BikeStore", "BookStore", "Brewery", "CafeOrCoffeeShop", "Campground", "ChildCare", "ClothingStore", "DaySpa", "Dentist", "Distillery", "DryCleaningOrLaundry", "Electrician", "ElectronicsStore", "EmploymentAgency", "EntertainmentBusiness", "ExerciseGym", "FinancialService", "Florist", "FoodEstablishment", "FurnitureStore", "GardenStore", "GroceryStore", "HairSalon", "HardwareStore", "HealthAndBeautyBusiness", "HomeAndConstructionBusiness", "Hostel", "Hotel", "IceCreamShop", "InsuranceAgency", "JewelryStore", "LegalService", "Locksmith", "LodgingBusiness", "MedicalBusiness", "MedicalClinic", "MovingCompany", "NailSalon", "Notary", "Optician", "PetStore", "Pharmacy", "Physiotherapy", "Plumber", "ProfessionalService", "RealEstateAgent", "RecyclingCenter", "Restaurant", "SelfStorage", "ShoeStore", "ShoppingCenter", "SportingGoodsStore", "SportsActivityLocation", "SportsClub", "Store", "TouristInformationCenter", "ToyStore", "TravelAgency", "Winery"
       ],
       "default": "company",
-      "wpml": "copy"
+      "wpml": "copy",
+      "group": "google"
     }
   ]
 }

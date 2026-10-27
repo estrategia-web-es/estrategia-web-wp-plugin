@@ -12,9 +12,10 @@
     "set_featured_image": { "en": "Set logo or photo", "es": "Poner logo o foto", "ca": "Posa un logotip o una foto" }
   },
   "icon": "dashicons-groups",
-  "supports": ["title", "thumbnail", "excerpt", "page-attributes", "custom-fields"],
+  "supports": ["title", "editor", "thumbnail", "excerpt", "page-attributes", "custom-fields"],
   "menu_position": 21,
   "wpml": "display-as-translated",
+  "fields_box": "main",
   "taxonomies": [
     {
       "name": "eweb_client_sector",

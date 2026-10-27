@@ -209,8 +209,13 @@ require_once __DIR__ . '/includes/class-field-format.php';
 require_once __DIR__ . '/includes/class-bindings.php';
 require_once __DIR__ . '/includes/class-rest.php';
 require_once __DIR__ . '/includes/class-site-types.php';
+require_once __DIR__ . '/includes/class-location-data.php';
+require_once __DIR__ . '/includes/class-location-fields.php';
+require_once __DIR__ . '/includes/class-location-migration.php';
 
 Store::boot();
+Location_Fields::boot();
+Location_Migration::boot(); // Only the admin notice: the migration itself runs from WP-CLI (its header).
 Registrar::boot();
 Wpml::boot();
 Fields_Panel::boot();
