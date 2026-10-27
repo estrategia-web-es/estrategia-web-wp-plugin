@@ -200,7 +200,12 @@ final class Settings {
 				'whatsapp_message' => $string,
 				'address'          => $string,
 				'schedule'         => $string,
-				'hours'            => array( 'type' => array( 'string', 'object' ) ),
+				// The stored JSON text, or day → «08:00-14:00, 16:00-20:00» (a line) or a list of ranges.
+				'hours'            => array(
+					'type'                 => array( 'string', 'object' ),
+					'additionalProperties' => false,
+					'properties'           => array_fill_keys( array( 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su' ), array( 'type' => array( 'string', 'array' ), 'items' => array( 'type' => 'string' ) ) ),
+				),
 				'map_url'          => $string,
 				'social'           => array(
 					'type'                 => 'object',

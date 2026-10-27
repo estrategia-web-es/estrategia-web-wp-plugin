@@ -57,7 +57,6 @@ const meta = (l) => ({
   estrategia_web_location_hours: JSON.stringify(HOURS),
   estrategia_web_location_latitude: l.lat,
   estrategia_web_location_longitude: l.lon,
-  estrategia_web_location_static_map: BASE + "/wp-content/uploads/mapa-prueba.webp",
 });
 const tiedContent = (slug) => `<!-- wp:group -->
 <div class="wp-block-group"><!-- wp:paragraph ${JSON.stringify({ metadata: { bindings: { content: { source: "estrategia-web-site/location", args: { slug, key: "estrategia_web_location_phone" } } } } })} -->

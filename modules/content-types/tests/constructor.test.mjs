@@ -165,13 +165,19 @@ test("the special sanitizers, now field types: rating, embed, local_image and th
   const ok = await wp(`/eweb_testimonial/${op.json.id}`, { method: "POST", body: { meta: { estrategia_web_testimonial_client: client.json.id, estrategia_web_testimonial_rating: -2 } } });
   assert.equal(ok.json.meta.estrategia_web_testimonial_client, client.json.id);
   assert.equal(ok.json.meta.estrategia_web_testimonial_rating, 0);
+  // embed and local_image: the location template used them up to 1.7.0 (its map embed and static map
+  // path); since 1.8.0 they are derived there, so they are measured on a type of the site's own.
+  const place = { prefix: "gment_", name: "gment_place", labels: { singular: "Lugar", plural: "Lugares" }, fields: [{ name: "gment_embed", type: "embed", label: "Mapa" }, { name: "gment_picture", type: "local_image", label: "Imagen" }] };
+  const saved = await ew("", { method: "POST", body: { definition: place } });
+  assert.equal(saved.status, 201, saved.text);
+  await wp("/types"); // Registered from the next request.
   const iframe = '<iframe src="https://www.google.com/maps/embed?pb=!1m18&amp;x=1" width="600"></iframe>';
-  const loc = await wp("/eweb_location", { method: "POST", body: { title: "Sede", status: "publish", meta: { estrategia_web_location_map_embed: iframe, estrategia_web_location_static_map: "https://otro.test/mapa.webp" } } });
+  const loc = await wp("/gment_place", { method: "POST", body: { title: "Sede", status: "publish", meta: { gment_embed: iframe, gment_picture: "https://otro.test/mapa.webp" } } });
   assert.equal(loc.status, 201, loc.text);
-  assert.equal(loc.json.meta.estrategia_web_location_map_embed, "https://www.google.com/maps/embed?pb=!1m18&x=1");
-  assert.equal(loc.json.meta.estrategia_web_location_static_map, "", "another domain: refused");
-  const theme = await wp(`/eweb_location/${loc.json.id}`, { method: "POST", body: { meta: { estrategia_web_location_static_map: "./assets/maps/sede.webp" } } });
-  assert.equal(theme.json.meta.estrategia_web_location_static_map, "assets/maps/sede.webp");
+  assert.equal(loc.json.meta.gment_embed, "https://www.google.com/maps/embed?pb=!1m18&x=1");
+  assert.equal(loc.json.meta.gment_picture, "", "another domain: refused");
+  const theme = await wp(`/gment_place/${loc.json.id}`, { method: "POST", body: { meta: { gment_picture: "./assets/maps/sede.webp" } } });
+  assert.equal(theme.json.meta.gment_picture, "assets/maps/sede.webp"); // gment_place goes with constructor-reset (after()).
 });
 
 test("protections: the internal name is fixed once there are entries; a removed field keeps its data and comes back", async () => {

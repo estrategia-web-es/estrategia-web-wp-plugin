@@ -11,20 +11,24 @@ let maioris;
 before(async () => {
   await reset();
   await saveCompany({ enabled_types: ["location"], phone: "971 00 00 00" });
+  await wp("/types"); // The definition is stored on the save; registered from the next request.
   const make = async (title, slug, status, m) => {
     const r = await wp(`/${type("location")}`, { method: "POST", body: { title, slug, status, meta: m } });
     assert.equal(r.status, 201, r.text);
     return r.json;
   };
+  // 1.8.0: the address by parts (the text is derived), the map as a search query (the link is derived).
   maioris = await make("Maioris & Llucmajor", "maioris", "publish", {
-    estrategia_web_location_address: "Carrer de Maioris 3\n07620 Llucmajor",
+    estrategia_web_location_street: "Carrer de Maioris 3",
+    estrategia_web_location_postal_code: "07620",
+    estrategia_web_location_locality: "Llucmajor",
     estrategia_web_location_phone: "971 11 22 33",
     estrategia_web_location_email: "maioris@ejemplo.test",
-    estrategia_web_location_schedule: "L-V 8-20",
-    estrategia_web_location_map_url: "https://maps.google.com/?q=Maioris",
+    estrategia_web_location_hours: JSON.stringify({ mo: ["08:00-20:00"], tu: ["08:00-20:00"], we: ["08:00-20:00"], th: ["08:00-20:00"], fr: ["08:00-20:00"] }),
+    estrategia_web_location_map_query: "Maioris",
   });
-  await make("Palma location", "palma", "publish", { estrategia_web_location_address: "Carrer de Palma 1\n07001 Palma", estrategia_web_location_phone: "971 44 55 66" });
-  await make("Draft location", "borrador", "draft", { estrategia_web_location_phone: "971 99 99 99", estrategia_web_location_address: "Must not appear" });
+  await make("Palma location", "palma", "publish", { estrategia_web_location_street: "Carrer de Palma 1", estrategia_web_location_postal_code: "07001", estrategia_web_location_locality: "Palma", estrategia_web_location_phone: "971 44 55 66" });
+  await make("Draft location", "borrador", "draft", { estrategia_web_location_phone: "971 99 99 99", estrategia_web_location_street: "Must not appear" });
 });
 
 const between = (text, cls, tag) => text.match(new RegExp(`<${tag}[^>]*${cls}[^>]*>([\\s\\S]*?)</${tag}>`))?.[1];
@@ -56,9 +60,20 @@ test("by slug, from any page: button with text and url to the phone of the «mai
   assert.equal(href(text, "t-tel"), "tel:+34971112233");
   assert.match(text, /t-tel[^"]*"><a[^>]*>971 11 22 33<\/a>/, "the button text is the phone");
   assert.equal(href(text, "t-mail"), "mailto:maioris@ejemplo.test");
-  assert.equal(href(text, "t-map"), "https://maps.google.com/?q=Maioris");
+  assert.equal(href(text, "t-map"), "https://www.google.com/maps/search/?api=1&#038;query=Maioris", "derived from the query (1.8.0)");
   assert.equal(between(text, "t-title", "h2"), "Maioris &amp; Llucmajor", "the title, escaped");
-  assert.equal(between(text, "t-address", "p").replace(/\n/g, ""), "Carrer de Maioris 3<br>07620 Llucmajor");
+  assert.equal(between(text, "t-address", "p").replace(/\n/g, ""), "Carrer de Maioris 3<br>07620 Llucmajor", "derived from the parts (1.8.0)");
+});
+
+test("the derived hours text (1.8.0): from the «hours» field, in the site's language (es)", async () => {
+  const page = await seedPage(
+    `<!-- wp:paragraph ${JSON.stringify({ className: "t-hours", ...meta({ slug: "maioris", key: "estrategia_web_location_schedule" }) })} -->
+<p class="t-hours">x</p>
+<!-- /wp:paragraph -->`,
+    "sede-horario"
+  );
+  const { text } = await html(page.url);
+  assert.equal(between(text, "t-hours", "p").replace(/\n/g, ""), "Abierto de lunes a viernes<br>De 8:00 a 20:00");
 });
 
 test("a non-existent, draft or keyless location comes out empty; outside a location, a key without slug too", async () => {
