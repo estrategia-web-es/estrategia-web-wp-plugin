@@ -91,8 +91,8 @@ test("the constructor offers a template's new fields to a copy made before them,
   assert.equal(put.status, 200, JSON.stringify(put.json));
   assert.equal(put.json.missingFields.length, 9);
 
-  await p.goto(BASE + "/wp-admin/admin.php?page=estrategia-web-content-types");
-  await p.click('tr[data-type="eweb_location"] [data-action="edit"]');
+  // 1.8.0: each type has its own edit screen (the list's «Edit» links there).
+  await p.goto(BASE + "/wp-admin/admin.php?page=estrategia-web-content-types&type=eweb_location");
   const add = p.locator('[data-action="add-template-fields"]');
   await add.waitFor({ timeout: 20000 });
   assert.match(await p.locator("[data-template-fields]").textContent(), /\(9\)/);
@@ -101,7 +101,7 @@ test("the constructor offers a template's new fields to a copy made before them,
   const untouched = await ctApi("/eweb_location");
   assert.equal(untouched.json.definition.fields.length, 8, "nothing stored until the person saves");
   await p.click('[data-action="save"]');
-  await p.locator('tr[data-type="eweb_location"]').waitFor({ timeout: 20000 });
+  await p.locator("[data-saved]").waitFor({ timeout: 20000 }); // 1.8.0: the screen stays on the type after saving.
   const after = await ctApi("/eweb_location");
   assert.deepEqual(after.json.definition.fields.map((f) => f.name), before.json.definition.fields.map((f) => f.name), "the same fields, in the template's order");
   assert.deepEqual(after.json.missingFields, []);

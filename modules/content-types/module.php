@@ -104,11 +104,21 @@
  * classic-required.test.mjs («required» on the classic screen). The test site reads the
  * definitions in tests/fixtures/ (its mu-plugin, tests/wp/).
  * The constructor (17-10-2026): level 1 constructor-pure.test.mjs (the
- * templates validate, the template rules, Changes); level 2
- * constructor.test.mjs (the REST route, registration from the database,
- * templates, protections, redirects, export/import); level 3
+ * templates validate, the template rules, Changes) and, since 1.8.0,
+ * constructor-model.test.mjs (assets/constructor-model.js, what the screen
+ * writes into a definition); level 2 constructor.test.mjs (the REST route,
+ * registration from the database, templates, protections, redirects,
+ * export/import) and constructor-screens.test.mjs (the list table, list →
+ * edit → save with the page's nonce, the stale ?type= redirect); level 3
  * constructor-editor.test.mjs (create «Restaurantes» with three fields in
- * the panel, and its type and panel appear).
+ * the edit screen — tabs, collapsed rows, keyboard and drag reordering, a
+ * field group — and its type and panel appear).
+ *
+ * THE SCREENS (1.8.0, after ACF's field groups): a LIST of types (a
+ * WP_List_Table, includes/admin/class-types-table.php) and one EDIT screen
+ * per type, ?page=estrategia-web-content-types&type=<name>, with the
+ * settings in tabs and the fields as collapsed rows. The URLs and why:
+ * includes/admin/class-page.php.
  *
  * =========================================================================
  * HOW TO MAINTAIN
@@ -121,7 +131,14 @@
  *
  * - A key a person should set from the panel also needs its control in
  *   assets/constructor.js and its text in Page::strings() (a key without a
- *   control is kept, and editable in the panel's JSON box).
+ *   control is kept, and editable in the panel's JSON box). Its place: a
+ *   type's key in the tab a person would look in (General: names and
+ *   address; URLs & languages: the other languages and WPML; Taxonomies;
+ *   Advanced: the rest — fields_box and groups live there), a field's key in
+ *   the field's row (fieldBody(); «group» is a select fed by «groups»).
+ *   Boundary case, with a name: menu_position had no control until 1.8.0
+ *   and was kept through the JSON box all along — that is the fallback, not
+ *   a bug.
  *
  * - A NEW FIELD TYPE is seven places, in the same commit, and the level 1 test
  *   fails if the first two disagree:
@@ -222,6 +239,6 @@ Site_Types::boot(); // modules/site's old types → definitions, once; «enabled
 add_action( 'after_switch_theme', array( Loader::class, 'forget' ) );
 
 if ( is_admin() ) {
-	require_once __DIR__ . '/includes/admin/class-page.php';
+	require_once __DIR__ . '/includes/admin/class-page.php'; // It loads class-types-table.php (WP_List_Table) only on its own screen.
 	Page::boot();
 }
