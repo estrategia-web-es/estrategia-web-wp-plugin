@@ -42,6 +42,21 @@
     "hierarchical": { "type": "boolean", "default": false },
     "menu_position": { "type": "integer", "minimum": 0 },
     "wpml": { "$ref": "#/$defs/typeWpml" },
+    "fields_box": { "enum": ["sidebar", "main"], "default": "sidebar", "description": "Where the fields are edited: sidebar = the «<Singular> details» panel of the block editor; main = a wide meta box in the main area, under the content, with the fields in their groups. A type without editor always gets the meta box." },
+    "groups": {
+      "type": "array",
+      "description": "Sections of the main-area meta box, in order. A field joins one with «group». Fields without a group go first.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "label"],
+        "properties": {
+          "key": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+          "label": { "$ref": "#/$defs/text" },
+          "collapsed": { "type": "boolean", "default": false, "description": "Closed until clicked (data a person rarely changes)." }
+        }
+      }
+    },
     "taxonomies": {
       "type": "array",
       "items": {
@@ -145,6 +160,7 @@
         "required": { "type": "boolean", "description": "Publishing with it empty is refused: a 400 in the block editor; on the classic screen (types without editor) the post stays a draft, or keeps the previous value if it was already published." },
         "default": { "description": "A value the field could store: an option value for select, YYYY-MM-DD for date, a number within min/max, true/false. Not for image or relation." },
         "wpml": { "enum": ["copy", "translate", "ignore"], "description": "Default: translate for text and textarea, copy for the rest." },
+        "group": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "description": "The key of one of the definition's «groups»: the section of the main-area meta box it goes in." },
         "options": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/option" } },
         "post_type": {
           "oneOf": [

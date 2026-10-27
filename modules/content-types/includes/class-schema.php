@@ -33,9 +33,32 @@ final class Schema {
 	/** Prefixes a site may NOT use. eweb_ is Estrategia Web's own types; wp_ and _ are WordPress's. */
 	public const RESERVED_PREFIXES = array( 'eweb_', 'estrategia_web_', 'wp_', 'ew_' );
 
-	public const TYPE_KEYS = array( '$schema', 'template', 'prefix', 'name', 'slug', 'labels', 'description', 'icon', 'supports', 'public', 'has_archive', 'show_in_rest', 'hierarchical', 'menu_position', 'wpml', 'taxonomies', 'fields' );
+	public const TYPE_KEYS = array( '$schema', 'template', 'prefix', 'name', 'slug', 'labels', 'description', 'icon', 'supports', 'public', 'has_archive', 'show_in_rest', 'hierarchical', 'menu_position', 'wpml', 'fields_box', 'groups', 'taxonomies', 'fields' );
 	public const TAXONOMY_KEYS = array( 'name', 'slug', 'labels', 'hierarchical', 'public', 'show_in_rest', 'show_admin_column', 'wpml' );
-	public const FIELD_KEYS = array( 'name', 'type', 'label', 'help', 'required', 'default', 'wpml', 'options', 'post_type', 'min', 'max', 'integer', 'true_label', 'false_label' );
+	public const FIELD_KEYS = array( 'name', 'type', 'label', 'help', 'required', 'default', 'wpml', 'group', 'options', 'post_type', 'min', 'max', 'integer', 'true_label', 'false_label' );
+
+	/**
+	 * WHERE THE FIELDS ARE EDITED (1.8.0, David: «una página vacía y todos
+	 * los datos en el panel estrecho»): «sidebar» (default) is the «<Singular>
+	 * details» panel of the block editor's sidebar; «main» is a meta box in
+	 * the MAIN area, under the content, wide, with the fields in their
+	 * «groups». A type without «editor» always gets the meta box (WordPress
+	 * gives it the classic screen), whatever this says.
+	 */
+	public const FIELDS_BOX = array( 'sidebar', 'main' );
+
+	/**
+	 * Field names a template SHIPPED before and no longer does (1.8.0: the
+	 * location's free texts, duplicated by the data they were made of). A
+	 * site's stored copy still has them until it runs its migration
+	 * (wp estrategia-web migrate-location-data), and must keep validating —
+	 * a definition with ONE error is not registered at all, and the site
+	 * would lose its locations the day the plugin is updated. Template key →
+	 * names. Removed with the migration (2.0.0).
+	 */
+	public const RETIRED_FIELDS = array(
+		'location' => array( 'estrategia_web_location_address', 'estrategia_web_location_schedule', 'estrategia_web_location_map_url', 'estrategia_web_location_map_embed', 'estrategia_web_location_static_map' ),
+	);
 	/** Required in every «labels» (a type's and a taxonomy's). */
 	public const LABEL_KEYS = array( 'singular', 'plural' );
 	/**
@@ -139,6 +162,7 @@ final class Schema {
 				$names[] = (string) $field['name'];
 			}
 		}
+		$names = array_merge( $names, self::RETIRED_FIELDS[ (string) ( $template['template'] ?? '' ) ] ?? array() );
 		return array_values( array_filter( $names ) );
 	}
 
@@ -179,8 +203,59 @@ final class Schema {
 			$errors[] = sprintf( __( '“wpml” must be one of: %s.', 'estrategia-web' ), implode( ', ', self::TYPE_WPML ) );
 		}
 
+		if ( isset( $def['fields_box'] ) && ! in_array( $def['fields_box'], self::FIELDS_BOX, true ) ) {
+			/* translators: %s: list of allowed values */
+			$errors[] = sprintf( __( '“fields_box” must be one of: %s.', 'estrategia-web' ), implode( ', ', self::FIELDS_BOX ) );
+		}
+		$groups = self::check_groups( $def['groups'] ?? array(), $errors );
+
 		$errors = array_merge( $errors, self::check_taxonomies( $def['taxonomies'] ?? array(), $prefix ) );
-		return array_merge( $errors, self::check_fields( $def['fields'] ?? array(), $prefix ) );
+		return array_merge( $errors, self::check_fields( $def['fields'] ?? array(), $prefix, $groups ) );
+	}
+
+	/**
+	 * «groups» (1.8.0): the sections of the main-area meta box, in order —
+	 * [{"key": "address", "label": {…}, "collapsed": false}]. A field joins
+	 * one with «group»: "address". Fields without a group go first, untitled.
+	 *
+	 * @param string[] $errors Appended to.
+	 * @return string[] The valid group keys.
+	 */
+	private static function check_groups( $groups, array &$errors ): array {
+		if ( ! is_array( $groups ) || ! array_is_list( $groups ) ) {
+			$errors[] = __( '“groups” must be a list.', 'estrategia-web' );
+			return array();
+		}
+		$keys = array();
+		foreach ( $groups as $i => $group ) {
+			/* translators: %d: position in the list, from 1 */
+			$where = sprintf( __( 'groups[%d]', 'estrategia-web' ), $i + 1 );
+			if ( ! is_array( $group ) || array_is_list( $group ) ) {
+				/* translators: %s: where in the file */
+				$errors[] = sprintf( __( '%s: must be an object.', 'estrategia-web' ), $where );
+				continue;
+			}
+			$errors = array_merge( $errors, self::unknown_keys( $group, array( 'key', 'label', 'collapsed' ), $where . '.' ) );
+			$key    = $group['key'] ?? null;
+			if ( ! is_string( $key ) || ! preg_match( '/^[a-z][a-z0-9_]*$/', $key ) ) {
+				/* translators: %s: where in the file */
+				$errors[] = sprintf( __( '%s.key must be lowercase letters, digits and “_”, starting with a letter.', 'estrategia-web' ), $where );
+			} elseif ( in_array( $key, $keys, true ) ) {
+				/* translators: %s: a group key */
+				$errors[] = sprintf( __( 'The group “%s” is declared twice.', 'estrategia-web' ), $key );
+			} else {
+				$keys[] = $key;
+			}
+			if ( ! isset( $group['label'] ) || ! self::is_text( $group['label'] ) ) {
+				/* translators: %s: where in the file */
+				$errors[] = sprintf( __( '%s.label is required (a string or an object of locale → string).', 'estrategia-web' ), $where );
+			}
+			if ( isset( $group['collapsed'] ) && ! is_bool( $group['collapsed'] ) ) {
+				/* translators: %s: where in the file */
+				$errors[] = sprintf( __( '%s.collapsed must be true or false.', 'estrategia-web' ), $where );
+			}
+		}
+		return $keys;
 	}
 
 	/**
@@ -332,6 +407,8 @@ final class Schema {
 			'hierarchical'  => $def['hierarchical'] ?? false,
 			'menu_position' => $def['menu_position'] ?? null,
 			'wpml'          => $def['wpml'] ?? 'display-as-translated',
+			'fields_box'    => $def['fields_box'] ?? 'sidebar',
+			'groups'        => array_map( static fn( $g ) => array( 'key' => $g['key'], 'label' => $g['label'], 'collapsed' => (bool) ( $g['collapsed'] ?? false ) ), $def['groups'] ?? array() ),
 			'taxonomies'    => $taxonomies,
 			'fields'        => $fields,
 		);
@@ -366,6 +443,7 @@ final class Schema {
 			'default'   => $field['default'] ?? $empty,
 			// Text a person reads changes with the language; everything else is the same in all of them.
 			'wpml'      => $field['wpml'] ?? ( in_array( $type, array( 'text', 'textarea' ), true ) ? 'translate' : 'copy' ),
+			'group'     => $field['group'] ?? '',
 			'options'   => $options,
 			'post_type' => (array) ( $field['post_type'] ?? array() ),
 			'min'       => $field['min'] ?? null,
@@ -437,7 +515,8 @@ final class Schema {
 		return $errors;
 	}
 
-	private static function check_fields( $fields, ?string $prefix ): array {
+	/** @param string[] $groups The definition's group keys (a field's «group» must be one). */
+	private static function check_fields( $fields, ?string $prefix, array $groups = array() ): array {
 		if ( ! is_array( $fields ) || ! array_is_list( $fields ) ) {
 			return array( __( '“fields” must be a list.', 'estrategia-web' ) );
 		}
@@ -482,6 +561,10 @@ final class Schema {
 			if ( isset( $field['wpml'] ) && ! in_array( $field['wpml'], self::FIELD_WPML, true ) ) {
 				/* translators: 1: where in the file, 2: allowed values */
 				$errors[] = sprintf( __( '%1$s.wpml must be one of: %2$s.', 'estrategia-web' ), $where, implode( ', ', self::FIELD_WPML ) );
+			}
+			if ( isset( $field['group'] ) && ! in_array( $field['group'], $groups, true ) ) {
+				/* translators: 1: where in the file, 2: a value from the JSON file */
+				$errors[] = sprintf( __( '%1$s.group “%2$s” is not one of the definition’s «groups».', 'estrategia-web' ), $where, self::show( $field['group'] ) );
 			}
 			// Keys that only make sense for one type: a typo there would be silently ignored.
 			$only = array( 'options' => 'select', 'post_type' => 'relation', 'min' => 'number', 'max' => 'number', 'integer' => 'number', 'true_label' => 'boolean', 'false_label' => 'boolean' );
