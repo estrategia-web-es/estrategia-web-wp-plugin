@@ -18,6 +18,13 @@
  *   the errors per file, the hash option, the rewrite rules for the slugs,
  *   and the registered meta of each type.
  *
+ * - 1.8.0, the location data migration (tests/location-migration.test.mjs):
+ *   /location-legacy (POST) puts back the location definition a 1.7.0 site
+ *   stored (tests/fixtures/legacy/location-1.7.0.json, the 1.7.0 template,
+ *   keeping the current row's slug), /location-migrate (POST {dry}) runs
+ *   Location_Migration::run() — what WP-CLI would — and /location-meta
+ *   (GET ?id=) gives every meta of a post, hidden ones included.
+ *
  * How to maintain: a new fixture folder goes in the filter below; anything
  * that must be measured from inside WordPress goes in /state.
  */
@@ -134,6 +141,57 @@ add_action(
 						'rules'     => array_values( array_filter( array_keys( (array) get_option( 'rewrite_rules', array() ) ), static fn( $k ) => str_starts_with( $k, (string) $r['slug'] ) ) ),
 					);
 				},
+			)
+		);
+		register_rest_route(
+			$ns,
+			'/location-legacy',
+			array(
+				'methods'             => 'POST',
+				'permission_callback' => '__return_true',
+				'callback'            => static function () {
+					$file = WP_CONTENT_DIR . '/plugins/estrategia-web/modules/content-types/tests/fixtures/legacy/location-1.7.0.json';
+					$def  = json_decode( (string) file_get_contents( $file ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+					unset( $def['$schema'] );
+					$row = \EstrategiaWeb\ContentTypes\Store::get( 'eweb_location' );
+					if ( $row && is_array( $row['definition'] ) ) {
+						$def['slug'] = $row['definition']['slug'];
+					}
+					$id = \EstrategiaWeb\ContentTypes\Store::save( $def, true, $row ? (int) $row['id'] : 0 );
+					// Client and testimonial as 1.7.0 stored them: no fields_box, and the client without «editor».
+					foreach ( array( 'eweb_client', 'eweb_testimonial' ) as $name ) {
+						$other = \EstrategiaWeb\ContentTypes\Store::get( $name );
+						if ( $other && is_array( $other['definition'] ) ) {
+							$old = $other['definition'];
+							unset( $old['fields_box'] );
+							if ( 'eweb_client' === $name ) {
+								$old['supports'] = array_values( array_diff( (array) $old['supports'], array( 'editor' ) ) );
+							}
+							\EstrategiaWeb\ContentTypes\Store::save( $old, $other['active'], (int) $other['id'] );
+						}
+					}
+					delete_option( \EstrategiaWeb\ContentTypes\Location_Migration::DONE );
+					delete_option( \EstrategiaWeb\ContentTypes\Location_Migration::BACKUP );
+					return array( 'id' => $id );
+				},
+			)
+		);
+		register_rest_route(
+			$ns,
+			'/location-migrate',
+			array(
+				'methods'             => 'POST',
+				'permission_callback' => '__return_true',
+				'callback'            => static fn( WP_REST_Request $r ) => \EstrategiaWeb\ContentTypes\Location_Migration::run( (bool) $r['dry'] ),
+			)
+		);
+		register_rest_route(
+			$ns,
+			'/location-meta',
+			array(
+				'methods'             => 'GET',
+				'permission_callback' => '__return_true',
+				'callback'            => static fn( WP_REST_Request $r ) => (object) array_map( static fn( $v ) => $v[0], get_post_meta( (int) $r['id'] ) ),
 			)
 		);
 		register_rest_route(

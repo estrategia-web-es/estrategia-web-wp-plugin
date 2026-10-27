@@ -58,8 +58,11 @@
  *   wpml           translate | display-as-translated | ignore
  *   taxonomies[]   an object (declared here; name ≤ 32) or the name of one
  *                  declared in another file (or category / post_tag)
+ *   fields_box     sidebar (default) | main: where the fields are edited
+ *                  (1.8.0; class-fields-panel.php)
+ *   groups[]       {key, label, collapsed}: the sections of the main box
  *   fields[]       name (the meta key, with prefix), type, label, help,
- *                  required, default, wpml (copy | translate | ignore),
+ *                  required, default, wpml (copy | translate | ignore), group,
  *                  options (select), post_type (relation), min/max/integer (number),
  *                  true_label/false_label (boolean: what the binding shows; "" = nothing)
  *   Field types: text, textarea, number, url, email, tel, image (attachment
@@ -94,6 +97,14 @@
  * class-field-format.php. Use it instead of core/post-meta for anything but
  * plain text.
  *
+ * A LOCATION'S DATA, STORED ONCE (1.8.0): the location template keeps each
+ * datum in one field and the texts the page shows are derived —
+ * class-location-data.php (the rules, pure), class-location-fields.php
+ * (WordPress: which post, which language, the old meta until a site
+ * migrates), class-location-migration.php (wp estrategia-web
+ * migrate-location-data). Schema::RETIRED_FIELDS keeps a site's old copy
+ * of the template valid until then.
+ *
  * Tests: modules/content-types/tests/ — level 1: schema.test.mjs (validator,
  * name limits, PHP ↔ JSON Schema drift), wpml.test.mjs (the WPML config and
  * the copy on save and the slug translations, with a WPML double), format.test.mjs (the content-field
@@ -109,6 +120,10 @@
  * templates, protections, redirects, export/import); level 3
  * constructor-editor.test.mjs (create «Restaurantes» with three fields in
  * the panel, and its type and panel appear).
+ * 1.8.0: level 1 location-data.test.mjs (the derived texts and the
+ * migration's parsers, with Lavandería's strings); level 2
+ * location-migration.test.mjs (a 1.7.0 site migrated) and
+ * location-box.test.mjs (the main-area meta box and its save).
  *
  * =========================================================================
  * HOW TO MAINTAIN

@@ -324,7 +324,9 @@ final class Registrar {
 	public static function sanitizer( array $field ): callable {
 		$default = $field['default'];
 		return match ( $field['type'] ) {
-			'textarea' => static fn( $v ) => sanitize_textarea_field( (string) $v ),
+			// \r\n → \n (1.8.0): a browser's <textarea> sends \r\n, and the location's street is compared
+			// line by line (the migration, the derived address). Seen in red in tests/location-box.test.mjs.
+			'textarea' => static fn( $v ) => str_replace( array( "\r\n", "\r" ), "\n", sanitize_textarea_field( (string) $v ) ),
 			'url'      => static fn( $v ) => esc_url_raw( trim( (string) $v ), array( 'http', 'https' ) ),
 			'email'    => static fn( $v ) => is_email( trim( (string) $v ) ) ? sanitize_email( (string) $v ) : '',
 			// Digits, spaces and + ( ) - . only: what people type in a phone number.

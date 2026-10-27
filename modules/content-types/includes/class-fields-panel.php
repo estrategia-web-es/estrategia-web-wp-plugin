@@ -22,6 +22,23 @@
  *
  * With WPML, in a TRANSLATION the «copy» fields are locked with the note
  * «changed in the original language»: WPML would overwrite them.
+ *
+ * THE MAIN-AREA META BOX (1.8.0, David: «una página vacía y todos los datos
+ * en el panel estrecho»): a definition with «fields_box: main» gets the
+ * meta box in the BLOCK editor too, under the content, and NO sidebar panel
+ * (uses_box()). The fields go in the definition's «groups» (<details>, a
+ * «collapsed» one closed) and other code adds under a group with the filter
+ * estrategia_web_content_types_box_preview (the location's «Shown on the
+ * site»). assets/fields-box.js adds the media library picker and «Copy
+ * Monday to every day»; without it the box still works. The block editor
+ * posts a legacy meta box AFTER the post's REST save, to post.php with this
+ * nonce: save_meta_box() is the same for both screens.
+ * - Boundary case, with a name: «required» on a main-box type is the
+ *   classic check (Registrar), because REST would refuse a publish whose
+ *   field is filled in right there in the box.
+ * - The trap: a <textarea> sends «\r\n»; the textarea sanitizer normalizes
+ *   it (Registrar::sanitizer()), or the location's street would not compare
+ *   line by line (tests/location-box.test.mjs saw it).
  */
 
 namespace EstrategiaWeb\ContentTypes;

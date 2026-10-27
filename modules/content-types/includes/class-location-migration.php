@@ -185,7 +185,7 @@ final class Location_Migration {
 			}
 			$entry['changes'][] = array( 'field' => $key, 'before' => $before, 'after' => $after );
 			if ( ! self::$dry ) {
-				update_post_meta( $post->ID, $key, wp_slash( $after ) );
+				self::write( $post, $key, $after );
 			}
 		};
 		$remove = array();
@@ -274,7 +274,11 @@ final class Location_Migration {
 						$entry['differences'][] = array( 'what' => $what, 'before' => $before, 'after' => $after );
 					}
 				}
-				array_push( $remove, 'map_url', 'map_embed' );
+				foreach ( array( 'map_url' => $url, 'map_embed' => $embed ) as $which => $value ) {
+					if ( '' !== $value ) {
+						$remove[] = $which;
+					}
+				}
 			}
 		}
 
@@ -291,7 +295,9 @@ final class Location_Migration {
 			}
 			if ( $id > 0 ) {
 				$after = (string) wp_get_attachment_image_url( $id, 'full' );
-				if ( $after !== Location_Fields::local_image_url( $path ) ) {
+				// By PATH: the same image on a copy of the site under another host (a test copy, staging) is not a difference.
+				$same = static fn( string $u ): string => (string) wp_parse_url( $u, PHP_URL_PATH );
+				if ( $same( $after ) !== $same( Location_Fields::local_image_url( $path ) ) ) {
 					$entry['differences'][] = array( 'what' => 'static map', 'before' => $path, 'after' => $after );
 				}
 				$remove[] = 'static_map';
@@ -438,6 +444,36 @@ final class Location_Migration {
 			$out[] = array( 'key' => 'fields', 'before' => $names( $before ), 'after' => $names( $after ) );
 		}
 		return $out;
+	}
+
+	/**
+	 * A meta value WITHOUT the sanitizer this request registered. THE TRAP
+	 * (seen in the level 2 test's first run): the request that migrates
+	 * registered the location's meta from the OLD definition, where the street
+	 * is a one-line «text» — sanitize_text_field() turned «Centro Comercial
+	 * Maioris\nCalle Imperial…» into one line. The values here are already
+	 * clean (they come from the parsers, the Hours sanitizer, or the stored
+	 * meta); the street gets sanitize_textarea_field(), as 1.8.0 registers it.
+	 */
+	private static function write( \WP_Post $post, string $key, string $value ): void {
+		if ( Location_Fields::STREET === $key ) {
+			$value = sanitize_textarea_field( $value );
+		}
+		$filters = array( "sanitize_post_meta_{$key}_for_{$post->post_type}", "sanitize_post_meta_{$key}" ); // What register_post_meta() hooks (sanitize_meta()).
+		$saved   = array();
+		foreach ( $filters as $hook ) {
+			if ( isset( $GLOBALS['wp_filter'][ $hook ] ) ) {
+				$saved[ $hook ] = $GLOBALS['wp_filter'][ $hook ];
+				unset( $GLOBALS['wp_filter'][ $hook ] );
+			}
+		}
+		try {
+			update_post_meta( $post->ID, $key, wp_slash( $value ) );
+		} finally {
+			foreach ( $saved as $hook => $callbacks ) {
+				$GLOBALS['wp_filter'][ $hook ] = $callbacks; // phpcs:ignore WordPress.WP.GlobalVariablesOverride
+			}
+		}
 	}
 
 	private static function backup( string $key, $value ): void {
