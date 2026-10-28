@@ -94,5 +94,8 @@ export async function login(page) {
   await page.goto(`${BASE}/wp-login.php`);
   await page.fill("#user_login", "admin");
   await page.fill("#user_pass", "password");
-  await Promise.all([page.waitForURL(/wp-admin/), page.click("#wp-submit")]);
+  // Wait for the PATH (28-10-2026). /wp-admin/ on the whole URL matched the login page itself
+  // (?redirect_to=…wp-admin…), so a login still in flight, or one that never finished, looked done
+  // and the test failed later at whatever it waited for next, with a message about something else.
+  await Promise.all([page.waitForURL((u) => u.pathname.startsWith("/wp-admin/")), page.click("#wp-submit")]);
 }

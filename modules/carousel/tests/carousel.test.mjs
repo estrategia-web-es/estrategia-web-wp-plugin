@@ -71,7 +71,8 @@ before( async () => {
 		await page.goto( `${ BASE_URL }/wp-login.php?redirect_to=${ encodeURIComponent( `${ BASE_URL }/wp-admin/post-new.php?post_type=page` ) }` );
 		await page.fill( '#user_login', 'admin' );
 		await page.fill( '#user_pass', 'password' );
-		await Promise.all( [ page.waitForURL( /post-new\.php/ ), page.click( '#wp-submit' ) ] );
+		// The PATH: the login URL itself carries «post-new.php» in redirect_to (tests/browser.mjs login()).
+		await Promise.all( [ page.waitForURL( ( u ) => u.pathname.endsWith( '/wp-admin/post-new.php' ) ), page.click( '#wp-submit' ) ] );
 		// Also core's paragraph: our block can register BEFORE core's library, and createBlock() of a
 		// core block then dies with «RangeError: Maximum call stack size exceeded» (28-10-2026: the
 		// editor had 2 block types when ours appeared; 3 seconds later, 136).

@@ -40,7 +40,8 @@ test("editor: the “Social networks” block shows in the editor (server previe
   await p.goto(`${BASE}/wp-login.php?redirect_to=${encodeURIComponent(editorUrl)}`);
   await p.fill("#user_login", "admin");
   await p.fill("#user_pass", "password");
-  await Promise.all([p.waitForURL(/post\.php/), p.click("#wp-submit")]);
+  // The PATH: the login URL itself carries «post.php» in redirect_to (tests/browser.mjs login()).
+  await Promise.all([p.waitForURL((u) => u.pathname.endsWith("/wp-admin/post.php")), p.click("#wp-submit")]);
   await p.waitForFunction(() => window.wp?.data?.select("core/block-editor")?.getBlocks().length === 1, null, { timeout: 60000 });
   const canvas = p.frameLocator('iframe[name="editor-canvas"]');
   await canvas.locator(".estrategia-web-social-links__name", { hasText: "Instagram" }).waitFor({ timeout: 20000 });

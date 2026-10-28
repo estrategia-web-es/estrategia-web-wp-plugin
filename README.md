@@ -807,14 +807,16 @@ modules, the seed).
 **The whole battery takes 5 minutes or less, measured** (David, 28-10-2026; it
 was 55). Each level 2 file must say on its first line why it is «NOT LEVEL 1
 BECAUSE:», each level 3 file why it is «NOT LEVEL 2 BECAUSE:», and each file
-has a time limit (45 s at level 2, 60 s at level 3; an exception is written
+has a time limit (90 s at level 2, 100 s at level 3; an exception is written
 in the test as `// TIEMPO: n s — why`): the runner stops or turns red
-otherwise. Levels 2 and 3 run in **several WordPresses at once** (5 normal
+otherwise, and kills a file still running at twice its limit. The test
+WordPress is pinned (Playground CLI and WordPress version), offline and
+without WP-cron, so two runs see the same WordPress. Levels 2 and 3 run in **several WordPresses at once** (5 normal
 ones and 1 with WPML, `EW_SHARDS` / `EW_WPML_SHARDS`), each file alone in
 its WordPress as before. The rules, the ports and the traps are in the
 header of [tests/run.mjs](tests/run.mjs).
 
-The runner starts **Playground** (WP 7.1, PHP 8.3) on **port 9404** (and the
+The runner starts **Playground** (WP 7.1.4, PHP 8.3) on **port 9404** (and the
 other shards' ports) if there is none, with the plugin mounted as `plugins/estrategia-web` and
 [tests/blueprint.json](tests/blueprint.json), and kills it at the end with
 `taskkill /T /F`. All modules share that WordPress, with a test mu-plugin

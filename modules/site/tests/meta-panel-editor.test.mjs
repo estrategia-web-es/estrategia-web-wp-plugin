@@ -51,7 +51,10 @@ before(async () => {
   if (p.url().includes("wp-login.php")) {
     await p.fill("#user_login", "admin");
     await p.fill("#user_pass", "password");
-    await Promise.all([p.waitForURL(/post\.php/), p.click("#wp-submit")]);
+    // The PATH, not the URL: the login page's own URL carries «post.php» in redirect_to, so /post\.php/ matched
+    // at once and a login that never finished was reported 60 s later as «no blocks» (28-10-2026).
+    // Seen red with a wrong password: «page.waitForURL: Timeout», on this line.
+    await Promise.all([p.waitForURL((u) => u.pathname.endsWith("/wp-admin/post.php")), p.click("#wp-submit")]);
   }
   await p.waitForFunction(() => window.wp?.data?.select("core/block-editor")?.getBlocks().length === 4, null, { timeout: 60000 });
   await p.evaluate(() => window.wp.data.dispatch("core/preferences")?.set("core/edit-post", "welcomeGuide", false));
