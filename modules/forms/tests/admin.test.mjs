@@ -15,7 +15,7 @@
 // Seen red again after round 2 (28-10-2026), every test, with the mutants above (one by one where a test reads what the one before left).
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { BASE, playwright, seed, testApi } from "./lib.mjs";
+import { BASE, FORM, playwright, seed, testApi } from "./lib.mjs";
 import { adminSession } from "../../../tests/lib.mjs";
 
 const OPTIONS = "Hoteles\\nRestaurantes\\nBarcos";
@@ -25,6 +25,7 @@ const errors = [];
 before(async () => {
   [{ pages: { page } }, browser] = await Promise.all([
     seed({
+      forms: [{ key: "contact", title: "Contacto (enlace)", content: FORM }],
       pages: [
         { key: "pattern", type: "wp_block", slug: "presupuesto-sincronizado", title: "Presupuesto", content: `<!-- wp:estrategia-web-forms/form {"formId":"presupuesto"} --><!-- wp:estrategia-web-forms/select {"label":"Servicio","name":"servicio","options":"${OPTIONS}"} /--><!-- /wp:estrategia-web-forms/form -->` },
         { key: "page", slug: "barcos-editor", title: "Barcos", content: `<!-- wp:block {"ref":{{id:pattern}},"content":{"servicio":{"defaultOption":3}}} /-->` },
@@ -46,7 +47,8 @@ before(async () => {
   await p.waitForFunction(() => window.wp?.data?.select("core/block-editor").getBlocks().length > 0 && window.wp.blocks.getBlockType("estrategia-web-forms/form"));
   await p.evaluate(() => wp.data.dispatch("core/preferences").set("core/edit-post", "welcomeGuide", false));
 });
-after(() => browser?.close());
+// The form post is not undone by the core reset the next file runs.
+after(() => Promise.all([browser?.close(), testApi("/eweb-forms", { method: "DELETE" })]));
 
 test("editor: opening and saving a page with the synced form keeps its preselection", async () => {
   await p.evaluate(() => {
@@ -98,5 +100,23 @@ test("editor: the preselected option follows its TEXT when options are reordered
   await options.fill("Barcos\nHoteles");
   await p.waitForFunction((id) => !wp.data.select("core/block-editor").getBlockAttributes(id).options.includes("Restaurantes"), clientId);
   assert.equal(await attr(), 0, "if the option disappears, no other one is preselected by accident");
+  assert.deepEqual(errors, [], "no JavaScript errors in the editor");
+});
+
+// 2.0.1: «Forms › Forms» links each notification to its form's editor with ?eweb_form&eweb_notification
+// (the link itself is forms-list.test.mjs, level 2). Here, what assets/notification-link.js does with it:
+// that notification selected and the block sidebar open with its «To» field. The form post is the
+// last thing this file opens (the page's editor above is left without saving). Seen red (28-10-2026)
+// with the script's first version, which selected the block once: the editor cleared the selection
+// while booting and nothing was selected (timeout).
+test("editor: a notification link opens the form with that notification selected and its «To» in the sidebar", async () => {
+  const [{ id }] = await testApi("/eweb-forms").then((all) => all.filter((f) => f.title === "Contacto (enlace)"));
+  await p.goto(`${BASE}/wp-admin/post.php?post=${id}&action=edit&eweb_form=contacto&eweb_notification=1`);
+  await p.waitForFunction(() => wp.data.select("core/block-editor").getSelectedBlock()?.name === "estrategia-web-forms/notification", null, { timeout: 20000 });
+  const selected = await p.evaluate(() => wp.data.select("core/block-editor").getSelectedBlock().attributes.label);
+  assert.equal(selected, "Acuse al remitente", "the second notification of «contacto»");
+  const to = p.getByRole("textbox", { name: "To", exact: true });
+  await to.waitFor();
+  assert.equal(await to.inputValue(), "{{email}}", "its recipient, in the open sidebar");
   assert.deepEqual(errors, [], "no JavaScript errors in the editor");
 });

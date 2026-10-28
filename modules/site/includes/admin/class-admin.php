@@ -67,7 +67,7 @@ final class Admin {
 	public static function media_section(): void {
 		$data = Settings::all();
 		?>
-		<h2><?php esc_html_e( 'SVG images', 'estrategia-web' ); ?></h2>
+		<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'SVG images', 'estrategia-web' ), 'ew-box-svg' ); ?>
 		<table class="form-table" role="presentation">
 			<tr>
 				<th scope="row"><?php esc_html_e( 'SVG uploads', 'estrategia-web' ); ?></th>
@@ -81,6 +81,7 @@ final class Admin {
 			</tr>
 		</table>
 		<?php
+		\EstrategiaWeb\Admin\Admin_UI::box_close();
 	}
 
 	/**
@@ -147,14 +148,13 @@ final class Admin {
 			);
 		};
 		?>
-		<div class="wrap">
-			<h1><?php esc_html_e( 'Company details', 'estrategia-web' ); ?></h1>
-			<p><?php esc_html_e( 'These details appear wherever a block is linked to them (Block Bindings, source «Company details»). Change them here and they change across the whole site.', 'estrategia-web' ); ?></p>
+		<div class="wrap ew-screen estrategia-web-company">
+			<?php \EstrategiaWeb\Admin\Admin_UI::header( __( 'Company details', 'estrategia-web' ), __( 'These details appear wherever a block is linked to them (Block Bindings, source «Company details»). Change them here and they change across the whole site.', 'estrategia-web' ) ); ?>
 			<?php settings_errors( Settings::OPTION ); ?>
 			<form method="post" action="options.php">
 				<?php settings_fields( 'estrategia_web_site' ); ?>
 
-				<h2><?php esc_html_e( 'Company', 'estrategia-web' ); ?></h2>
+				<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Company', 'estrategia-web' ), 'ew-box-company' ); ?>
 				<table class="form-table" role="presentation">
 					<?php
 					$text( 'company_name' );
@@ -166,8 +166,9 @@ final class Admin {
 					$text( 'map_url', 'url' );
 					?>
 				</table>
+				<?php \EstrategiaWeb\Admin\Admin_UI::box_close(); ?>
 
-				<h2><?php esc_html_e( 'Contact', 'estrategia-web' ); ?></h2>
+				<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Contact', 'estrategia-web' ), 'ew-box-contact' ); ?>
 				<table class="form-table" role="presentation">
 					<?php
 					$text( 'email', 'email' );
@@ -177,12 +178,14 @@ final class Admin {
 					$text( 'whatsapp_message', 'text', __( 'Text that appears already written when the chat opens.', 'estrategia-web' ) );
 					?>
 				</table>
+				<?php \EstrategiaWeb\Admin\Admin_UI::box_close(); ?>
 
 				<?php
 				/**
 				 * Sections of OTHER modules that belong to the COMPANY details
 				 * (today local-business's «Type of business», its own option in
-				 * this settings group). They go inside the form, before Save. A
+				 * this settings group). They go inside the form, before Save, each
+				 * in its own box (Admin_UI::box_open/close, since 2.0.1). A
 				 * site SETTING (Matomo since 1.7.0) does not go here: it is a
 				 * section of the Settings page (includes/admin/class-settings-page.php).
 				 * Fields named estrategia_web_site[key] are sanitised by Settings.
@@ -193,7 +196,7 @@ final class Admin {
 				do_action( 'estrategia_web_site_settings_sections', $data, $name );
 				?>
 
-				<?php submit_button(); ?>
+				<?php \EstrategiaWeb\Admin\Admin_UI::save(); ?>
 			</form>
 		</div>
 		<?php

@@ -17,9 +17,8 @@
  * - Routes estrategia-web-site-test/v1/*: ping, reset, users, page, raw-post,
  *   consent-categories (0.3.0, only reads a filter), consent-setup (0.5.0),
  *   modules (1.1.0: GET which modules the request loaded; POST saves the list
- *   like the screen does, or deletes it with «active»: null), legacy-types
- *   and prefix-migration (1.2.0: seeds via SQL a site with unprefixed post
- *   types and runs the migrator; modules/site/tests/prefix-migration.test.mjs).
+ *   like the screen does, or deletes it with «active»: null). (The routes of
+ *   the 1.2.0 and meta prefix migrators went with them in 2.0.1.)
  * - Since 1.1.0 it is the test mu-plugin of the CORE and of the modules
  *   that come from Estrategia Web Site; forms brings its own
  *   (modules/forms/tests/wp/). Both are loaded by tests/blueprint.json.
@@ -620,43 +619,7 @@ add_action(
 			}
 		);
 
-		// 1.2.0: a site from BEFORE the prefix, seeded via SQL (with the new
-		// plugin a «client» cannot be created through REST): a client with its
-		// sector, a location with a phone number, and a page with the old Query.
-		$route(
-			'/legacy-types',
-			'POST',
-			static function () {
-				global $wpdb;
-				$insert = static function ( string $type, string $title, string $slug, string $content = '' ) use ( $wpdb ): int {
-					// A second run on the same WordPress (28-10-2026): the slug must be free, or «?page_id=» redirects to the old page.
-					foreach ( $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_name = %s", $type, $slug ) ) as $old ) { // phpcs:ignore
-						wp_delete_post( (int) $old, true );
-					}
-					$wpdb->insert( $wpdb->posts, array( 'post_type' => $type, 'post_title' => $title, 'post_name' => $slug, 'post_status' => 'publish', 'post_content' => $content, 'post_date' => current_time( 'mysql' ), 'post_date_gmt' => current_time( 'mysql', true ), 'post_modified' => current_time( 'mysql' ), 'post_modified_gmt' => current_time( 'mysql', true ), 'post_author' => 1 ) ); // phpcs:ignore
-					return (int) $wpdb->insert_id;
-				};
-				$client = $insert( 'client', 'Hotel de antes', 'hotel-de-antes' );
-				$wpdb->insert( $wpdb->terms, array( 'name' => 'Hoteles de antes', 'slug' => 'hoteles-de-antes' ) ); // phpcs:ignore
-				$term = (int) $wpdb->insert_id;
-				$wpdb->insert( $wpdb->term_taxonomy, array( 'term_id' => $term, 'taxonomy' => 'client_sector', 'description' => '', 'count' => 1 ) ); // phpcs:ignore
-				$tt = (int) $wpdb->insert_id;
-				$wpdb->insert( $wpdb->term_relationships, array( 'object_id' => $client, 'term_taxonomy_id' => $tt ) ); // phpcs:ignore
-				$location = $insert( 'location', 'Sede de antes', 'sede-de-antes' );
-				add_post_meta( $location, 'estrategia_web_location_phone', '971 11 22 33' );
-				$query = '<!-- wp:query {"queryId":5,"query":{"perPage":10,"pages":0,"offset":0,"postType":"client","order":"asc","orderBy":"title","inherit":false,"taxQuery":{"client_sector":[' . $term . ']}}} -->'
-					. '<div class="wp-block-query"><!-- wp:post-template --><!-- wp:post-title /--><!-- wp:post-terms {"term":"client_sector"} /--><!-- /wp:post-template --></div><!-- /wp:query -->';
-				$page = $insert( 'page', 'Clientes de antes', 'clientes-de-antes', $query );
-				// The way WPML 5.1 and Rank Math store them on Lavandería (without those plugins here: just the rows).
-				update_option( 'icl_sitepress_settings#custom_posts_sync_option', array( 'v' => array( 'page' => 1, 'client' => 2, 'location' => 2 ) ) );
-				update_option( 'WPML(setup/translate-everything-taxonomies)', array( 'v' => array( 'client_sector' => array() ) ) );
-				update_option( 'rank_math_known_post_types', array( 'post' => 'post', 'client' => 'client' ) );
-				wp_cache_flush();
-				return array( 'client' => $client, 'term' => $term, 'location' => $location, 'page' => $page );
-			}
-		);
-
-		// Some options exactly as they are: what the migrator left. 28-10-2026: {delete: [names]}
+		// Some options exactly as they are. 28-10-2026: {delete: [names]}
 		// deletes those AFTER reading (a test's last read is also its cleanup of options /reset
 		// does not delete: tests/settings-page.test.mjs). Without «delete», read only, as before.
 		$route(
@@ -669,86 +632,6 @@ add_action(
 				}
 				return $out;
 			}
-		);
-
-		// The prefix migrator (includes/class-prefix-migration.php), dry or for real.
-		$route(
-			'/prefix-migration',
-			'POST',
-			static fn( WP_REST_Request $r ) => \EstrategiaWeb\Site\Prefix_Migration::run( (bool) $r->get_param( 'dry' ) )
-		);
-
-		// Unreleased: a site from BEFORE the meta prefix (client_url,
-		// testimonial_role, testimonial_client), seeded via SQL (REST no longer
-		// accepts the old keys): a client and a testimonial with the old rows, a
-		// client with both, a PAGE with its own «client_url» (someone else's),
-		// and a page whose Query loops bind the old keys (core/post-meta).
-		$route(
-			'/legacy-meta',
-			'POST',
-			static function () {
-				global $wpdb;
-				$client      = \EstrategiaWeb\Site\Type_Names::name( 'client' );
-				$testimonial = \EstrategiaWeb\Site\Type_Names::name( 'testimonial' );
-				$insert      = static function ( string $type, string $title, string $slug, string $content = '' ) use ( $wpdb ): int {
-					foreach ( $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_name = %s", $type, $slug ) ) as $old ) { // phpcs:ignore -- A second run: see /legacy-types.
-						wp_delete_post( (int) $old, true );
-					}
-					$wpdb->insert( $wpdb->posts, array( 'post_type' => $type, 'post_title' => $title, 'post_name' => $slug, 'post_status' => 'publish', 'post_content' => $content, 'post_date' => current_time( 'mysql' ), 'post_date_gmt' => current_time( 'mysql', true ), 'post_modified' => current_time( 'mysql' ), 'post_modified_gmt' => current_time( 'mysql', true ), 'post_author' => 1, 'menu_order' => 1 ) ); // phpcs:ignore
-					return (int) $wpdb->insert_id;
-				};
-				$meta = static function ( int $id, string $key, $value ) use ( $wpdb ): void {
-					$wpdb->insert( $wpdb->postmeta, array( 'post_id' => $id, 'meta_key' => $key, 'meta_value' => $value ) ); // phpcs:ignore
-				};
-				$c = $insert( $client, 'Cliente con web', 'cliente-con-web' );
-				$meta( $c, 'client_url', 'https://antes.test/' );
-				$both = $insert( $client, 'Cliente con las dos', 'cliente-con-las-dos' );
-				$meta( $both, 'client_url', 'https://vieja.test/' );
-				$meta( $both, 'estrategia_web_client_url', 'https://nueva.test/' );
-				$t = $insert( $testimonial, 'Opinión con cargo', 'opinion-con-cargo', '<!-- wp:paragraph --><p>Muy bien</p><!-- /wp:paragraph -->' );
-				$meta( $t, 'testimonial_role', 'Gerente del Hotel Antes' );
-				$meta( $t, 'testimonial_client', (string) $c );
-				$foreign = $insert( 'page', 'Página ajena', 'pagina-ajena' );
-				$meta( $foreign, 'client_url', 'https://ajeno.test/' );
-				$loop = static fn( string $type, string $body ) => '<!-- wp:query {"queryId":7,"query":{"perPage":10,"pages":0,"offset":0,"postType":"' . $type . '","order":"asc","orderBy":"title","inherit":false}} --><div class="wp-block-query"><!-- wp:post-template -->' . $body . '<!-- /wp:post-template --></div><!-- /wp:query -->';
-				$content = $loop( $client, '<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"core/post-meta","args":{"key":"client_url"}}}}} --><p>sin web</p><!-- /wp:paragraph -->' )
-					. $loop( $testimonial, '<!-- wp:paragraph {"metadata":{"bindings":{"content":{"args":{"key":"testimonial_role"},"source":"core/post-meta"}}}} --><p>sin cargo</p><!-- /wp:paragraph -->' );
-				$page = $insert( 'page', 'Fichas de antes', 'fichas-de-antes', $content );
-				wp_cache_flush();
-				return array( 'client' => $c, 'both' => $both, 'testimonial' => $t, 'foreign' => $foreign, 'page' => $page );
-			}
-		);
-
-		// The meta rows exactly as they are in the database (no alias).
-		$route(
-			'/raw-meta/(?P<id>\d+)',
-			'GET',
-			static function ( WP_REST_Request $r ) {
-				global $wpdb;
-				$rows = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key NOT LIKE '\\_%%' ORDER BY meta_key", (int) $r['id'] ), ARRAY_A ); // phpcs:ignore
-				return (object) array_column( $rows, 'meta_value', 'meta_key' );
-			}
-		);
-
-		// get_post_meta() as a theme would call it (goes through the alias).
-		$route(
-			'/get-meta',
-			'POST',
-			static fn( WP_REST_Request $r ) => array( 'value' => get_post_meta( (int) $r->get_param( 'id' ), (string) $r->get_param( 'key' ), true ) )
-		);
-
-		// The raw content of a post (what the migrator left).
-		$route(
-			'/raw-content/(?P<id>\d+)',
-			'GET',
-			static fn( WP_REST_Request $r ) => array( 'content' => (string) get_post_field( 'post_content', (int) $r['id'], 'raw' ) )
-		);
-
-		// The meta prefix migrator (includes/class-meta-prefix-migration.php), dry or for real.
-		$route(
-			'/meta-prefix-migration',
-			'POST',
-			static fn( WP_REST_Request $r ) => \EstrategiaWeb\Site\Meta_Prefix_Migration::run( (bool) $r->get_param( 'dry' ) )
 		);
 	}
 );

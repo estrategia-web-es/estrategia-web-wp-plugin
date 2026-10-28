@@ -54,7 +54,7 @@ test("server in es_ES: default texts, errors, recorded language and email", asyn
   assert.equal(ok.json.message, "Gracias. Tu mensaje se ha enviado.");
   const { submissions: [row], mails: [mail] } = ok.state;
   assert.equal(row.lang, "es_ES", "the submission's language is recorded");
-  assert.match(mail.text, /He leído y acepto la política de privacidad\.: Sí/, "{{todos_los_campos}} in the submission's language");
+  assert.match(mail.text, /He leído y acepto la política de privacidad\.: Sí/, "{{all_fields}} in the submission's language");
 });
 
 test("editor in es_ES: it gets the translations of the estrategia-web domain, and the blocks' texts translated", () => {

@@ -98,9 +98,10 @@
  * are updated together.
  *
  * The block name: estrategia-web-site/consent. The old ones,
- * armazon-site/consent and armazon/consent (parent theme ≤ 0.6.0), are
- * inserter-hidden ALIASES (includes/class-legacy-names.php) that print the
- * same, for markup not yet migrated. Removed in 2.0.0.
+ * armazon-site/consent and armazon/consent (parent theme ≤ 0.6.0), were
+ * aliases until 2.0.1, removed with the Armazón migrator. The old COOKIE's
+ * fallback stays (LEGACY_COOKIE): it lives in visitors' browsers, which no
+ * migrator reaches, and it costs one cookie read.
  *
  * Coexistence with an old parent theme (≤ 0.6.0, which still ships the
  * notice): if estrategia_web_consent_categories() already exists when
@@ -192,12 +193,14 @@ final class Consent {
 	 * The cookie with its pre-1.0.0 name. It is READ if the new one is
 	 * missing, and the browser moves it to the new one and deletes it
 	 * (blocks/consent/view.js): whoever already chose does not see the notice
-	 * again because of the rename. Removed in 2.0.0, with the Legacy_Names
-	 * aliases.
+	 * again because of the rename. It stayed in 2.0.1 when the block aliases
+	 * went: a visitor who chose before 1.0.0 and has not come back since
+	 * still has only this one. It can go when its max-age has passed for
+	 * every site (state.maxAge, the notice's own cookie lifetime).
 	 */
 	public const LEGACY_COOKIE = 'armazon_consent';
 
-	/** Name of the link block. The old ones (armazon/consent, armazon-site/consent) are aliases: Legacy_Names. */
+	/** Name of the link block. */
 	public const BLOCK = 'estrategia-web-site/consent';
 
 	/** Handles WordPress derives from blocks/consent/block.json. */
@@ -392,7 +395,7 @@ final class Consent {
 		);
 	}
 
-	/** Registers the link block and the table block (1.1.0). The old link names are Legacy_Names aliases. */
+	/** Registers the link block and the table block (1.1.0). */
 	public static function register_blocks(): void {
 		register_block_type( ESTRATEGIA_WEB_CONSENT_DIR . 'blocks/consent' );
 		register_block_type( ESTRATEGIA_WEB_CONSENT_DIR . 'blocks/cookie-table' );

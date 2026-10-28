@@ -185,7 +185,7 @@ final class Page {
 		$table = new Types_Table( $data );
 		$table->prepare_items();
 
-		echo '<div class="wrap estrategia-web-content-types">';
+		echo '<div class="wrap ew-screen estrategia-web-content-types">';
 		echo '<h1 class="wp-heading-inline">' . esc_html__( 'Content types', 'estrategia-web' ) . '</h1> ';
 		echo '<a href="' . esc_url( self::url( array( 'new' => '1' ) ) ) . '" class="page-title-action" data-action="add">' . esc_html__( 'Add new', 'estrategia-web' ) . '</a> ';
 		echo '<span class="ewct-menu-wrap">';
@@ -207,7 +207,7 @@ final class Page {
 		echo '<a href="' . esc_url( self::url( array( 'new' => '1', 'import' => '1' ) ) ) . '" class="page-title-action" data-action="import">' . esc_html__( 'Import JSON', 'estrategia-web' ) . '</a>';
 		echo '<hr class="wp-header-end">';
 		self::notice();
-		echo '<p>' . esc_html__( 'Your own content types — restaurants, courses, team members… — with their fields, taxonomies and addresses. They are saved in this site’s database.', 'estrategia-web' ) . '</p>';
+		echo '<p class="ew-lead">' . esc_html__( 'Your own content types — restaurants, courses, team members… — with their fields, taxonomies and addresses. They are saved in this site’s database.', 'estrategia-web' ) . '</p>';
 		// constructor.js puts its two regions (progress, errors) here and wires the buttons of the rows.
 		echo '<div id="estrategia-web-constructor" data-view="list"></div>';
 		$table->display();
@@ -241,10 +241,11 @@ final class Page {
 		}
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- navigation only.
 		$import = ! empty( $_GET['import'] );
-		echo '<div class="wrap estrategia-web-content-types">';
+		echo '<div class="wrap ew-screen estrategia-web-content-types">';
 		echo '<h1 class="wp-heading-inline" id="ewct-title">' . esc_html( $title ) . '</h1> ';
 		echo '<a href="' . esc_url( self::url() ) . '" class="page-title-action" data-action="back">' . esc_html__( 'Back to the list', 'estrategia-web' ) . '</a>';
 		echo '<hr class="wp-header-end">';
+		echo '<p class="ew-lead">' . esc_html__( 'The type’s settings, in tabs, and its fields: open a row to edit it, drag it to reorder.', 'estrategia-web' ) . '</p>';
 		self::notice();
 		printf( '<div id="estrategia-web-constructor" data-view="edit" data-type="%1$s"%2$s data-loading="1"><p>%3$s</p></div>', esc_attr( $name ), $import ? ' data-import="1"' : '', esc_html__( 'Loading…', 'estrategia-web' ) );
 		echo '<noscript><p>' . esc_html__( 'This screen needs JavaScript.', 'estrategia-web' ) . '</p></noscript></div>';

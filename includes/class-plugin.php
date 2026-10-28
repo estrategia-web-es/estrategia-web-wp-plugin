@@ -49,6 +49,7 @@ final class Plugin {
 			Admin\Menu::boot(); // 1.7.0: the «Estrategia Web» menu, its order and the old URLs.
 			Admin\Settings_Page::boot();
 			Admin\Modules_Page::boot();
+			Admin\Admin_UI::boot(); // 2.0.1: one look for every plugin screen (assets/admin.css).
 		}
 	}
 
@@ -161,8 +162,8 @@ final class Plugin {
 	 *   estrategia-web-ca.po, tests/catalan.test.mjs). Changing a Catalan
 	 *   slug changes their URLs, see tools/i18n.mjs.
 	 * - Slugs per language (/en/locations/) are NOT the plugin's job: that is
-	 *   WPML's slug translation («URL slug: eweb_location» strings, see
-	 *   class-prefix-migration.php), which rewrites on top of the registered
+	 *   WPML's slug translation («URL slug: eweb_location» strings), which
+	 *   rewrites on top of the registered
 	 *   slug and expects that slug to be the default language's.
 	 * - A fixed slug (rewrite_slugs option, the filter) still wins: it is
 	 *   applied after this, in the module.

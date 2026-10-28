@@ -48,11 +48,10 @@
  *      first saved in the post meta «_eweb_forms_migration_backup» (one row
  *      per run that changed the post; to undo: wp post meta get <id>
  *      _eweb_forms_migration_backup > old.html and wp post update <id>
- *      old.html). Straight to the table, like the prefix migration: no
- *      revision, no save hooks, no kses. For each changed post it fires the
- *      filter estrategia_web_forms_migration_post (entry, old, new, dry),
- *      the same contract as estrategia_web_prefix_migration_post: a site that
- *      keeps fingerprints of its content load refreshes them there.
+ *      old.html). Straight to the table: no revision, no save hooks, no
+ *      kses. For each changed post it fires the filter
+ *      estrategia_web_forms_migration_post (entry, old, new, dry): a site
+ *      that keeps fingerprints of its content load refreshes them there.
  * The submissions are not touched: they are grouped by identifier, and the
  * identifiers do not change (the old snapshots of cached pages also keep
  * validating; class-definitions.php).
@@ -429,8 +428,7 @@ final class Form_Migration {
 			/**
 			 * A post whose content the forms migrator changes (also on a dry
 			 * run, without writing: then $new is null). Whatever the filter
-			 * returns shows up in the report. Same contract as
-			 * estrategia_web_prefix_migration_post.
+			 * returns shows up in the report.
 			 *
 			 * @param array       $entry What shows up in the report.
 			 * @param string      $old   The content before.

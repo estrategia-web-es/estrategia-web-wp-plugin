@@ -49,8 +49,8 @@ export const state = () => testApi("/state");
 export const TEAM = "equipo@ejemplo.test";
 export const FAIL = "fail@ejemplo.test";
 
-// The team notice uses the current fixed markers; the acknowledgement, the old
-// Spanish names that saved forms still carry (aliases until 2.0.0).
+// The fixed markers, in English: the old Spanish names stopped being aliases
+// in 2.0.1 (modules/forms/tests/marker-migration.test.mjs renames them).
 export const FORM = `<!-- wp:estrategia-web-forms/form {"formId":"contacto","title":"Contacto"} -->
 <!-- wp:estrategia-web-forms/text {"label":"Nombre","name":"nombre","required":true,"width":"half"} /-->
 <!-- wp:estrategia-web-forms/email {"label":"Correo","name":"email","required":true,"width":"half"} /-->
@@ -60,7 +60,7 @@ export const FORM = `<!-- wp:estrategia-web-forms/form {"formId":"contacto","tit
 <!-- wp:estrategia-web-forms/checkbox {"name":"privacidad","consent":true} /-->
 <!-- wp:estrategia-web-forms/submit {"text":"Enviar consulta"} /-->
 <!-- wp:estrategia-web-forms/notification {"label":"Aviso al equipo","to":"${TEAM}","replyTo":"{{email}}","subject":"Nuevo mensaje de {{nombre}}","body":"Desde {{page_url}} el {{submission_date}} en {{site_name}}:\\n\\n{{all_fields}}"} /-->
-<!-- wp:estrategia-web-forms/notification {"label":"Acuse al remitente","to":"{{email}}","subject":"Hemos recibido tu mensaje","body":"Hola {{nombre}}, gracias por escribir.\\nServicio: {{servicio}}\\nAlias: {{url_pagina}} el {{fecha}} en {{nombre_sitio}}:\\n{{todos_los_campos}}"} /-->
+<!-- wp:estrategia-web-forms/notification {"label":"Acuse al remitente","to":"{{email}}","subject":"Hemos recibido tu mensaje","body":"Hola {{nombre}}, gracias por escribir.\\nServicio: {{servicio}}\\nDesde {{ Page_URL }} el {{submission_date}} en {{site_name}}:\\n{{all_fields}}"} /-->
 <!-- wp:estrategia-web-forms/notification {"label":"Aviso que falla","to":"${FAIL}","subject":"Copia"} /-->
 <!-- /wp:estrategia-web-forms/form -->`;
 

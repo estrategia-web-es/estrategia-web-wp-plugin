@@ -1,0 +1,40 @@
+/*
+ * ONE LOOK FOR EVERY PLUGIN SCREEN (2.0.1). Loaded on every screen whose
+ * ?page= starts with «estrategia-web»; the markup comes from
+ * includes/admin/class-admin-ui.php (header, box, tabs, save), whose header
+ * says how to use it.
+ * How to maintain: only WordPress's admin greys (#c3c4c7, #dcdcde, #f6f7f7,
+ * #fff) and #2271b1 for focus, so the screens follow the admin colour scheme.
+ * The content types builder (modules/content-types/assets/constructor.js)
+ * builds its own markup with .ewct-box / .ewct-tabs: those are the same
+ * thing and are drawn here too — this look IS the builder's, made common.
+ */
+
+/* Header: the line under the title that says what the screen is for. */
+.ew-screen .ew-lead { margin: 0.5em 0 1.25em; max-width: 60em; font-size: 14px; color: #50575e; }
+
+/* A section: a white box with its title. */
+.ew-box, .ewct-box { border: 1px solid #c3c4c7; background: #fff; margin: 1em 0 1.5em; max-width: 70em; }
+.ew-box-title, .ewct-box-title { font-size: 14px; line-height: 1.4; margin: 0; padding: 0.75em 1em; border-bottom: 1px solid #dcdcde; }
+.ew-box-body { padding: 0.25em 1em 0.75em; }
+.ew-box-body > p:first-child { margin-top: 0.75em; }
+.ew-box-body > .form-table { margin-top: 0.25em; }
+.ew-box-body > .form-table th { padding-left: 0; }
+.ew-box-body > .widefat { margin: 0.75em 0; }
+
+/* The tabs: a white strip whose active tab is white too (the builder's). */
+.ew-tabs.nav-tab-wrapper, .ewct-tabs.nav-tab-wrapper { padding: 0.5em 1em 0; margin: 1em 0 1.5em; max-width: 70em; background: #fff; border: 1px solid #c3c4c7; box-sizing: border-box; }
+.ew-box > .ewct-tabs.nav-tab-wrapper, .ewct-box > .ewct-tabs.nav-tab-wrapper { margin: 0; border-width: 0 0 1px; max-width: none; }
+.ew-tabs .nav-tab, .ewct-tabs .nav-tab { font-size: 13px; cursor: pointer; }
+.ew-tabs .nav-tab-active, .ewct-tabs .nav-tab-active,
+.ew-tabs .nav-tab-active:hover, .ewct-tabs .nav-tab-active:hover { background: #fff; border-bottom-color: #fff; }
+.ew-tabs .nav-tab:focus, .ewct-tabs .nav-tab:focus { box-shadow: 0 0 0 2px #2271b1; outline: none; }
+
+/* The save button: under the boxes it saves, on the left. */
+.ew-actions { margin: 0 0 2em; max-width: 70em; }
+.ew-box + .ew-actions { margin-top: -0.5em; }
+
+@media (max-width: 782px) {
+	.ew-box-body { padding: 0.25em 0.75em 0.75em; }
+	.ew-tabs.nav-tab-wrapper, .ewct-tabs.nav-tab-wrapper { padding: 0.5em 0.5em 0; }
+}

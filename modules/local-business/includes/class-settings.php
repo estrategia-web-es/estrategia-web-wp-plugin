@@ -70,7 +70,7 @@ final class Settings {
 	public static function render(): void {
 		$current = Data::business_type();
 		?>
-		<h2><?php esc_html_e( 'Search engines (schema.org)', 'estrategia-web' ); ?></h2>
+		<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Search engines (schema.org)', 'estrategia-web' ), 'ew-box-local-business' ); ?>
 		<p><?php esc_html_e( 'What Google is told about the company and its locations (structured data). The locations\' addresses, hours and coordinates are filled in on each location.', 'estrategia-web' ); ?></p>
 		<table class="form-table" role="presentation">
 			<tr>
@@ -86,5 +86,6 @@ final class Settings {
 			</tr>
 		</table>
 		<?php
+		\EstrategiaWeb\Admin\Admin_UI::box_close();
 	}
 }

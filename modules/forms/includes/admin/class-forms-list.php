@@ -17,15 +17,17 @@
  * What it lists: every post of ANY type (pages, posts, synced patterns
  * — wp_block —, template parts saved in the database…) in publish, draft,
  * pending, future or private, never revisions or trash, whose content has a
- * form block (estrategia-web-forms/form, or its pre-1.0.0 name
- * armazon-forms/form). One row per form block. Per form:
+ * form block (estrategia-web-forms/form). One row per form block. Per form:
  * - its name in the submission log (the block's «title») and its identifier
  *   (formId) — the two things the Submissions filter shows;
  * - where it is: the post's title, type and status, with an «Edit» link
  *   (only if the user can edit it); for a synced pattern, also the pages
  *   that use it (posts whose content has <!-- wp:block {"ref":ID…);
  * - its notifications: how many, and each one's label and recipients as
- *   written in the block («{{email}}» markers shown as they are).
+ *   written in the block («{{email}}» markers shown as they are). Since
+ *   2.0.1 each label is a LINK that opens the form with that notification
+ *   selected and the sidebar open (notification_url(),
+ *   assets/notification-link.js): a recipient is fixed in two clicks.
  * The fields and notifications are read with Definitions::build(), the SAME
  * function that makes the snapshot a submission is validated against, so
  * this page cannot tell a different story from the one the emails follow.
@@ -68,8 +70,8 @@ final class Forms_List {
 	/** The statuses a form can be in and still matter. */
 	public const STATUSES = array( 'publish', 'draft', 'pending', 'future', 'private' );
 
-	/** The block names: the current one and the pre-1.0.0 one (Legacy_Names). */
-	private const BLOCKS = array( 'estrategia-web-forms/form', 'armazon-forms/form' );
+	/** The form block (its pre-1.0.0 name armazon-forms/form stopped rendering in 2.0.1, with its alias). */
+	private const BLOCKS = array( 'estrategia-web-forms/form' );
 
 	/**
 	 * Every form block in the database, one row each.
@@ -90,7 +92,7 @@ final class Forms_List {
 
 		$rows = array();
 		foreach ( (array) $posts as $post ) {
-			$content = str_replace( '<!-- wp:' . Legacy_Names::OLD . '/', '<!-- wp:' . Legacy_Names::NEW . '/', (string) $post->post_content );
+			$content = (string) $post->post_content;
 			foreach ( self::form_blocks( parse_blocks( $content ) ) as $i => $block ) {
 				$type       = \WP_Block_Type_Registry::get_instance()->get_registered( 'estrategia-web-forms/form' );
 				$attributes = $type ? $type->prepare_attributes_for_render( (array) ( $block['attrs'] ?? array() ) ) : (array) ( $block['attrs'] ?? array() );
@@ -241,6 +243,31 @@ final class Forms_List {
 		return $html;
 	}
 
+	/**
+	 * (2.0.1) The editor URL that opens a form with its notification number
+	 * $index (0-based, in the order Definitions reads them) selected and the
+	 * block sidebar open: the post's edit link plus eweb_form (which form, a
+	 * page may hold several) and eweb_notification. The editor side is
+	 * assets/notification-link.js, enqueued only when the URL carries them.
+	 */
+	public static function notification_url( string $edit_link, string $form_id, int $index ): string {
+		return add_query_arg(
+			array(
+				'eweb_form'         => rawurlencode( $form_id ),
+				'eweb_notification' => $index,
+			),
+			$edit_link
+		);
+	}
+
+	/** The editor side of notification_url(): only on a request that carries it. */
+	public static function enqueue_notification_link(): void {
+		if ( ! isset( $_GET['eweb_notification'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- navigation only: it selects a block.
+			return;
+		}
+		wp_enqueue_script( 'estrategia-web-forms-notification-link', ESTRATEGIA_WEB_FORMS_URL . 'assets/notification-link.js', array( 'wp-data', 'wp-block-editor' ), ESTRATEGIA_WEB_FORMS_VERSION, true );
+	}
+
 	public static function render(): void {
 		if ( ! current_user_can( Admin::capability() ) ) {
 			wp_die( esc_html__( 'You are not allowed to see this page.', 'estrategia-web' ), 403 );
@@ -250,13 +277,14 @@ final class Forms_List {
 		$inline = count( array_filter( $rows, static fn( $r ) => Form_Post_Type::TYPE !== $r['post_type'] ) );
 		$add    = current_user_can( 'edit_pages' ) ? admin_url( 'post-new.php?post_type=' . Form_Post_Type::TYPE ) : '';
 		?>
-		<div class="wrap estrategia-web-forms-list">
-			<h1 class="wp-heading-inline"><?php esc_html_e( 'Forms', 'estrategia-web' ); ?></h1>
-			<?php if ( $add ) : ?>
-				<a class="page-title-action" href="<?php echo esc_url( $add ); ?>"><?php esc_html_e( 'Add form', 'estrategia-web' ); ?></a>
-			<?php endif; ?>
-			<hr class="wp-header-end">
-			<p><?php esc_html_e( 'The forms on this site and where they are used. Edit a form here; to show it on a page, add the «Form» block and choose it. Its name and identifier are the ones the submissions log shows.', 'estrategia-web' ); ?></p>
+		<div class="wrap ew-screen estrategia-web-forms-list">
+			<?php
+			\EstrategiaWeb\Admin\Admin_UI::header(
+				__( 'Forms', 'estrategia-web' ),
+				__( 'The forms on this site and where they are used. Edit a form here; to show it on a page, add the «Form» block and choose it. Its name and identifier are the ones the submissions log shows.', 'estrategia-web' ),
+				$add ? '<a class="page-title-action" href="' . esc_url( $add ) . '">' . esc_html__( 'Add form', 'estrategia-web' ) . '</a>' : ''
+			);
+			?>
 			<?php if ( $inline ) : ?>
 				<div class="notice notice-warning inline estrategia-web-forms-list__inline-notice"><p>
 					<?php
@@ -339,12 +367,19 @@ final class Forms_List {
 							echo esc_html( sprintf( _n( '%d notification', '%d notifications', $count, 'estrategia-web' ), $count ) );
 							?>
 							<?php if ( $count ) : ?>
+								<?php $edit = get_edit_post_link( $row['post_id'], 'raw' ); ?>
 								<ul style="margin:.3em 0 0 1.2em;list-style:disc">
 									<?php foreach ( $row['notifications'] as $n => $notification ) : ?>
 										<li>
 											<?php
 											/* translators: %d: position of the notification in the form. */
-											echo esc_html( '' !== $notification['label'] ? $notification['label'] : sprintf( __( 'Notification %d', 'estrategia-web' ), $n + 1 ) );
+											$label = '' !== $notification['label'] ? $notification['label'] : sprintf( __( 'Notification %d', 'estrategia-web' ), $n + 1 );
+											if ( $edit ) {
+												// 2.0.1: opens the form with this notification selected and the block sidebar open (notification-link.js).
+												printf( '<a class="eweb-notification-link" href="%s">%s</a>', esc_url( self::notification_url( $edit, $row['form_id'], $n ) ), esc_html( $label ) );
+											} else {
+												echo esc_html( $label );
+											}
 											?>
 											→ <code><?php echo esc_html( '' !== $notification['to'] ? $notification['to'] : '—' ); ?></code>
 										</li>

@@ -17,9 +17,11 @@
  *
  * WHY IT SHIPS DISABLED (Default: off): it changes what the visitor sees, and
  * on Lavandería, the only site today, redirects are handled by Rank Math
- * because the SEO agency works with it. Enabling it there would mean two
- * systems at once; the screen warns if that happens
- * (includes/class-conflicts.php).
+ * because the SEO agency works with it. Since 2.0.1 it also switches ITSELF
+ * off when Rank Math's Redirections module or Yoast SEO Premium is active
+ * (they own the redirects; the Modules screen says «Redirects are managed by
+ * Rank Math»), so enabling it there by mistake does nothing. Other redirect
+ * plugins only get a warning on its screen (includes/class-conflicts.php).
  *
  * Where everything lives:
  *   includes/class-rules.php     the pure part: normalise, match, read the
@@ -80,15 +82,38 @@ add_action( 'init', array( Settings::class, 'schedule' ) );
 add_action( Settings::CRON, array( Settings::class, 'purge' ) );
 add_action( 'estrategia_web_deactivate', array( Settings::class, 'unschedule' ) );
 
-Runtime::boot();
-
-if ( is_admin() ) {
-	require_once __DIR__ . '/includes/admin/class-tables.php';
-	require_once __DIR__ . '/includes/admin/class-page.php';
-	Admin\Page::boot();
-}
-
-if ( defined( 'WP_CLI' ) && WP_CLI && class_exists( '\WP_CLI' ) ) {
-	require_once __DIR__ . '/includes/class-cli.php';
-	\WP_CLI::add_command( 'estrategia-web redirects', Cli::class );
-}
+// 2.0.1: if the SEO plugin has its own redirect manager on (Rank Math's
+// Redirections, Yoast Premium), it owns the redirects and this module steps
+// aside: no rules, no 404 log, no screen, no WP-CLI; the Modules screen says
+// who has them (Conflicts::owner(), whose header has the why and the
+// sources). On plugins_loaded, priority 0: the SEO plugins' files load after
+// ours, so asking earlier would never see them.
+add_action(
+	'plugins_loaded',
+	static function (): void {
+		$owner = Conflicts::owner();
+		if ( '' !== $owner ) {
+			add_filter(
+				'estrategia_web_module_status',
+				static function ( $status, $slug ) use ( $owner ) {
+					/* translators: %s: name of the SEO plugin, e.g. "Rank Math". */
+					return 'redirects' === $slug ? sprintf( __( 'Redirects are managed by %s.', 'estrategia-web' ), $owner ) : $status;
+				},
+				10,
+				2
+			);
+			return;
+		}
+		Runtime::boot();
+		if ( is_admin() ) {
+			require_once __DIR__ . '/includes/admin/class-tables.php';
+			require_once __DIR__ . '/includes/admin/class-page.php';
+			Admin\Page::boot();
+		}
+		if ( defined( 'WP_CLI' ) && WP_CLI && class_exists( '\WP_CLI' ) ) {
+			require_once __DIR__ . '/includes/class-cli.php';
+			\WP_CLI::add_command( 'estrategia-web redirects', Cli::class );
+		}
+	},
+	0
+);

@@ -26,8 +26,12 @@
  *   module is on, in order: several requests' counts with one call, also
  *   for requests made at once. The trap it avoids: a single option holding
  *   a list loses entries when two requests append at the same time.
- * - fake-rank-math {on}: plays Rank Math with its redirects module (defines
- *   RANK_MATH_VERSION here, in a mu-plugin, before the plugins).
+ * - fake-seo {plugin, modules?} (2.0.1, was fake-rank-math): plays another
+ *   plugin by defining, here in a mu-plugin before the plugins, the constant
+ *   it defines when loaded: «rank-math» (RANK_MATH_VERSION, with
+ *   rank_math_modules = modules, by default redirections + sitemap),
+ *   «yoast-premium» (WPSEO_PREMIUM_FILE) or «redirection»
+ *   (REDIRECTION_VERSION). Without «plugin», none.
  * - bench {n, rules}: seeds filler rules up to «rules» and measures n
  *   Store::match lookups (ms per lookup).
  */
@@ -38,8 +42,17 @@ if ( ! defined( 'ESTRATEGIA_WEB_REDIRECTS_TESTING' ) || true !== ESTRATEGIA_WEB_
 	return;
 }
 
-if ( get_option( 'estrategia_web_redirects_test_rank_math' ) ) {
-	define( 'RANK_MATH_VERSION', '1.0.0-falso' );
+// The fake SEO / redirect plugin (/fake-seo): the constant the real one defines when loaded.
+switch ( get_option( 'estrategia_web_redirects_test_fake' ) ) {
+	case 'rank-math':
+		define( 'RANK_MATH_VERSION', '1.0.0-falso' );
+		break;
+	case 'yoast-premium':
+		define( 'WPSEO_PREMIUM_FILE', __FILE__ );
+		break;
+	case 'redirection':
+		define( 'REDIRECTION_VERSION', '0.0.0-falso' );
+		break;
 }
 
 $GLOBALS['estrategia_web_redirects_test_queries'] = 0;
@@ -121,7 +134,7 @@ add_action(
 					}
 				}
 				delete_option( 'estrategia_web_redirects_settings' );
-				delete_option( 'estrategia_web_redirects_test_rank_math' );
+				delete_option( 'estrategia_web_redirects_test_fake' );
 				delete_option( 'rank_math_modules' );
 				delete_option( 'estrategia_web_redirects_test_last' );
 				$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'estrategia_web_redirects_test_req_%'" ); // phpcs:ignore
@@ -252,14 +265,15 @@ add_action(
 			}
 		);
 		$route(
-			'/fake-rank-math',
+			'/fake-seo',
 			'POST',
 			static function ( WP_REST_Request $r ) {
-				if ( $r->get_param( 'on' ) ) {
-					update_option( 'estrategia_web_redirects_test_rank_math', 1 );
+				$plugin = (string) $r->get_param( 'plugin' );
+				if ( '' !== $plugin ) {
+					update_option( 'estrategia_web_redirects_test_fake', $plugin );
 					update_option( 'rank_math_modules', (array) ( $r->get_param( 'modules' ) ?? array( 'redirections', 'sitemap' ) ) );
 				} else {
-					delete_option( 'estrategia_web_redirects_test_rank_math' );
+					delete_option( 'estrategia_web_redirects_test_fake' );
 					delete_option( 'rank_math_modules' );
 				}
 				return array( 'ok' => true );

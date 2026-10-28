@@ -221,7 +221,7 @@ final class Uploads {
 	public static function render_section(): void {
 		$settings = self::settings();
 		?>
-		<h2><?php esc_html_e( 'Image uploads', 'estrategia-web' ); ?></h2>
+		<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Image uploads', 'estrategia-web' ), 'ew-box-uploads' ); ?>
 		<p><?php esc_html_e( 'Applies to images uploaded from now on. Images already in the library do not change.', 'estrategia-web' ); ?></p>
 		<input type="hidden" name="<?php echo esc_attr( self::OPTION ); ?>[_form]" value="1">
 		<table class="form-table" role="presentation">
@@ -247,5 +247,6 @@ final class Uploads {
 			</tr>
 		</table>
 		<?php
+		\EstrategiaWeb\Admin\Admin_UI::box_close();
 	}
 }

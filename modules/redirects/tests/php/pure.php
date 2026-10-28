@@ -129,11 +129,22 @@ function apply_filters( $hook, $value ) {
 	return $value;
 }
 require dirname( __DIR__, 2 ) . '/includes/class-conflicts.php';
-$out['conflicts_none'] = \EstrategiaWeb\Redirects\Conflicts::detect();
+use EstrategiaWeb\Redirects\Conflicts;
+// 2.0.1: owner() — who manages the redirects instead of this module. Each
+// pair is [owner(), detect()].
+$both                          = static fn() => array( Conflicts::owner(), Conflicts::detect() );
+$out['owner_none']             = $both();
+$GLOBALS['rank_math_modules']  = array( 'redirections' );
+$out['owner_rank_math_absent'] = $both(); // The option left behind by an uninstalled Rank Math.
 define( 'RANK_MATH_VERSION', '1.0.0-falso' );
-$GLOBALS['rank_math_modules']       = array( 'sitemap' );
-$out['conflicts_rank_math_without'] = \EstrategiaWeb\Redirects\Conflicts::detect();
-$GLOBALS['rank_math_modules']       = array( 'redirections', 'sitemap' );
-$out['conflicts_rank_math']         = \EstrategiaWeb\Redirects\Conflicts::detect();
+$GLOBALS['rank_math_modules']  = array( 'sitemap' );
+$out['owner_rank_math_off']    = $both();
+$GLOBALS['rank_math_modules']  = array( 'redirections', 'sitemap' );
+$out['owner_rank_math']        = $both();
+define( 'REDIRECTION_VERSION', '5.0-falso' );
+$out['owner_rank_math_and_redirection'] = $both();
+$GLOBALS['rank_math_modules']  = array();
+define( 'WPSEO_PREMIUM_FILE', __FILE__ );
+$out['owner_yoast_premium']    = $both();
 
 echo json_encode( $out, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );

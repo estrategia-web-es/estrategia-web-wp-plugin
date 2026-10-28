@@ -38,9 +38,10 @@
  *
  * How to maintain:
  * - THE PREFIX LIVES ONLY HERE (PREFIX). Everything else asks for it with
- *   name(): Content_Types, Location, the Unprefixed_Names alias,
- *   the migrator (includes/class-prefix-migration.php) and the public function
- *   estrategia_web_type_name() used by the themes' patterns.
+ *   name(): Content_Types, Location and the public function
+ *   estrategia_web_type_name() used by the themes' patterns. (The 1.2.0
+ *   migrator and the alias for the unprefixed names were removed in 2.0.1;
+ *   renamed() stays: the test WordPress's reset uses it.)
  *   Outside the plugin there is ONE copy, and it checks itself:
  *   content/semilla/tipos.mjs of each site (the load stops if /wp/v2/types does
  *   not have the name).

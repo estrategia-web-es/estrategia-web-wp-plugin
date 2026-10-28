@@ -89,8 +89,8 @@ before(async () => {
           slug: "test-cookie-link",
           content:
             '<!-- wp:estrategia-web-site/consent {"label":"My cookies"} /-->' +
+            "<!-- wp:estrategia-web-site/consent /-->" +
             "<!-- wp:armazon/consent /-->" +
-            "<!-- wp:armazon-site/consent /-->" +
             '<!-- wp:shortcode -->[estrategia_web_consent_settings label="Via shortcode"]<!-- /wp:shortcode -->',
         },
       ],
@@ -107,7 +107,7 @@ test("1. with no declared categories there is no notice, no module and no «Cook
   assert.ok(!page.includes("estrategia-web-consent-link"), "without categories, the link is not printed");
 });
 
-test("2. with categories: the notice in stable order with its three buttons, the PARENT's revision and cookie, no «Powered by» by default, and the four links", async () => {
+test("2. with categories: the notice in stable order with its three buttons, the PARENT's revision and cookie, no «Powered by» by default, and the three links", async () => {
   const page = await front({ categories: ["maps", "statistics"] });
   assert.ok(page.includes(NOTICE), "the notice is missing");
   assert.deepEqual(offered(page), ["statistics", "maps"], "order of the known categories, not the filter's");
@@ -125,16 +125,16 @@ test("2. with categories: the notice in stable order with its three buttons, the
   // 1.0.0: «Powered by» OFF by default (WordPress.org, guideline 10).
   assert.equal(powered(page), null, "without the filter there is no «Powered by» line");
 
-  // The link with the new name, the two OLD names (armazon/consent ≤ parent
-  // 0.6.0, armazon-site/consent ≤ 0.5.4: they print the SAME) and the shortcode.
+  // The link block with its label and with the default one, and the
+  // shortcode. The OLD name armazon/consent prints nothing since 2.0.1 (its
+  // alias went with the Armazón migrator).
   const found = links(page);
-  assert.equal(found.length, 4, `there should be four links and there are ${found.length}`);
+  assert.equal(found.length, 3, `there should be three links and there are ${found.length}`);
   assert.match(found[0].cls, /wp-block-estrategia-web-site-consent/);
   assert.equal(found[0].label, "My cookies");
-  assert.match(found[1].cls, /wp-block-estrategia-web-site-consent\b/, "the armazon/consent alias prints like the new block");
+  assert.match(found[1].cls, /wp-block-estrategia-web-site-consent\b/);
   assert.equal(found[1].label, "Configurar cookies");
-  assert.match(found[2].cls, /wp-block-estrategia-web-site-consent\b/, "the armazon-site/consent alias prints like the new block");
-  assert.equal(found[3].label, "Via shortcode");
+  assert.equal(found[2].label, "Via shortcode");
 });
 
 test("3. «Powered by Estrategia Web» switched on: after the buttons, linked, new tab, rel=noopener and WITHOUT nofollow", async () => {

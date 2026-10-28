@@ -9,7 +9,7 @@
  *     (without WP-CLI's command:  wp eval 'echo wp_json_encode( EstrategiaWeb\ContentTypes\Location_Migration::run( true ), 448 );')
  *
  * The same convention as the plugin's other migrations
- * (includes/class-prefix-migration.php): it does NOT run by itself on
+ * (modules/forms/includes/class-form-migration.php): it does NOT run by itself on
  * update — it is run after READING the dry run. Until it runs, the site
  * looks exactly as before (Location_Fields shows the old texts while they
  * are there).

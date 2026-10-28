@@ -33,8 +33,8 @@
 	const { useSelect } = wp.data;
 	const { __ } = wp.i18n;
 
-	// Only the current names: the old Spanish ones (Markers::ALIASES) still
-	// work in saved forms until 2.0.0, but the help no longer offers them.
+	// The fixed markers (class-markers.php). The old Spanish names were
+	// renamed in saved forms by «migrate-form-markers» (2.0.1).
 	const FIXED_MARKERS = [ 'all_fields', 'submission_date', 'page_url', 'site_name' ];
 
 	const randomId = ( prefix ) => prefix + '-' + Math.random().toString( 36 ).slice( 2, 8 );

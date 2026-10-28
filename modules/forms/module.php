@@ -18,7 +18,10 @@
  * and the «Formularios» menu. Since 2.0.0 also: the post type eweb_form
  * (REST base eweb-forms), the reference block estrategia-web-forms/form-ref,
  * the meta _eweb_forms_migration_backup and the WP-CLI command
- * «estrategia-web migrate-forms».
+ * «estrategia-web migrate-forms». Since 2.0.1: the meta
+ * _eweb_markers_migration_backup, the option
+ * estrategia_web_markers_migration_backup and «estrategia-web
+ * migrate-form-markers».
  *
  * Constants: ESTRATEGIA_WEB_FORMS_DIR and _URL point to THIS folder;
  * ESTRATEGIA_WEB_FORMS_VERSION is the plugin's. The DATABASE version is
@@ -40,7 +43,6 @@ define( 'ESTRATEGIA_WEB_FORMS_DIR', __DIR__ . '/' );
 define( 'ESTRATEGIA_WEB_FORMS_URL', plugin_dir_url( __FILE__ ) );
 
 require_once __DIR__ . '/includes/class-markers.php';
-require_once __DIR__ . '/includes/class-legacy-names.php';
 require_once __DIR__ . '/includes/class-ip.php';
 require_once __DIR__ . '/includes/class-token.php';
 require_once __DIR__ . '/includes/class-preselect.php';
@@ -54,6 +56,7 @@ require_once __DIR__ . '/includes/class-notifier.php';
 require_once __DIR__ . '/includes/class-blocks.php';
 require_once __DIR__ . '/includes/class-form-post-type.php'; // 2.0.0: the form as a post of its own (eweb_form).
 require_once __DIR__ . '/includes/class-form-migration.php'; // 2.0.0: wp estrategia-web migrate-forms.
+require_once __DIR__ . '/includes/class-marker-migration.php'; // 2.0.1: wp estrategia-web migrate-form-markers.
 require_once __DIR__ . '/includes/class-rest.php';
 require_once __DIR__ . '/includes/class-cron.php';
 require_once __DIR__ . '/includes/admin/class-submissions-table.php';
@@ -66,7 +69,6 @@ add_action( 'init', array( Cron::class, 'schedule' ) );
 
 add_action( 'init', array( Blocks::class, 'register' ) );
 Form_Post_Type::boot();
-Legacy_Names::boot(); // The armazon-forms/… blocks as aliases (until 2.0.0).
 add_action( 'rest_api_init', array( Rest::class, 'register_routes' ) );
 add_action( Cron::HOOK, array( Cron::class, 'purge' ) );
 add_action( 'update_option_' . Settings::OPTION, array( Settings::class, 'register_strings' ) );

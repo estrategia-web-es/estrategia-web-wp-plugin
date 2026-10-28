@@ -21,8 +21,9 @@
 //     written is put in its place and the page reloaded: the notice does not
 //     show again, get() gives the parent's choice, consent-ready fires with
 //     it, and what was not accepted does not run;
-//  3. the «Cookie settings» links (new name and the armazon/consent alias)
-//     reopen it with focus inside, and Escape closes it once chosen;
+//  3. the «Cookie settings» link reopens it with focus inside, and Escape
+//     closes it once chosen (until 2.0.1 also through the armazon/consent
+//     alias, removed with the Armazón migrator);
 //  4. open() + «Aceptar todas»: the event with both categories, the deferred
 //     <script type="text/plain" data-estrategia-web-consent> runs; on reload
 //     the event fires on boot with the stored choice and open() shows the
@@ -62,7 +63,7 @@ before(async () => {
     method: "POST",
     body: {
       consent: { categories: ["statistics", "maps"], script: true, powered_by: { show: true }, theme_css: ":root :where(p){margin-top:0;margin-bottom:0}" },
-      pages: [{ slug: "test-notice", content: '<!-- wp:paragraph --><p>Footer</p><!-- /wp:paragraph --><!-- wp:estrategia-web-site/consent /--><!-- wp:armazon/consent {"label":"Old alias"} /-->' }],
+      pages: [{ slug: "test-notice", content: '<!-- wp:paragraph --><p>Footer</p><!-- /wp:paragraph --><!-- wp:estrategia-web-site/consent /-->' }],
     },
   });
   pageUrl = pages[0].url;
@@ -199,8 +200,8 @@ test("the notice, one visitor: first visit, reject, the parent's cookie, the lin
   assert.deepEqual(await js(() => window.ready), [[["maps"], "function"]], "consent-ready fires once with the stored choice");
   assert.equal(await js(() => window.estrategiaWebTestStatistics), undefined, "statistics was not accepted: its script must not run");
 
-  // 3. The footer links reopen it (new name and armazon/consent alias), focus inside, Escape closes it once chosen.
-  for (const name of ["Configurar cookies", "Old alias"]) {
+  // 3. The footer link reopens it, focus inside, Escape closes it once chosen.
+  for (const name of ["Configurar cookies"]) {
     await page.getByRole("button", { name, exact: true }).click();
     await notice.waitFor({ state: "visible" });
     await page.waitForFunction(() => document.activeElement?.id === "estrategia-web-consent-title");

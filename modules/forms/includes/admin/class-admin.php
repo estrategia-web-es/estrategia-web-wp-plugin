@@ -35,6 +35,7 @@ final class Admin {
 		add_action( 'admin_init', array( self::class, 'register_settings' ) );
 		add_action( 'admin_post_estrategia_web_forms_export', array( self::class, 'export_csv' ) );
 		add_action( 'admin_post_estrategia_web_forms_delete', array( self::class, 'delete' ) );
+		add_action( 'enqueue_block_editor_assets', array( Forms_List::class, 'enqueue_notification_link' ) ); // 2.0.1.
 	}
 
 	public static function capability(): string {
@@ -100,10 +101,8 @@ final class Admin {
 		$table->prepare_items();
 		$export = wp_nonce_url( add_query_arg( array( 'action' => 'estrategia_web_forms_export', 'form_id' => $form_id ), admin_url( 'admin-post.php' ) ), 'estrategia_web_forms_export' );
 		?>
-		<div class="wrap">
-			<h1 class="wp-heading-inline"><?php esc_html_e( 'Form submissions', 'estrategia-web' ); ?></h1>
-			<a class="page-title-action" href="<?php echo esc_url( $export ); ?>"><?php esc_html_e( 'Export CSV', 'estrategia-web' ); ?></a>
-			<hr class="wp-header-end">
+		<div class="wrap ew-screen">
+			<?php \EstrategiaWeb\Admin\Admin_UI::header( __( 'Form submissions', 'estrategia-web' ), __( 'Every message sent through the site\'s forms, with the emails each one sent.', 'estrategia-web' ), '<a class="page-title-action" href="' . esc_url( $export ) . '">' . esc_html__( 'Export CSV', 'estrategia-web' ) . '</a>' ); ?>
 			<?php if ( null !== $deleted ) : ?>
 				<div class="notice notice-success is-dismissible"><p>
 					<?php
@@ -268,12 +267,11 @@ final class Admin {
 		$name  = Settings::OPTION;
 		$purge = get_option( 'estrategia_web_forms_last_purge' );
 		?>
-		<div class="wrap">
-			<h1><?php esc_html_e( 'Form settings', 'estrategia-web' ); ?></h1>
-			<p><?php esc_html_e( 'Fields, notifications and messages of each form are set in the form block, in the editor. Here only what is common to all forms.', 'estrategia-web' ); ?></p>
+		<div class="wrap ew-screen">
+			<?php \EstrategiaWeb\Admin\Admin_UI::header( __( 'Form settings', 'estrategia-web' ), __( 'Fields, notifications and messages of each form are set in the form block, in the editor. Here only what is common to all forms.', 'estrategia-web' ) ); ?>
 			<form method="post" action="options.php">
 				<?php settings_fields( 'estrategia_web_forms' ); ?>
-				<h2><?php esc_html_e( 'Submission log', 'estrategia-web' ); ?></h2>
+				<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Submission log', 'estrategia-web' ), 'ew-box-forms-log' ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
 						<th scope="row"><label for="af-retention"><?php esc_html_e( 'Keep submissions for (days)', 'estrategia-web' ); ?></label></th>
@@ -288,7 +286,8 @@ final class Admin {
 							</p></td>
 					</tr>
 				</table>
-				<h2><?php esc_html_e( 'Anti-spam', 'estrategia-web' ); ?></h2>
+				<?php \EstrategiaWeb\Admin\Admin_UI::box_close(); ?>
+				<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Anti-spam', 'estrategia-web' ), 'ew-box-forms-spam' ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
 						<th scope="row"><label for="af-min"><?php esc_html_e( 'Minimum filling time (seconds)', 'estrategia-web' ); ?></label></th>
@@ -302,7 +301,8 @@ final class Admin {
 							<p class="description"><?php esc_html_e( '0 submissions disables the limit.', 'estrategia-web' ); ?></p></td>
 					</tr>
 				</table>
-				<h2><?php esc_html_e( 'Default texts', 'estrategia-web' ); ?></h2>
+				<?php \EstrategiaWeb\Admin\Admin_UI::box_close(); ?>
+				<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Default texts', 'estrategia-web' ), 'ew-box-forms-texts' ); ?>
 				<p><?php esc_html_e( 'Leave empty to use the built-in text, already translated. If you fill them in and the site uses WPML, translate them in WPML → String Translation (domain estrategia-web-forms).', 'estrategia-web' ); ?></p>
 				<table class="form-table" role="presentation">
 					<tr>
@@ -318,7 +318,8 @@ final class Admin {
 						<td><textarea id="af-footer" name="<?php echo esc_attr( $name ); ?>[email_footer]" rows="3" class="large-text"><?php echo esc_textarea( (string) $s['email_footer'] ); ?></textarea></td>
 					</tr>
 				</table>
-				<?php submit_button(); ?>
+				<?php \EstrategiaWeb\Admin\Admin_UI::box_close(); ?>
+				<?php \EstrategiaWeb\Admin\Admin_UI::save(); ?>
 			</form>
 		</div>
 		<?php

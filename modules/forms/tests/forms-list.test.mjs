@@ -92,6 +92,12 @@ test("a form inside a synced pattern: its name, identifier, notifications, and t
   assert.match(r, /2 (avisos|notifications)/, "how many notifications");
   assert.match(r, /Aviso al equipo[\s\S]*?<code>equipo@ejemplo\.test, \{\{email\}\}<\/code>/, "label and recipients as written, markers included");
   assert.match(r, /(Aviso|Notification) 2[\s\S]*?<code>\{\{email\}\}<\/code>/, "a notification without a label is numbered");
+  // 2.0.1: each notification is a link to the form's editor with that notification (0-based) and
+  // the form's identifier. What the editor does with it is admin.test.mjs (level 3). Seen red
+  // (28-10-2026) with the labels printed without their link.
+  const amp = "&(?:amp;|#038;)?";
+  assert.match(r, new RegExp(`<a class="eweb-notification-link" href="[^"]*post\\.php\\?post=${pages.pattern.id}${amp}action=edit${amp}eweb_form=presupuesto${amp}eweb_notification=0">Aviso al equipo</a>`));
+  assert.match(r, new RegExp(`eweb_notification=1">(Aviso|Notification) 2</a>`));
 });
 
 // 2.0.0 (class-form-post-type.php). Moved down from admin.test.mjs (level 3) on 28-10-2026: the

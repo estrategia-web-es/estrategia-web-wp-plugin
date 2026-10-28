@@ -19,10 +19,6 @@
  *     wp option update estrategia_web_whatsapp_message "Hi, I'm writing from the website"
  * or via REST at /wp/v2/settings (hence show_in_rest).
  *
- * Alias: if the new options do not exist, the “Armazón” ones are read
- * (armazon_whatsapp_*); nothing is written here, migrating is the migrator's
- * job. Removed in 2.0.0, with the other aliases.
- *
  * Block Bindings: phone, message and label can be bound (the company's
  * number, from the site module's source). See the explanation in
  * modules/map/module.php.
@@ -72,17 +68,6 @@ add_action(
 		);
 	}
 );
-
-foreach ( array( 'whatsapp_phone', 'whatsapp_message' ) as $estrategia_web_option ) {
-	add_filter(
-		'default_option_estrategia_web_' . $estrategia_web_option,
-		static function ( $default ) use ( $estrategia_web_option ) {
-			$legacy = get_option( 'armazon_' . $estrategia_web_option, null );
-			return null === $legacy ? $default : $legacy;
-		}
-	);
-}
-unset( $estrategia_web_option );
 
 add_filter(
 	'block_bindings_supported_attributes_estrategia-web/whatsapp',

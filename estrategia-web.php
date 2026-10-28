@@ -3,7 +3,7 @@
  * Plugin Name:       Estrategia Web
  * Plugin URI:        https://estrategiaweb.es/
  * Description:       Everything but the design in an Estrategia Web site, as modules you switch on and off in "Estrategia Web → Modules": company details and content types, cookie notice, forms, carousel, map, WhatsApp, language switcher, WebP and external links.
- * Version:           2.0.0
+ * Version:           2.0.1
  * Requires at least: 7.1
  * Requires PHP:      8.1
  * Author:            Estrategia Web
@@ -33,7 +33,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const ESTRATEGIA_WEB_VERSION = '2.0.0';
+const ESTRATEGIA_WEB_VERSION = '2.0.1';
 const ESTRATEGIA_WEB_FILE    = __FILE__;
 define( 'ESTRATEGIA_WEB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'ESTRATEGIA_WEB_URL', plugin_dir_url( __FILE__ ) );
@@ -41,9 +41,7 @@ define( 'ESTRATEGIA_WEB_URL', plugin_dir_url( __FILE__ ) );
 require_once ESTRATEGIA_WEB_DIR . 'includes/class-modules.php';
 require_once ESTRATEGIA_WEB_DIR . 'includes/class-plugin.php';
 require_once ESTRATEGIA_WEB_DIR . 'includes/class-blocks.php';
-require_once ESTRATEGIA_WEB_DIR . 'includes/class-armazon-migration.php';
-require_once ESTRATEGIA_WEB_DIR . 'includes/class-prefix-migration.php';
-require_once ESTRATEGIA_WEB_DIR . 'includes/class-meta-prefix-migration.php';
+require_once ESTRATEGIA_WEB_DIR . 'includes/admin/class-admin-ui.php';
 require_once ESTRATEGIA_WEB_DIR . 'includes/admin/class-menu.php';
 require_once ESTRATEGIA_WEB_DIR . 'includes/admin/class-settings-page.php';
 require_once ESTRATEGIA_WEB_DIR . 'includes/admin/class-modules-page.php';

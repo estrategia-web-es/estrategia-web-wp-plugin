@@ -127,12 +127,12 @@ test("good submission: logged with everything and the N notifications go out wit
   }
   assert.match(team.html, new RegExp(`Desde ${SITE}/contacto/`));
   assert.match(team.html, /Sitio de pruebas/);
-  assert.match(team.html, /<th[^>]*>Teléfono<\/th><td[^>]*>\+34 600 000 000<\/td>/, "{{todos_los_campos}} as an HTML table");
+  assert.match(team.html, /<th[^>]*>Teléfono<\/th><td[^>]*>\+34 600 000 000<\/td>/, "{{all_fields}} as an HTML table");
   assert.match(team.text, /Mensaje: \nHola,\nquería información\./, "and as lines in the text version");
   assert.deepEqual(ack.to, ["ana@ejemplo.test"], "the acknowledgement goes to the email the visitor typed");
   assert.match(ack.text, /^Hola Ana, gracias por escribir\.\nServicio: Planchado/);
-  assert.match(ack.text, new RegExp(`Alias: ${SITE}/contacto/ el \\S.* en Sitio de pruebas:\\nNombre: Ana\\n`), "the old Spanish markers still work (aliases until 2.0.0)");
-  assert.match(ack.html, /<th[^>]*>Teléfono<\/th>/, "{{todos_los_campos}} is still the HTML table");
+  assert.match(ack.text, new RegExp(`Desde ${SITE}/contacto/ el \\S.* en Sitio de pruebas:\\nNombre: Ana\\n`), "fixed markers with spaces and capitals inside the braces");
+  assert.match(ack.html, /<th[^>]*>Teléfono<\/th>/, "{{all_fields}} is the HTML table");
   for (const m of mails) {
     assert.ok(!m.html.includes("{{") && !m.text.includes("{{") && !m.subject.includes("{{"), "no unreplaced marker");
   }

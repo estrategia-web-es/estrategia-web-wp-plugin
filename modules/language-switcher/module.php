@@ -1,7 +1,7 @@
 <?php
 /**
  * Module Name: Language switcher
- * Description: Language switcher block for WPML: the current language and links to the same page in the others, as a drop-down or inline. Without WPML it shows nothing.
+ * Description: The «ES ▾» of the header: switches language to the same page, keyboard-accessible and with hreflang. Needs WPML; without it, nothing is shown.
  * Default: on
  * Requires:
  * Category: Languages

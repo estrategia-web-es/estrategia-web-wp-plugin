@@ -27,6 +27,10 @@
  *   what was loaded in this request. Right after saving they match; if they
  *   do not, one of them is missing a requirement, and that is what the
  *   «Status» column says.
+ * - (2.0.1) A module that is on but has stepped aside by itself says why
+ *   in «Status» through the filter estrategia_web_module_status (today only
+ *   redirects, when Rank Math or Yoast Premium own the redirects). This page
+ *   still knows no module: the module answers for itself.
  */
 
 namespace EstrategiaWeb\Admin;
@@ -89,12 +93,10 @@ final class Modules_Page {
 		}
 		$groups = Modules::grouped( $translated );
 		?>
-		<div class="wrap estrategia-web-modules">
-			<h1><?php esc_html_e( 'Modules', 'estrategia-web' ); ?></h1>
-			<p><?php esc_html_e( 'Each module adds one feature to the site. A module that is off loads nothing, and turning it off does not delete anything it saved: turning it on again brings it back as it was.', 'estrategia-web' ); ?></p>
+		<div class="wrap ew-screen estrategia-web-modules">
+			<?php Admin_UI::header( __( 'Modules', 'estrategia-web' ), __( 'Each module adds one feature to the site. A module that is off loads nothing, and turning it off does not delete anything it saved: turning it on again brings it back as it was.', 'estrategia-web' ) ); ?>
 			<style>
 				.estrategia-web-modules td, .estrategia-web-modules th { vertical-align: middle; }
-				.estrategia-web-modules h2 { margin-top: 1.5em; }
 				.estrategia-web-modules .column-switch { width: 4.5em; }
 				.estrategia-web-modules input[role="switch"] { appearance: none; width: 2.5em; height: 1.4em; border-radius: 1em; background: #8c8f94; position: relative; cursor: pointer; margin: 0; border: 0; }
 				.estrategia-web-modules input[role="switch"]::before { content: ""; position: absolute; top: .2em; left: .2em; width: 1em; height: 1em; border-radius: 50%; background: #fff; transition: transform .15s; margin: 0; }
@@ -108,7 +110,7 @@ final class Modules_Page {
 				<input type="hidden" name="<?php echo esc_attr( Modules::OPTION ); ?>[]" value="">
 				<?php foreach ( $groups as $category => $slugs ) : ?>
 					<?php $heading = 'estrategia-web-modules-' . sanitize_title( $category ); ?>
-					<h2 id="<?php echo esc_attr( $heading ); ?>"><?php echo esc_html( _x( $category, 'module category', 'estrategia-web' ) ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Modules::CATEGORIES; tools/i18n.mjs extracts the headers. ?></h2>
+					<?php Admin_UI::box_open( _x( $category, 'module category', 'estrategia-web' ), $heading ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Modules::CATEGORIES; tools/i18n.mjs extracts the headers. ?>
 					<table class="widefat striped" aria-labelledby="<?php echo esc_attr( $heading ); ?>" data-category="<?php echo esc_attr( $category ); ?>">
 						<thead>
 							<tr>
@@ -125,6 +127,16 @@ final class Modules_Page {
 							$is_on    = in_array( $slug, $wanted, true );
 							$missing  = $blocked[ $slug ] ?? array();
 							$requires = array_values( array_filter( $module['requires'], static fn( $r ) => empty( $available[ $r ]['core'] ) ) );
+							/**
+							 * (2.0.1) What a LOADED module says instead of «On» when it has
+							 * stepped aside by itself (redirects: «Redirects are managed by
+							 * Rank Math»). '' = nothing to say. Only a module that is loaded
+							 * can answer: one that is off says «Off», as always.
+							 *
+							 * @param string $status Text for the Status column.
+							 * @param string $slug   The module.
+							 */
+							$note = $is_on && ! $missing ? (string) apply_filters( 'estrategia_web_module_status', '', $slug ) : '';
 							?>
 							<tr>
 								<td class="column-switch">
@@ -153,6 +165,8 @@ final class Modules_Page {
 										echo esc_html( sprintf( __( 'Not loaded: turn on %s.', 'estrategia-web' ), implode( ', ', array_map( $name, $missing ) ) ) );
 										?>
 										</span>
+									<?php elseif ( '' !== $note ) : ?>
+										<span class="is-stepped-aside" data-module="<?php echo esc_attr( $slug ); ?>"><?php echo esc_html( $note ); ?></span>
 									<?php elseif ( $is_on ) : ?>
 										<?php esc_html_e( 'On', 'estrategia-web' ); ?>
 									<?php else : ?>
@@ -163,8 +177,9 @@ final class Modules_Page {
 						<?php endforeach; ?>
 						</tbody>
 					</table>
+					<?php Admin_UI::box_close(); ?>
 				<?php endforeach; ?>
-				<?php submit_button(); ?>
+				<?php Admin_UI::save(); ?>
 			</form>
 		</div>
 		<?php

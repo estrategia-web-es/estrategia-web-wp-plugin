@@ -343,8 +343,7 @@ and its readers: that is the client's call under its GDPR).
   What has to be checked: the switcher (`language-switcher`) with four, the
   translated home page (WPML itself, with step 1 done: section 5), the loader (`cargar.mjs` has
   English hard-coded: `LANG = 'en'`) and translated slugs (the /en/ trap:
-  URL rules are rebuilt with the request's language; README and
-  `Prefix_Migration::run`).
+  URL rules are rebuilt with the request's language; README).
 - **Catalan as the main language**: the strings of the plugin, the parent
   and the child exist in `es_ES`; **`ca` is missing**. Proposal: `ca.po` in
   all three with `tools/i18n.mjs` (merges and compiles), in the **informal
