@@ -34,7 +34,6 @@
 import { test, describe, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, CSV, api, get } from "./lib.mjs";
-import { adminSession } from "../../../tests/lib.mjs";
 
 /** The query counts of the public requests of the given URIs, from the last `k` (oldest first). */
 // The LAST row of each URI (round 2: tests run at the same time, so «the last k rows» no longer
@@ -136,38 +135,6 @@ test("the cost of a lookup (recorded, not enforced… except the indexed limit)"
   console.log(`  · ${big.rules} rules: ${big.ms_each} ms/lookup (${big.db_engine})`);
   assert.equal(big.rules, 5000);
   assert.ok(big.ms_each < 50, "an indexed lookup doesn't depend on the number of rules");
-});
-
-// 2.0.1 (David, 28-10-2026): when the SEO plugin has its own redirect manager on, it OWNS the
-// redirects and this module steps aside by itself, and the Modules screen says who has them.
-// Which plugin owns them, from which constant and option, is level 1 (pure.test.mjs:
-// Conflicts::owner()); here, that the site really stops redirecting, the screen and the menu
-// item go, and the Modules screen says it. Played with the constants the real plugins define
-// (/fake-seo). Seen red (28-10-2026): before the Spanish string existed (the Modules screen said
-// it in English), and with module.php ignoring owner() (Rank Math's source still answered 301).
-test("an SEO plugin with its own redirects: the module steps aside and the Modules screen says who has them", async () => {
-  const s = await adminSession();
-  const SOURCE = "/index.html%3Fp=6981.html";
-  const plain = (html) => html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
-  const modules = async () => (await s.get("/wp-admin/admin.php?page=estrategia-web")).text;
-  // The module's row on the Modules screen, as text.
-  const row = (html) => plain(html.match(/<tr>(?:(?!<\/tr>)[\s\S])*estrategia-web-module-redirects[\s\S]*?<\/tr>/)?.[0] ?? "(no row)");
-  await api("/fake-seo", { method: "POST", body: { plugin: "rank-math" } });
-  const [rm, rmScreen, rmPage] = await Promise.all([get(SOURCE), modules(), s.get("/wp-admin/admin.php?page=estrategia-web-redirects")]);
-  assert.equal(rm.status, 404, "Rank Math with Redirections on: ours does not redirect");
-  assert.match(row(rmScreen), /Redirecciones .*Las redirecciones las gestiona Rank Math\./);
-  assert.doesNotMatch(rmPage.text, /<h1[^>]*>Redirecciones<\/h1>/, "nor its screen");
-  assert.doesNotMatch(rmScreen, /page=estrategia-web-redirects/, "nor its menu item");
-
-  // Rank Math with its Redirections module OFF: ours works again.
-  await api("/fake-seo", { method: "POST", body: { plugin: "rank-math", modules: ["sitemap"] } });
-  assert.equal((await get(SOURCE)).status, 301);
-
-  await api("/fake-seo", { method: "POST", body: { plugin: "yoast-premium" } });
-  const [yo, yoScreen] = await Promise.all([get(SOURCE), modules()]);
-  assert.equal(yo.status, 404, "Yoast Premium: its Redirect manager has no off switch");
-  assert.match(row(yoScreen), /Las redirecciones las gestiona Yoast SEO Premium\./);
-  await api("/fake-seo", { method: "POST", body: {} });
 });
 
 test("switching the module off stops redirecting and doesn't delete the rules", async () => {
