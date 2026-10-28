@@ -113,6 +113,26 @@ add_action(
 							}
 						}
 						WPML_Config::load_config_run();
+						// That re-read also registers in String Translation the company details of
+						// <admin-texts> with the values they have NOW — empty (this test stores no
+						// address) — and then String Translation does not parse the admin texts again
+						// while its transient «wpml_admin_text_import:parse_config:<hash>» holds the same
+						// config (WPML_Admin_Text_Import::parse_config()), so the originals stay ""
+						// when the option changes. site/tests/company-data-wpml.test.mjs, run after
+						// this, translated «[estrategia_web_site]address» against an original of ""
+						// and /en/ kept the Spanish address (seen 28-10-2026, red every time in that
+						// order). This test needs none of those strings: they go, and so does the
+						// transient, so the next re-read registers them with the values of then.
+						if ( function_exists( 'icl_unregister_string' ) ) {
+							$admin_texts = (array) get_option( '_icl_admin_option_names', array() );
+							foreach ( array_keys( (array) ( $admin_texts['estrategia_web_site'] ?? array() ) ) as $key ) {
+								icl_unregister_string( 'admin_texts_estrategia_web_site', '[estrategia_web_site]' . $key );
+							}
+							$like = $wpdb->esc_like( '_transient_wpml_admin_text_import:parse_config:' ) . '%';
+							foreach ( $wpdb->get_col( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s", $like ) ) as $transient ) { // phpcs:ignore
+								delete_transient( substr( $transient, strlen( '_transient_' ) ) );
+							}
+						}
 						$insert = static function ( string $post_type, string $title, string $slug, string $content, array $meta ): int {
 							$id = wp_insert_post( wp_slash( array( 'post_type' => $post_type, 'post_status' => 'publish', 'post_title' => $title, 'post_name' => $slug, 'post_content' => $content, 'meta_input' => $meta ) ), true );
 							if ( is_wp_error( $id ) ) {
