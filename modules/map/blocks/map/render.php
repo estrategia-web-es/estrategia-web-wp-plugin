@@ -169,7 +169,12 @@ if ( ! function_exists( 'estrategia_web_map_static_url' ) ) {
 // The data comes from attributes or from Block Bindings: a text source brings
 // it with <br> instead of line breaks (the estrategia-web-site ones do); they
 // are turned back into line breaks so they are escaped here only once.
-$estrategia_web_text      = static fn( string $key ): string => trim( html_entity_decode( wp_strip_all_tags( preg_replace( '/<br\s*\/?>/i', "\n", (string) $attributes[ $key ] ) ), ENT_QUOTES, 'UTF-8' ) );
+// The line break that may FOLLOW the <br> goes too (2.0.0): the location source
+// derives the address as «line<br>\nline», and leaving the \n doubled every
+// break — blank lines in the box and «, ,» in the static map's alt.
+// The conversion lives in text.php so a level-1 test can call it (tests/text.test.mjs).
+require_once __DIR__ . '/text.php';
+$estrategia_web_text      = static fn( string $key ): string => estrategia_web_map_text( (string) $attributes[ $key ] );
 $estrategia_web_place     = $estrategia_web_text( 'placeName' );
 $estrategia_web_phone     = $estrategia_web_text( 'phone' );
 $estrategia_web_hours     = $estrategia_web_text( 'hours' );
