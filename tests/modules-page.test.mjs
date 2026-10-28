@@ -49,7 +49,7 @@ test("with no saved option the modules with Default: on are loaded, and only tho
   assert.equal(m.saved, null);
   assert.deepEqual([...m.loaded].sort(), ON);
   assert.ok(m.blocks.includes("estrategia-web/carousel"), "the carousel block");
-  assert.ok(m.blocks.includes("armazon/carousel"), "the old-name alias exists with the module on");
+  assert.ok(!m.blocks.includes("armazon/carousel"), "no old-name alias since 2.0.1");
   assert.ok(m.namespaces.includes("estrategia-web-forms/v1"), "the forms' REST routes");
 });
 
@@ -65,7 +65,6 @@ test("saving records which modules existed, and a disabled module registers noth
   assert.ok(!m.loaded.includes("carousel") && !m.loaded.includes("forms"));
 
   assert.ok(!m.blocks.includes("estrategia-web/carousel"), "no block");
-  assert.ok(!m.blocks.includes("armazon/carousel"), "nor its alias");
   assert.ok(!m.blocks.includes("estrategia-web-forms/form"));
   assert.ok(!m.namespaces.includes("estrategia-web-forms/v1"), "nor the module's REST routes");
   assert.ok(m.blocks.includes("estrategia-web/map"), "the others remain");

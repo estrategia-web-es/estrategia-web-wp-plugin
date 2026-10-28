@@ -63,18 +63,12 @@ require_once __DIR__ . '/includes/class-location.php';
 require_once __DIR__ . '/includes/class-shortcode.php';
 require_once __DIR__ . '/includes/class-content-types.php';
 require_once __DIR__ . '/includes/class-svg.php';
-require_once __DIR__ . '/includes/class-legacy-names.php';
-require_once __DIR__ . '/includes/class-unprefixed-names.php';
-require_once __DIR__ . '/includes/class-unprefixed-meta.php';
 require_once __DIR__ . '/includes/admin/class-admin.php';
 
 add_action( 'init', array( Settings::class, 'register' ) );
 add_action( 'init', array( Bindings::class, 'register' ) );
 add_action( 'init', array( Location::class, 'register' ) );
 add_action( 'init', array( Shortcode::class, 'register' ) );
-Legacy_Names::boot(); // The pre-1.0.0 names, as aliases (until 2.0.0).
-Unprefixed_Names::boot(); // The unprefixed types and taxonomies from before 1.2.0, as aliases (until 2.0.0).
-Unprefixed_Meta::boot(); // client_url, testimonial_role, testimonial_client: read aliases of their prefixed names (until 2.0.0).
 add_action( 'enqueue_block_editor_assets', array( Bindings::class, 'enqueue_editor' ) );
 add_filter( 'post_class', array( Content_Types::class, 'post_class' ), 10, 3 );
 Svg::boot();

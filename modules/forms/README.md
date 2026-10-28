@@ -388,12 +388,11 @@ at `E:\Repositories\armazon-wp-formularios`.
 | CSS classes and properties | `.armazon-forms__…`, `--armazon-forms-…` | `.estrategia-web-forms__…`, `--estrategia-web-forms-…` |
 | WPML context | `armazon-forms` | `estrategia-web-forms` |
 
-The old blocks keep rendering throughout 1.x
-([includes/class-legacy-names.php](includes/class-legacy-names.php)); they
-are removed in **2.0.0**. Tables, options and WPML strings are moved by
-**the migrator**, which lives in the Estrategia Web Site plugin
-(`includes/class-armazon-migration.php`): submissions are renamed with
-`RENAME TABLE`, not copied or lost.
+The old blocks kept rendering as aliases until **2.0.1**, which removed them
+together with **the migrator** that moved tables, options and WPML strings
+(`includes/class-armazon-migration.php` up to 2.0.0; submissions were renamed
+with `ALTER TABLE … RENAME TO`, not copied or lost). A site still on the
+Armazón names takes a 2.0.0 package first.
 
 ## If you change provider
 

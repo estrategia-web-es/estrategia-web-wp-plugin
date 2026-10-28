@@ -17,8 +17,7 @@
  * What it lists: every post of ANY type (pages, posts, synced patterns
  * — wp_block —, template parts saved in the database…) in publish, draft,
  * pending, future or private, never revisions or trash, whose content has a
- * form block (estrategia-web-forms/form, or its pre-1.0.0 name
- * armazon-forms/form). One row per form block. Per form:
+ * form block (estrategia-web-forms/form). One row per form block. Per form:
  * - its name in the submission log (the block's «title») and its identifier
  *   (formId) — the two things the Submissions filter shows;
  * - where it is: the post's title, type and status, with an «Edit» link
@@ -68,8 +67,8 @@ final class Forms_List {
 	/** The statuses a form can be in and still matter. */
 	public const STATUSES = array( 'publish', 'draft', 'pending', 'future', 'private' );
 
-	/** The block names: the current one and the pre-1.0.0 one (Legacy_Names). */
-	private const BLOCKS = array( 'estrategia-web-forms/form', 'armazon-forms/form' );
+	/** The form block (its pre-1.0.0 name armazon-forms/form stopped rendering in 2.0.1, with its alias). */
+	private const BLOCKS = array( 'estrategia-web-forms/form' );
 
 	/**
 	 * Every form block in the database, one row each.
@@ -90,7 +89,7 @@ final class Forms_List {
 
 		$rows = array();
 		foreach ( (array) $posts as $post ) {
-			$content = str_replace( '<!-- wp:' . Legacy_Names::OLD . '/', '<!-- wp:' . Legacy_Names::NEW . '/', (string) $post->post_content );
+			$content = (string) $post->post_content;
 			foreach ( self::form_blocks( parse_blocks( $content ) ) as $i => $block ) {
 				$type       = \WP_Block_Type_Registry::get_instance()->get_registered( 'estrategia-web-forms/form' );
 				$attributes = $type ? $type->prepare_attributes_for_render( (array) ( $block['attrs'] ?? array() ) ) : (array) ( $block['attrs'] ?? array() );

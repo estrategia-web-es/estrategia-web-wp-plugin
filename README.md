@@ -99,9 +99,7 @@ is [modules/webp/module.php](modules/webp/module.php); the complete one,
     includes/                   the core, always loaded:
       class-modules.php           the loader (HOW TO ADD A MODULE)
       class-plugin.php            translations and the estrategia_web_activate / _deactivate hooks
-      class-blocks.php            autoRegister labels, editor translations, armazon/… aliases
-      class-armazon-migration.php the migrator from «Armazón» (for all the pieces)
-      class-prefix-migration.php  the migrator of the post type prefix (1.2.0)
+      class-blocks.php            autoRegister labels, editor translations
       admin/class-menu.php          the «Estrategia Web» menu, its order and the old URLs (1.7.0)
       admin/class-settings-page.php «Estrategia Web › Settings» and its tab registry (1.7.0)
       admin/class-modules-page.php  the «Estrategia Web → Modules» screen
@@ -134,18 +132,18 @@ code, with the prefix of its row.
 | Taxonomies | `eweb_` | `eweb_client_sector`, `eweb_project_category`, `eweb_portfolio_category` (same) |
 | Blocks | `estrategia-web/`, `estrategia-web-site/`, `estrategia-web-forms/` | `estrategia-web/carousel`, `/map`, `/whatsapp`, `/language-switcher`, `/social-links`, `/cookie-table`; `estrategia-web-site/consent`; `estrategia-web-forms/form`, `/text`, `/email`, `/tel`, `/textarea`, `/select`, `/checkbox`, `/submit`, `/notification`, `/form-ref` (2.0.0) |
 | Options | `estrategia_web_` | `estrategia_web_site`, `estrategia_web_modules`, `estrategia_web_modules_known`, `estrategia_web_forms_settings`, `estrategia_web_forms_db_version`, `estrategia_web_forms_last_purge`, `estrategia_web_forms_migrations_log`, `estrategia_web_cookies`, `estrategia_web_cookies_settings`, `estrategia_web_google_tags`, `estrategia_web_map_google_seen`, `estrategia_web_redirects_settings`, `estrategia_web_redirects_db_version`, `estrategia_web_social_links`, `estrategia_web_uploads`, `estrategia_web_whatsapp_phone`, `estrategia_web_whatsapp_message`, `estrategia_web_content_types_hash`, `estrategia_web_content_types_wpml_pending`, `estrategia_web_content_types_wpml_slugs` |
-| Post meta | `estrategia_web_` | those of section 3, all of them (unreleased: `client_url`, `testimonial_role` and `testimonial_client`, from before 1.0.0, became `estrategia_web_…`; the old keys are read aliases until 2.0.0, see «Names») |
+| Post meta | `estrategia_web_` | those of section 3, all of them (`client_url`, `testimonial_role` and `testimonial_client`, from before 1.0.0, became `estrategia_web_…`; their read aliases went in 2.0.1, see «Names») |
 | Tables | `{prefix}estrategia_web_` | `estrategia_web_forms_submissions`, `estrategia_web_forms_definitions`, `estrategia_web_redirects` |
 | Transients and cron | `estrategia_web_` | `estrategia_web_redirects_report_*`, `estrategia_web_cs_*` (detector limit); events `estrategia_web_forms_purge`, `estrategia_web_redirects_purge` |
 | Cookies | `estrategia_web_` | `estrategia_web_consent` (the old `armazon_consent` is read and carried over) |
 | Hooks (filters and actions) | `estrategia_web_` | those of each section; the live list: `grep -rhoE "(apply_filters\|do_action)\( *'estrategia_web[a-z_]*'" modules includes` |
-| REST routes | `estrategia-web/v1`, `estrategia-web-forms/v1` | `estrategia-web/v1/cookies`, `/cookies/seen`, `/content-types`, `/content-types/<name>`, `/content-types/templates/<key>`; `estrategia-web-forms/v1/submit`, `/token`; the post types' routes are core's, `/wp/v2/eweb_client`… (aliases of `/wp/v2/client`… until 2.0.0) |
+| REST routes | `estrategia-web/v1`, `estrategia-web-forms/v1` | `estrategia-web/v1/cookies`, `/cookies/seen`, `/content-types`, `/content-types/<name>`, `/content-types/templates/<key>`; `estrategia-web-forms/v1/submit`, `/token`; the post types' routes are core's, `/wp/v2/eweb_client`… |
 | Block Bindings sources | `estrategia-web-site/`, `estrategia-web/` | `estrategia-web-site/company`, `estrategia-web-site/location`, `estrategia-web/content-field` (content-types module) |
 | Shortcodes | `estrategia_web_` | `[estrategia_web_company]`, `[estrategia_web_consent_settings]`, `[estrategia_web_cookie_table]` |
 | Global functions (for themes) | `estrategia_web_` | `estrategia_web_type_name()` (1.2.0) |
 | PHP | namespace `EstrategiaWeb\` | `EstrategiaWeb\Site\…`, `EstrategiaWeb\Forms\…`… |
 | JS and events | `estrategiaWeb…`, `estrategia-web:` | `window.estrategiaWebConsent`, `estrategia-web:consent`, `estrategia-web:consent-ready`, `estrategia-web:form-sent` |
-| WP-CLI | `estrategia-web` | `wp estrategia-web redirects …`, `migrate-armazon`, `migrate-prefix` |
+| WP-CLI | `estrategia-web` | `wp estrategia-web redirects …`, `migrate-location-data`, `migrate-forms` (2.0.0), `migrate-form-markers` (2.0.1) |
 | Text domain, folder | `estrategia-web` | — |
 
 **Two prefixes, on purpose**: `estrategia_web_` / `estrategia-web` for
@@ -393,8 +391,8 @@ filter receives. WordPress registers it with the **prefix** in front:
 0). That name is the one in `wp_posts.post_type`, a Query Loop's
 `"postType"`, the REST route and WPML. A theme asks for it with
 `estrategia_web_type_name( 'client' )`. The public URLs (`/clientes/`) do not
-change. Whatever was stored before with the unprefixed names is carried over
-with the prefix migrator (section «Names»).
+change. Whatever was stored before with the unprefixed names was carried
+over by the prefix migrator, removed in 2.0.1 (section «Names»).
 
 | Key (registered: `eweb_` + key) | Menu | Slug (es_ES) | Uses | Fields (`register_post_meta`, `single`, `show_in_rest`) | Taxonomy |
 |---|---|---|---|---|---|
@@ -951,21 +949,18 @@ The **post types** (`client`, `testimonial`, `location`, `project`,
 the prefix in 1.2.0** (unreleased, David's decision of 15-10-2026:
 `eweb_client`…; next section).
 
-**The old names keep working** during 1.x
-([modules/site/includes/class-legacy-names.php](modules/site/includes/class-legacy-names.php)):
-blocks, bindings sources, shortcodes and the option (if the new one is
-missing); the old cookie is read and carried over to the new one without
+**Since 2.0.1 the old names are gone** (David, 28-10-2026: Lavandería, the
+only site that had them, already went through the migrator, and new sites
+are born with the new names). Up to 2.0.0 they kept working as aliases
+(blocks, bindings sources, shortcodes, the option, the theme's
+`armazon/…` blocks and the WhatsApp options), and **the Armazón migrator**
+(`includes/class-armazon-migration.php`, `wp estrategia-web migrate-armazon`)
+moved a site IN PLACE. A site still on the Armazón names takes a 2.0.0
+package first (git tag or `git show 3cc9d29:includes/class-armazon-migration.php`).
+What stays: the old consent COOKIE is still read and carried over without
 asking again
-([modules/consent/includes/class-consent.php](modules/consent/includes/class-consent.php)).
-They are removed in **2.0.0**.
-
-**THE MIGRATOR** ([includes/class-armazon-migration.php](includes/class-armazon-migration.php))
-moves a site from the old names to the new ones IN PLACE: content (blocks
-and WPML translations), meta, options, the forms plugin's tables, WPML
-strings, active theme and plugins. Idempotent, with a dry run, and it does
-not run on its own: `wp estrategia-web-site migrate-armazon --dry-run`, or
-included from `wp eval-file` as Lavandería does
-(`despliegue/migrar-a-estrategia-web.mjs`). Before it, a database backup.
+([modules/consent/includes/class-consent.php](modules/consent/includes/class-consent.php),
+`LEGACY_COOKIE`): it lives in visitors' browsers, where no migrator reaches.
 
 ## Prefixed types (unreleased, 1.2.0)
 
@@ -982,44 +977,19 @@ included from `wp eval-file` as Lavandería does
 keys: `client`), the `estrategia_web_site_rewrite_slug` filter (it receives
 the key), the meta keys, the blocks and the tables.
 
-**The old names keep working until 2.0.0**
-([modules/site/includes/class-unprefixed-names.php](modules/site/includes/class-unprefixed-names.php)):
-a Query Loop or a `post-terms` saved with `"postType":"client"` render the
-new ones on the site, and `/wp/v2/client…` answers like
-`/wp/v2/eweb_client…` if no other plugin owns that route. **Not** in the
-editor (the old Query Loop shows empty) nor for a theme's
-`get_posts( 'post_type' => 'client' )`.
+**THE THREE METAS (1.5.0).** `client_url`, `testimonial_role` and
+`testimonial_client` became `estrategia_web_client_url`,
+`estrategia_web_testimonial_role` and `estrategia_web_testimonial_client`.
 
-**THE PREFIX MIGRATOR**
-([includes/class-prefix-migration.php](includes/class-prefix-migration.php)):
-`wp_posts`, terms, block content (Query Loops, `post-terms`, navigation
-links), `single-client`… templates, classic menus, WPML (translations,
-translatable types, slugs), Rank Math and screen preferences; it lists as a
-warning whatever names an old type and it does not know how to migrate.
-Idempotent, with a dry run, and it does not run on its own:
-`wp estrategia-web migrate-prefix --dry-run`, or from `wp eval-file` as
-Lavandería does (`despliegue/prefijo-tipos.mjs`, which also renews the
-fingerprints of its content loading). It is run **right after uploading the
-1.2.0 plugin**: in between, the site cannot find its clients or locations.
-Before it, a database backup.
-
-**THE THREE METAS (unreleased).** `client_url`, `testimonial_role` and
-`testimonial_client` are registered as `estrategia_web_client_url`,
-`estrategia_web_testimonial_role` and `estrategia_web_testimonial_client`
-(the map lives only in
-[modules/site/includes/class-unprefixed-meta.php](modules/site/includes/class-unprefixed-meta.php)).
-Until 2.0.0 the old keys are **read aliases** on clients and testimonials:
-`get_post_meta( $id, 'client_url', true )` answers with the new value, a
-`core/post-meta` binding saved with `"key":"client_url"` renders the new
-one, and until the site is migrated the new key reads the old row. **Not**
-for writing (an old key in REST `meta` is ignored) nor in the editor. The
-migrator is
-[includes/class-meta-prefix-migration.php](includes/class-meta-prefix-migration.php)
-(`wp estrategia-web migrate-meta-prefix --dry-run`): `wp_postmeta` of
-clients and testimonials and the `core/post-meta` bindings of the content;
-idempotent, with a dry run; a post with both keys keeps the new one and is
-warned about. A class of its own so that its dry run works against a server
-still on 1.4.3 (Lavandería: `despliegue/prefijo-tipos.mjs` carries both).
+**Since 2.0.1 the unprefixed names are gone**: the read aliases (a Query
+Loop saved with `"postType":"client"`, `/wp/v2/client…`, `get_post_meta(
+$id, 'client_url' )`, a binding with `"key":"client_url"`) and the two
+migrators that carried a site over (`wp estrategia-web migrate-prefix` and
+`migrate-meta-prefix`, `includes/class-prefix-migration.php` and
+`includes/class-meta-prefix-migration.php`). Lavandería went through both
+(15 and 17-10-2026); a site still on ≤ 1.1.0 names takes a 2.0.0 package
+first. What remains is the map itself, `Type_Names::renamed()`, which the
+test WordPress's reset uses.
 
 ## If you change provider
 

@@ -40,7 +40,6 @@ define( 'ESTRATEGIA_WEB_FORMS_DIR', __DIR__ . '/' );
 define( 'ESTRATEGIA_WEB_FORMS_URL', plugin_dir_url( __FILE__ ) );
 
 require_once __DIR__ . '/includes/class-markers.php';
-require_once __DIR__ . '/includes/class-legacy-names.php';
 require_once __DIR__ . '/includes/class-ip.php';
 require_once __DIR__ . '/includes/class-token.php';
 require_once __DIR__ . '/includes/class-preselect.php';
@@ -67,7 +66,6 @@ add_action( 'init', array( Cron::class, 'schedule' ) );
 
 add_action( 'init', array( Blocks::class, 'register' ) );
 Form_Post_Type::boot();
-Legacy_Names::boot(); // The armazon-forms/… blocks as aliases (until 2.0.0).
 add_action( 'rest_api_init', array( Rest::class, 'register_routes' ) );
 add_action( Cron::HOOK, array( Cron::class, 'purge' ) );
 add_action( 'update_option_' . Settings::OPTION, array( Settings::class, 'register_strings' ) );

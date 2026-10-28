@@ -24,11 +24,11 @@
  *   class, never CSS.
  * - meta_keys() / meta_fields(): the fields of one of these types as the
  *   site's DEFINITION has them, for the `estrategia-web-site/location`
- *   Block Bindings source (class-location.php) and the pre-1.0.0 location
- *   keys (class-legacy-names.php). They follow the definition: a field the
- *   site adds to its locations in the panel is offered by that source too.
- * - Type_Names (the prefix), Unprefixed_Names, Unprefixed_Meta and
- *   Legacy_Names: aliases of old names, until 2.0.0.
+ *   Block Bindings source (class-location.php). They follow the definition:
+ *   a field the site adds to its locations in the panel is offered by that
+ *   source too.
+ * - Type_Names: the prefix. (The aliases of the pre-1.0.0 and unprefixed
+ *   names went in 2.0.1.)
  * - The «enabled_types» and «rewrite_slugs» keys of the option (Settings):
  *   contract, read by the migration and by the switch.
  *
