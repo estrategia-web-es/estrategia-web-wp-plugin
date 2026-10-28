@@ -85,13 +85,20 @@ final class Rest {
 		$lang  = (string) $definition['lang'];
 		$state = Language::switch_to( $lang );
 		try {
-			return self::handle( $params, $definition, $is_js, $page_url );
+			return self::handle( $params, $definition, (string) $params['_af_def'], $is_js, $page_url );
 		} finally {
 			Language::restore( $state );
 		}
 	}
 
-	private static function handle( array $params, array $definition, bool $is_js, string $page_url ): \WP_REST_Response {
+	/**
+	 * @param string $hash The key the definition was stored and loaded under. Used as
+	 *                     it is, NOT recomputed from $definition: since 2.0.1 a stored
+	 *                     snapshot can be rewritten in place (Marker_Migration), and a
+	 *                     page cached before that still carries a token signed for
+	 *                     the key (seen red in tests/marker-migration.test.mjs).
+	 */
+	private static function handle( array $params, array $definition, string $hash, bool $is_js, string $page_url ): \WP_REST_Response {
 		$form_id = (string) $definition['form_id'];
 		$lang    = (string) $definition['lang'];
 		$success = '' !== $definition['success_message'] ? $definition['success_message'] : Settings::text( 'success_message', $lang );
@@ -106,7 +113,7 @@ final class Rest {
 		// 2. Token: signed by this server, for this definition, neither too early nor expired.
 		$check = Token::verify(
 			(string) ( $params['_af_token'] ?? '' ),
-			Definitions::hash( $definition ),
+			$hash,
 			time(),
 			wp_salt( 'nonce' ),
 			(int) Settings::get( 'min_seconds' ),
@@ -148,7 +155,7 @@ final class Rest {
 			array(
 				'form_id'         => $form_id,
 				'form_title'      => $definition['title'],
-				'definition_hash' => Definitions::hash( $definition ),
+				'definition_hash' => $hash,
 				'post_id'         => (int) $definition['post_id'],
 				'page_url'        => $page_url,
 				'lang'            => $lang,

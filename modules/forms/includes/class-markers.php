@@ -17,8 +17,11 @@
  * - FIXED markers: the four constants below. They are plugin vocabulary, so
  *   they are in English like the rest of the code (row 8), since 1.4.0.
  *   Until then they were in Spanish ({{todos_los_campos}}, {{fecha}},
- *   {{url_pagina}}, {{nombre_sitio}}), and sites have them SAVED in their
- *   forms: those names keep working as aliases (ALIASES) until 2.0.0.
+ *   {{url_pagina}}, {{nombre_sitio}}) and worked as read aliases until
+ *   2.0.1, which removed them: «wp estrategia-web migrate-form-markers»
+ *   renames them in the saved forms (class-marker-migration.php, where the
+ *   old names live now). A site that has not run it shows {{fecha}}
+ *   verbatim in its emails: the "unknown marker" rule.
  *
  * Why {{submission_date}} and not {{date}}: the default form names its fields
  * in English (name, email, message), so a booking form with a field called
@@ -31,18 +34,14 @@
  *   Notifier::marker_values() and the FIXED_MARKERS list in
  *   assets/editor.js (the editor help). Pick a name no form would give a
  *   field: it will shadow it.
- * - Edge case, a field named like a fixed marker or an alias (a Spanish
- *   reservation form with a field "fecha"): the FIXED marker wins and the
- *   field cannot be reached from a template. That was already the behaviour
- *   before 1.4.0, and with_aliases() keeps it for the old names so that no
- *   saved email changes its content. The fix is renaming the field.
- * - The pitfall: an alias is resolved by copying the VALUE of its canonical
- *   marker (with_aliases()), not inside replace(). replace() only sees a
- *   values array; resolving there would make a field named "fecha" win over
- *   the alias and change emails already being sent.
- * - 2.0.0: delete ALIASES and with_aliases(), and say so in the CHANGELOG
- *   (sites that still use the old names will show {{fecha}} verbatim, which
- *   is the "unknown marker" rule doing its job).
+ * - Edge case, a field named like a fixed marker (a booking form with a
+ *   field "submission_date"): the FIXED marker wins and the field cannot be
+ *   reached from a template (Notifier merges the fixed values after the
+ *   fields). The fix is renaming the field. A field named like an OLD name
+ *   ("fecha") is reachable again since 2.0.1: {{fecha}} is that field.
+ * - The pitfall: renaming a fixed marker means saved forms stop working.
+ *   It takes a migration like Marker_Migration, not an alias: aliases stay
+ *   forever (this one lasted from 1.4.0 to 2.0.1).
  */
 
 namespace EstrategiaWeb\Forms;
@@ -55,33 +54,6 @@ final class Markers {
 	public const DATE       = 'submission_date';
 	public const PAGE_URL   = 'page_url';
 	public const SITE_NAME  = 'site_name';
-
-	/**
-	 * Old (Spanish) name => current name. Deprecated, removed in 2.0.0.
-	 */
-	public const ALIASES = array(
-		'todos_los_campos' => self::ALL_FIELDS,
-		'fecha'            => self::DATE,
-		'url_pagina'       => self::PAGE_URL,
-		'nombre_sitio'     => self::SITE_NAME,
-	);
-
-	/**
-	 * Adds the deprecated names with the value of their current marker.
-	 * Call it on the FINAL values array (after the fields): the alias then
-	 * overwrites a field with the same name, as the fixed marker did.
-	 *
-	 * @param array<string, string> $values marker name => value.
-	 * @return array<string, string>
-	 */
-	public static function with_aliases( array $values ): array {
-		foreach ( self::ALIASES as $old => $current ) {
-			if ( array_key_exists( $current, $values ) ) {
-				$values[ $old ] = $values[ $current ];
-			}
-		}
-		return $values;
-	}
 
 	/**
 	 * @param string                $template Template with markers.

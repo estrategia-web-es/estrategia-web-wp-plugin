@@ -131,8 +131,11 @@ the reason for using the position and the pitfalls, in
 | `{{page_url}}` | the page the form was submitted from |
 | `{{site_name}}` | the site name |
 
-Until 2.0.0 the old Spanish names keep working as aliases:
-`{{todos_los_campos}}`, `{{fecha}}`, `{{url_pagina}}` and `{{nombre_sitio}}`.
+The old Spanish names (`{{todos_los_campos}}`, `{{fecha}}`, `{{url_pagina}}`,
+`{{nombre_sitio}}`) worked as aliases until 2.0.1, which removed them:
+`wp estrategia-web migrate-form-markers [--dry-run]` renames them in every
+saved form, inline form and stored snapshot
+([includes/class-marker-migration.php](includes/class-marker-migration.php)).
 `{{submission_date}}` and not `{{date}}`: a fixed marker shadows a field with
 the same name, and «date» is a likely field name. The details, in
 [includes/class-markers.php](includes/class-markers.php).

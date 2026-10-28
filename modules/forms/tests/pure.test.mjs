@@ -25,17 +25,42 @@ test("markers: escaped in HTML except those declared as already-built HTML", () 
   assert.equal(out.raw_not_escaped, "<table>");
 });
 
-test("fixed markers: the English names, and the old Spanish ones as aliases until 2.0.0", () => {
-  const expected = "Nombre: Ana|15/10/2026 10:00|https://example.test/contacto/|Lavandería";
-  assert.equal(out.fixed_current, expected);
-  assert.equal(out.fixed_aliases, expected, "sites have {{fecha}}, {{url_pagina}}… saved in their forms: they must keep working");
+test("fixed markers: the English names; the old Spanish ones are no longer aliases (2.0.1)", () => {
+  assert.equal(out.fixed_current, "Nombre: Ana|15/10/2026 10:00|https://example.test/contacto/|Lavandería");
+  // Unknown markers stay verbatim, and {{fecha}} is now the FIELD «fecha».
+  assert.equal(out.fixed_old, "{{todos_los_campos}}|el 3 de mayo|{{url_pagina}}|{{ Nombre_Sitio }}");
 });
 
-test("fixed markers: an alias wins over a field with the same name, as before the rename", () => {
-  // The field "fecha" (el 3 de mayo) is shadowed by the alias: that is what
-  // {{fecha}} printed before 1.4.0, so no saved email changes its content.
-  assert.match(out.fixed_aliases, /\|15\/10\/2026 10:00\|/);
-  assert.deepEqual(out.alias_no_value, { nombre: "Ana" }, "no current marker, no alias: nothing is invented");
+// 2.0.1: Marker_Migration's pure part. Seen red (28-10-2026) with a mutant
+// that gave every notification the FIRST form's identifier («presupuesto»'s
+// Copia came out as «contacto»).
+test("markers migration: the four old names, with spaces and capitals; nothing else", () => {
+  assert.equal(out.mig_text, "{{all_fields}}|{{submission_date}}|{{page_url}}|{{site_name}}|{{nombre}}|{{fechas}}");
+});
+
+test("markers migration: only inside notification blocks, byte for byte around them, idempotent", () => {
+  const page = out.mig_page;
+  assert.match(page, /<p>Escribe \{\{fecha\}\} en tu plantilla<\/p>/, "a paragraph that mentions a marker is not a notification");
+  assert.match(page, /"name":"fecha"/, "a field named fecha stays");
+  assert.match(page, /"subject":"Nuevo \{\{nombre\}\} el \{\{submission_date\}\}","body":"Desde \{\{page_url\}\} en \{\{site_name\}\}:\\n\\n\{\{all_fields\}\}"/);
+  assert.match(page, /"label":"Copia","to":"x@ejemplo.test","body":"\{\{submission_date\}\}"/);
+  assert.doesNotMatch(page.split("\n").filter((l) => l.includes("/notification")).join("\n"), /todos_los_campos|url_pagina|nombre_sitio|\{\{\s*fecha/i);
+  // Before → after per notification, with the form it belongs to; «Ya nuevo» had nothing to change.
+  assert.deepEqual(out.mig_changes, [
+    { form_id: "contacto", aviso: "Aviso al equipo", cambios: {
+      subject: { antes: "Nuevo {{nombre}} el {{ Fecha }}", despues: "Nuevo {{nombre}} el {{submission_date}}" },
+      body: { antes: "Desde {{url_pagina}} en {{nombre_sitio}}:\n\n{{todos_los_campos}}", despues: "Desde {{page_url}} en {{site_name}}:\n\n{{all_fields}}" },
+    } },
+    { form_id: "presupuesto", aviso: "Copia", cambios: { body: { antes: "{{fecha}}", despues: "{{submission_date}}" } } },
+  ]);
+  assert.deepEqual(out.mig_again, [true, []], "the second pass changes nothing");
+});
+
+test("markers migration: a stored snapshot's notifications; an already new one is null", () => {
+  assert.equal(out.mig_snapshot.notifications[0].subject, "{{submission_date}}");
+  assert.equal(out.mig_snapshot.notifications[0].body, "{{all_fields}}");
+  assert.deepEqual(out.mig_snapshot.fields, [{ name: "fecha" }]);
+  assert.equal(out.mig_snapshot_new, null);
 });
 
 test("subject on a single line: no header injection", () => {

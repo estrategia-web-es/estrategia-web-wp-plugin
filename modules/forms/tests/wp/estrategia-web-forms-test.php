@@ -400,6 +400,29 @@ add_action(
 				return $out;
 			}
 		);
+		// 2.0.1 (tests/marker-migration.test.mjs). {dry, ids}: Marker_Migration::run(), as the WP-CLI command, and in
+		// the same request what it left in those posts: «after» = {id: {content, backups}}, plus the snapshot backup option.
+		$route(
+			'/migrate-form-markers',
+			'POST',
+			static function ( WP_REST_Request $r ) {
+				wp_set_current_user( 1 );
+				if ( $r->get_param( 'fresh' ) ) {
+					delete_option( \EstrategiaWeb\Forms\Marker_Migration::BACKUP_OPTION );
+				}
+				$out   = \EstrategiaWeb\Forms\Marker_Migration::run( (bool) $r->get_param( 'dry' ) );
+				$after = array();
+				foreach ( array_map( 'intval', (array) $r->get_param( 'ids' ) ) as $id ) {
+					$after[ $id ] = array(
+						'content' => (string) get_post_field( 'post_content', $id, 'raw' ),
+						'backups' => get_post_meta( $id, \EstrategiaWeb\Forms\Marker_Migration::BACKUP_META ),
+					);
+				}
+				$out['after']           = $after;
+				$out['snapshot_backup'] = array_keys( (array) get_option( \EstrategiaWeb\Forms\Marker_Migration::BACKUP_OPTION, array() ) );
+				return $out;
+			}
+		);
 		// GET: every form post (any status but trash) with its content, language and WPML trid. DELETE: all of them, for good.
 		$route(
 			'/eweb-forms',

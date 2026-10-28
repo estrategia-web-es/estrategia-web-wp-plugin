@@ -54,6 +54,7 @@ require_once __DIR__ . '/includes/class-notifier.php';
 require_once __DIR__ . '/includes/class-blocks.php';
 require_once __DIR__ . '/includes/class-form-post-type.php'; // 2.0.0: the form as a post of its own (eweb_form).
 require_once __DIR__ . '/includes/class-form-migration.php'; // 2.0.0: wp estrategia-web migrate-forms.
+require_once __DIR__ . '/includes/class-marker-migration.php'; // 2.0.1: wp estrategia-web migrate-form-markers.
 require_once __DIR__ . '/includes/class-rest.php';
 require_once __DIR__ . '/includes/class-cron.php';
 require_once __DIR__ . '/includes/admin/class-submissions-table.php';
