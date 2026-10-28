@@ -358,10 +358,11 @@ and its readers: that is the client's call under its GDPR).
 Lavandería turns them off (`comments-off`). Here there are comments on
 articles: the module is left **off** and the site uses WordPress comments.
 Proposal: prior moderation (Settings › Discussion), no links, with the
-privacy notice in the form. **GAP**: the parent theme's `single.html`
-template **has no comments block** (measured on 15-10-2026): either it is
-added in the parent (the next site with comments would do it the same way)
-or in this site's child. **GAP**: how much spam it gets today and whether
+privacy notice in the form. The parent theme's `single.html` has the
+comments block since its 1.2.0 (branch `ew-web2026`, 28-10-2026, made for
+estrategiaweb.es, the first site with a blog: also cards in the listings,
+author, reading time and related posts); with `comments-off` on it renders
+nothing. **GAP**: how much spam it gets today and whether
 it uses anything (Akismet or other) — checked with the database copy (8.2).
 
 ## How to maintain this guide
