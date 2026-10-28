@@ -44,6 +44,12 @@ after(async () => {
 });
 
 test("a week entered in the panel: ranges, «same as the day before», the warning on a range that will not be kept, stored canonical", async () => {
+  // 1.8.0: the location template edits its fields in the main-area meta box (fields_box: main), where the
+  // hours are one line per day (tests/location-box.test.mjs). The panel's hours control is for a type
+  // in the sidebar: this copy is switched to it, which a site may do.
+  const def = (await ctApi("/eweb_location")).json.definition;
+  const side = await ctApi("/eweb_location", { method: "POST", body: { definition: { ...def, fields_box: "sidebar" }, confirm: true } });
+  assert.equal(side.status, 200, JSON.stringify(side.json));
   const r = await wp(`/${type("location")}`, { method: "POST", body: { title: "Son Oms", status: "draft" } });
   assert.equal(r.status, 201, r.text);
   await p.goto(`${BASE}/wp-admin/post.php?post=${r.json.id}&action=edit`);
@@ -89,19 +95,20 @@ test("the constructor offers a template's new fields to a copy made before them,
   old.fields = old.fields.slice(0, 8); // the copy as it was on 17-10-2026
   const put = await ctApi("/eweb_location", { method: "POST", body: { definition: old, confirm: true } });
   assert.equal(put.status, 200, JSON.stringify(put.json));
-  assert.equal(put.json.missingFields.length, 9);
+  const missing = before.json.definition.fields.length - 8;
+  assert.equal(put.json.missingFields.length, missing);
 
-  await p.goto(BASE + "/wp-admin/admin.php?page=estrategia-web-content-types");
-  await p.click('tr[data-type="eweb_location"] [data-action="edit"]');
+  // 1.8.0: each type has its own edit screen (the list's «Edit» links there).
+  await p.goto(BASE + "/wp-admin/admin.php?page=estrategia-web-content-types&type=eweb_location");
   const add = p.locator('[data-action="add-template-fields"]');
   await add.waitFor({ timeout: 20000 });
-  assert.match(await p.locator("[data-template-fields]").textContent(), /\(9\)/);
+  assert.match(await p.locator("[data-template-fields]").textContent(), new RegExp(`\\(${missing}\\)`));
   await add.click();
   assert.equal(await p.locator("[data-template-fields]").textContent(), "", "the notice goes away once they are in the draft");
   const untouched = await ctApi("/eweb_location");
   assert.equal(untouched.json.definition.fields.length, 8, "nothing stored until the person saves");
   await p.click('[data-action="save"]');
-  await p.locator('tr[data-type="eweb_location"]').waitFor({ timeout: 20000 });
+  await p.locator("[data-saved]").waitFor({ timeout: 20000 }); // 1.8.0: the screen stays on the type after saving.
   const after = await ctApi("/eweb_location");
   assert.deepEqual(after.json.definition.fields.map((f) => f.name), before.json.definition.fields.map((f) => f.name), "the same fields, in the template's order");
   assert.deepEqual(after.json.missingFields, []);

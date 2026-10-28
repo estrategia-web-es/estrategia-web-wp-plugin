@@ -40,9 +40,13 @@ const CONTRACT = {
   location: {
     name: "eweb_location",
     taxonomies: [],
-    fields: ["estrategia_web_location_address", "estrategia_web_location_phone", "estrategia_web_location_email", "estrategia_web_location_schedule", "estrategia_web_location_map_url", "estrategia_web_location_map_embed", "estrategia_web_location_static_map", "estrategia_web_location_static_map_id",
-      // 22-10-2026, for modules/local-business (schema.org): the address by parts, the structured hours, the coordinates and the type.
-      "estrategia_web_location_street", "estrategia_web_location_postal_code", "estrategia_web_location_locality", "estrategia_web_location_region", "estrategia_web_location_country", "estrategia_web_location_hours", "estrategia_web_location_latitude", "estrategia_web_location_longitude", "estrategia_web_location_business_type"],
+    // 1.8.0 (27-10-2026): each datum stored ONCE. Out (derived now, Location_Data): address, schedule,
+    // map_url, map_embed, static_map. In: map_query. Still valid in a site's copy until its migration
+    // (Schema::RETIRED_FIELDS), so the stored data keeps its names.
+    fields: ["estrategia_web_location_phone", "estrategia_web_location_email",
+      "estrategia_web_location_street", "estrategia_web_location_postal_code", "estrategia_web_location_locality", "estrategia_web_location_region", "estrategia_web_location_country", "estrategia_web_location_hours",
+      "estrategia_web_location_map_query", "estrategia_web_location_static_map_id",
+      "estrategia_web_location_latitude", "estrategia_web_location_longitude", "estrategia_web_location_business_type"],
   },
   project: { name: "eweb_project", taxonomies: ["eweb_project_category"], fields: [] },
   portfolio: { name: "eweb_portfolio", taxonomies: ["eweb_portfolio_category"], fields: [] },
@@ -78,16 +82,13 @@ test("the templates keep the old names: type, taxonomies and meta keys (nothing 
   assert.deepEqual(
     Object.fromEntries(Object.entries(loc).map(([k, f]) => [k, f.wpml])),
     {
-      estrategia_web_location_address: "translate",
       estrategia_web_location_phone: "copy",
       estrategia_web_location_email: "copy",
-      estrategia_web_location_schedule: "translate",
-      estrategia_web_location_map_url: "copy",
-      estrategia_web_location_map_embed: "copy",
-      estrategia_web_location_static_map: "copy",
+      estrategia_web_location_map_query: "copy",
       estrategia_web_location_static_map_id: "copy",
-      // A postal address is not translated (the post office reads it in the local language): copied, like the hours and the coordinates.
-      estrategia_web_location_street: "copy",
+      // 1.8.0: the street is what the page shows, line by line, so it is translated (Lavandería's English
+      // «Maioris Shopping Centre»); the rest of a postal address is not (the post office reads it in the local language).
+      estrategia_web_location_street: "translate",
       estrategia_web_location_postal_code: "copy",
       estrategia_web_location_locality: "copy",
       estrategia_web_location_region: "copy",
@@ -105,7 +106,10 @@ test("the templates keep the old names: type, taxonomies and meta keys (nothing 
   assert.deepEqual(t.estrategia_web_testimonial_client.post_type, ["eweb_client"]);
   const c = Object.fromEntries(es.client.normalized.fields.map((f) => [f.name, f]));
   assert.equal(c.estrategia_web_client_image_fit.default, "cover", "a client without the field saved counts as a photo");
-  assert.deepEqual(es.client.normalized.supports, ["title", "thumbnail", "excerpt", "page-attributes", "custom-fields"], "no editor: the classic screen, as before");
+  assert.deepEqual(es.client.normalized.supports, ["title", "editor", "thumbnail", "excerpt", "page-attributes", "custom-fields"], "1.8.0: the block editor like every type, its fields in the main meta box");
+  for (const key of ["location", "client", "testimonial"]) assert.equal(es[key].normalized.fields_box, "main", key + ": fields in the main area (1.8.0)");
+  assert.deepEqual(es.location.normalized.groups.map((g) => [g.key, g.collapsed]), [["contact", false], ["address", false], ["hours", false], ["map", false], ["google", true]], "«For Google» starts closed");
+  assert.ok(es.location.normalized.fields.every((f) => f.group), "every location field in a group");
   assert.deepEqual(es.location.normalized.labels.details, { en: "Location details", es: "Datos de la sede", ca: "Dades de la seu" }, "the panel title the old Meta_Panel had");
 });
 
@@ -165,22 +169,43 @@ test("the hours field type: a default must be hours as stored", () => {
 // 22-10-2026. Seen red: with add_missing() appending at the end, the new fields went after the site's own «Parking».
 test("new fields of a template: offered by name, put in after their template neighbour, the site's own fields untouched", () => {
   const stored = resolved("location");
-  // A site that copied the template on 17-10-2026: the first eight fields, one of them changed, plus one of its own.
-  stored.fields = stored.fields.slice(0, 8);
-  stored.fields[0].label = { es: "Dirección (como se ve)" };
+  // A site with only the template's first two fields, one of them changed, plus one of its own.
+  stored.fields = stored.fields.slice(0, 2);
+  stored.fields[0].label = { es: "Teléfono de la sede" };
   const own = { name: "eweb_location_parking", type: "boolean", label: "Parking" };
   stored.fields.push(own);
   const { missing, added } = php("missing", { def: stored });
-  const NEW = ["estrategia_web_location_street", "estrategia_web_location_postal_code", "estrategia_web_location_locality", "estrategia_web_location_region", "estrategia_web_location_country", "estrategia_web_location_hours", "estrategia_web_location_latitude", "estrategia_web_location_longitude", "estrategia_web_location_business_type"];
+  const NEW = resolved("location").fields.slice(2).map((f) => f.name);
   assert.deepEqual(missing.map((m) => m.field.name), NEW);
-  assert.equal(missing[0].after, "estrategia_web_location_static_map_id");
-  assert.deepEqual(added.fields.map((f) => f.name), [...stored.fields.slice(0, 8).map((f) => f.name), ...NEW, own.name], "after the template's last old field, before the site's own one");
+  assert.equal(missing[0].after, "estrategia_web_location_email");
+  assert.deepEqual(added.fields.map((f) => f.name), [...stored.fields.slice(0, 2).map((f) => f.name), ...NEW, own.name], "after the template's last old field, before the site's own one");
   assert.deepEqual(added.fields[0], stored.fields[0], "the site's version of a template field is kept");
   assert.deepEqual(added.fields.at(-1), own, "and so is its own field");
   assert.deepEqual(errors(added), [], "what a deploy would store validates");
   assert.deepEqual(php("missing", { def: added }).missing, [], "idempotent: nothing more to offer");
   const plain = { prefix: "gment_", name: "gment_shop", labels: { singular: "Shop", plural: "Shops" }, fields: [] };
   assert.deepEqual(php("missing", { def: plain }).missing, [], "a definition without a template is offered nothing");
+});
+
+// 1.8.0. Seen red (27-10-2026) with RETIRED_FIELDS emptied: the old copy failed with «uses the reserved prefix».
+test("a site's copy from before 1.8.0 (the address, hours and map texts still in it) keeps validating until it migrates; an unknown estrategia_web_ field still does not", () => {
+  const old = resolved("location");
+  old.fields.unshift({ name: "estrategia_web_location_address", type: "textarea", label: "Address", wpml: "translate" });
+  for (const n of ["schedule", "map_url", "map_embed", "static_map"]) old.fields.push({ name: "estrategia_web_location_" + n, type: n === "schedule" ? "textarea" : n === "static_map" ? "local_image" : n === "map_embed" ? "embed" : "url", label: n });
+  assert.deepEqual(errors(old), [], "a definition with ONE error is not registered: the site would lose its locations on update");
+  old.fields.push({ name: "estrategia_web_location_invented", type: "text", label: "x" });
+  hasError(old, /estrategia_web_location_invented/);
+});
+
+test("fields_box, groups and group: validated", () => {
+  const base = () => ({ prefix: "gment_", name: "gment_shop", labels: { singular: "Shop", plural: "Shops" }, fields: [{ name: "gment_phone", type: "tel", label: "Phone", group: "contact" }], groups: [{ key: "contact", label: "Contact" }] });
+  assert.deepEqual(errors({ ...base(), fields_box: "main" }), []);
+  hasError({ ...base(), fields_box: "middle" }, /“fields_box” must be one of: sidebar, main/);
+  const g = base();
+  g.fields[0].group = "other";
+  hasError(g, /group “other” is not one of the definition’s «groups»/);
+  hasError({ ...base(), groups: [{ key: "contact", label: "A" }, { key: "contact", label: "B" }] }, /group “contact” is declared twice/);
+  hasError({ ...base(), groups: [{ key: "contact", label: "A", collapsed: "yes" }] }, /collapsed must be true or false/);
 });
 
 test("Changes: what is refused, what is warned, and the URLs that move", () => {

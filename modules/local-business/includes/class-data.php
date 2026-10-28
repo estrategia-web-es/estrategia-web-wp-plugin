@@ -84,7 +84,7 @@ final class Data {
 		return trailingslashit( (string) get_option( 'home' ) ) . '#organization';
 	}
 
-	/** @return array{id:string,name:string,url:string,logo:string,telephone:string,email:string,same_as:string[]} */
+	/** @return array{hours:string,type:string,id:string,name:string,url:string,logo:string,telephone:string,email:string,same_as:string[]} */
 	public static function company(): array {
 		$logo_id = (int) get_option( 'site_logo' ) ?: (int) get_theme_mod( 'custom_logo' );
 		$same_as = array();
@@ -94,7 +94,12 @@ final class Data {
 			}
 		}
 		$name = Company::value( 'company_name' );
+		// 1.8.0: the company's hours (Company details) speak for the business only on a site with no
+		// locations — with locations, each has its own and the company's field is hidden.
+		$hours = self::all_locations() ? '' : (string) \EstrategiaWeb\Site\Settings::get( 'hours' );
 		return array(
+			'hours'     => $hours,
+			'type'      => self::business_type(),
 			'id'        => self::organization_id(),
 			'name'      => '' !== $name ? $name : wp_specialchars_decode( (string) get_bloginfo( 'name' ), ENT_QUOTES ),
 			'url'       => (string) apply_filters( 'wpml_home_url', home_url( '/' ) ),
@@ -161,7 +166,8 @@ final class Data {
 				'image'       => self::image( $location, $meta ),
 				'telephone'   => '' !== $meta( 'phone' ) ? $meta( 'phone' ) : Company::value( 'phone' ),
 				'email'       => $meta( 'email' ),
-				'street'      => $meta( 'street' ),
+				// 1.8.0: the street may have two lines (what the page shows); Google gets them on one.
+				'street'      => \EstrategiaWeb\ContentTypes\Location_Data::street_line( $meta( 'street' ) ),
 				'postal_code' => $meta( 'postal_code' ),
 				'locality'    => $meta( 'locality' ),
 				'region'      => $meta( 'region' ),

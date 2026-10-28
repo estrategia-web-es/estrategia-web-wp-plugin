@@ -15,6 +15,7 @@
   "supports": ["title", "editor", "thumbnail", "page-attributes", "custom-fields"],
   "menu_position": 22,
   "wpml": "display-as-translated",
+  "fields_box": "main",
   "fields": [
     {
       "name": "estrategia_web_testimonial_author",

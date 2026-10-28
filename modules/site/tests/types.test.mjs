@@ -58,12 +58,13 @@ test("fields (meta) via REST: type and sanitizing (rating 1-5, email, URL)", asy
   const t2 = await wp(`/${type("testimonial")}`, { method: "POST", body: { title: "Another", status: "publish", meta: { estrategia_web_testimonial_client: t.json.id } } });
   assert.equal(t2.json.meta.estrategia_web_testimonial_client, 0, "an id that is not a client is not saved");
 
-  const l = await wp(`/${type("location")}`, { method: "POST", body: { title: "Palma location", status: "publish", meta: { estrategia_web_location_email: "bad", estrategia_web_location_map_url: "javascript:alert(1)", estrategia_web_location_map_embed: "https://www.google.com/maps/embed?pb=x", estrategia_web_location_address: "Calle 1\nPalma" } } });
+  // 1.8.0: the street keeps its two lines (\r\n from a browser becomes \n); the old free texts are gone.
+  const l = await wp(`/${type("location")}`, { method: "POST", body: { title: "Palma location", status: "publish", meta: { estrategia_web_location_email: "bad", estrategia_web_location_street: "Edificio Sol\r\nCalle 1", estrategia_web_location_map_query: "  Palma <b>Centro</b> " } } });
   assert.equal(l.status, 201, l.text);
   assert.equal(l.json.meta.estrategia_web_location_email, "");
-  assert.equal(l.json.meta.estrategia_web_location_map_url, "");
-  assert.equal(l.json.meta.estrategia_web_location_map_embed, "https://www.google.com/maps/embed?pb=x");
-  assert.equal(l.json.meta.estrategia_web_location_address, "Calle 1\nPalma");
+  assert.equal(l.json.meta.estrategia_web_location_street, "Edificio Sol\nCalle 1");
+  assert.equal(l.json.meta.estrategia_web_location_map_query, "Palma Centro");
+  assert.equal("estrategia_web_location_address" in l.json.meta, false, "retired in 1.8.0");
 });
 
 test("a Query (core/query) of `client` filtered by client_sector renders those of that sector with title and image", async () => {

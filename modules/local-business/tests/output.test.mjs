@@ -5,7 +5,7 @@
 // failed (no script at all: the binding sits inside a group, as on Lavandería's pages).
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { reset, wp, saveCompany, seedPage, html, type, BASE } from "../../../tests/lib.mjs";
+import { reset, wp, saveCompany, seedPage, html, type, upload, png, BASE } from "../../../tests/lib.mjs";
 import { checkLocalBusiness, checkOrganization, jsonLdBlocks, nodesOf } from "./google-rules.mjs";
 
 const host = async (name) => {
@@ -15,6 +15,7 @@ const host = async (name) => {
 const SRC = "estrategia-web-site/location";
 const HOURS = { mo: ["08:00-16:00"], tu: ["08:00-16:00"], we: ["08:00-16:00"], th: ["08:00-16:00"], fr: ["08:00-16:00"], sa: ["08:00-16:00"] };
 let sonOms;
+let staticMap;
 let tied;
 
 before(async () => {
@@ -23,17 +24,22 @@ before(async () => {
   await saveCompany({ enabled_types: ["location"], company_name: "Lavandería de pruebas", phone: "971 00 00 00", email: "info@ejemplo.test" });
   const s = await wp("/settings", { method: "POST", body: { estrategia_web_local_business_type: "DryCleaningOrLaundry", estrategia_web_social_links: [{ name: "", url: "https://www.facebook.com/ejemplo", icon: "facebook" }] } });
   assert.equal(s.status, 200, s.text);
+  await wp("/types"); // The definition is stored on the save; registered from the next request.
   const make = async (body) => {
     const r = await wp(`/${type("location")}`, { method: "POST", body: { status: "publish", ...body } });
     assert.equal(r.status, 201, r.text);
     return r.json;
   };
+  const map = await upload("mapa-son-oms.png", "image/png", png(8, 6));
+  assert.equal(map.status, 201, map.text);
+  staticMap = map.json.source_url;
   sonOms = await make({
     title: "Lavandería Industrial",
     slug: "son-oms",
     meta: {
       estrategia_web_location_phone: "+34 871 049 656",
-      estrategia_web_location_street: "Calle Camp Franc, 11, Nave 14",
+      // 1.8.0: two lines, what the page shows; Google gets them on one.
+      estrategia_web_location_street: "Calle Camp Franc, 11, Nave 14\nPolígono Son Oms",
       estrategia_web_location_postal_code: "07199",
       estrategia_web_location_locality: "Palma",
       estrategia_web_location_region: "Islas Baleares",
@@ -41,11 +47,11 @@ before(async () => {
       estrategia_web_location_hours: JSON.stringify({ sa: ["08:00-12:00", "11:00-16:00"], ...Object.fromEntries(Object.entries(HOURS).filter(([d]) => d !== "sa")), su: ["99:00-10:00"] }),
       estrategia_web_location_latitude: 39.5379694,
       estrategia_web_location_longitude: 2.7349615,
-      estrategia_web_location_static_map: BASE + "/wp-content/uploads/mapa-son-oms.webp",
+      estrategia_web_location_static_map_id: map.json.id,
     },
   });
-  // A location whose new fields were never filled in: it publishes nothing for itself.
-  await make({ title: "Sede sin datos", slug: "sin-datos", meta: { estrategia_web_location_address: "Solo texto" } });
+  // A location whose address was never filled in: it publishes nothing for itself.
+  await make({ title: "Sede sin datos", slug: "sin-datos", meta: { estrategia_web_location_phone: "971 00 00 01" } });
   tied = await seedPage(
     `<!-- wp:group -->
 <div class="wp-block-group"><!-- wp:paragraph ${JSON.stringify({ metadata: { bindings: { content: { source: SRC, args: { slug: "son-oms", key: "estrategia_web_location_phone" } } } } })} -->
@@ -83,7 +89,8 @@ test("without an SEO plugin, a page tied to a location: our own script, its Loca
   assert.equal(lb["@id"], sonOms.link + "#localbusiness", "@id: the location's own page");
   assert.equal(lb.name, "Lavandería Industrial");
   assert.equal(lb.telephone, "+34 871 049 656");
-  assert.equal(lb.image, BASE + "/wp-content/uploads/mapa-son-oms.webp");
+  assert.equal(lb.image, staticMap, "the static map of the media library");
+  assert.equal(lb.address.streetAddress, "Calle Camp Franc, 11, Nave 14, Polígono Son Oms", "the street's two lines on one (1.8.0)");
   const org = nodes.find((n) => n["@type"] === "Organization");
   assert.deepEqual(checkOrganization(org), { errors: [] });
   assert.equal(lb.parentOrganization["@id"], org["@id"]);
@@ -131,4 +138,17 @@ test("with Yoast: our nodes appended to its list, its Organization completed", a
   assert.deepEqual(nodes.map((n) => [].concat(n["@type"])[0]), ["Organization", "WebPage", "DryCleaningOrLaundry"]);
   assert.equal(nodes[0].name, "Yoast name");
   assert.equal(nodes[2].parentOrganization["@id"], nodes[0]["@id"]);
+});
+
+// 1.8.0. Seen red (27-10-2026) before Data::company() passed the hours: no openingHoursSpecification.
+test("a site WITHOUT locations: the Company details hours on the front page's Organization, typed as the business (with locations they are ignored)", async () => {
+  await host("");
+  await saveCompany({ hours: { tu: "13:00-16:00, 20:00-23:30", we: "13:00-16:00" } });
+  const withLocations = nodesOf((await html(BASE + "/")).text)[0];
+  assert.equal(withLocations.openingHoursSpecification, undefined, "with locations, each has its own");
+  for (const loc of (await wp(`/${type("location")}?status=any&context=edit&per_page=100`)).json) await wp(`/${type("location")}/${loc.id}?force=true`, { method: "DELETE" });
+  const org = nodesOf((await html(BASE + "/")).text)[0];
+  assert.deepEqual(org["@type"], ["Organization", "DryCleaningOrLaundry"]);
+  assert.deepEqual(org.openingHoursSpecification.map((s) => [s.dayOfWeek, s.opens, s.closes]), [[["Tuesday", "Wednesday"], "13:00", "16:00"], [["Tuesday"], "20:00", "23:30"]]);
+  assert.deepEqual(checkOrganization(org), { errors: [] });
 });

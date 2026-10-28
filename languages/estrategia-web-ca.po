@@ -9,10 +9,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: includes/admin/class-menu.php:80 includes/admin/class-menu.php:88
-#: modules/site/includes/admin/class-admin.php:116
+#: modules/site/includes/admin/class-admin.php:151
 #: modules/site/includes/class-bindings.php:51
 #: modules/site/includes/class-legacy-names.php:109
-#: modules/site/includes/class-settings.php:165
+#: modules/site/includes/class-settings.php:168
 msgid "Company details"
 msgstr "Dades de l'empresa"
 
@@ -46,7 +46,7 @@ msgstr "Mòdul"
 
 #: includes/admin/class-modules-page.php:117
 #: modules/consent/includes/admin/class-cookies-page.php:250
-#: modules/content-types/includes/admin/class-page.php:88
+#: modules/content-types/includes/admin/class-types-table.php:61
 msgid "Status"
 msgstr "Estat"
 
@@ -68,6 +68,7 @@ msgstr "Desactivat"
 
 #: includes/admin/class-settings-page.php:211
 #: includes/admin/class-settings-page.php:228
+#: modules/content-types/includes/admin/class-page.php:268
 #: modules/forms/includes/admin/class-admin.php:55
 msgid "Settings"
 msgstr "Paràmetres"
@@ -477,7 +478,6 @@ msgid "Seen"
 msgstr "Vista"
 
 #: modules/consent/includes/admin/class-cookies-page.php:256
-#: modules/content-types/includes/admin/class-page.php:90
 msgid "Actions"
 msgstr "Accions"
 
@@ -522,12 +522,12 @@ msgid "Proposal: Estrategia Web"
 msgstr "Proposta: Estrategia Web"
 
 #: modules/consent/includes/admin/class-cookies-page.php:312
-#: modules/content-types/includes/admin/class-page.php:188
+#: modules/content-types/includes/admin/class-page.php:364
 msgid "Save"
 msgstr "Desa"
 
 #: modules/consent/includes/admin/class-cookies-page.php:313
-#: modules/content-types/includes/admin/class-page.php:104
+#: modules/content-types/includes/admin/class-types-table.php:121
 #: modules/forms/includes/admin/class-submissions-table.php:39
 #: modules/forms/includes/admin/class-submissions-table.php:86
 #: modules/redirects/includes/admin/class-tables.php:56
@@ -551,7 +551,8 @@ msgstr ""
 "s'omplen amb la proposta, si n'hi ha."
 
 #: modules/consent/includes/admin/class-cookies-page.php:326
-#: modules/content-types/includes/admin/class-page.php:84
+#: modules/content-types/includes/admin/class-page.php:322
+#: modules/content-types/includes/admin/class-types-table.php:56
 #: modules/social/includes/class-admin.php:91
 #: modules/social/includes/class-admin.php:132
 msgid "Name"
@@ -965,16 +966,6 @@ msgctxt "module category"
 msgid "Privacy & analytics"
 msgstr "Privadesa i analítica"
 
-#: modules/content-types/assets/fields-panel.js:53
-#: modules/map/blocks/map/edit.js:123
-msgid "Choose image"
-msgstr "Tria una imatge"
-
-#: modules/content-types/assets/fields-panel.js:53
-#: modules/map/blocks/map/edit.js:85 modules/map/blocks/map/edit.js:123
-msgid "Replace image"
-msgstr "Canvia la imatge"
-
 #: modules/content-types/assets/fields-panel.js:95
 msgid "Incomplete: this range will not be saved."
 msgstr "Incompleta: aquesta franja no es desarà."
@@ -1024,12 +1015,83 @@ msgstr "%s: igual que el dia anterior"
 msgid "Same as the day before"
 msgstr "Igual que el dia anterior"
 
-#: modules/content-types/includes/admin/class-page.php:53
-#: modules/content-types/includes/admin/class-page.php:73
+#: modules/content-types/includes/admin/class-page.php:97
+#: modules/content-types/includes/admin/class-page.php:189
 msgid "Content types"
 msgstr "Tipus de contingut"
 
-#: modules/content-types/includes/admin/class-page.php:74
+#. translators: %s: internal name of a content type
+#: modules/content-types/includes/admin/class-page.php:169
+#, php-format
+msgid "Template added as “%s”. You can change it here."
+msgstr "Plantilla afegida com a «%s». La pots canviar aquí."
+
+#. translators: %s: internal name of a content type
+#: modules/content-types/includes/admin/class-page.php:171
+#, php-format
+msgid "Content type “%s” activated."
+msgstr "Tipus de contingut «%s» activat."
+
+#. translators: %s: internal name of a content type
+#: modules/content-types/includes/admin/class-page.php:173
+#, php-format
+msgid ""
+"Content type “%s” deactivated. Its entries stay and come back when you "
+"activate it."
+msgstr ""
+"Tipus de contingut «%s» desactivat. Les entrades es queden i tornen quan "
+"l'activis."
+
+#. translators: %s: internal name of a content type
+#: modules/content-types/includes/admin/class-page.php:175
+#, php-format
+msgid "Content type “%s” deleted."
+msgstr "Tipus de contingut «%s» eliminat."
+
+#. translators: %s: internal name of a content type
+#: modules/content-types/includes/admin/class-page.php:177
+#, php-format
+msgid ""
+"There is no content type “%s” (it may have been deleted or renamed). These "
+"are the ones there are."
+msgstr ""
+"No hi ha cap tipus de contingut «%s» (potser s'ha eliminat o reanomenat). "
+"Aquests són els que hi ha."
+
+#: modules/content-types/includes/admin/class-page.php:190
+#: modules/redirects/includes/admin/class-page.php:177
+msgid "Add new"
+msgstr "Afegeix-ne una"
+
+#: modules/content-types/includes/admin/class-page.php:192
+msgid "Add from template"
+msgstr "Afegeix des d'una plantilla"
+
+#: modules/content-types/includes/admin/class-page.php:193
+msgid ""
+"Ready-made types of a corporate site. Adding one copies it into this panel, "
+"where you can change it."
+msgstr ""
+"Tipus ja fets d'un web corporatiu. Si n'afegeixes un, es copia a aquest "
+"tauler, on el pots canviar."
+
+#: modules/content-types/includes/admin/class-page.php:195
+msgid "Already added"
+msgstr "Ja afegit"
+
+#: modules/content-types/includes/admin/class-page.php:195
+msgid ""
+"Not available: a type with this name is registered elsewhere (Company "
+"details › Content types)."
+msgstr ""
+"No disponible: hi ha un tipus amb aquest nom registrat en un altre lloc "
+"(Dades de l'empresa › Tipus de contingut)."
+
+#: modules/content-types/includes/admin/class-page.php:207
+msgid "Import JSON"
+msgstr "Importa un JSON"
+
+#: modules/content-types/includes/admin/class-page.php:210
 msgid ""
 "Your own content types — restaurants, courses, team members… — with their "
 "fields, taxonomies and addresses. They are saved in this site’s database."
@@ -1038,173 +1100,67 @@ msgstr ""
 "— amb els seus camps, taxonomies i adreces. Es desen a la base de dades "
 "d'aquest web."
 
-#
-#: modules/content-types/includes/admin/class-page.php:75
-msgid "Loading…"
-msgstr "S'està carregant…"
+#: modules/content-types/includes/admin/class-page.php:215
+msgid "Files with errors (not registered)"
+msgstr "Fitxers amb errors (no es registren)"
 
-#: modules/content-types/includes/admin/class-page.php:76
+#: modules/content-types/includes/admin/class-page.php:225
+msgid "Folders searched for JSON files"
+msgstr "Carpetes on es cerquen fitxers JSON"
+
+#: modules/content-types/includes/admin/class-page.php:230
+#: modules/content-types/includes/admin/class-page.php:250
 msgid "This screen needs JavaScript."
 msgstr "Aquesta pantalla necessita JavaScript."
 
-#
-#: modules/content-types/includes/admin/class-page.php:82
-msgid "Types"
-msgstr "Tipus"
-
-#: modules/content-types/includes/admin/class-page.php:83
-msgid ""
-"There are no content types yet. Add one, start from a template or import a "
-"JSON file."
-msgstr ""
-"Encara no hi ha tipus de contingut. Afegeix-ne un, comença des d'una "
-"plantilla o importa un fitxer JSON."
-
-#
-#: modules/content-types/includes/admin/class-page.php:85
-#: modules/content-types/includes/admin/class-page.php:137
-msgid "Internal name"
-msgstr "Nom intern"
-
-#
-#: modules/content-types/includes/admin/class-page.php:86
-msgid "URL"
-msgstr "URL"
-
-#: modules/content-types/includes/admin/class-page.php:87
-msgid "Where it is defined"
-msgstr "On es defineix"
-
-#: modules/content-types/includes/admin/class-page.php:89
-msgid "Entries"
-msgstr "Entrades"
-
-#: modules/content-types/includes/admin/class-page.php:91
-msgid "This panel"
-msgstr "Aquest tauler"
-
-#. translators: %s: a template name, e.g. Testimonials
-#: modules/content-types/includes/admin/class-page.php:93
-#, php-format
-msgid "This panel (from the template “%s”)"
-msgstr "Aquest tauler (de la plantilla «%s»)"
-
-#. translators: %s: a file path
-#: modules/content-types/includes/admin/class-page.php:95
-#, php-format
-msgid "File (read-only): %s"
-msgstr "Fitxer (només lectura): %s"
-
-#: modules/content-types/includes/admin/class-page.php:96
-#: modules/redirects/includes/admin/class-page.php:285
-#: modules/redirects/includes/admin/class-tables.php:38
-msgid "Active"
-msgstr "Activa"
-
-#: modules/content-types/includes/admin/class-page.php:97
-msgid "Switched off"
-msgstr "Desactivat"
-
-#
-#: modules/content-types/includes/admin/class-page.php:98
-msgid "Not registered: it has errors"
-msgstr "No registrat: té errors"
-
-#: modules/content-types/includes/admin/class-page.php:99
-#: modules/forms/includes/admin/class-forms-list.php:204
-#: modules/redirects/includes/admin/class-tables.php:89
-msgid "Edit"
-msgstr "Edita"
-
-#
-#: modules/content-types/includes/admin/class-page.php:100
-msgid "Export JSON"
-msgstr "Exporta el JSON"
-
-#: modules/content-types/includes/admin/class-page.php:101
-msgid "Copy to this panel"
-msgstr "Copia a aquest tauler"
-
-#: modules/content-types/includes/admin/class-page.php:102
-msgid "Switch off"
-msgstr "Desactiva"
-
-#: modules/content-types/includes/admin/class-page.php:103
-msgid "Switch on"
-msgstr "Activa"
+#: modules/content-types/includes/admin/class-page.php:234
+msgid "New content type"
+msgstr "Tipus de contingut nou"
 
 #. translators: %s: a content type name
-#: modules/content-types/includes/admin/class-page.php:106
+#: modules/content-types/includes/admin/class-page.php:240
+#: modules/content-types/includes/admin/class-page.php:267
 #, php-format
-msgid ""
-"Switch off “%s”? Its menu and its addresses disappear; its entries stay and "
-"come back when you switch it on."
-msgstr ""
-"Vols desactivar «%s»? Desapareixen el seu menú i les seves adreces; les "
-"entrades es queden i tornen quan l'activis."
+msgid "Edit “%s”"
+msgstr "Edita «%s»"
+
+#: modules/content-types/includes/admin/class-page.php:246
+#: modules/forms/includes/admin/class-admin.php:129
+#: modules/forms/includes/admin/class-admin.php:134
+#: modules/forms/includes/admin/class-admin.php:177
+msgid "Back to the list"
+msgstr "Torna a la llista"
+
+#: modules/content-types/includes/admin/class-page.php:249
+msgid "Loading…"
+msgstr "S'està carregant…"
 
 #. translators: %s: a content type name
-#: modules/content-types/includes/admin/class-page.php:108
+#: modules/content-types/includes/admin/class-page.php:257
+#, php-format
+msgid ""
+"Deactivate “%s”? Its menu and its addresses disappear; its entries stay and "
+"come back when you activate it."
+msgstr ""
+"Vols desactivar «%s»? En desapareixen el menú i les adreces; les entrades es "
+"queden i tornen quan l'activis."
+
+#. translators: %s: a content type name
+#: modules/content-types/includes/admin/class-page.php:259
 #, php-format
 msgid "Delete the definition of “%s”? This cannot be undone."
 msgstr "Vols esborrar la definició de «%s»? No es pot desfer."
 
-#
-#: modules/content-types/includes/admin/class-page.php:109
-msgid "Add content type"
-msgstr "Afegeix un tipus de contingut"
-
-#
-#: modules/content-types/includes/admin/class-page.php:110
-msgid "Import JSON"
-msgstr "Importa un JSON"
-
-#: modules/content-types/includes/admin/class-page.php:111
+#: modules/content-types/includes/admin/class-page.php:260
 msgid "JSON file"
 msgstr "Fitxer JSON"
 
-#: modules/content-types/includes/admin/class-page.php:112
-msgid "Or paste the JSON here"
-msgstr "O enganxa aquí el JSON"
-
-#: modules/content-types/includes/admin/class-page.php:113
-#: modules/redirects/includes/admin/class-page.php:343
-msgid "Import"
-msgstr "Importa"
-
-#
-#: modules/content-types/includes/admin/class-page.php:114
+#: modules/content-types/includes/admin/class-page.php:261
 msgid "That is not valid JSON."
 msgstr "Això no és un JSON vàlid."
 
-#: modules/content-types/includes/admin/class-page.php:115
-msgid "Templates"
-msgstr "Plantilles"
-
-#: modules/content-types/includes/admin/class-page.php:116
-msgid ""
-"Ready-made types of a corporate site. Adding one copies it into this panel, "
-"where you can change it."
-msgstr ""
-"Tipus ja fets d'un web corporatiu. Si n'afegeixes un, es copia a aquest "
-"tauler, on el pots canviar."
-
-#. translators: %s: a template name, e.g. Testimonials
-#. translators: %s: singular name of a taxonomy, e.g. Cuisine
-#. translators: %s: singular name of a content type, e.g. Restaurant
-#: modules/content-types/includes/admin/class-page.php:118
-#: modules/content-types/includes/class-registrar.php:209
-#: modules/content-types/includes/class-registrar.php:292
-#, php-format
-msgid "Add %s"
-msgstr "Afegeix %s"
-
-#: modules/content-types/includes/admin/class-page.php:119
-msgid "Already added"
-msgstr "Ja afegit"
-
 #. translators: 1: how many fields, 2: their names, comma separated
-#: modules/content-types/includes/admin/class-page.php:121
+#: modules/content-types/includes/admin/class-page.php:263
 #, php-format
 msgid ""
 "The template this type comes from has new fields (%1$d): %2$s. They are not "
@@ -1213,66 +1169,47 @@ msgstr ""
 "La plantilla d'on ve aquest tipus té camps nous (%1$d): %2$s. No s'afegeixen "
 "sols: afegeix-los aquí i desa."
 
-#: modules/content-types/includes/admin/class-page.php:122
+#: modules/content-types/includes/admin/class-page.php:264
 msgid "Add the new fields of the template"
 msgstr "Afegeix els camps nous de la plantilla"
 
-#: modules/content-types/includes/admin/class-page.php:123
+#: modules/content-types/includes/admin/class-page.php:265
 msgid ""
-"Not available: a type with this name is registered elsewhere (Company "
-"details › Content types)."
+"This type is defined in a file, which is read-only. Saving here creates its "
+"copy in this panel, which wins from then on."
 msgstr ""
-"No disponible: hi ha un tipus amb aquest nom registrat en un altre lloc "
-"(Dades de l'empresa › Tipus de contingut)."
+"Aquest tipus està definit en un fitxer, que és només de lectura. En desar "
+"aquí se'n crea la còpia en aquest panell, que mana des d'aleshores."
 
-#: modules/content-types/includes/admin/class-page.php:124
-msgid "Files with errors (not registered)"
-msgstr "Fitxers amb errors (no es registren)"
+#: modules/content-types/includes/admin/class-page.php:269
+msgid "General"
+msgstr "General"
 
-#
-#: modules/content-types/includes/admin/class-page.php:125
-msgid "Folders searched for JSON files"
-msgstr "Carpetes on es cerquen fitxers JSON"
+#: modules/content-types/includes/admin/class-page.php:270
+msgid "URLs & languages"
+msgstr "URLs i idiomes"
 
-#: modules/content-types/includes/admin/class-page.php:126
-#: modules/forms/includes/admin/class-admin.php:129
-#: modules/forms/includes/admin/class-admin.php:134
-#: modules/forms/includes/admin/class-admin.php:177
-msgid "Back to the list"
-msgstr "Torna a la llista"
-
-#. translators: %s: a content type name
-#: modules/content-types/includes/admin/class-page.php:128
-#, php-format
-msgid "Edit “%s”"
-msgstr "Edita «%s»"
-
-#
-#: modules/content-types/includes/admin/class-page.php:129
-msgid "New content type"
-msgstr "Tipus de contingut nou"
-
-#: modules/content-types/includes/admin/class-page.php:130
-msgid "The type"
-msgstr "El tipus"
+#: modules/content-types/includes/admin/class-page.php:271
+msgid "Advanced"
+msgstr "Avançat"
 
 #. translators: %s: a language code such as es
-#: modules/content-types/includes/admin/class-page.php:132
+#: modules/content-types/includes/admin/class-page.php:273
 #, php-format
 msgid "Name, plural (%s)"
 msgstr "Nom, plural (%s)"
 
 #. translators: %s: a language code such as es
-#: modules/content-types/includes/admin/class-page.php:134
+#: modules/content-types/includes/admin/class-page.php:275
 #, php-format
 msgid "Name, singular (%s)"
 msgstr "Nom, singular (%s)"
 
-#: modules/content-types/includes/admin/class-page.php:135
+#: modules/content-types/includes/admin/class-page.php:276
 msgid "Prefix"
 msgstr "Prefix"
 
-#: modules/content-types/includes/admin/class-page.php:136
+#: modules/content-types/includes/admin/class-page.php:277
 msgid ""
 "The site’s own, 2 to 9 letters or digits and “_” (e.g. “gment_”). Every "
 "internal name starts with it."
@@ -1280,8 +1217,12 @@ msgstr ""
 "El propi del web, de 2 a 9 lletres o xifres i «_» (p. ex. «gment_»). Tots "
 "els noms interns hi comencen."
 
-#
-#: modules/content-types/includes/admin/class-page.php:138
+#: modules/content-types/includes/admin/class-page.php:278
+#: modules/content-types/includes/admin/class-types-table.php:57
+msgid "Internal name"
+msgstr "Nom intern"
+
+#: modules/content-types/includes/admin/class-page.php:279
 msgid ""
 "Lowercase letters, digits and “_”, at most 20 characters. It cannot be "
 "changed once there are entries."
@@ -1289,12 +1230,11 @@ msgstr ""
 "Minúscules, xifres i «_», 20 caràcters com a molt. No es pot canviar quan ja "
 "hi ha entrades."
 
-#
-#: modules/content-types/includes/admin/class-page.php:139
+#: modules/content-types/includes/admin/class-page.php:280
 msgid "Address (URL)"
 msgstr "Adreça (URL)"
 
-#: modules/content-types/includes/admin/class-page.php:140
+#: modules/content-types/includes/admin/class-page.php:281
 msgid ""
 "The part of the address after the domain: /restaurants/. Changing it moves "
 "the published addresses."
@@ -1302,93 +1242,238 @@ msgstr ""
 "La part de l'adreça després del domini: /restaurants/. Si la canvies, es "
 "mouen les adreces publicades."
 
-#: modules/content-types/includes/admin/class-page.php:141
+#: modules/content-types/includes/admin/class-page.php:282
+msgid ""
+"The address of this type in the other languages of the site. Empty: the "
+"first language’s is used."
+msgstr ""
+"L'adreça d'aquest tipus en els altres idiomes del lloc. Buida: s'usa la del "
+"primer idioma."
+
+#: modules/content-types/includes/admin/class-page.php:283
+msgid "The site has one language: the address is set in General."
+msgstr "El lloc té un sol idioma: l'adreça es posa a General."
+
+#: modules/content-types/includes/admin/class-page.php:284
 msgid "Menu icon"
 msgstr "Icona del menú"
 
-#: modules/content-types/includes/admin/class-page.php:142
+#: modules/content-types/includes/admin/class-page.php:285
 msgid "A Dashicons name, e.g. dashicons-food."
 msgstr "Un nom de Dashicons, p. ex. dashicons-food."
 
-#: modules/content-types/includes/admin/class-page.php:143
+#: modules/content-types/includes/admin/class-page.php:286
+msgid "Position in the menu"
+msgstr "Posició al menú"
+
+#: modules/content-types/includes/admin/class-page.php:287
+msgid ""
+"A whole number: 5 below Posts, 20 below Pages, 25 below Comments. Empty: at "
+"the end."
+msgstr ""
+"Un nombre enter: 5 davall d'Entrades, 20 davall de Pàgines, 25 davall de "
+"Comentaris. Buit: al final."
+
+#: modules/content-types/includes/admin/class-page.php:288
 msgid "What the editor offers"
 msgstr "Què ofereix l'editor"
 
-#: modules/content-types/includes/admin/class-page.php:144
+#: modules/content-types/includes/admin/class-page.php:289
 msgid "Public (has its own pages on the site)"
 msgstr "Públic (té pàgines pròpies al web)"
 
-#: modules/content-types/includes/admin/class-page.php:145
+#: modules/content-types/includes/admin/class-page.php:290
 msgid "Has a list page at its address"
 msgstr "Té una pàgina de llistat a la seva adreça"
 
-#
-#: modules/content-types/includes/admin/class-page.php:146
+#: modules/content-types/includes/admin/class-page.php:291
 msgid "Translation (WPML)"
 msgstr "Traducció (WPML)"
 
-#
-#: modules/content-types/includes/admin/class-page.php:147
-#: modules/content-types/includes/admin/class-page.php:173
+#: modules/content-types/includes/admin/class-page.php:292
+#: modules/content-types/includes/admin/class-page.php:349
 msgid "Translate"
 msgstr "Tradueix"
 
-#: modules/content-types/includes/admin/class-page.php:148
+#: modules/content-types/includes/admin/class-page.php:293
 msgid "Translate, and show the original until it is translated"
 msgstr "Tradueix, i mostra l'original mentre no estigui traduït"
 
-#
-#: modules/content-types/includes/admin/class-page.php:149
+#: modules/content-types/includes/admin/class-page.php:294
 msgid "Do not translate"
 msgstr "No el tradueixis"
 
-#
-#: modules/content-types/includes/admin/class-page.php:150
+#: modules/content-types/includes/admin/class-page.php:295
+msgid "Where the fields are edited"
+msgstr "On s'editen els camps"
+
+#: modules/content-types/includes/admin/class-page.php:296
+msgid "In the editor’s sidebar (the «details» panel)"
+msgstr "A la barra lateral de l'editor (el panell «dades»)"
+
+#: modules/content-types/includes/admin/class-page.php:297
+msgid "In a wide box under the content, with its groups"
+msgstr "En una caixa ampla davall del contingut, amb els grups"
+
+#: modules/content-types/includes/admin/class-page.php:298
+msgid ""
+"A type without «Content (block editor)» always gets the box under the "
+"content."
+msgstr ""
+"Un tipus sense «Contingut (editor de blocs)» sempre té la caixa davall del "
+"contingut."
+
+#: modules/content-types/includes/admin/class-page.php:299
+msgid "Field groups"
+msgstr "Grups de camps"
+
+#: modules/content-types/includes/admin/class-page.php:300
+msgid ""
+"Sections of the box under the content. A field joins one in its settings "
+"(«Group»); fields without a group go first."
+msgstr ""
+"Seccions de la caixa davall del contingut. Un camp hi entra des de la "
+"configuració («Grup»); els camps sense grup van primer."
+
+#. translators: %d: position of a group in the list
+#: modules/content-types/includes/admin/class-page.php:302
+#, php-format
+msgid "Group %d"
+msgstr "Grup %d"
+
+#: modules/content-types/includes/admin/class-page.php:303
+msgid "Add group"
+msgstr "Afegeix un grup"
+
+#: modules/content-types/includes/admin/class-page.php:304
+msgid "Key"
+msgstr "Clau"
+
+#: modules/content-types/includes/admin/class-page.php:305
+msgid ""
+"Lowercase letters, digits and “_”, starting with a letter. The fields refer "
+"to it."
+msgstr ""
+"Minúscules, xifres i «_», començant per una lletra. Els camps s'hi "
+"refereixen."
+
+#. translators: %s: a language code such as es
+#: modules/content-types/includes/admin/class-page.php:307
+#, php-format
+msgid "Title (%s)"
+msgstr "Títol (%s)"
+
+#: modules/content-types/includes/admin/class-page.php:308
+msgid "Closed when the screen opens"
+msgstr "Tancat en obrir la pantalla"
+
+#: modules/content-types/includes/admin/class-page.php:309
+msgid "Group"
+msgstr "Grup"
+
+#: modules/content-types/includes/admin/class-page.php:310
+msgid "No group"
+msgstr "Sense grup"
+
+#: modules/content-types/includes/admin/class-page.php:311
 msgid "Taxonomies"
 msgstr "Taxonomies"
 
 #. translators: %d: position of a taxonomy in the list
-#: modules/content-types/includes/admin/class-page.php:152
+#: modules/content-types/includes/admin/class-page.php:313
 #, php-format
 msgid "Taxonomy %d"
 msgstr "Taxonomia %d"
 
-#: modules/content-types/includes/admin/class-page.php:153
+#: modules/content-types/includes/admin/class-page.php:314
 msgid "Add taxonomy"
 msgstr "Afegeix una taxonomia"
 
-#
-#: modules/content-types/includes/admin/class-page.php:154
+#: modules/content-types/includes/admin/class-page.php:315
 msgid "Hierarchical (like categories)"
 msgstr "Jeràrquica (com les categories)"
 
 #. translators: %s: a taxonomy name
-#: modules/content-types/includes/admin/class-page.php:156
+#: modules/content-types/includes/admin/class-page.php:317
 #, php-format
 msgid "Uses the taxonomy “%s”, declared elsewhere."
 msgstr "Fa servir la taxonomia «%s», declarada en un altre lloc."
 
-#
-#: modules/content-types/includes/admin/class-page.php:157
+#: modules/content-types/includes/admin/class-page.php:318
+#: modules/content-types/includes/admin/class-types-table.php:59
 msgid "Fields"
 msgstr "Camps"
 
-#. translators: 1: position of a field in the list, 2: its label
-#: modules/content-types/includes/admin/class-page.php:159
-#, php-format
-msgid "Field %1$d: %2$s"
-msgstr "Camp %1$d: %2$s"
+#: modules/content-types/includes/admin/class-page.php:319
+msgid "No fields yet."
+msgstr "Encara no hi ha camps."
 
-#
-#: modules/content-types/includes/admin/class-page.php:160
+#: modules/content-types/includes/admin/class-page.php:320
+msgid ""
+"Open a field to change it. To reorder, drag a row by its handle, or use Alt "
+"+ Up or Down arrow on a field (or its Move buttons)."
+msgstr ""
+"Obre un camp per canviar-lo. Per reordenar, arrossega una fila per l'ansa o "
+"usa Alt + fletxa amunt o avall sobre un camp (o els botons Puja i Baixa)."
+
+#: modules/content-types/includes/admin/class-page.php:321
+msgid "Label"
+msgstr "Etiqueta"
+
+#: modules/content-types/includes/admin/class-page.php:323
+#: modules/content-types/includes/admin/class-page.php:339
+#: modules/redirects/includes/admin/class-page.php:268
+#: modules/redirects/includes/admin/class-tables.php:35
+msgid "Type"
+msgstr "Tipus"
+
+#: modules/content-types/includes/admin/class-page.php:324
+msgid "(no label)"
+msgstr "(sense etiqueta)"
+
+#: modules/content-types/includes/admin/class-page.php:325
+msgid "Drag to reorder"
+msgstr "Arrossega per reordenar"
+
+#. translators: %s: a field label
+#: modules/content-types/includes/admin/class-page.php:327
+#, php-format
+msgid "Move “%s” up"
+msgstr "Puja «%s»"
+
+#. translators: %s: a field label
+#: modules/content-types/includes/admin/class-page.php:329
+#, php-format
+msgid "Move “%s” down"
+msgstr "Baixa «%s»"
+
+#. translators: %s: a field label
+#: modules/content-types/includes/admin/class-page.php:331
+#, php-format
+msgid "Remove “%s”"
+msgstr "Treu «%s»"
+
+#. translators: 1: a field label, 2: its new position, 3: how many fields
+#: modules/content-types/includes/admin/class-page.php:333
+#, php-format
+msgid "“%1$s” moved to position %2$d of %3$d."
+msgstr "«%1$s» mogut a la posició %2$d de %3$d."
+
+#. translators: %s: a field label
+#: modules/content-types/includes/admin/class-page.php:335
+#, php-format
+msgid "“%s” removed. Save to keep the change."
+msgstr "«%s» tret. Desa per conservar el canvi."
+
+#: modules/content-types/includes/admin/class-page.php:336
 msgid "Add field"
 msgstr "Afegeix un camp"
 
-#: modules/content-types/includes/admin/class-page.php:161
+#: modules/content-types/includes/admin/class-page.php:337
 msgid "Internal name (meta key)"
 msgstr "Nom intern (clau meta)"
 
-#: modules/content-types/includes/admin/class-page.php:162
+#: modules/content-types/includes/admin/class-page.php:338
 msgid ""
 "It cannot be renamed: its data is stored under this name. To change it, "
 "remove the field and add a new one."
@@ -1396,100 +1481,91 @@ msgstr ""
 "No es pot canviar el nom: les dades estan desades amb aquest nom. Per "
 "canviar-lo, treu el camp i afegeix-ne un de nou."
 
-#: modules/content-types/includes/admin/class-page.php:163
-#: modules/redirects/includes/admin/class-page.php:268
-#: modules/redirects/includes/admin/class-tables.php:35
-msgid "Type"
-msgstr "Tipus"
-
 #. translators: %s: a language code such as es
-#: modules/content-types/includes/admin/class-page.php:165
+#: modules/content-types/includes/admin/class-page.php:341
 #, php-format
 msgid "Label (%s)"
 msgstr "Etiqueta (%s)"
 
 #. translators: %s: a language code such as es
-#: modules/content-types/includes/admin/class-page.php:167
+#: modules/content-types/includes/admin/class-page.php:343
 #, php-format
 msgid "Help (%s)"
 msgstr "Ajuda (%s)"
 
-#: modules/content-types/includes/admin/class-page.php:168
+#: modules/content-types/includes/admin/class-page.php:344
 msgid "Required to publish"
 msgstr "Obligatori per publicar"
 
-#
-#: modules/content-types/includes/admin/class-page.php:169
+#: modules/content-types/includes/admin/class-page.php:345
 msgid "Default value"
 msgstr "Valor per defecte"
 
-#
-#: modules/content-types/includes/admin/class-page.php:170
+#: modules/content-types/includes/admin/class-page.php:346
 msgid "In translations"
 msgstr "A les traduccions"
 
-#: modules/content-types/includes/admin/class-page.php:171
+#: modules/content-types/includes/admin/class-page.php:347
 msgid "Automatic (texts translated, the rest copied)"
 msgstr "Automàtic (els textos es tradueixen, la resta es copia)"
 
-#: modules/content-types/includes/admin/class-page.php:172
+#: modules/content-types/includes/admin/class-page.php:348
 msgid "Copy from the original"
 msgstr "Copia de l'original"
 
-#
-#: modules/content-types/includes/admin/class-page.php:174
+#: modules/content-types/includes/admin/class-page.php:350
 msgid "Ignore"
 msgstr "Ignora"
 
-#: modules/content-types/includes/admin/class-page.php:175
+#: modules/content-types/includes/admin/class-page.php:351
 msgid "Options, one per line: value | label"
 msgstr "Opcions, una per línia: valor | etiqueta"
 
-#: modules/content-types/includes/admin/class-page.php:176
+#: modules/content-types/includes/admin/class-page.php:352
 msgid "Related types (internal names, separated by commas)"
 msgstr "Tipus relacionats (noms interns, separats per comes)"
 
-#: modules/content-types/includes/admin/class-page.php:177
+#: modules/content-types/includes/admin/class-page.php:353
 msgid "Minimum"
 msgstr "Mínim"
 
-#: modules/content-types/includes/admin/class-page.php:178
+#: modules/content-types/includes/admin/class-page.php:354
 msgid "Maximum"
 msgstr "Màxim"
 
-#
-#: modules/content-types/includes/admin/class-page.php:179
+#: modules/content-types/includes/admin/class-page.php:355
 msgid "Whole numbers only"
 msgstr "Només nombres enters"
 
-#: modules/content-types/includes/admin/class-page.php:180
+#: modules/content-types/includes/admin/class-page.php:356
 msgid "Text when yes (empty: «Yes»)"
 msgstr "Text quan és sí (buit: «Sí»)"
 
-#: modules/content-types/includes/admin/class-page.php:181
+#: modules/content-types/includes/admin/class-page.php:357
 msgid "Text when no (empty: «No»)"
 msgstr "Text quan és no (buit: «No»)"
 
-#: modules/content-types/includes/admin/class-page.php:182
+#: modules/content-types/includes/admin/class-page.php:358
 #: modules/social/includes/class-admin.php:67
 msgid "Move up"
 msgstr "Mou amunt"
 
-#: modules/content-types/includes/admin/class-page.php:183
+#: modules/content-types/includes/admin/class-page.php:359
 #: modules/social/includes/class-admin.php:68
 msgid "Move down"
 msgstr "Mou avall"
 
-#: modules/content-types/includes/admin/class-page.php:184
+#: modules/content-types/includes/admin/class-page.php:360
+#: modules/content-types/includes/class-fields-panel.php:192
 #: modules/social/includes/class-admin.php:69
 msgid "Remove"
 msgstr "Treu"
 
-#: modules/content-types/includes/admin/class-page.php:185
+#: modules/content-types/includes/admin/class-page.php:361
 msgid "JSON (advanced)"
 msgstr "JSON (avançat)"
 
-#: modules/content-types/includes/admin/class-page.php:186
+#: modules/content-types/includes/admin/class-page.php:362
 msgid ""
 "The whole definition. Change it here to set what the form does not show, "
 "then apply it."
@@ -1497,164 +1573,228 @@ msgstr ""
 "La definició sencera. Canvia-la aquí per ajustar el que el formulari no "
 "mostra, i després aplica-la."
 
-#: modules/content-types/includes/admin/class-page.php:187
+#: modules/content-types/includes/admin/class-page.php:363
 msgid "Apply the JSON to the form"
 msgstr "Aplica el JSON al formulari"
 
-#: modules/content-types/includes/admin/class-page.php:189
+#: modules/content-types/includes/admin/class-page.php:365
 msgid "Saving…"
 msgstr "S'està desant…"
 
-#: modules/content-types/includes/admin/class-page.php:190
+#: modules/content-types/includes/admin/class-page.php:366
 msgid "Saved. The changes are visible from the next page you open."
 msgstr "Desat. Els canvis es veuen a partir de la pròxima pàgina que obris."
 
 #. translators: %d: number of redirects
-#: modules/content-types/includes/admin/class-page.php:192
+#: modules/content-types/includes/admin/class-page.php:368
 #, php-format
 msgid "Redirects created for the old addresses: %d."
 msgstr "Redireccions creades per a les adreces velles: %d."
 
-#: modules/content-types/includes/admin/class-page.php:193
+#: modules/content-types/includes/admin/class-page.php:369
 msgid "Before saving"
 msgstr "Abans de desar"
 
-#: modules/content-types/includes/admin/class-page.php:194
+#: modules/content-types/includes/admin/class-page.php:370
 msgid "Save anyway"
 msgstr "Desa igualment"
 
-#: modules/content-types/includes/admin/class-page.php:195
+#: modules/content-types/includes/admin/class-page.php:371
 #: modules/forms/includes/admin/class-admin.php:194
 msgid "Cancel"
 msgstr "Cancel·la"
 
-#
-#: modules/content-types/includes/admin/class-page.php:196
+#: modules/content-types/includes/admin/class-page.php:372
 msgid "Nothing was saved"
 msgstr "No s'ha desat res"
 
-#: modules/content-types/includes/admin/class-page.php:197
+#: modules/content-types/includes/admin/class-page.php:373
 msgid "The list could not be loaded."
 msgstr "No s'ha pogut carregar la llista."
 
-#: modules/content-types/includes/admin/class-page.php:199
+#: modules/content-types/includes/admin/class-page.php:375
 msgid "Text"
 msgstr "Text"
 
-#: modules/content-types/includes/admin/class-page.php:200
+#: modules/content-types/includes/admin/class-page.php:376
 msgid "Text, several lines"
 msgstr "Text de diverses línies"
 
-#: modules/content-types/includes/admin/class-page.php:201
+#: modules/content-types/includes/admin/class-page.php:377
 msgid "Number"
 msgstr "Nombre"
 
-#
-#: modules/content-types/includes/admin/class-page.php:202
+#: modules/content-types/includes/admin/class-page.php:378
 msgid "Web address"
 msgstr "Adreça web"
 
-#: modules/content-types/includes/admin/class-page.php:203
-#: modules/site/includes/class-company.php:111
+#: modules/content-types/includes/admin/class-page.php:379
+#: modules/site/includes/class-company.php:133
 #: modules/social/includes/class-icons.php:82
 msgid "Email"
 msgstr "Correu electrònic"
 
-#: modules/content-types/includes/admin/class-page.php:204
-#: modules/site/includes/class-company.php:112
+#: modules/content-types/includes/admin/class-page.php:380
+#: modules/site/includes/class-company.php:134
 msgid "Phone"
 msgstr "Telèfon"
 
-#: modules/content-types/includes/admin/class-page.php:205
+#: modules/content-types/includes/admin/class-page.php:381
 msgid "Image"
 msgstr "Imatge"
 
-#: modules/content-types/includes/admin/class-page.php:206
+#: modules/content-types/includes/admin/class-page.php:382
 #: modules/forms/includes/admin/class-admin.php:157
 #: modules/forms/includes/admin/class-submissions-table.php:30
 msgid "Date"
 msgstr "Data"
 
-#
-#: modules/content-types/includes/admin/class-page.php:207
+#: modules/content-types/includes/admin/class-page.php:383
 msgid "Choice from a list"
 msgstr "Tria d'una llista"
 
-#: modules/content-types/includes/admin/class-page.php:208
+#: modules/content-types/includes/admin/class-page.php:384
 msgid "Link to another entry"
 msgstr "Enllaç a una altra entrada"
 
-#: modules/content-types/includes/admin/class-page.php:209
+#: modules/content-types/includes/admin/class-page.php:385
 msgid "Yes / no"
 msgstr "Sí / no"
 
-#
-#: modules/content-types/includes/admin/class-page.php:210
+#: modules/content-types/includes/admin/class-page.php:386
 msgid "Rating (stars)"
 msgstr "Valoració (estrelles)"
 
-#: modules/content-types/includes/admin/class-page.php:211
+#: modules/content-types/includes/admin/class-page.php:387
 msgid "Embedded map or video"
 msgstr "Mapa o vídeo incrustat"
 
-#
-#: modules/content-types/includes/admin/class-page.php:212
+#: modules/content-types/includes/admin/class-page.php:388
 msgid "Image of this site by path"
 msgstr "Imatge d'aquest web per camí"
 
-#: modules/content-types/includes/admin/class-page.php:213
+#: modules/content-types/includes/admin/class-page.php:389
 msgid "Opening hours (days and times)"
 msgstr "Horari (dies i hores)"
 
-#: modules/content-types/includes/admin/class-page.php:216
+#: modules/content-types/includes/admin/class-page.php:392
 msgid "Title"
 msgstr "Títol"
 
-#: modules/content-types/includes/admin/class-page.php:217
+#: modules/content-types/includes/admin/class-page.php:393
 msgid "Content (block editor)"
 msgstr "Contingut (editor de blocs)"
 
-#: modules/content-types/includes/admin/class-page.php:218
+#: modules/content-types/includes/admin/class-page.php:394
 msgid "Author"
 msgstr "Autor"
 
-#
-#: modules/content-types/includes/admin/class-page.php:219
+#: modules/content-types/includes/admin/class-page.php:395
 msgid "Featured image"
 msgstr "Imatge destacada"
 
-#: modules/content-types/includes/admin/class-page.php:220
+#: modules/content-types/includes/admin/class-page.php:396
 msgid "Excerpt"
 msgstr "Extracte"
 
-#: modules/content-types/includes/admin/class-page.php:221
+#: modules/content-types/includes/admin/class-page.php:397
 msgid "Trackbacks"
 msgstr "Retroenllaços"
 
-#
-#: modules/content-types/includes/admin/class-page.php:222
+#: modules/content-types/includes/admin/class-page.php:398
 msgid "Custom fields"
 msgstr "Camps personalitzats"
 
-#
-#: modules/content-types/includes/admin/class-page.php:223
+#: modules/content-types/includes/admin/class-page.php:399
 msgid "Comments"
 msgstr "Comentaris"
 
-#
-#: modules/content-types/includes/admin/class-page.php:224
+#: modules/content-types/includes/admin/class-page.php:400
 msgid "Revisions"
 msgstr "Revisions"
 
-#: modules/content-types/includes/admin/class-page.php:225
+#: modules/content-types/includes/admin/class-page.php:401
 #: modules/social/includes/class-admin.php:93
 msgid "Order"
 msgstr "Ordre"
 
-#
-#: modules/content-types/includes/admin/class-page.php:226
+#: modules/content-types/includes/admin/class-page.php:402
 msgid "Formats"
 msgstr "Formats"
+
+#: modules/content-types/includes/admin/class-types-table.php:58
+msgid "URL"
+msgstr "URL"
+
+#: modules/content-types/includes/admin/class-types-table.php:60
+msgid "Where it is defined"
+msgstr "On es defineix"
+
+#: modules/content-types/includes/admin/class-types-table.php:62
+msgid "Entries"
+msgstr "Entrades"
+
+#: modules/content-types/includes/admin/class-types-table.php:72
+msgid ""
+"There are no content types yet. Add one, start from a template or import a "
+"JSON file."
+msgstr ""
+"Encara no hi ha tipus de contingut. Afegeix-ne un, comença des d'una "
+"plantilla o importa un fitxer JSON."
+
+#: modules/content-types/includes/admin/class-types-table.php:114
+#: modules/forms/includes/admin/class-forms-list.php:204
+#: modules/redirects/includes/admin/class-tables.php:89
+msgid "Edit"
+msgstr "Edita"
+
+#: modules/content-types/includes/admin/class-types-table.php:115
+#: modules/redirects/includes/admin/class-tables.php:54
+msgid "Activate"
+msgstr "Activa"
+
+#: modules/content-types/includes/admin/class-types-table.php:115
+#: modules/redirects/includes/admin/class-tables.php:55
+msgid "Deactivate"
+msgstr "Desactiva"
+
+#: modules/content-types/includes/admin/class-types-table.php:117
+msgid "Copy to this panel"
+msgstr "Copia a aquest tauler"
+
+#: modules/content-types/includes/admin/class-types-table.php:119
+msgid "Export JSON"
+msgstr "Exporta el JSON"
+
+#. translators: %s: a file path
+#: modules/content-types/includes/admin/class-types-table.php:143
+#, php-format
+msgid "File (read-only): %s"
+msgstr "Fitxer (només lectura): %s"
+
+#. translators: %s: a template name, e.g. Testimonials
+#: modules/content-types/includes/admin/class-types-table.php:148
+#, php-format
+msgid "This panel (from the template “%s”)"
+msgstr "Aquest tauler (de la plantilla «%s»)"
+
+#: modules/content-types/includes/admin/class-types-table.php:151
+msgid "This panel"
+msgstr "Aquest tauler"
+
+#: modules/content-types/includes/admin/class-types-table.php:157
+msgid "Not registered: it has errors"
+msgstr "No registrat: té errors"
+
+#: modules/content-types/includes/admin/class-types-table.php:159
+#: modules/redirects/includes/admin/class-page.php:285
+#: modules/redirects/includes/admin/class-tables.php:38
+msgid "Active"
+msgstr "Activa"
+
+#: modules/content-types/includes/admin/class-types-table.php:159
+msgid "Inactive"
+msgstr "Inactiu"
 
 #: modules/content-types/includes/class-bindings.php:68
 msgid "Content field"
@@ -1736,21 +1876,21 @@ msgstr ""
 "L'URL de «%1$s» passa de /%2$s/ a /%3$s/: les seves adreces publicades es "
 "mouen."
 
-#: modules/content-types/includes/class-fields-panel.php:45
+#: modules/content-types/includes/class-fields-panel.php:63
 msgid "No rating"
 msgstr "Sense valoració"
 
-#: modules/content-types/includes/class-fields-panel.php:73
+#: modules/content-types/includes/class-fields-panel.php:91
 msgid "Changed in the original language: it is copied to the translations."
 msgstr "Es canvia a l'idioma original: es copia a les traduccions."
 
 #. translators: %s: singular name of a content type, e.g. Restaurant
-#: modules/content-types/includes/class-fields-panel.php:89
+#: modules/content-types/includes/class-fields-panel.php:110
 #, php-format
 msgid "%s details"
 msgstr "%s: dades"
 
-#: modules/content-types/includes/class-fields-panel.php:92
+#: modules/content-types/includes/class-fields-panel.php:113
 msgid ""
 "Fields that are the same in every language are copied to the translations "
 "when you save; the others are translated in each language."
@@ -1758,12 +1898,27 @@ msgstr ""
 "Els camps que són iguals en tots els idiomes es copien a les traduccions "
 "quan deses; els altres es tradueixen en cada idioma."
 
-#: modules/content-types/includes/class-fields-panel.php:223
-#: modules/content-types/includes/class-fields-panel.php:229
+#: modules/content-types/includes/class-fields-panel.php:190
+msgid "Choose image"
+msgstr "Tria una imatge"
+
+#: modules/content-types/includes/class-fields-panel.php:191
+msgid "Replace image"
+msgstr "Canvia la imatge"
+
+#: modules/content-types/includes/class-fields-panel.php:193
+msgid "Copy Monday to every day"
+msgstr "Copia el dilluns a tots els dies"
+
+#: modules/content-types/includes/class-fields-panel.php:194
+msgid "Monday’s hours copied to every day."
+msgstr "Horari del dilluns copiat a tots els dies."
+
+#: modules/content-types/includes/class-fields-panel.php:348
+#: modules/content-types/includes/class-fields-panel.php:354
 msgid "— None —"
 msgstr "— Cap —"
 
-#
 #: modules/content-types/includes/class-loader.php:88
 msgid "The stored definition is not valid JSON."
 msgstr "La definició desada no és un JSON vàlid."
@@ -1783,6 +1938,32 @@ msgid ""
 msgstr ""
 "El tipus «%s» està definit a la base de dades (Estrategia Web → Tipus de "
 "contingut), que mana: aquest fitxer no es fa servir."
+
+#: modules/content-types/includes/class-location-fields.php:221
+msgid "Nothing yet."
+msgstr "Encara res."
+
+#: modules/content-types/includes/class-location-fields.php:231
+#: modules/map/blocks/map/render.php:347
+msgid "Open in Google Maps"
+msgstr "Obre a Google Maps"
+
+#: modules/content-types/includes/class-location-fields.php:236
+#: modules/site/includes/admin/class-admin.php:116
+msgid "Shown on the site (as of the last save):"
+msgstr "El que es veu al web (des de la darrera vegada que has desat):"
+
+#: modules/content-types/includes/class-location-migration.php:109
+msgid ""
+"Estrategia Web 1.8.0: some locations still keep their data twice (address "
+"and hours as text, the map as two links). Until the data migration runs they "
+"look as before. Read its dry run, check its DIFFERENCES, then run it without "
+"--dry-run."
+msgstr ""
+"Estrategia Web 1.8.0: algunes seus encara guarden les dades dues vegades "
+"(adreça i horari com a text, el mapa com a dos enllaços). Fins que s'executi "
+"la migració de dades es veuen com abans. Llegeix-ne la simulació, revisa'n "
+"les DIFERÈNCIES (DIFFERENCES) i després executa-la sense --dry-run."
 
 #. translators: %s: list of field names
 #: modules/content-types/includes/class-registrar.php:140
@@ -1821,16 +2002,24 @@ msgid ""
 msgstr ""
 "La taxonomia «%s» ja la registra un altre codi: no es torna a registrar."
 
+#. translators: %s: singular name of a taxonomy, e.g. Cuisine
+#. translators: %s: singular name of a content type, e.g. Restaurant
+#: modules/content-types/includes/class-registrar.php:209
+#: modules/content-types/includes/class-registrar.php:297
+#, php-format
+msgid "Add %s"
+msgstr "Afegeix %s"
+
 #. translators: %s: singular name of a taxonomy
 #. translators: %s: singular name of a content type
 #: modules/content-types/includes/class-registrar.php:211
-#: modules/content-types/includes/class-registrar.php:294
+#: modules/content-types/includes/class-registrar.php:299
 #, php-format
 msgid "Edit %s"
 msgstr "Edita %s"
 
 #. translators: 1: field name, 2: post type name
-#: modules/content-types/includes/class-registrar.php:277
+#: modules/content-types/includes/class-registrar.php:282
 #, php-format
 msgid ""
 "The relation “%1$s” points to the type “%2$s”, which is not registered: it "
@@ -1840,27 +2029,27 @@ msgstr ""
 "desar 0."
 
 #. translators: %s: singular name of a content type
-#: modules/content-types/includes/class-registrar.php:296
+#: modules/content-types/includes/class-registrar.php:301
 #, php-format
 msgid "View %s"
 msgstr "Mostra %s"
 
 #. translators: %s: plural name of a content type, e.g. Restaurants
-#: modules/content-types/includes/class-registrar.php:298
+#: modules/content-types/includes/class-registrar.php:303
 #, php-format
 msgid "Search %s"
 msgstr "Cerca %s"
 
-#: modules/content-types/includes/class-registrar.php:299
+#: modules/content-types/includes/class-registrar.php:304
 msgid "Nothing found."
 msgstr "No s'ha trobat res."
 
-#: modules/content-types/includes/class-registrar.php:300
+#: modules/content-types/includes/class-registrar.php:305
 msgid "Nothing found in the trash."
 msgstr "No hi ha res a la paperera."
 
 #. translators: %s: list of field names
-#: modules/content-types/includes/class-registrar.php:377
+#: modules/content-types/includes/class-registrar.php:384
 #, php-format
 msgid "Fill in these fields before publishing: %s."
 msgstr "Emplena aquests camps abans de publicar: %s."
@@ -1920,7 +2109,6 @@ msgid ""
 msgstr ""
 "El nom «%s» ja és un tipus de WordPress o d'un altre codi: tria'n un altre."
 
-#
 #: modules/content-types/includes/class-rest.php:220
 #: modules/content-types/includes/class-rest.php:234
 msgid "The definition has errors: nothing was saved."
@@ -1950,17 +2138,17 @@ msgstr ""
 msgid "URL of “%s” changed in Content types"
 msgstr "URL de «%s» canviat a Tipus de contingut"
 
-#: modules/content-types/includes/class-schema.php:88
+#: modules/content-types/includes/class-schema.php:111
 msgid "The file is not a JSON object."
 msgstr "El fitxer no és un objecte JSON."
 
 #. translators: %s: a template key such as testimonial
-#: modules/content-types/includes/class-schema.php:95
+#: modules/content-types/includes/class-schema.php:118
 #, php-format
 msgid "“template”: there is no template “%s” in the plugin."
 msgstr "«template»: el connector no té cap plantilla «%s»."
 
-#: modules/content-types/includes/class-schema.php:105
+#: modules/content-types/includes/class-schema.php:128
 msgid ""
 "“prefix” must be 2 to 9 lowercase letters or digits followed by “_” (e.g. "
 "“gment_”)."
@@ -1969,7 +2157,7 @@ msgstr ""
 "«_» (per exemple, «gment_»)."
 
 #. translators: %s: a prefix such as eweb_
-#: modules/content-types/includes/class-schema.php:109
+#: modules/content-types/includes/class-schema.php:132
 #, php-format
 msgid ""
 "The prefix “%s” is reserved (Estrategia Web or WordPress). Choose the site’s "
@@ -1979,59 +2167,110 @@ msgstr ""
 "propi del web."
 
 #. translators: 1: a type name, 2: a template key
-#: modules/content-types/includes/class-schema.php:114
+#: modules/content-types/includes/class-schema.php:137
 #, php-format
 msgid "“name” must be “%1$s”: it is the type of the template “%2$s”."
 msgstr "«name» ha de ser «%1$s»: és el tipus de la plantilla «%2$s»."
 
-#: modules/content-types/includes/class-schema.php:151
+#: modules/content-types/includes/class-schema.php:175
 msgid "“description” must be a string or an object of locale → string."
 msgstr "«description» ha de ser un text o un objecte idioma → text."
 
-#: modules/content-types/includes/class-schema.php:154
+#: modules/content-types/includes/class-schema.php:178
 msgid "“icon” must be a Dashicons class such as “dashicons-food”."
 msgstr "«icon» ha de ser una classe de Dashicons, com ara «dashicons-food»."
 
-#: modules/content-types/includes/class-schema.php:158
+#: modules/content-types/includes/class-schema.php:182
 msgid "“supports” must be a list."
 msgstr "«supports» ha de ser una llista."
 
 #. translators: %s: a value from the JSON file
-#: modules/content-types/includes/class-schema.php:163
+#: modules/content-types/includes/class-schema.php:187
 #, php-format
 msgid "“supports”: unknown value “%s”."
 msgstr "«supports»: valor desconegut «%s»."
 
 #. translators: %s: a key of the JSON file
-#: modules/content-types/includes/class-schema.php:171
+#: modules/content-types/includes/class-schema.php:195
 #, php-format
 msgid "“%s” must be true or false."
 msgstr "«%s» ha de ser true o false."
 
-#: modules/content-types/includes/class-schema.php:175
+#: modules/content-types/includes/class-schema.php:199
 msgid "“menu_position” must be a whole number from 0."
 msgstr "«menu_position» ha de ser un nombre enter a partir de 0."
 
 #. translators: %s: list of allowed values
-#: modules/content-types/includes/class-schema.php:179
+#: modules/content-types/includes/class-schema.php:203
 #, php-format
 msgid "“wpml” must be one of: %s."
 msgstr "«wpml» ha de ser un d'aquests: %s."
 
+#. translators: %s: list of allowed values
+#: modules/content-types/includes/class-schema.php:208
+#, php-format
+msgid "“fields_box” must be one of: %s."
+msgstr "«fields_box» ha de ser un d'aquests: %s."
+
+#: modules/content-types/includes/class-schema.php:226
+msgid "“groups” must be a list."
+msgstr "«groups» ha de ser una llista."
+
+#. translators: %d: position in the list, from 1
+#: modules/content-types/includes/class-schema.php:232
+#, php-format
+msgid "groups[%d]"
+msgstr "groups[%d]"
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:235
+#: modules/content-types/includes/class-schema.php:530
+#, php-format
+msgid "%s: must be an object."
+msgstr "%s: ha de ser un objecte."
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:242
+#, php-format
+msgid ""
+"%s.key must be lowercase letters, digits and “_”, starting with a letter."
+msgstr ""
+"%s.key només pot tenir lletres minúscules, xifres i «_», i ha de començar "
+"amb una lletra."
+
+#. translators: %s: a group key
+#: modules/content-types/includes/class-schema.php:245
+#, php-format
+msgid "The group “%s” is declared twice."
+msgstr "El grup «%s» està declarat dues vegades."
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:251
+#: modules/content-types/includes/class-schema.php:551
+#, php-format
+msgid "%s.label is required (a string or an object of locale → string)."
+msgstr "%s.label és obligatori (un text o un objecte idioma → text)."
+
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:255
+#, php-format
+msgid "%s.collapsed must be true or false."
+msgstr "%s.collapsed ha de ser true o false."
+
 #. translators: 1: type name, 2: another file name
-#: modules/content-types/includes/class-schema.php:201
+#: modules/content-types/includes/class-schema.php:276
 #, php-format
 msgid "The type “%1$s” is already declared in %2$s."
 msgstr "El tipus «%1$s» ja està declarat a %2$s."
 
 #. translators: 1: taxonomy name, 2: another file name
-#: modules/content-types/includes/class-schema.php:208
+#: modules/content-types/includes/class-schema.php:283
 #, php-format
 msgid "The name “%1$s” is already declared in %2$s."
 msgstr "El nom «%1$s» ja està declarat a %2$s."
 
 #. translators: 1: field name, 2: WPML mode, 3: another file name, 4: WPML mode there
-#: modules/content-types/includes/class-schema.php:224
+#: modules/content-types/includes/class-schema.php:299
 #, php-format
 msgid ""
 "The field “%1$s” has wpml “%2$s” here and “%4$s” in %3$s: WPML keeps one "
@@ -2041,7 +2280,7 @@ msgstr ""
 "per clau de meta."
 
 #. translators: %s: taxonomy name
-#: modules/content-types/includes/class-schema.php:233
+#: modules/content-types/includes/class-schema.php:308
 #, php-format
 msgid ""
 "The taxonomy “%s” is not declared in any file (declare it as an object in "
@@ -2051,7 +2290,7 @@ msgstr ""
 "en un d'ells)."
 
 #. translators: 1: a URL slug, 2: a language code, 3: type or taxonomy name, 4: a file name
-#: modules/content-types/includes/class-schema.php:278
+#: modules/content-types/includes/class-schema.php:353
 #, php-format
 msgid ""
 "The slug “%1$s” (language “%2$s”) is already the URL of “%3$s” in %4$s: two "
@@ -2060,101 +2299,95 @@ msgstr ""
 "L'àlies «%1$s» (idioma «%2$s») ja és l'URL de «%3$s» a %4$s: dos tipus o "
 "taxonomies no poden compartir URL."
 
-#: modules/content-types/includes/class-schema.php:404
+#: modules/content-types/includes/class-schema.php:482
 msgid "“taxonomies” must be a list."
 msgstr "«taxonomies» ha de ser una llista."
 
 #. translators: %d: position in the list, from 1
-#: modules/content-types/includes/class-schema.php:409
+#: modules/content-types/includes/class-schema.php:487
 #, php-format
 msgid "taxonomies[%d]"
 msgstr "taxonomies[%d]"
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:413
+#: modules/content-types/includes/class-schema.php:491
 #, php-format
 msgid "%s: a reference must be a taxonomy name."
 msgstr "%s: una referència ha de ser el nom d'una taxonomia."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:419
+#: modules/content-types/includes/class-schema.php:497
 #, php-format
 msgid "%s: must be a taxonomy name or an object."
 msgstr "%s: ha de ser el nom d'una taxonomia o un objecte."
 
 #. translators: 1: where in the file, 2: a key
-#: modules/content-types/includes/class-schema.php:429
+#: modules/content-types/includes/class-schema.php:507
 #, php-format
 msgid "%1$s.%2$s must be true or false."
 msgstr "%1$s.%2$s ha de ser true o false."
 
 #. translators: 1: where in the file, 2: allowed values
-#: modules/content-types/includes/class-schema.php:434
-#: modules/content-types/includes/class-schema.php:484
+#: modules/content-types/includes/class-schema.php:512
+#: modules/content-types/includes/class-schema.php:563
 #, php-format
 msgid "%1$s.wpml must be one of: %2$s."
 msgstr "%1$s.wpml ha de ser un d'aquests: %2$s."
 
-#: modules/content-types/includes/class-schema.php:442
+#: modules/content-types/includes/class-schema.php:521
 msgid "“fields” must be a list."
 msgstr "«fields» ha de ser una llista."
 
 #. translators: %d: position in the list, from 1
-#: modules/content-types/includes/class-schema.php:448
+#: modules/content-types/includes/class-schema.php:527
 #, php-format
 msgid "fields[%d]"
 msgstr "fields[%d]"
 
-#. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:451
-#, php-format
-msgid "%s: must be an object."
-msgstr "%s: ha de ser un objecte."
-
 #. translators: %s: field name
-#: modules/content-types/includes/class-schema.php:460
+#: modules/content-types/includes/class-schema.php:539
 #, php-format
 msgid "The field “%s” is declared twice."
 msgstr "El camp «%s» està declarat dues vegades."
 
 #. translators: 1: where in the file, 2: allowed values
-#: modules/content-types/includes/class-schema.php:467
+#: modules/content-types/includes/class-schema.php:546
 #, php-format
 msgid "%1$s.type must be one of: %2$s."
 msgstr "%1$s.type ha de ser un d'aquests: %2$s."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:472
-#, php-format
-msgid "%s.label is required (a string or an object of locale → string)."
-msgstr "%s.label és obligatori (un text o un objecte idioma → text)."
-
-#. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:476
+#: modules/content-types/includes/class-schema.php:555
 #, php-format
 msgid "%s.help must be a string or an object of locale → string."
 msgstr "%s.help ha de ser un text o un objecte idioma → text."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:480
+#: modules/content-types/includes/class-schema.php:559
 #, php-format
 msgid "%s.required must be true or false."
 msgstr "%s.required ha de ser true o false."
 
+#. translators: 1: where in the file, 2: a value from the JSON file
+#: modules/content-types/includes/class-schema.php:567
+#, php-format
+msgid "%1$s.group “%2$s” is not one of the definition’s «groups»."
+msgstr "%1$s.group «%2$s» no és cap dels «groups» de la definició."
+
 #. translators: 1: where in the file, 2: a key, 3: a field type
-#: modules/content-types/includes/class-schema.php:491
+#: modules/content-types/includes/class-schema.php:574
 #, php-format
 msgid "%1$s.%2$s is only for fields of type “%3$s”."
 msgstr "%1$s.%2$s només val per a camps de tipus «%3$s»."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:509
+#: modules/content-types/includes/class-schema.php:592
 #, php-format
 msgid "%s: a select needs “options”, a non-empty list."
 msgstr "%s: un select necessita «options», una llista no buida."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:516
+#: modules/content-types/includes/class-schema.php:599
 #, php-format
 msgid ""
 "%s.options: each option is a non-empty string or {\"value\": \"…\", "
@@ -2163,19 +2396,19 @@ msgstr ""
 "%s.options: cada opció és un text no buit o {\"value\": \"…\", \"label\": …}."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:523
+#: modules/content-types/includes/class-schema.php:606
 #, php-format
 msgid "%s.options: two options have the same value."
 msgstr "%s.options: dues opcions tenen el mateix valor."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:527
+#: modules/content-types/includes/class-schema.php:610
 #, php-format
 msgid "%s.default must be the value of one of the options."
 msgstr "%s.default ha de ser el valor d'una de les opcions."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:535
+#: modules/content-types/includes/class-schema.php:618
 #, php-format
 msgid "%s: a relation needs “post_type”, a post type name or a list of them."
 msgstr ""
@@ -2183,32 +2416,32 @@ msgstr ""
 "noms."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:539
+#: modules/content-types/includes/class-schema.php:622
 #, php-format
 msgid "%s: a relation cannot have a default (it is the ID of a post)."
 msgstr ""
 "%s: una relació no pot tenir valor per defecte (és l'ID d'una entrada)."
 
 #. translators: 1: where in the file, 2: min or max
-#: modules/content-types/includes/class-schema.php:545
+#: modules/content-types/includes/class-schema.php:628
 #, php-format
 msgid "%1$s.%2$s must be a number."
 msgstr "%1$s.%2$s ha de ser un nombre."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:550
+#: modules/content-types/includes/class-schema.php:633
 #, php-format
 msgid "%s.integer must be true or false."
 msgstr "%s.integer ha de ser true o false."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:554
+#: modules/content-types/includes/class-schema.php:637
 #, php-format
 msgid "%s: min is greater than max."
 msgstr "%s: min és més gran que max."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:559
+#: modules/content-types/includes/class-schema.php:642
 #, php-format
 msgid ""
 "%s.default must be a number within min and max (a whole number if “integer”)."
@@ -2216,19 +2449,19 @@ msgstr ""
 "%s.default ha de ser un nombre entre min i max (enter si porta «integer»)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:564
+#: modules/content-types/includes/class-schema.php:647
 #, php-format
 msgid "%s: a boolean cannot be required (“no” is an answer)."
 msgstr "%s: un booleà no pot ser obligatori («no» també és una resposta)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:568
+#: modules/content-types/includes/class-schema.php:651
 #, php-format
 msgid "%s.default must be true or false."
 msgstr "%s.default ha de ser true o false."
 
 #. translators: 1: where in the file, 2: true_label or false_label
-#: modules/content-types/includes/class-schema.php:574
+#: modules/content-types/includes/class-schema.php:657
 #, php-format
 msgid ""
 "%1$s.%2$s must be a string (\"\" to show nothing) or an object of locale → "
@@ -2238,19 +2471,19 @@ msgstr ""
 "text."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:580
+#: modules/content-types/includes/class-schema.php:663
 #, php-format
 msgid "%s.default must be a whole number from 0 (no rating) to 5."
 msgstr "%s.default ha de ser un nombre enter de 0 (sense valoració) a 5."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:585
+#: modules/content-types/includes/class-schema.php:668
 #, php-format
 msgid "%s: an image cannot have a default (it is the ID of an attachment)."
 msgstr "%s: una imatge no pot tenir valor per defecte (és l'ID d'un adjunt)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:589
+#: modules/content-types/includes/class-schema.php:672
 #, php-format
 msgid ""
 "%s.default must be opening hours as stored, e.g. {\"mo\":[\"08:00-14:00\"]}, "
@@ -2260,19 +2493,19 @@ msgstr ""
 "[\"08:00-14:00\"]}, o \"\"."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:592
+#: modules/content-types/includes/class-schema.php:675
 #, php-format
 msgid "%s.default must be a string."
 msgstr "%s.default ha de ser un text."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:595
+#: modules/content-types/includes/class-schema.php:678
 #, php-format
 msgid "%s.default must be a date as YYYY-MM-DD."
 msgstr "%s.default ha de ser una data AAAA-MM-DD."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:608
+#: modules/content-types/includes/class-schema.php:691
 #, php-format
 msgid "%s must be lowercase letters, digits and “_”, starting with a letter."
 msgstr ""
@@ -2280,27 +2513,27 @@ msgstr ""
 "una lletra."
 
 #. translators: 1: where in the file, 2: the name, 3: max length, 4: its length
-#: modules/content-types/includes/class-schema.php:613
+#: modules/content-types/includes/class-schema.php:696
 #, php-format
 msgid ""
 "%1$s “%2$s” is longer than %3$d characters (%4$d): WordPress would cut it."
 msgstr "%1$s «%2$s» passa de %3$d caràcters (%4$d): WordPress el tallaria."
 
 #. translators: 1: where in the file, 2: the name, 3: the prefix
-#: modules/content-types/includes/class-schema.php:620
+#: modules/content-types/includes/class-schema.php:703
 #, php-format
 msgid "%1$s “%2$s” must start with the prefix “%3$s”."
 msgstr "%1$s «%2$s» ha de començar pel prefix «%3$s»."
 
 #. translators: 1: where in the file, 2: the name, 3: a reserved prefix
-#: modules/content-types/includes/class-schema.php:625
+#: modules/content-types/includes/class-schema.php:708
 #, php-format
 msgid "%1$s “%2$s” uses the reserved prefix “%3$s”."
 msgstr "%1$s «%2$s» fa servir el prefix reservat «%3$s»."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:646
-#: modules/content-types/includes/class-schema.php:654
+#: modules/content-types/includes/class-schema.php:729
+#: modules/content-types/includes/class-schema.php:737
 #, php-format
 msgid ""
 "%s must be a URL path (lowercase ASCII letters, digits, “-” and “/”, no "
@@ -2310,31 +2543,31 @@ msgstr ""
 "sense barres als extrems) o un objecte de locale → un camí així."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:688
+#: modules/content-types/includes/class-schema.php:771
 #, php-format
 msgid "%s is required: {\"singular\": …, \"plural\": …}."
 msgstr "%s és obligatori: {\"singular\": …, \"plural\": …}."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:692
+#: modules/content-types/includes/class-schema.php:775
 #, php-format
 msgid "%s must be an object: {\"singular\": …, \"plural\": …}."
 msgstr "%s ha de ser un objecte: {\"singular\": …, \"plural\": …}."
 
 #. translators: 1: where in the file, 2: singular or plural
-#: modules/content-types/includes/class-schema.php:698
+#: modules/content-types/includes/class-schema.php:781
 #, php-format
 msgid "%1$s.%2$s is required: a string or an object of locale → string."
 msgstr "%1$s.%2$s és obligatori: un text o un objecte idioma → text."
 
 #. translators: 1: where in the file, 2: a label key such as details
-#: modules/content-types/includes/class-schema.php:704
+#: modules/content-types/includes/class-schema.php:787
 #, php-format
 msgid "%1$s.%2$s must be a string or an object of locale → string."
 msgstr "%1$s.%2$s ha de ser un text o un objecte locale → text."
 
 #. translators: 1: a key, 2: allowed keys
-#: modules/content-types/includes/class-schema.php:731
+#: modules/content-types/includes/class-schema.php:814
 #, php-format
 msgid "Unknown key “%1$s”. Allowed: %2$s."
 msgstr "Clau desconeguda «%1$s». S'admeten: %2$s."
@@ -2379,17 +2612,14 @@ msgctxt "URL slug"
 msgid "portfolio-category"
 msgstr "categoria-portafolis"
 
-#
 #: modules/content-types/includes/class-store.php:78
 msgid "Content type definitions"
 msgstr "Definicions de tipus de contingut"
 
-#
 #: modules/content-types/includes/class-store.php:79
 msgid "Content type definition"
 msgstr "Definició de tipus de contingut"
 
-#
 #: modules/content-types/module.php
 msgctxt "module description"
 msgid ""
@@ -2401,7 +2631,6 @@ msgstr ""
 "(o comença des d'una plantilla: clients, opinions, seus, projectes, "
 "portafolis), amb el tauler de l'editor, els Block Bindings i WPML generats."
 
-#
 #: modules/content-types/module.php
 msgctxt "module name"
 msgid "Content types"
@@ -2519,11 +2748,6 @@ msgstr "Missatges"
 #: modules/forms/assets/editor.js:120 modules/forms/assets/editor.js:127
 msgid "Empty: the default message from Forms → Settings."
 msgstr "Buit: el missatge per defecte de Formularis → Paràmetres."
-
-#: modules/forms/assets/editor.js:150 modules/forms/assets/editor.js:311
-#: modules/forms/assets/editor.js:320
-msgid "Label"
-msgstr "Etiqueta"
 
 #: modules/forms/assets/editor.js:153
 msgid ""
@@ -2899,7 +3123,7 @@ msgstr "Pàgina"
 
 #: modules/forms/includes/admin/class-admin.php:159
 #: modules/forms/includes/admin/class-submissions-table.php:33
-#: modules/language-switcher/blocks/language-switcher/render.php:86
+#: modules/language-switcher/blocks/language-switcher/render.php:87
 msgid "Language"
 msgstr "Idioma"
 
@@ -3349,7 +3573,7 @@ msgstr "wpml"
 msgid "Show the current language as (code: “ES”, name: “Español”)"
 msgstr "Mostra l'idioma actual com a (code: «CA», name: «Català»)"
 
-#: modules/language-switcher/blocks/language-switcher/render.php:116
+#: modules/language-switcher/blocks/language-switcher/render.php:117
 msgid "Language:"
 msgstr "Idioma:"
 
@@ -3485,10 +3709,6 @@ msgstr ""
 "Google Maps › Comparteix › Insereix un mapa. Pots enganxar tot el codi de "
 "l'iframe."
 
-#: modules/map/blocks/map/edit.js:60
-msgid "Google Maps link"
-msgstr "Enllaç a Google Maps"
-
 #: modules/map/blocks/map/edit.js:62
 msgid "Optional. Empty: a search for the address."
 msgstr "Opcional. Buit: una cerca de l'adreça."
@@ -3587,10 +3807,6 @@ msgstr ""
 #, php-format
 msgid "Open in Google Maps: %1$s %2$s"
 msgstr "Obre a Google Maps: %1$s %2$s"
-
-#: modules/map/blocks/map/render.php:347
-msgid "Open in Google Maps"
-msgstr "Obre a Google Maps"
 
 #: modules/map/module.php
 msgctxt "module name"
@@ -3696,10 +3912,6 @@ msgstr "S'han desat els paràmetres."
 #: modules/redirects/includes/admin/class-page.php:160
 msgid "The 404 log is empty."
 msgstr "El registre de 404 és buit."
-
-#: modules/redirects/includes/admin/class-page.php:177
-msgid "Add new"
-msgstr "Afegeix-ne una"
 
 #: modules/redirects/includes/admin/class-page.php:178
 msgid "404 log"
@@ -3838,6 +4050,10 @@ msgstr "%1$d noves, %2$d actualitzades, %3$d sense canvis, %4$d amb errors."
 msgid "Line %1$d (%2$s): %3$s"
 msgstr "Línia %1$d (%2$s): %3$s"
 
+#: modules/redirects/includes/admin/class-page.php:343
+msgid "Import"
+msgstr "Importa"
+
 #: modules/redirects/includes/admin/class-page.php:344
 msgid ""
 "A CSV with the columns origen, destino, tipo and motivo (or source, target, "
@@ -3872,14 +4088,6 @@ msgstr "Visites"
 #: modules/redirects/includes/admin/class-tables.php:37
 msgid "Last hit"
 msgstr "Última visita"
-
-#: modules/redirects/includes/admin/class-tables.php:54
-msgid "Activate"
-msgstr "Activa"
-
-#: modules/redirects/includes/admin/class-tables.php:55
-msgid "Deactivate"
-msgstr "Desactiva"
 
 #: modules/redirects/includes/admin/class-tables.php:78
 msgid "No redirects yet."
@@ -3988,7 +4196,15 @@ msgstr "Pujada de SVG"
 msgid "Allow SVG uploads (administrators only; files are sanitized)"
 msgstr "Permet pujar SVG (només administradors; els fitxers se sanegen)"
 
-#: modules/site/includes/admin/class-admin.php:117
+#: modules/site/includes/admin/class-admin.php:97
+msgid "This site has locations: the opening hours go in each location."
+msgstr "Aquest web té seus: l'horari va a cada seu."
+
+#: modules/site/includes/admin/class-admin.php:113
+msgid "One line per day, e.g. 08:00-14:00, 16:00-20:00. Empty: closed."
+msgstr "Una línia per dia, p. ex. 08:00-14:00, 16:00-20:00. Buit: tancat."
+
+#: modules/site/includes/admin/class-admin.php:152
 msgid ""
 "These details appear wherever a block is linked to them (Block Bindings, "
 "source «Company details»). Change them here and they change across the whole "
@@ -3997,11 +4213,11 @@ msgstr ""
 "Aquestes dades surten allà on un bloc hi estigui enllaçat (Block Bindings, "
 "font «Dades de l'empresa»). Si les canvies aquí, canvien a tot el web."
 
-#: modules/site/includes/admin/class-admin.php:122
+#: modules/site/includes/admin/class-admin.php:157
 msgid "Company"
 msgstr "Empresa"
 
-#: modules/site/includes/admin/class-admin.php:128
+#: modules/site/includes/admin/class-admin.php:163
 msgid ""
 "As it appears in the legal notice, without «Registered in». Example: "
 "Registro Mercantil de Mallorca, tomo 1234, folio 56, hoja PM-7890, "
@@ -4010,119 +4226,139 @@ msgstr ""
 "Tal com apareix a l'avís legal, sense «Inscrita a». Exemple: Registre "
 "Mercantil de Mallorca, tom 1234, foli 56, full PM-7890, inscripció 1a"
 
-#: modules/site/includes/admin/class-admin.php:135
+#: modules/site/includes/admin/class-admin.php:170
 msgid "Contact"
 msgstr "Contacte"
 
-#: modules/site/includes/admin/class-admin.php:141
+#: modules/site/includes/admin/class-admin.php:176
 msgid "International format, digits only, without +. Example: 34600000000."
 msgstr "Format internacional, només xifres, sense +. Exemple: 34600000000."
 
-#: modules/site/includes/admin/class-admin.php:142
+#: modules/site/includes/admin/class-admin.php:177
 msgid "Text that appears already written when the chat opens."
 msgstr "Text que apareix ja escrit quan s'obre el xat."
 
-#: modules/site/includes/class-company.php:107
+#: modules/site/includes/class-company.php:129
 msgid "Company name"
 msgstr "Nom comercial"
 
-#: modules/site/includes/class-company.php:108
+#: modules/site/includes/class-company.php:130
 msgid "Legal name"
 msgstr "Raó social"
 
-#: modules/site/includes/class-company.php:109
+#: modules/site/includes/class-company.php:131
 msgid "Tax ID"
 msgstr "NIF/CIF"
 
-#: modules/site/includes/class-company.php:110
+#: modules/site/includes/class-company.php:132
 msgid "Company registry"
 msgstr "Inscripció registral"
 
-#: modules/site/includes/class-company.php:113
+#: modules/site/includes/class-company.php:135
 msgid "Secondary phone"
 msgstr "Telèfon secundari"
 
-#: modules/site/includes/class-company.php:114
+#: modules/site/includes/class-company.php:136
 msgid "WhatsApp"
 msgstr "WhatsApp"
 
-#: modules/site/includes/class-company.php:115
+#: modules/site/includes/class-company.php:137
 msgid "WhatsApp message"
 msgstr "Missatge de WhatsApp"
 
-#: modules/site/includes/class-company.php:116
+#: modules/site/includes/class-company.php:138
 msgid "Address"
 msgstr "Adreça"
 
-#: modules/site/includes/class-company.php:117
+#: modules/site/includes/class-company.php:139
 msgid "Opening hours"
 msgstr "Horari"
 
-#: modules/site/includes/class-company.php:118
+#: modules/site/includes/class-company.php:140
 msgid "Map link"
 msgstr "Enllaç al mapa"
 
-#: modules/site/includes/class-company.php:119
+#: modules/site/includes/class-company.php:141
 msgid "Facebook"
 msgstr "Facebook"
 
-#: modules/site/includes/class-company.php:120
+#: modules/site/includes/class-company.php:142
 msgid "Instagram"
 msgstr "Instagram"
 
-#: modules/site/includes/class-company.php:121
+#: modules/site/includes/class-company.php:143
 msgid "LinkedIn"
 msgstr "LinkedIn"
 
-#: modules/site/includes/class-company.php:122
+#: modules/site/includes/class-company.php:144
 msgid "X (Twitter)"
 msgstr "X (Twitter)"
 
-#: modules/site/includes/class-company.php:123
+#: modules/site/includes/class-company.php:145
 msgid "YouTube"
 msgstr "YouTube"
 
-#: modules/site/includes/class-company.php:124
+#: modules/site/includes/class-company.php:146
 msgid "TikTok"
 msgstr "TikTok"
 
-#: modules/site/includes/class-company.php:125
-#: modules/site/includes/class-location.php:135
+#: modules/site/includes/class-company.php:147
+#: modules/site/includes/class-location.php:161
 msgid "Phone (link)"
 msgstr "Telèfon (enllaç)"
 
-#: modules/site/includes/class-company.php:126
+#: modules/site/includes/class-company.php:148
 msgid "Secondary phone (link)"
 msgstr "Telèfon secundari (enllaç)"
 
-#: modules/site/includes/class-company.php:127
-#: modules/site/includes/class-location.php:136
+#: modules/site/includes/class-company.php:149
+#: modules/site/includes/class-location.php:162
 msgid "Email (link)"
 msgstr "Correu electrònic (enllaç)"
 
-#: modules/site/includes/class-company.php:128
+#: modules/site/includes/class-company.php:150
 msgid "WhatsApp (link)"
 msgstr "WhatsApp (enllaç)"
 
 #: modules/site/includes/class-legacy-names.php:110
-#: modules/site/includes/class-location.php:66
+#: modules/site/includes/class-location.php:74
 msgid "Location details"
 msgstr "Dades de la seu"
 
-#: modules/site/includes/class-location.php:132
+#: modules/site/includes/class-location.php:151
+msgid "Address (text)"
+msgstr "Adreça (text)"
+
+#: modules/site/includes/class-location.php:152
+msgid "Opening hours (text)"
+msgstr "Horari (text)"
+
+#: modules/site/includes/class-location.php:153
+msgid "Google Maps link"
+msgstr "Enllaç a Google Maps"
+
+#: modules/site/includes/class-location.php:154
+msgid "Map embed URL"
+msgstr "URL per incrustar el mapa"
+
+#: modules/site/includes/class-location.php:155
+msgid "Static map image (URL)"
+msgstr "Imatge estàtica del mapa (URL)"
+
+#: modules/site/includes/class-location.php:157
 msgid "Location name"
 msgstr "Nom de la seu"
 
-#: modules/site/includes/class-settings.php:166
+#: modules/site/includes/class-settings.php:169
 msgid "Company details and site options of the Estrategia Web Site plugin."
 msgstr ""
 "Dades de l'empresa i opcions del web de l'extensió Estrategia Web Site."
 
-#: modules/site/includes/class-settings.php:288
+#: modules/site/includes/class-settings.php:320
 msgid "The email address is not valid. The previous one has been kept."
 msgstr "L'adreça de correu electrònic no és vàlida. S'ha mantingut l'anterior."
 
-#: modules/site/includes/class-settings.php:301
+#: modules/site/includes/class-settings.php:333
 msgid ""
 "The WhatsApp number is not valid (international format, digits only). The "
 "previous one has been kept."
@@ -4131,7 +4367,7 @@ msgstr ""
 "mantingut l'anterior."
 
 #. translators: %s: the field name.
-#: modules/site/includes/class-settings.php:375
+#: modules/site/includes/class-settings.php:407
 #, php-format
 msgid ""
 "The address in «%s» is not a valid web address. The previous one has been "
@@ -4149,13 +4385,11 @@ msgid ""
 msgstr ""
 "Aquest fitxer SVG no s'ha pogut llegir o no és segur, així que no s'ha pujat."
 
-#
 #: modules/site/module.php
 msgctxt "module name"
 msgid "Company data"
 msgstr "Dades de l'empresa"
 
-#
 #: modules/site/module.php
 msgctxt "module description"
 msgid ""
@@ -4461,6 +4695,34 @@ msgstr "Número de WhatsApp en format internacional, només xifres."
 msgid "Predefined WhatsApp message."
 msgstr "Missatge predefinit de WhatsApp."
 
+#~ msgid "Types"
+#~ msgstr "Tipus"
+
+#~ msgid "Switched off"
+#~ msgstr "Desactivat"
+
+#~ msgid "Switch off"
+#~ msgstr "Desactiva"
+
+#~ msgid "Switch on"
+#~ msgstr "Activa"
+
+#~ msgid "Add content type"
+#~ msgstr "Afegeix un tipus de contingut"
+
+#~ msgid "Or paste the JSON here"
+#~ msgstr "O enganxa aquí el JSON"
+
+#~ msgid "Templates"
+#~ msgstr "Plantilles"
+
+#~ msgid "The type"
+#~ msgstr "El tipus"
+
+#, php-format
+#~ msgid "Field %1$d: %2$s"
+#~ msgstr "Camp %1$d: %2$s"
+
 #~ msgctxt "module name"
 #~ msgid "Translated front page (WPML)"
 #~ msgstr "Pàgina d'inici traduïda (WPML)"
@@ -4661,9 +4923,6 @@ msgstr "Missatge predefinit de WhatsApp."
 
 #~ msgid "Set static map image"
 #~ msgstr "Posa la imatge estàtica del mapa"
-
-#~ msgid "Map embed URL"
-#~ msgstr "URL per incrustar el mapa"
 
 #~ msgid "Static map image (theme path or URL of this site)"
 #~ msgstr "Imatge del mapa estàtic (camí del tema o URL d'aquest web)"

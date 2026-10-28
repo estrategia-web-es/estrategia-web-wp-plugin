@@ -241,7 +241,12 @@ final class Registrar {
 					)
 				);
 			}
-			if ( array_filter( $def['fields'], static fn( $f ) => $f['required'] ) ) {
+			// «fields_box: main» (1.8.0): the fields travel in the meta box's form, AFTER the REST save, so
+			// REST would refuse a publish whose required field is filled in right there. Its «required» is
+			// the classic one (check_required_classic(), on the meta box's save). Boundary case: the FIRST
+			// publish in the block editor is already done when the meta box posts, so an empty required
+			// field is «kept» (the notice asks for it), not turned into a draft.
+			if ( 'main' !== $def['fields_box'] && array_filter( $def['fields'], static fn( $f ) => $f['required'] ) ) {
 				add_filter( 'rest_pre_insert_' . $name, array( self::class, 'check_required' ), 10, 2 );
 			}
 		}
@@ -319,7 +324,9 @@ final class Registrar {
 	public static function sanitizer( array $field ): callable {
 		$default = $field['default'];
 		return match ( $field['type'] ) {
-			'textarea' => static fn( $v ) => sanitize_textarea_field( (string) $v ),
+			// \r\n → \n (1.8.0): a browser's <textarea> sends \r\n, and the location's street is compared
+			// line by line (the migration, the derived address). Seen in red in tests/location-box.test.mjs.
+			'textarea' => static fn( $v ) => str_replace( array( "\r\n", "\r" ), "\n", sanitize_textarea_field( (string) $v ) ),
 			'url'      => static fn( $v ) => esc_url_raw( trim( (string) $v ), array( 'http', 'https' ) ),
 			'email'    => static fn( $v ) => is_email( trim( (string) $v ) ) ? sanitize_email( (string) $v ) : '',
 			// Digits, spaces and + ( ) - . only: what people type in a phone number.

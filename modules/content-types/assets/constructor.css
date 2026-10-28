@@ -1,20 +1,40 @@
-/* «Estrategia Web → Content types» (assets/constructor.js). Only layout: colours and controls are WordPress's own. */
+/*
+ * «Estrategia Web → Content types» (assets/constructor.js, includes/admin/class-page.php).
+ * Only layout: colours and controls are WordPress's own (nav-tab, notice, button-link,
+ * dashicons), so the screen follows the admin colour scheme.
+ * How to maintain: a new part of the screen gets its .ewct-* class here; never a colour
+ * that is not one of WordPress's admin greys (#c3c4c7, #dcdcde, #f6f7f7, #2271b1 for focus).
+ */
 .ewct-alert { margin: 1em 0; padding: 0.5em 1em; }
-.ewct-alert:focus { outline: 2px solid #2271b1; outline-offset: 2px; }
+.ewct-alert:focus, [data-saved]:focus { outline: 2px solid #2271b1; outline-offset: 2px; }
 .ewct-alert h2 { margin: 0.5em 0; font-size: 1.1em; }
 .ewct-status:not(:empty) { margin: 1em 0; font-weight: 600; }
-.ewct-types .ewct-actions { white-space: normal; }
-.ewct-types .ewct-actions .button { margin: 0 4px 4px 0; }
-.ewct-templates li { margin-bottom: 0.5em; }
-.ewct-import, .ewct-json { margin: 1em 0; max-width: 60em; }
-.ewct-import summary, .ewct-json summary { cursor: pointer; font-weight: 600; }
-.ewct-form { max-width: 60em; }
-.ewct-section { border: 1px solid #c3c4c7; background: #fff; padding: 0.5em 1.5em 1em; margin: 0 0 1.5em; }
-.ewct-section > legend { font-size: 1.2em; font-weight: 600; padding: 0 0.5em; }
+
+/* The list: «Add from template» opens a small panel under its button. */
+.ewct-menu-wrap { position: relative; display: inline-block; }
+button.page-title-action { cursor: pointer; line-height: 1.5; }
+.ewct-menu { position: absolute; z-index: 100; top: calc(100% + 4px); left: 0; min-width: 18em; max-width: min(28em, 90vw); background: #fff; border: 1px solid #c3c4c7; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15); padding: 0.5em 1em; }
+.ewct-menu ul { margin: 0.5em 0; }
+.ewct-menu li { margin: 0.4em 0; }
+.ewct-menu .button-link { font-size: 14px; }
+.ewct-menu .description { display: block; font-size: 12px; }
+.ewct-dirs { margin: 1.5em 0; }
+.ewct-dirs summary { cursor: pointer; }
+.wp-list-table .row-actions .button-link { font-size: 13px; padding: 0; }
+
+/* The edit screen. */
+.ewct-form { max-width: 70em; }
+.ewct-box { border: 1px solid #c3c4c7; background: #fff; margin: 1em 0 1.5em; }
+.ewct-box-title { font-size: 14px; margin: 0; padding: 0.75em 1em; border-bottom: 1px solid #dcdcde; }
+.ewct-box > .description { margin: 0.75em 1em; }
+.ewct-tabs.nav-tab-wrapper { padding: 0.5em 1em 0; margin: 0; }
+.ewct-tabs .nav-tab { cursor: pointer; font-size: 13px; }
+.ewct-tabs .nav-tab:focus { box-shadow: 0 0 0 2px #2271b1; outline: none; }
+.ewct-panel { padding: 0.5em 1.5em 1em; }
+.ewct-panel:focus { outline: 1px dotted #2271b1; }
 .ewct-item { border: 1px solid #dcdcde; padding: 0.5em 1em; margin: 1em 0; }
-.ewct-item > legend { font-weight: 600; padding: 0 0.5em; }
-.ewct-supports { margin: 1em 0; }
-.ewct-supports > legend { font-weight: 600; }
+.ewct-item > legend, .ewct-groups > legend, .ewct-supports > legend { font-weight: 600; padding: 0 0.5em; }
+.ewct-supports, .ewct-groups { margin: 1em 0; }
 .ewct-control { margin: 0.75em 0; }
 .ewct-control label { display: block; font-weight: 600; margin-bottom: 0.25em; }
 .ewct-control .description { margin-top: 0.25em; }
@@ -22,4 +42,34 @@
 .ewct-languages { display: grid; grid-template-columns: repeat(auto-fit, minmax(16em, 1fr)); gap: 0 1.5em; }
 .ewct-languages .regular-text { width: 100%; }
 .ewct-row-buttons { margin-top: 1em; }
+.ewct-json { border-top: 1px solid #dcdcde; margin-top: 1.5em; }
 input[readonly] { background: #f0f0f1; }
+
+/* Fields: collapsed rows (label, name, type) that open on click. */
+.ewct-fields-head, .ewct-field-toggle { display: grid; grid-template-columns: 2fr 2fr 1.5fr; gap: 1em; align-items: center; }
+.ewct-fields-head { margin: 0 1em; padding: 0.5em 6.5em 0.5em 2.25em; font-weight: 600; border-bottom: 1px solid #dcdcde; }
+.ewct-fields { list-style: none; margin: 0 1em; padding: 0; }
+.ewct-field { margin: 0; border-bottom: 1px solid #dcdcde; background: #fff; }
+.ewct-field.is-open { background: #f6f7f7; }
+.ewct-field.is-dragging { opacity: 0.5; }
+.ewct-field.drop-before { box-shadow: inset 0 3px 0 #2271b1; }
+.ewct-field.drop-after { box-shadow: inset 0 -3px 0 #2271b1; }
+.ewct-field-head { display: flex; align-items: center; gap: 0.5em; padding: 0.35em 0; cursor: pointer; }
+.ewct-handle { cursor: move; color: #8c8f94; flex: none; }
+.ewct-field-toggle { flex: 1; min-width: 0; text-align: left; background: none; border: 0; padding: 0.5em 0.25em; cursor: pointer; color: #2271b1; font-size: 14px; }
+.ewct-field-toggle:focus { box-shadow: 0 0 0 2px #2271b1; outline: none; }
+.ewct-field-toggle > * { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ewct-col-label { font-weight: 600; }
+.ewct-col-name, .ewct-col-type { color: #50575e; }
+.ewct-field-buttons { flex: none; display: flex; gap: 0.25em; }
+.ewct-icon { padding: 4px; line-height: 1; }
+.ewct-icon[disabled] { opacity: 0.35; }
+.ewct-field-body { padding: 0.25em 1em 1em 2.25em; border-top: 1px solid #dcdcde; }
+.ewct-no-fields { margin: 1em; }
+.ewct-add-field { margin: 1em; }
+
+@media (max-width: 782px) {
+	.ewct-fields-head { display: none; }
+	.ewct-field-toggle { grid-template-columns: 1fr; gap: 0; }
+	.ewct-field-body { padding-left: 1em; }
+}

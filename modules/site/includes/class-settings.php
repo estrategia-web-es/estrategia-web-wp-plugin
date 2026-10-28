@@ -127,7 +127,10 @@ final class Settings {
 		'whatsapp'         => '',
 		'whatsapp_message' => '',
 		'address'          => '',
+		// Up to 1.7.0 the opening hours as a free text; since 1.8.0 the text is DERIVED from «hours» (Company::value()) and this is only read while a site has not migrated it (wp estrategia-web migrate-location-data).
 		'schedule'         => '',
+		// 1.8.0. Opening hours day by day, the «hours» field type's JSON (content-types' class-hours.php). Hidden when the site has locations: each has its own.
+		'hours'            => '',
 		'map_url'          => '',
 		'social'           => array(
 			'facebook'  => '',
@@ -197,6 +200,12 @@ final class Settings {
 				'whatsapp_message' => $string,
 				'address'          => $string,
 				'schedule'         => $string,
+				// The stored JSON text, or day → «08:00-14:00, 16:00-20:00» (a line) or a list of ranges.
+				'hours'            => array(
+					'type'                 => array( 'string', 'object' ),
+					'additionalProperties' => false,
+					'properties'           => array_fill_keys( array( 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su' ), array( 'type' => array( 'string', 'array' ), 'items' => array( 'type' => 'string' ) ) ),
+				),
 				'map_url'          => $string,
 				'social'           => array(
 					'type'                 => 'object',
@@ -246,6 +255,18 @@ final class Settings {
 		return (array) apply_filters( 'estrategia_web_site_settings', $all );
 	}
 
+	/**
+	 * The «hours» rules live in the content-types module (class-hours.php,
+	 * pure PHP); this core module loads the file itself, so it works with
+	 * content-types switched off.
+	 */
+	public static function hours_class(): string {
+		if ( ! class_exists( \EstrategiaWeb\ContentTypes\Hours::class ) ) {
+			require_once dirname( __DIR__, 2 ) . '/content-types/includes/class-hours.php';
+		}
+		return \EstrategiaWeb\ContentTypes\Hours::class;
+	}
+
 	public static function get( string $key ): mixed {
 		return self::all()[ $key ] ?? null;
 	}
@@ -276,6 +297,17 @@ final class Settings {
 			if ( array_key_exists( $key, $input ) ) {
 				$out[ $key ] = sanitize_textarea_field( (string) $input[ $key ] );
 			}
+		}
+		if ( array_key_exists( 'hours', $input ) ) {
+			$hours = $input['hours'];
+			if ( is_object( $hours ) ) {
+				$hours = (array) $hours;
+			}
+			if ( is_array( $hours ) && ! array_is_list( $hours ) ) {
+				// The Company details screen sends one line per day («08:00-14:00, 16:00-20:00»).
+				$hours = array_map( static fn( $line ) => is_string( $line ) ? self::hours_class()::from_line( $line ) : $line, $hours );
+			}
+			$out['hours'] = self::hours_class()::sanitize( $hours );
 		}
 
 		if ( array_key_exists( 'email', $input ) ) {

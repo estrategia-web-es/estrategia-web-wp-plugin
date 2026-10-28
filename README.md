@@ -15,7 +15,7 @@ archived) and four blocks registered by the theme. **The public names of
 filters): what changed is where the code lives. The general framework is in
 [armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md](E:/Repositories/armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md).
 
-- Slug, folder and text domain: `estrategia-web` (`estrategia-web/estrategia-web.php`) · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · version **1.7.0**
+- Slug, folder and text domain: `estrategia-web` (`estrategia-web/estrategia-web.php`) · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · version **1.8.0**
 - The repo is still called `armazon-wp-sitio`; the plugin folder on a site is `estrategia-web/`.
 - No dependencies, no `node_modules`, no build step.
 
@@ -302,8 +302,43 @@ Keys:
 | Key | What |
 |---|---|
 | `title` | the location's name |
-| `estrategia_web_location_address`, `estrategia_web_location_schedule` | multi-line (come out with `<br>`) |
-| `estrategia_web_location_phone`, `estrategia_web_location_email`, `estrategia_web_location_map_url`, `estrategia_web_location_map_embed`, `estrategia_web_location_static_map`, `estrategia_web_location_static_map_id` (0.4.0) | as is |
+| `estrategia_web_location_address` | **derived (1.8.0)**: the address text, from street (1-2 lines), postal code, locality and region, in the format of the location's language. Multi-line (`<br>`) |
+| `estrategia_web_location_schedule` | **derived (1.8.0)**: the hours text, from the `hours` field («Abierto todos los días» / «De 8:00 a 23:00»). Multi-line |
+| `estrategia_web_location_map_url`, `estrategia_web_location_map_embed` | **derived (1.8.0)**: «Open in Google Maps» and the embed URL, from «What to search on Google Maps» (`estrategia_web_location_map_query`) |
+| `estrategia_web_location_static_map` | **derived (1.8.0)**: the URL of the media library image `estrategia_web_location_static_map_id` |
+| `estrategia_web_location_phone`, `estrategia_web_location_email`, every other field of the definition | as stored |
+
+**The derived keys only exist in THIS source** (1.8.0). They were stored
+meta up to 1.7.0, and a theme that bound them with `core/post-meta` must
+switch those bindings to `estrategia-web-site/location` (same `key`, no
+`slug` inside a Query Loop) BEFORE running the data migration — after it the
+meta is gone and `core/post-meta` shows nothing. Until the migration runs, the
+old stored text is what these keys show, so updating the plugin changes nothing.
+
+**The wording of the derived texts** is a per-language format
+(`Location_Data::FORMATS` in
+[class-location-data.php](modules/content-types/includes/class-location-data.php):
+es, ca, en; any other language uses en). A site changes it with a filter, in
+its theme or a mu-plugin:
+
+```php
+add_filter( 'estrategia_web_location_formats', function ( array $format, string $lang ) {
+	if ( 'es' === $lang ) {
+		$format['open']      = 'Abrimos {days}';          // first line when every open day has the same hours
+		$format['interval']  = 'de {open} a {close} h';   // each range
+		$format['address']   = "{street}\n{postal_code} {locality} ({region})";
+	}
+	return $format;
+}, 10, 2 );
+```
+
+Keys: `address` (placeholders `{street}` `{postal_code}` `{locality}`
+`{region}` `{country}`; an empty part takes its separator with it), `open`,
+`line` (`{days}: {times}`, one per set of hours when there are several),
+`every_day`, `day_range` (`{from}`/`{to}`, three days or more), `list_and`,
+`days` (seven names, Monday first), `interval` (`{open}`/`{close}`),
+`times_and`, `time` (a PHP date format: `G:i`, `g:ia`). The company's hours
+(Company details) use the same format.
 | `estrategia_web_location_phone_href` | `tel:+34971112233`, from `estrategia_web_location_phone` (same country code as the company) |
 | `estrategia_web_location_email_href` | `mailto:…`, from `estrategia_web_location_email` |
 
@@ -364,7 +399,7 @@ with the prefix migrator (section «Names»).
 |---|---|---|---|---|---|
 | `client` | Clients | `/clientes/` | title = name, featured image = logo/photo, excerpt, manual order | `estrategia_web_client_url` (URL; `client_url` up to 1.4.3), `estrategia_web_client_image_fit` (`cover` by default or `contain`; any other value → `cover`; 0.2.0), `estrategia_web_client_business_type` (text: «agencia de alquiler vacacional», what used to go in brackets in the title; translated with WPML; unreleased) | `client_sector` (hierarchical, slug `/sector/`) |
 | `testimonial` | Testimonials | `/opiniones/` | title (internal), content = the testimonial, image = author's photo, order | `estrategia_web_testimonial_author`, `estrategia_web_testimonial_role` (text), `estrategia_web_testimonial_rating` (integer 0-5; **0 = no rating**), `estrategia_web_testimonial_client` (id of a `client`, or 0) (the role and the client were `testimonial_role` / `testimonial_client` up to 1.4.3) | — |
-| `location` | Locations | `/sedes/` | title = location, content, image = static map, excerpt, order | `estrategia_web_location_address`, `estrategia_web_location_schedule` (multi-line), `estrategia_web_location_phone`, `estrategia_web_location_email`, `estrategia_web_location_map_url` (link to Google Maps), `estrategia_web_location_map_embed` (embed URL for the `estrategia-web/map` block; unreleased: if the whole `<iframe>` is pasted, its `src` is stored), `estrategia_web_location_static_map` (0.4.0: static map image served by **this** site: theme path `assets/maps/sede.webp`, site path `/wp-content/…` or a URL on the same domain, ending in webp/png/jpg/gif/avif/svg; anything else → `''`), `estrategia_web_location_static_map_id` (0.4.0: integer, id of an **image** attachment; otherwise 0) | — |
+| `location` | Locations | `/sedes/` | title = location, content, image = static map, excerpt, order | **1.8.0, each datum once** («A location's data stored once», at the end): `estrategia_web_location_phone`, `_email`, `_street` (1-2 lines), `_postal_code`, `_locality`, `_region`, `_country`, `_hours`, `_map_query`, `_static_map_id` (an **image** attachment; otherwise 0), `_latitude`, `_longitude`, `_business_type`. The address and hours texts, the Maps link, the embed and the static map URL are derived (section 2 ter). Up to 1.7.0 also `_address`, `_schedule`, `_map_url`, `_map_embed`, `_static_map`: removed by the migration | — |
 | `project` | Projects | `/proyectos/` | title, content, image, excerpt, order, revisions | — | `project_category` (`/categoria-proyecto/`) |
 | `portfolio` | Portfolio | `/portfolio/` | same | — | `portfolio_category` (`/categoria-portfolio/`) |
 
@@ -410,19 +445,17 @@ A field inside the Query Loop (the author of a testimonial):
 <!-- /wp:paragraph -->
 ```
 
-The map of each location with the parent theme's `estrategia-web/map`, inside
-a Query Loop of `location` (0.4.0: the static map, from
-`estrategia_web_location_static_map`):
+The map of each location with `estrategia-web/map`, inside a Query Loop of
+`location` — since 1.8.0 through THIS source (the four values are derived;
+`core/post-meta` cannot show them):
 
 ```html
-<!-- wp:estrategia-web/map {"metadata":{"bindings":{"address":{"source":"core/post-meta","args":{"key":"estrategia_web_location_address"}},"embedUrl":{"source":"core/post-meta","args":{"key":"estrategia_web_location_map_embed"}},"mapsUrl":{"source":"core/post-meta","args":{"key":"estrategia_web_location_map_url"}},"staticMapUrl":{"source":"core/post-meta","args":{"key":"estrategia_web_location_static_map"}}}}} /-->
+<!-- wp:estrategia-web/map {"metadata":{"bindings":{"address":{"source":"estrategia-web-site/location","args":{"key":"estrategia_web_location_address"}},"embedUrl":{"source":"estrategia-web-site/location","args":{"key":"estrategia_web_location_map_embed"}},"mapsUrl":{"source":"estrategia-web-site/location","args":{"key":"estrategia_web_location_map_url"}},"staticMapUrl":{"source":"estrategia-web-site/location","args":{"key":"estrategia_web_location_static_map"}}}}} /-->
 ```
 
-`estrategia_web_location_static_map_id` is stored and validated, but **today
-it cannot be bound** to `staticMapId`: the parent only declares its text
-attributes as bindable (`inc/blocks.php`) and `staticMapId` is a number. For
-the media library, the attachment URL in `estrategia_web_location_static_map`
-(same domain) works just as well. The theme checks the URL again when
+`staticMapUrl` gets the URL of the media library image
+(`estrategia_web_location_static_map_id`); the block's own `staticMapId`
+(a number) cannot be bound. The map block checks the URL again when
 rendering (`estrategia_web_map_static_url`).
 
 **Public slugs per site: `rewrite_slugs`** in the option (0.2.0). The routes
@@ -809,6 +842,12 @@ tests expect English; their `reset()` marks it and goes back to `en_US` (see
 | [social/social-admin](modules/social/tests/social-admin.test.mjs) | 3 | (unreleased) «Company details» no longer has network fields and links here; the «Social networks» screen: add, move up, remove and save in the order shown; emptying it saves `[]`; the block shows in the editor without errors |
 | [redirects/pure](modules/redirects/tests/pure.test.mjs) | 1 | normalizing and matching (%3F, `?p=`/`?page_id=`, trailing slash, uppercase, extra query); Lavandería's real CSV (83 rules) whole and error-free; loops, duplicates, targets and types; CSV with `;`, BOM and «revisar» |
 | [redirects/server](modules/redirects/tests/server.test.mjs) | 2 | off by default; importing the real CSV (dry-run, idempotent); its sources redirect with variants; 410; counter; 0 queries on a page that exists and 1 on a 404; 404 log without query string and its purge; cost of a lookup with 84 and 5000 rules |
+| [content-types/constructor-model](modules/content-types/tests/constructor-model.test.mjs) | 1 | (1.8.0) the constructor's pure part: texts per language, slug string→object, move, group keys and choices, edit URL |
+| [content-types/constructor-screens](modules/content-types/tests/constructor-screens.test.mjs) | 2 | (1.8.0) the list table (rows, field count, row actions, template menu); list → edit → save with the page's own REST nonce (not without it); deactivate; a stale `?type=` redirects to the list with a notice |
+| [content-types/constructor-editor](modules/content-types/tests/constructor-editor.test.mjs) | 3 | (rewritten 1.8.0) tabs, collapsed rows, Alt+arrow and drag reordering, field groups, confirm on save, the template menu |
+| [content-types/location-data](modules/content-types/tests/location-data.test.mjs) | 1 | (1.8.0) a location's derived texts with Lavandería's real strings (address, hours in es/en/ca, the Maps link and embed byte for byte), several sets of hours, lists of days, and the migration's parsers (what they read and what they refuse). Seen red with «cada día» and with `rawurlencode()` |
+| [content-types/location-migration](modules/content-types/tests/location-migration.test.mjs) | 2 | (1.8.0) a 1.7.0 site through `migrate-location-data`: the page the same before and after, the dry run's before → after and DIFFERENCES (none for Lavandería's two), nothing written by it, the real run (new fields, old meta out, backup, 1.8.0 definitions, client with `editor`, the company's hours), a second run that changes nothing, and the way out of «not parsed». Seen red with the street sanitized as one line |
+| [content-types/location-box](modules/content-types/tests/location-box.test.mjs) | 2 | (1.8.0) the fields meta box in the block editor's main area for locations, testimonials and clients (groups, «For Google» closed, no sidebar panel) and its save as the block editor posts it. Seen red with the `\r\n` of a `<textarea>` |
 | [redirects/admin](modules/redirects/tests/admin.test.mjs) | 3 | the screen: list and search, adding, loop error without losing what was typed, Rank Math notice, importing by uploading the CSV, exporting, «Create redirect» from the 404 log |
 
 **All of them have been seen failing** (02-10-2026): three batches of
@@ -1034,6 +1073,7 @@ Pending: [TODO.md](TODO.md).
 
 Content types are **data of each site**: one definition per type, stored in the database (private post type `eweb_content_type`, the JSON as its content, with revisions), made and edited in **Estrategia Web → Content types**: names and address per language, supports, taxonomies and fields (text, textarea, number, url, email, tel, image, date, select, relation, boolean, rating, embed, local_image, hours, with required, default, help, options and the WPML mode). Export and import a definition as JSON from the same screen.
 
+- **The screens (1.8.0, after ACF's field groups)**: a list of types (`admin.php?page=estrategia-web-content-types`: a WordPress list table with fields, status and entries; Edit, Deactivate/Activate, Export JSON, Delete; «Add new», «Add from template», «Import JSON») and one edit screen per type (`…&type=<name>`; `&new=1` for a new one, `&new=1&import=1` to import): settings in tabs (General, URLs & languages, Taxonomies, Advanced) and the fields as collapsed rows, reordered with the mouse (the handle) or the keyboard (Alt + arrows, or the Move buttons). Where the fields are edited (`fields_box`), field groups (`groups`) and each field's group are set there too.
 - **Templates**: clients, testimonials, locations, projects and portfolio, with the same type, taxonomy and meta names as the `site` module's (`modules/content-types/templates/`). «Add …» copies one into the database; from then on it is the site's.
 - **New fields of a template** (unreleased): when a template gets fields a site's copy does not have (the location template's address by parts, structured hours, coordinates and type of business, 22-10-2026), the constructor **offers** them on that type («The template this type comes from has new fields… Add the new fields of the template»), each after its template neighbour; nothing is added by itself. A deploy script does the same with `Templates::add_missing()`.
 - **The `hours` field type** (unreleased): opening hours per day of the week, several ranges a day, stored as JSON text `{"mo":["08:00-14:00","16:00-20:00"],"sa":["09:00-13:00"]}` (closed days left out; `""` = empty). Bad ranges are dropped, overlapping ones merged. In the editor: a group per day with time inputs, «Add hours» and «Same as the day before»; on the classic screen, one line per day.
@@ -1080,7 +1120,8 @@ JSON-LD so search engines can show the business (address, phone, hours, map) fro
 | front page | `Organization`: name (Company details, or the site title), url, logo (the site logo), telephone, email, `sameAs` (the social module's web links), and each location as a `department` |
 | a location's own page, and a page **tied** to one (its content binds a block to it by slug with `estrategia-web-site/location`, also inside a group or a synced pattern) | that location as a `LocalBusiness` (its type, see below): name, `address` (`PostalAddress` by parts), telephone (the company's if it has none), email, `openingHoursSpecification`, `geo`, `url` = the page being read, `image` (featured image, static map, logo), `@id` = `<its permalink>#localbusiness`, `parentOrganization` → the Organization |
 
-- **The data**: fields of the location template — `estrategia_web_location_street`, `_postal_code`, `_locality`, `_region`, `_country` (ISO 3166, default `ES`), `_hours` (type `hours`), `_latitude`, `_longitude` (0 = not given), `_business_type` (`company` = the company's). All «copy» in WPML (a postal address is not translated). The free texts «Address» and «Opening hours» stay for what the page shows.
+- **The data**: fields of the location template — `estrategia_web_location_street` (1-2 lines, joined with «, » for `streetAddress`; «translate» in WPML since 1.8.0), `_postal_code`, `_locality`, `_region`, `_country` (ISO 3166, default `ES`), `_hours` (type `hours`), `_latitude`, `_longitude` (0 = not given), `_business_type` (`company` = the company's) — all but the street «copy» in WPML. Since 1.8.0 the SAME fields make what the page shows (the address and hours texts are derived: section 2 ter); there are no free texts any more.
+- **A site without locations** (1.8.0, a restaurant: the company is the business): the Company details hours (`hours` of `estrategia_web_site`, day by day) go into the front page's Organization as `openingHoursSpecification`, and the node's `@type` becomes `["Organization", <type of business>]` (only a LocalBusiness may have hours; in Rank Math's or Yoast's Organization the type is added to theirs). With locations, the company's hours field is hidden: each location has its own.
 - **Type of business**: **Company details › Search engines (schema.org)**, option `estrategia_web_local_business_type` (also over `/wp/v2/settings`), one of a closed list of schema.org LocalBusiness subtypes (`LocalBusiness` by default; `DryCleaningOrLaundry`, `Restaurant`, `Store`…); a location may set its own.
 - **A location is left out** (no node, not half a one) without a name, a street and a town or postal code.
 - **With Rank Math or Yoast**: our nodes go into **their** graph (`rank_math/json_ld`, `wpseo_schema_graph`): their Organization is completed with what it lacks, never duplicated, and our locations point to its `@id`. If their local SEO already publishes a LocalBusiness on a page, ours steps aside on that page. Their settings are never touched. **Without them**: our own `<script type="application/ld+json" class="estrategia-web-local-business">`.
@@ -1088,3 +1129,23 @@ JSON-LD so search engines can show the business (address, phone, hours, map) fro
 - **Filter** `estrategia_web_local_business_graph`: `[Organization|null, LocalBusiness[]]` before printing or merging.
 
 Tests: `modules/local-business/tests/graph.test.mjs` (level 1: the nodes against Google's rules — `tests/google-rules.mjs`, which the sites' tests import too —, the merge, the type list against the template) and `output.test.mjs` (level 2: alone, with Rank Math doubles with and without its local SEO, with a Yoast double). The hours field: `modules/content-types/tests/hours.test.mjs` (level 1) and `hours-editor.test.mjs` (level 3, with the constructor's offer of new template fields). How to maintain it: the header of `modules/local-business/module.php`.
+
+## A location's data stored once (1.8.0)
+
+Up to 1.7.0 a location kept the same data twice — the address as a text and by parts, the hours as a text and day by day, the map as a link and as an embed URL, the static map as a URL and as a media ID — and the copies drifted apart. Since 1.8.0:
+
+| Stored (one field each) | Derived (shown) |
+|---|---|
+| street (1-2 lines), postal code, locality, region, country | the address text; `streetAddress` for Google |
+| `hours` (day by day) | the hours text |
+| «What to search on Google Maps» (`estrategia_web_location_map_query`: a Google Business profile name or an address) | «Open in Google Maps» (`https://www.google.com/maps/search/?api=1&query=…`) and the embed (`https://www.google.com/maps/embed?origin=mfe&pb=!1m3!2m1!1s…!6i15`) |
+| static map image (`estrategia_web_location_static_map_id`, media library) | its URL |
+
+Where they are shown: section 2 ter (the location source, with the format filter); local-business. Where they are edited: a **meta box in the main area** of the block editor, grouped (Contact, Address, Opening hours, Map, «For Google» closed), with «Shown on the site» under each group — the definition keys `fields_box: "main"`, `groups` and a field's `group` ([content-types.schema.json](modules/content-types/content-types.schema.json)). Locations, testimonials and clients (which now have `editor`) use it; a type without `editor` still gets it on the classic screen.
+
+**The migration**, once per site, after reading its dry run:
+
+    wp estrategia-web migrate-location-data --dry-run     JSON: per location, before → after, DIFFERENCES, what it could not read
+    wp estrategia-web migrate-location-data               does it (backup in _estrategia_web_location_backup_1_8_0 and the option estrategia_web_location_migration_backup)
+
+What it does, what a DIFFERENCE means and how to get out of «not parsed»: the header of [class-location-migration.php](modules/content-types/includes/class-location-migration.php). Until it runs nothing changes on the site (the old texts are shown while they exist); the admin shows a notice on the locations screens.

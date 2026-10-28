@@ -58,8 +58,11 @@
  *   wpml           translate | display-as-translated | ignore
  *   taxonomies[]   an object (declared here; name ≤ 32) or the name of one
  *                  declared in another file (or category / post_tag)
+ *   fields_box     sidebar (default) | main: where the fields are edited
+ *                  (1.8.0; class-fields-panel.php)
+ *   groups[]       {key, label, collapsed}: the sections of the main box
  *   fields[]       name (the meta key, with prefix), type, label, help,
- *                  required, default, wpml (copy | translate | ignore),
+ *                  required, default, wpml (copy | translate | ignore), group,
  *                  options (select), post_type (relation), min/max/integer (number),
  *                  true_label/false_label (boolean: what the binding shows; "" = nothing)
  *   Field types: text, textarea, number, url, email, tel, image (attachment
@@ -94,6 +97,14 @@
  * class-field-format.php. Use it instead of core/post-meta for anything but
  * plain text.
  *
+ * A LOCATION'S DATA, STORED ONCE (1.8.0): the location template keeps each
+ * datum in one field and the texts the page shows are derived —
+ * class-location-data.php (the rules, pure), class-location-fields.php
+ * (WordPress: which post, which language, the old meta until a site
+ * migrates), class-location-migration.php (wp estrategia-web
+ * migrate-location-data). Schema::RETIRED_FIELDS keeps a site's old copy
+ * of the template valid until then.
+ *
  * Tests: modules/content-types/tests/ — level 1: schema.test.mjs (validator,
  * name limits, PHP ↔ JSON Schema drift), wpml.test.mjs (the WPML config and
  * the copy on save and the slug translations, with a WPML double), format.test.mjs (the content-field
@@ -104,11 +115,25 @@
  * classic-required.test.mjs («required» on the classic screen). The test site reads the
  * definitions in tests/fixtures/ (its mu-plugin, tests/wp/).
  * The constructor (17-10-2026): level 1 constructor-pure.test.mjs (the
- * templates validate, the template rules, Changes); level 2
- * constructor.test.mjs (the REST route, registration from the database,
- * templates, protections, redirects, export/import); level 3
+ * templates validate, the template rules, Changes) and, since 1.8.0,
+ * constructor-model.test.mjs (assets/constructor-model.js, what the screen
+ * writes into a definition); level 2 constructor.test.mjs (the REST route,
+ * registration from the database, templates, protections, redirects,
+ * export/import) and constructor-screens.test.mjs (the list table, list →
+ * edit → save with the page's nonce, the stale ?type= redirect); level 3
  * constructor-editor.test.mjs (create «Restaurantes» with three fields in
- * the panel, and its type and panel appear).
+ * the edit screen — tabs, collapsed rows, keyboard and drag reordering, a
+ * field group — and its type and panel appear).
+ * 1.8.0: level 1 location-data.test.mjs (the derived texts and the
+ * migration's parsers, with Lavandería's strings); level 2
+ * location-migration.test.mjs (a 1.7.0 site migrated) and
+ * location-box.test.mjs (the main-area meta box and its save).
+ *
+ * THE SCREENS (1.8.0, after ACF's field groups): a LIST of types (a
+ * WP_List_Table, includes/admin/class-types-table.php) and one EDIT screen
+ * per type, ?page=estrategia-web-content-types&type=<name>, with the
+ * settings in tabs and the fields as collapsed rows. The URLs and why:
+ * includes/admin/class-page.php.
  *
  * =========================================================================
  * HOW TO MAINTAIN
@@ -121,7 +146,14 @@
  *
  * - A key a person should set from the panel also needs its control in
  *   assets/constructor.js and its text in Page::strings() (a key without a
- *   control is kept, and editable in the panel's JSON box).
+ *   control is kept, and editable in the panel's JSON box). Its place: a
+ *   type's key in the tab a person would look in (General: names and
+ *   address; URLs & languages: the other languages and WPML; Taxonomies;
+ *   Advanced: the rest — fields_box and groups live there), a field's key in
+ *   the field's row (fieldBody(); «group» is a select fed by «groups»).
+ *   Boundary case, with a name: menu_position had no control until 1.8.0
+ *   and was kept through the JSON box all along — that is the fallback, not
+ *   a bug.
  *
  * - A NEW FIELD TYPE is seven places, in the same commit, and the level 1 test
  *   fails if the first two disagree:
@@ -209,8 +241,13 @@ require_once __DIR__ . '/includes/class-field-format.php';
 require_once __DIR__ . '/includes/class-bindings.php';
 require_once __DIR__ . '/includes/class-rest.php';
 require_once __DIR__ . '/includes/class-site-types.php';
+require_once __DIR__ . '/includes/class-location-data.php';
+require_once __DIR__ . '/includes/class-location-fields.php';
+require_once __DIR__ . '/includes/class-location-migration.php';
 
 Store::boot();
+Location_Fields::boot();
+Location_Migration::boot(); // Only the admin notice: the migration itself runs from WP-CLI (its header).
 Registrar::boot();
 Wpml::boot();
 Fields_Panel::boot();
@@ -222,6 +259,6 @@ Site_Types::boot(); // modules/site's old types → definitions, once; «enabled
 add_action( 'after_switch_theme', array( Loader::class, 'forget' ) );
 
 if ( is_admin() ) {
-	require_once __DIR__ . '/includes/admin/class-page.php';
+	require_once __DIR__ . '/includes/admin/class-page.php'; // It loads class-types-table.php (WP_List_Table) only on its own screen.
 	Page::boot();
 }

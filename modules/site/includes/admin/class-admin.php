@@ -83,6 +83,41 @@ final class Admin {
 		<?php
 	}
 
+	/**
+	 * «Opening hours» (1.8.0): day by day — the «hours» field type, one line
+	 * per day as on a location's meta box — and, under it, the sentence the
+	 * site shows (Company::value( 'schedule' ), derived). A site WITH
+	 * locations does not get the field: each location has its own hours, and
+	 * two places to write them is what 1.8.0 removed. A site that still has
+	 * the old free text sees it, read-only, until its migration converts it.
+	 */
+	private static function hours_row( array $data, string $label ): void {
+		$type = Type_Names::name( 'location' );
+		if ( post_type_exists( $type ) && (int) ( wp_count_posts( $type )->publish ?? 0 ) > 0 ) {
+			printf( '<tr><th scope="row">%s</th><td><p class="description">%s</p></td></tr>', esc_html( $label ), esc_html__( 'This site has locations: the opening hours go in each location.', 'estrategia-web' ) );
+			return;
+		}
+		$hours = Settings::hours_class();
+		$days  = array( 'mo' => 1, 'tu' => 2, 'we' => 3, 'th' => 4, 'fr' => 5, 'sa' => 6, 'su' => 0 );
+		global $wp_locale;
+		echo '<tr><th scope="row">' . esc_html( $label ) . '</th><td><fieldset id="estrategia-web-site-hours"><legend class="screen-reader-text">' . esc_html( $label ) . '</legend>';
+		foreach ( $days as $day => $n ) {
+			printf(
+				'<p><label for="estrategia-web-site-hours-%1$s" style="display:inline-block;min-width:8em">%2$s</label> <input type="text" class="regular-text" id="estrategia-web-site-hours-%1$s" name="%3$s[hours][%1$s]" value="%4$s" placeholder="09:00-14:00, 16:00-20:00"></p>',
+				esc_attr( $day ),
+				esc_html( $wp_locale ? $wp_locale->get_weekday( $n ) : $day ),
+				esc_attr( Settings::OPTION ),
+				esc_attr( $hours::to_line( (string) $data['hours'], $day ) )
+			);
+		}
+		echo '<p class="description">' . esc_html__( 'One line per day, e.g. 08:00-14:00, 16:00-20:00. Empty: closed.', 'estrategia-web' ) . '</p>';
+		$shown = Company::value( 'schedule' );
+		if ( '' !== $shown ) {
+			echo '<p><strong>' . esc_html__( 'Shown on the site (as of the last save):', 'estrategia-web' ) . '</strong><br>' . nl2br( esc_html( $shown ) ) . '</p>';
+		}
+		echo '</fieldset></td></tr>';
+	}
+
 	public static function render(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
@@ -127,7 +162,7 @@ final class Admin {
 					$text( 'tax_id' );
 					$text( 'registry', 'text', __( 'As it appears in the legal notice, without «Registered in». Example: Registro Mercantil de Mallorca, tomo 1234, folio 56, hoja PM-7890, inscripción 1.ª', 'estrategia-web' ) );
 					$area( 'address' );
-					$area( 'schedule' );
+					self::hours_row( $data, $labels['schedule'] );
 					$text( 'map_url', 'url' );
 					?>
 				</table>

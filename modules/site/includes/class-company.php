@@ -46,7 +46,7 @@ final class Company {
 	 * Settings::DEFAULTS goes in here, or it shows up as bindable data in the
 	 * editor (the Matomo ones, 0.3.0, are the example).
 	 */
-	private const NOT_DATA = array( 'enabled_types', 'allow_svg', 'social', 'rewrite_slugs', 'matomo_url', 'matomo_site_id', 'matomo_mode' );
+	private const NOT_DATA = array( 'enabled_types', 'allow_svg', 'social', 'rewrite_slugs', 'matomo_url', 'matomo_site_id', 'matomo_mode', 'hours' );
 
 	/** Country code for phone numbers written without one. */
 	public static function country_code(): string {
@@ -80,6 +80,8 @@ final class Company {
 				return Links::mailto( (string) $data['email'] );
 			case 'whatsapp_href':
 				return Links::whatsapp( (string) $data['whatsapp'], (string) $data['whatsapp_message'], self::country_code() );
+			case 'schedule':
+				return self::schedule( $data );
 		}
 		if ( str_starts_with( $key, 'social.' ) ) {
 			$network = substr( $key, 7 );
@@ -96,6 +98,26 @@ final class Company {
 			return '';
 		}
 		return (string) $data[ $key ];
+	}
+
+	/**
+	 * «schedule», the opening hours as the page shows them (1.8.0): DERIVED
+	 * from «hours» (day by day) with the location's format for the request's
+	 * language (content-types' Location_Data / Location_Fields). While a site
+	 * has the old free text and no «hours», the old text.
+	 */
+	private static function schedule( array $data ): string {
+		$hours = (string) ( $data['hours'] ?? '' );
+		if ( '' === $hours ) {
+			return (string) ( $data['schedule'] ?? '' );
+		}
+		if ( ! class_exists( \EstrategiaWeb\ContentTypes\Location_Data::class ) ) {
+			Settings::hours_class();
+			require_once dirname( __DIR__, 2 ) . '/content-types/includes/class-location-data.php';
+		}
+		return class_exists( \EstrategiaWeb\ContentTypes\Location_Fields::class )
+			? \EstrategiaWeb\ContentTypes\Location_Fields::company_hours_text( $hours )
+			: \EstrategiaWeb\ContentTypes\Location_Data::hours_text( $hours, \EstrategiaWeb\ContentTypes\Location_Data::default_format( determine_locale() ) );
 	}
 
 	/**
