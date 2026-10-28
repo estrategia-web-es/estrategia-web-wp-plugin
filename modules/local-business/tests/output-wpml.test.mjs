@@ -35,7 +35,7 @@
 // the front page listed the four locations, both languages, as departments.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { reset, wp, saveCompany, html, type, BASE, wpml, requireWpml } from "../../../tests/lib.mjs";
+import { reset, wp, saveCompany, html, type, BASE, wpml, requireWpml, upload, png } from "../../../tests/lib.mjs";
 import { checkLocalBusiness, checkOrganization, jsonLdBlocks, nodesOf } from "./google-rules.mjs";
 
 const TYPE = "DryCleaningOrLaundry";
@@ -57,7 +57,10 @@ const meta = (l) => ({
   estrategia_web_location_hours: JSON.stringify(HOURS),
   estrategia_web_location_latitude: l.lat,
   estrategia_web_location_longitude: l.lon,
+  // 1.8.0: the static map is only the media library image (Google's recommended «image»).
+  estrategia_web_location_static_map_id: mapId,
 });
+let mapId = 0;
 const tiedContent = (slug) => `<!-- wp:group -->
 <div class="wp-block-group"><!-- wp:paragraph ${JSON.stringify({ metadata: { bindings: { content: { source: "estrategia-web-site/location", args: { slug, key: "estrategia_web_location_phone" } } } } })} -->
 <p>x</p>
@@ -77,6 +80,9 @@ before(async () => {
   // What a deploy does (Lavandería's re-reads the wpml-config.xml files): until then WPML does not have the
   // location type as translatable, filters nothing by language and the front page lists both languages.
   await wpml("/config", {});
+  const map = await upload("mapa-prueba.png", "image/png", png(8, 6));
+  assert.equal(map.status, 201, map.text);
+  mapId = map.json.id;
   for (const [slug, l] of Object.entries(LOCATIONS)) {
     const r = await wp(`/${type("location")}`, { method: "POST", body: { status: "publish", title: l.es, slug, meta: meta(l) } });
     assert.equal(r.status, 201, r.text);
