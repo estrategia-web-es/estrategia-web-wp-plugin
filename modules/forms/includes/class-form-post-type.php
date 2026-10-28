@@ -1,11 +1,11 @@
 <?php
 /**
- * THE FORM AS AN ENTITY (1.9.0): the post type «eweb_form» («Formulario»).
+ * THE FORM AS AN ENTITY (2.0.0): the post type «eweb_form» («Formulario»).
  *
- * Until 1.8.0 a form was a block tree (estrategia-web-forms/form with its
+ * Up to 1.7.0 a form was a block tree (estrategia-web-forms/form with its
  * fields and notifications) INSIDE a page or a synced pattern, so editing it
  * meant finding where it lived (sometimes the page, sometimes the pattern)
- * and a copied form duplicated its notifications. Since 1.9.0 a form is a
+ * and a copied form duplicated its notifications. Since 2.0.0 a form is a
  * post of its own, like Formello's (David's reference, 27-10-2026), and
  * pages show it with the «Formulario» reference block
  * (estrategia-web-forms/form-ref, Blocks::render_form_ref()).

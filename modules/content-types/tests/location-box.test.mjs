@@ -1,4 +1,4 @@
-// NIVEL: 2 — Playground WordPress, because it WRITES and the screen is the server's HTML: the 1.8.0 meta box in the MAIN area of the block editor (location, testimonial, client) — its groups, «For Google» closed, no sidebar panel — and its save, posted the way the block editor posts legacy meta boxes (the base form + the «normal» location to _wpMetaBoxUrl), with no browser. What only the box's JavaScript does (the media picker, «Copy Monday») is not here: it is sugar over these same inputs.
+// NIVEL: 2 — Playground WordPress, because it WRITES and the screen is the server's HTML: the 2.0.0 meta box in the MAIN area of the block editor (location, testimonial, client) — its groups, «For Google» closed, no sidebar panel — and its save, posted the way the block editor posts legacy meta boxes (the base form + the «normal» location to _wpMetaBoxUrl), with no browser. What only the box's JavaScript does (the media picker, «Copy Monday») is not here: it is sugar over these same inputs.
 //
 // Seen red (27-10-2026), the first run, for real: «the save» stored the
 // street with «\r\n» — what a browser's <textarea> sends — and the derived
@@ -96,7 +96,7 @@ test("testimonials and clients: the block editor too, with their fields in the m
   for (const t of ["eweb_testimonial", "eweb_client"]) {
     const p = await session.get(`/wp-admin/post-new.php?post_type=${t}`);
     assert.equal(p.status, 200, t);
-    assert.match(p.text, /block-editor-page/, t + ": block editor (the client got «editor» in 1.8.0)");
+    assert.match(p.text, /block-editor-page/, t + ": block editor (the client got «editor» in 2.0.0)");
     const normal = p.text.match(/<form class="metabox-location-normal"[^>]*>([\s\S]*?)<\/form>/)?.[1] ?? "";
     assert.match(normal, /id="estrategia-web-content-types"/, t + ": its fields in the main area");
     assert.ok(!p.text.includes("estrategiaWebContentTypesPanel"), t + ": no sidebar panel");

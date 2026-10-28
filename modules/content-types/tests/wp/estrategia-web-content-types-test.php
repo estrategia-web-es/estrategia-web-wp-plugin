@@ -18,7 +18,7 @@
  *   the errors per file, the hash option, the rewrite rules for the slugs,
  *   and the registered meta of each type.
  *
- * - 1.8.0, the location data migration (tests/location-migration.test.mjs):
+ * - 2.0.0, the location data migration (tests/location-migration.test.mjs):
  *   /location-legacy (POST) puts back the location definition a 1.7.0 site
  *   stored (tests/fixtures/legacy/location-1.7.0.json, the 1.7.0 template,
  *   keeping the current row's slug), /location-migrate (POST {dry}) runs

@@ -1,7 +1,7 @@
 <?php
 /**
  * «Estrategia Web → Content types»: THE CONSTRUCTOR (17-10-2026), made into
- * two screens in 1.8.0 with ACF's field groups as the reference (David: the
+ * two screens in 2.0.0 with ACF's field groups as the reference (David: the
  * single page — every type and every field open, one after the other — was
  * one endless scroll and could not be used):
  *

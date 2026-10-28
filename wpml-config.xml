@@ -141,7 +141,7 @@
 		error); modules/site/tests/wpml-config.test.mjs checks the attributes.
 	-->
 	<!--
-		Forms module (1.9.0): the form post, eweb_form
+		Forms module (2.0.0): the form post, eweb_form
 		(modules/forms/includes/class-form-post-type.php). Translatable like a
 		page: each language has its form post, related as translations, and its
 		texts are the block attributes declared above, translated the same way

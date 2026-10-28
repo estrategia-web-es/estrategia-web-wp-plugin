@@ -65,11 +65,11 @@ final class Graph {
 
 	/**
 	 * @param array $company id, name, url, logo, telephone, email, same_as[]; hours (stored «hours» JSON) and
-	 *                       type (a Types::ALL name), only for a site without locations (1.8.0)
+	 *                       type (a Types::ALL name), only for a site without locations (2.0.0)
 	 * @param array $departments LocalBusiness nodes (local_business() of each location, without parent)
 	 */
 	public static function organization( array $company, array $departments = array() ): array {
-		// 1.8.0: a site WITHOUT locations (a restaurant: the company is the business) gives its
+		// 2.0.0: a site WITHOUT locations (a restaurant: the company is the business) gives its
 		// Company details hours here; the node is then also its type of business, the only kind
 		// schema.org lets have opening hours (Data::company() passes them only with no locations).
 		$hours = Hours::specification( $company['hours'] ?? '' );

@@ -38,7 +38,7 @@ final class Blocks {
 		'checkbox'     => 'render_field',
 		'submit'       => 'render_submit',
 		'notification' => 'render_nothing',
-		'form-ref'     => 'render_form_ref', // 1.9.0: a form post (eweb_form) shown in a page.
+		'form-ref'     => 'render_form_ref', // 2.0.0: a form post (eweb_form) shown in a page.
 	);
 
 	public const RESULT_PARAM = 'af_result';
@@ -116,7 +116,7 @@ final class Blocks {
 	}
 
 	/**
-	 * The «Formulario» reference block (1.9.0): renders the form post it
+	 * The «Formulario» reference block (2.0.0): renders the form post it
 	 * points to, in the current language (Form_Post_Type::resolve()),
 	 * EXACTLY as the same tree rendered inline: the post's blocks become
 	 * this block's inner blocks and are rendered as such, the way core's

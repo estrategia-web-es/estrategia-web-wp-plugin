@@ -1,6 +1,6 @@
 <?php
 /**
- * A LOCATION'S DERIVED VALUES, read from WordPress (1.8.0). The rules are
+ * A LOCATION'S DERIVED VALUES, read from WordPress (2.0.0). The rules are
  * pure and live in class-location-data.php; this class only knows WHICH
  * post, WHICH language and WHICH meta:
  *
@@ -20,7 +20,7 @@
  * estrategia_web_content_types_box_preview of class-fields-panel.php).
  * core/post-meta CANNOT show them — it reads stored meta, and a derived
  * value is not stored —: a theme that bound core/post-meta to those keys
- * moves to estrategia-web-site/location (CHANGELOG 1.8.0).
+ * moves to estrategia-web-site/location (CHANGELOG 2.0.0).
  *
  * THE FORMAT of the texts: Location_Data::FORMATS for the post's language
  * (WPML) or the site's, changed per site with the filter

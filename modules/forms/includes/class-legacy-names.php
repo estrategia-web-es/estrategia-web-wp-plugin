@@ -45,7 +45,7 @@ final class Legacy_Names {
 		$registry = \WP_Block_Type_Registry::get_instance();
 		foreach ( array_keys( Blocks::BLOCKS ) as $slug ) {
 			if ( 'form-ref' === $slug ) {
-				continue; // 1.9.0: born after the rename, it never had an old name.
+				continue; // 2.0.0: born after the rename, it never had an old name.
 			}
 			$old  = self::OLD . '/' . $slug;
 			$type = $registry->get_registered( self::NEW . '/' . $slug );

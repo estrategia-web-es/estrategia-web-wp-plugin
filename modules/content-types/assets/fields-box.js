@@ -1,6 +1,6 @@
 /**
  * The fields meta box (includes/class-fields-panel.php, render_meta_box()),
- * made usable — 1.8.0. Without this script the box still works: an image
+ * made usable — 2.0.0. Without this script the box still works: an image
  * is its media library number and the hours are one line per day.
  *
  *   - image: the number input becomes the picture plus «Choose image» /

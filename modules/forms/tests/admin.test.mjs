@@ -105,7 +105,7 @@ test("editor: the blocks are registered and a new form comes with its template w
   const names = await p.evaluate(() => wp.blocks.getBlockTypes().map((b) => b.name).filter((n) => n.startsWith("estrategia-web-forms/")).sort());
   assert.deepEqual(names, ["checkbox", "email", "form", "form-ref", "notification", "select", "submit", "tel", "text", "textarea"].map((n) => "estrategia-web-forms/" + n));
   const inserter = await p.evaluate(() => ({ form: wp.blocks.hasBlockSupport("estrategia-web-forms/form", "inserter", true), ref: wp.blocks.hasBlockSupport("estrategia-web-forms/form-ref", "inserter", true) }));
-  assert.deepEqual(inserter, { form: false, ref: true }, "1.9.0: a page gets the reference block; the form tree lives in a form post");
+  assert.deepEqual(inserter, { form: false, ref: true }, "2.0.0: a page gets the reference block; the form tree lives in a form post");
 
   await p.evaluate(() => wp.data.dispatch("core/block-editor").insertBlocks(wp.blocks.createBlock("estrategia-web-forms/form")));
   await p.waitForFunction(() => wp.data.select("core/block-editor").getBlocks()[0]?.innerBlocks.length > 0);
@@ -118,7 +118,7 @@ test("editor: the blocks are registered and a new form comes with its template w
   assert.deepEqual(errors, [], "no JavaScript errors in the editor");
 });
 
-// 1.9.0 (class-form-post-type.php): the form post's editor. Seen red (28-10-2026) with the
+// 2.0.0 (class-form-post-type.php): the form post's editor. Seen red (28-10-2026) with the
 // allowed_block_types_all filter unhooked: the reference block was allowed inside a form post.
 test("editor: a new form post comes with the locked Form block and its template; no reference block inside a form", async () => {
   const errors = [];

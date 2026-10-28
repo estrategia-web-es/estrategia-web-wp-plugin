@@ -1,6 +1,6 @@
 // NIVEL: 2 — Playground WordPress, because it WRITES: creates clients and locations via REST and renders a Query with core/post-meta.
 //
-// The unreleased field additions: the client's «Business type» and (1.8.0)
+// The unreleased field additions: the client's «Business type» and (2.0.0)
 // the location's single map field, the search, with the link and the embed derived.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
@@ -42,7 +42,7 @@ test("client: in a Query of clients, core/post-meta renders each one's business 
   assert.match(items[1], /Portic Villas[\s\S]*<p class="t-tipo[^"]*">Agencia de alquiler vacacional<\/p>/);
 });
 
-// 1.8.0: the location keeps ONE map field, the search; the link and the embed are derived (the embed
+// 2.0.0: the location keeps ONE map field, the search; the link and the embed are derived (the embed
 // field and its whole-<iframe> sanitizer: content-types/tests/constructor.test.mjs, on a type of its own).
 test("location: «What to search on Google Maps» is stored as typed, and the Maps link and the embed come out of it", async () => {
   const s = await wp(`/${type("location")}`, { method: "POST", body: { title: "Maioris", slug: "maioris", status: "publish", meta: { estrategia_web_location_map_query: "Lavandería Ecológica Mallorca - Maioris (Autoservicio)" } } });

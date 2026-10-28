@@ -1,5 +1,5 @@
 /**
- * THE CONSTRUCTOR'S PURE PART (1.8.0): what assets/constructor.js does to a
+ * THE CONSTRUCTOR'S PURE PART (2.0.0): what assets/constructor.js does to a
  * definition without touching the page — texts per language, the address
  * per language, moving a field, the choices of a field's «group», the URL
  * of a type's edit screen. Split out so it is tested at level 1 without a

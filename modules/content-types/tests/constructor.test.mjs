@@ -166,7 +166,7 @@ test("the special sanitizers, now field types: rating, embed, local_image and th
   assert.equal(ok.json.meta.estrategia_web_testimonial_client, client.json.id);
   assert.equal(ok.json.meta.estrategia_web_testimonial_rating, 0);
   // embed and local_image: the location template used them up to 1.7.0 (its map embed and static map
-  // path); since 1.8.0 they are derived there, so they are measured on a type of the site's own.
+  // path); since 2.0.0 they are derived there, so they are measured on a type of the site's own.
   const place = { prefix: "gment_", name: "gment_place", labels: { singular: "Lugar", plural: "Lugares" }, fields: [{ name: "gment_embed", type: "embed", label: "Mapa" }, { name: "gment_picture", type: "local_image", label: "Imagen" }] };
   const saved = await ew("", { method: "POST", body: { definition: place } });
   assert.equal(saved.status, 201, saved.text);

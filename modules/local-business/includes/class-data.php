@@ -94,7 +94,7 @@ final class Data {
 			}
 		}
 		$name = Company::value( 'company_name' );
-		// 1.8.0: the company's hours (Company details) speak for the business only on a site with no
+		// 2.0.0: the company's hours (Company details) speak for the business only on a site with no
 		// locations — with locations, each has its own and the company's field is hidden.
 		$hours = self::all_locations() ? '' : (string) \EstrategiaWeb\Site\Settings::get( 'hours' );
 		return array(
@@ -166,7 +166,7 @@ final class Data {
 				'image'       => self::image( $location, $meta ),
 				'telephone'   => '' !== $meta( 'phone' ) ? $meta( 'phone' ) : Company::value( 'phone' ),
 				'email'       => $meta( 'email' ),
-				// 1.8.0: the street may have two lines (what the page shows); Google gets them on one.
+				// 2.0.0: the street may have two lines (what the page shows); Google gets them on one.
 				'street'      => \EstrategiaWeb\ContentTypes\Location_Data::street_line( $meta( 'street' ) ),
 				'postal_code' => $meta( 'postal_code' ),
 				'locality'    => $meta( 'locality' ),

@@ -140,7 +140,7 @@ add_action(
 
 		$route( '/post/(?P<id>\d+)', 'GET', static fn( WP_REST_Request $r ) => array( 'content' => (string) get_post_field( 'post_content', (int) $r['id'], 'raw' ) ) );
 
-		// 1.9.0, the form posts and their migrator (tests/form-ref.test.mjs, form-migration*.test.mjs).
+		// 2.0.0, the form posts and their migrator (tests/form-ref.test.mjs, form-migration*.test.mjs).
 		// {dry, ids}: Form_Migration::run(), as the WP-CLI command, as the administrator.
 		$route(
 			'/migrate-forms',

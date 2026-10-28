@@ -40,7 +40,7 @@ const CONTRACT = {
   location: {
     name: "eweb_location",
     taxonomies: [],
-    // 1.8.0 (27-10-2026): each datum stored ONCE. Out (derived now, Location_Data): address, schedule,
+    // 2.0.0 (27-10-2026): each datum stored ONCE. Out (derived now, Location_Data): address, schedule,
     // map_url, map_embed, static_map. In: map_query. Still valid in a site's copy until its migration
     // (Schema::RETIRED_FIELDS), so the stored data keeps its names.
     fields: ["estrategia_web_location_phone", "estrategia_web_location_email",
@@ -86,7 +86,7 @@ test("the templates keep the old names: type, taxonomies and meta keys (nothing 
       estrategia_web_location_email: "copy",
       estrategia_web_location_map_query: "copy",
       estrategia_web_location_static_map_id: "copy",
-      // 1.8.0: the street is what the page shows, line by line, so it is translated (Lavandería's English
+      // 2.0.0: the street is what the page shows, line by line, so it is translated (Lavandería's English
       // «Maioris Shopping Centre»); the rest of a postal address is not (the post office reads it in the local language).
       estrategia_web_location_street: "translate",
       estrategia_web_location_postal_code: "copy",
@@ -106,8 +106,8 @@ test("the templates keep the old names: type, taxonomies and meta keys (nothing 
   assert.deepEqual(t.estrategia_web_testimonial_client.post_type, ["eweb_client"]);
   const c = Object.fromEntries(es.client.normalized.fields.map((f) => [f.name, f]));
   assert.equal(c.estrategia_web_client_image_fit.default, "cover", "a client without the field saved counts as a photo");
-  assert.deepEqual(es.client.normalized.supports, ["title", "editor", "thumbnail", "excerpt", "page-attributes", "custom-fields"], "1.8.0: the block editor like every type, its fields in the main meta box");
-  for (const key of ["location", "client", "testimonial"]) assert.equal(es[key].normalized.fields_box, "main", key + ": fields in the main area (1.8.0)");
+  assert.deepEqual(es.client.normalized.supports, ["title", "editor", "thumbnail", "excerpt", "page-attributes", "custom-fields"], "2.0.0: the block editor like every type, its fields in the main meta box");
+  for (const key of ["location", "client", "testimonial"]) assert.equal(es[key].normalized.fields_box, "main", key + ": fields in the main area (2.0.0)");
   assert.deepEqual(es.location.normalized.groups.map((g) => [g.key, g.collapsed]), [["contact", false], ["address", false], ["hours", false], ["map", false], ["google", true]], "«For Google» starts closed");
   assert.ok(es.location.normalized.fields.every((f) => f.group), "every location field in a group");
   assert.deepEqual(es.location.normalized.labels.details, { en: "Location details", es: "Datos de la sede", ca: "Dades de la seu" }, "the panel title the old Meta_Panel had");
@@ -187,8 +187,8 @@ test("new fields of a template: offered by name, put in after their template nei
   assert.deepEqual(php("missing", { def: plain }).missing, [], "a definition without a template is offered nothing");
 });
 
-// 1.8.0. Seen red (27-10-2026) with RETIRED_FIELDS emptied: the old copy failed with «uses the reserved prefix».
-test("a site's copy from before 1.8.0 (the address, hours and map texts still in it) keeps validating until it migrates; an unknown estrategia_web_ field still does not", () => {
+// 2.0.0. Seen red (27-10-2026) with RETIRED_FIELDS emptied: the old copy failed with «uses the reserved prefix».
+test("a site's copy from before 2.0.0 (the address, hours and map texts still in it) keeps validating until it migrates; an unknown estrategia_web_ field still does not", () => {
   const old = resolved("location");
   old.fields.unshift({ name: "estrategia_web_location_address", type: "textarea", label: "Address", wpml: "translate" });
   for (const n of ["schedule", "map_url", "map_embed", "static_map"]) old.fields.push({ name: "estrategia_web_location_" + n, type: n === "schedule" ? "textarea" : n === "static_map" ? "local_image" : n === "map_embed" ? "embed" : "url", label: n });

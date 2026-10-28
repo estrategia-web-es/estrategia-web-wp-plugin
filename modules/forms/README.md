@@ -24,7 +24,7 @@ no WPML) is in
 - Slug and text domain: `estrategia-web-forms` · WordPress **7.1+** · PHP **8.1+** · GPLv2+
 - No dependencies, no `node_modules`, no build step.
 
-> **Since 1.9.0 a form is a post of its own** (`eweb_form`, «Formulario»),
+> **Since 2.0.0 a form is a post of its own** (`eweb_form`, «Formulario»),
 > like Formello's: it is created and edited in **Forms → Forms**, and a page
 > shows it with the **«Form» reference block** (`estrategia-web-forms/form-ref`).
 > What the form post holds is the same block tree as before, so everything
@@ -65,12 +65,12 @@ no WPML) is in
 
 ## Configuring a form
 
-1. **Forms → Forms → Add form** (1.9.0). The new form post comes with the
+1. **Forms → Forms → Add form** (2.0.0). The new form post comes with the
    Form block and its template: name, email, message, consent, button and
    two notifications (to the site and an acknowledgement to the sender).
    Change, remove or add whatever is needed; the post title is only its name
    in the admin. To show it on a page, add the **«Form»** block there and
-   choose it from the list. (Before 1.9.0 the Form block went straight into
+   choose it from the list. (Before 2.0.0 the Form block went straight into
    the page; it no longer appears in the inserter.)
 2. In the form's side panel: the **Name in the submissions log**, the **Form
    identifier** and, if needed, custom success and error messages.
@@ -176,7 +176,7 @@ Hooks for the unusual: `estrategia_web_forms_email` (tweak a notification),
 by default), `estrategia_web_forms_client_ip` (IP behind a trusted proxy),
 `estrategia_web_forms_csv_separator` (`;` by default) and `estrategia_web_forms_settings`.
 
-## Form posts and the migration (1.9.0)
+## Form posts and the migration (2.0.0)
 
 **The model.** A form is a post of type `eweb_form` (not public, no URL,
 edited with the block editor, page capabilities, translatable with WPML).

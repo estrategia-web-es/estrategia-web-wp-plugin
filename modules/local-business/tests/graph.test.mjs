@@ -123,7 +123,7 @@ test("merge: a host that already has a local business on the page → ours steps
   assert.deepEqual(one("merge", host, ORG, [LB]).graph, host);
 });
 
-// 1.8.0. Seen red (27-10-2026) before organization() read «hours»: no openingHoursSpecification.
+// 2.0.0. Seen red (27-10-2026) before organization() read «hours»: no openingHoursSpecification.
 test("a site WITHOUT locations: the company's hours make the Organization its type of business too, with its hours (and the host's Organization gets the type)", () => {
   const HOURS = JSON.stringify({ tu: ["13:00-16:00", "20:00-23:30"], we: ["13:00-16:00", "20:00-23:30"] });
   const org = one("organization", { ...COMPANY, hours: HOURS, type: "Restaurant" });

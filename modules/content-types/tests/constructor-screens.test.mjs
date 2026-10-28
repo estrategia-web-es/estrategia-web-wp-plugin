@@ -1,6 +1,6 @@
 // NIVEL: 2 — Playground WordPress, no browser: the list is painted by PHP (a WP_List_Table) and the edit screen's frame too, so the HTML a logged-in administrator gets, and the REST call its page makes with the page's own nonce, are enough to follow list → edit → save → list and the stale-URL redirect. What only exists painted by JS (tabs, rows, drag, keyboard) is level 3: constructor-editor.test.mjs.
 //
-// The site under test speaks es_ES; the texts new in 1.8.0 are not in the
+// The site under test speaks es_ES; the texts new in 2.0.0 are not in the
 // .po yet when this runs, so the test looks for the data-* hooks and the
 // definitions' own words («Cursos»), never for translated labels.
 //

@@ -2,14 +2,14 @@
 //
 // A location's static map. Up to 1.7.0 two fields: `estrategia_web_location_static_map`
 // (a path or URL of the site) and `estrategia_web_location_static_map_id` (the same image
-// in the media library). Since 1.8.0 (each datum once) only the media library image;
+// in the media library). Since 2.0.0 (each datum once) only the media library image;
 // the URL is DERIVED and comes out through the estrategia-web-site/location source
 // under the old key, which is what estrategia-web/map's staticMapUrl binds. The
 // theme is not here, so it is checked with a paragraph and an image bound to it.
 // The path rules of the «local_image» field type (what the old field was) are
 // still a type any definition can use: checked here on a type of the site's own.
 //
-// Seen red (27-10-2026) with 1.7.0's tests against 1.8.0: the location no longer
+// Seen red (27-10-2026) with 1.7.0's tests against 2.0.0: the location no longer
 // had the path field (each assertion on it failed), which is what moved them here.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";

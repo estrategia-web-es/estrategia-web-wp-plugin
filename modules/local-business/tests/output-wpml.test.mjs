@@ -57,7 +57,7 @@ const meta = (l) => ({
   estrategia_web_location_hours: JSON.stringify(HOURS),
   estrategia_web_location_latitude: l.lat,
   estrategia_web_location_longitude: l.lon,
-  // 1.8.0: the static map is only the media library image (Google's recommended «image»).
+  // 2.0.0: the static map is only the media library image (Google's recommended «image»).
   estrategia_web_location_static_map_id: mapId,
 });
 let mapId = 0;

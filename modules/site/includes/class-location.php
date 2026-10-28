@@ -15,7 +15,7 @@
  *
  * Keys: `title`, the type's location_* fields (Content_Types) and the derived
  * `estrategia_web_location_phone_href` (tel:) and `estrategia_web_location_email_href` (mailto:).
- * Since 1.8.0 also the DERIVED ones under their old meta names (the data is
+ * Since 2.0.0 also the DERIVED ones under their old meta names (the data is
  * stored once; content-types' Location_Fields makes these from it):
  * `estrategia_web_location_address` (text from the address parts),
  * `_schedule` (text from the «hours» field), `_map_url` and `_map_embed`
@@ -132,7 +132,7 @@ final class Location {
 			case 'estrategia_web_location_email_href':
 				return Links::mailto( $meta( 'estrategia_web_location_email' ) );
 		}
-		// 1.8.0: the old stored texts are DERIVED now, under the same keys (Location_Fields).
+		// 2.0.0: the old stored texts are DERIVED now, under the same keys (Location_Fields).
 		if ( class_exists( Location_Fields::class ) && in_array( $key, Location_Fields::LEGACY, true ) ) {
 			return match ( array_search( $key, Location_Fields::LEGACY, true ) ) {
 				'address'    => Location_Fields::address_text( $post ),

@@ -127,9 +127,9 @@ final class Settings {
 		'whatsapp'         => '',
 		'whatsapp_message' => '',
 		'address'          => '',
-		// Up to 1.7.0 the opening hours as a free text; since 1.8.0 the text is DERIVED from «hours» (Company::value()) and this is only read while a site has not migrated it (wp estrategia-web migrate-location-data).
+		// Up to 1.7.0 the opening hours as a free text; since 2.0.0 the text is DERIVED from «hours» (Company::value()) and this is only read while a site has not migrated it (wp estrategia-web migrate-location-data).
 		'schedule'         => '',
-		// 1.8.0. Opening hours day by day, the «hours» field type's JSON (content-types' class-hours.php). Hidden when the site has locations: each has its own.
+		// 2.0.0. Opening hours day by day, the «hours» field type's JSON (content-types' class-hours.php). Hidden when the site has locations: each has its own.
 		'hours'            => '',
 		'map_url'          => '',
 		'social'           => array(

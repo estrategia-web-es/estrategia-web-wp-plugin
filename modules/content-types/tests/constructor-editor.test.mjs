@@ -10,7 +10,7 @@
 // Seen red (17-10-2026): with the submit handler not calling save(), «create
 // Restaurantes» never got the row; with alarm() not focusing the region,
 // «an error goes to the alert region» failed on document.activeElement.
-// 1.8.0 (27-10-2026), the two screens: run against the 1.7 page, the four
+// 2.0.0 (27-10-2026), the two screens: run against the 1.7 page, the four
 // tests that use the screen failed waiting for the new hooks
 // ([data-action="add"] as a link, the templates button); with the Alt + arrow handler removed, «create Restaurantes» failed
 // on the order after the keypress; with the drop handler not calling

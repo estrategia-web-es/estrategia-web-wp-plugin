@@ -1,7 +1,7 @@
 // NIVEL: 3 — browser. NEEDS A BROWSER BECAUSE: what is tested is that what a person types in the fields box of the block editor ends up saved — the box is a «legacy» meta box that the editor's JavaScript posts after the post's own save — and the box's own JavaScript (the media library button, «Copiar el lunes a todos los días»). The HTML and the save as a request are level 2 (content-types/tests/location-box.test.mjs).
 //
 // The real case (07-10-2026): changing the phone of the Maioris location from its
-// edit screen, without WP-CLI. Since 1.8.0 (David, 27-10-2026: «una página vacía y
+// edit screen, without WP-CLI. Since 2.0.0 (David, 27-10-2026: «una página vacía y
 // todos los datos en el panel estrecho») location, client and testimonial edit their
 // fields in a wide box in the MAIN area of the block editor, grouped, not in the sidebar.
 //
@@ -89,7 +89,7 @@ test("location: the «Datos de la sede» box in the main area, grouped, with no 
   assert.deepEqual(errors, [], "no JavaScript errors in the editor");
 });
 
-test("client (the block editor since 1.8.0): the «Datos del cliente» box saves business type and image fit", async () => {
+test("client (the block editor since 2.0.0): the «Datos del cliente» box saves business type and image fit", async () => {
   const client = await wp(`/${type("client")}`, { method: "POST", body: { title: "Portic Villas", status: "publish", meta: { estrategia_web_client_url: "https://portic.test" } } });
   const box = await openEditor(client.json.id);
   assert.match(await box.locator("h2").first().textContent(), /Datos del cliente/);

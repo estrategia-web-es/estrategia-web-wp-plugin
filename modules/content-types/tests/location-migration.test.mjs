@@ -1,4 +1,4 @@
-// NIVEL: 2 — Playground WordPress, because it WRITES: a 1.7.0 site (its stored location definition and locations with the duplicated meta, Lavandería's real values) goes through the 1.8.0 migration — dry run, real run, a second run that changes nothing, the backup — and the page bound to the location says the same before and after. Level 1 (location-data.test.mjs) has the derivations; this is the database.
+// NIVEL: 2 — Playground WordPress, because it WRITES: a 1.7.0 site (its stored location definition and locations with the duplicated meta, Lavandería's real values) goes through the 2.0.0 migration — dry run, real run, a second run that changes nothing, the backup — and the page bound to the location says the same before and after. Level 1 (location-data.test.mjs) has the derivations; this is the database.
 //
 // Seen red (27-10-2026), the first runs, for real: the street came out on
 // ONE line after the real run — the request that migrates had registered
@@ -114,7 +114,7 @@ test("the dry run: before → after per location, no DIFFERENCE for Lavandería,
   assert.equal(m[L + "street"], MAIORIS.street);
 });
 
-test("the real run: the new fields, the old meta out, the backup, the definition of 1.8.0 — and the page says exactly the same", async () => {
+test("the real run: the new fields, the old meta out, the backup, the definition of 2.0.0 — and the page says exactly the same", async () => {
   const r = await migrate(false);
   assert.equal(r.summary.differences, 0, JSON.stringify(r.locations.map((l) => l.differences)));
   const m = await meta(ids.maioris);
@@ -125,7 +125,7 @@ test("the real run: the new fields, the old meta out, the backup, the definition
   assert.equal(backup.map_embed, MAIORIS.map_embed);
   const odd = await meta(ids.odd);
   assert.equal(odd[L + "address"], "Calle Mayor 1, Palma", "not read: kept, and still shown");
-  // The definition is 1.8.0's: no retired field, the new ones, the groups.
+  // The definition is 2.0.0's: no retired field, the new ones, the groups.
   await wp("/types");
   const state = await ct("/state");
   const keys = Object.keys(state.meta.eweb_location);
@@ -152,7 +152,7 @@ test("a second run changes nothing; filling in by hand what could not be read le
   const again = await migrate(false);
   const by = Object.fromEntries(again.locations.map((l) => [l.slug, l]));
   assert.deepEqual([by.maioris.changes, by.maioris.removed, by["son-oms"].changes, by["son-oms"].removed], [[], [], [], []]);
-  assert.deepEqual(again.definitions, [], "the definitions are 1.8.0's already");
+  assert.deepEqual(again.definitions, [], "the definitions are 2.0.0's already");
   assert.equal(by.rara.not_parsed.length, 4, "still not readable, still kept");
   const r = await wp(`/${type("location")}/${ids.odd}`, { method: "POST", body: { meta: { [L + "street"]: "Calle Mayor, 1", [L + "locality"]: "Palma", [L + "postal_code"]: "07001", [L + "hours"]: week(["mo", "tu", "we", "th", "fr"], "08:00-20:00"), [L + "map_query"]: "Sede rara Palma", [L + "static_map_id"]: image.id } } });
   assert.equal(r.status, 200, r.text);

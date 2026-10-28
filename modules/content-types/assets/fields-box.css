@@ -1,5 +1,5 @@
 /*
- * The fields meta box (includes/class-fields-panel.php) — 1.8.0. Wide: the
+ * The fields meta box (includes/class-fields-panel.php) — 2.0.0. Wide: the
  * fields in a grid of columns that fold to one on a narrow screen; long
  * ones (textarea, hours, image) take the whole row. How to maintain: a
  * field kind that needs the whole row goes in render_fields()' $wide list,

@@ -23,7 +23,7 @@
  * With WPML, in a TRANSLATION the «copy» fields are locked with the note
  * «changed in the original language»: WPML would overwrite them.
  *
- * THE MAIN-AREA META BOX (1.8.0, David: «una página vacía y todos los datos
+ * THE MAIN-AREA META BOX (2.0.0, David: «una página vacía y todos los datos
  * en el panel estrecho»): a definition with «fields_box: main» gets the
  * meta box in the BLOCK editor too, under the content, and NO sidebar panel
  * (uses_box()). The fields go in the definition's «groups» (<details>, a
@@ -153,7 +153,7 @@ final class Fields_Panel {
 	/**
 	 * The meta box instead of the sidebar panel: a type WITHOUT «editor»
 	 * (WordPress gives it the classic screen: the only place there is) or
-	 * one whose definition says «fields_box: main» (1.8.0).
+	 * one whose definition says «fields_box: main» (2.0.0).
 	 */
 	public static function uses_box( string $type, ?array $def = null ): bool {
 		$def = $def ?? Loader::type( $type );

@@ -1,6 +1,6 @@
 // NIVEL: 2 — Playground WordPress, because the migrator READS and WRITES the database (posts, the new form posts, the backup meta) and what is checked is what WordPress then renders and accepts. Its plan, without WordPress, is level 1 (form-migration-plan.test.mjs); with WPML, form-migration-wpml.test.mjs.
 //
-// wp estrategia-web migrate-forms (1.9.0, class-form-migration.php), run
+// wp estrategia-web migrate-forms (2.0.0, class-form-migration.php), run
 // here through the test route /migrate-forms (the same Form_Migration::run()
 // the WP-CLI command calls), limited to this test's posts (ids) so that the
 // inline forms other tests leave in the shared WordPress are not touched.

@@ -84,11 +84,11 @@ final class Admin {
 	}
 
 	/**
-	 * «Opening hours» (1.8.0): day by day — the «hours» field type, one line
+	 * «Opening hours» (2.0.0): day by day — the «hours» field type, one line
 	 * per day as on a location's meta box — and, under it, the sentence the
 	 * site shows (Company::value( 'schedule' ), derived). A site WITH
 	 * locations does not get the field: each location has its own hours, and
-	 * two places to write them is what 1.8.0 removed. A site that still has
+	 * two places to write them is what 2.0.0 removed. A site that still has
 	 * the old free text sees it, read-only, until its migration converts it.
 	 */
 	private static function hours_row( array $data, string $label ): void {

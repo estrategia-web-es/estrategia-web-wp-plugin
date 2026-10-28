@@ -1,6 +1,6 @@
 <?php
 /**
- * A LOCATION'S DATA, STORED ONCE (1.8.0, David, 27-10-2026: «los datos
+ * A LOCATION'S DATA, STORED ONCE (2.0.0, David, 27-10-2026: «los datos
  * duplicados se separan»). Up to 1.7.0 a location kept the same thing twice
  * — the address as a text AND by parts, the hours as a text AND day by day,
  * the map as a link AND as an embed URL, the static map as a URL AND as a

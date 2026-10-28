@@ -38,7 +38,7 @@ before(async () => {
     slug: "son-oms",
     meta: {
       estrategia_web_location_phone: "+34 871 049 656",
-      // 1.8.0: two lines, what the page shows; Google gets them on one.
+      // 2.0.0: two lines, what the page shows; Google gets them on one.
       estrategia_web_location_street: "Calle Camp Franc, 11, Nave 14\nPolígono Son Oms",
       estrategia_web_location_postal_code: "07199",
       estrategia_web_location_locality: "Palma",
@@ -90,7 +90,7 @@ test("without an SEO plugin, a page tied to a location: our own script, its Loca
   assert.equal(lb.name, "Lavandería Industrial");
   assert.equal(lb.telephone, "+34 871 049 656");
   assert.equal(lb.image, staticMap, "the static map of the media library");
-  assert.equal(lb.address.streetAddress, "Calle Camp Franc, 11, Nave 14, Polígono Son Oms", "the street's two lines on one (1.8.0)");
+  assert.equal(lb.address.streetAddress, "Calle Camp Franc, 11, Nave 14, Polígono Son Oms", "the street's two lines on one (2.0.0)");
   const org = nodes.find((n) => n["@type"] === "Organization");
   assert.deepEqual(checkOrganization(org), { errors: [] });
   assert.equal(lb.parentOrganization["@id"], org["@id"]);
@@ -140,7 +140,7 @@ test("with Yoast: our nodes appended to its list, its Organization completed", a
   assert.equal(nodes[2].parentOrganization["@id"], nodes[0]["@id"]);
 });
 
-// 1.8.0. Seen red (27-10-2026) before Data::company() passed the hours: no openingHoursSpecification.
+// 2.0.0. Seen red (27-10-2026) before Data::company() passed the hours: no openingHoursSpecification.
 test("a site WITHOUT locations: the Company details hours on the front page's Organization, typed as the business (with locations they are ignored)", async () => {
   await host("");
   await saveCompany({ hours: { tu: "13:00-16:00, 20:00-23:30", we: "13:00-16:00" } });

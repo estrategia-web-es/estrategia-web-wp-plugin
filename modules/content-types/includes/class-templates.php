@@ -17,7 +17,7 @@
  *   key          type              taxonomy                  fields
  *   client       eweb_client       eweb_client_sector        url, image fit, business type
  *   testimonial  eweb_testimonial  —                         author, role, rating, related client
- *   location     eweb_location     —                         phone, email, address by parts, hours, map query, static map, «For Google» (1.8.0)
+ *   location     eweb_location     —                         phone, email, address by parts, hours, map query, static map, «For Google» (2.0.0)
  *   project      eweb_project      eweb_project_category     —
  *   portfolio    eweb_portfolio    eweb_portfolio_category   —
  *

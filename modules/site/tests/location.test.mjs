@@ -17,7 +17,7 @@ before(async () => {
     assert.equal(r.status, 201, r.text);
     return r.json;
   };
-  // 1.8.0: the address by parts (the text is derived), the map as a search query (the link is derived).
+  // 2.0.0: the address by parts (the text is derived), the map as a search query (the link is derived).
   maioris = await make("Maioris & Llucmajor", "maioris", "publish", {
     estrategia_web_location_street: "Carrer de Maioris 3",
     estrategia_web_location_postal_code: "07620",
@@ -60,12 +60,12 @@ test("by slug, from any page: button with text and url to the phone of the «mai
   assert.equal(href(text, "t-tel"), "tel:+34971112233");
   assert.match(text, /t-tel[^"]*"><a[^>]*>971 11 22 33<\/a>/, "the button text is the phone");
   assert.equal(href(text, "t-mail"), "mailto:maioris@ejemplo.test");
-  assert.equal(href(text, "t-map"), "https://www.google.com/maps/search/?api=1&#038;query=Maioris", "derived from the query (1.8.0)");
+  assert.equal(href(text, "t-map"), "https://www.google.com/maps/search/?api=1&#038;query=Maioris", "derived from the query (2.0.0)");
   assert.equal(between(text, "t-title", "h2"), "Maioris &amp; Llucmajor", "the title, escaped");
-  assert.equal(between(text, "t-address", "p").replace(/\n/g, ""), "Carrer de Maioris 3<br>07620 Llucmajor", "derived from the parts (1.8.0)");
+  assert.equal(between(text, "t-address", "p").replace(/\n/g, ""), "Carrer de Maioris 3<br>07620 Llucmajor", "derived from the parts (2.0.0)");
 });
 
-test("the derived hours text (1.8.0): from the «hours» field, in the site's language (es)", async () => {
+test("the derived hours text (2.0.0): from the «hours» field, in the site's language (es)", async () => {
   const page = await seedPage(
     `<!-- wp:paragraph ${JSON.stringify({ className: "t-hours", ...meta({ slug: "maioris", key: "estrategia_web_location_schedule" }) })} -->
 <p class="t-hours">x</p>

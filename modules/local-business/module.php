@@ -23,7 +23,7 @@
  *
  * WHERE THE DATA LIVES: in the location template's fields of the
  * content-types module (address by parts, structured hours — the «hours»
- * field type —, latitude/longitude, type of business); since 1.8.0 the
+ * field type —, latitude/longitude, type of business); since 2.0.0 the
  * same fields make the texts the page shows (content-types'
  * class-location-data.php), so what Google reads and what people read can
  * no longer differ. A site WITHOUT locations gives its Company details

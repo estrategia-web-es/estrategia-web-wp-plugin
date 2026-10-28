@@ -1,6 +1,6 @@
 <?php
 /**
- * THE 1.8.0 DATA MIGRATION: a location's duplicated data → stored once
+ * THE 2.0.0 DATA MIGRATION: a location's duplicated data → stored once
  * (class-location-data.php says why and what is derived). Per site, once,
  * IDEMPOTENT, with a dry run that says what it would do:
  *
@@ -31,7 +31,7 @@
  * And for the company (modules/site, Company details): the «schedule» text →
  * «hours», the same way; backup in the option BACKUP.
  * And the DEFINITIONS made from the plugin's templates (the site's stored
- * copies, class-templates.php): location gets the 1.8.0 fields (the old
+ * copies, class-templates.php): location gets the 2.0.0 fields (the old
  * ones out, «What to search on Google Maps» in, the street in two lines and
  * translatable, the groups of the meta box); client gets «editor» in its
  * supports; location, client and testimonial get «fields_box: main». A
@@ -76,14 +76,14 @@ final class Location_Migration {
 	public const BACKUP      = 'estrategia_web_location_migration_backup';
 	public const DONE        = 'estrategia_web_location_data_migrated';
 
-	/** Template key => what 1.8.0 changes in the site's copy besides the fields. */
+	/** Template key => what 2.0.0 changes in the site's copy besides the fields. */
 	private const DEFINITION_KEYS = array( 'location', 'client', 'testimonial' );
 
-	/** Fields 1.8.0 CHANGED (not only grouped): the template's version replaces the site's. */
+	/** Fields 2.0.0 CHANGED (not only grouped): the template's version replaces the site's. */
 	private const REPLACED_FIELDS = array( Location_Fields::STREET, Location_Fields::STATIC_ID );
 
 	/**
-	 * Fields where a location's data is STORED from 1.8.0: added to a site's
+	 * Fields where a location's data is STORED from 2.0.0: added to a site's
 	 * copy even if it never took them (a 1.4 copy without the parts). Every
 	 * other template field the site lacks was removed on purpose and stays
 	 * out (class-templates.php, «the copy is the site's»).
@@ -106,7 +106,7 @@ final class Location_Migration {
 		}
 		printf(
 			'<div class="notice notice-warning"><p>%s</p><p><code>wp estrategia-web migrate-location-data --dry-run</code></p></div>',
-			esc_html__( 'Estrategia Web 1.8.0: some locations still keep their data twice (address and hours as text, the map as two links). Until the data migration runs they look as before. Read its dry run, check its DIFFERENCES, then run it without --dry-run.', 'estrategia-web' )
+			esc_html__( 'Estrategia Web 2.0.0: some locations still keep their data twice (address and hours as text, the map as two links). Until the data migration runs they look as before. Read its dry run, check its DIFFERENCES, then run it without --dry-run.', 'estrategia-web' )
 		);
 	}
 
@@ -386,7 +386,7 @@ final class Location_Migration {
 		return $out;
 	}
 
-	/** A stored definition with the 1.8.0 template's changes (see the header). */
+	/** A stored definition with the 2.0.0 template's changes (see the header). */
 	private static function upgrade( array $def, array $template ): array {
 		$by_name = array();
 		foreach ( (array) ( $template['fields'] ?? array() ) as $f ) {
@@ -415,7 +415,7 @@ final class Location_Migration {
 				}
 				$fields[] = $field;
 			} elseif ( isset( $mine[ $name ] ) || in_array( $name, self::STORAGE_FIELDS[ $template['template'] ] ?? array(), true ) ) {
-				$fields[] = $f; // Changed in 1.8.0, or where the data now LIVES (the map query, the parts).
+				$fields[] = $f; // Changed in 2.0.0, or where the data now LIVES (the map query, the parts).
 			}
 			// Any other template field the site does not have: it removed it on purpose; not brought back.
 		}
@@ -459,7 +459,7 @@ final class Location_Migration {
 	 * is a one-line «text» — sanitize_text_field() turned «Centro Comercial
 	 * Maioris\nCalle Imperial…» into one line. The values here are already
 	 * clean (they come from the parsers, the Hours sanitizer, or the stored
-	 * meta); the street gets sanitize_textarea_field(), as 1.8.0 registers it.
+	 * meta); the street gets sanitize_textarea_field(), as 2.0.0 registers it.
 	 */
 	private static function write( \WP_Post $post, string $key, string $value ): void {
 		if ( Location_Fields::STREET === $key ) {
@@ -497,6 +497,6 @@ if ( defined( 'WP_CLI' ) && WP_CLI && class_exists( '\WP_CLI' ) ) {
 			$report = Location_Migration::run( ! empty( $assoc['dry-run'] ) );
 			\WP_CLI::line( wp_json_encode( $report, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
 		},
-		array( 'shortdesc' => '1.8.0: a location\'s duplicated data → stored once (address, hours, map, static map; the company\'s hours; the template definitions). --dry-run says what it would do.' )
+		array( 'shortdesc' => '2.0.0: a location\'s duplicated data → stored once (address, hours, map, static map; the company\'s hours; the template definitions). --dry-run says what it would do.' )
 	);
 }

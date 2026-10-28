@@ -4,7 +4,7 @@
 //
 // The cases are Lavandería Mallorca's real values (content/semilla/sedes.json
 // and en/sedes.json of its repo, 27-10-2026): what each location SAYS today
-// must be what 1.8.0 derives from its parts, or the site would change when it
+// must be what 2.0.0 derives from its parts, or the site would change when it
 // migrates. If a default format changes, these fail first.
 //
 // Seen red (27-10-2026): with the Spanish «every_day» as «cada día» (the
@@ -27,7 +27,7 @@ const days = (list, range) => Object.fromEntries(list.map((d) => [d, [range]]));
 const EVERY_DAY = days(["mo", "tu", "we", "th", "fr", "sa", "su"], "08:00-23:00");
 const MON_SAT = days(["mo", "tu", "we", "th", "fr", "sa"], "08:00-16:00");
 
-// Lavandería, as stored today (texts) and as 1.8.0 stores it (parts).
+// Lavandería, as stored today (texts) and as 2.0.0 stores it (parts).
 const MAIORIS = {
   text: "Centro Comercial Maioris\nCalle Imperial, 2, Local 12, Urb. Maioris Décima\n07609 Llucmajor, Islas Baleares",
   textEn: "Maioris Shopping Centre\nCalle Imperial, 2, Local 12, Urb. Maioris Décima\n07609 Llucmajor, Islas Baleares",

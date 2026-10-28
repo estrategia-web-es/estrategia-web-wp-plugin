@@ -44,7 +44,7 @@ after(async () => {
 });
 
 test("a week entered in the panel: ranges, «same as the day before», the warning on a range that will not be kept, stored canonical", async () => {
-  // 1.8.0: the location template edits its fields in the main-area meta box (fields_box: main), where the
+  // 2.0.0: the location template edits its fields in the main-area meta box (fields_box: main), where the
   // hours are one line per day (tests/location-box.test.mjs). The panel's hours control is for a type
   // in the sidebar: this copy is switched to it, which a site may do.
   const def = (await ctApi("/eweb_location")).json.definition;
@@ -98,7 +98,7 @@ test("the constructor offers a template's new fields to a copy made before them,
   const missing = before.json.definition.fields.length - 8;
   assert.equal(put.json.missingFields.length, missing);
 
-  // 1.8.0: each type has its own edit screen (the list's «Edit» links there).
+  // 2.0.0: each type has its own edit screen (the list's «Edit» links there).
   await p.goto(BASE + "/wp-admin/admin.php?page=estrategia-web-content-types&type=eweb_location");
   const add = p.locator('[data-action="add-template-fields"]');
   await add.waitFor({ timeout: 20000 });
@@ -108,7 +108,7 @@ test("the constructor offers a template's new fields to a copy made before them,
   const untouched = await ctApi("/eweb_location");
   assert.equal(untouched.json.definition.fields.length, 8, "nothing stored until the person saves");
   await p.click('[data-action="save"]');
-  await p.locator("[data-saved]").waitFor({ timeout: 20000 }); // 1.8.0: the screen stays on the type after saving.
+  await p.locator("[data-saved]").waitFor({ timeout: 20000 }); // 2.0.0: the screen stays on the type after saving.
   const after = await ctApi("/eweb_location");
   assert.deepEqual(after.json.definition.fields.map((f) => f.name), before.json.definition.fields.map((f) => f.name), "the same fields, in the template's order");
   assert.deepEqual(after.json.missingFields, []);

@@ -101,7 +101,7 @@ final class Company {
 	}
 
 	/**
-	 * «schedule», the opening hours as the page shows them (1.8.0): DERIVED
+	 * «schedule», the opening hours as the page shows them (2.0.0): DERIVED
 	 * from «hours» (day by day) with the location's format for the request's
 	 * language (content-types' Location_Data / Location_Fields). While a site
 	 * has the old free text and no «hours», the old text.

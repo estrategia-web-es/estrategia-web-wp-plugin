@@ -1,6 +1,6 @@
 // NIVEL: 2 — Playground WordPress, because what is tested is what WordPress RENDERS for a «Formulario» reference block pointing to a form post (eweb_form), what the submission endpoint does with it (it WRITES: the log, the intercepted emails) and who the REST API lets read form posts. Not level 1: the render goes through WP_Block, block context and the Interactivity API. Not level 3: no browser behaviour is involved (browser.test.mjs covers the form's JS, which is the same markup).
 //
-// THE REFERENCE RENDERS AND SUBMITS EXACTLY LIKE THE INLINE FORM (1.9.0,
+// THE REFERENCE RENDERS AND SUBMITS EXACTLY LIKE THE INLINE FORM (2.0.0,
 // modules/forms/includes/class-form-post-type.php and
 // Blocks::render_form_ref()). The same tree (lib.mjs FORM) as a form post
 // shown through a reference, and as an inline form in another page, and:

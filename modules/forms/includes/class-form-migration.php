@@ -1,18 +1,18 @@
 <?php
 /**
- * THE FORMS MIGRATOR (1.9.0): every form written INSIDE a post (a page, a
+ * THE FORMS MIGRATOR (2.0.0): every form written INSIDE a post (a page, a
  * synced pattern, a template part saved in the database…) becomes a form
  * post of its own (eweb_form, class-form-post-type.php) and, where it was,
  * the «Formulario» reference block pointing to it is left. The page looks
  * and submits exactly the same (the reference renders the same tree; see
  * Blocks::render_form_ref()).
  *
- * How to use it (with the plugin 1.9.0 active, after a backup):
+ * How to use it (with the plugin 2.0.0 active, after a backup):
  *   wp estrategia-web migrate-forms --dry-run     what it would create and replace
  *   wp estrategia-web migrate-forms               does it
  *   wp estrategia-web migrate-forms --ids=14,190  only those posts (to try one page first)
  * It prints its report as JSON. It does NOT run by itself on activation or
- * update: until it runs, the inline forms keep working as in 1.8.0 (the
+ * update: until it runs, the inline forms keep working as in 1.7.0 (the
  * form block still renders anywhere), «Forms → Forms» lists them with a
  * notice, and the site just has the old editing model.
  *
@@ -527,6 +527,6 @@ if ( defined( 'WP_CLI' ) && WP_CLI && class_exists( '\WP_CLI' ) ) {
 			\WP_CLI::line( wp_json_encode( $report, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
 			\WP_CLI::line( $report['resumen'] );
 		},
-		array( 'shortdesc' => 'Moves every form written inside a post (page, synced pattern…) to a form post of its own (eweb_form) and leaves the «Form» reference block where it was (1.9.0). With --dry-run it only says what it would do; --ids=1,2 limits it to those posts.' )
+		array( 'shortdesc' => 'Moves every form written inside a post (page, synced pattern…) to a form post of its own (eweb_form) and leaves the «Form» reference block where it was (2.0.0). With --dry-run it only says what it would do; --ids=1,2 limits it to those posts.' )
 	);
 }

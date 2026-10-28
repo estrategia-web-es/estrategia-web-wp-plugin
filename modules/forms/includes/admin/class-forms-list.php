@@ -4,7 +4,7 @@
  * of the Forms menu. Read only: a form is edited where it lives (the block,
  * in the editor), and this page says WHERE that is and what it does.
  *
- * SINCE 1.9.0 a form lives in a form post (eweb_form,
+ * SINCE 2.0.0 a form lives in a form post (eweb_form,
  * class-form-post-type.php), so this is the list of form posts: they come
  * first (the type sorts before page and wp_block), with «Add form» at the
  * top, an Edit link, and «Used in»: the posts whose content has a
@@ -52,7 +52,7 @@
  * - Tests: modules/forms/tests/forms-list.test.mjs (level 2: a form inside a
  *   synced pattern, the pages that use it, its notifications) and, for the
  *   form posts and «Used in», modules/forms/tests/form-migration.test.mjs.
- * - Edge case (1.9.0): a reference inside a synced pattern. «Used in» names
+ * - Edge case (2.0.0): a reference inside a synced pattern. «Used in» names
  *   the pattern and, under it, the pages using the pattern (one level, the
  *   same rule as above).
  */
@@ -145,7 +145,7 @@ final class Forms_List {
 
 	/**
 	 * The posts that show one of these form posts through a reference
-	 * block (1.9.0). Same LIKE-then-regex rule as pattern_users().
+	 * block (2.0.0). Same LIKE-then-regex rule as pattern_users().
 	 *
 	 * @param int[] $form_ids The form post and its translations.
 	 * @return array<int, object{ID: int, post_title: string, post_type: string, post_status: string}>
@@ -202,7 +202,7 @@ final class Forms_List {
 			$langs = array_values( array_unique( $langs ) );
 			sort( $langs );
 			$main['translations'] = $langs;
-			$main['ids']          = array_values( array_unique( array_map( static fn( $m ) => (int) $m['post_id'], $members ) ) ); // 1.9.0: every language's post, for «Used in».
+			$main['ids']          = array_values( array_unique( array_map( static fn( $m ) => (int) $m['post_id'], $members ) ) ); // 2.0.0: every language's post, for «Used in».
 			$out[]                = $main;
 		}
 		return $out;

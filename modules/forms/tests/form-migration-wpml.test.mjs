@@ -1,7 +1,7 @@
 // NIVEL: 2 — Playground WordPress with REAL WPML. NOT LEVEL 1 BECAUSE: what is tested is what WPML does with the migrated forms — the language and translation group (trid) of each form post, WPML re-reading wpml-config.xml so that eweb_form is translatable, and the language WPML gives a request to /en/ — and that only exists with WPML. NOT LEVEL 3: what is checked is the database and the rendered HTML.
 // WPML: REAL — runs against the WordPress with WPML (tests/run.mjs, «WPML»).
 //
-// THE MIGRATED FORM, PER LANGUAGE (1.9.0, class-form-migration.php, step 3,
+// THE MIGRATED FORM, PER LANGUAGE (2.0.0, class-form-migration.php, step 3,
 // and Form_Post_Type::resolve()). A Spanish contact page with its form
 // inline and its English translation (made with WPML) with the English
 // labels, as Lavandería's Contacto/Contact; then:

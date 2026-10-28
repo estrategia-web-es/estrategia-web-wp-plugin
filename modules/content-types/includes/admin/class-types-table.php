@@ -1,6 +1,6 @@
 <?php
 /**
- * The list of «Estrategia Web → Content types» (1.8.0): a WP_List_Table,
+ * The list of «Estrategia Web → Content types» (2.0.0): a WP_List_Table,
  * like the redirects and the forms submissions, one row per type of
  * Rest::index() — from this panel or from a theme file. Painted by PHP, so
  * it is the same markup as every WordPress list (row actions on hover AND

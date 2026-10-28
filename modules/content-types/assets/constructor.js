@@ -1,5 +1,5 @@
 /**
- * THE CONSTRUCTOR: «Estrategia Web → Content types», its two screens (1.8.0,
+ * THE CONSTRUCTOR: «Estrategia Web → Content types», its two screens (2.0.0,
  * after ACF's field groups). The whole explanation — the URLs, why two
  * screens, accessibility — is in includes/admin/class-page.php; what the
  * server checks, in includes/class-rest.php.
@@ -418,7 +418,7 @@
 			];
 		}
 
-		/** «groups» (1.8.0): the sections of the box under the content. Their keys feed each field's «Group». */
+		/** «groups» (2.0.0): the sections of the box under the content. Their keys feed each field's «Group». */
 		function groupsFieldset() {
 			const groups = draft.groups || [];
 			const repaint = () => {
@@ -548,7 +548,7 @@
 				return;
 			}
 			delete parsed.$schema;
-			// Importing over a type of this panel edits THAT type (as the list's «Import» did before 1.8.0).
+			// Importing over a type of this panel edits THAT type (as the list's «Import» did before 2.0.0).
 			const existing = ! item && data.types.find( ( x ) => x.name === parsed.name && x.source === 'database' );
 			if ( existing ) {
 				window.history.replaceState( null, '', M.editUrl( config.listUrl, existing.name ) );

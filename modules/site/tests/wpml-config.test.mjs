@@ -64,7 +64,7 @@ test("every type and taxonomy of Type_Names has its template, display-as-transla
 });
 
 test("the XML no longer declares those types, taxonomies or metas: the content-types module does, from each definition (two sources would fight)", () => {
-  // eweb_form (1.9.0) is the forms module's own type, not a content-types definition: it IS declared in the XML.
+  // eweb_form (2.0.0) is the forms module's own type, not a content-types definition: it IS declared in the XML.
   assert.deepEqual(Object.keys(declared("custom-type")).filter((n) => n.startsWith(PREFIX) && n !== "eweb_form"), [], "<custom-types>");
   assert.equal(declared("custom-type").eweb_form, 'translate="1"', "the form post is translatable (modules/forms/includes/class-form-post-type.php)");
   assert.deepEqual(Object.keys(declared("taxonomy")).filter((n) => n.startsWith(PREFIX)), [], "<taxonomies>");

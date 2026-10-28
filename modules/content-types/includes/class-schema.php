@@ -38,7 +38,7 @@ final class Schema {
 	public const FIELD_KEYS = array( 'name', 'type', 'label', 'help', 'required', 'default', 'wpml', 'group', 'options', 'post_type', 'min', 'max', 'integer', 'true_label', 'false_label' );
 
 	/**
-	 * WHERE THE FIELDS ARE EDITED (1.8.0, David: «una página vacía y todos
+	 * WHERE THE FIELDS ARE EDITED (2.0.0, David: «una página vacía y todos
 	 * los datos en el panel estrecho»): «sidebar» (default) is the «<Singular>
 	 * details» panel of the block editor's sidebar; «main» is a meta box in
 	 * the MAIN area, under the content, wide, with the fields in their
@@ -48,7 +48,7 @@ final class Schema {
 	public const FIELDS_BOX = array( 'sidebar', 'main' );
 
 	/**
-	 * Field names a template SHIPPED before and no longer does (1.8.0: the
+	 * Field names a template SHIPPED before and no longer does (2.0.0: the
 	 * location's free texts, duplicated by the data they were made of). A
 	 * site's stored copy still has them until it runs its migration
 	 * (wp estrategia-web migrate-location-data), and must keep validating —
@@ -214,7 +214,7 @@ final class Schema {
 	}
 
 	/**
-	 * «groups» (1.8.0): the sections of the main-area meta box, in order —
+	 * «groups» (2.0.0): the sections of the main-area meta box, in order —
 	 * [{"key": "address", "label": {…}, "collapsed": false}]. A field joins
 	 * one with «group»: "address". Fields without a group go first, untitled.
 	 *

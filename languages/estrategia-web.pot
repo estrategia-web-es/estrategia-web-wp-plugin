@@ -1806,7 +1806,7 @@ msgstr ""
 
 #: modules/content-types/includes/class-location-migration.php:109
 msgid ""
-"Estrategia Web 1.8.0: some locations still keep their data twice (address "
+"Estrategia Web 2.0.0: some locations still keep their data twice (address "
 "and hours as text, the map as two links). Until the data migration runs they "
 "look as before. Read its dry run, check its DIFFERENCES, then run it without "
 "--dry-run."
