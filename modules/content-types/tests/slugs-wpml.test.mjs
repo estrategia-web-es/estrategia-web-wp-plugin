@@ -1,5 +1,6 @@
 // NIVEL: 2 — Playground WordPress with REAL WPML. NOT LEVEL 1 BECAUSE: what is tested is that WPML itself takes the per-language slugs of a JSON-declared type (its «URL slug» strings, its switches) and then serves /restaurantes/… and /en/restaurants/… linked to each other; only a WordPress running WPML routes and links like that. The WPML config built from the definitions is wpml.test.mjs (level 1, with a double). NOT LEVEL 3: everything checked is status codes, the HTML the server sends and the stored rows.
 // WPML: REAL — runs against the WordPress with WPML (tests/run.mjs, «WPML»).
+// TIEMPO: 90 s — measured 28-10-2026: 45-47 s alone (same on 2.0.0 and 2.0.1), 56-82 s in the full battery while the machine was busy (the WPML WordPress is the slowest and its files run one after another); not made faster yet, discuss if it keeps growing.
 //
 // PER-LANGUAGE SLUG OF THE content-types TYPES (17-10-2026). With the
 // Gastronòmicament example of this module switched on (examples/
