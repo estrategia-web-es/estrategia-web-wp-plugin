@@ -16,6 +16,14 @@
 // content and stay there. NEEDS the local WPML copy: without it, it FAILS
 // (tests/run.mjs, «WPML»); without WPML the block renders nothing at all.
 //
+// 28-10-2026: a request to the WPML WordPress costs 2,5-5 s. The setup
+// (WPML's state, reset, purge, consent, the page and its translation: seven
+// requests) is ONE: /pair in tests/wp/estrategia-web-wpml-test.php, which
+// chains the same routes inside one request. The two pages are read in
+// parallel, and test 2 reads the English page test 1 already has.
+// requireWpml() is only called when /pair is missing (no WPML), for its
+// message: the test still FAILS without WPML.
+//
 // How to maintain: if the block's markup changes (render.php), the selectors
 // here and in language-switcher-browser.test.mjs change with it, in the same
 // commit. Edge case: a page with no translation gets WPML's front page in
@@ -23,32 +31,33 @@
 //
 // Seen red (25-10-2026): expecting «EN» in the Spanish page's switcher, step 1
 // fails on the first page; restored, green.
+// Seen red (28-10-2026) with the Spanish page's link expected to go to
+// /en/language-test/x and the notice expected to say «Aceptar todas»: both
+// tests fail.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { reset, wp, testApi, BASE, page, wpml, requireWpml } from "../../../tests/lib.mjs";
+import { BASE, page, wpml, requireWpml } from "../../../tests/lib.mjs";
 
 const BLOCK = '<!-- wp:estrategia-web/language-switcher /-->\n<!-- wp:paragraph --><p>Idiomas</p><!-- /wp:paragraph -->';
-let es;
-let en;
+const es = "/prueba-idiomas/";
+const en = "/en/language-test/";
+const pages = {};
 
 before(async () => {
-  await requireWpml({ st: false });
-  await reset();
-  await wpml("/purge", { slugs: ["prueba-idiomas", "language-test"] });
-  await testApi("/consent-setup", { method: "POST", body: { categories: ["maps"] } });
-  const r = await wp("/pages", { method: "POST", body: { title: "Prueba idiomas", slug: "prueba-idiomas", status: "publish", content: BLOCK } });
-  assert.equal(r.status, 201, r.text);
-  const tr = await wpml("/translate", { kind: "post", type: "page", original: r.json.id, title: "Language test", slug: "language-test", content: BLOCK });
-  es = "/prueba-idiomas/";
-  en = new URL(tr.url).pathname;
-  assert.equal(en, "/en/language-test/", "the translation is not in /en/");
+  const pair = await wpml("/pair", { slug: "prueba-idiomas", title: "Prueba idiomas", slug_en: "language-test", title_en: "Language test", content: BLOCK, consent: { categories: ["maps"] } }).catch(async (e) => {
+    await requireWpml({ st: false });
+    throw e;
+  });
+  assert.equal(new URL(pair.es.url).pathname, es);
+  assert.equal(new URL(pair.en.url).pathname, en, "the translation is not in /en/");
+  [pages[es], pages[en]] = await Promise.all([page(es), page(en)]);
 });
 
 const pathOf = (href) => new URL(href, BASE).pathname;
 
-test("1. each page and its translation: code, closed, hreflang/lang and the exact pair, both ways", async () => {
+test("1. each page and its translation: code, closed, hreflang/lang and the exact pair, both ways", () => {
   for (const [from, to, lang, other] of [[es, en, "es", "en"], [en, es, "en", "es"]]) {
-    const { status, document } = await page(from);
+    const { status, document } = pages[from];
     assert.equal(status, 200, `${from} -> ${status}`);
     assert.match(document.documentElement.lang, new RegExp(`^${lang}`), `${from}: <html lang> is not ${lang}`);
     const switcher = document.querySelector(".estrategia-web-language");
@@ -65,9 +74,8 @@ test("1. each page and its translation: code, closed, hreflang/lang and the exac
   }
 });
 
-test("2. in /en/ the cookie notice is in English", async () => {
-  const { document } = await page(en);
-  const notice = document.querySelector(".estrategia-web-consent");
+test("2. in /en/ the cookie notice is in English", () => {
+  const notice = pages[en].document.querySelector(".estrategia-web-consent");
   assert.ok(notice, `${en}: no cookie notice in the HTML`);
   const text = notice.textContent.replace(/\s+/g, " ");
   assert.match(text, /Accept all/, `the notice in ${en} does not say «Accept all»: ${text.slice(0, 200)}`);

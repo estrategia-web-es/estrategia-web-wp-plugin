@@ -8,14 +8,17 @@
  * came from the parent theme's tests/fixtures/setup/setup.php on 17-10-2026
  * with the same pages, posts and literals:
  *
- * - /prueba-mapa/ — a map without an image, with all its details (map,
- *   map-card, map-in-flex; in the theme it was the map of /prueba-modulos/).
+ * (28-10-2026: the steps of map.test.mjs, one per page.)
+ * - /prueba-mapa/ — a map without an image, with all its details (step 1:
+ *   card, flex, no request before the click; in the theme it was the map of
+ *   /prueba-modulos/).
  * - /prueba-mapa-consulta/ — a core/query of two posts, the address bound to
- *   the prueba_direccion field and the first with a featured image (map-query).
+ *   the prueba_direccion field and the first with a featured image (step 2).
  * - /prueba-mapa-estatico/ — a static map served by the site and another one
- *   from a third-party domain, which must be discarded (map-static).
+ *   from a third-party domain, which must be discarded (step 3, and
+ *   map-consent.test.mjs / map-consent-html.test.mjs with the notice on).
  * - /prueba-mapa-sin-datos/ — showDetails:false with and without an image
- *   (map-details).
+ *   (step 4).
  *
  * POST /wp-json/estrategia-web-map-test/v1/seed. Idempotent: pages, posts and
  * images are rewritten or reused by slug, never duplicated.
@@ -43,7 +46,7 @@ if ( ! defined( 'ESTRATEGIA_WEB_BLOCKS_TESTING' ) || true !== ESTRATEGIA_WEB_BLO
 	return;
 }
 
-// A post field to bind estrategia-web/map to core/post-meta inside a Query (map-query.test.mjs).
+// A post field to bind estrategia-web/map to core/post-meta inside a Query (map.test.mjs, step 2).
 add_action(
 	'init',
 	static function () {

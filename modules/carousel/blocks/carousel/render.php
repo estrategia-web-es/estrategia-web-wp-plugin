@@ -55,8 +55,8 @@
  *   cell and the hole of the short row travels with its column, also across
  *   the seam. An irregular layout (a short row that is not the last one,
  *   flex with wrap and a short last row) is not rotated: it wraps around by
- *   rewinding, like 0.5.0. Test: the parent theme's
- *   tests/carousel-any-count.test.mjs.
+ *   rewinding, like 0.5.0. Test:
+ *   modules/carousel/tests/carousel.test.mjs (./any-count.mjs).
  *   With several rows the dots do not match (they count cards, not columns):
  *   those carousels go without dots.
  * - Edge case: with ONE slide, or all of them in view, there is nothing to
@@ -78,15 +78,15 @@
  *   position (:first-child for "the first one you see") does not work: the
  *   first in the DOM is no longer the one on the left. :nth-child rules stay
  *   attached to their slide, which is what we want.
- * - Tests: tests/carousel-glide.test.mjs (every step slides, with several
- *   intermediate frames and no jumps) and tests/carousel-infinite.test.mjs, which checks frame by
- *   frame that the track never goes backwards.
+ * - Tests: tests/carousel-infinite.test.mjs: every step slides, with several
+ *   intermediate frames and no jumps, and frame by frame the track never
+ *   goes backwards (the glide and loop checks were merged into it, 28-10-2026).
  *
  * PHOTOS (0.7.4): the slides visible on load get fetchpriority="high" (if the
  * carousel is the first thing on the page), the rest loading="lazy", and all
  * of them a sizes equal to the slide width, or the one from the imageSizes
  * attribute. All of it in modules/carousel/includes/carousel-images.php, with its edge case
- * (Lavandería) and its traps. Test: tests/carousel-images.test.mjs.
+ * (Lavandería) and its traps. Test: tests/carousel.test.mjs (./images.mjs).
  *
  * Decisions:
  * - Without JavaScript it is a row scrollable by finger, wheel or arrow keys:

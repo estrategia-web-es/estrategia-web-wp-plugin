@@ -1,4 +1,4 @@
-// NIVEL: 2 — Playground WordPress with REAL WPML. NOT LEVEL 1 BECAUSE: what is tested is that WPML itself (its XSD, its block config, its string packages, its rebuild of the translation) understands the plugin's wpml-config.xml, and that only exists in a WordPress running WPML; reading the XML is what tests/wpml-blocks.test.mjs (level 1) already does. NOT LEVEL 3: everything checked is the HTML the server sends and the stored rows.
+// NIVEL: 2 — Playground WordPress with REAL WPML. NOT LEVEL 1 BECAUSE: what is tested is that WPML itself (its XSD, its block config, its string packages, its rebuild of the translation) understands the plugin's wpml-config.xml, and that only exists in a WordPress running WPML; reading the XML is what tests/wpml-blocks.test.mjs (level 1) already does. NOT LEVEL 3: everything checked is what WPML stores.
 // WPML: REAL — runs against the WordPress with WPML (tests/run.mjs, «WPML»).
 //
 // THE TEXTS OF THE BLOCKS ARE TRANSLATED WITH THE PAGE (David, 17-10-2026:
@@ -18,26 +18,34 @@
 //     silently) and WPML has read its blocks.
 //  2. The translator sees every declared text and NOT what is not translated
 //     (the phone, the form's keys, the recipient).
-//  3. Translated, /en/<slug>/ shows the English texts and no Spanish one;
-//     what is not declared arrives copied: the phone the same, and the select
-//     with the SAME option preselected (defaultOption is a position).
-//  4. The English page's form, sent: the acknowledgement has the default
-//     subject («Site: title») with the title TRANSLATED and the field table
-//     with the English labels, and the log stores lang=en.
-// At the end, whatever happens, both pages and their package are deleted.
+//  3. The English page WPML rebuilt carries every translation and no Spanish
+//     text; what is not declared arrives copied: the phone the same, and the
+//     select with the SAME option preselected (defaultOption is a position).
+// The page, its translation and their package are deleted in the same
+// request, whatever happens.
 //
-// Moved from Lavandería (tests/wpml-blocks.test.mjs) on 25-10-2026, when the
-// plugin's test WordPress got WPML: same steps and assertions, on a page of
-// its own instead of the site's. NEEDS the local WPML copy: without it, it
-// FAILS (tests/run.mjs, «WPML»).
+// 28-10-2026, from 115 s to one request. A request to the WPML WordPress
+// costs 2,5-5 s and this test made ~17. Now /blocks-run does the reset, the
+// purge, the page and the three /blocks steps inside ONE request (same
+// routes, chained; it also creates String Translation's packages table, which
+// made the wp-admin login of openWpmlScreen unnecessary). What was cut, and
+// why it is not lost:
+// - Rendering /en/ and reading its HTML: once WPML has stored the translated
+//   attributes, showing them is our blocks' render.php, the same code in any
+//   language (each block's own tests). WPML's routing of /en/ is WPML's.
+//   What only WPML can break (the translations stored, nothing Spanish left,
+//   the phone and defaultOption copied) is checked on the stored page.
+// - Step 4, the English form sent (acknowledgement in English, log with
+//   lang=en): modules/forms/tests/wpml.test.mjs, step 3, proves it with
+//   String Translation and the same WPML.
+// requireWpml() is only called when the route is missing (no WPML), for its
+// message: the test still FAILS without WPML.
 //
 // How to maintain: a new block of the plugin with texts goes into CONTENT and
 // EN; WHICH attributes are declared is watched by tests/wpml-blocks.test.mjs
 // (level 1), this one checks that WPML understands them.
-// The traps: WPML rebuilds the translation FROM THE ORIGINAL on every job, so
-// a hand change to the English page lasts until the next update; and String
-// Translation creates its packages table on the first wp-admin request, so
-// the test opens wp-admin first (openWpmlScreen).
+// The trap: WPML rebuilds the translation FROM THE ORIGINAL on every job, so
+// a hand change to the English page lasts until the next update.
 //
 // Seen red (25-10-2026, here): expecting «Option three EWWB» preselected,
 // step 3 fails («the select does not arrive with the second option
@@ -45,10 +53,12 @@
 // the test route ran as nobody, WPML's rebuild went through kses and the
 // map's translated URLs were stored with «&amp;» (step 3, «the English page
 // WPML stored lacks these translations»): fixed in the route, not here.
-import { test, before, after } from "node:test";
+// Seen red (28-10-2026) with a config expected for a block that does not
+// exist, with the WhatsApp message listed as not translated, and with
+// defaultOption expected 3: each of the three steps fails.
+import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { reset, wp, testApi, BASE, wpml, requireWpml, openWpmlScreen } from "./lib.mjs";
-import { loadForm, submit, mails, submissions, settings } from "../modules/forms/tests/lib.mjs";
+import { wpml, requireWpml } from "./lib.mjs";
 
 const SLUG = "prueba-bloques-wpml";
 const SLUG_EN = "blocks-wpml-test";
@@ -111,31 +121,19 @@ const CONTENT = [
   ),
 ].join("\n\n");
 
-const decode = (s) => s.replace(/&amp;/g, "&").replace(/&#0?38;/g, "&").replace(/&#0?39;|&#8217;/g, "'").replace(/&quot;/g, '"');
-const blocks = (body) => wpml("/blocks", body);
-let page;
+// A string as it sits inside the stored block markup (JSON-escaped: «\n», quotes).
+const inMarkup = (s) => JSON.stringify(s).slice(1, -1);
+let pkg, tr, content;
 
 before(async () => {
-  await requireWpml();
-  await reset();
-  await openWpmlScreen("/wp-admin/");
-  await wpml("/purge", { slugs: [SLUG, SLUG_EN] });
-  const r = await wp("/pages", { method: "POST", body: { title: "Prueba bloques WPML", slug: SLUG, status: "publish", content: CONTENT } });
-  assert.equal(r.status, 201, r.text);
-  page = r.json;
-  await settings({ min_seconds: 1, rate_limit: 0 });
-  // A theme that declares «maps» (as Lavandería's): without a category the notice is off and the
-  // «Cookie settings» link renders nothing.
-  await testApi("/consent-setup", { method: "POST", body: { categories: ["maps"] } });
+  ({ package: pkg, translation: tr } = await wpml("/blocks-run", { slug: SLUG, title: "Prueba bloques WPML", slug_en: SLUG_EN, title_en: "Blocks WPML test", content: CONTENT, translations: EN }).catch(async (e) => {
+    await requireWpml();
+    throw e;
+  }));
+  content = tr.content.replace(/\\u0026/g, "&").replace(/\\u003c/g, "<").replace(/\\u003e/g, ">");
 });
 
-after(async () => {
-  if (page) await blocks({ action: "delete", post_id: page.id });
-});
-
-let pkg;
-test("1. the plugin's XML passes WPML's XSD and WPML has read its blocks", async () => {
-  pkg = await blocks({ action: "package", post_id: page.id });
+test("1. the plugin's XML passes WPML's XSD and WPML has read its blocks", () => {
   assert.ok(pkg.xsd.valid, `the plugin's wpml-config.xml does NOT pass WPML's XSD (WPML would drop it whole): ${pkg.xsd.errors.join(" | ")}`);
   for (const b of ["estrategia-web/whatsapp", "estrategia-web/map", "estrategia-web/carousel", "estrategia-web-site/consent", "estrategia-web-forms/form"]) {
     assert.ok(pkg.config[b], `WPML has no config for ${b}: ${Object.keys(pkg.config).join(", ")}`);
@@ -149,44 +147,14 @@ test("2. what the translator would see: every declared text, and nothing that is
   for (const v of NOT_OFFERED) assert.ok(!offered.includes(v), `«${v}» is NOT translated and WPML offers it`);
 });
 
-let path;
-test("3. translated by WPML, /en/ shows it in English; the phone and the preselected option arrive copied", async () => {
-  const tr = await blocks({ action: "translate", post_id: page.id, translations: EN, slug: SLUG_EN, title: "Blocks WPML test" });
+test("3. translated by WPML, the English page carries every translation and nothing Spanish; the phone and the preselected option arrive copied", () => {
   assert.ok(tr.translated >= Object.keys(EN).length, `only ${tr.translated} translations were saved`);
+  assert.match(new URL(tr.url).pathname, /^\/en\//, `the translation is not in /en/: ${tr.url}`);
   // WPML rebuilt the English page with ALL the translations (also those not seen on the page).
-  const content = tr.content.replace(/\\u0026/g, "&").replace(/\\u003c/g, "<").replace(/\\u003e/g, ">");
-  const notStored = Object.values(EN).filter((en) => !content.includes(JSON.stringify(en).slice(1, -1)));
+  const notStored = Object.values(EN).filter((en) => !content.includes(inMarkup(en)));
   assert.deepEqual(notStored, [], `the English page WPML stored lacks these translations: ${content.match(/<!-- wp:estrategia-web\/map [^>]*>/)?.[0]}`);
-  path = new URL(tr.url).pathname;
-  assert.match(path, /^\/en\//, `the translation is not in /en/: ${tr.url}`);
-  const res = await fetch(BASE + path);
-  assert.equal(res.status, 200, `${path} -> ${res.status}`);
-  const text = decode(await res.text());
-  const shown = (s) => text.includes(s) || text.includes(encodeURIComponent(s));
-  // Not in the HTML: the success message and the title (server side; step 4) and the alt (the map has no image).
-  const OFF_PAGE = [OPTIONS_ES, "Gracias, recibido EWWB", "Solicitud de prueba EWWB", "Fachada de la sede EWWB"];
-  const notShown = Object.entries(EN).filter(([es]) => !OFF_PAGE.includes(es) && !es.startsWith("https://")).filter(([, en]) => !shown(en)).map(([, en]) => en);
-  assert.deepEqual(notShown, [], `${path} does not show these translated texts`);
-  const leftovers = Object.keys(EN).filter((es) => !es.startsWith("https://") && es.split("\n").some((line) => shown(line)));
-  assert.deepEqual(leftovers, [], `${path} still shows Spanish texts`);
-  assert.ok(text.includes("hl=en") && !text.includes("hl=es"), `${path}: the map does not carry the translated URL`);
-  assert.ok(shown(PHONE) || text.includes(PHONE.replace(/\D/g, "")), `${path}: the phone did not arrive copied`);
-  assert.match(text, /<option value="Option two EWWB" selected>/, `${path}: the select does not arrive with the second option preselected`);
-});
-
-test("4. the English page's form: acknowledgement with the translated title and labels, log with lang=en", async () => {
-  const { hidden } = await loadForm(BASE + path);
-  await new Promise((r) => setTimeout(r, 1100)); // min_seconds = 1: the fill time IS what the form measures.
-  const sent = await submit(hidden, { nombre_ewwb: "Test Person", correo_ewwb: "ewwb@example.com", servicio_ewwb: "Option three EWWB", acepto_ewwb: "1" });
-  assert.equal(sent.status, 200, JSON.stringify(sent.json));
-  assert.equal(sent.json.message, "Thanks, received EWWB");
-  const ack = (await mails()).find((m) => m.to.includes("ewwb@example.com"));
-  assert.ok(ack, "no acknowledgement went out");
-  assert.match(ack.subject, /: Test request EWWB$/, `the default subject does not carry the translated title: ${ack.subject}`);
-  for (const s of ["Name EWWB", "Service EWWB", "Option three EWWB", "I accept the policy EWWB", ">Yes<"]) {
-    assert.ok(ack.html.includes(s), `the default body of the acknowledgement lacks «${s}»`);
-  }
-  const log = (await submissions()).find((row) => row.form_id === "prueba-ewwb");
-  assert.ok(log, "the submission is not in the log");
-  assert.equal(log.lang, "en");
+  const leftovers = Object.keys(EN).filter((es) => content.includes(inMarkup(es)));
+  assert.deepEqual(leftovers, [], "the English page WPML stored still has Spanish texts");
+  assert.ok(content.includes(inMarkup(PHONE)), "the phone did not arrive copied");
+  assert.match(content, /<!-- wp:estrategia-web-forms\/select \{[^}]*"defaultOption":2[,}]/, "the select does not arrive with the second option preselected (defaultOption is a position)");
 });

@@ -1,108 +1,103 @@
-// NIVEL: 2 — Playground WordPress, because it WRITES: submissions in the table, intercepted emails, rate-limit transients.
+// NIVEL: 2 — Playground WordPress. NOT LEVEL 1 BECAUSE: what is tested is the submission ENDPOINT as WordPress serves it — the rendered form's hidden fields, the REST route, what it WRITES (submissions in the table, intercepted wp_mail, rate-limit transients), the 303 back to the page and the page it renders then. The decisions it calls (token, markers, IP) are level 1 in pure.test.mjs.
 //
 // Everything here is done WITHOUT a browser, crafting the request: that is exactly
 // what a bot or someone bypassing the browser's validation would do.
+//
+// ONE form load for the whole file (28-10-2026, from 75 requests to ~20):
+// the token is not single-use (it expires after 7 days), so every case
+// submits the same hidden fields; and the rejections are not checked one by
+// one for «nothing saved»: the good submission finds exactly ONE row and
+// three emails, which proves that none of the rejected ones before it
+// (each with its own «nombre») saved or notified anything. The order of the
+// tests matters and is the file's: min_seconds is 30 for the first case only,
+// and the rate limit goes last because it counts every submission after it.
+// Round 2 (28-10-2026, ~19 rounds of requests to ~12): the submissions that
+// do not depend on each other are sent two at a time — the six of the first
+// cases in before(), the two no-JS ones together, the purge with the rate
+// limit's setting — and each test asserts its own answer; the good one
+// answers the emails and the log itself (submit(…, { state: true })).
+//
+// Seen red (28-10-2026), every test, with these mutants of the plugin: min_seconds
+// passed as 0 to Token::verify («too early» → 200); only «too fast» tokens
+// rejected (the tampered one passed); the honeypot branch removed (the good
+// submission found «honeypot» in the log); the select's option check removed
+// (no error on «servicio»); the rate limit's «>=» as «>» (the second one →
+// 200); the purge's cutoff two days older (deleted 0); Blocks::announce()
+// saving «announced» as false (the reload carried the signal again); the
+// 303 without its «-status» anchor; and a «{{email}}» comment in the
+// rendered form (the public HTML test).
+// Seen red again after round 2 (28-10-2026), every test, with the mutants above (one by one where a test reads what the one before left).
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { reset, settings, mails, submissions, seedPage, loadForm, submit, GOOD, TEAM, FAIL, waitMinTime, testApi, BASE } from "./lib.mjs";
+import { seed, settings, loadForm, submit, GOOD, TEAM, FAIL, FORM, testApi, BASE } from "./lib.mjs";
 
 // The URL of the run's WordPress, escaped for a regular expression (with EW_PORT it is not 9404).
 const SITE = BASE.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
+const html = async (url) => (await fetch(url)).text();
 
-let page;
+let page, form, hidden, good, sent;
 before(async () => {
-  await reset();
-  page = await seedPage();
+  // min_seconds 30: the too-early case is rejected on purpose; then it goes back to 1.
+  ({ pages: { contact: page } } = await seed({ settings: { min_seconds: 30, retention_days: 30 }, pages: [{ key: "contact", slug: "contacto", title: "Contacto", content: FORM }] }));
+  ({ html: form, hidden } = await loadForm(page.url));
+  // Round 2 (28-10-2026): the submissions that do not depend on each other go at once, here, and each
+  // test below asserts its own answer. First the four the server answers BEFORE looking at min_seconds
+  // or that min_seconds = 30 rejects (honeypot and definition go before the token; a forged
+  // signature is invalid at any age), then, with min_seconds = 1, the invalid one and the good one.
+  const forged = { ...hidden, _af_token: String(Math.floor(Date.now() / 1000) - 60) + "." + "a".repeat(40) };
+  const [tooEarly, forgedToken, noDefinition, honeypot] = await Promise.all([
+    submit(hidden, { ...GOOD, nombre: "too-early" }),
+    submit(forged, { ...GOOD, nombre: "forged" }),
+    submit({ ...hidden, _af_def: "0".repeat(32) }, { ...GOOD, nombre: "no-definition" }),
+    submit(hidden, { ...GOOD, nombre: "honeypot" }, { extra: { af_website: "http://spam.example" } }),
+  ]);
+  await settings({ min_seconds: 1 });
+  const [invalid, goodOne] = await Promise.all([
+    submit(hidden, { ...GOOD, nombre: "invalid", email: "not-an-email", servicio: "Tintorería", mensaje: "", privacidad: "" }),
+    submit(hidden, { ...GOOD, campo_inventado: "x" }, { state: true }), // It answers the emails and the log too.
+  ]);
+  sent = { tooEarly, forgedToken, noDefinition, honeypot, invalid, good: goodOne };
 });
 
-test("the public HTML contains no notification recipients or templates", async () => {
-  const { html, hidden } = await loadForm(page.url);
-  assert.match(html, /name="fields\[nombre\]"/, "the form is rendered");
+test("the public HTML contains no notification recipients or templates", () => {
+  assert.match(form, /name="fields\[nombre\]"/, "the form is rendered");
   assert.ok(hidden._af_def && hidden._af_token, "it carries definition and token");
   for (const secret of [TEAM, FAIL, "Nuevo mensaje de", "Hemos recibido tu mensaje", "Aviso al equipo", "{{"]) {
-    assert.ok(!html.includes(secret), `the public HTML contains «${secret}»`);
+    assert.ok(!form.includes(secret), `the public HTML contains «${secret}»`);
   }
 });
 
-test("an empty required field fails on the server even if nobody validates it before", async () => {
-  await reset();
-  const { hidden } = await loadForm(page.url);
-  await waitMinTime();
-  const r = await submit(hidden, { ...GOOD, mensaje: "", privacidad: "" });
+test("minimum time: submitting too early is rejected", () => {
+  assert.equal(sent.tooEarly.status, 403);
+  assert.equal(sent.tooEarly.json.code, "token_too_fast");
+});
+
+test("required fields, a malformed email and an option not in the list fail on the server even if nobody validates them before", () => {
+  const r = sent.invalid;
   assert.equal(r.status, 422);
   assert.equal(r.json.ok, false);
-  assert.ok(r.json.errors.mensaje, "error on mensaje");
-  assert.ok(r.json.errors.privacidad, "consent is required even if the block does not say required");
-  assert.equal((await submissions()).length, 0, "nothing is saved");
-  assert.equal((await mails()).length, 0, "no notification goes out");
+  assert.deepEqual(Object.keys(r.json.errors).sort(), ["email", "mensaje", "privacidad", "servicio"], "consent is required even if the block does not say required");
 });
 
-test("malformed email and an option not in the list: server error", async () => {
-  const { hidden } = await loadForm(page.url);
-  await waitMinTime();
-  const r = await submit(hidden, { ...GOOD, email: "not-an-email", servicio: "Tintorería" });
-  assert.equal(r.status, 422);
-  assert.ok(r.json.errors.email);
-  assert.ok(r.json.errors.servicio);
+test("tampered token or one from another definition: rejected", () => {
+  assert.equal(sent.forgedToken.json.code, "token_invalid");
+  assert.equal(sent.noDefinition.json.code, "unknown_form");
 });
 
-test("filled honeypot: answers success and neither saves nor notifies", async () => {
-  await reset();
-  const { hidden } = await loadForm(page.url);
-  await waitMinTime();
-  const r = await submit(hidden, GOOD, { extra: { af_website: "http://spam.example" } });
-  assert.equal(r.status, 200);
-  assert.equal(r.json.ok, true, "the bot is not told it failed");
-  assert.equal((await submissions()).length, 0);
-  assert.equal((await mails()).length, 0);
+test("filled honeypot: answers success (the bot is not told it failed)", () => {
+  assert.equal(sent.honeypot.status, 200);
+  assert.equal(sent.honeypot.json.ok, true);
 });
 
-test("minimum time: submitting too early is rejected", async () => {
-  await reset();
-  await settings({ min_seconds: 30 });
-  const { hidden } = await loadForm(page.url);
-  const r = await submit(hidden, GOOD);
-  assert.equal(r.status, 403);
-  assert.equal(r.json.code, "token_too_fast");
-  assert.equal((await submissions()).length, 0);
-  await settings({ min_seconds: 1 });
-});
-
-test("tampered token or one from another definition: rejected", async () => {
-  await reset();
-  const { hidden } = await loadForm(page.url);
-  await waitMinTime();
-  const forged = { ...hidden, _af_token: String(Math.floor(Date.now() / 1000) - 60) + "." + "a".repeat(40) };
-  assert.equal((await submit(forged, GOOD)).json.code, "token_invalid");
-  const noDef = { ...hidden, _af_def: "0".repeat(32) };
-  assert.equal((await submit(noDef, GOOD)).json.code, "unknown_form");
-  assert.equal((await submissions()).length, 0);
-});
-
-test("per-IP limit: the third submission in the window is rejected", async () => {
-  await reset();
-  await settings({ rate_limit: 2, rate_window: 10 });
-  const { hidden } = await loadForm(page.url);
-  await waitMinTime();
-  assert.equal((await submit(hidden, GOOD)).status, 200);
-  assert.equal((await submit(hidden, GOOD)).status, 200);
-  const third = await submit(hidden, GOOD);
-  assert.equal(third.status, 429);
-  assert.equal(third.json.code, "rate_limit");
-  assert.equal((await submissions()).length, 2);
-  await settings({ rate_limit: 0 });
-});
-
-test("good submission: logged with everything and the N notifications go out with markers replaced", async () => {
-  await reset();
-  const { hidden } = await loadForm(page.url);
-  await waitMinTime();
-  const r = await submit(hidden, { ...GOOD, campo_inventado: "x" });
+test("good submission: logged with everything and the N notifications go out with markers replaced; none of the rejected ones left a row or an email", async () => {
+  const r = sent.good;
   assert.equal(r.status, 200);
   assert.equal(r.json.ok, true);
 
-  const [row] = await submissions();
-  assert.ok(row, "there is a submission in the log");
+  const { submissions, mails } = r.state;
+  assert.deepEqual(submissions.map((s) => s.data.find((d) => d.name === "nombre")?.value), ["Ana"], "only the good one is in the log (too-early, invalid, forged, no-definition and honeypot saved nothing)");
+  const [row] = submissions;
+  good = row;
   assert.equal(row.form_id, "contacto");
   assert.equal(row.form_title, "Contacto");
   assert.equal(row.page_url, page.url);
@@ -122,9 +117,8 @@ test("good submission: logged with everything and the N notifications go out wit
   );
   assert.ok(row.notifications[2].error, "the failure stores its reason");
 
-  const sent = await mails();
-  assert.equal(sent.length, 3, "all three notifications are attempted");
-  const [team, ack] = sent;
+  assert.equal(mails.length, 3, "all three notifications are attempted, and no rejected submission notified anything");
+  const [team, ack] = mails;
   assert.deepEqual(team.to, [TEAM]);
   assert.equal(team.subject, "Nuevo mensaje de Ana");
   assert.ok(team.headers.includes("Reply-To: ana@ejemplo.test"), "reply-to comes from the email field");
@@ -139,60 +133,54 @@ test("good submission: logged with everything and the N notifications go out wit
   assert.match(ack.text, /^Hola Ana, gracias por escribir\.\nServicio: Planchado/);
   assert.match(ack.text, new RegExp(`Alias: ${SITE}/contacto/ el \\S.* en Sitio de pruebas:\\nNombre: Ana\\n`), "the old Spanish markers still work (aliases until 2.0.0)");
   assert.match(ack.html, /<th[^>]*>Teléfono<\/th>/, "{{todos_los_campos}} is still the HTML table");
-  for (const m of sent) {
+  for (const m of mails) {
     assert.ok(!m.html.includes("{{") && !m.text.includes("{{") && !m.subject.includes("{{"), "no unreplaced marker");
   }
 });
 
-test("without JS: 303 redirect to the page with the result", async () => {
-  await reset();
-  const { hidden } = await loadForm(page.url);
-  await waitMinTime();
-  const r = await submit(hidden, { ...GOOD, mensaje: "" }, { js: false });
+const SIGNAL = /<script class="estrategia-web-forms-sent"[^>]*>\s*document\.dispatchEvent\(new CustomEvent\('estrategia-web:form-sent',\{detail:\{"form":"af-contacto","returned":true\}\}\)\);\s*(\/\*[^*]*\*\/\s*)?<\/script>/;
+
+let okWithoutJs, okFirst;
+test("without JS, with an error: 303 to the page, the field marked, what was typed kept, and no conversion signal", async () => {
+  // At once, the good one of the next test, and their return pages at once too.
+  let r;
+  [r, okWithoutJs] = await Promise.all([submit(hidden, { ...GOOD, mensaje: "" }, { js: false }), submit(hidden, GOOD, { js: false })]);
   assert.equal(r.status, 303);
   assert.match(r.location, new RegExp(`^${SITE}/contacto/\\?af_result=[a-z0-9]{20}#af-contacto-status$`));
-  const html = await (await fetch(r.location)).text();
-  assert.match(html, /aria-invalid="true"/, "the field with an error is marked");
-  assert.match(html, /value="Ana"/, "what was typed is kept");
-  assert.equal((await submissions()).length, 0);
+  let back;
+  [back, okFirst] = await Promise.all([html(r.location), okWithoutJs.status === 303 ? html(okWithoutJs.location) : ""]);
+  assert.match(back, /aria-invalid="true"/, "the field with an error is marked");
+  assert.match(back, /value="Ana"/, "what was typed is kept");
+  assert.ok(!back.includes("estrategia-web-forms-sent"), "an error is not a conversion");
 });
 
 // Seen failing on 17-10-2026 with two mutants in Blocks::announce(): without
 // the «announced» mark (the reload fired it again) and announcing errors too.
-test("without JS, OK: the page that comes back fires «estrategia-web:form-sent» ONCE (for the Ads conversion); an error never", async () => {
-  await reset();
-  const signal = /<script class="estrategia-web-forms-sent"[^>]*>\s*document\.dispatchEvent\(new CustomEvent\('estrategia-web:form-sent',\{detail:\{"form":"af-contacto","returned":true\}\}\)\);\s*(\/\*[^*]*\*\/\s*)?<\/script>/;
-  let { hidden } = await loadForm(page.url);
-  await waitMinTime();
-  const ok = await submit(hidden, GOOD, { js: false });
+test("without JS, OK: the page that comes back fires «estrategia-web:form-sent» ONCE (for the Ads conversion)", async () => {
+  const ok = okWithoutJs; // Sent, and its page read once, with the case before.
   assert.equal(ok.status, 303);
-  const first = await (await fetch(ok.location)).text();
-  const around = (html) => (html.match(/[\s\S]{0,200}estrategia-web-forms-sent[\s\S]{0,300}/) || html.match(/af-contacto-status[\s\S]{0,400}/) || [""])[0];
-  assert.ok(signal.test(first), "the return page carries the signal:\n" + around(first));
+  const first = okFirst;
+  const around = (h) => (h.match(/[\s\S]{0,200}estrategia-web-forms-sent[\s\S]{0,300}/) || h.match(/af-contacto-status[\s\S]{0,400}/) || [""])[0];
+  assert.ok(SIGNAL.test(first), "the return page carries the signal:\n" + around(first));
   assert.equal(first.match(/estrategia-web:form-sent/g).length, 1, "once in the page");
-  const again = await (await fetch(ok.location)).text();
+  const again = await html(ok.location);
   assert.match(again, /Thank you|Gracias/, "the message is still there on reload");
   assert.ok(!again.includes("estrategia-web-forms-sent"), "but the signal is not: the conversion would count twice");
-
-  ({ hidden } = await loadForm(page.url));
-  await waitMinTime();
-  const bad = await submit(hidden, { ...GOOD, mensaje: "" }, { js: false });
-  assert.ok(!(await (await fetch(bad.location)).text()).includes("estrategia-web-forms-sent"), "an error is not a conversion");
 });
 
-test("scheduled purge: deletes what is older than the retention and leaves the rest", async () => {
-  await reset();
-  await settings({ retention_days: 30 });
-  const { hidden } = await loadForm(page.url);
-  await waitMinTime();
-  await submit(hidden, GOOD);
-  await submit(hidden, GOOD);
-  const [a] = await submissions();
-  await testApi("/backdate", { method: "POST", body: { id: a.id, days: 31 } });
-  const r = await testApi("/purge", { method: "POST" });
+test("scheduled purge: deletes what is older than the retention (30 days) and leaves the rest", async () => {
+  // Two rows now: the good one and the no-JS one. The good one, 31 days old. At once, the next test's
+  // rate limit (it only counts the submissions after it).
+  const [r] = await Promise.all([testApi("/purge", { method: "POST", body: { backdate: { id: good.id, days: 31 } } }), settings({ rate_limit: 1, rate_window: 10 })]);
   assert.equal(r.scheduled, true, "the purge is scheduled in WP-Cron");
   assert.equal(r.last_purge.deleted, 1);
-  const left = await submissions();
-  assert.equal(left.length, 1);
-  assert.notEqual(left[0].id, a.id);
+  assert.equal(r.left.length, 1);
+  assert.notEqual(r.left[0], Number(good.id));
+});
+
+test("per-IP limit: the submission after the limit in the window is rejected", async () => {
+  assert.equal((await submit(hidden, GOOD)).status, 200);
+  const over = await submit(hidden, GOOD);
+  assert.equal(over.status, 429);
+  assert.equal(over.json.code, "rate_limit");
 });

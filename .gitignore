@@ -4,6 +4,8 @@ secretos/
 languages/.tmp-*/
 *.log
 tests/.playground.log
+# Last measured time of each test file: tests/run.mjs deals the shards with it.
+tests/.timings.json
 # WPML for the test WordPress (tests/run.mjs, «WPML»): paid and licensed, never in git.
 tests/fixtures/wpml/
 .DS_Store

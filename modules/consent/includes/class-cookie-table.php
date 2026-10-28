@@ -24,7 +24,7 @@
  *
  * How to maintain:
  * - Who and when: whoever touches the notice or the table. Test:
- *   modules/consent/tests/cookies.test.mjs (level 2).
+ *   modules/consent/tests/cookie-registry.test.mjs (level 2).
  * - A new duration unit: into duration() with its _n().
  * - Edge case: no confirmed cookie. On the site NOTHING is printed (an empty
  *   table in the policy would say «we use no cookies», and that is false: at

@@ -1,32 +1,72 @@
-// NIVEL: 2 — Playground WordPress, because what is tested is the HTML the site PRINTS (the notice, the link and the «Powered by» line) according to the filters and the option saved through REST.
+// NIVEL: 2 — Playground WordPress. NOT LEVEL 1 BECAUSE: what is tested is the HTML the site PRINTS (the notice, its links and the «Powered by» line) from what a theme declares through filters, block render callbacks, shortcodes and block aliases; that only exists rendered by WordPress.
 //
 // Cookie notice (0.5.0, came from the parent theme). What it is and why, in
 // the header of includes/class-consent.php. What happens in the browser
-// (buttons, cookie, JS API, event, Matomo with the real notice, contrast) is
-// in tests/consent-browser.test.mjs (level 3).
+// (buttons, cookie, JS API, event, contrast) is consent-browser.test.mjs
+// (level 3).
 //
-// The «site» that declares categories is the consent-setup test route
-// (tests/wp/estrategia-web-site-test.php), which plays the theme's
-// functions.php.
+// The «site» that declares categories plays the theme's functions.php: here
+// through ?ew-consent-setup=<json> on the page request itself (the same
+// filters of tests/wp/estrategia-web-site-test.php read it; see
+// modules/consent/tests/wp/estrategia-web-cookies-test.php), so each case is
+// ONE request. All the cases read ONE seeded page that carries the four
+// «Cookie settings» links (new block, the two old aliases, the shortcode):
+// the notice is printed in wp_footer on every page.
 //
 // Seen failing on 05-10-2026 with four mutants, each one caught: rel with
 // nofollow, the revision with '2', the «Powered by» filter not applied and
 // the armazon/consent and armazon-site/consent aliases not registered.
+// Seen red (28-10-2026), one break per case: «the theme» declaring «maps»
+// in case 1 (the notice is printed); the expected revision computed with
+// '|2' (case 2); the rel expected «noopener nofollow» (case 3); the changed
+// text expected «Made by Others» (case 4); the hybrid category expected
+// «maps» (case 5).
+// Merged on 28-10-2026: the revision/cookie case and «Powered by off by
+// default» read the same page as «with categories» (case 2), and the link
+// cases the same page as cases 1 and 2.
 //
 // How to maintain: if the cookie format or the revision formula changes, the
-// «the revision is the parent's» test MUST go red: changing it makes every
-// visitor see the notice again. The test is not «fixed» without deciding
-// that.
+// revision assertion of case 2 MUST go red: changing it makes every visitor
+// see the notice again. The test is not «fixed» without deciding that.
+// Round 2 (28-10-2026): every page is requested at once in before() (ALL:
+// a new case adds its line there), and the hybrid Matomo case passes the
+// company option on the request (?ew-options) instead of saving it, so no
+// case leaves anything stored for the next. The trap: a case whose page is
+// missing from ALL still works, but is requested late, on its own.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import crypto from "node:crypto";
-import { BASE, html, reset, saveCompany, seedPage, testApi } from "../../../tests/lib.mjs";
+import { BASE, html, testApi } from "../../../tests/lib.mjs";
 
-const setup = (body) => testApi("/consent-setup", { method: "POST", body });
-const front = async (path = "/") => (await html(BASE + path + (path.includes("?") ? "&" : "?") + "nocache=" + Date.now())).text;
 const NOTICE = 'id="estrategia-web-consent"';
+let path;
+/** The seeded page as a visitor gets it, with «the theme» declaring `setup` for this request. */
+/** The seeded page with «the theme» declaring `setup` (and other options, ?ew-options) for that request; each one requested once. */
+const pages = new Map();
+const front = (setup = {}, options) => {
+  const key = JSON.stringify([setup, options]);
+  if (!pages.has(key)) {
+    const extra = options ? "&ew-options=" + encodeURIComponent(JSON.stringify(options)) : "";
+    pages.set(key, html(`${BASE}${path}?ew-consent-setup=${encodeURIComponent(JSON.stringify(setup))}${extra}&nocache=${Date.now()}`).then((r) => r.text));
+  }
+  return pages.get(key);
+};
+// Every page the cases read, requested at once when the seed is there (round 2, 28-10-2026).
+const ALL = [
+  [{}],
+  [{ categories: ["maps", "statistics"] }],
+  [{ categories: ["maps"], powered_by: { show: true } }],
+  [{ categories: ["maps"], powered_by: { show: true, text: "Made by Other", url: "https://other.example/" } }],
+  [{ categories: ["maps"], powered_by: { show: true, url: "" } }],
+  [{ categories: ["maps"], powered_by: { show: true, url: "javascript:alert(1)" } }],
+  [{ categories: ["maps"], powered_by: false }],
+  [{}, { estrategia_web_site: { matomo_url: "https://stats.example.test/", matomo_site_id: 3, matomo_mode: "hybrid" } }],
+];
+const offered = (page) => [...page.matchAll(/name="estrategia-web-consent-category"\s+value="([^"]+)"/g)].map((m) => m[1]);
+const links = (page) =>
+  [...page.matchAll(/<p ([^>]*estrategia-web-consent-link[^>]*)><button type="button" class="estrategia-web-consent-link__button" aria-controls="estrategia-web-consent"[^>]*>([^<]*)<\/button><\/p>/g)].map((m) => ({ cls: m[1], label: m[2] }));
 
-/** The notice's «Powered by» line: { html, anchor: { href, target, rel, text } | null }. */
+/** The notice's «Powered by» line: { html, text, anchor: { href, target, rel } | null }, or null. */
 function powered(page) {
   const m = page.match(/<p class="estrategia-web-consent__powered">([\s\S]*?)<\/p>/);
   if (!m) return null;
@@ -39,63 +79,67 @@ function powered(page) {
   };
 }
 
-before(reset);
-
-test("consent (0.5.0): the plugin carries the notice; with no declared categories it does NOT show (nor its module)", async () => {
-  await reset();
-  const r = await setup({});
-  assert.equal(r.active, true, "with a theme that ships no notice, the notice belongs to the plugin");
-  assert.deepEqual(r.categories, []);
-  const page = await front();
-  assert.ok(!page.includes(NOTICE), "no categories, no notice");
-  assert.ok(!page.includes("estrategia-web-site-consent-view-script-module"), "no categories, the module is not loaded");
+before(async () => {
+  // ONE request: the reset and the page (/setup, tests/wp/estrategia-web-site-test.php).
+  const { pages } = await testApi("/setup", {
+    method: "POST",
+    body: {
+      pages: [
+        {
+          slug: "test-cookie-link",
+          content:
+            '<!-- wp:estrategia-web-site/consent {"label":"My cookies"} /-->' +
+            "<!-- wp:armazon/consent /-->" +
+            "<!-- wp:armazon-site/consent /-->" +
+            '<!-- wp:shortcode -->[estrategia_web_consent_settings label="Via shortcode"]<!-- /wp:shortcode -->',
+        },
+      ],
+    },
+  });
+  path = new URL(pages[0].url).pathname;
+  for (const [setup, options] of ALL) front(setup, options).catch(() => {}); // Awaited (and reported) by each case.
 });
 
-test("consent (0.5.0): with categories the notice shows, with the categories in stable order and the three buttons", async () => {
-  await reset();
-  await setup({ categories: ["maps", "statistics"] });
-  const page = await front();
+test("1. with no declared categories there is no notice, no module and no «Cookie settings» link (nothing to reopen)", async () => {
+  const page = await front({});
+  assert.ok(!page.includes(NOTICE), "no categories, no notice");
+  assert.ok(!page.includes("estrategia-web-site-consent-view-script-module"), "no categories, the module is not loaded");
+  assert.ok(!page.includes("estrategia-web-consent-link"), "without categories, the link is not printed");
+});
+
+test("2. with categories: the notice in stable order with its three buttons, the PARENT's revision and cookie, no «Powered by» by default, and the four links", async () => {
+  const page = await front({ categories: ["maps", "statistics"] });
   assert.ok(page.includes(NOTICE), "the notice is missing");
-  const offered = [...page.matchAll(/name="estrategia-web-consent-category"\s+value="([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(offered, ["statistics", "maps"], "order of the known categories, not the filter's");
+  assert.deepEqual(offered(page), ["statistics", "maps"], "order of the known categories, not the filter's");
   for (const action of ["accept", "reject", "configure"]) {
     assert.ok(page.includes(`data-estrategia-web-consent-action="${action}"`), `the ${action} button is missing`);
   }
   assert.ok(page.includes("estrategia-web-site-consent-view-script-module"), "the notice module");
   assert.ok(page.includes("Aceptar todas") && page.includes("Rechazar todas"), "texts translated from the estrategia-web-site domain");
-});
 
-test("consent (0.5.0): the revision and the cookie are THE PARENT'S (whoever already chose does not see the notice again)", async () => {
-  await reset();
-  const md5 = (s) => crypto.createHash("md5").update(s).digest("hex").slice(0, 8);
   // The armazon-wp-padre 0.6.0 formula, inc/consent.php: md5( implode( ',', categories ) . '|' . '1' ).
-  const r = await setup({ categories: ["statistics", "maps"] });
-  assert.equal(r.revision, md5("statistics,maps|1"));
-  const page = await front();
-  assert.match(page, new RegExp(`"revision":"${r.revision}"`), "the Interactivity state carries the same revision");
+  const revision = crypto.createHash("md5").update("statistics,maps|1").digest("hex").slice(0, 8);
+  assert.match(page, new RegExp(`"revision":"${revision}"`), "the revision is not the parent's: whoever already chose would see the notice again");
   assert.match(page, /"cookieName":"estrategia_web_consent"/, "the same cookie");
-});
 
-test("consent (0.5.0): hybrid Matomo declares «statistics» by itself and the notice shows without the theme declaring anything", async () => {
-  await reset();
-  await saveCompany({ matomo_url: "https://stats.example.test/", matomo_site_id: 3, matomo_mode: "hybrid" });
-  const page = await front();
-  const offered = [...page.matchAll(/name="estrategia-web-consent-category"\s+value="([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(offered, ["statistics"]);
-});
-
-test("consent (1.0.0): «Powered by» OFF by default (WordPress.org, guideline 10)", async () => {
-  await reset();
-  await setup({ categories: ["maps"] });
-  const page = await front();
-  assert.ok(page.includes(NOTICE), "control: the notice shows");
+  // 1.0.0: «Powered by» OFF by default (WordPress.org, guideline 10).
   assert.equal(powered(page), null, "without the filter there is no «Powered by» line");
+
+  // The link with the new name, the two OLD names (armazon/consent ≤ parent
+  // 0.6.0, armazon-site/consent ≤ 0.5.4: they print the SAME) and the shortcode.
+  const found = links(page);
+  assert.equal(found.length, 4, `there should be four links and there are ${found.length}`);
+  assert.match(found[0].cls, /wp-block-estrategia-web-site-consent/);
+  assert.equal(found[0].label, "My cookies");
+  assert.match(found[1].cls, /wp-block-estrategia-web-site-consent\b/, "the armazon/consent alias prints like the new block");
+  assert.equal(found[1].label, "Configurar cookies");
+  assert.match(found[2].cls, /wp-block-estrategia-web-site-consent\b/, "the armazon-site/consent alias prints like the new block");
+  assert.equal(found[3].label, "Via shortcode");
 });
 
-test("consent (0.5.0): «Powered by Estrategia Web» switched on: at the foot, linked, new tab, rel=noopener and WITHOUT nofollow", async () => {
-  await reset();
-  await setup({ categories: ["maps"], powered_by: { show: true } });
-  const p = powered(await front());
+test("3. «Powered by Estrategia Web» switched on: after the buttons, linked, new tab, rel=noopener and WITHOUT nofollow", async () => {
+  const page = await front({ categories: ["maps"], powered_by: { show: true } });
+  const p = powered(page);
   assert.ok(p, "the «Powered by» line is missing");
   assert.equal(p.text, "Powered by Estrategia Web");
   assert.equal(p.anchor?.href, "https://estrategiaweb.es/");
@@ -103,54 +147,28 @@ test("consent (0.5.0): «Powered by Estrategia Web» switched on: at the foot, l
   assert.equal(p.anchor.rel, "noopener", "rel must be noopener and nothing else (no nofollow: it counts as a link)");
   assert.ok(!/nofollow|sponsored|ugc/.test(p.html), "no nofollow, sponsored or ugc");
   assert.match(p.html, /estrategia-web-consent__sr">\s*\(se abre en una pestaña nueva\)/, "new-tab notice for screen readers");
-  const page = await front();
   assert.ok(page.indexOf("estrategia-web-consent__actions") < page.indexOf("estrategia-web-consent__powered"), "it goes AFTER the buttons");
 });
 
-test("consent (0.5.0): the «Powered by» is changed and removed with the estrategia_web_site_consent_powered_by filter", async () => {
-  await reset();
-  await setup({ categories: ["maps"], powered_by: { show: true, text: "Made by Other", url: "https://other.example/" } });
-  let p = powered(await front());
+test("4. the estrategia_web_site_consent_powered_by filter: changes it, keeps what is not passed, drops empty and non-http(s) urls, and false removes it", async () => {
+  const [changed, empty, script, removed] = await Promise.all([
+    front({ categories: ["maps"], powered_by: { show: true, text: "Made by Other", url: "https://other.example/" } }),
+    front({ categories: ["maps"], powered_by: { show: true, url: "" } }),
+    front({ categories: ["maps"], powered_by: { show: true, url: "javascript:alert(1)" } }),
+    front({ categories: ["maps"], powered_by: false }),
+  ]);
+  let p = powered(changed);
   assert.equal(p.text, "Made by Other");
   assert.equal(p.anchor.href, "https://other.example/");
-
-  await setup({ categories: ["maps"], powered_by: { show: true, url: "" } });
-  p = powered(await front());
+  p = powered(empty);
   assert.equal(p.text, "Powered by Estrategia Web", "whatever is not passed is kept");
   assert.equal(p.anchor, null, "empty url: text without a link");
-
-  await setup({ categories: ["maps"], powered_by: { show: true, url: "javascript:alert(1)" } });
-  p = powered(await front());
-  assert.equal(p.anchor, null, "a non-http(s) url is discarded");
-
-  await setup({ categories: ["maps"], powered_by: false });
-  const page = await front();
-  assert.ok(page.includes(NOTICE), "control: the notice is still there");
-  assert.equal(powered(page), null, "__return_false removes it");
+  assert.equal(powered(script).anchor, null, "a non-http(s) url is discarded");
+  assert.ok(removed.includes(NOTICE), "control: the notice is still there");
+  assert.equal(powered(removed), null, "__return_false removes it");
 });
 
-test("consent (0.5.0): the «Cookie settings» link with the new name, with the OLD one (alias) and by shortcode", async () => {
-  await reset();
-  await setup({ categories: ["maps"] });
-  const { url } = await seedPage(
-    '<!-- wp:estrategia-web-site/consent {"label":"My cookies"} /-->' +
-      "<!-- wp:armazon/consent /-->" +
-      "<!-- wp:armazon-site/consent /-->" +
-      '<!-- wp:shortcode -->[estrategia_web_consent_settings label="Via shortcode"]<!-- /wp:shortcode -->',
-    "test-cookie-link"
-  );
-  const page = await front(new URL(url).pathname);
-  const links = [...page.matchAll(/<p ([^>]*estrategia-web-consent-link[^>]*)><button type="button" class="estrategia-web-consent-link__button" aria-controls="estrategia-web-consent"[^>]*>([^<]*)<\/button><\/p>/g)].map((m) => ({ cls: m[1], label: m[2] }));
-  assert.equal(links.length, 4, `there should be four links and there are ${links.length}`);
-  assert.match(links[0].cls, /wp-block-estrategia-web-site-consent/);
-  assert.equal(links[0].label, "My cookies");
-  // The two old names (armazon/consent ≤ parent 0.6.0, armazon-site/consent ≤ 0.5.4) print the SAME as the new one.
-  assert.match(links[1].cls, /wp-block-estrategia-web-site-consent\b/, "the armazon/consent alias prints like the new block");
-  assert.equal(links[1].label, "Configurar cookies");
-  assert.match(links[2].cls, /wp-block-estrategia-web-site-consent\b/, "the armazon-site/consent alias prints like the new block");
-  assert.equal(links[3].label, "Via shortcode");
-
-  await setup({});
-  const none = await front(new URL(url).pathname);
-  assert.ok(!none.includes("estrategia-web-consent-link"), "without categories, the link is not printed (there is no notice to reopen)");
+test("5. hybrid Matomo declares «statistics» by itself: the notice shows without the theme declaring anything", async () => {
+  // The company option with hybrid Matomo, for that request (?ew-options): nothing is saved.
+  assert.deepEqual(offered(await front({}, { estrategia_web_site: { matomo_url: "https://stats.example.test/", matomo_site_id: 3, matomo_mode: "hybrid" } })), ["statistics"]);
 });

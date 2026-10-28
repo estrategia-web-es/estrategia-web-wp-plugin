@@ -15,7 +15,7 @@
 	 * Caught by the Lavandería height comparison on 03-10-2026
 	 * (Autoservicio 14 % shorter). 0.3.1 tried flex:none and it did not
 	 * work: the problem was not shrinking but the width of the measurement.
-	 * See tests/map-in-flex.test.mjs.
+	 * See tests/map.test.mjs, step 1.
 	 */
 	inline-size: 100%;
 	flex: none;

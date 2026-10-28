@@ -56,7 +56,7 @@
  * - The other trap: WordPress only gives fetchpriority="high" to ONE image per
  *   page, the first large one (over 50,000 px²) it finds. If there is another
  *   large image before the carousel, the carousel is not treated as the hero.
- * - Test: tests/carousel-images.test.mjs (level 3).
+ * - Test: tests/carousel.test.mjs (level 3; ./images.mjs).
  *
  * Since plugin 1.1.0 it lives here (before, inc/carousel-images.php in the
  * theme) and in the EstrategiaWeb\Carousel namespace: images_register(),
@@ -159,7 +159,7 @@ function images_register( string $id, array $attributes ): void {
  * there is no <head> left to print in: nothing is preloaded, silently (the
  * page is the same as without asking). The same if the image has no srcset
  * nor src.
- * Test: the theme's tests/carousel-preload.test.mjs (level 3).
+ * Test: modules/carousel/tests/carousel.test.mjs (level 3; the preload part is in ./images.mjs).
  *
  * How to maintain: if the 782 px breakpoint of style.css changes, change
  * PRELOAD_MEDIA too (it is the complement of carousel-mobile-crop.php's

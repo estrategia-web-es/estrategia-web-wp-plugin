@@ -10,19 +10,23 @@
  *
  * - /prueba-carrusel/ — five slides, no loop (carousel.test.mjs; in the
  *   theme it was the carousel of /prueba-modulos/).
- * - /prueba-carrusel-consulta/ — a core/query of six posts (carousel-query).
+ * - /prueba-carrusel-consulta/ — a core/query of six posts (carousel.test.mjs).
  * - /prueba-carrusel-bucle/ — looping ones: blocks, query, a two-row grid
  *   (class rejilla-prueba), three slides with 2.4 in view and a single slide
- *   (carousel-loop, -infinite, -glide).
+ *   (carousel-infinite; carousel-loop and -glide were merged into it on 28-10-2026).
  * - /prueba-carrusel-fotos/ — 1920×1280 photos drawn with GD, at the top and
- *   far below (carousel-images, carousel-preload).
+ *   far below (images.mjs, run by carousel.test.mjs).
  * - /prueba-carrusel-movil/ — mobileRatio 4/5 and preloadSlides 2
- *   (carousel-mobile-crop, carousel-preload).
+ *   (images.mjs, run by carousel.test.mjs; it was carousel-images, -mobile-crop and -preload).
  * - /prueba-carrusel-impar/ — 7 of 3 and 23 posts in one row and in a
- *   12-column grid (class rejilla-impar) (carousel-any-count).
+ *   12-column grid (class rejilla-impar) (any-count.mjs, run by carousel.test.mjs).
  *
  * POST /wp-json/estrategia-web-carousel-test/v1/seed. Idempotent: pages and
- * posts are rewritten by slug, the photos are made only the first time.
+ * posts are rewritten by slug only when they differ (28-10-2026: every test
+ * file seeds, and rewriting the 35 every time cost ~3 s per file), the
+ * photos are made only the first time. The trap: a page edited by hand in
+ * the test WordPress with the SAME content is left as is; change the seed's
+ * content and it is rewritten.
  *
  * What the THEME did and is done here instead: the CSS of the two grids
  * (rejilla-prueba, rejilla-impar), which a site's child sets for its client
@@ -46,7 +50,7 @@ if ( ! defined( 'ESTRATEGIA_WEB_BLOCKS_TESTING' ) || true !== ESTRATEGIA_WEB_BLO
 
 // A carousel in a two-row GRID, like Lavandería's client strip
 // (carousel-infinite.test.mjs), and 23 cards in 12 columns
-// (carousel-any-count.test.mjs): the bottom row has 11.
+// (any-count.mjs, run by carousel.test.mjs): the bottom row has 11.
 // ONLY on those two pages: printed everywhere, the class name in the CSS made
 // tests/modules-page.test.mjs (which checks that a disabled carousel leaves no
 // «estrategia-web-carousel__track» in the HTML) fail (17-10-2026).
@@ -85,6 +89,11 @@ add_action(
  */
 function estrategia_web_carousel_test_page( string $slug, string $title, string $content ): int {
 	$existing = get_page_by_path( $slug );
+	// 28-10-2026: as it is already, nothing is written (every carousel test
+	// file seeds again, and the 35 rewrites took ~3 s of each one).
+	if ( $existing && 'publish' === $existing->post_status && $title === $existing->post_title && $content === $existing->post_content ) {
+		return (int) $existing->ID;
+	}
 	return (int) wp_insert_post(
 		array(
 			'ID'           => $existing ? $existing->ID : 0,
@@ -105,6 +114,9 @@ function estrategia_web_carousel_test_page( string $slug, string $title, string 
  */
 function estrategia_web_carousel_test_post( string $slug, string $title ): void {
 	$post = get_page_by_path( $slug, OBJECT, 'post' );
+	if ( $post && 'publish' === $post->post_status && $title === $post->post_title ) {
+		return;
+	}
 	wp_insert_post(
 		array(
 			'ID'          => $post ? $post->ID : 0,

@@ -1,9 +1,33 @@
-// NIVEL: 2 — Playground WordPress, because it WRITES: definitions stored in the database through the constructor's REST route, registered on the next request, the templates, the protections when a definition changes (entries, removed fields, URLs that move and their 301s), switching off and deleting, export / import, revisions, and the three new field types' sanitizers.
+// NIVEL: 2 — Playground WordPress. NOT LEVEL 1 BECAUSE: what is tested is what the constructor's REST route WRITES and what WordPress does with it on the next request — definitions stored as posts (slashes, kses, revisions), registered with their meta, the protections that count real entries, the 301s written into the redirects module's table and served. The validator, Changes::check() (what is refused or warned, which URLs move) and redirect_paths() are level 1: constructor-pure.test.mjs. The templates, the field-type sanitizers, a stored definition beating a theme file and the 1.4.x migration: constructor-templates.test.mjs.
 //
 // The site under test speaks es_ES (tests/wp/estrategia-web-site-test.php).
-// It starts and ends with estrategia-web-ct-test/v1/constructor-reset (no
-// definitions, no gment_ posts) and with modules/site's types switched off,
-// so the other modules' tests never see what is created here.
+// It starts with estrategia-web-ct-test/v1/constructor-reset (no
+// definitions, no gment_ posts) and the redirects module's reset, and ends
+// (after()) with the redirects it created deleted, so the other modules'
+// tests never see them.
+//
+// HOW IT IS FAST (28-10-2026; 144 s and ~85 requests before, ~37 after round
+// 1, ~19 now): the REST calls go through batch.mjs — several calls in ONE
+// request — and a batch ends exactly where WordPress has to boot again to
+// see what was written (a type registered, its meta, the modules list: the
+// trap in tests/wp/estrategia-web-content-types-test.php, /batch). And two
+// independent tracks run at once (the test WordPress answers two requests at
+// a time): gment_course and gment_workshop. The export/import test is the
+// round-trip test (GET is the export); «empty, it can be deleted» is the
+// workshop deleted there; the 409 that asks for confirmation is proven once
+// (protections) and the URL test confirms directly. What a batch skips is
+// core's HTTP authentication; that only an administrator writes is still
+// checked (the author's call, as the author).
+//
+// ISOLATION (28-10-2026). «a URL that moves» failed on the SECOND run against
+// the same WordPress: {"created":0,"skipped":["/courses/ (Ya hay una
+// redirección para este origen.)", …]}. Root cause: the 301s the constructor
+// writes live in the redirects module's table, and neither the core reset()
+// nor constructor-reset empties it, so the first run's rules were still
+// there and the second run's were refused as duplicates. Now before() and
+// after() call estrategia-web-redirects-test/v1/reset. Seen red (28-10-2026)
+// by running the file twice on one WordPress before the fix; green twice in
+// a row after it.
 //
 // Seen red (17-10-2026): with Store::save() not slashing, «a definition
 // round-trips» failed (the \u escapes and the backslash were eaten); with
@@ -13,31 +37,26 @@
 // stored one was saved (201) — Rest::write() put the new definition first
 // for Schema::check_all(), which lets the first one keep a name, so the
 // error went to the stored one. Now the new one goes last.
-import { test, before, after } from "node:test";
+// Seen red (28-10-2026, round 2, batched), each test with one expected value
+// changed (the es label, the teacher that comes back, the entry count, the
+// imported definition, the clashing taxonomy, the 301's target): all six
+// red; restored, green.
+import { test, describe, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { BASE, credentials, reset, saveCompany, testApi, wp } from "../../../tests/lib.mjs";
+import { BASE, credentials } from "../../../tests/lib.mjs";
+import { batch } from "./batch.mjs";
 
-const ct = async (path, { method = "GET", body } = {}) => {
-  const res = await fetch(BASE + "/wp-json/estrategia-web-ct-test/v1" + path, { method, headers: body ? { "Content-Type": "application/json" } : {}, body: body ? JSON.stringify(body) : undefined });
-  if (!res.ok) throw new Error(`${method} ${path} -> ${res.status} ${await res.text()}`);
+const call = async (base, route, { method = "GET", body } = {}) => {
+  const res = await fetch(BASE + base + route, { method, headers: body ? { "Content-Type": "application/json" } : {}, body: body ? JSON.stringify(body) : undefined });
+  if (!res.ok) throw new Error(`${method} ${route} -> ${res.status} ${await res.text()}`);
   return res.json();
 };
-/** The constructor's route, as the administrator. Returns { status, json }. */
-async function ew(path = "", { method = "GET", body, as = "administrator" } = {}) {
-  const who = (await credentials())[as];
-  const res = await fetch(BASE + "/wp-json/estrategia-web/v1/content-types" + path, {
-    method,
-    headers: { Authorization: "Basic " + Buffer.from(`${who.user}:${who.password}`).toString("base64"), ...(body ? { "Content-Type": "application/json" } : {}) },
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  const text = await res.text();
-  let json = null;
-  try {
-    json = JSON.parse(text);
-  } catch {}
-  return { status: res.status, json, text };
-}
-const raw = (name, extra = "") => ct(`/constructor-raw?name=${name}${extra}`);
+const ct = (route, opts) => call("/wp-json/estrategia-web-ct-test/v1", route, opts);
+const redirects = (route, opts) => call("/wp-json/estrategia-web-redirects-test/v1", route, opts);
+// The calls of a batch (batch.mjs).
+const CT = "/estrategia-web/v1/content-types";
+const save = (definition, extra = {}, path = "") => ({ method: "POST", path: CT + path, body: { definition, ...extra } });
+const raw = (name, extra = "") => ({ path: `/estrategia-web-ct-test/v1/constructor-raw?name=${name}${extra}` });
 
 const course = () => ({
   prefix: "gment_",
@@ -52,245 +71,129 @@ const course = () => ({
     { name: "gment_teacher", type: "text", label: { es: "Profesor" } },
   ],
 });
+const workshop = (slug = "workshops") => ({
+  ...course(),
+  name: "gment_workshop",
+  slug,
+  taxonomies: [{ name: "gment_topic", labels: { singular: "Tema", plural: "Temas" } }],
+  description: 'Taller «práctico» de 2\\3 días <b>& más</b> "comillas"',
+});
 
 before(async () => {
-  await reset();
-  const { loaded } = await testApi("/modules");
-  await testApi("/modules", { method: "POST", body: { active: [...new Set([...loaded, "content-types", "redirects"])] } });
-  await saveCompany({ enabled_types: [] });
-  await ct("/constructor-reset", { method: "POST" });
+  // reset() (content-types is on by default), the gment_ posts and the redirects table emptied, at once;
+  // the redirects module switched on after reset(), which empties the modules list.
+  // ONE request (batch.mjs): the redirects module is switched on after reset() empties the modules list, and is
+  // loaded from the next request. The test users (for the author's call) alongside.
+  await Promise.all([
+    batch(
+      { method: "POST", path: "/estrategia-web-site-test/v1/reset" },
+      { method: "POST", path: "/estrategia-web-ct-test/v1/constructor-reset" },
+      { method: "POST", path: "/estrategia-web-redirects-test/v1/reset" },
+      { method: "POST", path: "/estrategia-web-redirects-test/v1/setup", body: { on: true } }
+    ),
+    credentials(),
+  ]);
 });
-after(async () => {
-  await ct("/constructor-reset", { method: "POST" });
-  await reset();
-});
+// What reset() does not undo: the 301s in the redirects module's table (ISOLATION).
+after(() => redirects("/reset", { method: "POST" }));
 
-test("only administrators: an author gets 403", async () => {
-  assert.equal((await ew("", { as: "author" })).status, 403);
-  assert.equal((await ew("", { as: "author", method: "POST", body: { definition: course() } })).status, 403);
-});
+describe("two tracks at once", { concurrency: true }, () => {
+  describe("gment_course", { concurrency: 1 }, () => {
+    let entry;
 
-test("a definition created through REST is stored and registered on the next request, with its fields and taxonomy", async () => {
-  const created = await ew("", { method: "POST", body: { definition: course() } });
-  assert.equal(created.status, 201, created.text);
-  assert.equal(created.json.source, "database");
-  assert.equal(created.json.active, true);
-  const type = await wp("/types/gment_course");
-  assert.equal(type.status, 200, "registered from the database");
-  assert.equal(type.json.name, "Cursos", "the es label");
-  assert.ok(type.json.taxonomies.includes("gment_level"));
-  const state = await ct("/state");
-  assert.equal(state.meta.gment_course.gment_hours.type, "integer");
-  const list = await ew();
-  assert.ok(list.json.types.some((t) => t.name === "gment_course" && t.source === "database"));
-  assert.deepEqual(list.json.languages, ["es"], "the site language (no WPML here)");
-  assert.equal((await raw("gment_course", "&slug=courses")).rules.length > 0, true, "rewrite rules for /courses/ after the flush");
-});
+    test("only administrators write; a definition created through REST is stored and registered on the next request, with its taxonomy", async () => {
+      const [author, created] = await batch({ ...save(course()), as: "author" }, save(course()));
+      assert.equal(author.status, 403, "the author, logged in: forbidden");
+      assert.equal(created.status, 201, created.text);
+      assert.equal(created.json.source, "database");
+      assert.equal(created.json.active, true);
+      // The next request: registered. Its first entry goes in the same batch, for «protections».
+      let type;
+      [type, entry] = await batch({ path: "/wp/v2/types/gment_course" }, { method: "POST", path: "/wp/v2/gment_course", body: { title: "Curso de pan", status: "publish", meta: { gment_teacher: "Joan", gment_hours: 20 } } });
+      assert.equal(type.status, 200, "registered from the database");
+      assert.equal(type.json.name, "Cursos", "the es label");
+      assert.ok(type.json.taxonomies.includes("gment_level"));
+      assert.equal(entry.status, 201, entry.text);
+    });
 
-test("a definition round-trips exactly: accents, quotes, a backslash, < and & (slashes and kses)", async () => {
-  const def = course();
-  def.name = "gment_workshop";
-  def.slug = "workshops";
-  def.taxonomies = [];
-  def.description = 'Taller «práctico» de 2\\3 días <b>& más</b> "comillas"';
-  const r = await ew("", { method: "POST", body: { definition: def } });
-  assert.equal(r.status, 201, r.text);
-  const back = await ew("/gment_workshop");
-  assert.equal(back.json.definition.description, def.description);
-  assert.deepEqual(back.json.definition, def);
-  const stored = (await raw("gment_workshop")).row.json;
-  assert.ok(!stored.includes("<b>"), "nothing that kses could take for a tag is stored raw");
-});
+    test("protections: the internal name is fixed once there are entries; a removed field keeps its data and comes back", async () => {
+      const renamed = course();
+      renamed.name = "gment_class";
+      const fewer = course();
+      fewer.fields = fewer.fields.filter((f) => f.name !== "gment_teacher");
+      const [r, ask, before, done] = await batch(save(renamed, { confirm: true }, "/gment_course"), save(fewer, {}, "/gment_course"), raw("gment_course"), save(fewer, { confirm: true }, "/gment_course"));
+      assert.equal(r.status, 400, r.text);
+      assert.match(r.json.data.errors.join(" "), /gment_course/);
+      assert.equal(ask.status, 409, "a warning needs confirm");
+      assert.equal(ask.json.code, "estrategia_web_ct_confirm");
+      assert.match(ask.json.data.warnings.join(" "), /gment_teacher/);
+      assert.equal(before.json.row.definition.fields.length, 2, "nothing written before confirming");
+      assert.equal(done.status, 200, done.text);
+      // The next request registers the field list without gment_teacher.
+      const [hidden, back] = await batch({ path: `/wp/v2/gment_course/${entry.json.id}?context=edit` }, save(course(), { confirm: true }, "/gment_course"));
+      assert.equal(hidden.json.meta.gment_teacher, undefined, "no longer in REST (the value stays in the database: it comes back below)");
+      assert.equal(back.status, 200, back.text);
+      const [again, revisions] = await batch({ path: `/wp/v2/gment_course/${entry.json.id}?context=edit` }, raw("gment_course"));
+      assert.equal(again.json.meta.gment_teacher, "Joan", "added back with the same name: it is there again");
+      assert.ok(revisions.json.revisions >= 2, "every save keeps a revision of the JSON");
+    });
 
-test("errors: 400 with the validator's list and nothing written; a duplicate is 409", async () => {
-  const bad = course();
-  bad.name = "gment_bad";
-  bad.fields[0].requird = true;
-  bad.prefix = "eweb_";
-  const r = await ew("", { method: "POST", body: { definition: bad } });
-  assert.equal(r.status, 400);
-  assert.match(r.json.data.errors.join(" | "), /reservado|reserved/);
-  assert.match(r.json.data.errors.join(" | "), /requird/);
-  assert.equal((await raw("gment_bad")).row, null, "nothing stored");
-  assert.equal((await ew("", { method: "POST", body: { definition: course() } })).status, 409, "gment_course already exists");
-  const clash = course();
-  clash.name = "gment_course2";
-  clash.slug = "courses2";
-  clash.fields = [];
-  const r2 = await ew("", { method: "POST", body: { definition: clash } });
-  assert.equal(r2.status, 400, "the same taxonomy declared twice (check_all against what is stored)");
-  assert.match(r2.json.data.errors.join(" "), /gment_level/);
-});
+    test("deleting a type with entries is refused; switching it off keeps its entries and unregisters it", async () => {
+      // «Empty, it can be deleted»: the workshop, in «round-trips».
+      const [del, off] = await batch({ method: "DELETE", path: CT + "/gment_course" }, { method: "POST", path: CT + "/gment_course", body: { active: false } });
+      assert.equal(del.status, 409, del.text);
+      assert.equal(del.json.code, "estrategia_web_ct_has_entries");
+      assert.equal(off.json.active, false);
+      const [type, stored] = await batch({ path: "/wp/v2/types/gment_course" }, raw("gment_course"));
+      assert.equal(type.status, 404, "switched off: not registered");
+      assert.equal(stored.json.entries, 1, "its entry is still there");
+    });
+  });
 
-test("templates: «enabled_types» still switches them (Site_Types); added from the panel, the same type, names and labels as before", async () => {
-  await saveCompany({ enabled_types: ["client"] });
-  const client = await ew("/eweb_client");
-  assert.equal(client.status, 200, "enabled_types added the client template: " + client.text);
-  assert.equal(client.json.active, true);
-  assert.deepEqual(client.json.definition.slug, { en: "clients", es: "clientes", ca: "clients" }, "a NEW type (no entries): the template's slugs per language");
-  assert.equal((await wp("/types/eweb_client")).status, 200);
-  await saveCompany({ enabled_types: [] });
-  assert.equal((await ew("/eweb_client")).json.active, false, "taken out of enabled_types: switched off, not deleted");
-  assert.equal((await wp("/types/eweb_client")).status, 404);
-  await ew("/eweb_client", { method: "DELETE" });
+  describe("gment_workshop", { concurrency: 1 }, () => {
+    test("a definition round-trips exactly (accents, quotes, a backslash, < and &: slashes and kses); GET is the export and POST takes it back; empty, it is deleted", async () => {
+      const def = workshop();
+      const [r, back, stored, del, imported] = await batch(save(def), { path: CT + "/gment_workshop" }, raw("gment_workshop"), { method: "DELETE", path: CT + "/gment_workshop" }, save({ $schema: "../content-types.schema.json", ...def }));
+      assert.equal(r.status, 201, r.text);
+      assert.deepEqual(back.json.definition, def);
+      assert.ok(!stored.json.row.json.includes("<b>"), "nothing that kses could take for a tag is stored raw");
+      assert.equal(del.status, 200, "no entries: it can be deleted");
+      assert.equal(imported.status, 201, imported.text);
+      assert.deepEqual(imported.json.definition, def, "the same definition (the $schema of a file is dropped)");
+    });
 
-  for (const key of ["client", "testimonial", "location"]) {
-    const r = await ew("/templates/" + key, { method: "POST" });
-    assert.equal(r.status, 201, key + ": " + r.text);
-    assert.equal(r.json.template, key);
-  }
-  assert.equal((await ew("/templates/client", { method: "POST" })).status, 409, "only once");
-  const t = await wp("/types/eweb_testimonial");
-  assert.equal(t.status, 200);
-  assert.equal(t.json.name, "Opiniones");
-  assert.equal(t.json.rest_base, "eweb_testimonial", "the same REST route as before");
-  const state = await ct("/state");
-  assert.equal(state.meta.eweb_testimonial.estrategia_web_testimonial_rating.type, "integer");
-  assert.equal(state.meta.eweb_location.estrategia_web_location_phone.label, "Teléfono");
-  assert.equal((await raw("eweb_location", "&slug=sedes")).rules.length > 0, true, "/sedes/, the es slug, as the old gettext one");
-  assert.deepEqual((await ew("/eweb_client")).json.definition.slug, { en: "clients", es: "clientes", ca: "clients" }, "stored with its slug per language; registered: the site language's");
-  const tax = await wp("/taxonomies/eweb_client_sector");
-  assert.equal(tax.status, 200);
-  assert.equal(tax.json.name, "Sectores");
-});
+    test("errors: 400 with the validator's list and nothing written; a duplicate is 409; a taxonomy already stored is 400", async () => {
+      const bad = workshop();
+      bad.name = "gment_bad";
+      bad.taxonomies = [];
+      bad.fields[0].requird = true;
+      const clash = workshop("workshops2");
+      clash.name = "gment_workshop2";
+      clash.fields = [];
+      const [r, dup, r2, nothing] = await batch(save(bad), save(workshop()), save(clash), raw("gment_bad"));
+      assert.equal(r.status, 400);
+      assert.match(r.json.data.errors.join(" | "), /requird/);
+      assert.equal(dup.status, 409, "gment_workshop already exists");
+      assert.equal(r2.status, 400, "the same taxonomy declared twice (check_all against what is stored)");
+      assert.match(r2.json.data.errors.join(" "), /gment_topic/);
+      assert.equal(nothing.json.row, null, "nothing stored");
+    });
 
-test("the special sanitizers, now field types: rating, embed, local_image and the related client", async () => {
-  const client = await wp("/eweb_client", { method: "POST", body: { title: "Cliente prueba", status: "publish" } });
-  assert.equal(client.status, 201, client.text);
-  const page = await wp("/pages", { method: "POST", body: { title: "Una página", status: "publish" } });
-  const op = await wp("/eweb_testimonial", { method: "POST", body: { title: "Opinión", status: "publish", meta: { estrategia_web_testimonial_rating: 9, estrategia_web_testimonial_client: page.json.id } } });
-  assert.equal(op.status, 201, op.text);
-  assert.equal(op.json.meta.estrategia_web_testimonial_rating, 5, "clamped to 5");
-  assert.equal(op.json.meta.estrategia_web_testimonial_client, 0, "a page is not a client");
-  const ok = await wp(`/eweb_testimonial/${op.json.id}`, { method: "POST", body: { meta: { estrategia_web_testimonial_client: client.json.id, estrategia_web_testimonial_rating: -2 } } });
-  assert.equal(ok.json.meta.estrategia_web_testimonial_client, client.json.id);
-  assert.equal(ok.json.meta.estrategia_web_testimonial_rating, 0);
-  // embed and local_image: the location template used them up to 1.7.0 (its map embed and static map
-  // path); since 2.0.0 they are derived there, so they are measured on a type of the site's own.
-  const place = { prefix: "gment_", name: "gment_place", labels: { singular: "Lugar", plural: "Lugares" }, fields: [{ name: "gment_embed", type: "embed", label: "Mapa" }, { name: "gment_picture", type: "local_image", label: "Imagen" }] };
-  const saved = await ew("", { method: "POST", body: { definition: place } });
-  assert.equal(saved.status, 201, saved.text);
-  await wp("/types"); // Registered from the next request.
-  const iframe = '<iframe src="https://www.google.com/maps/embed?pb=!1m18&amp;x=1" width="600"></iframe>';
-  const loc = await wp("/gment_place", { method: "POST", body: { title: "Sede", status: "publish", meta: { gment_embed: iframe, gment_picture: "https://otro.test/mapa.webp" } } });
-  assert.equal(loc.status, 201, loc.text);
-  assert.equal(loc.json.meta.gment_embed, "https://www.google.com/maps/embed?pb=!1m18&x=1");
-  assert.equal(loc.json.meta.gment_picture, "", "another domain: refused");
-  const theme = await wp(`/gment_place/${loc.json.id}`, { method: "POST", body: { meta: { gment_picture: "./assets/maps/sede.webp" } } });
-  assert.equal(theme.json.meta.gment_picture, "assets/maps/sede.webp"); // gment_place goes with constructor-reset (after()).
-});
-
-test("protections: the internal name is fixed once there are entries; a removed field keeps its data and comes back", async () => {
-  const post = await wp("/gment_course", { method: "POST", body: { title: "Curso de pan", status: "publish", meta: { gment_teacher: "Joan", gment_hours: 20 } } });
-  assert.equal(post.status, 201, post.text);
-  const renamed = course();
-  renamed.name = "gment_class";
-  const r = await ew("/gment_course", { method: "POST", body: { definition: renamed, confirm: true } });
-  assert.equal(r.status, 400, r.text);
-  assert.match(r.json.data.errors.join(" "), /gment_course/);
-
-  const fewer = course();
-  fewer.fields = fewer.fields.filter((f) => f.name !== "gment_teacher");
-  const ask = await ew("/gment_course", { method: "POST", body: { definition: fewer } });
-  assert.equal(ask.status, 409, "a warning needs confirm");
-  assert.equal(ask.json.code, "estrategia_web_ct_confirm");
-  assert.match(ask.json.data.warnings.join(" "), /gment_teacher/);
-  assert.equal((await ew("/gment_course")).json.definition.fields.length, 2, "nothing written before confirming");
-  assert.equal((await ew("/gment_course", { method: "POST", body: { definition: fewer, confirm: true } })).status, 200);
-  assert.equal((await raw("gment_course", `&post=${post.json.id}`)).meta.gment_teacher, "Joan", "the value stays in the database");
-  const hidden = await wp(`/gment_course/${post.json.id}?context=edit`);
-  assert.equal(hidden.json.meta.gment_teacher, undefined, "and is no longer in REST");
-  assert.equal((await ew("/gment_course", { method: "POST", body: { definition: course(), confirm: true } })).status, 200);
-  const back = await wp(`/gment_course/${post.json.id}?context=edit`);
-  assert.equal(back.json.meta.gment_teacher, "Joan", "added back with the same name: it is there again");
-  assert.ok((await raw("gment_course")).revisions >= 2, "every save keeps a revision of the JSON");
-});
-
-test("a URL that moves: warned, then 301s in the redirects module; with that module off, the warning says so", async () => {
-  const moved = course();
-  moved.slug = "cursos";
-  const ask = await ew("/gment_course", { method: "POST", body: { definition: moved } });
-  assert.equal(ask.status, 409);
-  assert.match(ask.json.data.warnings.join(" "), /\/courses\/.*\/cursos\//);
-  const done = await ew("/gment_course", { method: "POST", body: { definition: moved, confirm: true } });
-  assert.equal(done.status, 200, done.text);
-  assert.ok(done.json.redirects.created >= 2, "the archive and the post: " + JSON.stringify(done.json.redirects));
-  await wp("/types/gment_course"); // A request that registers the new slug and flushes.
-  const res = await fetch(BASE + "/courses/curso-de-pan/", { redirect: "manual" });
-  assert.equal(res.status, 301);
-  assert.match(res.headers.get("location"), /\/cursos\/curso-de-pan\/$/);
-  assert.equal((await fetch(BASE + "/cursos/curso-de-pan/")).status, 200);
-
-  const { loaded } = await testApi("/modules");
-  await testApi("/modules", { method: "POST", body: { active: loaded.filter((m) => m !== "redirects") } });
-  const back = course();
-  const warn = await ew("/gment_course", { method: "POST", body: { definition: back } });
-  assert.equal(warn.status, 409);
-  assert.match(warn.json.data.warnings.join(" "), /Redirecciones|Redirects/);
-  await testApi("/modules", { method: "POST", body: { active: [...loaded] } });
-});
-
-test("deleting a type with entries is refused; switching it off keeps everything; empty, it can be deleted", async () => {
-  const del = await ew("/gment_course", { method: "DELETE" });
-  assert.equal(del.status, 409, del.text);
-  assert.equal(del.json.code, "estrategia_web_ct_has_entries");
-  assert.equal((await ew("/gment_course", { method: "POST", body: { active: false } })).json.active, false);
-  assert.equal((await wp("/types/gment_course")).status, 404, "switched off: not registered");
-  assert.equal((await raw("gment_course")).entries, 1, "its entry is still there");
-  assert.equal((await ew("/gment_course", { method: "POST", body: { active: true } })).json.active, true);
-  assert.equal((await wp("/types/gment_course")).status, 200);
-  const posts = await wp("/gment_course?status=any&context=edit");
-  for (const p of posts.json) await wp(`/gment_course/${p.id}?force=true`, { method: "DELETE" });
-  const gone = await ew("/gment_course", { method: "DELETE" });
-  assert.equal(gone.status, 200, gone.text);
-  assert.equal((await raw("gment_course")).row, null);
-});
-
-test("export and import: the JSON of GET is what POST takes back", async () => {
-  const exported = (await ew("/gment_workshop")).json.definition;
-  assert.equal((await ew("/gment_workshop", { method: "DELETE" })).status, 200);
-  const imported = await ew("", { method: "POST", body: { definition: { $schema: "../content-types.schema.json", ...exported } } });
-  assert.equal(imported.status, 201, imported.text);
-  assert.deepEqual(imported.json.definition, exported, "the same definition (the $schema of a file is dropped)");
-});
-
-test("a type defined in a file and in the database: the database wins and the file is listed as ignored", async () => {
-  await ct("/setup", { method: "POST", body: { on: true } });
-  await ct("/state");
-  const fromFile = (await ew()).json.types.find((t) => t.name === "gment_wine");
-  assert.equal(fromFile.source, "file");
-  const def = structuredClone(fromFile.definition);
-  def.labels.plural = "Vinos de la casa";
-  const r = await ew("", { method: "POST", body: { definition: def } });
-  assert.equal(r.status, 201, r.text);
-  const after = (await ew()).json.types.find((t) => t.name === "gment_wine");
-  assert.equal(after.source, "database");
-  assert.equal((await wp("/types/gment_wine")).json.name, "Vinos de la casa");
-  const state = await ct("/state");
-  assert.match((state.errors["gment_wine.json"] || []).join(" "), /base de datos|database/);
-  await ct("/setup", { method: "POST", body: { on: false } });
-});
-
-test("the migration of a 1.4.x site: its enabled types and the ones with entries, with the URLs it serves today; once", async () => {
-  await ct("/constructor-reset", { method: "POST" });
-  const legacy = await ct("/constructor-legacy", { method: "POST", body: { option: { enabled_types: ["client", "location"], rewrite_slugs: { location: "centros" } }, testimonials: 2 } });
-  assert.equal((await wp("/types/eweb_client")).status, 200, "this request migrates and registers in the same load");
-  const list = (await ew()).json.types;
-  const by = Object.fromEntries(list.map((t) => [t.name, t]));
-  assert.deepEqual(Object.keys(by).sort(), ["eweb_client", "eweb_location", "eweb_testimonial"], "project and portfolio: neither enabled nor with entries");
-  assert.equal(by.eweb_client.active, true);
-  assert.equal(by.eweb_location.active, true);
-  assert.equal(by.eweb_testimonial.active, false, "entries but not enabled: stored switched off, as before (not registered)");
-  assert.deepEqual(by.eweb_client.definition.slug, { es: "clientes" }, "the URL it served (the es gettext slug), not the template's per-language set");
-  assert.deepEqual(by.eweb_client.definition.taxonomies[0].slug, { es: "sector" });
-  assert.deepEqual(by.eweb_location.definition.slug, { es: "centros" }, "a slug fixed in rewrite_slugs is kept");
-  assert.ok((await raw("eweb_testimonial")).entries >= 2, "entries untouched (2 here, plus the one an earlier test left)");
-  assert.equal((await wp("/types/eweb_testimonial")).status, 404);
-  // Once: a definition deleted afterwards is not brought back by the migration.
-  for (const loc of (await wp("/eweb_location?status=any&context=edit&per_page=100")).json || []) await wp(`/eweb_location/${loc.id}?force=true`, { method: "DELETE" }); // An earlier test's location.
-  const del = await ew("/eweb_location", { method: "DELETE" });
-  assert.equal(del.status, 200, del.text);
-  await wp("/types");
-  assert.equal((await ew("/eweb_location")).status, 404, "not migrated again");
-  assert.equal(legacy.testimonials.length, 2); // after(): reset() deletes them with the rest of the eweb_ posts.
+    test("a URL that moves: 301s in the redirects module, and the rules of the new one; with that module off, the warning says so", async () => {
+      // That it is warned first (409) is Changes::check(), level 1; the 409 itself, «protections».
+      // The entry is published and the slug moved in the same request: the old registration builds the old URLs (Rest's «The trap»).
+      const [entry, done] = await batch({ method: "POST", path: "/wp/v2/gment_workshop", body: { title: "Taller de pan", status: "publish" } }, save(workshop("talleres"), { confirm: true }, "/gment_workshop"));
+      assert.equal(entry.status, 201, entry.text);
+      assert.equal(done.status, 200, done.text);
+      assert.ok(done.json.redirects.created >= 2, "the archive and the post: " + JSON.stringify(done.json.redirects));
+      const [old, now] = await Promise.all([fetch(BASE + "/workshops/taller-de-pan/", { redirect: "manual" }), fetch(BASE + "/talleres/taller-de-pan/")]);
+      assert.equal(old.status, 301);
+      assert.match(old.headers.get("location"), /\/talleres\/taller-de-pan\/$/);
+      assert.equal(now.status, 200, "registered with the new slug and the rules flushed");
+      await redirects("/setup", { method: "POST", body: { on: false } }); // The modules are loaded at boot: the warning comes in the next request.
+      const [warn] = await batch(save(workshop(), {}, "/gment_workshop"));
+      assert.equal(warn.status, 409);
+      assert.match(warn.json.data.warnings.join(" "), /Redirecciones|Redirects/);
+    });
+  });
 });

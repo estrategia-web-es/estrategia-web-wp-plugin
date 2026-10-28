@@ -1,155 +1,156 @@
-// NIVEL: 2 — Playground WordPress, because it WRITES: enables and disables types in the option, creates clients, sectors and images via REST and checks the raw row in the database.
+// NIVEL: 2 — Playground WordPress. NOT LEVEL 1 BECAUSE: what is tested is what WordPress does with the site's types as the option switches them — registered or not for REST and the router, the rows kept in the database while off, the rewrite rules rebuilt for /clientes/ or a custom slug, the meta sanitized by its REST registration — and the Query rendering a sector's clients with their images the image-fit class and each client's business type through core/post-meta; the names are type-names.test.mjs (level 1). No browser.
+//
+// 28-10-2026, from ~70 s: the independent requests of each step in parallel;
+// the client Query by sector and the image fit one are ONE Query (the fit
+// cases are the sector's clients); the REST route and the post 404 once the
+// type is off (core's consequence of the 404 of the type) are gone;
+// and gone what content-types/tests/constructor-templates.test.mjs already
+// proves through REST (the rating clamped to 5, a related «client» that is
+// not a client saved as 0).
+// Round 2 (same day): the client's business type (from meta-fields.test.mjs)
+// rides on the same Query; «fields (meta) via REST» is gone — the testimonial's
+// related client and its text fields are content-types/tests/constructor-templates.test.mjs,
+// the location's street lines content-types/tests/location-box.test.mjs, its map
+// search location.test.mjs (all level 2), and what a text or an email field
+// keeps is the field type's sanitizer, the same for every type.
+// Seen red (28-10-2026) with the expected Spanish label changed («Clientes»),
+// with the restaurant expected in the hotels' Query, and with Hotel Mar's
+// business type expected as «Agencia».
+
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { reset, wp, saveCompany, seedPage, html, rawPost, upload, png, BASE, type } from "../../../tests/lib.mjs";
 
 before(reset);
 
-let before_id;
+let before_id, link;
 
-test("without `client` in enabled_types the type does not exist; once enabled it exists with its Spanish labels", async () => {
-  await saveCompany({ enabled_types: [] });
-  assert.equal((await wp(`/types/${type("client")}`)).status, 404);
-  assert.equal((await wp(`/${type("client")}`)).status, 404, "nor its REST route");
-
+test("enabling `client`: the type exists with its Spanish labels and only the enabled one; disabled, it does not exist but its content stays in the database", async () => {
   await saveCompany({ enabled_types: ["client"] });
-  const registered = await wp(`/types/${type("client")}`);
-  assert.equal(registered.status, 200);
-  assert.equal(registered.json.name, "Clientes");
-  assert.deepEqual(registered.json.taxonomies, [type("client_sector")]);
-  assert.equal((await wp(`/types/${type("testimonial")}`)).status, 404, "only the enabled one");
-});
-
-test("disabling the type does NOT delete its content, and re-enabling it finds it still there", async () => {
-  await saveCompany({ enabled_types: ["client"] });
-  const created = await wp(`/${type("client")}`, { method: "POST", body: { title: "Cliente de antes", status: "publish", meta: { estrategia_web_client_url: "https://antes.test" } } });
+  // One GET of every type (round 2): the client with its labels, and the testimonial absent.
+  const [all, created] = await Promise.all([
+    wp("/types"),
+    wp(`/${type("client")}`, { method: "POST", body: { title: "Cliente de antes", status: "publish", meta: { estrategia_web_client_url: "https://antes.test" } } }),
+  ]);
+  const registered = all.json[type("client")];
+  assert.ok(registered, "the client type is registered: " + Object.keys(all.json ?? {}).join(", "));
+  assert.equal(registered.name, "Clientes");
+  assert.deepEqual(registered.taxonomies, [type("client_sector")]);
+  assert.equal(type("testimonial") in all.json, false, "only the enabled one");
   assert.equal(created.status, 201, created.text);
   before_id = created.json.id;
+  link = created.json.link;
 
   await saveCompany({ enabled_types: [] });
-  assert.equal((await wp(`/${type("client")}/${before_id}`)).status, 404, "disabled, WordPress does not know it");
-  const raw = await rawPost(before_id);
+  // Its REST route and its post going 404 too are core's consequence of the type not being registered.
+  const [gone, raw] = await Promise.all([wp(`/types/${type("client")}`), rawPost(before_id)]);
+  assert.equal(gone.status, 404, "disabled, WordPress does not know it");
   assert.equal(raw.post_type, type("client"), "but the row is still in wp_posts");
   assert.equal(raw.post_status, "publish");
+});
 
+test("re-enabled, it finds its content with its fields, at the Spanish slug (/clientes/), and the single page responds", async () => {
   await saveCompany({ enabled_types: ["client"] });
-  const back = await wp(`/${type("client")}/${before_id}`);
+  const [back, page] = await Promise.all([wp(`/${type("client")}/${before_id}`), html(link)]);
   assert.equal(back.status, 200);
   assert.equal(back.json.title.rendered, "Cliente de antes");
   assert.equal(back.json.meta.estrategia_web_client_url, "https://antes.test", "with its fields");
-});
-
-test("the public slug is the Spanish one (/clientes/) and the single page responds after enabling the type", async () => {
-  const back = await wp(`/${type("client")}/${before_id}`);
   assert.match(back.json.link, /\/clientes\/cliente-de-antes\/$/);
-  const page = await html(back.json.link);
   assert.equal(page.status, 200, "the URL rules were rebuilt on their own when enabling");
   assert.match(page.text, /Cliente de antes/);
 });
 
-test("fields (meta) via REST: type and sanitizing (rating 1-5, email, URL)", async () => {
-  await saveCompany({ enabled_types: ["client", "testimonial", "location"] });
-  const t = await wp(`/${type("testimonial")}`, { method: "POST", body: { title: "Testimonial", content: "Very good", status: "publish", meta: { estrategia_web_testimonial_author: "Ana <b>", estrategia_web_testimonial_rating: 9, estrategia_web_testimonial_client: before_id } } });
-  assert.equal(t.status, 201, t.text);
-  assert.equal(t.json.meta.estrategia_web_testimonial_author, "Ana");
-  assert.equal(t.json.meta.estrategia_web_testimonial_rating, 5, "out of range is clamped to 5");
-  assert.equal(t.json.meta.estrategia_web_testimonial_client, before_id);
-
-  const t2 = await wp(`/${type("testimonial")}`, { method: "POST", body: { title: "Another", status: "publish", meta: { estrategia_web_testimonial_client: t.json.id } } });
-  assert.equal(t2.json.meta.estrategia_web_testimonial_client, 0, "an id that is not a client is not saved");
-
-  // 2.0.0: the street keeps its two lines (\r\n from a browser becomes \n); the old free texts are gone.
-  const l = await wp(`/${type("location")}`, { method: "POST", body: { title: "Palma location", status: "publish", meta: { estrategia_web_location_email: "bad", estrategia_web_location_street: "Edificio Sol\r\nCalle 1", estrategia_web_location_map_query: "  Palma <b>Centro</b> " } } });
-  assert.equal(l.status, 201, l.text);
-  assert.equal(l.json.meta.estrategia_web_location_email, "");
-  assert.equal(l.json.meta.estrategia_web_location_street, "Edificio Sol\nCalle 1");
-  assert.equal(l.json.meta.estrategia_web_location_map_query, "Palma Centro");
-  assert.equal("estrategia_web_location_address" in l.json.meta, false, "retired in 2.0.0");
-});
-
-test("a Query (core/query) of `client` filtered by client_sector renders those of that sector with title and image", async () => {
-  await saveCompany({ enabled_types: ["client"] });
-  const hotel = await wp(`/${type("client_sector")}`, { method: "POST", body: { name: "Hoteles" } });
-  const restaurants = await wp(`/${type("client_sector")}`, { method: "POST", body: { name: "Restaurantes" } });
-  assert.equal(hotel.status, 201, hotel.text);
-
-  const make = async (title, sector, color) => {
-    const img = await upload(`logo-${sector}-${title.length}.png`, "image/png", png(4, 2, color));
-    assert.equal(img.status, 201, img.text);
-    const c = await wp(`/${type("client")}`, { method: "POST", body: { title, status: "publish", [type("client_sector")]: [sector], featured_media: img.json.id } });
-    assert.equal(c.status, 201, c.text);
-    return { id: c.json.id, img: img.json.source_url };
-  };
-  const a = await make("Hotel Sol", hotel.json.id, [200, 0, 0]);
-  const b = await make("Hotel Mar", hotel.json.id, [0, 200, 0]);
-  const c = await make("Restaurante Luna", restaurants.json.id, [0, 0, 200]);
-
-  const query = JSON.stringify({ queryId: 7, query: { perPage: 10, pages: 0, offset: 0, postType: type("client"), order: "asc", orderBy: "title", inherit: false, taxQuery: { [type("client_sector")]: [hotel.json.id] } } });
-  const page = await seedPage(`<!-- wp:query ${query} -->
+// ONE Query of clients filtered by sector, for both tests: the sector's clients with their images, and
+// the image fit (Hotel Sol «contain», Hotel Mar by default; Restaurante Luna, out of the sector, sends
+// a value that is not one of the two).
+let queries;
+const clientQuery = () =>
+  (queries ??= (async () => {
+    const [hotel, restaurants, ...imgs] = await Promise.all([
+      wp(`/${type("client_sector")}`, { method: "POST", body: { name: "Hoteles" } }),
+      wp(`/${type("client_sector")}`, { method: "POST", body: { name: "Restaurantes" } }),
+      upload("logo-hotel-sol.png", "image/png", png(4, 2, [200, 0, 0])),
+      upload("logo-hotel-mar.png", "image/png", png(4, 2, [0, 200, 0])),
+    ]);
+    assert.equal(hotel.status, 201, hotel.text);
+    for (const img of imgs) assert.equal(img.status, 201, img.text);
+    const client = async (title, body) => {
+      const c = await wp(`/${type("client")}`, { method: "POST", body: { title, status: "publish", ...body } });
+      assert.equal(c.status, 201, c.text);
+      return c.json;
+    };
+    const sector = { queryId: 7, query: { perPage: 10, pages: 0, offset: 0, postType: type("client"), order: "asc", orderBy: "title", inherit: false, taxQuery: { [type("client_sector")]: [hotel.json.id] } } };
+    const [sol, mar, luna, page] = await Promise.all([
+      client("Hotel Sol", { [type("client_sector")]: [hotel.json.id], featured_media: imgs[0].json.id, meta: { estrategia_web_client_image_fit: "contain", estrategia_web_client_business_type: "  Agencia de <b>alquiler</b> vacacional " } }),
+      client("Hotel Mar", { [type("client_sector")]: [hotel.json.id], featured_media: imgs[1].json.id, meta: { estrategia_web_client_business_type: "Hotel" } }),
+      client("Restaurante Luna", { [type("client_sector")]: [restaurants.json.id], meta: { estrategia_web_client_image_fit: "stretch" } }),
+      seedPage(
+        `<!-- wp:query ${JSON.stringify(sector)} -->
 <div class="wp-block-query"><!-- wp:post-template -->
 <!-- wp:post-featured-image /-->
 <!-- wp:post-title /-->
+<!-- wp:paragraph ${JSON.stringify({ className: "t-tipo", metadata: { bindings: { content: { source: "core/post-meta", args: { key: "estrategia_web_client_business_type" } } } } })} -->
+<p class="t-tipo">x</p>
+<!-- /wp:paragraph -->
 <!-- /wp:post-template --></div>
-<!-- /wp:query -->`, "clientes-hoteles");
+<!-- /wp:query -->`,
+        "clientes-consultas"
+      ),
+    ]);
+    const { text } = await html(page.url);
+    const list = text.match(/<ul[^>]*wp-block-post-template[\s\S]*?<\/ul>/)?.[0];
+    assert.ok(list, "the query renders its list");
+    return { imgs: imgs.map((i) => i.json.source_url), list, sol, mar, luna };
+  })());
 
-  const { text } = await html(page.url);
-  const list = text.match(/<ul[^>]*wp-block-post-template[\s\S]*?<\/ul>/)?.[0];
-  assert.ok(list, "the query renders its list");
+test("a Query (core/query) of `client` filtered by client_sector renders those of that sector with title and image", async () => {
+  const { imgs, list } = await clientQuery();
   const items = [...list.matchAll(/<li[\s\S]*?<\/li>/g)].map((m) => m[0]);
   assert.equal(items.length, 2, "only the two from the sector");
   assert.match(items[0], /Hotel Mar/, "ordered by title");
   assert.match(items[1], /Hotel Sol/);
   const file = (u) => u.split("/").pop().replace(/\.png$/, "");
-  assert.ok(items[0].includes(file(b.img)) && /<img/.test(items[0]), "with its featured image");
-  assert.ok(items[1].includes(file(a.img)));
-  assert.ok(!list.includes("Restaurante Luna") && !list.includes(file(c.img)), "the one from another sector does not appear");
-  assert.ok(BASE);
+  assert.ok(items[0].includes(file(imgs[1])) && /<img/.test(items[0]), "with its featured image");
+  assert.ok(items[1].includes(file(imgs[0])));
+  assert.ok(!list.includes("Restaurante Luna"), "the one from another sector does not appear");
+});
+
+test("estrategia_web_client_image_fit (0.2.0): 'cover' by default, sanitized to cover|contain, and 'contain' puts has-image-fit-contain on the Query's <li>", async () => {
+  const { list, sol, mar, luna } = await clientQuery();
+  assert.equal(sol.meta.estrategia_web_client_image_fit, "contain");
+  assert.equal(mar.meta.estrategia_web_client_image_fit, "cover", "by default");
+  assert.equal(luna.meta.estrategia_web_client_image_fit, "cover", "another value is sanitized to cover");
+  const li = (title) => list.match(new RegExp(`<li[^>]*>(?:(?!</li>)[\\s\\S])*${title}`))?.[0].match(/<li[^>]*>/)[0];
+  assert.match(li("Hotel Sol"), /\bhas-image-fit-contain\b/);
+  assert.doesNotMatch(li("Hotel Mar"), /has-image-fit/);
+});
+
+// Moved here from meta-fields.test.mjs (round 2, 28-10-2026): the same clients, the same Query.
+test("the client's business type: sanitized via REST, and core/post-meta renders each one's in the Query (the cards)", async () => {
+  const { list, sol } = await clientQuery();
+  assert.equal(sol.meta.estrategia_web_client_business_type, "Agencia de alquiler vacacional");
+  const li = (title) => list.match(new RegExp(`<li[^>]*>(?:(?!</li>)[\\s\\S])*${title}[\\s\\S]*?</li>`))?.[0] ?? "";
+  assert.match(li("Hotel Mar"), /<p class="t-tipo[^"]*">Hotel<\/p>/);
+  assert.match(li("Hotel Sol"), /<p class="t-tipo[^"]*">Agencia de alquiler vacacional<\/p>/);
 });
 
 test("rewrite_slugs (0.2.0): moves the client archive to /cliente/ without a filter, the /clientes/ page is left free, and empty goes back to the usual one", async () => {
   await saveCompany({ enabled_types: ["client"], rewrite_slugs: { client: "cliente" } });
-  const c = await wp(`/${type("client")}`, { method: "POST", body: { title: "Cliente movido", status: "publish" } });
+  const [c] = await Promise.all([
+    wp(`/${type("client")}`, { method: "POST", body: { title: "Cliente movido", status: "publish" } }),
+    seedPage("<!-- wp:paragraph --><p>own-clients-page</p><!-- /wp:paragraph -->", "clientes"),
+  ]);
   assert.equal(c.status, 201, c.text);
   assert.match(c.json.link, /\/cliente\/cliente-movido\/$/);
-  const single = await html(c.json.link);
+  const [single, archive, own] = await Promise.all([html(c.json.link), html(BASE + "/cliente/"), html(BASE + "/clientes/")]);
   assert.equal(single.status, 200, "the rules were rebuilt when the slug changed");
   assert.match(single.text, /Cliente movido/);
-  assert.equal((await html(BASE + "/cliente/")).status, 200, "the archive, at /cliente/");
-
-  await seedPage("<!-- wp:paragraph --><p>own-clients-page</p><!-- /wp:paragraph -->", "clientes");
-  const own = await html(BASE + "/clientes/");
+  assert.equal(archive.status, 200, "the archive, at /cliente/");
   assert.equal(own.status, 200);
   assert.match(own.text, /own-clients-page/, "/clientes/ is the PAGE, not the archive");
 
   await saveCompany({ rewrite_slugs: { client: "" } });
-  const back = await wp(`/${type("client")}/${c.json.id}`);
-  assert.match(back.json.link, /\/clientes\/cliente-movido\/$/, "empty = the usual slug");
-  assert.equal((await html(back.json.link)).status, 200);
-});
-
-test("estrategia_web_client_image_fit (0.2.0): 'cover' by default, sanitized to cover|contain, and 'contain' puts has-image-fit-contain on the Query's <li>", async () => {
-  await saveCompany({ enabled_types: ["client"] });
-  const make = async (title, meta) => {
-    const c = await wp(`/${type("client")}`, { method: "POST", body: { title, status: "publish", meta } });
-    assert.equal(c.status, 201, c.text);
-    return c.json;
-  };
-  const logo = await make("Fit Logo", { estrategia_web_client_image_fit: "contain" });
-  const photo = await make("Fit Photo", {});
-  const odd = await make("Fit Odd", { estrategia_web_client_image_fit: "stretch" });
-  assert.equal(logo.meta.estrategia_web_client_image_fit, "contain");
-  assert.equal(photo.meta.estrategia_web_client_image_fit, "cover", "by default");
-  assert.equal(odd.meta.estrategia_web_client_image_fit, "cover", "another value is sanitized to cover");
-
-  const query = JSON.stringify({ queryId: 8, query: { perPage: 10, pages: 0, offset: 0, postType: type("client"), order: "asc", orderBy: "title", inherit: false, search: "Fit " } });
-  const page = await seedPage(`<!-- wp:query ${query} -->
-<div class="wp-block-query"><!-- wp:post-template -->
-<!-- wp:post-title /-->
-<!-- /wp:post-template --></div>
-<!-- /wp:query -->`, "clientes-fit");
-  const { text } = await html(page.url);
-  const li = (title) => text.match(new RegExp(`<li[^>]*>(?:(?!</li>)[\\s\\S])*${title}`))?.[0].match(/<li[^>]*>/)[0];
-  assert.match(li("Fit Logo"), /\bhas-image-fit-contain\b/);
-  assert.doesNotMatch(li("Fit Photo"), /has-image-fit/);
-  assert.doesNotMatch(li("Fit Odd"), /has-image-fit/);
+  const back = await html(BASE + "/clientes/cliente-movido/");
+  assert.equal(back.status, 200, "empty = the usual slug, and its rules rebuilt");
+  assert.match(back.text, /Cliente movido/);
 });

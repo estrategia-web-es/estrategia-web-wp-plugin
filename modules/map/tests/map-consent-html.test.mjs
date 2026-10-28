@@ -1,4 +1,4 @@
-// NIVEL: 2 — Playground WordPress, because what is tested is the HTML the server sends for a page with a map when the cookie notice is on: that only exists rendered by WordPress. NOT LEVEL 3: it is read from the served HTML, without running its JavaScript; what needs the browser (requests, what is seen, the iframe after accepting) is map-consent.test.mjs.
+// NIVEL: 2 — Playground WordPress. NOT LEVEL 1 BECAUSE: what is tested is the HTML the server sends for a page with a map when the cookie notice is on, and that only exists rendered by WordPress (the map block and the notice in wp_footer). NOT LEVEL 3: it is read from the served HTML, without running its JavaScript; what needs the browser (requests, what is seen, the iframe after accepting) is map-consent.test.mjs.
 //
 // estrategia-web/map WITH the cookie notice, in the served HTML (the notice
 // is printed in wp_footer with «hidden» and its JS opens it):
@@ -17,8 +17,10 @@
 // render.php and the notice's.
 //
 // Seen red (25-10-2026): expecting the category «statistics», step 1 fails;
-// restored, green.
-import { test, before, after } from "node:test";
+// restored, green. 28-10-2026: the three setup requests go together (the
+// seed only writes posts, consent-setup an option); seen red again the
+// same way.
+import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { reset, testApi, page, BASE } from "../../../tests/lib.mjs";
 import { BLOCK_MODULES } from "../../../tests/browser.mjs";
@@ -26,14 +28,16 @@ import { BLOCK_MODULES } from "../../../tests/browser.mjs";
 let served;
 before(async () => {
   await reset();
-  await testApi("/modules", { method: "POST", body: { active: [...BLOCK_MODULES, "consent"] } });
-  const res = await fetch(`${BASE}/wp-json/estrategia-web-map-test/v1/seed`, { method: "POST" });
+  // Independent of each other (the seed only writes posts; consent-setup an option).
+  const [, res] = await Promise.all([
+    testApi("/modules", { method: "POST", body: { active: [...BLOCK_MODULES, "consent"] } }),
+    fetch(`${BASE}/wp-json/estrategia-web-map-test/v1/seed`, { method: "POST" }),
+    testApi("/consent-setup", { method: "POST", body: { categories: ["maps"] } }),
+  ]);
   assert.ok(res.ok, `map seed -> ${res.status}`);
-  await testApi("/consent-setup", { method: "POST", body: { categories: ["maps"] } });
   served = await page("/prueba-mapa-estatico/");
   assert.equal(served.status, 200);
 });
-after(() => testApi("/modules", { method: "POST", body: { active: null } }));
 
 test("1. the notice is in the HTML and offers «maps»", () => {
   const notice = served.document.querySelector("#estrategia-web-consent");

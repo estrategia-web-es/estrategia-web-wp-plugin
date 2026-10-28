@@ -1,5 +1,7 @@
-// NIVEL: 2 — Playground WordPress, because the attribute is rendered by render_callback when serving the page.
+// NIVEL: 2 — Playground WordPress. NOT LEVEL 1 BECAUSE: the attribute is written by the blocks' render_callback when WordPress serves the page (WP_Block, the block attributes as WordPress parses them from the saved content, its escaping functions).
 //
+// One request seeds (seed(), with the reset) and one reads the page: every
+// case reads the same HTML (28-10-2026).
 // autocomplete (0.2.2, WCAG 1.3.5 «Identify Input Purpose»).
 // Born from the Lavandería audit (06-10-2026): on Contacto, name and
 // company did not have it (email and phone did, fixed by type).
@@ -9,9 +11,12 @@
 // - also in the dropdown and the text area;
 // - a value with quotes or odd characters does not leak into the HTML.
 // Seen failing on 06-10-2026 before the code: name without autocomplete.
+// Seen red (28-10-2026), every test, with these mutants of Blocks::autocomplete()
+// at once: uppercased values, no character check, no default for email, and
+// «on» guessed for text fields.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { reset, seedPage, loadForm, TEAM } from "./lib.mjs";
+import { seed, loadForm, TEAM } from "./lib.mjs";
 
 const FORM = `<!-- wp:estrategia-web-forms/form {"formId":"autocompletar","title":"Autocompletar"} -->
 <!-- wp:estrategia-web-forms/text {"label":"Nombre","name":"nombre","autocomplete":"name"} /-->
@@ -30,9 +35,8 @@ const FORM = `<!-- wp:estrategia-web-forms/form {"formId":"autocompletar","title
 
 let html;
 before(async () => {
-  await reset();
-  const page = await seedPage(FORM, "autocompletar");
-  ({ html } = await loadForm(page.url));
+  const { pages } = await seed({ pages: [{ key: "page", slug: "autocompletar", content: FORM }] });
+  ({ html } = await loadForm(pages.page.url));
 });
 
 /** The autocomplete of a field's control (input, select or textarea); null if it has none. */

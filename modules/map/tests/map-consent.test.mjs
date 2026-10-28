@@ -27,8 +27,11 @@
 // its src and that it is seen, not the request.
 //
 // Seen red (25-10-2026): expecting the static map wider than 2000 px, step 1
-// fails («the static map is not seen»); restored, green.
-import { test, before, after } from "node:test";
+/// fails («the static map is not seen»); restored, green.
+// 28-10-2026: the setup requests go together and the two visitors (accept
+// all; «Ver mapa») run at the same time, each in its own context. Seen red
+// (28-10-2026) with the embed expected at …/maps/embed2 (step 2).
+import { test, before } from "node:test";
 import { withBrowser, assert, BASE_URL, BLOCK_MODULES } from "../../../tests/browser.mjs";
 import { reset, testApi } from "../../../tests/lib.mjs";
 
@@ -37,12 +40,14 @@ const OWN_HOST = new URL(BASE_URL).host;
 
 before(async () => {
   await reset();
-  await testApi("/modules", { method: "POST", body: { active: [...BLOCK_MODULES, "consent"] } });
-  const res = await fetch(`${BASE_URL}/wp-json/estrategia-web-map-test/v1/seed`, { method: "POST" });
+  // Independent of each other (the seed only writes posts; consent-setup an option).
+  const [, res] = await Promise.all([
+    testApi("/modules", { method: "POST", body: { active: [...BLOCK_MODULES, "consent"] } }),
+    fetch(`${BASE_URL}/wp-json/estrategia-web-map-test/v1/seed`, { method: "POST" }),
+    testApi("/consent-setup", { method: "POST", body: { categories: ["maps"] } }),
+  ]);
   assert.ok(res.ok, `map seed -> ${res.status}`);
-  await testApi("/consent-setup", { method: "POST", body: { categories: ["maps"] } });
 });
-after(() => testApi("/modules", { method: "POST", body: { active: null } }));
 
 /** A page in a new context that aborts and records every request to another host. */
 async function guarded(newPage) {
@@ -61,6 +66,12 @@ async function guarded(newPage) {
 
 test("map + notice: nothing to third parties before consent; the iframe after «Accept all» and after «Ver mapa»", () =>
   withBrowser(async ({ newPage }) => {
+    // The two visitors are independent (each its own context): at the same time (28-10-2026).
+    await Promise.all([acceptAll(newPage), showMap(newPage)]);
+  })
+);
+
+async function acceptAll(newPage) {
     // 1. Unanswered.
     const page = await guarded(newPage);
     await page.goto(PAGE, { waitUntil: "networkidle" });
@@ -86,7 +97,9 @@ test("map + notice: nothing to third parties before consent; the iframe after «
     assert.match(await iframe.getAttribute("src"), /^https:\/\/www\.google\.com\/maps\/embed/, "after accepting, the iframe is not Google Maps'");
     assert.ok(await iframe.isVisible(), "after accepting, the iframe is not seen");
     await page.context().close();
+}
 
+async function showMap(newPage) {
     // 3. «Ver mapa» with the notice unanswered → that map, and «maps» granted.
     const other = await guarded(newPage);
     await other.goto(PAGE, { waitUntil: "networkidle" });
@@ -97,5 +110,4 @@ test("map + notice: nothing to third parties before consent; the iframe after «
     assert.ok(await map.locator("iframe").isVisible(), "«Ver mapa» does not show the iframe");
     assert.ok(await other.evaluate(() => window.estrategiaWebConsent?.has("maps")), "«Ver mapa» does not grant «maps»");
     await other.context().close();
-  })
-);
+}

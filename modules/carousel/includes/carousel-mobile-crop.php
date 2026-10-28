@@ -68,7 +68,7 @@
  *   and those are core/image.
  * - The trap: the first visit after publishing pays for the crop (a few
  *   hundred ms per image and width). After deploying, open the home page once.
- * - Test: the theme's tests/carousel-mobile-crop.test.mjs (level 3) and
+ * - Test: modules/carousel/tests/carousel.test.mjs (level 3; the mobile crop part is in ./images.mjs) and
  *   modules/carousel/tests/mobile-crop-pure.test.mjs (level 1, the geometry).
  */
 

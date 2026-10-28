@@ -58,6 +58,41 @@ function estrategia_web_test_real_wpml(): bool {
 		&& in_array( 'sitepress-multilingual-cms/sitepress.php', (array) get_option( 'active_plugins', array() ), true );
 }
 
+// For /ping?timing (below): when the mu-plugins load, when the plugins have loaded, at init.
+$GLOBALS['estrategia_web_test_t_mu'] = microtime( true );
+add_action( 'plugins_loaded', static fn() => $GLOBALS['estrategia_web_test_t_plugins'] = microtime( true ), PHP_INT_MIN );
+add_action( 'init', static fn() => $GLOBALS['estrategia_web_test_t_init'] = microtime( true ), PHP_INT_MIN );
+
+// A RESET request loads every module (28-10-2026). Modules are loaded when the plugin loads,
+// from the saved list, BEFORE any route runs: a file that left the list without forms made the
+// next file's forms /reset die with «Class "EstrategiaWeb\Forms\Migrations" not found» (seen red
+// in the first run with shards, consent-links, where the order of the files is no longer fixed).
+// Any module's /reset (…-test/v1/reset) reads the list as not saved, i.e. every default module;
+// the reset itself deletes the saved list for the requests after it. Seed routes are left alone
+// on purpose: tests/browser.mjs seeds with ONLY the block modules on.
+// The same for /setup (any module's): it runs /reset first and then seeds through module code
+// (consent-setup needs the consent module: «Class "EstrategiaWeb\Site\Consent" not found» when
+// map.test.mjs, which leaves only the block modules on, ran before consent-browser.test.mjs).
+// The filter only lives until plugins_loaded, when the modules are already loaded: after that
+// the request reads and WRITES the real list (with it, an update_option of the list inside the
+// request updated 0 rows and saved nothing).
+if ( preg_match( '#/wp-json/estrategia-web-[a-z-]+-test/v1/(reset|setup)/?(\?|$)#', (string) ( $_SERVER['REQUEST_URI'] ?? '' ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+	add_filter( 'pre_option_estrategia_web_modules', '__return_null' );
+	add_action( 'plugins_loaded', static fn() => remove_filter( 'pre_option_estrategia_web_modules', '__return_null' ), PHP_INT_MIN );
+}
+
+// ?ew-test-modules=a,b,c (28-10-2026): THIS request reads that as the saved module list, through
+// get_option() like a saved one, without writing anything. A test that reads several screens, each
+// with another list (tests/menu.test.mjs, tests/settings-page.test.mjs), reads them all at once
+// instead of «save the list, read, save the next». It does not go through update_option, so it
+// does not write _known (what saving does is tests/modules-page.test.mjs). Edge case: the list
+// is taken as given, also without core modules («site»), exactly as a saved list would be.
+// The trap: the links on the page do not carry the parameter; following one reads the real list.
+if ( isset( $_GET['ew-test-modules'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$estrategia_web_test_modules = array_values( array_filter( explode( ',', sanitize_text_field( wp_unslash( $_GET['ew-test-modules'] ) ) ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	add_filter( 'pre_option_estrategia_web_modules', static fn() => $estrategia_web_test_modules );
+}
+
 // WPLANG does not work: sanitize_option() rejects it if the core language pack is not downloaded.
 // Except with ?wpml-double=<code>: then nothing forces the locale (WordPress
 // says en_US, as with WPLANG empty) and a WPML double says the language
@@ -120,6 +155,29 @@ if ( ! isset( $_GET['wpml-double'] ) ) { // phpcs:ignore WordPress.Security.Nonc
 		},
 		5
 	);
+	// &wpml-double-switcher (28-10-2026): es and en as wpml_active_languages returns them (the
+	// current one «active»), so the language switcher block renders on the normal WordPress.
+	// For modules/language-switcher/tests/language-switcher-browser.test.mjs, which tests the
+	// block's JavaScript; the URLs here are NOT WPML's (the real-WPML level 2 test checks those).
+	// Opt-in because forms and content-types read this filter too, and their tests with the
+	// double expect no language list.
+	if ( isset( $_GET['wpml-double-switcher'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		add_filter(
+			'wpml_active_languages',
+			static function () {
+				$out = array();
+				foreach ( array( 'es' => 'Español', 'en' => 'English' ) as $code => $name ) {
+					$out[ $code ] = array(
+						'code'        => $code,
+						'native_name' => $name,
+						'active'      => $code === $GLOBALS['estrategia_web_test_wpml'] ? 1 : 0,
+						'url'         => home_url( 'es' === $code ? '/' : '/en/' ),
+					);
+				}
+				return $out;
+			}
+		);
+	}
 }
 add_filter( 'wp_is_application_passwords_available', '__return_true' );
 
@@ -189,7 +247,30 @@ add_action(
 			register_rest_route( $ns, $path, array( 'methods' => $methods, 'callback' => $cb, 'permission_callback' => '__return_true' ) );
 		};
 
-		$route( '/ping', 'GET', static fn() => array( 'ok' => true ) );
+		// ?timing: where a request's time goes, in ms from PHP's start (28-10-2026: every request to
+		// Playground costs ~1,1 s whatever it does; this says how much is WordPress before any
+		// plugin, how much the plugins, and how much the rest until the route runs).
+		$route(
+			'/ping',
+			'GET',
+			static function ( WP_REST_Request $r ) {
+				if ( null === $r->get_param( 'timing' ) ) {
+					return array( 'ok' => true );
+				}
+				$start = (float) $_SERVER['REQUEST_TIME_FLOAT']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+				$ms    = static fn( $t ) => null === $t ? null : (int) round( ( $t - $start ) * 1000 );
+				return array(
+					'ok'       => true,
+					'mu'       => $ms( $GLOBALS['estrategia_web_test_t_mu'] ?? null ),
+					'plugins'  => $ms( $GLOBALS['estrategia_web_test_t_plugins'] ?? null ),
+					'init'     => $ms( $GLOBALS['estrategia_web_test_t_init'] ?? null ),
+					'route'    => $ms( microtime( true ) ),
+					'included' => count( get_included_files() ),
+					// Measured 28-10-2026: mu ~800 ms (WordPress and the SQLite drop-in, before any
+					// plugin; the opcache is Playground's file cache only), plugins +150, route +100.
+				);
+			}
+		);
 
 		// 1.4.0, languages (tests/wplang.test.mjs, with ?wpml-double=<code>):
 		// a plugin text and a URL slug as THIS request translates them, the
@@ -356,6 +437,7 @@ add_action(
 				delete_option( 'estrategia_web_site_test_webp' );
 				delete_option( 'estrategia_web_site_test_external_links' );
 				delete_option( 'estrategia_web_test_suite' ); // The forms tests' marker (es_ES comes back).
+				delete_option( 'estrategia_web_forms_test_locale' ); // And the locale a forms test may force (28-10-2026: it carried into the next file).
 				delete_option( 'estrategia_web_social_links' ); // No list: the migration of the fixed fields runs again.
 				delete_option( 'estrategia_web_modules' ); // 1.1.0: all modules, as freshly installed.
 				delete_option( 'estrategia_web_modules_known' );
@@ -390,6 +472,91 @@ add_action(
 					$wpdb->query( "DELETE FROM {$wpdb->term_taxonomy} WHERE term_taxonomy_id IN ($in)" ); // phpcs:ignore
 				}
 				return array( 'ok' => true );
+			}
+		);
+
+		// 28-10-2026: a test file's whole before() in ONE request (a request
+		// costs ~1,3 s, it is WordPress booting; the work inside is nothing).
+		// POST {modules?, company?, consent?, options?, pages?}: runs /reset
+		// exactly as that route does (dispatched inside this request, no HTTP),
+		// then, in this order and only what is given:
+		//   modules  "all" (every module on disk, Default: off ones too) or a
+		//            list, as POST /modules;
+		//   company  saved through /wp/v2/settings as the administrator, as
+		//            saveCompany() in tests/lib.mjs (same sanitize);
+		//   consent  as POST /consent-setup;
+		//   options  {name: value}; null deletes the option;
+		//   pages    [{slug, content, title?}], each as POST /page.
+		// Returns {available, pages: [{id, url}]}.
+		// How to maintain: a new seed is one more key here, dispatching to the
+		// route that already does it. What /reset does is NOT changed here
+		// (every test file calls it). The trap: a route dispatched inside this
+		// request sees this request's modules (the ones loaded BEFORE «modules»
+		// was saved), so nothing here may depend on a module just switched on.
+		$route(
+			'/setup',
+			'POST',
+			static function ( WP_REST_Request $r ) {
+				$call = static function ( string $method, string $path, array $body ) {
+					$req = new WP_REST_Request( $method, $path );
+					$req->set_header( 'Content-Type', 'application/json' );
+					$req->set_body( (string) wp_json_encode( $body ) );
+					$res = rest_do_request( $req );
+					if ( $res->is_error() || $res->get_status() >= 300 ) {
+						throw new RuntimeException( $path . ' -> ' . $res->get_status() . ' ' . wp_json_encode( $res->get_data() ) );
+					}
+					return $res->get_data();
+				};
+				$ns = '/estrategia-web-site-test/v1';
+				try {
+					$call( 'POST', $ns . '/reset', array() );
+					$available = array_keys( \EstrategiaWeb\Modules::available() );
+					$modules   = $r->get_param( 'modules' );
+					if ( null !== $modules ) {
+						$call( 'POST', $ns . '/modules', array( 'active' => 'all' === $modules ? $available : (array) $modules ) );
+					}
+					if ( null !== $r->get_param( 'company' ) ) {
+						wp_set_current_user( 1 );
+						$call( 'POST', '/wp/v2/settings', array( 'estrategia_web_site' => (array) $r->get_param( 'company' ) ) );
+					}
+					if ( null !== $r->get_param( 'consent' ) ) {
+						$call( 'POST', $ns . '/consent-setup', (array) $r->get_param( 'consent' ) );
+					}
+					foreach ( (array) $r->get_param( 'options' ) as $name => $value ) {
+						if ( null === $value ) {
+							delete_option( (string) $name );
+						} else {
+							update_option( (string) $name, $value );
+						}
+					}
+					$pages = array();
+					foreach ( (array) $r->get_param( 'pages' ) as $p ) {
+						$pages[] = $call( 'POST', $ns . '/page', (array) $p );
+					}
+				} catch ( RuntimeException $e ) {
+					return new WP_Error( 'setup', $e->getMessage(), array( 'status' => 500 ) );
+				}
+				return array(
+					'available' => $available,
+					'pages'     => $pages,
+				);
+			}
+		);
+
+		// 28-10-2026: GET /modules plus what the loaded modules REGISTERED in
+		// this request: the plugin's block names (estrategia-web*, and the old
+		// armazon/* aliases) and the REST namespaces. One request instead of
+		// one /wp/v2/block-types call per block (tests/modules-page.test.mjs).
+		$route(
+			'/registered',
+			'GET',
+			static function () {
+				$modules = rest_do_request( new WP_REST_Request( 'GET', '/estrategia-web-site-test/v1/modules' ) )->get_data();
+				$blocks  = array_keys( WP_Block_Type_Registry::get_instance()->get_all_registered() );
+				return $modules + array(
+					'blocks'     => array_values( array_filter( $blocks, static fn( $n ) => str_starts_with( $n, 'estrategia-web' ) || str_starts_with( $n, 'armazon/' ) ) ),
+					'namespaces' => rest_get_server()->get_namespaces(),
+				);
 			}
 		);
 
@@ -462,6 +629,10 @@ add_action(
 			static function () {
 				global $wpdb;
 				$insert = static function ( string $type, string $title, string $slug, string $content = '' ) use ( $wpdb ): int {
+					// A second run on the same WordPress (28-10-2026): the slug must be free, or «?page_id=» redirects to the old page.
+					foreach ( $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_name = %s", $type, $slug ) ) as $old ) { // phpcs:ignore
+						wp_delete_post( (int) $old, true );
+					}
 					$wpdb->insert( $wpdb->posts, array( 'post_type' => $type, 'post_title' => $title, 'post_name' => $slug, 'post_status' => 'publish', 'post_content' => $content, 'post_date' => current_time( 'mysql' ), 'post_date_gmt' => current_time( 'mysql', true ), 'post_modified' => current_time( 'mysql' ), 'post_modified_gmt' => current_time( 'mysql', true ), 'post_author' => 1 ) ); // phpcs:ignore
 					return (int) $wpdb->insert_id;
 				};
@@ -485,11 +656,19 @@ add_action(
 			}
 		);
 
-		// Some options exactly as they are (read only): what the migrator left.
+		// Some options exactly as they are: what the migrator left. 28-10-2026: {delete: [names]}
+		// deletes those AFTER reading (a test's last read is also its cleanup of options /reset
+		// does not delete: tests/settings-page.test.mjs). Without «delete», read only, as before.
 		$route(
 			'/options',
 			'POST',
-			static fn( WP_REST_Request $r ) => array_combine( (array) $r->get_param( 'names' ), array_map( static fn( $n ) => get_option( (string) $n, null ), (array) $r->get_param( 'names' ) ) )
+			static function ( WP_REST_Request $r ) {
+				$out = array_combine( (array) $r->get_param( 'names' ), array_map( static fn( $n ) => get_option( (string) $n, null ), (array) $r->get_param( 'names' ) ) );
+				foreach ( (array) $r->get_param( 'delete' ) as $name ) {
+					delete_option( (string) $name );
+				}
+				return $out;
+			}
 		);
 
 		// The prefix migrator (includes/class-prefix-migration.php), dry or for real.
@@ -512,6 +691,9 @@ add_action(
 				$client      = \EstrategiaWeb\Site\Type_Names::name( 'client' );
 				$testimonial = \EstrategiaWeb\Site\Type_Names::name( 'testimonial' );
 				$insert      = static function ( string $type, string $title, string $slug, string $content = '' ) use ( $wpdb ): int {
+					foreach ( $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_name = %s", $type, $slug ) ) as $old ) { // phpcs:ignore -- A second run: see /legacy-types.
+						wp_delete_post( (int) $old, true );
+					}
 					$wpdb->insert( $wpdb->posts, array( 'post_type' => $type, 'post_title' => $title, 'post_name' => $slug, 'post_status' => 'publish', 'post_content' => $content, 'post_date' => current_time( 'mysql' ), 'post_date_gmt' => current_time( 'mysql', true ), 'post_modified' => current_time( 'mysql' ), 'post_modified_gmt' => current_time( 'mysql', true ), 'post_author' => 1, 'menu_order' => 1 ) ); // phpcs:ignore
 					return (int) $wpdb->insert_id;
 				};

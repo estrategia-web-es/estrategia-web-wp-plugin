@@ -8,6 +8,9 @@
 // Careful: with /index.html%3Fp=6981.html it does NOT fail, because the
 // unsplit key matches the split one letter by letter; hence the cases with
 // a trailing slash and with page_id, which are the ones that give it away.
+// Seen red (28-10-2026), the Conflicts::detect() case: with Rank Math counted
+// without its redirects module («Rank Math without its redirects module is
+// not a conflict»).
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
@@ -78,6 +81,12 @@ test("validate: loops, target equal to source, duplicates, targets and types", (
   assert.equal(v.home_p_ok, "", "/?p=ID is allowed");
   assert.equal(v.foreign_source, "foreign_source");
   assert.equal(v.gone_target, "", "a 410 stores no target");
+});
+
+test("two redirect systems: Rank Math only with its redirects module on (Conflicts::detect)", () => {
+  assert.deepEqual(out.conflicts_none, []);
+  assert.deepEqual(out.conflicts_rank_math_without, [], "Rank Math without its redirects module is not a conflict");
+  assert.deepEqual(out.conflicts_rank_math, ["Rank Math"]);
 });
 
 test("CSV with semicolons, BOM, a «revisar» row (comes in disabled) and no header", () => {

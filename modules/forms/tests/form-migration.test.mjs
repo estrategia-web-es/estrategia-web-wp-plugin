@@ -1,4 +1,4 @@
-// NIVEL: 2 — Playground WordPress, because the migrator READS and WRITES the database (posts, the new form posts, the backup meta) and what is checked is what WordPress then renders and accepts. Its plan, without WordPress, is level 1 (form-migration-plan.test.mjs); with WPML, form-migration-wpml.test.mjs.
+// NIVEL: 2 — Playground WordPress. NOT LEVEL 1 BECAUSE: the migrator READS and WRITES the database (posts, the new form posts, the backup meta) and what is checked is what WordPress then renders, accepts and lists. Its plan, without WordPress, is level 1 (form-migration-plan.test.mjs); with WPML, form-migration-wpml.test.mjs.
 //
 // wp estrategia-web migrate-forms (2.0.0, class-form-migration.php), run
 // here through the test route /migrate-forms (the same Form_Migration::run()
@@ -17,12 +17,24 @@
 //     a new submission lands with the old one under the same identifier, and
 //     «Forms → Forms» lists the form posts with where they are used;
 //  4. second run: «ya», nothing created or changed.
+// The site is seeded in ONE request (seed(): it also drops the pages' old
+// backups, so «one backup» is exact), and each migration answers, in the same
+// request, the four posts' contents and backups and the form posts it left
+// (/migrate-forms with «read») (28-10-2026: from ~50 requests to ~12). Round 2:
+// the submission from before is sent at once with the dry run, and the list
+// screen read at once with the new submission, which answers the log itself
+// (8 rounds instead of 11).
 //
 // Seen red (27-10-2026): without the add_post_meta() of the backup, step 2
-// fails («the original content is kept»); restored, green.
+// fails («the original content is kept»); restored, green. Seen red
+// (28-10-2026), every test: the dry run inserting the form posts (step 1, «no
+// form post created»); and at once, without the backup (step 2), the form
+// post rendered with do_blocks() (step 3, the preselection), «Forms → Forms»
+// without «Add form» (the list) and run() never answering «ya» (step 4).
+// Seen red again after round 2 (28-10-2026), every test, with the mutants above (one by one where a test reads what the one before left).
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { reset, seedPage, loadForm, submit, submissions, GOOD, FORM, waitMinTime, testApi } from "./lib.mjs";
+import { seed, loadForm, submit, GOOD, FORM, waitMinTime, testApi } from "./lib.mjs";
 import { adminSession } from "../../../tests/lib.mjs";
 
 const QUOTE = `<!-- wp:estrategia-web-forms/form {"formId":"presupuesto-mig","title":"Presupuesto"} -->
@@ -34,31 +46,40 @@ const QUOTE = `<!-- wp:estrategia-web-forms/form {"formId":"presupuesto-mig","ti
 const BEFORE = "<!-- wp:paragraph -->\n<p>Antes del formulario</p>\n<!-- /wp:paragraph -->\n\n";
 const AFTER = "\n\n<!-- wp:paragraph -->\n<p>Después</p>\n<!-- /wp:paragraph -->";
 
-let page, copy, pattern, user, ids, originals, backups;
-const migrate = (dry) => testApi("/migrate-forms", { method: "POST", body: { dry, ids } });
-const content = async (id) => (await testApi(`/post/${id}`)).content;
+let page, copy, pattern, user, ids, originals, forms, migrated;
+/** The migration, and in the same request what it left: [report, { id: {content, backups} } of the four posts, every form post]. */
+const migrate = async (dry) => {
+  const r = await testApi("/migrate-forms", { method: "POST", body: { dry, ids, read: true } });
+  return [r, r.after.posts, r.after.forms];
+};
+const contentsOf = (posts) => ids.map((id) => posts[id].content);
 
+let session;
 before(async () => {
-  await reset();
-  await testApi("/eweb-forms", { method: "DELETE" });
-  page = await seedPage(BEFORE + FORM + AFTER, "mig-contacto");
-  copy = await seedPage(FORM, "mig-contacto-copia");
-  pattern = await testApi("/page", { method: "POST", body: { type: "wp_block", slug: "mig-presupuesto", title: "Formulario de presupuesto (mig)", content: `<!-- wp:group --><div class="wp-block-group">${QUOTE}</div><!-- /wp:group -->` } });
-  user = await seedPage(`<!-- wp:block {"ref":${pattern.id},"content":{"servicio":{"defaultOption":2}}} /-->`, "mig-planchado");
+  let pages;
+  [{ pages }, session] = await Promise.all([seed({
+    pages: [
+      { key: "page", slug: "mig-contacto", title: "Contacto", content: BEFORE + FORM + AFTER },
+      { key: "copy", slug: "mig-contacto-copia", title: "Contacto", content: FORM },
+      { key: "pattern", type: "wp_block", slug: "mig-presupuesto", title: "Formulario de presupuesto (mig)", content: `<!-- wp:group --><div class="wp-block-group">${QUOTE}</div><!-- /wp:group -->` },
+      { key: "user", slug: "mig-planchado", title: "Planchado", content: `<!-- wp:block {"ref":{{id:pattern}},"content":{"servicio":{"defaultOption":2}}} /-->` },
+    ],
+  }), adminSession()]);
+  ({ page, copy, pattern, user } = pages);
   ids = [page.id, copy.id, pattern.id, user.id];
-  originals = Object.fromEntries(await Promise.all(ids.map(async (id) => [id, await content(id)])));
-  backups = Object.fromEntries(await Promise.all(ids.map(async (id) => [id, (await testApi(`/backup/${id}`)).length])));
-  // A submission from before the migration.
-  const { hidden } = await loadForm(page.url);
+  originals = Object.fromEntries([page, copy, pattern, user].map((p) => [p.id, p.content]));
+  // The form a submission from before the migration is sent with (at once with the dry run, below).
+  ({ hidden: before0 } = await loadForm(page.url));
   await waitMinTime();
-  assert.equal((await submit(hidden, GOOD)).status, 200);
 });
-after(async () => {
-  await testApi("/eweb-forms", { method: "DELETE" });
-});
+let before0, list;
+// The form posts are not undone by the core reset that the next file (of another module) runs.
+after(() => testApi("/eweb-forms", { method: "DELETE" }));
 
 test("dry run: two form posts to create, three posts to change, the copy reported as identical, nothing written", async () => {
-  const r = await migrate(true);
+  // At once, the submission from before the migration (the dry run neither reads nor writes the log).
+  const [[r, posts, formPosts], early] = await Promise.all([migrate(true), submit(before0, GOOD)]);
+  assert.equal(early.status, 200, "the submission from before the migration");
   assert.equal(r.seco, true);
   assert.equal(r.ya, false);
   assert.deepEqual(r.formularios.map((f) => [f.form_id, f.accion, f.origen, f.copias, f.iguales]), [
@@ -68,14 +89,18 @@ test("dry run: two form posts to create, three posts to change, the copy reporte
   assert.deepEqual(r.contenido.map((c) => c.id).sort((a, b) => a - b), [page.id, copy.id, pattern.id].sort((a, b) => a - b), "the page that only uses the pattern is not changed");
   assert.ok(r.avisos.some((a) => a.includes("«contacto» is in 2 posts") && a.includes("identical")), r.avisos.join("\n"));
   assert.match(r.resumen, /^DRY RUN: 2 form post\(s\) to create, 0 reused; 3 post\(s\) to change/);
-  assert.deepEqual(await testApi("/eweb-forms"), [], "no form post created");
-  for (const id of ids) assert.equal(await content(id), originals[id], `post ${id} untouched`);
+  assert.deepEqual(formPosts, [], "no form post created");
+  for (const id of ids) {
+    assert.equal(posts[id].content, originals[id], `post ${id} untouched`);
+    assert.deepEqual(posts[id].backups, [], `post ${id}: no backup`);
+  }
 });
 
 test("real run: the form posts, each tree replaced byte for byte around it, the original in the backup meta", async () => {
-  const r = await migrate(false);
+  const [r, posts, formPosts] = await migrate(false);
+  forms = formPosts;
   assert.equal(r.seco, false);
-  const forms = await testApi("/eweb-forms");
+  migrated = contentsOf(posts);
   assert.equal(forms.length, 2, "contacto and presupuesto-mig: the copy is the same form");
   const contact = forms.find((f) => f.content.includes('"formId":"contacto"'));
   const quote = forms.find((f) => f.content.includes('"formId":"presupuesto-mig"'));
@@ -85,32 +110,29 @@ test("real run: the form posts, each tree replaced byte for byte around it, the 
   assert.equal(contact.status, "publish");
 
   const tag = (id) => `<!-- wp:estrategia-web-forms/form-ref {"ref":${id}} /-->`;
-  assert.equal(await content(page.id), BEFORE + tag(contact.id) + AFTER);
-  assert.equal(await content(copy.id), tag(contact.id), "the copy points to the same form post");
-  assert.equal(await content(pattern.id), `<!-- wp:group --><div class="wp-block-group">${tag(quote.id)}</div><!-- /wp:group -->`);
-  assert.equal(await content(user.id), originals[user.id], "the page using the pattern is untouched");
+  assert.equal(posts[page.id].content, BEFORE + tag(contact.id) + AFTER);
+  assert.equal(posts[copy.id].content, tag(contact.id), "the copy points to the same form post");
+  assert.equal(posts[pattern.id].content, `<!-- wp:group --><div class="wp-block-group">${tag(quote.id)}</div><!-- /wp:group -->`);
+  assert.equal(posts[user.id].content, originals[user.id], "the page using the pattern is untouched");
   for (const id of [page.id, copy.id, pattern.id]) {
-    // ONE MORE row, the last: a re-run of this test on the same WordPress re-seeds the same pages, and each migration adds one.
-    const rows = await testApi(`/backup/${id}`);
-    assert.equal(rows.length, backups[id] + 1, `one backup row more (post ${id})`);
-    assert.equal(rows.at(-1), originals[id], `the original content is kept (post ${id})`);
+    assert.deepEqual(posts[id].backups, [originals[id]], `the original content is kept, once (post ${id})`);
   }
 });
 
 test("after: the same form renders, the preselection holds, and a new submission joins the old one", async () => {
-  const { html, hidden } = await loadForm(page.url);
+  const [{ html, hidden }, used] = await Promise.all([loadForm(page.url), loadForm(user.url)]);
   assert.match(html, /<p[^>]*>Antes del formulario<\/p>[\s\S]*name="fields\[nombre\]"[\s\S]*<p[^>]*>Después<\/p>/);
-  assert.match((await loadForm(user.url)).html, /<option value="Planchado" selected>/, "pattern → reference → form, with the page's «content»");
+  assert.match(used.html, /<option value="Planchado" selected>/, "pattern → reference → form, with the page's «content»");
   await waitMinTime();
-  assert.equal((await submit(hidden, GOOD)).status, 200);
-  const rows = (await submissions()).filter((s) => s.form_id === "contacto");
+  // At once, «Forms → Forms» for the next test; the submission answers the log itself.
+  let sent;
+  [sent, { text: list }] = await Promise.all([submit(hidden, GOOD, { state: true }), session.get("/wp-admin/admin.php?page=estrategia-web-forms-list")]);
+  assert.equal(sent.status, 200);
+  const rows = sent.state.submissions.filter((s) => s.form_id === "contacto");
   assert.equal(rows.length, 2, "the one from before and the new one, under the same identifier");
 });
 
-test("«Forms → Forms»: the form posts first, with where they are used (and the pattern's pages)", async () => {
-  const s = await adminSession();
-  const list = (await s.get("/wp-admin/admin.php?page=estrategia-web-forms-list")).text;
-  const forms = await testApi("/eweb-forms");
+test("«Forms → Forms»: the form posts first, with where they are used (and the pattern's pages)", () => {
   const contact = forms.find((f) => f.content.includes('"formId":"contacto"'));
   const quote = forms.find((f) => f.content.includes('"formId":"presupuesto-mig"'));
   const row = (id) => list.match(new RegExp(`<tr data-form-id="[^"]*" data-post-id="${id}">[\\s\\S]*?</tr>`))?.[0] ?? "";
@@ -123,11 +145,10 @@ test("«Forms → Forms»: the form posts first, with where they are used (and t
 });
 
 test("second run: «ya», nothing created or changed", async () => {
-  const before = await Promise.all(ids.map(content));
-  const r = await migrate(false);
+  const [r, posts, formPosts] = await migrate(false);
   assert.equal(r.ya, true);
   assert.match(r.resumen, /^ya/);
   assert.deepEqual(r.formularios, []);
-  assert.equal((await testApi("/eweb-forms")).length, 2);
-  assert.deepEqual(await Promise.all(ids.map(content)), before);
+  assert.equal(formPosts.length, 2);
+  assert.deepEqual(contentsOf(posts), migrated);
 });

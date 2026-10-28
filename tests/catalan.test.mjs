@@ -1,4 +1,4 @@
-// NIVEL: 2 — Playground WordPress, because what is checked is the HTML a Catalan site PRINTS to the visitor and the slug a type is registered with, and both only happen in a real request with the plugin's languages/estrategia-web-ca.l10n.php loaded.
+// NIVEL: 2 — Playground WordPress. NOT LEVEL 1 BECAUSE: what is checked is the HTML a Catalan site PRINTS to the visitor and the slug a type is registered with, and both only happen in a real request with the plugin's languages/estrategia-web-ca.l10n.php loaded (that the .po has every string is level 1, tests/translations.test.mjs).
 //
 // Catalan (locale «ca», WPML's own locale for it). Gastronòmicament is
 // Catalan by default with es/en/de: ?wpml-double=ca&wpml-default=ca imitates
@@ -13,15 +13,21 @@
 //
 // Seen in red on 16-10-2026 before languages/estrategia-web-ca.po existed:
 // every text in English («Accept all», «Show map»…) and the slug «locations».
+// Seen red (28-10-2026) with the expected slug «seus» and the text «Mostra
+// el mapa» changed to wrong ones: the three tests fail.
+//
+// 28-10-2026: the five setup requests are one (/setup) and the four reads go
+// in parallel. The last test asked /i18n again for the slug the first one
+// had already checked: it now reads only /i18n-slugs.
 //
 // How to maintain: the wording lives in languages/estrategia-web-ca.po and
 // David decides the doubtful forms (docs/translations/ca-review.md). If one
 // is changed there, change it here too. The slugs are a promise: changing
 // «seus» or «clients» changes the URLs of every Catalan site already
 // published, so this test is not «fixed» without deciding that.
-import { test, before, after } from "node:test";
+import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { BASE, html, reset, saveCompany, seedPage, testApi } from "./lib.mjs";
+import { html, testApi } from "./lib.mjs";
 
 const CA = "wpml-double=ca&wpml-default=ca";
 // What the visitor reads: entities and the curly apostrophe of wptexturize back to plain text.
@@ -31,40 +37,47 @@ const text = (s) =>
     .replace(/&quot;/g, '"')
     .replace(/&amp;/g, "&");
 
-let page;
+let ca, es, slugs, page;
 before(async () => {
-  await reset();
-  await saveCompany({ enabled_types: ["location", "client"] });
-  await testApi("/consent-setup", { method: "POST", body: { categories: ["maps", "statistics"] } });
-  page = await seedPage(
-    '<!-- wp:estrategia-web/map {"placeName":"Seu de prova","address":"Plaça de Cort 1, 07001 Palma","embedUrl":"https://www.google.com/maps/embed?pb=!1m18!1m12"} /-->' +
-      '<!-- wp:estrategia-web/whatsapp {"phone":"34600000000"} /-->' +
-      '<!-- wp:estrategia-web/carousel {"label":"Fotos"} --><!-- wp:paragraph --><p>U</p><!-- /wp:paragraph --><!-- wp:paragraph --><p>Dos</p><!-- /wp:paragraph --><!-- /wp:estrategia-web/carousel -->' +
-      '<!-- wp:estrategia-web-forms/form {"formId":"ca"} --><!-- wp:estrategia-web-forms/text {"label":"Nom","name":"nom","required":true} /--><!-- wp:estrategia-web-forms/checkbox {"name":"privadesa","consent":true} /--><!-- wp:estrategia-web-forms/submit /--><!-- /wp:estrategia-web-forms/form -->',
-    "catala"
-  );
-});
-after(reset);
-
-test("Catalan site, Catalan request: a plugin text and the URL slug", async () => {
-  const r = await testApi("/i18n?" + CA);
-  assert.equal(r.now.text, "Accepta-les totes", `determine_locale() was ${r.determine_locale}`);
-  assert.equal(r.now.slug, "seus");
-  assert.equal(r.registered_slug, "seus");
-  assert.equal(r.switched_en.text, "Accept all", "a WPML switch to English still works");
-  assert.equal(r.switched_en.slug, "seus", "the slug is the site's, also while in English");
-});
-
-test("Catalan site, Spanish request (/es/): Spanish texts, Catalan slug", async () => {
-  const r = await testApi("/i18n?wpml-double=es&wpml-default=ca");
-  assert.equal(r.now.text, "Aceptar todas");
-  assert.equal(r.registered_slug, "seus", "the stored rules are the default language's");
+  const { pages } = await testApi("/setup", {
+    method: "POST",
+    body: {
+      company: { enabled_types: ["location", "client"] },
+      consent: { categories: ["maps", "statistics"] },
+      pages: [
+        {
+          slug: "catala",
+          content:
+            '<!-- wp:estrategia-web/map {"placeName":"Seu de prova","address":"Plaça de Cort 1, 07001 Palma","embedUrl":"https://www.google.com/maps/embed?pb=!1m18!1m12"} /-->' +
+            '<!-- wp:estrategia-web/whatsapp {"phone":"34600000000"} /-->' +
+            '<!-- wp:estrategia-web/carousel {"label":"Fotos"} --><!-- wp:paragraph --><p>U</p><!-- /wp:paragraph --><!-- wp:paragraph --><p>Dos</p><!-- /wp:paragraph --><!-- /wp:estrategia-web/carousel -->' +
+            '<!-- wp:estrategia-web-forms/form {"formId":"ca"} --><!-- wp:estrategia-web-forms/text {"label":"Nom","name":"nom","required":true} /--><!-- wp:estrategia-web-forms/checkbox {"name":"privadesa","consent":true} /--><!-- wp:estrategia-web-forms/submit /--><!-- /wp:estrategia-web-forms/form -->',
+        },
+      ],
+    },
+  });
+  const url = pages[0].url;
+  [ca, es, slugs, page] = await Promise.all([
+    testApi("/i18n?" + CA),
+    testApi("/i18n?wpml-double=es&wpml-default=ca"),
+    testApi("/i18n-slugs?" + CA),
+    html(url + (url.includes("?") ? "&" : "?") + CA + "&nocache=" + Date.now()),
+  ]);
 });
 
-test("what the visitor reads on a Catalan page", async () => {
-  const r = await html(page.url + (page.url.includes("?") ? "&" : "?") + CA + "&nocache=" + Date.now());
-  assert.equal(r.status, 200);
-  const t = text(r.text);
+test("Catalan site, Catalan request: a plugin text and the URL slug; Spanish request (/es/): Spanish texts, Catalan slug", () => {
+  assert.equal(ca.now.text, "Accepta-les totes", `determine_locale() was ${ca.determine_locale}`);
+  assert.equal(ca.now.slug, "seus");
+  assert.equal(ca.registered_slug, "seus");
+  assert.equal(ca.switched_en.text, "Accept all", "a WPML switch to English still works");
+  assert.equal(ca.switched_en.slug, "seus", "the slug is the site's, also while in English");
+  assert.equal(es.now.text, "Aceptar todas");
+  assert.equal(es.registered_slug, "seus", "the stored rules are the default language's");
+});
+
+test("what the visitor reads on a Catalan page", () => {
+  assert.equal(page.status, 200);
+  const t = text(page.text);
   const expected = [
     // Cookie notice.
     "Utilitzem galetes pròpies i de tercers per a les finalitats que s'indiquen.",
@@ -95,11 +108,8 @@ test("what the visitor reads on a Catalan page", async () => {
   }
 });
 
-test("the other Catalan slugs, as the site language registers them", async () => {
-  const r = await testApi("/i18n?" + CA);
-  assert.equal(r.registered_slug, "seus");
-  const types = await testApi("/i18n-slugs?" + CA);
-  assert.deepEqual(types, {
+test("the other Catalan slugs, as the site language registers them", () => {
+  assert.deepEqual(slugs, {
     clients: "clients",
     "client-sector": "sector",
     testimonials: "opinions",

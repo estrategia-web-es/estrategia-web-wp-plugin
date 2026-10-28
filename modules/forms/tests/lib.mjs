@@ -22,20 +22,28 @@ export async function testApi(path, { method = "GET", body } = {}) {
 }
 
 // First the CORE reset (tests/wp/estrategia-web-site-test.php) and
-// then our own. Since 1.1.0 all modules share WordPress, and whatever
+// then our own, both in ONE request since 28-10-2026 (this module's /reset
+// runs the core one first). Since 1.1.0 all modules share WordPress, and whatever
 // another test leaves behind stays: measured on 14-10-2026, the cookie notice
 // seeded by consent-browser.test.mjs was still open here, its «Guardar»
 // button matched button[type=submit] and the four tests in
 // browser.test.mjs hung waiting. Order matters: ours goes
 // AFTER because it sets «estrategia_web_test_suite = forms» (the language).
-export const reset = async () => {
-  const core = await fetch(BASE + "/wp-json/estrategia-web-site-test/v1/reset", { method: "POST" });
-  if (!core.ok) throw new Error("core reset -> " + core.status);
-  return testApi("/reset", { method: "POST" });
-};
+export const reset = () => seed();
+/**
+ * reset() AND the file's seed in ONE request (28-10-2026: each request to the
+ * test WordPress costs ~1,3 s whatever it does). The options (core reset,
+ * en_US marker, locale, settings, form posts, pages with «{{id:<key>}}»,
+ * WPML translations, log rows) and what it returns: the /reset route in
+ * wp/estrategia-web-forms-test.php.
+ *   const { pages } = await seed({ pages: [{ key: "contact", slug: "contacto", content: FORM }] });
+ */
+export const seed = (options = {}) => testApi("/reset", { method: "POST", body: options });
 export const settings = (s) => testApi("/settings", { method: "POST", body: s });
 export const mails = () => testApi("/mails");
 export const submissions = () => testApi("/submissions");
+/** { mails, submissions } in one request. */
+export const state = () => testApi("/state");
 
 // The notification recipients: what must NEVER appear in the public HTML.
 export const TEAM = "equipo@ejemplo.test";
@@ -72,8 +80,12 @@ export async function loadForm(url) {
   return { html, hidden: hiddenFields(html) };
 }
 
-/** Submission as the JS would do it (JSON response) or as a browser without JS (redirect). */
-export async function submit(hidden, fields, { js = true, extra = {} } = {}) {
+/**
+ * Submission as the JS would do it (JSON response) or as a browser without JS (redirect).
+ * { state: true } (JS only): the answer also brings `state` = { mails, submissions } as they are when
+ * the submission ends (wp/estrategia-web-forms-test.php, «X-EW-Forms-Test-State»): no state() after it.
+ */
+export async function submit(hidden, fields, { js = true, extra = {}, state: withState = false } = {}) {
   const body = new URLSearchParams();
   for (const [k, v] of Object.entries(hidden)) body.append(k, v);
   for (const [k, v] of Object.entries(fields)) body.append(`fields[${k}]`, v);
@@ -83,9 +95,12 @@ export async function submit(hidden, fields, { js = true, extra = {} } = {}) {
     method: "POST",
     body,
     redirect: "manual",
-    headers: { "User-Agent": "estrategia-web-forms-test/1.0" },
+    headers: { "User-Agent": "estrategia-web-forms-test/1.0", ...(withState ? { "X-EW-Forms-Test-State": "1" } : {}) },
   });
-  return { status: res.status, location: res.headers.get("location"), json: js ? await res.json() : null };
+  const json = js ? await res.json() : null;
+  const state = json?._test_state ?? null;
+  if (json) delete json._test_state;
+  return { status: res.status, location: res.headers.get("location"), json, state };
 }
 
 export const GOOD = {

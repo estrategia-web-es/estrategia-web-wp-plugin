@@ -1,4 +1,4 @@
-// NIVEL: 3 — browser. NEEDS A BROWSER BECAUSE: what is tested is what IS SEEN frame by frame while the track scrolls across the seam (the last slide followed by the first), in a grid laid out by the browser, with keyboard and real touch gestures.
+// NIVEL: BANCO DE TRABAJO — not a test file: the «any number of slides» checks that carousel.test.mjs runs (round 2, 28-10-2026: it was carousel-any-count.test.mjs, with its own reset, seed and browser). Level 3 because: what is tested is what IS SEEN frame by frame while the track scrolls across the seam (the last slide followed by the first), in a grid laid out by the browser, with keyboard and real touch gestures.
 /**
  * Infinite estrategia-web/carousel with ANY number of slides (plugin 1.4.3):
  * a count that is not a multiple of what is in view, nor of the columns.
@@ -20,10 +20,14 @@
  * not a whole number of columns, the carousel did not rotate and "next" on
  * the last column rewound to the first (Lavandería: scrollLeft 2343 → 1).
  * The waits are for FACTS (which slide is at the edge), never for time.
+ * Trimmed on 28-10-2026 (minimum trips that prove it): the 23-slide row and
+ * the 12-column grid no longer go round all of it: End takes them straight
+ * to the last one and "next" crosses the seam three times (25 and 14 trips
+ * became 3 each); the 7-slide row keeps its full turn and beyond.
+ * Seen red (28-10-2026) with the expected grid at 12 + 12 cards («the test
+ * grid does not come out as 12 + 11»).
  */
-import { test, withBrowser, assert, BASE_URL, blockSite } from '../../../tests/browser.mjs';
-
-blockSite( 'carousel' );
+import { assert, BASE_URL } from '../../../tests/browser.mjs';
 
 const URL = `${ BASE_URL }/prueba-carrusel-impar/`;
 
@@ -122,22 +126,41 @@ const gridLayout = ( page, handle ) =>
 
 const ROWS = '0'.repeat( 12 ) + '1'.repeat( 11 );
 
-test( 'carousel-any-count', () =>
-	withBrowser( async ( { newPage } ) => {
-		const page = await newPage( { viewport: { width: 1200, height: 900 } } );
-		await page.addInitScript( probes );
-		await page.goto( URL, { waitUntil: 'networkidle' } );
+/** Every check of the header, on three pages made with newPage(options) (a page that records its errors in page.errors). */
+export const checkAnyCount = async ( newPage ) => {
+	{
+		// The three pages load at once (the waiting is WordPress's); they are then used one after another.
+		const load = async ( options ) => {
+			const p = await newPage( options );
+			await p.addInitScript( probes );
+			await p.goto( URL, { waitUntil: 'load' } );
+			return p;
+		};
+		const [ page, phone, calm ] = await Promise.all( [
+			load( { viewport: { width: 1200, height: 900 } } ),
+			load( { viewport: { width: 402, height: 860 }, isMobile: true, hasTouch: true } ),
+			load( { viewport: { width: 1200, height: 900 }, reducedMotion: 'reduce' } ),
+		] );
 
-		// 1. One row, counts that are not a multiple of what is in view.
+		// 1. One row, counts that are not a multiple of what is in view. Seven: a
+		// full turn and beyond. Twenty-three: End first (straight to the last
+		// one), then across the seam; the middle of a 23-lap is plain scrolling.
 		for ( const [ name, n ] of [ [ 'Siete de tres', 7 ], [ 'Veintitrés en una fila', 23 ] ] ) {
 			const { carousel, track, handle } = await ready( page, name );
 			await settledAt( page, handle, 0, n, `${ name }, on load` );
 			const next = carousel.getByRole( 'button', { name: 'Diapositiva siguiente' } );
 			const prev = carousel.getByRole( 'button', { name: 'Diapositiva anterior' } );
+			let start = 0;
+			if ( n > 7 ) {
+				await track.focus();
+				await page.keyboard.press( 'End' );
+				await settledAt( page, handle, n - 1, n, `${ name }, End` );
+				start = n - 1;
+			}
 			await page.evaluate( ( el ) => window.__record( el ), handle );
-			for ( let k = 1; k <= n + 2; k++ ) {
+			for ( let k = 1; k <= ( n > 7 ? 3 : n + 2 ); k++ ) {
 				await next.click();
-				await settledAt( page, handle, k % n, n, `${ name }, "next" no. ${ k }` );
+				await settledAt( page, handle, ( start + k ) % n, n, `${ name }, "next" no. ${ k }` );
 			}
 			let samples = await page.evaluate( () => window.__stop() );
 			assert.ok( worstBackStep( samples, n, 1 ) > -0.05, `${ name }: with "next" the track goes back ${ ( -worstBackStep( samples, n, 1 ) ).toFixed( 2 ) } slides in some frame` );
@@ -165,11 +188,17 @@ test( 'carousel-any-count', () =>
 			assert.deepEqual( await gridLayout( page, handle ), { rows: ROWS, misplaced: 0 }, 'the test grid does not come out as 12 + 11' );
 			await settledAt( page, handle, 0, n, `${ name }, on load` );
 			const next = carousel.getByRole( 'button', { name: 'Diapositiva siguiente' } );
+			// End (straight to the last column, as Lavandería's visitor scrolls), then "next"
+			// across the seam: where 1.4.2 rewound (scrollLeft 2343 → 1).
+			await track.focus();
+			await page.keyboard.press( 'End' );
+			await settledAt( page, handle, n - 1, n, `${ name }, End` );
+			assert.deepEqual( await gridLayout( page, handle ), { rows: ROWS, misplaced: 0 }, `${ name }: at the last column a card changed row or left its column` );
 			await page.evaluate( ( el ) => window.__record( el ), handle );
-			for ( let k = 1; k <= n + 2; k++ ) {
+			for ( let k = 1; k <= 3; k++ ) {
 				await next.click();
-				await settledAt( page, handle, k % n, n, `${ name }, "next" no. ${ k }` );
-				assert.deepEqual( await gridLayout( page, handle ), { rows: ROWS, misplaced: 0 }, `${ name }: a card changed row or left its column (column ${ ( k % n ) + 1 })` );
+				await settledAt( page, handle, ( n - 1 + k ) % n, n, `${ name }, "next" no. ${ k } from the last column` );
+				assert.deepEqual( await gridLayout( page, handle ), { rows: ROWS, misplaced: 0 }, `${ name }: a card changed row or left its column (column ${ ( ( n - 1 + k ) % n ) + 1 })` );
 			}
 			const samples = await page.evaluate( () => window.__stop() );
 			assert.ok( worstBackStep( samples, n, 1 ) > -0.05, `${ name }: with "next" the track goes back ${ ( -worstBackStep( samples, n, 1 ) ).toFixed( 2 ) } columns in some frame (rewind)` );
@@ -199,9 +228,6 @@ test( 'carousel-any-count', () =>
 		assert.deepEqual( page.errors, [], page.errors.join( '\n' ) );
 
 		// 4. Mobile, with a finger on the grid: dragging right on the first column shows the last.
-		const phone = await newPage( { viewport: { width: 402, height: 860 }, isMobile: true, hasTouch: true } );
-		await phone.addInitScript( probes );
-		await phone.goto( URL, { waitUntil: 'networkidle' } );
 		{
 			const { track, handle } = await ready( phone, 'Veintitrés en dos filas' );
 			await settledAt( phone, handle, 0, 12, 'grid on mobile, on load' );
@@ -227,9 +253,6 @@ test( 'carousel-any-count', () =>
 		assert.deepEqual( phone.errors, [], phone.errors.join( '\n' ) );
 
 		// 5. "Reduce motion": the grid wraps around the same, without animation.
-		const calm = await newPage( { viewport: { width: 1200, height: 900 }, reducedMotion: 'reduce' } );
-		await calm.addInitScript( probes );
-		await calm.goto( URL, { waitUntil: 'networkidle' } );
 		{
 			const { track, handle } = await ready( calm, 'Veintitrés en dos filas' );
 			await track.focus();
@@ -241,5 +264,5 @@ test( 'carousel-any-count', () =>
 			assert.ok( at > 1, `grid with "reduce motion": → on the last column rewound to scrollLeft ${ at } instead of continuing` );
 		}
 		assert.deepEqual( calm.errors, [], calm.errors.join( '\n' ) );
-	} )
-);
+	}
+};

@@ -1,52 +1,68 @@
-// NIVEL: 2 — Playground WordPress, because what is tested is what the site PRINTS (the <head> and the notice categories) depending on the option saved over REST and the active modules.
+// NIVEL: 2 — Playground WordPress. NOT LEVEL 1 BECAUSE: what is tested is what the site PRINTS (the <head> and the notice categories) from the module's option, that option's register_setting validation over REST, and the modules WordPress loads, including «requires consent».
 //
 // Google tags (1.1.0). What it does and why: header of
 // modules/google-tags/includes/class-google-tags.php. The browser side (what
 // is requested from Google before and after accepting, Consent Mode) is in
 // google-tags-browser.test.mjs (level 3).
 //
-// How to maintain: a new field gets its «empty = nothing» case and its
-// validation case here.
+// 28-10-2026: the module is switched on ONCE in before() (it was switched
+// on again in every test: three requests each). Round 2 (28-10-2026): the
+// READING cases pass the option on the request itself (?ew-options,
+// modules/consent/tests/wp/estrategia-web-cookies-test.php) and go at once;
+// HOW it is saved (the 400s, the value stored) is case 3, over REST, and
+// case 4 reads what case 3 stored.
+// Seen red (28-10-2026), one break per case: «statistics» expected with
+// empty fields (1); GA4 expected to require «marketing» (2); a mistyped id
+// expected to be accepted (3); the block expected from «site» instead of
+// «consent» (4).
+//
+// How to maintain: a new field gets its «empty = nothing» and its «what it
+// requires» reading in case 2 and its validation in case 3. The traps: the
+// modules list is saved in one request and read in the NEXT one, so «switch
+// on» and «read what loaded» are never the same request; and the override is
+// only for reading — a save carries none (sanitize() merges with the stored
+// value).
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { BASE, html, reset, testApi, wp } from "../../../tests/lib.mjs";
+import { BASE, credentials, html, reset, testApi, wp } from "../../../tests/lib.mjs";
 
-const front = async () => (await html(BASE + "/?nocache=" + Date.now())).text;
+/** The front page with the google-tags option `tags` for this request only (none: what is stored). */
+const front = async (tags) =>
+  (await html(`${BASE}/?${tags ? "ew-options=" + encodeURIComponent(JSON.stringify({ estrategia_web_google_tags: tags })) + "&" : ""}nocache=${Date.now()}`)).text;
 const TAG = 'id="estrategia-web-google-tags"';
 const offered = (page) => [...page.matchAll(/name="estrategia-web-consent-category"\s+value="([^"]+)"/g)].map((m) => m[1]);
-const cleanAll = async () => {
-  await reset();
-  await fetch(BASE + "/wp-json/estrategia-web-cookies-test/v1/reset", { method: "POST" });
-};
-
-/** Switches google-tags on in addition to what the site loads by default. */
-async function enable(extra = ["google-tags"], without = []) {
-  await testApi("/modules", { method: "POST", body: { active: null } });
-  const { loaded } = await testApi("/modules");
-  await testApi("/modules", { method: "POST", body: { active: [...loaded.filter((m) => !without.includes(m)), ...extra] } });
-}
+const cookiesReset = () => fetch(BASE + "/wp-json/estrategia-web-cookies-test/v1/reset", { method: "POST" });
 const save = (value) => wp("/settings", { method: "POST", body: { estrategia_web_google_tags: value } });
 
-before(cleanAll);
-after(cleanAll);
+let byDefault;
+before(async () => {
+  await reset();
+  // cookies-test reset also deletes estrategia_web_google_tags (another file may have left it).
+  const [, { loaded }] = await Promise.all([cookiesReset(), testApi("/modules"), credentials()]);
+  byDefault = loaded;
+  await testApi("/modules", { method: "POST", body: { active: [...loaded, "google-tags"] } });
+});
+// The site reset() does not delete the google-tags option: the other files share this WordPress.
+after(cookiesReset);
 
-test("google-tags: OFF by default; switched on with empty fields it prints nothing", async () => {
-  const { loaded } = await testApi("/modules");
-  assert.ok(!loaded.includes("google-tags"), "Default: off");
-  await enable();
-  assert.ok((await testApi("/modules")).loaded.includes("google-tags"));
-  const page = await front();
+test("1. OFF by default; switched on with empty fields it prints nothing", async () => {
+  assert.ok(!byDefault.includes("google-tags"), "Default: off");
+  const [mods, page] = await Promise.all([testApi("/modules"), front()]);
+  assert.ok(mods.loaded.includes("google-tags"));
   assert.ok(!page.includes(TAG) && !page.includes("googletagmanager"), "without ids there is nothing from Google");
   assert.deepEqual(offered(page), [], "and no categories in the notice");
 });
 
-test("google-tags: with GA4, consent «default» denied BEFORE anything else and no Google <script src> in the HTML", async () => {
-  await enable();
-  const r = await save({ ga4: "G-TEST12345" });
-  assert.equal(r.status, 200, r.text);
-  const page = await front();
-  assert.ok(page.includes(TAG));
-  const head = page.slice(0, page.indexOf("</head>"));
+test("2. what each id prints: GA4 (consent «default» denied FIRST, no Google <script src>), Ads + its conversion label, Tag Manager, the advanced mode", async () => {
+  const [ga4, ads, gtm] = await Promise.all([
+    front({ ga4: "G-TEST12345" }),
+    front({ ads: "AW-123456789", ads_form_label: "AW-123456789/AbCd_ef-12" }),
+    front({ ga4: "G-ABCDE12345", gtm: "GTM-ABCD123", mode: "advanced" }),
+  ]);
+
+  // GA4: our script is the FIRST in the <head>, everything starts denied, Google is not in the HTML.
+  assert.ok(ga4.includes(TAG));
+  const head = ga4.slice(0, ga4.indexOf("</head>"));
   const ours = head.indexOf(TAG);
   const firstScript = head.search(/<script\b/);
   assert.ok(ours >= 0 && head.lastIndexOf("<script", ours) === firstScript, "it is the FIRST script in the <head>");
@@ -54,40 +70,34 @@ test("google-tags: with GA4, consent «default» denied BEFORE anything else and
   for (const key of ["ad_storage", "ad_user_data", "ad_personalization", "analytics_storage"]) {
     assert.match(defaults, new RegExp(`${key}: 'denied'`), `${key} does not start denied`);
   }
-  assert.ok(!/<script[^>]+src="[^"]*googletagmanager/.test(page), "the Google script is not in the HTML: the browser requests it after accepting");
-  assert.match(page, /"ga4":"G-TEST12345"/);
-  assert.deepEqual(offered(page), ["statistics"], "GA4 requires Analytics");
+  assert.ok(!/<script[^>]+src="[^"]*googletagmanager/.test(ga4), "the Google script is not in the HTML: the browser requests it after accepting");
+  assert.match(ga4, /"ga4":"G-TEST12345"/);
+  assert.deepEqual(offered(ga4), ["statistics"], "GA4 requires Analytics");
+
+  // Ads requires Advertising; the conversion label goes with its Ads account.
+  assert.deepEqual(offered(ads), ["marketing"]);
+  assert.match(ads, /"form":"AW-123456789\\?\/AbCd_ef-12"/);
+
+  // Tag Manager requires both; without an Ads account no conversion; the advanced mode reaches the page.
+  assert.deepEqual(offered(gtm), ["statistics", "marketing"]);
+  assert.match(gtm, /"form":""/, "without an Ads account, the conversion is not sent");
+  assert.match(gtm, /"advanced":true/);
 });
 
-test("google-tags: Ads requires Advertising; Tag Manager, both; the conversion label only with its Ads account", async () => {
-  await enable();
-  await save({ ga4: "", ads: "AW-123456789", ads_form_label: "AW-123456789/AbCd_ef-12", gtm: "" });
-  let page = await front();
-  assert.deepEqual(offered(page), ["marketing"]);
-  assert.match(page, /"form":"AW-123456789\\?\/AbCd_ef-12"/);
-
-  await save({ ads: "", gtm: "GTM-ABCD123" });
-  page = await front();
-  assert.deepEqual(offered(page), ["statistics", "marketing"]);
-  assert.match(page, /"form":""/, "without an Ads account, the conversion is not sent");
-});
-
-test("google-tags: mistyped ids → 400 over REST; lowercase from the screen is fixed automatically (clean)", async () => {
-  await enable();
-  assert.equal((await save({ ga4: "UA-1234-1" })).status, 400);
-  assert.equal((await save({ gtm: "GTM-<script>" })).status, 400);
-  assert.equal((await save({ mode: "loco" })).status, 400);
-  const ok = await save({ ga4: "G-ABCDE12345", mode: "advanced" });
-  assert.equal(ok.status, 200);
+test("3. saving over REST: mistyped ids and modes → 400; a good save is stored clean", async () => {
+  // The refused saves change nothing, so they go with the good one.
+  const [ok, ...bad] = await Promise.all([save({ ga4: "G-TEST12345", mode: "advanced" }), save({ ga4: "UA-1234-1" }), save({ gtm: "GTM-<script>" }), save({ mode: "loco" })]);
+  assert.equal(ok.status, 200, ok.text);
+  assert.equal(ok.json.estrategia_web_google_tags.ga4, "G-TEST12345");
   assert.equal(ok.json.estrategia_web_google_tags.mode, "advanced");
-  assert.match(await front(), /"advanced":true/);
+  assert.deepEqual(bad.map((b) => b.status), [400, 400, 400]);
 });
 
-test("google-tags: Requires consent — with the notice off it does not load (and the modules screen says why)", async () => {
-  await enable(["google-tags"], ["consent"]);
-  await save({ ga4: "G-TEST12345" });
-  const mods = await testApi("/modules");
+test("4. Requires consent — with the notice off it does not load (and the modules screen says why)", async () => {
+  // GA4 is stored since case 3: switched on, it would print its tag.
+  await testApi("/modules", { method: "POST", body: { active: [...byDefault.filter((m) => m !== "consent"), "google-tags"] } });
+  const [mods, page] = await Promise.all([testApi("/modules"), front()]);
   assert.ok(!mods.loaded.includes("google-tags"));
   assert.deepEqual(mods.blocked["google-tags"], ["consent"]);
-  assert.ok(!(await front()).includes(TAG));
+  assert.ok(!page.includes(TAG));
 });

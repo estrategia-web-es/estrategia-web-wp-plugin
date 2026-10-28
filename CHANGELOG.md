@@ -44,6 +44,13 @@ Lavandería: none of 3–5 done yet (the theme references are listed in its repo
 - **WPML**: `wpml-config.xml` declares `<custom-type translate="1">eweb_form</custom-type>`; `modules/site/tests/wpml-config.test.mjs` knows it is the forms module's, not a content-types definition.
 - Tests: `forms/form-migration-plan` (level 1), `forms/form-ref`, `forms/form-migration` and `forms/form-migration-wpml` (level 2, the last one with real WPML); `forms/admin` (level 3) checks the reference block is registered and offered, the old Form block is not, and a new form post comes with the locked Form block and no reference block allowed inside. Full suite 28-10-2026: 3331 s (level 1 16 s, level 2 1488 s, WPML 674 s, level 3 1059 s), green but for `forms/admin`'s old block list, updated and re-run green.
 
+### The test battery: from 55 minutes to ~6
+
+- **Measured** (28-10-2026, same machine): 3467 s before; the same battery after, 329-424 s depending on what else the machine is running (it is CPU-bound). Target ≤ 300 s (David): not reached yet; see the README, «Tests».
+- **Why it was slow**: every request to the test WordPress costs ~1,1 s whatever it does (WordPress and the SQLite drop-in before any plugin: ~800 ms, measured with `/ping?timing`), and every file ran after the previous one against one WordPress.
+- **tests/run.mjs**: levels 2 and 3 run in 5 + 1 (WPML) WordPresses at once, each booting while level 1 runs and starting its files when ready, dealt by their last measured time (`tests/.timings.json`); the first line of a level 2/3 file must say «NOT LEVEL 1/2 BECAUSE:» or nothing runs; each file has a time limit (60 s level 2, 75 s level 3) and an exception is a `// TIEMPO:` line in the test.
+- **The tests**: every module's tests cut by about two thirds of their requests (one setup request per file, one page/editor per file, screens without JavaScript read as HTML at level 2, decisions moved to level 1); merged files: map (6 → 2), whatsapp (2 → 1), carousel (10 → 2), site (17 → 12), consent cookies split in two. Fixed isolation bugs found on the way: a reused WordPress kept the constructor's 301s; forms-list and hours-editor depended on WordPress downloading core's Spanish pack by itself; a file that left the modules list short broke the next file's reset/setup; the first editor load opens the welcome guide; two parallel uploads raced to create the month's folder.
+
 ## 1.7.0 — 24-10-2026
 
 **Before updating a site with WPML: check `existing_content_language_verified=1`** (`wp eval 'echo get_option("icl_sitepress_settings")["existing_content_language_verified"];'`); **if it is 0, set it (or /en/ will redirect to /en/home/).** Lavandería: done 24-10-2026.

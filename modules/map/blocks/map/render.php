@@ -333,7 +333,7 @@ $estrategia_web_title = '' !== $estrategia_web_address
 		// It goes in aria-label and NOT in a hidden span: the span counts in
 		// innerText and in copied text, and the address would appear twice where
 		// the card already shows it alongside (showDetails:false; the theme's
-		// map-details test). Without location or address there is no aria-label:
+		// tests/map.test.mjs, step 4). Without location or address there is no aria-label:
 		// the name is the usual text.
 		$estrategia_web_link_for = preg_replace( '/\s+/', ' ', '' !== $estrategia_web_place ? $estrategia_web_place : $estrategia_web_address );
 		$estrategia_web_link_aria = '' === $estrategia_web_link_for ? '' : sprintf(

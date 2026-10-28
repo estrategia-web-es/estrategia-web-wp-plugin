@@ -30,7 +30,8 @@
  *
  * How to maintain:
  * - Who and when: whoever touches the notice. Level 2 test in
- *   modules/consent/tests/cookies.test.mjs (the screen loads and saves).
+ *   modules/consent/tests/cookie-registry.test.mjs (the admin route the screen
+ *   saves through) and, level 3, cookies-browser.test.mjs (the screen).
  * - A new field of a row: its cell here, its key in
  *   Cookie_Registry::ENTRY_DEFAULTS and its sanitisation in
  *   Cookie_Registry::save().

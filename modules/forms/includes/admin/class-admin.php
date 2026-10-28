@@ -16,7 +16,7 @@
  *
  * How to maintain: every action that changes something goes through
  * admin-post.php with its nonce and its capability check, and both are
- * tested in tests/admin.test.mjs. The trap: a GET link that deletes can be
+ * tested in tests/submissions-admin.test.mjs. The trap: a GET link that deletes can be
  * triggered by an <img> on another site; that is why «Delete» leads to a
  * confirmation screen and the actual deletion is a POST.
  */

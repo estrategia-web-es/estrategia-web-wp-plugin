@@ -12,6 +12,8 @@
 			"step": "setSiteOptions",
 			"options": { "permalink_structure": "/%postname%/", "blogname": "Sitio de pruebas", "admin_email": "admin@ejemplo.test" }
 		},
+		{ "step": "runPHP", "code": "<?php require_once '/wordpress/wp-load.php'; global $wpdb; update_user_meta( 1, $wpdb->get_blog_prefix() . 'persisted_preferences', array( 'core/edit-post' => array( 'welcomeGuide' => false ), 'core/edit-site' => array( 'welcomeGuide' => false ), '_modified' => gmdate( 'c' ) ) ); // No welcome guide on the admin's FIRST editor load: with shards any editor test can be the first one (tests/run.mjs, «The trap of the first editor»)." },
+		{ "step": "runPHP", "code": "<?php require_once '/wordpress/wp-load.php'; wp_upload_dir( null, true ); // The month's uploads folder exists before two workers race to create it (tests/run.mjs, «The trap of the two workers»)." },
 		{ "step": "runPHP", "code": "<?php require_once '/wordpress/wp-load.php'; require WP_CONTENT_DIR . '/plugins/estrategia-web/tests/wp/setup-wpml.php';" },
 		{ "step": "runPHP", "code": "<?php require_once '/wordpress/wp-load.php'; require WP_CONTENT_DIR . '/plugins/estrategia-web/tests/wp/setup-wpml.php';" }
 	]

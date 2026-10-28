@@ -1,16 +1,34 @@
-// NIVEL: 3 — browser. NEEDS A BROWSER BECAUSE: the «hours» control only exists when the block editor paints the fields panel (assets/fields-panel.js), and what is tested is that a person can enter a week THERE — add ranges, copy the day before, see the warning on a range that will not be kept — and that it is stored canonical; and that the constructor offers a template's NEW fields to a copy made before them (assets/constructor.js), which only exists painted.
+// NIVEL: 3 — browser. NOT LEVEL 2 BECAUSE: the «hours» control only exists when the block editor paints the fields panel (assets/fields-panel.js), and what is tested is that a person can enter a week THERE — add ranges, copy the day before, see the warning on a range that will not be kept — and that it is stored canonical; and that the constructor offers a template's NEW fields to a copy made before them (assets/constructor.js), which only exists painted.
 //
 // The site under test speaks es_ES: controls are found by their data-* hooks (data-day, data-range, data-action).
+//
+// ISOLATION (28-10-2026). «a week entered in the panel» failed on a fresh
+// WordPress with «Monday» where it expected /lunes/. Root cause: the day
+// names are WordPress's (WP_Locale, Fields_Panel::day_names()), translated
+// by CORE's es_ES language pack, which the test WordPress only has when it
+// downloads it by itself on some request (the same cause as
+// modules/forms/tests/forms-list.test.mjs's header). Core's translations
+// are not ours to test: what OUR code does — the day's name as the group's
+// legend and in each input's label — is asserted in either language.
+// Seen red (28-10-2026) on a fresh WordPress before the fix; green after.
+//
+// 28-10-2026, from ~44 s: logged in by cookie (admin-browser.mjs) while the
+// site is set up, no module requests (content-types is on after reset()),
+// the location's definition read once for both tests. Seen red (28-10-2026)
+// after the change, one expected value changed in each test (the range
+// number in the label, 9 fields before saving): both red; restored, green.
+// Round 2: the stored week is read from the editor's answer to its save;
+// seen red expecting Sunday's 10:00-10:00 kept; restored, green.
 //
 // Seen red (22-10-2026): with HoursField's «Same as the day before» copying the CURRENT day, Tuesday stayed closed
 // and «a week entered in the panel» failed on the stored JSON; with offerSection() looking at the stored
 // definition instead of the draft, the notice did not go away after adding the fields.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { BASE, playwright, reset, saveCompany, testApi, wp, credentials, type } from "../../../tests/lib.mjs";
+import { BASE, testApi, wp, credentials, type } from "../../../tests/lib.mjs";
+import { adminBrowser } from "./admin-browser.mjs";
 
-let browser, p;
-const errors = [];
+let browser, p, errors;
 
 const ctApi = async (path, { method = "GET", body } = {}) => {
   const who = (await credentials()).administrator;
@@ -22,35 +40,27 @@ const ctApi = async (path, { method = "GET", body } = {}) => {
   return { status: res.status, json: await res.json() };
 };
 
+let template; // The location's definition as the template stores it.
+
 before(async () => {
-  await reset();
-  const { loaded } = await testApi("/modules");
-  await testApi("/modules", { method: "POST", body: { active: [...new Set([...loaded, "content-types"])] } });
-  await saveCompany({ enabled_types: ["location"] });
-  await wp(`/${type("location")}?per_page=1`); // the request that stores the template copy (Site_Types)
-  browser = await playwright().chromium.launch();
-  p = await (await browser.newContext({ viewport: { width: 1400, height: 1100 } })).newPage();
-  p.on("pageerror", (e) => errors.push(e.message));
-  await p.goto(BASE + "/wp-admin/");
-  if (p.url().includes("wp-login.php")) {
-    await p.fill("#user_login", "admin");
-    await p.fill("#user_pass", "password");
-    await Promise.all([p.waitForURL(/wp-admin/), p.click("#wp-submit")]);
-  }
+  const site = (async () => {
+    // reset() and «enabled_types» in one request: saving it stores the template copy (Site_Types), at the latest on the next request.
+    await Promise.all([testApi("/setup", { method: "POST", body: { company: { enabled_types: ["location"] } } }), credentials()]);
+    template = (await ctApi("/eweb_location")).json.definition;
+  })();
+  [, { browser, page: p, errors }] = await Promise.all([site, adminBrowser({ height: 1100 })]);
 });
-after(async () => {
-  await browser?.close();
-  await reset();
-});
+after(() => browser?.close());
 
 test("a week entered in the panel: ranges, «same as the day before», the warning on a range that will not be kept, stored canonical", async () => {
   // 2.0.0: the location template edits its fields in the main-area meta box (fields_box: main), where the
   // hours are one line per day (tests/location-box.test.mjs). The panel's hours control is for a type
   // in the sidebar: this copy is switched to it, which a site may do.
-  const def = (await ctApi("/eweb_location")).json.definition;
-  const side = await ctApi("/eweb_location", { method: "POST", body: { definition: { ...def, fields_box: "sidebar" }, confirm: true } });
+  const [side, r] = await Promise.all([
+    ctApi("/eweb_location", { method: "POST", body: { definition: { ...template, fields_box: "sidebar" }, confirm: true } }),
+    wp(`/${type("location")}`, { method: "POST", body: { title: "Son Oms", status: "draft" } }),
+  ]);
   assert.equal(side.status, 200, JSON.stringify(side.json));
-  const r = await wp(`/${type("location")}`, { method: "POST", body: { title: "Son Oms", status: "draft" } });
   assert.equal(r.status, 201, r.text);
   await p.goto(`${BASE}/wp-admin/post.php?post=${r.json.id}&action=edit`);
   await p.waitForFunction(() => window.wp?.data?.select("core/editor")?.getCurrentPostType(), null, { timeout: 60000 });
@@ -60,7 +70,8 @@ test("a week entered in the panel: ranges, «same as the day before», the warni
   await field.waitFor({ timeout: 20000 });
 
   const day = (d) => field.locator(`[data-day="${d}"]`);
-  assert.match(await day("mo").locator("legend").textContent(), /lunes/i, "the day's name, in the editor's language, as the group's legend");
+  // The name is core's (WP_Locale): Spanish only if WordPress has downloaded its es_ES pack (ISOLATION).
+  assert.match(await day("mo").locator("legend").textContent(), /lunes|monday/i, "the day's name, in the editor's language, as the group's legend");
   assert.match(await day("mo").textContent(), /Cerrado/, "an empty day reads «Closed»");
   await day("mo").locator('[data-action="add-range"]').click();
   const mo = day("mo").locator('[data-range="0"] input[type="time"]');
@@ -68,7 +79,7 @@ test("a week entered in the panel: ranges, «same as the day before», the warni
   await mo.nth(0).fill("08:00");
   await mo.nth(1).fill("16:00");
   assert.match(await mo.nth(0).getAttribute("id"), /mo-0-0$/);
-  assert.match(await p.locator(`label[for="${await mo.nth(0).getAttribute("id")}"]`).textContent(), /lunes.*1/i, "each input has its label with the day and the range");
+  assert.match(await p.locator(`label[for="${await mo.nth(0).getAttribute("id")}"]`).textContent(), /(lunes|monday).*1/i, "each input has its label with the day and the range");
   for (const d of ["tu", "we", "th", "fr", "sa"]) await day(d).locator('[data-action="copy-previous"]').click();
 
   // Sunday: a range with opening = closing is marked before saving.
@@ -82,20 +93,19 @@ test("a week entered in the panel: ranges, «same as the day before», the warni
 
   await p.evaluate(async () => window.wp.data.dispatch("core/editor").savePost());
   await p.waitForFunction(() => !window.wp.data.select("core/editor").isSavingPost(), null, { timeout: 30000 });
-  const stored = await wp(`/${type("location")}/${r.json.id}?context=edit`);
+  // What was stored: the server's answer to the save, as the editor keeps it (no other request).
+  const stored = { json: await p.evaluate((id) => window.wp.data.select("core/editor").getCurrentPost()) };
   const six = ["08:00-16:00"];
   assert.equal(stored.json.meta.estrategia_web_location_hours, JSON.stringify({ mo: six, tu: six, we: six, th: six, fr: six, sa: six }), "Monday copied down to Saturday; Sunday's 10:00-10:00 not kept");
   assert.deepEqual(errors, []);
 });
 
 test("the constructor offers a template's new fields to a copy made before them, and adds them only when asked", async () => {
-  const before = await ctApi("/eweb_location");
-  assert.equal(before.status, 200, JSON.stringify(before.json));
-  const old = structuredClone(before.json.definition);
+  const old = structuredClone(template);
   old.fields = old.fields.slice(0, 8); // the copy as it was on 17-10-2026
   const put = await ctApi("/eweb_location", { method: "POST", body: { definition: old, confirm: true } });
   assert.equal(put.status, 200, JSON.stringify(put.json));
-  const missing = before.json.definition.fields.length - 8;
+  const missing = template.fields.length - 8;
   assert.equal(put.json.missingFields.length, missing);
 
   // 2.0.0: each type has its own edit screen (the list's «Edit» links there).
@@ -110,7 +120,7 @@ test("the constructor offers a template's new fields to a copy made before them,
   await p.click('[data-action="save"]');
   await p.locator("[data-saved]").waitFor({ timeout: 20000 }); // 2.0.0: the screen stays on the type after saving.
   const after = await ctApi("/eweb_location");
-  assert.deepEqual(after.json.definition.fields.map((f) => f.name), before.json.definition.fields.map((f) => f.name), "the same fields, in the template's order");
+  assert.deepEqual(after.json.definition.fields.map((f) => f.name), template.fields.map((f) => f.name), "the same fields, in the template's order");
   assert.deepEqual(after.json.missingFields, []);
   assert.deepEqual(errors, []);
 });

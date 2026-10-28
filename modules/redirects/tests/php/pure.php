@@ -117,4 +117,23 @@ $out['semi']       = $semi['rows'];
 $out['noheader']   = Rules::parse_csv( "/a/,/b/,301,nota\n" )['rows'];
 $out['cell']       = array( Rules::cell( '=1+1' ), Rules::cell( '/a/' ), Rules::cell( '-x' ) );
 
+// Conflicts::detect() (28-10-2026; it was checked by loading the screen three
+// times in a browser). get_option and apply_filters are played here; the
+// trap: RANK_MATH_VERSION cannot be undefined, so the case without Rank Math
+// goes first.
+$GLOBALS['rank_math_modules'] = array();
+function get_option( $name, $fallback = false ) {
+	return 'rank_math_modules' === $name ? $GLOBALS['rank_math_modules'] : $fallback;
+}
+function apply_filters( $hook, $value ) {
+	return $value;
+}
+require dirname( __DIR__, 2 ) . '/includes/class-conflicts.php';
+$out['conflicts_none'] = \EstrategiaWeb\Redirects\Conflicts::detect();
+define( 'RANK_MATH_VERSION', '1.0.0-falso' );
+$GLOBALS['rank_math_modules']       = array( 'sitemap' );
+$out['conflicts_rank_math_without'] = \EstrategiaWeb\Redirects\Conflicts::detect();
+$GLOBALS['rank_math_modules']       = array( 'redirections', 'sitemap' );
+$out['conflicts_rank_math']         = \EstrategiaWeb\Redirects\Conflicts::detect();
+
 echo json_encode( $out, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );

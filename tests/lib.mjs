@@ -37,10 +37,16 @@ export const seedPage = (content, slug = "prueba") => testApi("/page", { method:
 export const rawPost = (id) => testApi(`/raw-post/${id}`);
 
 let users;
-/** { administrator: {user, password}, author: {user, password} } — created once per process. */
-export async function credentials() {
-  users ??= await testApi("/users", { method: "POST" });
-  return users;
+/**
+ * { administrator: {user, password}, author: {user, password} } — created once per process.
+ * The PROMISE is kept, not the result (28-10-2026): two wp() calls in a Promise.all each
+ * created their own application password and one of them got a 401.
+ */
+export function credentials() {
+  // tests/run.mjs creates them ONCE per WordPress when it boots and passes them in EW_CREDENTIALS
+  // (28-10-2026: one request less per test file). A file run by hand without the runner creates its own.
+  if (!users && process.env.EW_CREDENTIALS) users = Promise.resolve(JSON.parse(process.env.EW_CREDENTIALS));
+  return (users ??= testApi("/users", { method: "POST" }));
 }
 
 /**

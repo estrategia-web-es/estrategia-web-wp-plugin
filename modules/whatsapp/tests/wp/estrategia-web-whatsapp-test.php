@@ -15,6 +15,9 @@
  *   which takes the site options and goes bottom-right. In the theme the
  *   second one was the footer's (parts/footer.html); here the theme is
  *   Playground's default (tests/browser.mjs), so the page carries it.
+ *   28-10-2026: a 3000 px spacer between them makes the page long enough to
+ *   scroll, so the same page serves «fixed while scrolling» and «under the
+ *   cookie notice» (they had a page of their own, a second load).
  *
  * POST /wp-json/estrategia-web-whatsapp-test/v1/seed. Idempotent.
  *
@@ -53,6 +56,8 @@ add_action(
 							'post_name'    => 'prueba-whatsapp',
 							'post_content' => wp_slash(
 								'<!-- wp:paragraph --><p>Botones de WhatsApp.</p><!-- /wp:paragraph -->'
+								. '<!-- wp:spacer {"height":"3000px"} --><div style="height:3000px" aria-hidden="true" class="wp-block-spacer"></div><!-- /wp:spacer -->'
+								. '<!-- wp:paragraph --><p>Abajo</p><!-- /wp:paragraph -->'
 								. '<!-- wp:estrategia-web/whatsapp {"phone":"+34 600 11 12 22","message":"Hola, ¿tenéis hora mañana?","position":"bottom-left"} /-->'
 								. '<!-- wp:estrategia-web/whatsapp /-->'
 							),

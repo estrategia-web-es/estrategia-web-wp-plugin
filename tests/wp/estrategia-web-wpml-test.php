@@ -291,8 +291,9 @@ add_action(
 		 * The trap (17-10-2026, in Lavandería): the packages table
 		 * (icl_string_packages) is created by String Translation on the first
 		 * wp-admin request (WPML_Package_Translation_Schema, only with
-		 * is_admin()). In a fresh Playground it does not exist until then: the
-		 * test opens wp-admin first.
+		 * is_admin()). In a fresh Playground it does not exist until then: a
+		 * caller of /blocks opens wp-admin first, or uses /blocks-run (below),
+		 * which runs that schema update itself.
 		 */
 		$route(
 			'/blocks',
@@ -376,6 +377,98 @@ add_action(
 					return array( 'deleted' => array_values( array_filter( array( $post_id, $en ) ) ) );
 				}
 				throw new RuntimeException( "unknown action: $action" );
+			}
+		);
+
+		/*
+		 * 28-10-2026: a WPML test's whole setup in ONE request. A request to
+		 * this WordPress costs ~2,5-5 s (WordPress AND WPML booting); the work
+		 * inside is nothing. Both routes only CHAIN the routes above (and
+		 * /reset, /consent-setup, /wp/v2/pages), dispatched inside this
+		 * request with rest_do_request: same code, same user, no HTTP.
+		 *
+		 *   POST /pair    {slug, title, slug_en, title_en, content, consent?}
+		 *                 (language switcher tests): /reset, /purge of both
+		 *                 slugs, consent as /consent-setup, the Spanish page as
+		 *                 /wp/v2/pages and its English translation as /translate.
+		 *                 Returns {state, es: {id, url}, en: {id, url}}.
+		 *   POST /blocks-run  {slug, slug_en, title, title_en, content, translations}
+		 *                 (tests/wpml-blocks-translated.test.mjs): /reset, /purge,
+		 *                 the page, then /blocks package, translate and delete
+		 *                 (the delete always, also when a step fails).
+		 *                 Returns {state, package, translation}.
+		 * Both FAIL (500, saying why) when WPML is half set up, as requireWpml()
+		 * does; without WPML they are 404 and the test calls requireWpml() for
+		 * its message.
+		 * How to maintain: a step is a dispatch to the route that does it, never
+		 * a copy of its code. The trap: /blocks needs String Translation's
+		 * packages table, which ST only creates on a wp-admin request
+		 * (WPML_Package_Translation_Schema::run_update, only with is_admin());
+		 * /blocks-run runs that update itself, which is what made the test's
+		 * wp-admin login (openWpmlScreen) unnecessary.
+		 */
+		$call = static function ( string $method, string $path, array $body = array() ) {
+			$req = new WP_REST_Request( $method, $path );
+			if ( 'GET' !== $method ) {
+				$req->set_header( 'Content-Type', 'application/json' );
+				$req->set_body( (string) wp_json_encode( $body ) );
+			}
+			$res = rest_do_request( $req );
+			if ( $res->is_error() || $res->get_status() >= 300 ) {
+				throw new RuntimeException( $method . ' ' . $path . ' -> ' . $res->get_status() . ' ' . wp_json_encode( $res->get_data() ) );
+			}
+			return $res->get_data();
+		};
+		$ready = static function () use ( $call ) {
+			$state = $call( 'GET', '/estrategia-web-wpml-test/v1/state' );
+			if ( empty( $state['setup_complete'] ) || empty( $state['verified'] ) ) {
+				throw new RuntimeException( 'WPML half installed (tests/wp/setup-wpml.php did not finish): ' . wp_json_encode( $state ) );
+			}
+			$call( 'POST', '/estrategia-web-site-test/v1/reset' );
+			return $state;
+		};
+		$ns = '/estrategia-web-wpml-test/v1';
+
+		$route(
+			'/pair',
+			'POST',
+			static function ( WP_REST_Request $r ) use ( $call, $ready, $ns ) {
+				$state = $ready();
+				$call( 'POST', $ns . '/purge', array( 'slugs' => array( (string) $r->get_param( 'slug' ), (string) $r->get_param( 'slug_en' ) ) ) );
+				if ( null !== $r->get_param( 'consent' ) ) {
+					$call( 'POST', '/estrategia-web-site-test/v1/consent-setup', (array) $r->get_param( 'consent' ) );
+				}
+				$es = $call( 'POST', '/wp/v2/pages', array( 'title' => (string) $r->get_param( 'title' ), 'slug' => (string) $r->get_param( 'slug' ), 'status' => 'publish', 'content' => (string) $r->get_param( 'content' ) ) );
+				$en = $call( 'POST', $ns . '/translate', array( 'kind' => 'post', 'type' => 'page', 'original' => (int) $es['id'], 'title' => (string) $r->get_param( 'title_en' ), 'slug' => (string) $r->get_param( 'slug_en' ), 'content' => (string) $r->get_param( 'content' ) ) );
+				return array(
+					'state' => $state,
+					'es'    => array( 'id' => (int) $es['id'], 'url' => (string) $es['link'] ),
+					'en'    => $en,
+				);
+			}
+		);
+
+		$route(
+			'/blocks-run',
+			'POST',
+			static function ( WP_REST_Request $r ) use ( $call, $ready, $ns ) {
+				$state = $ready();
+				if ( class_exists( 'WPML_Package_Translation_Schema' ) ) {
+					WPML_Package_Translation_Schema::run_update();
+				}
+				$call( 'POST', $ns . '/purge', array( 'slugs' => array( (string) $r->get_param( 'slug' ), (string) $r->get_param( 'slug_en' ) ) ) );
+				$page = $call( 'POST', '/wp/v2/pages', array( 'title' => (string) $r->get_param( 'title' ), 'slug' => (string) $r->get_param( 'slug' ), 'status' => 'publish', 'content' => (string) $r->get_param( 'content' ) ) );
+				try {
+					$package     = $call( 'POST', $ns . '/blocks', array( 'action' => 'package', 'post_id' => (int) $page['id'] ) );
+					$translation = $call( 'POST', $ns . '/blocks', array( 'action' => 'translate', 'post_id' => (int) $page['id'], 'translations' => (array) $r->get_param( 'translations' ), 'slug' => (string) $r->get_param( 'slug_en' ), 'title' => (string) $r->get_param( 'title_en' ) ) );
+				} finally {
+					$call( 'POST', $ns . '/blocks', array( 'action' => 'delete', 'post_id' => (int) $page['id'] ) );
+				}
+				return array(
+					'state'       => $state,
+					'package'     => $package,
+					'translation' => $translation,
+				);
 			}
 		);
 	}
