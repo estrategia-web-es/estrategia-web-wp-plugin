@@ -24,6 +24,15 @@ no WPML) is in
 - Slug and text domain: `estrategia-web-forms` · WordPress **7.1+** · PHP **8.1+** · GPLv2+
 - No dependencies, no `node_modules`, no build step.
 
+> **Since 1.9.0 a form is a post of its own** (`eweb_form`, «Formulario»),
+> like Formello's: it is created and edited in **Forms → Forms**, and a page
+> shows it with the **«Form» reference block** (`estrategia-web-forms/form-ref`).
+> What the form post holds is the same block tree as before, so everything
+> below about fields, notifications, markers and preselection still holds;
+> only WHERE the tree lives changed. Sites with forms written inside pages
+> move them with `wp estrategia-web migrate-forms` (below, «Form posts and
+> the migration»).
+
 ## What it does
 
 1. **Blocks**: «Form» (container) and inside it «Text field», «Email
@@ -56,10 +65,13 @@ no WPML) is in
 
 ## Configuring a form
 
-1. In the editor, add the **Form** block. It comes with a template:
-   name, email, message, consent, button and two notifications (to the site
-   and an acknowledgement to the sender). Change, remove or add whatever is
-   needed.
+1. **Forms → Forms → Add form** (1.9.0). The new form post comes with the
+   Form block and its template: name, email, message, consent, button and
+   two notifications (to the site and an acknowledgement to the sender).
+   Change, remove or add whatever is needed; the post title is only its name
+   in the admin. To show it on a page, add the **«Form»** block there and
+   choose it from the list. (Before 1.9.0 the Form block went straight into
+   the page; it no longer appears in the inserter.)
 2. In the form's side panel: the **Name in the submissions log**, the **Form
    identifier** and, if needed, custom success and error messages.
 3. Each field: its **name (key)** is the one used in markers (`{{email}}`)
@@ -163,6 +175,47 @@ Hooks for the unusual: `estrategia_web_forms_email` (tweak a notification),
 `estrategia_web_forms_capability` (who sees the submissions, `manage_options`
 by default), `estrategia_web_forms_client_ip` (IP behind a trusted proxy),
 `estrategia_web_forms_csv_separator` (`;` by default) and `estrategia_web_forms_settings`.
+
+## Form posts and the migration (1.9.0)
+
+**The model.** A form is a post of type `eweb_form` (not public, no URL,
+edited with the block editor, page capabilities, translatable with WPML).
+Its content is ONE Form block (the template puts it, locked) with the
+fields, button and notifications inside: exactly the tree a page used to
+carry. A page shows it with the **«Form» reference block**
+(`estrategia-web-forms/form-ref`, attribute `ref` = the form post's id),
+which renders the form post's blocks as its own inner blocks, so the HTML,
+the token, the antispam, the REST submission, the no-JS POST and the
+preselection of a synced pattern (its `content`) are the same as inline.
+With WPML the reference renders the form post of the current language (or
+the original), whatever id it stores: when WPML copies the block from the
+original page into a translation, the English page still shows the English
+form. Rules and traps: [includes/class-form-post-type.php](includes/class-form-post-type.php)
+and `Blocks::render_form_ref()` in [includes/class-blocks.php](includes/class-blocks.php).
+
+- **Why a new block and not the old Form block pointing to a post**: the
+  old block is the form post's root, and on sites that have not migrated it
+  still renders inline. Two jobs, two blocks.
+- **Per-page preselection without a synced pattern** is not a reference
+  attribute (yet): wrap the reference in a synced pattern and use its
+  `content`, or link with `?af_<field>=`.
+
+**The migration**, on each site after updating, with a backup:
+
+    wp estrategia-web migrate-forms --dry-run     what it would create and change
+    wp estrategia-web migrate-forms               does it
+    wp estrategia-web migrate-forms --ids=14,190  only those posts
+
+Every form tree written inside a post becomes a form post per **identifier
+and language** (two identifiers are never unified; the same identifier
+copied into two posts of one language is one form post, and the report says
+whether the copies were identical), the translations are linked by
+identifier, and the tree is replaced by the reference block, byte for byte
+around it. The original content stays in the post meta
+`_eweb_forms_migration_backup`. Idempotent («ya» the second time). The
+submissions keep their identifier, so the log does not split. Everything
+else (order of steps, edge cases, the trap of re-serializing), in the
+header of [includes/class-form-migration.php](includes/class-form-migration.php).
 
 ## Decisions, with their reasons
 

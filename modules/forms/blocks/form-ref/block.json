@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "estrategia-web-forms/form-ref",
+	"version": "0.1.0",
+	"title": "Form",
+	"category": "widgets",
+	"icon": "feedback",
+	"description": "Shows one of the site's forms. The form itself is edited in Forms → Forms.",
+	"keywords": [ "contact", "form", "email", "quote" ],
+	"textdomain": "estrategia-web",
+	"attributes": {
+		"ref": { "type": "integer", "default": 0 }
+	},
+	"usesContext": [ "postId", "postType", "pattern/overrides" ],
+	"supports": {
+		"html": false,
+		"reusable": false,
+		"customClassName": false
+	},
+	"editorScript": "estrategia-web-forms-editor",
+	"editorStyle": "estrategia-web-forms-editor",
+	"style": "estrategia-web-forms"
+}

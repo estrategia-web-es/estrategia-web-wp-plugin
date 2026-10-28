@@ -318,6 +318,7 @@ msgid "Cookies"
 msgstr "Galetes"
 
 #: modules/consent/includes/admin/class-cookies-page.php:84
+#: modules/forms/includes/class-form-post-type.php:148
 msgid "Sorry, you are not allowed to do that."
 msgstr "No tens permís per fer això."
 
@@ -1743,7 +1744,7 @@ msgstr ""
 "plantilla o importa un fitxer JSON."
 
 #: modules/content-types/includes/admin/class-types-table.php:114
-#: modules/forms/includes/admin/class-forms-list.php:204
+#: modules/forms/includes/admin/class-forms-list.php:239
 #: modules/redirects/includes/admin/class-tables.php:89
 msgid "Edit"
 msgstr "Edita"
@@ -2901,6 +2902,26 @@ msgstr "administrador del web"
 msgid "Not shown to visitors. Edit it in the side panel."
 msgstr "Els visitants no el veuen. Es modifica al tauler lateral."
 
+#: modules/forms/assets/editor.js:466
+msgid "Choose a form"
+msgstr "Tria un formulari"
+
+#: modules/forms/assets/editor.js:469
+msgid "not published"
+msgstr "sense publicar"
+
+#: modules/forms/assets/editor.js:481
+msgid "Edit this form"
+msgstr "Edita aquest formulari"
+
+#: modules/forms/assets/editor.js:494
+msgid ""
+"Choose which of the site's forms to show here. Forms are created and edited "
+"in Forms → Forms."
+msgstr ""
+"Tria quin formulari del lloc es mostra aquí. Els formularis es creen i "
+"s'editen a Formularis → Formularis."
+
 #: modules/forms/blocks/checkbox/block.json
 msgctxt "block description"
 msgid ""
@@ -2925,34 +2946,53 @@ msgctxt "block title"
 msgid "Email field"
 msgstr "Camp de correu"
 
-#: modules/forms/blocks/form/block.json
-msgctxt "block description"
-msgid ""
-"A form built with blocks. Its fields go inside; its email notifications too."
-msgstr ""
-"Un formulari fet amb blocs. A dins hi van els seus camps, i també els seus "
-"avisos per correu."
-
+#: modules/forms/blocks/form-ref/block.json
 #: modules/forms/blocks/form/block.json
 msgctxt "block title"
 msgid "Form"
 msgstr "Formulari"
 
+#: modules/forms/blocks/form-ref/block.json
+msgctxt "block description"
+msgid ""
+"Shows one of the site's forms. The form itself is edited in Forms → Forms."
+msgstr ""
+"Mostra un dels formularis del lloc. El formulari s'edita a Formularis → "
+"Formularis."
+
+#: modules/forms/blocks/form-ref/block.json
 #: modules/forms/blocks/form/block.json
 #: modules/whatsapp/blocks/whatsapp/block.json
 msgctxt "block keyword"
 msgid "contact"
 msgstr "contacte"
 
+#: modules/forms/blocks/form-ref/block.json
 #: modules/forms/blocks/form/block.json
 msgctxt "block keyword"
 msgid "email"
 msgstr "correu"
 
+#: modules/forms/blocks/form-ref/block.json
 #: modules/forms/blocks/form/block.json
 msgctxt "block keyword"
 msgid "form"
 msgstr "formulari"
+
+#: modules/forms/blocks/form-ref/block.json
+msgctxt "block keyword"
+msgid "quote"
+msgstr "pressupost"
+
+#: modules/forms/blocks/form/block.json
+msgctxt "block description"
+msgid ""
+"The form itself, edited in Forms → Forms. Its fields go inside; its email "
+"notifications too. Pages show it with the «Form» block."
+msgstr ""
+"El formulari pròpiament dit, que s'edita a Formularis → Formularis. A dins "
+"hi van els seus camps, i també els seus avisos per correu. Les pàgines el "
+"mostren amb el bloc «Formulari»."
 
 #: modules/forms/blocks/notification/block.json
 msgctxt "block description"
@@ -3030,7 +3070,8 @@ msgstr "Enviaments de formularis"
 
 #: modules/forms/includes/admin/class-admin.php:47
 #: modules/forms/includes/admin/class-admin.php:59
-#: modules/forms/includes/admin/class-forms-list.php:217
+#: modules/forms/includes/admin/class-forms-list.php:254
+#: modules/forms/includes/class-form-post-type.php:84
 msgid "Forms"
 msgstr "Formularis"
 
@@ -3045,7 +3086,7 @@ msgstr "Paràmetres dels formularis"
 
 #: modules/forms/includes/admin/class-admin.php:76
 #: modules/forms/includes/admin/class-admin.php:265
-#: modules/forms/includes/admin/class-forms-list.php:211
+#: modules/forms/includes/admin/class-forms-list.php:246
 msgid "You are not allowed to see this page."
 msgstr "No tens permís per veure aquesta pàgina."
 
@@ -3077,7 +3118,7 @@ msgid "Data"
 msgstr "Dades"
 
 #: modules/forms/includes/admin/class-admin.php:143
-#: modules/forms/includes/admin/class-forms-list.php:224
+#: modules/forms/includes/admin/class-forms-list.php:273
 #: modules/forms/includes/admin/class-submissions-table.php:34
 msgid "Notifications"
 msgstr "Avisos"
@@ -3112,8 +3153,9 @@ msgid "Details"
 msgstr "Detalls"
 
 #: modules/forms/includes/admin/class-admin.php:156
-#: modules/forms/includes/admin/class-forms-list.php:222
+#: modules/forms/includes/admin/class-forms-list.php:271
 #: modules/forms/includes/admin/class-submissions-table.php:31
+#: modules/forms/includes/class-form-post-type.php:85
 msgid "Form"
 msgstr "Formulari"
 
@@ -3240,50 +3282,80 @@ msgid "Email footer"
 msgstr "Peu dels correus"
 
 #. translators: %d: post ID.
-#: modules/forms/includes/admin/class-forms-list.php:201
+#: modules/forms/includes/admin/class-forms-list.php:236
 #, php-format
 msgid "(no title, #%d)"
 msgstr "(sense títol, núm. %d)"
 
-#: modules/forms/includes/admin/class-forms-list.php:218
-msgid ""
-"The forms on this site and where they are. A form is edited in its block: "
-"open the page or pattern it is in. Its name and identifier are the ones the "
-"submissions log shows."
-msgstr ""
-"Els formularis del lloc i on són. Un formulari s'edita al seu bloc: obre la "
-"pàgina o el patró on és. El seu nom i el seu identificador són els que "
-"mostra el registre d'enviaments."
+#: modules/forms/includes/admin/class-forms-list.php:256
+#: modules/forms/includes/class-form-post-type.php:86
+#: modules/forms/includes/class-form-post-type.php:87
+msgid "Add form"
+msgstr "Afegeix un formulari"
 
-#: modules/forms/includes/admin/class-forms-list.php:223
+#: modules/forms/includes/admin/class-forms-list.php:259
+msgid ""
+"The forms on this site and where they are used. Edit a form here; to show it "
+"on a page, add the «Form» block and choose it. Its name and identifier are "
+"the ones the submissions log shows."
+msgstr ""
+"Els formularis del lloc i on s'usen. Edita aquí cada formulari; per mostrar-"
+"lo en una pàgina, afegeix el bloc «Formulari» i tria'l. El seu nom i el seu "
+"identificador són els que mostra el registre d'enviaments."
+
+#. translators: %d: number of forms written inside pages or patterns.
+#: modules/forms/includes/admin/class-forms-list.php:264
+#, php-format
+msgid ""
+"%d form is still written inside a page or a pattern. Move it to its own form "
+"with the command «wp estrategia-web migrate-forms» (try it first with --dry-"
+"run)."
+msgid_plural ""
+"%d forms are still written inside a page or a pattern. Move them to their "
+"own forms with the command «wp estrategia-web migrate-forms» (try it first "
+"with --dry-run)."
+msgstr[0] "%d formulari encara és escrit dins una pàgina o un patró. Passa'l a un formulari propi amb l'ordre «wp estrategia-web migrate-forms» (prova-la abans amb --dry-run)."
+msgstr[1] "%d formularis encara són escrits dins una pàgina o un patró. Passa'ls a formularis propis amb l'ordre «wp estrategia-web migrate-forms» (prova-la abans amb --dry-run)."
+
+#: modules/forms/includes/admin/class-forms-list.php:272
 msgid "Where it is"
 msgstr "On és"
 
-#: modules/forms/includes/admin/class-forms-list.php:226
+#: modules/forms/includes/admin/class-forms-list.php:275
 msgid "Also in"
 msgstr "També en"
 
-#: modules/forms/includes/admin/class-forms-list.php:232
+#: modules/forms/includes/admin/class-forms-list.php:281
 msgid ""
-"There are no forms yet. Add a «Form» block to a page or a synced pattern."
+"There are no forms yet. Add one with «Add form», then show it on a page with "
+"the «Form» block."
 msgstr ""
-"Encara no hi ha formularis. Afegeix un bloc «Formulari» a una pàgina o a un "
-"patró sincronitzat."
+"Encara no hi ha formularis. Crea'n un amb «Afegeix un formulari» i mostra'l "
+"en una pàgina amb el bloc «Formulari»."
 
-#: modules/forms/includes/admin/class-forms-list.php:237
+#: modules/forms/includes/admin/class-forms-list.php:286
 msgid "(no name)"
 msgstr "(sense nom)"
 
-#: modules/forms/includes/admin/class-forms-list.php:246
+#: modules/forms/includes/admin/class-forms-list.php:295
+#: modules/forms/includes/admin/class-forms-list.php:323
 msgid "Used in:"
 msgstr "S'utilitza a:"
 
-#: modules/forms/includes/admin/class-forms-list.php:253
+#: modules/forms/includes/admin/class-forms-list.php:313
+msgid "Not used on any page yet."
+msgstr "Encara no s'usa en cap pàgina."
+
+#: modules/forms/includes/admin/class-forms-list.php:317
+msgid "Written inside this content (not migrated)."
+msgstr "Escrit dins aquest contingut (sense migrar)."
+
+#: modules/forms/includes/admin/class-forms-list.php:330
 msgid "No page uses this pattern."
 msgstr "Cap pàgina no utilitza aquest patró."
 
 #. translators: %d: number of email notifications.
-#: modules/forms/includes/admin/class-forms-list.php:262
+#: modules/forms/includes/admin/class-forms-list.php:339
 #, php-format
 msgid "%d notification"
 msgid_plural "%d notifications"
@@ -3291,7 +3363,7 @@ msgstr[0] "%d avís"
 msgstr[1] "%d avisos"
 
 #. translators: %d: position of the notification in the form.
-#: modules/forms/includes/admin/class-forms-list.php:270
+#: modules/forms/includes/admin/class-forms-list.php:347
 #, php-format
 msgid "Notification %d"
 msgstr "Avís %d"
@@ -3324,30 +3396,58 @@ msgstr "Tots enviats"
 msgid "Some failed"
 msgstr "Algun ha fallat"
 
-#: modules/forms/includes/class-blocks.php:80
+#: modules/forms/includes/class-blocks.php:81
 msgid ""
 "The message could not be sent. Please check your connection and try again."
 msgstr ""
 "No s'ha pogut enviar el missatge. Comprova la connexió i torna-ho a provar."
 
-#: modules/forms/includes/class-blocks.php:103
+#: modules/forms/includes/class-blocks.php:104
 msgid "Leave this field empty"
 msgstr "Deixa aquest camp buit"
 
-#: modules/forms/includes/class-blocks.php:195
+#: modules/forms/includes/class-blocks.php:232
 msgid "Choose an option"
 msgstr "Tria una opció"
 
-#: modules/forms/includes/class-blocks.php:221
+#: modules/forms/includes/class-blocks.php:258
 msgid "Send"
 msgstr "Envia"
 
 #. translators: the text between braces becomes the link to the privacy policy.
 #. translators: the text between braces becomes the link to the privacy policy; {text|url} links to that url.
-#: modules/forms/includes/class-blocks.php:270
-#: modules/forms/includes/class-blocks.php:296
+#: modules/forms/includes/class-blocks.php:307
+#: modules/forms/includes/class-blocks.php:333
 msgid "I have read and accept the {privacy policy}."
 msgstr "He llegit i accepto la {política de privadesa}."
+
+#: modules/forms/includes/class-form-post-type.php:88
+msgid "Edit form"
+msgstr "Edita el formulari"
+
+#: modules/forms/includes/class-form-post-type.php:89
+msgid "New form"
+msgstr "Formulari nou"
+
+#: modules/forms/includes/class-form-post-type.php:90
+msgid "Search forms"
+msgstr "Cerca formularis"
+
+#: modules/forms/includes/class-form-post-type.php:91
+msgid "No forms found."
+msgstr "No s'ha trobat cap formulari."
+
+#: modules/forms/includes/class-form-post-type.php:92
+msgid "No forms found in Trash."
+msgstr "No s'ha trobat cap formulari a la paperera."
+
+#: modules/forms/includes/class-form-post-type.php:93
+msgid "Form published."
+msgstr "S'ha publicat el formulari."
+
+#: modules/forms/includes/class-form-post-type.php:94
+msgid "Form updated."
+msgstr "S'ha actualitzat el formulari."
 
 #: modules/forms/includes/class-notifier.php:61
 msgid "No valid recipient."
@@ -4694,439 +4794,3 @@ msgstr "Número de WhatsApp en format internacional, només xifres."
 #: modules/whatsapp/module.php:67
 msgid "Predefined WhatsApp message."
 msgstr "Missatge predefinit de WhatsApp."
-
-#~ msgid "Types"
-#~ msgstr "Tipus"
-
-#~ msgid "Switched off"
-#~ msgstr "Desactivat"
-
-#~ msgid "Switch off"
-#~ msgstr "Desactiva"
-
-#~ msgid "Switch on"
-#~ msgstr "Activa"
-
-#~ msgid "Add content type"
-#~ msgstr "Afegeix un tipus de contingut"
-
-#~ msgid "Or paste the JSON here"
-#~ msgstr "O enganxa aquí el JSON"
-
-#~ msgid "Templates"
-#~ msgstr "Plantilles"
-
-#~ msgid "The type"
-#~ msgstr "El tipus"
-
-#, php-format
-#~ msgid "Field %1$d: %2$s"
-#~ msgstr "Camp %1$d: %2$s"
-
-#~ msgctxt "module name"
-#~ msgid "Translated front page (WPML)"
-#~ msgstr "Pàgina d'inici traduïda (WPML)"
-
-#~ msgctxt "module description"
-#~ msgid ""
-#~ "With WPML, /en/ shows the translated front page instead of the latest "
-#~ "posts. Without WPML it does nothing."
-#~ msgstr ""
-#~ "Amb WPML, /en/ mostra la pàgina d'inici traduïda en lloc de les darreres "
-#~ "entrades. Sense WPML no fa res."
-
-#~ msgid "Google"
-#~ msgstr "Google"
-
-#~ msgid "Social networks are edited in Estrategia Web › Social networks."
-#~ msgstr "Les xarxes socials es modifiquen a Estrategia Web › Xarxes socials."
-
-#~ msgid ""
-#~ "Clients, testimonials, locations, projects and portfolio are added and "
-#~ "switched on and off in Estrategia Web › Content types."
-#~ msgstr ""
-#~ "Els clients, opinions, seus, projectes i portafolis s'afegeixen, "
-#~ "s'activen i es desactiven a Estrategia Web › Tipus de contingut."
-
-#~ msgid ""
-#~ "The Content types module is off: clients, testimonials, locations, "
-#~ "projects and portfolio are not registered (their content is kept). Switch "
-#~ "it on in Estrategia Web › Modules."
-#~ msgstr ""
-#~ "El mòdul Tipus de contingut està desactivat: els clients, opinions, seus, "
-#~ "projectes i portafolis no es registren (el seu contingut es conserva). "
-#~ "Activa'l a Estrategia Web › Mòduls."
-
-#~ msgid "Clients"
-#~ msgstr "Clients"
-
-#~ msgid "Testimonials"
-#~ msgstr "Opinions"
-
-#~ msgid "Locations"
-#~ msgstr "Seus"
-
-#~ msgid "Projects"
-#~ msgstr "Projectes"
-
-#~ msgid "Portfolio"
-#~ msgstr "Portafolis"
-
-#~ msgid ""
-#~ "Only the checked types appear in the menu and on the site. Unchecking a "
-#~ "type does not delete its content: it comes back when it is checked again."
-#~ msgstr ""
-#~ "Només els tipus marcats apareixen al menú i al web. Desmarcar un tipus no "
-#~ "n'esborra el contingut: torna quan es torna a marcar."
-
-#~ msgid "Client"
-#~ msgstr "Client"
-
-#~ msgid "Add client"
-#~ msgstr "Afegeix un client"
-
-#~ msgid "Edit client"
-#~ msgstr "Edita el client"
-
-#~ msgid "New client"
-#~ msgstr "Client nou"
-
-#~ msgid "View client"
-#~ msgstr "Mostra el client"
-
-#~ msgid "View clients"
-#~ msgstr "Mostra els clients"
-
-#~ msgid "Search clients"
-#~ msgstr "Cerca clients"
-
-#~ msgid "No clients found."
-#~ msgstr "No s'ha trobat cap client."
-
-#~ msgid "No clients found in Trash."
-#~ msgstr "No s'ha trobat cap client a la paperera."
-
-#~ msgid "All clients"
-#~ msgstr "Tots els clients"
-
-#~ msgid "Logo or photo"
-#~ msgstr "Logotip o foto"
-
-#~ msgid "Set logo or photo"
-#~ msgstr "Posa un logotip o una foto"
-
-#~ msgid "Sectors"
-#~ msgstr "Sectors"
-
-#~ msgid "Sector"
-#~ msgstr "Sector"
-
-#~ msgid "Add sector"
-#~ msgstr "Afegeix un sector"
-
-#~ msgid "Edit sector"
-#~ msgstr "Edita el sector"
-
-#~ msgid "Search sectors"
-#~ msgstr "Cerca sectors"
-
-#~ msgid "All sectors"
-#~ msgstr "Tots els sectors"
-
-#~ msgid "No sectors found."
-#~ msgstr "No s'ha trobat cap sector."
-
-#~ msgid "Client website"
-#~ msgstr "Web del client"
-
-#~ msgid "Image fit (cover for a photo, contain for a logo)"
-#~ msgstr ""
-#~ "Encaix de la imatge (cover per a una foto, contain per a un logotip)"
-
-#~ msgid "Business type"
-#~ msgstr "Tipus de negoci"
-
-#~ msgid "Testimonial"
-#~ msgstr "Opinió"
-
-#~ msgid "Add testimonial"
-#~ msgstr "Afegeix una opinió"
-
-#~ msgid "Edit testimonial"
-#~ msgstr "Edita l'opinió"
-
-#~ msgid "New testimonial"
-#~ msgstr "Opinió nova"
-
-#~ msgid "View testimonial"
-#~ msgstr "Mostra l'opinió"
-
-#~ msgid "View testimonials"
-#~ msgstr "Mostra les opinions"
-
-#~ msgid "Search testimonials"
-#~ msgstr "Cerca opinions"
-
-#~ msgid "No testimonials found."
-#~ msgstr "No s'ha trobat cap opinió."
-
-#~ msgid "No testimonials found in Trash."
-#~ msgstr "No s'ha trobat cap opinió a la paperera."
-
-#~ msgid "All testimonials"
-#~ msgstr "Totes les opinions"
-
-#~ msgid "Author photo"
-#~ msgstr "Foto de l'autor"
-
-#~ msgid "Set author photo"
-#~ msgstr "Posa la foto de l'autor"
-
-#~ msgid "Author role or company"
-#~ msgstr "Càrrec o empresa de l'autor"
-
-#~ msgid "Rating (1 to 5)"
-#~ msgstr "Valoració (de 1 a 5)"
-
-#~ msgid "Related client"
-#~ msgstr "Client relacionat"
-
-#~ msgid "Location"
-#~ msgstr "Seu"
-
-#~ msgid "Add location"
-#~ msgstr "Afegeix una seu"
-
-#~ msgid "Edit location"
-#~ msgstr "Edita la seu"
-
-#~ msgid "New location"
-#~ msgstr "Seu nova"
-
-#~ msgid "View location"
-#~ msgstr "Mostra la seu"
-
-#~ msgid "View locations"
-#~ msgstr "Mostra les seus"
-
-#~ msgid "Search locations"
-#~ msgstr "Cerca seus"
-
-#~ msgid "No locations found."
-#~ msgstr "No s'ha trobat cap seu."
-
-#~ msgid "No locations found in Trash."
-#~ msgstr "No s'ha trobat cap seu a la paperera."
-
-#~ msgid "All locations"
-#~ msgstr "Totes les seus"
-
-#~ msgid "Set static map image"
-#~ msgstr "Posa la imatge estàtica del mapa"
-
-#~ msgid "Static map image (theme path or URL of this site)"
-#~ msgstr "Imatge del mapa estàtic (camí del tema o URL d'aquest web)"
-
-#~ msgid "Static map image (media library ID)"
-#~ msgstr "Imatge del mapa estàtic (ID de la mediateca)"
-
-#~ msgid "Project"
-#~ msgstr "Projecte"
-
-#~ msgid "Add project"
-#~ msgstr "Afegeix un projecte"
-
-#~ msgid "Edit project"
-#~ msgstr "Edita el projecte"
-
-#~ msgid "New project"
-#~ msgstr "Projecte nou"
-
-#~ msgid "View project"
-#~ msgstr "Mostra el projecte"
-
-#~ msgid "View projects"
-#~ msgstr "Mostra els projectes"
-
-#~ msgid "Search projects"
-#~ msgstr "Cerca projectes"
-
-#~ msgid "No projects found."
-#~ msgstr "No s'ha trobat cap projecte."
-
-#~ msgid "No projects found in Trash."
-#~ msgstr "No s'ha trobat cap projecte a la paperera."
-
-#~ msgid "All projects"
-#~ msgstr "Tots els projectes"
-
-#~ msgid "Project categories"
-#~ msgstr "Categories de projecte"
-
-#~ msgid "Project category"
-#~ msgstr "Categoria de projecte"
-
-#~ msgid "Add category"
-#~ msgstr "Afegeix una categoria"
-
-#~ msgid "Edit category"
-#~ msgstr "Edita la categoria"
-
-#~ msgid "Search categories"
-#~ msgstr "Cerca categories"
-
-#~ msgid "All categories"
-#~ msgstr "Totes les categories"
-
-#~ msgid "No categories found."
-#~ msgstr "No s'ha trobat cap categoria."
-
-#~ msgid "Portfolio item"
-#~ msgstr "Treball del portafolis"
-
-#~ msgid "Add portfolio item"
-#~ msgstr "Afegeix un treball"
-
-#~ msgid "Edit portfolio item"
-#~ msgstr "Edita el treball"
-
-#~ msgid "New portfolio item"
-#~ msgstr "Treball nou"
-
-#~ msgid "View portfolio item"
-#~ msgstr "Mostra el treball"
-
-#~ msgid "View portfolio"
-#~ msgstr "Mostra el portafolis"
-
-#~ msgid "Search portfolio"
-#~ msgstr "Cerca al portafolis"
-
-#~ msgid "No portfolio items found."
-#~ msgstr "No hi ha cap treball al portafolis."
-
-#~ msgid "No portfolio items found in Trash."
-#~ msgstr "No hi ha cap treball a la paperera."
-
-#~ msgid "All portfolio items"
-#~ msgstr "Tots els treballs"
-
-#~ msgid "Portfolio categories"
-#~ msgstr "Categories del portafolis"
-
-#~ msgid "Portfolio category"
-#~ msgstr "Categoria del portafolis"
-
-#~ msgid "Client details"
-#~ msgstr "Dades del client"
-
-#~ msgid "Testimonial details"
-#~ msgstr "Dades de l'opinió"
-
-#~ msgid "Google Maps › Share › Copy link."
-#~ msgstr "Google Maps › Comparteix › Copia l'enllaç."
-
-#~ msgid ""
-#~ "Map picture shown before Google Maps loads (privacy: Google only loads "
-#~ "after a click)."
-#~ msgstr ""
-#~ "Imatge del mapa que es veu abans que es carregui Google Maps (privadesa: "
-#~ "Google només es carrega després d'un clic)."
-
-#~ msgid ""
-#~ "Only if the picture is not in the media library: a theme path (assets/"
-#~ "maps/place.webp) or a URL of this site. The picture above wins."
-#~ msgstr ""
-#~ "Només si la imatge no és a la mediateca: un camí del tema (assets/maps/"
-#~ "seu.webp) o un URL d'aquest lloc. Si hi ha imatge a dalt, mana aquesta."
-
-#~ msgid ""
-#~ "What the client does, e.g. “holiday rental agency”. It is translated; the "
-#~ "name is not."
-#~ msgstr ""
-#~ "A què es dedica el client, p. ex. «agència de lloguer turístic». Es "
-#~ "tradueix; el nom, no."
-
-#~ msgid ""
-#~ "Phone, links and map are copied to the translations when you save; "
-#~ "address and opening hours are translated in each language."
-#~ msgstr ""
-#~ "El telèfon, els enllaços i el mapa es copien a les traduccions quan "
-#~ "deses; l'adreça i l'horari es tradueixen en cada idioma."
-
-#~ msgid "Photo (fills the box, may be cropped)"
-#~ msgstr "Foto (omple el requadre, es pot retallar)"
-
-#~ msgid "Logo (whole, never cropped)"
-#~ msgstr "Logotip (sencer, no es retalla mai)"
-
-#~ msgctxt "module name"
-#~ msgid "Company data and content types"
-#~ msgstr "Dades de l'empresa i tipus de contingut"
-
-#~ msgid ""
-#~ "Content types, taxonomies and fields declared in JSON files of the site. "
-#~ "This screen only shows them: they are changed in the files, in the site’s "
-#~ "repository."
-#~ msgstr ""
-#~ "Tipus de contingut, taxonomies i camps declarats en fitxers JSON del web. "
-#~ "Aquesta pantalla només els mostra: es canvien als fitxers, al repositori "
-#~ "del web."
-
-#~ msgid "does not exist"
-#~ msgstr "no existeix"
-
-#~ msgid "exists"
-#~ msgstr "existeix"
-
-#~ msgid "Declared types"
-#~ msgstr "Tipus declarats"
-
-#~ msgid ""
-#~ "None. Add a JSON file to one of the folders above (see the example in "
-#~ "modules/content-types/examples/)."
-#~ msgstr ""
-#~ "Cap. Afegeix un fitxer JSON a una de les carpetes de dalt (hi ha un "
-#~ "exemple a modules/content-types/examples/)."
-
-#~ msgid "copy"
-#~ msgstr "copia"
-
-#~ msgid "ignore"
-#~ msgstr "ignora"
-
-#~ msgid "File:"
-#~ msgstr "Fitxer:"
-
-#~ msgid "WPML:"
-#~ msgstr "WPML:"
-
-#~ msgid "Meta key"
-#~ msgstr "Clau de la meta"
-
-#~ msgid "WPML"
-#~ msgstr "WPML"
-
-#~ msgid "yes"
-#~ msgstr "sí"
-
-#~ msgctxt "module name"
-#~ msgid "Content types from JSON"
-#~ msgstr "Tipus de contingut des de JSON"
-
-#, php-format
-#~ msgid ""
-#~ "%s must be lowercase letters, digits, “-” and “/” (a URL path without "
-#~ "slashes at the ends)."
-#~ msgstr ""
-#~ "%s només pot tenir lletres minúscules, xifres, «-» i «/» (una ruta d'URL "
-#~ "sense barres als extrems)."
-
-#~ msgid ""
-#~ "For third-party cookies the detector cannot see (for example, the ones "
-#~ "Google sets on its own domain when a map loads). Empty fields are filled "
-#~ "with the proposal, if there is one."
-#~ msgstr ""
-#~ "Per a les galetes de tercers que el detector no pot veure (per exemple, "
-#~ "les que posa Google al seu propi domini quan es carrega un mapa). Els "
-#~ "camps buits s'emplenen amb la proposta, si n'hi ha."

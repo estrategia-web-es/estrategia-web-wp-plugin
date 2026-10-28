@@ -103,7 +103,9 @@ test("editor: the blocks are registered and a new form comes with its template w
   await p.goto(BASE + "/wp-admin/post-new.php?post_type=page");
   await p.waitForFunction(() => window.wp?.blocks?.getBlockType("estrategia-web-forms/form"));
   const names = await p.evaluate(() => wp.blocks.getBlockTypes().map((b) => b.name).filter((n) => n.startsWith("estrategia-web-forms/")).sort());
-  assert.deepEqual(names, ["checkbox", "email", "form", "notification", "select", "submit", "tel", "text", "textarea"].map((n) => "estrategia-web-forms/" + n));
+  assert.deepEqual(names, ["checkbox", "email", "form", "form-ref", "notification", "select", "submit", "tel", "text", "textarea"].map((n) => "estrategia-web-forms/" + n));
+  const inserter = await p.evaluate(() => ({ form: wp.blocks.hasBlockSupport("estrategia-web-forms/form", "inserter", true), ref: wp.blocks.hasBlockSupport("estrategia-web-forms/form-ref", "inserter", true) }));
+  assert.deepEqual(inserter, { form: false, ref: true }, "1.9.0: a page gets the reference block; the form tree lives in a form post");
 
   await p.evaluate(() => wp.data.dispatch("core/block-editor").insertBlocks(wp.blocks.createBlock("estrategia-web-forms/form")));
   await p.waitForFunction(() => wp.data.select("core/block-editor").getBlocks()[0]?.innerBlocks.length > 0);
@@ -114,6 +116,32 @@ test("editor: the blocks are registered and a new form comes with its template w
   assert.match(form.formId, /^form-[a-z0-9]+$/, "the identifier is generated automatically");
   assert.deepEqual(form.inner, ["text", "email", "textarea", "checkbox", "submit", "notification", "notification"]);
   assert.deepEqual(errors, [], "no JavaScript errors in the editor");
+});
+
+// 1.9.0 (class-form-post-type.php): the form post's editor. Seen red (28-10-2026) with the
+// allowed_block_types_all filter unhooked: the reference block was allowed inside a form post.
+test("editor: a new form post comes with the locked Form block and its template; no reference block inside a form", async () => {
+  const errors = [];
+  p.on("pageerror", (e) => errors.push(e.message));
+  await p.goto(BASE + "/wp-admin/post-new.php?post_type=eweb_form");
+  await p.waitForFunction(() => wp.data?.select("core/block-editor")?.getBlocks()[0]?.innerBlocks.length > 0);
+  const state = await p.evaluate(() => {
+    const be = wp.data.select("core/block-editor");
+    const [b] = be.getBlocks();
+    return {
+      count: be.getBlocks().length,
+      name: b.name,
+      lock: b.attributes.lock,
+      inner: b.innerBlocks.map((i) => i.name.replace("estrategia-web-forms/", "")),
+      refAllowed: be.canInsertBlockType("estrategia-web-forms/form-ref"),
+    };
+  });
+  assert.equal(state.count, 1);
+  assert.equal(state.name, "estrategia-web-forms/form");
+  assert.deepEqual(state.lock, { move: true, remove: true });
+  assert.deepEqual(state.inner, ["text", "email", "textarea", "checkbox", "submit", "notification", "notification"]);
+  assert.equal(state.refAllowed, false, "a form inside a form");
+  assert.deepEqual(errors, []);
 });
 
 test("editor: the preselected option follows its TEXT when options are reordered or removed", async () => {

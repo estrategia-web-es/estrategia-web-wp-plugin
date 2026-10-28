@@ -140,6 +140,63 @@ add_action(
 
 		$route( '/post/(?P<id>\d+)', 'GET', static fn( WP_REST_Request $r ) => array( 'content' => (string) get_post_field( 'post_content', (int) $r['id'], 'raw' ) ) );
 
+		// 1.9.0, the form posts and their migrator (tests/form-ref.test.mjs, form-migration*.test.mjs).
+		// {dry, ids}: Form_Migration::run(), as the WP-CLI command, as the administrator.
+		$route(
+			'/migrate-forms',
+			'POST',
+			static function ( WP_REST_Request $r ) {
+				wp_set_current_user( 1 );
+				return \EstrategiaWeb\Forms\Form_Migration::run( (bool) $r->get_param( 'dry' ), array_map( 'intval', (array) $r->get_param( 'ids' ) ) );
+			}
+		);
+		// GET: every form post (any status but trash) with its content, language and WPML trid. DELETE: all of them, for good.
+		$route(
+			'/eweb-forms',
+			'GET,DELETE',
+			static function ( WP_REST_Request $r ) {
+				$ids = get_posts( array( 'post_type' => 'eweb_form', 'post_status' => 'any', 'numberposts' => -1, 'fields' => 'ids', 'suppress_filters' => true, 'orderby' => 'ID', 'order' => 'ASC' ) );
+				$out = array();
+				foreach ( $ids as $id ) {
+					if ( 'DELETE' === $r->get_method() ) {
+						wp_delete_post( $id, true );
+						continue;
+					}
+					$lang  = apply_filters( 'wpml_post_language_details', null, $id );
+					$out[] = array(
+						'id'      => (int) $id,
+						'title'   => get_the_title( $id ),
+						'status'  => get_post_status( $id ),
+						'content' => (string) get_post_field( 'post_content', $id, 'raw' ),
+						'lang'    => is_array( $lang ) ? (string) ( $lang['language_code'] ?? '' ) : '',
+						'trid'    => (int) apply_filters( 'wpml_element_trid', null, $id, 'post_eweb_form' ),
+					);
+				}
+				return $out;
+			}
+		);
+		$route( '/backup/(?P<id>\d+)', 'GET', static fn( WP_REST_Request $r ) => get_post_meta( (int) $r['id'], \EstrategiaWeb\Forms\Form_Migration::BACKUP_META ) );
+		// {title, content, status}: a form post, as the administrator would save it.
+		$route(
+			'/eweb-form',
+			'POST',
+			static function ( WP_REST_Request $r ) {
+				kses_remove_filters();
+				$id = wp_insert_post(
+					wp_slash(
+						array(
+							'post_type'    => 'eweb_form',
+							'post_status'  => (string) ( $r->get_param( 'status' ) ?: 'publish' ),
+							'post_title'   => (string) $r->get_param( 'title' ),
+							'post_content' => (string) $r->get_param( 'content' ),
+						)
+					),
+					true
+				);
+				return is_wp_error( $id ) ? $id : array( 'id' => (int) $id );
+			}
+		);
+
 		$route( '/mails', 'GET', static fn() => get_option( ESTRATEGIA_WEB_FORMS_TEST_MAILS, array() ) );
 
 		$route( '/submissions', 'GET', static fn() => \EstrategiaWeb\Forms\Submissions::query( '', 0 )['rows'] );
