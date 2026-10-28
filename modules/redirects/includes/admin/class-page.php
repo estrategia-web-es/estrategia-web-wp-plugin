@@ -178,7 +178,8 @@ final class Page {
 			'log'    => __( '404 log', 'estrategia-web' ),
 			'import' => __( 'Import / export', 'estrategia-web' ),
 		);
-		echo '<div class="wrap estrategia-web-redirects"><h1>' . esc_html__( 'Redirects', 'estrategia-web' ) . '</h1>';
+		echo '<div class="wrap ew-screen estrategia-web-redirects">';
+		\EstrategiaWeb\Admin\Admin_UI::header( __( 'Redirects', 'estrategia-web' ), __( 'Old addresses that send visitors to the new ones (301, 302), or say a page is gone for good (410).', 'estrategia-web' ) );
 
 		$conflicts = Conflicts::detect();
 		if ( $conflicts ) {
@@ -189,15 +190,15 @@ final class Page {
 		}
 		self::notice();
 
-		echo '<nav class="nav-tab-wrapper">';
+		$links   = array();
+		$editing = 'edit' === $view && ( isset( $_GET['id'] ) || ( self::$failed && ! empty( self::$failed[0]['id'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		foreach ( $tabs as $key => $label ) {
-			$editing = 'edit' === $view && ( isset( $_GET['id'] ) || ( self::$failed && ! empty( self::$failed[0]['id'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 			if ( 'edit' === $key && $editing ) {
 				$label = __( 'Edit redirect', 'estrategia-web' );
 			}
-			printf( '<a href="%s" class="nav-tab%s">%s</a>', esc_url( self::url( 'list' === $key ? array() : array( 'view' => $key ) ) ), $key === $view ? ' nav-tab-active' : '', esc_html( $label ) );
+			$links[ $key ] = array( $label, self::url( 'list' === $key ? array() : array( 'view' => $key ) ) );
 		}
-		echo '</nav>';
+		\EstrategiaWeb\Admin\Admin_UI::tabs( $links, $view, __( 'Redirects sections', 'estrategia-web' ) );
 
 		switch ( $view ) {
 			case 'edit':

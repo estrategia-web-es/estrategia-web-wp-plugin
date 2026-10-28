@@ -15,7 +15,7 @@ archived) and four blocks registered by the theme. **The public names of
 filters): what changed is where the code lives. The general framework is in
 [armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md](E:/Repositories/armazon/decisiones/2026-10-01-wordpress-tema-padre-compartido.md).
 
-- Slug, folder and text domain: `estrategia-web` (`estrategia-web/estrategia-web.php`) · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · version **2.0.0**
+- Slug, folder and text domain: `estrategia-web` (`estrategia-web/estrategia-web.php`) · WordPress **7.1+** · PHP **8.1+** · GPLv2+ · version **2.0.1**
 - The repo is still called `armazon-wp-sitio`; the plugin folder on a site is `estrategia-web/`.
 - No dependencies, no `node_modules`, no build step.
 
@@ -73,6 +73,14 @@ Dashboard), that opens on Company details:
 | Redirects | `estrategia-web-redirects` | redirects module |
 | Modules | `estrategia-web` | always last, grouped by the modules' `Category` |
 
+**One look for every screen (2.0.1)**: the same header (title + one line
+saying what the screen is for), every section of a form in a white box with
+its title, the content types builder's tabs (also in Settings and
+Redirects) and the save button under the boxes it saves. The pieces and
+how to use them: [includes/admin/class-admin-ui.php](includes/admin/class-admin-ui.php);
+the stylesheet: [assets/admin.css](assets/admin.css); the check:
+[tests/admin-look.test.mjs](tests/admin-look.test.mjs).
+
 **Forms** keeps its own top-level item: **Forms** (the list of the site's
 forms, where each one is, its notifications; since 2.0.0 the form posts,
 with «Add form» and where each one is used), **Submissions**, **Settings**.
@@ -100,9 +108,11 @@ is [modules/webp/module.php](modules/webp/module.php); the complete one,
       class-modules.php           the loader (HOW TO ADD A MODULE)
       class-plugin.php            translations and the estrategia_web_activate / _deactivate hooks
       class-blocks.php            autoRegister labels, editor translations
+      admin/class-admin-ui.php      one look for every plugin screen: header, boxes, tabs, save (2.0.1)
       admin/class-menu.php          the «Estrategia Web» menu, its order and the old URLs (1.7.0)
       admin/class-settings-page.php «Estrategia Web › Settings» and its tab registry (1.7.0)
       admin/class-modules-page.php  the «Estrategia Web → Modules» screen
+    assets/admin.css            the shared admin stylesheet (2.0.1; drawn by class-admin-ui.php)
     modules/<slug>/             module.php (header + bootstrap), includes/, blocks/, assets/, tests/, uninstall.php
     languages/                  estrategia-web.pot · estrategia-web-es_ES.po · .l10n.php (one for everything)
     tests/                      runner, lib.mjs, blueprint and the core tests
@@ -864,7 +874,11 @@ tests expect English; their `reset()` marks it and goes back to `en_US` (see
 | [content-types/location-data](modules/content-types/tests/location-data.test.mjs) | 1 | (2.0.0) a location's derived texts with Lavandería's real strings (address, hours in es/en/ca, the Maps link and embed byte for byte), several sets of hours, lists of days, and the migration's parsers (what they read and what they refuse). Seen red with «cada día» and with `rawurlencode()` |
 | [content-types/location-migration](modules/content-types/tests/location-migration.test.mjs) | 2 | (2.0.0) a 1.7.0 site through `migrate-location-data`: the page the same before and after, the dry run's before → after and DIFFERENCES (none for Lavandería's two), nothing written by it, the real run (new fields, old meta out, backup, 2.0.0 definitions, client with `editor`, the company's hours), a second run that changes nothing, and the way out of «not parsed». Seen red with the street sanitized as one line |
 | [content-types/location-box](modules/content-types/tests/location-box.test.mjs) | 2 | (2.0.0) the fields meta box in the block editor's main area for locations, testimonials and clients (groups, «For Google» closed, no sidebar panel) and its save as the block editor posts it. Seen red with the `\r\n` of a `<textarea>` |
-| [redirects/admin](modules/redirects/tests/admin.test.mjs) | 2 | (level 3 until 28-10-2026: the screen has no JavaScript; read and posted with a cookie session) the screen: list and search, adding, loop error without losing what was typed, Rank Math notice, importing by uploading the CSV, exporting, «Create redirect» from the 404 log |
+| [redirects/admin](modules/redirects/tests/admin.test.mjs) | 2 | (level 3 until 28-10-2026: the screen has no JavaScript; read and posted with a cookie session) the screen: list and search, adding, loop error without losing what was typed, the two-systems notice (Redirection since 2.0.1), importing by uploading the CSV, exporting, «Create redirect» from the 404 log |
+| [redirects/server](modules/redirects/tests/server.test.mjs) (2.0.1 case) | 2 | Rank Math with Redirections on, or Yoast Premium: the module steps aside (no redirect, no screen, no menu item) and the Modules screen says «Las redirecciones las gestiona …»; with Rank Math's module off, ours redirects again. Who owns them is level 1 ([redirects/pure](modules/redirects/tests/pure.test.mjs), `Conflicts::owner()`) |
+| [forms/marker-migration](modules/forms/tests/marker-migration.test.mjs) | 2 | (2.0.1) `migrate-form-markers`: dry run with before → after per notification and nothing written, the inline form listed with its reminder, the real run byte for byte with its backups, a page cached before the migration still sends the right values, second run «ya». Its pure part is in forms/pure (level 1) |
+| [admin-look](tests/admin-look.test.mjs) | 2 | (2.0.1) every plugin screen loads assets/admin.css and has the same header (title + what it is for); every section of a form in a box with its title and the save button under the boxes; Settings and Redirects with the builder's tabs |
+| [forms/admin](modules/forms/tests/admin.test.mjs) (2.0.1 case) | 3 | a notification's link from «Forms → Forms» opens the form with that notification selected and its «To» in the sidebar |
 
 **All of them have been seen failing** (02-10-2026): three batches of
 mutants, ten in total, each caught by its test. The 0.2.0 ones (marked

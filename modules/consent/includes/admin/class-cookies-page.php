@@ -46,6 +46,7 @@
 
 namespace EstrategiaWeb\Site;
 
+use EstrategiaWeb\Admin\Admin_UI;
 use EstrategiaWeb\Admin\Settings_Page;
 
 defined( 'ABSPATH' ) || exit;
@@ -179,8 +180,8 @@ final class Cookies_Page {
 				<div class="notice notice-warning"><p><?php esc_html_e( 'The active theme brings its own cookie notice: these settings do not apply to it.', 'estrategia-web' ); ?></p></div>
 			<?php endif; ?>
 
-			<h2><?php esc_html_e( 'Cookie notice', 'estrategia-web' ); ?></h2>
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+				<?php Admin_UI::box_open( __( 'Cookie notice', 'estrategia-web' ), 'ew-box-cookie-notice' ); ?>
 				<?php self::hidden( 'settings' ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
@@ -211,7 +212,8 @@ final class Cookies_Page {
 						</td>
 					</tr>
 				</table>
-				<?php submit_button( __( 'Save notice settings', 'estrategia-web' ) ); ?>
+				<?php Admin_UI::box_close(); ?>
+				<?php Admin_UI::save( __( 'Save notice settings', 'estrategia-web' ) ); ?>
 			</form>
 
 			<?php
@@ -235,7 +237,7 @@ final class Cookies_Page {
 				</p></div>
 			<?php endforeach; ?>
 
-			<h2><?php esc_html_e( 'Cookies of this site', 'estrategia-web' ); ?></h2>
+			<?php Admin_UI::box_open( __( 'Cookies of this site', 'estrategia-web' ), 'ew-box-cookies' ); ?>
 			<p><?php esc_html_e( 'Only confirmed cookies appear in the cookie table of the policy (block «Cookie table» or shortcode [estrategia_web_cookie_table]). Proposals come from our own list and from the Open Cookie Database: check them. A name ending in * covers every cookie that starts like that.', 'estrategia-web' ); ?></p>
 			<p><?php esc_html_e( 'The cookies «Declared by the plugin» belong to third-party services that the active modules load (the Google map, Google tags, Matomo): the detector cannot see the ones set on the provider’s own domain, and sees the rest only after a visitor accepts. To leave one out of the policy, mark it Ignored: if you delete it, it comes back as a proposal while its module still loads the service.', 'estrategia-web' ); ?></p>
 			<?php if ( in_array( 'pending', array_column( $entries, 'status' ), true ) ) : ?>
@@ -318,10 +320,11 @@ final class Cookies_Page {
 					<?php endforeach; ?>
 				</tbody>
 			</table>
+			<?php Admin_UI::box_close(); ?>
 
-			<h2><?php esc_html_e( 'Add a cookie by hand', 'estrategia-web' ); ?></h2>
-			<p><?php esc_html_e( 'For third-party cookies the detector cannot see and no module declares (for example, a video or a chat embedded by hand). Empty fields are filled with the proposal, if there is one.', 'estrategia-web' ); ?></p>
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+				<?php Admin_UI::box_open( __( 'Add a cookie by hand', 'estrategia-web' ), 'ew-box-cookie-add' ); ?>
+				<p><?php esc_html_e( 'For third-party cookies the detector cannot see and no module declares (for example, a video or a chat embedded by hand). Empty fields are filled with the proposal, if there is one.', 'estrategia-web' ); ?></p>
 				<?php self::hidden( 'add' ); ?>
 				<table class="form-table" role="presentation">
 					<tr><th scope="row"><label for="estrategia-web-cookie-name"><?php esc_html_e( 'Name', 'estrategia-web' ); ?></label></th><td><input type="text" class="regular-text" id="estrategia-web-cookie-name" name="name" required maxlength="129"></td></tr><?php // No «pattern»: browsers compile it in «v» mode and an unescaped «|» inside [] silently invalidates it. The server validates (Cookie_Registry::name_ok). ?>
@@ -330,7 +333,8 @@ final class Cookies_Page {
 					<tr><th scope="row"><label for="estrategia-web-cookie-purpose"><?php esc_html_e( 'Purpose', 'estrategia-web' ); ?></label></th><td><textarea class="large-text" rows="2" id="estrategia-web-cookie-purpose" name="purpose"></textarea></td></tr>
 					<tr><th scope="row"><label for="estrategia-web-cookie-duration"><?php esc_html_e( 'Duration', 'estrategia-web' ); ?></label></th><td><input type="text" id="estrategia-web-cookie-duration" name="duration"><p class="description"><?php esc_html_e( 'Like «2 years», «30 minutes» or «session» to have it translated automatically; anything else is shown as written.', 'estrategia-web' ); ?></p></td></tr>
 				</table>
-				<?php submit_button( __( 'Add cookie', 'estrategia-web' ) ); ?>
+				<?php Admin_UI::box_close(); ?>
+				<?php Admin_UI::save( __( 'Add cookie', 'estrategia-web' ) ); ?>
 			</form>
 
 			<p class="description">

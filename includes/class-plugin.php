@@ -49,6 +49,7 @@ final class Plugin {
 			Admin\Menu::boot(); // 1.7.0: the «Estrategia Web» menu, its order and the old URLs.
 			Admin\Settings_Page::boot();
 			Admin\Modules_Page::boot();
+			Admin\Admin_UI::boot(); // 2.0.1: one look for every plugin screen (assets/admin.css).
 		}
 	}
 

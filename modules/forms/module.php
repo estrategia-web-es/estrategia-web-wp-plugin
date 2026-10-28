@@ -18,7 +18,10 @@
  * and the «Formularios» menu. Since 2.0.0 also: the post type eweb_form
  * (REST base eweb-forms), the reference block estrategia-web-forms/form-ref,
  * the meta _eweb_forms_migration_backup and the WP-CLI command
- * «estrategia-web migrate-forms».
+ * «estrategia-web migrate-forms». Since 2.0.1: the meta
+ * _eweb_markers_migration_backup, the option
+ * estrategia_web_markers_migration_backup and «estrategia-web
+ * migrate-form-markers».
  *
  * Constants: ESTRATEGIA_WEB_FORMS_DIR and _URL point to THIS folder;
  * ESTRATEGIA_WEB_FORMS_VERSION is the plugin's. The DATABASE version is

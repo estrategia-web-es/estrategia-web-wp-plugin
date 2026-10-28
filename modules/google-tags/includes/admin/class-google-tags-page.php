@@ -64,7 +64,7 @@ final class Google_Tags_Page {
 			);
 		};
 		?>
-		<h2><?php esc_html_e( 'Google tags', 'estrategia-web' ); ?></h2>
+		<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Google tags', 'estrategia-web' ), 'ew-box-google-tags' ); ?>
 		<p><?php esc_html_e( 'An empty field loads nothing. Whatever is filled in waits for the cookie notice: Analytics needs «Analytics», Ads needs «Advertising», and Tag Manager asks for both. Logged-in editors and administrators are not measured.', 'estrategia-web' ); ?></p>
 		<table class="form-table" role="presentation">
 			<?php
@@ -90,5 +90,6 @@ final class Google_Tags_Page {
 			</tr>
 		</table>
 		<?php
+		\EstrategiaWeb\Admin\Admin_UI::box_close();
 	}
 }

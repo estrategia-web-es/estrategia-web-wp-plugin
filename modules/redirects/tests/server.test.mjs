@@ -143,7 +143,8 @@ test("the cost of a lookup (recorded, not enforced… except the indexed limit)"
 // Which plugin owns them, from which constant and option, is level 1 (pure.test.mjs:
 // Conflicts::owner()); here, that the site really stops redirecting, the screen and the menu
 // item go, and the Modules screen says it. Played with the constants the real plugins define
-// (/fake-seo). Seen red (28-10-2026) before the code: Rank Math's rule still answered 301.
+// (/fake-seo). Seen red (28-10-2026): before the Spanish string existed (the Modules screen said
+// it in English), and with module.php ignoring owner() (Rank Math's source still answered 301).
 test("an SEO plugin with its own redirects: the module steps aside and the Modules screen says who has them", async () => {
   const s = await adminSession();
   const SOURCE = "/index.html%3Fp=6981.html";

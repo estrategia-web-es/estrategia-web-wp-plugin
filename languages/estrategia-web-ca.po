@@ -9,9 +9,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: includes/admin/class-menu.php:80 includes/admin/class-menu.php:88
-#: modules/site/includes/admin/class-admin.php:151
+#: modules/site/includes/admin/class-admin.php:152
 #: modules/site/includes/class-bindings.php:51
-#: modules/site/includes/class-legacy-names.php:109
 #: modules/site/includes/class-settings.php:168
 msgid "Company details"
 msgstr "Dades de l'empresa"
@@ -20,12 +19,12 @@ msgstr "Dades de l'empresa"
 msgid "Estrategia Web"
 msgstr "Estrategia Web"
 
-#: includes/admin/class-modules-page.php:72
-#: includes/admin/class-modules-page.php:93
+#: includes/admin/class-modules-page.php:76
+#: includes/admin/class-modules-page.php:97
 msgid "Modules"
 msgstr "Mòduls"
 
-#: includes/admin/class-modules-page.php:94
+#: includes/admin/class-modules-page.php:97
 msgid ""
 "Each module adds one feature to the site. A module that is off loads "
 "nothing, and turning it off does not delete anything it saved: turning it on "
@@ -35,45 +34,51 @@ msgstr ""
 "desactivar-lo no esborra res del que va desar: quan el tornes a activar, "
 "torna tal com estava."
 
-#: includes/admin/class-modules-page.php:115
-#: includes/admin/class-modules-page.php:157
+#: includes/admin/class-modules-page.php:117
+#: includes/admin/class-modules-page.php:171
 msgid "On"
 msgstr "Activat"
 
-#: includes/admin/class-modules-page.php:116
+#: includes/admin/class-modules-page.php:118
 msgid "Module"
 msgstr "Mòdul"
 
-#: includes/admin/class-modules-page.php:117
-#: modules/consent/includes/admin/class-cookies-page.php:250
+#: includes/admin/class-modules-page.php:119
+#: modules/consent/includes/admin/class-cookies-page.php:253
 #: modules/content-types/includes/admin/class-types-table.php:61
 msgid "Status"
 msgstr "Estat"
 
 #. translators: %s: names of other modules, comma separated.
-#: includes/admin/class-modules-page.php:143
+#: includes/admin/class-modules-page.php:155
 #, php-format
 msgid "Needs: %s."
 msgstr "Necessita: %s."
 
 #. translators: %s: names of the modules that are missing.
-#: includes/admin/class-modules-page.php:153
+#: includes/admin/class-modules-page.php:165
 #, php-format
 msgid "Not loaded: turn on %s."
 msgstr "No es carrega: activa %s."
 
-#: includes/admin/class-modules-page.php:159
+#: includes/admin/class-modules-page.php:173
 msgid "Off"
 msgstr "Desactivat"
 
 #: includes/admin/class-settings-page.php:211
-#: includes/admin/class-settings-page.php:228
-#: modules/content-types/includes/admin/class-page.php:268
-#: modules/forms/includes/admin/class-admin.php:55
+#: includes/admin/class-settings-page.php:229
+#: modules/content-types/includes/admin/class-page.php:269
+#: modules/forms/includes/admin/class-admin.php:56
 msgid "Settings"
 msgstr "Paràmetres"
 
 #: includes/admin/class-settings-page.php:229
+msgid ""
+"How the site behaves, by topic: the cookie notice, the statistics and what "
+"is accepted when uploading images."
+msgstr "Com es comporta el web, per temes: l'avís de galetes, les estadístiques i què s'accepta en pujar imatges."
+
+#: includes/admin/class-settings-page.php:234
 msgid "Settings sections"
 msgstr "Seccions dels paràmetres"
 
@@ -311,39 +316,39 @@ msgstr "Categoria (buit: totes)"
 msgid "Heading level of each category"
 msgstr "Nivell del títol de cada categoria"
 
-#: modules/consent/includes/admin/class-cookies-page.php:66
-#: modules/consent/includes/class-consent.php:530
+#: modules/consent/includes/admin/class-cookies-page.php:68
+#: modules/consent/includes/class-consent.php:533
 #: modules/matomo/includes/class-admin-fields.php:67
 msgid "Cookies"
 msgstr "Galetes"
 
-#: modules/consent/includes/admin/class-cookies-page.php:84
+#: modules/consent/includes/admin/class-cookies-page.php:86
 #: modules/forms/includes/class-form-post-type.php:148
 msgid "Sorry, you are not allowed to do that."
 msgstr "No tens permís per fer això."
 
-#: modules/consent/includes/admin/class-cookies-page.php:144
+#: modules/consent/includes/admin/class-cookies-page.php:146
 #: modules/forms/includes/admin/class-submissions-table.php:115
 msgid "Pending"
 msgstr "Pendent"
 
-#: modules/consent/includes/admin/class-cookies-page.php:145
+#: modules/consent/includes/admin/class-cookies-page.php:147
 msgid "Confirmed"
 msgstr "Confirmada"
 
-#: modules/consent/includes/admin/class-cookies-page.php:146
+#: modules/consent/includes/admin/class-cookies-page.php:148
 msgid "Ignored"
 msgstr "Ignorada"
 
-#: modules/consent/includes/admin/class-cookies-page.php:173
+#: modules/consent/includes/admin/class-cookies-page.php:175
 msgid "Changes saved."
 msgstr "S'han desat els canvis."
 
-#: modules/consent/includes/admin/class-cookies-page.php:173
+#: modules/consent/includes/admin/class-cookies-page.php:175
 msgid "Cookie deleted."
 msgstr "S'ha suprimit la galeta."
 
-#: modules/consent/includes/admin/class-cookies-page.php:175
+#: modules/consent/includes/admin/class-cookies-page.php:177
 msgid ""
 "Not saved: check the cookie name (exact name, or a prefix ending in *) and "
 "that the list is not full."
@@ -351,7 +356,7 @@ msgstr ""
 "No s'ha desat: revisa el nom de la galeta (el nom exacte, o un prefix acabat "
 "en *) i que la llista no estigui plena."
 
-#: modules/consent/includes/admin/class-cookies-page.php:178
+#: modules/consent/includes/admin/class-cookies-page.php:180
 msgid ""
 "The active theme brings its own cookie notice: these settings do not apply "
 "to it."
@@ -359,19 +364,19 @@ msgstr ""
 "El tema actiu porta el seu propi avís de galetes: aquests paràmetres no s'hi "
 "apliquen."
 
-#: modules/consent/includes/admin/class-cookies-page.php:181
+#: modules/consent/includes/admin/class-cookies-page.php:184
 msgid "Cookie notice"
 msgstr "Avís de galetes"
 
-#: modules/consent/includes/admin/class-cookies-page.php:186
+#: modules/consent/includes/admin/class-cookies-page.php:188
 msgid "Categories the notice asks about"
 msgstr "Categories per les quals pregunta l'avís"
 
-#: modules/consent/includes/admin/class-cookies-page.php:195
+#: modules/consent/includes/admin/class-cookies-page.php:197
 msgid "declared by the code (theme or a module)"
 msgstr "la declara el codi (el tema o un mòdul)"
 
-#: modules/consent/includes/admin/class-cookies-page.php:200
+#: modules/consent/includes/admin/class-cookies-page.php:202
 msgid ""
 "Changing the categories shows the notice again to every visitor: they are "
 "being asked about something new. Without any category, the notice does not "
@@ -380,11 +385,11 @@ msgstr ""
 "Canviar les categories torna a mostrar l'avís a tots els visitants: se'ls "
 "pregunta per una cosa nova. Sense cap categoria, l'avís no surt."
 
-#: modules/consent/includes/admin/class-cookies-page.php:204
+#: modules/consent/includes/admin/class-cookies-page.php:206
 msgid "Cookie detector"
 msgstr "Detector de galetes"
 
-#: modules/consent/includes/admin/class-cookies-page.php:208
+#: modules/consent/includes/admin/class-cookies-page.php:210
 msgid ""
 "When a visitor accepts cookies, their browser sends the NAMES (never the "
 "values) of the cookies it sees on this site, at most once a week or when the "
@@ -394,12 +399,12 @@ msgstr ""
 "els valors) de les galetes que veu en aquest web, com a màxim un cop per "
 "setmana o quan canvia la llista. Els noms nous surten a sota com a pendents."
 
-#: modules/consent/includes/admin/class-cookies-page.php:213
+#: modules/consent/includes/admin/class-cookies-page.php:216
 msgid "Save notice settings"
 msgstr "Desa els paràmetres de l'avís"
 
 #. translators: 1: category name, 2: list of cookie names.
-#: modules/consent/includes/admin/class-cookies-page.php:229
+#: modules/consent/includes/admin/class-cookies-page.php:232
 #, php-format
 msgid ""
 "The notice does not ask about «%1$s», but these confirmed cookies belong to "
@@ -410,11 +415,11 @@ msgstr ""
 "d'aquesta categoria: %2$s. O l'avís pregunta per ella (a dalt), o aquestes "
 "galetes no s'haurien de posar."
 
-#: modules/consent/includes/admin/class-cookies-page.php:237
+#: modules/consent/includes/admin/class-cookies-page.php:240
 msgid "Cookies of this site"
 msgstr "Galetes d'aquest web"
 
-#: modules/consent/includes/admin/class-cookies-page.php:238
+#: modules/consent/includes/admin/class-cookies-page.php:241
 msgid ""
 "Only confirmed cookies appear in the cookie table of the policy (block "
 "«Cookie table» or shortcode [estrategia_web_cookie_table]). Proposals come "
@@ -426,7 +431,7 @@ msgstr ""
 "propostes surten de la nostra llista i de l'Open Cookie Database: revisa-"
 "les. Un nom acabat en * cobreix totes les galetes que comencen així."
 
-#: modules/consent/includes/admin/class-cookies-page.php:239
+#: modules/consent/includes/admin/class-cookies-page.php:242
 msgid ""
 "The cookies «Declared by the plugin» belong to third-party services that the "
 "active modules load (the Google map, Google tags, Matomo): the detector "
@@ -442,47 +447,47 @@ msgstr ""
 "la política, marca-la com a Ignorada: si la suprimeixes, torna com a "
 "proposta mentre el seu mòdul continuï carregant el servei."
 
-#: modules/consent/includes/admin/class-cookies-page.php:243
+#: modules/consent/includes/admin/class-cookies-page.php:246
 msgid "Confirm all pending proposals"
 msgstr "Confirma totes les propostes pendents"
 
-#: modules/consent/includes/admin/class-cookies-page.php:249
+#: modules/consent/includes/admin/class-cookies-page.php:252
 #: modules/consent/includes/class-cookie-table.php:163
 msgid "Cookie"
 msgstr "Galeta"
 
-#: modules/consent/includes/admin/class-cookies-page.php:251
-#: modules/consent/includes/admin/class-cookies-page.php:327
+#: modules/consent/includes/admin/class-cookies-page.php:254
+#: modules/consent/includes/admin/class-cookies-page.php:331
 msgid "Category"
 msgstr "Categoria"
 
-#: modules/consent/includes/admin/class-cookies-page.php:252
-#: modules/consent/includes/admin/class-cookies-page.php:328
+#: modules/consent/includes/admin/class-cookies-page.php:255
+#: modules/consent/includes/admin/class-cookies-page.php:332
 #: modules/consent/includes/class-cookie-table.php:164
 msgid "Provider"
 msgstr "Proveïdor"
 
-#: modules/consent/includes/admin/class-cookies-page.php:253
-#: modules/consent/includes/admin/class-cookies-page.php:329
+#: modules/consent/includes/admin/class-cookies-page.php:256
+#: modules/consent/includes/admin/class-cookies-page.php:333
 #: modules/consent/includes/class-cookie-table.php:165
 msgid "Purpose"
 msgstr "Finalitat"
 
-#: modules/consent/includes/admin/class-cookies-page.php:254
-#: modules/consent/includes/admin/class-cookies-page.php:330
+#: modules/consent/includes/admin/class-cookies-page.php:257
+#: modules/consent/includes/admin/class-cookies-page.php:334
 #: modules/consent/includes/class-cookie-table.php:166
 msgid "Duration"
 msgstr "Durada"
 
-#: modules/consent/includes/admin/class-cookies-page.php:255
+#: modules/consent/includes/admin/class-cookies-page.php:258
 msgid "Seen"
 msgstr "Vista"
 
-#: modules/consent/includes/admin/class-cookies-page.php:256
+#: modules/consent/includes/admin/class-cookies-page.php:259
 msgid "Actions"
 msgstr "Accions"
 
-#: modules/consent/includes/admin/class-cookies-page.php:261
+#: modules/consent/includes/admin/class-cookies-page.php:264
 msgid ""
 "No cookies yet. They appear when a visitor accepts the notice, or add them "
 "below."
@@ -491,18 +496,18 @@ msgstr ""
 "les a sota."
 
 #. translators: %s: a concrete cookie name.
-#: modules/consent/includes/admin/class-cookies-page.php:272
+#: modules/consent/includes/admin/class-cookies-page.php:275
 #, php-format
 msgid "e.g. %s"
 msgstr "p. ex. %s"
 
 #. translators: %s: name of a third-party service, e.g. «Google Maps (map block)».
-#: modules/consent/includes/admin/class-cookies-page.php:291
+#: modules/consent/includes/admin/class-cookies-page.php:294
 #, php-format
 msgid "Declared by the plugin: %s"
 msgstr "Declarada pel plugin: %s"
 
-#: modules/consent/includes/admin/class-cookies-page.php:294
+#: modules/consent/includes/admin/class-cookies-page.php:297
 msgid ""
 "Its module no longer loads this service: delete the cookie if the site does "
 "not use it any more."
@@ -510,24 +515,24 @@ msgstr ""
 "El seu mòdul ja no carrega aquest servei: suprimeix la galeta si el web ja "
 "no l'usa."
 
-#: modules/consent/includes/admin/class-cookies-page.php:299
+#: modules/consent/includes/admin/class-cookies-page.php:302
 msgid "Added by hand"
 msgstr "Afegida a mà"
 
-#: modules/consent/includes/admin/class-cookies-page.php:302
+#: modules/consent/includes/admin/class-cookies-page.php:305
 msgid "Proposal: Open Cookie Database"
 msgstr "Proposta: Open Cookie Database"
 
-#: modules/consent/includes/admin/class-cookies-page.php:304
+#: modules/consent/includes/admin/class-cookies-page.php:307
 msgid "Proposal: Estrategia Web"
 msgstr "Proposta: Estrategia Web"
 
-#: modules/consent/includes/admin/class-cookies-page.php:312
-#: modules/content-types/includes/admin/class-page.php:364
+#: modules/consent/includes/admin/class-cookies-page.php:315
+#: modules/content-types/includes/admin/class-page.php:365
 msgid "Save"
 msgstr "Desa"
 
-#: modules/consent/includes/admin/class-cookies-page.php:313
+#: modules/consent/includes/admin/class-cookies-page.php:316
 #: modules/content-types/includes/admin/class-types-table.php:121
 #: modules/forms/includes/admin/class-submissions-table.php:39
 #: modules/forms/includes/admin/class-submissions-table.php:86
@@ -537,11 +542,11 @@ msgstr "Desa"
 msgid "Delete"
 msgstr "Suprimeix"
 
-#: modules/consent/includes/admin/class-cookies-page.php:321
+#: modules/consent/includes/admin/class-cookies-page.php:326
 msgid "Add a cookie by hand"
 msgstr "Afegeix una galeta a mà"
 
-#: modules/consent/includes/admin/class-cookies-page.php:322
+#: modules/consent/includes/admin/class-cookies-page.php:327
 msgid ""
 "For third-party cookies the detector cannot see and no module declares (for "
 "example, a video or a chat embedded by hand). Empty fields are filled with "
@@ -551,15 +556,15 @@ msgstr ""
 "declara (per exemple, un vídeo o un xat inserits a mà). Els camps buits "
 "s'omplen amb la proposta, si n'hi ha."
 
-#: modules/consent/includes/admin/class-cookies-page.php:326
-#: modules/content-types/includes/admin/class-page.php:322
+#: modules/consent/includes/admin/class-cookies-page.php:330
+#: modules/content-types/includes/admin/class-page.php:323
 #: modules/content-types/includes/admin/class-types-table.php:56
-#: modules/social/includes/class-admin.php:91
-#: modules/social/includes/class-admin.php:132
+#: modules/social/includes/class-admin.php:93
+#: modules/social/includes/class-admin.php:135
 msgid "Name"
 msgstr "Nom"
 
-#: modules/consent/includes/admin/class-cookies-page.php:330
+#: modules/consent/includes/admin/class-cookies-page.php:334
 msgid ""
 "Like «2 years», «30 minutes» or «session» to have it translated "
 "automatically; anything else is shown as written."
@@ -567,12 +572,12 @@ msgstr ""
 "Com ara «2 years», «30 minutes» o «session» perquè es tradueixi tot sol; "
 "qualsevol altra cosa surt tal com s'escriu."
 
-#: modules/consent/includes/admin/class-cookies-page.php:332
+#: modules/consent/includes/admin/class-cookies-page.php:337
 msgid "Add cookie"
 msgstr "Afegeix la galeta"
 
 #. translators: 1: link to the Open Cookie Database, 2: licence name, 3: date.
-#: modules/consent/includes/admin/class-cookies-page.php:339
+#: modules/consent/includes/admin/class-cookies-page.php:344
 #, php-format
 msgid ""
 "Proposals use data from the %1$s, licensed under %2$s (extract of %3$s)."
@@ -580,21 +585,21 @@ msgstr ""
 "Les propostes fan servir dades de l'%1$s, amb llicència %2$s (extracte del "
 "%3$s)."
 
-#: modules/consent/includes/class-consent.php:266
+#: modules/consent/includes/class-consent.php:269
 #: modules/google-tags/includes/admin/class-google-tags-page.php:40
 #: modules/matomo/includes/class-admin-fields.php:35
 msgid "Analytics"
 msgstr "Analítica"
 
-#: modules/consent/includes/class-consent.php:267
+#: modules/consent/includes/class-consent.php:270
 msgid "Help us understand how the site is used."
 msgstr "Ens ajuden a entendre com s'utilitza el lloc."
 
-#: modules/consent/includes/class-consent.php:270
+#: modules/consent/includes/class-consent.php:273
 msgid "Maps and third-party content"
 msgstr "Mapes i contingut de tercers"
 
-#: modules/consent/includes/class-consent.php:271
+#: modules/consent/includes/class-consent.php:274
 msgid ""
 "Load embedded maps and other content served by third parties, which may set "
 "their own cookies."
@@ -602,19 +607,19 @@ msgstr ""
 "Carreguen mapes i altre contingut servit per tercers, que poden instal·lar "
 "les seves pròpies galetes."
 
-#: modules/consent/includes/class-consent.php:274
+#: modules/consent/includes/class-consent.php:277
 msgid "Advertising"
 msgstr "Publicitat"
 
-#: modules/consent/includes/class-consent.php:275
+#: modules/consent/includes/class-consent.php:278
 msgid "Measure campaigns and show relevant advertising."
 msgstr "Mesuren campanyes i mostren publicitat rellevant."
 
-#: modules/consent/includes/class-consent.php:278
+#: modules/consent/includes/class-consent.php:281
 msgid "Preferences"
 msgstr "Preferències"
 
-#: modules/consent/includes/class-consent.php:279
+#: modules/consent/includes/class-consent.php:282
 msgid ""
 "Remember choices that change how the site behaves or looks, such as the "
 "region or recently viewed items."
@@ -623,23 +628,23 @@ msgstr ""
 "regió o el que has vist darrerament."
 
 #. translators: %s: name of the company that built the site (a brand, not translated).
-#: modules/consent/includes/class-consent.php:375
+#: modules/consent/includes/class-consent.php:378
 #, php-format
 msgid "Powered by %s"
 msgstr "Powered by %s"
 
-#: modules/consent/includes/class-consent.php:408
+#: modules/consent/includes/class-consent.php:411
 msgid ""
 "Cookie notice: detector on or off, and categories added by the administrator."
 msgstr ""
 "Avís de galetes: detector activat o desactivat i categories que afegeix "
 "l'administrador."
 
-#: modules/consent/includes/class-consent.php:435
+#: modules/consent/includes/class-consent.php:438
 msgid "Link text (empty: “Cookie settings”)"
 msgstr "Text de l'enllaç (buit: «Configura les galetes»)"
 
-#: modules/consent/includes/class-consent.php:511
+#: modules/consent/includes/class-consent.php:514
 msgid ""
 "We use our own and third-party cookies for the purposes listed below. You "
 "can accept them, reject them or choose which ones to allow. Necessary "
@@ -649,20 +654,20 @@ msgstr ""
 "Les pots acceptar, rebutjar o triar quines permets. Les galetes necessàries "
 "sempre estan actives."
 
-#: modules/consent/includes/class-consent.php:534
+#: modules/consent/includes/class-consent.php:537
 msgid "Privacy and cookie policy"
 msgstr "Política de privadesa i galetes"
 
-#: modules/consent/includes/class-consent.php:540
+#: modules/consent/includes/class-consent.php:543
 msgid "Cookie categories"
 msgstr "Categories de galetes"
 
-#: modules/consent/includes/class-consent.php:543
+#: modules/consent/includes/class-consent.php:546
 #: modules/consent/includes/class-cookie-table.php:53
 msgid "Necessary"
 msgstr "Necessàries"
 
-#: modules/consent/includes/class-consent.php:543
+#: modules/consent/includes/class-consent.php:546
 #: modules/consent/includes/class-cookie-table.php:54
 msgid ""
 "Required for the site to work, including remembering this choice. Always "
@@ -671,31 +676,31 @@ msgstr ""
 "Imprescindibles perquè el lloc funcioni, també per recordar aquesta elecció. "
 "Sempre actives."
 
-#: modules/consent/includes/class-consent.php:559
+#: modules/consent/includes/class-consent.php:562
 msgid "Save choices"
 msgstr "Desa la selecció"
 
-#: modules/consent/includes/class-consent.php:563
+#: modules/consent/includes/class-consent.php:566
 msgid "Accept all"
 msgstr "Accepta-les totes"
 
-#: modules/consent/includes/class-consent.php:564
+#: modules/consent/includes/class-consent.php:567
 msgid "Reject all"
 msgstr "Rebutja-les totes"
 
-#: modules/consent/includes/class-consent.php:565
+#: modules/consent/includes/class-consent.php:568
 msgid "Configure"
 msgstr "Configura"
 
-#: modules/consent/includes/class-consent.php:570
+#: modules/consent/includes/class-consent.php:573
 #: modules/external-links/includes/class-external-links.php:101
-#: modules/map/blocks/map/render.php:343 modules/map/blocks/map/render.php:347
+#: modules/map/blocks/map/render.php:348 modules/map/blocks/map/render.php:352
 #: modules/social/blocks/social-links/render.php:74
 #: modules/whatsapp/blocks/whatsapp/render.php:74
 msgid "(opens in a new tab)"
 msgstr "(s'obre en una pestanya nova)"
 
-#: modules/consent/includes/class-consent.php:597
+#: modules/consent/includes/class-consent.php:600
 msgid ""
 "Cookie settings: this site declares no optional cookie categories, so there "
 "is no notice to reopen and this link is not shown."
@@ -704,7 +709,7 @@ msgstr ""
 "opcionals, així que no hi ha cap avís per tornar a obrir i l'enllaç no es "
 "mostra."
 
-#: modules/consent/includes/class-consent.php:603
+#: modules/consent/includes/class-consent.php:606
 msgid "Cookie settings"
 msgstr "Configura les galetes"
 
@@ -1110,7 +1115,7 @@ msgid "Folders searched for JSON files"
 msgstr "Carpetes on es cerquen fitxers JSON"
 
 #: modules/content-types/includes/admin/class-page.php:230
-#: modules/content-types/includes/admin/class-page.php:250
+#: modules/content-types/includes/admin/class-page.php:251
 msgid "This screen needs JavaScript."
 msgstr "Aquesta pantalla necessita JavaScript."
 
@@ -1120,24 +1125,30 @@ msgstr "Tipus de contingut nou"
 
 #. translators: %s: a content type name
 #: modules/content-types/includes/admin/class-page.php:240
-#: modules/content-types/includes/admin/class-page.php:267
+#: modules/content-types/includes/admin/class-page.php:268
 #, php-format
 msgid "Edit “%s”"
 msgstr "Edita «%s»"
 
 #: modules/content-types/includes/admin/class-page.php:246
-#: modules/forms/includes/admin/class-admin.php:129
-#: modules/forms/includes/admin/class-admin.php:134
-#: modules/forms/includes/admin/class-admin.php:177
+#: modules/forms/includes/admin/class-admin.php:128
+#: modules/forms/includes/admin/class-admin.php:133
+#: modules/forms/includes/admin/class-admin.php:176
 msgid "Back to the list"
 msgstr "Torna a la llista"
 
-#: modules/content-types/includes/admin/class-page.php:249
+#: modules/content-types/includes/admin/class-page.php:248
+msgid ""
+"The type’s settings, in tabs, and its fields: open a row to edit it, drag it "
+"to reorder."
+msgstr "Els paràmetres del tipus, en pestanyes, i els seus camps: obre una fila per editar-la i arrossega-la per canviar-ne l'ordre."
+
+#: modules/content-types/includes/admin/class-page.php:250
 msgid "Loading…"
 msgstr "S'està carregant…"
 
 #. translators: %s: a content type name
-#: modules/content-types/includes/admin/class-page.php:257
+#: modules/content-types/includes/admin/class-page.php:258
 #, php-format
 msgid ""
 "Deactivate “%s”? Its menu and its addresses disappear; its entries stay and "
@@ -1147,21 +1158,21 @@ msgstr ""
 "queden i tornen quan l'activis."
 
 #. translators: %s: a content type name
-#: modules/content-types/includes/admin/class-page.php:259
+#: modules/content-types/includes/admin/class-page.php:260
 #, php-format
 msgid "Delete the definition of “%s”? This cannot be undone."
 msgstr "Vols esborrar la definició de «%s»? No es pot desfer."
 
-#: modules/content-types/includes/admin/class-page.php:260
+#: modules/content-types/includes/admin/class-page.php:261
 msgid "JSON file"
 msgstr "Fitxer JSON"
 
-#: modules/content-types/includes/admin/class-page.php:261
+#: modules/content-types/includes/admin/class-page.php:262
 msgid "That is not valid JSON."
 msgstr "Això no és un JSON vàlid."
 
 #. translators: 1: how many fields, 2: their names, comma separated
-#: modules/content-types/includes/admin/class-page.php:263
+#: modules/content-types/includes/admin/class-page.php:264
 #, php-format
 msgid ""
 "The template this type comes from has new fields (%1$d): %2$s. They are not "
@@ -1170,11 +1181,11 @@ msgstr ""
 "La plantilla d'on ve aquest tipus té camps nous (%1$d): %2$s. No s'afegeixen "
 "sols: afegeix-los aquí i desa."
 
-#: modules/content-types/includes/admin/class-page.php:264
+#: modules/content-types/includes/admin/class-page.php:265
 msgid "Add the new fields of the template"
 msgstr "Afegeix els camps nous de la plantilla"
 
-#: modules/content-types/includes/admin/class-page.php:265
+#: modules/content-types/includes/admin/class-page.php:266
 msgid ""
 "This type is defined in a file, which is read-only. Saving here creates its "
 "copy in this panel, which wins from then on."
@@ -1182,35 +1193,35 @@ msgstr ""
 "Aquest tipus està definit en un fitxer, que és només de lectura. En desar "
 "aquí se'n crea la còpia en aquest panell, que mana des d'aleshores."
 
-#: modules/content-types/includes/admin/class-page.php:269
+#: modules/content-types/includes/admin/class-page.php:270
 msgid "General"
 msgstr "General"
 
-#: modules/content-types/includes/admin/class-page.php:270
+#: modules/content-types/includes/admin/class-page.php:271
 msgid "URLs & languages"
 msgstr "URLs i idiomes"
 
-#: modules/content-types/includes/admin/class-page.php:271
+#: modules/content-types/includes/admin/class-page.php:272
 msgid "Advanced"
 msgstr "Avançat"
 
 #. translators: %s: a language code such as es
-#: modules/content-types/includes/admin/class-page.php:273
+#: modules/content-types/includes/admin/class-page.php:274
 #, php-format
 msgid "Name, plural (%s)"
 msgstr "Nom, plural (%s)"
 
 #. translators: %s: a language code such as es
-#: modules/content-types/includes/admin/class-page.php:275
+#: modules/content-types/includes/admin/class-page.php:276
 #, php-format
 msgid "Name, singular (%s)"
 msgstr "Nom, singular (%s)"
 
-#: modules/content-types/includes/admin/class-page.php:276
+#: modules/content-types/includes/admin/class-page.php:277
 msgid "Prefix"
 msgstr "Prefix"
 
-#: modules/content-types/includes/admin/class-page.php:277
+#: modules/content-types/includes/admin/class-page.php:278
 msgid ""
 "The site’s own, 2 to 9 letters or digits and “_” (e.g. “gment_”). Every "
 "internal name starts with it."
@@ -1218,12 +1229,12 @@ msgstr ""
 "El propi del web, de 2 a 9 lletres o xifres i «_» (p. ex. «gment_»). Tots "
 "els noms interns hi comencen."
 
-#: modules/content-types/includes/admin/class-page.php:278
+#: modules/content-types/includes/admin/class-page.php:279
 #: modules/content-types/includes/admin/class-types-table.php:57
 msgid "Internal name"
 msgstr "Nom intern"
 
-#: modules/content-types/includes/admin/class-page.php:279
+#: modules/content-types/includes/admin/class-page.php:280
 msgid ""
 "Lowercase letters, digits and “_”, at most 20 characters. It cannot be "
 "changed once there are entries."
@@ -1231,11 +1242,11 @@ msgstr ""
 "Minúscules, xifres i «_», 20 caràcters com a molt. No es pot canviar quan ja "
 "hi ha entrades."
 
-#: modules/content-types/includes/admin/class-page.php:280
+#: modules/content-types/includes/admin/class-page.php:281
 msgid "Address (URL)"
 msgstr "Adreça (URL)"
 
-#: modules/content-types/includes/admin/class-page.php:281
+#: modules/content-types/includes/admin/class-page.php:282
 msgid ""
 "The part of the address after the domain: /restaurants/. Changing it moves "
 "the published addresses."
@@ -1243,7 +1254,7 @@ msgstr ""
 "La part de l'adreça després del domini: /restaurants/. Si la canvies, es "
 "mouen les adreces publicades."
 
-#: modules/content-types/includes/admin/class-page.php:282
+#: modules/content-types/includes/admin/class-page.php:283
 msgid ""
 "The address of this type in the other languages of the site. Empty: the "
 "first language’s is used."
@@ -1251,23 +1262,23 @@ msgstr ""
 "L'adreça d'aquest tipus en els altres idiomes del lloc. Buida: s'usa la del "
 "primer idioma."
 
-#: modules/content-types/includes/admin/class-page.php:283
+#: modules/content-types/includes/admin/class-page.php:284
 msgid "The site has one language: the address is set in General."
 msgstr "El lloc té un sol idioma: l'adreça es posa a General."
 
-#: modules/content-types/includes/admin/class-page.php:284
+#: modules/content-types/includes/admin/class-page.php:285
 msgid "Menu icon"
 msgstr "Icona del menú"
 
-#: modules/content-types/includes/admin/class-page.php:285
+#: modules/content-types/includes/admin/class-page.php:286
 msgid "A Dashicons name, e.g. dashicons-food."
 msgstr "Un nom de Dashicons, p. ex. dashicons-food."
 
-#: modules/content-types/includes/admin/class-page.php:286
+#: modules/content-types/includes/admin/class-page.php:287
 msgid "Position in the menu"
 msgstr "Posició al menú"
 
-#: modules/content-types/includes/admin/class-page.php:287
+#: modules/content-types/includes/admin/class-page.php:288
 msgid ""
 "A whole number: 5 below Posts, 20 below Pages, 25 below Comments. Empty: at "
 "the end."
@@ -1275,48 +1286,48 @@ msgstr ""
 "Un nombre enter: 5 davall d'Entrades, 20 davall de Pàgines, 25 davall de "
 "Comentaris. Buit: al final."
 
-#: modules/content-types/includes/admin/class-page.php:288
+#: modules/content-types/includes/admin/class-page.php:289
 msgid "What the editor offers"
 msgstr "Què ofereix l'editor"
 
-#: modules/content-types/includes/admin/class-page.php:289
+#: modules/content-types/includes/admin/class-page.php:290
 msgid "Public (has its own pages on the site)"
 msgstr "Públic (té pàgines pròpies al web)"
 
-#: modules/content-types/includes/admin/class-page.php:290
+#: modules/content-types/includes/admin/class-page.php:291
 msgid "Has a list page at its address"
 msgstr "Té una pàgina de llistat a la seva adreça"
 
-#: modules/content-types/includes/admin/class-page.php:291
+#: modules/content-types/includes/admin/class-page.php:292
 msgid "Translation (WPML)"
 msgstr "Traducció (WPML)"
 
-#: modules/content-types/includes/admin/class-page.php:292
-#: modules/content-types/includes/admin/class-page.php:349
+#: modules/content-types/includes/admin/class-page.php:293
+#: modules/content-types/includes/admin/class-page.php:350
 msgid "Translate"
 msgstr "Tradueix"
 
-#: modules/content-types/includes/admin/class-page.php:293
+#: modules/content-types/includes/admin/class-page.php:294
 msgid "Translate, and show the original until it is translated"
 msgstr "Tradueix, i mostra l'original mentre no estigui traduït"
 
-#: modules/content-types/includes/admin/class-page.php:294
+#: modules/content-types/includes/admin/class-page.php:295
 msgid "Do not translate"
 msgstr "No el tradueixis"
 
-#: modules/content-types/includes/admin/class-page.php:295
+#: modules/content-types/includes/admin/class-page.php:296
 msgid "Where the fields are edited"
 msgstr "On s'editen els camps"
 
-#: modules/content-types/includes/admin/class-page.php:296
+#: modules/content-types/includes/admin/class-page.php:297
 msgid "In the editor’s sidebar (the «details» panel)"
 msgstr "A la barra lateral de l'editor (el panell «dades»)"
 
-#: modules/content-types/includes/admin/class-page.php:297
+#: modules/content-types/includes/admin/class-page.php:298
 msgid "In a wide box under the content, with its groups"
 msgstr "En una caixa ampla davall del contingut, amb els grups"
 
-#: modules/content-types/includes/admin/class-page.php:298
+#: modules/content-types/includes/admin/class-page.php:299
 msgid ""
 "A type without «Content (block editor)» always gets the box under the "
 "content."
@@ -1324,11 +1335,11 @@ msgstr ""
 "Un tipus sense «Contingut (editor de blocs)» sempre té la caixa davall del "
 "contingut."
 
-#: modules/content-types/includes/admin/class-page.php:299
+#: modules/content-types/includes/admin/class-page.php:300
 msgid "Field groups"
 msgstr "Grups de camps"
 
-#: modules/content-types/includes/admin/class-page.php:300
+#: modules/content-types/includes/admin/class-page.php:301
 msgid ""
 "Sections of the box under the content. A field joins one in its settings "
 "(«Group»); fields without a group go first."
@@ -1337,20 +1348,20 @@ msgstr ""
 "configuració («Grup»); els camps sense grup van primer."
 
 #. translators: %d: position of a group in the list
-#: modules/content-types/includes/admin/class-page.php:302
+#: modules/content-types/includes/admin/class-page.php:303
 #, php-format
 msgid "Group %d"
 msgstr "Grup %d"
 
-#: modules/content-types/includes/admin/class-page.php:303
+#: modules/content-types/includes/admin/class-page.php:304
 msgid "Add group"
 msgstr "Afegeix un grup"
 
-#: modules/content-types/includes/admin/class-page.php:304
+#: modules/content-types/includes/admin/class-page.php:305
 msgid "Key"
 msgstr "Clau"
 
-#: modules/content-types/includes/admin/class-page.php:305
+#: modules/content-types/includes/admin/class-page.php:306
 msgid ""
 "Lowercase letters, digits and “_”, starting with a letter. The fields refer "
 "to it."
@@ -1359,57 +1370,57 @@ msgstr ""
 "refereixen."
 
 #. translators: %s: a language code such as es
-#: modules/content-types/includes/admin/class-page.php:307
+#: modules/content-types/includes/admin/class-page.php:308
 #, php-format
 msgid "Title (%s)"
 msgstr "Títol (%s)"
 
-#: modules/content-types/includes/admin/class-page.php:308
+#: modules/content-types/includes/admin/class-page.php:309
 msgid "Closed when the screen opens"
 msgstr "Tancat en obrir la pantalla"
 
-#: modules/content-types/includes/admin/class-page.php:309
+#: modules/content-types/includes/admin/class-page.php:310
 msgid "Group"
 msgstr "Grup"
 
-#: modules/content-types/includes/admin/class-page.php:310
+#: modules/content-types/includes/admin/class-page.php:311
 msgid "No group"
 msgstr "Sense grup"
 
-#: modules/content-types/includes/admin/class-page.php:311
+#: modules/content-types/includes/admin/class-page.php:312
 msgid "Taxonomies"
 msgstr "Taxonomies"
 
 #. translators: %d: position of a taxonomy in the list
-#: modules/content-types/includes/admin/class-page.php:313
+#: modules/content-types/includes/admin/class-page.php:314
 #, php-format
 msgid "Taxonomy %d"
 msgstr "Taxonomia %d"
 
-#: modules/content-types/includes/admin/class-page.php:314
+#: modules/content-types/includes/admin/class-page.php:315
 msgid "Add taxonomy"
 msgstr "Afegeix una taxonomia"
 
-#: modules/content-types/includes/admin/class-page.php:315
+#: modules/content-types/includes/admin/class-page.php:316
 msgid "Hierarchical (like categories)"
 msgstr "Jeràrquica (com les categories)"
 
 #. translators: %s: a taxonomy name
-#: modules/content-types/includes/admin/class-page.php:317
+#: modules/content-types/includes/admin/class-page.php:318
 #, php-format
 msgid "Uses the taxonomy “%s”, declared elsewhere."
 msgstr "Fa servir la taxonomia «%s», declarada en un altre lloc."
 
-#: modules/content-types/includes/admin/class-page.php:318
+#: modules/content-types/includes/admin/class-page.php:319
 #: modules/content-types/includes/admin/class-types-table.php:59
 msgid "Fields"
 msgstr "Camps"
 
-#: modules/content-types/includes/admin/class-page.php:319
+#: modules/content-types/includes/admin/class-page.php:320
 msgid "No fields yet."
 msgstr "Encara no hi ha camps."
 
-#: modules/content-types/includes/admin/class-page.php:320
+#: modules/content-types/includes/admin/class-page.php:321
 msgid ""
 "Open a field to change it. To reorder, drag a row by its handle, or use Alt "
 "+ Up or Down arrow on a field (or its Move buttons)."
@@ -1417,64 +1428,64 @@ msgstr ""
 "Obre un camp per canviar-lo. Per reordenar, arrossega una fila per l'ansa o "
 "usa Alt + fletxa amunt o avall sobre un camp (o els botons Puja i Baixa)."
 
-#: modules/content-types/includes/admin/class-page.php:321
+#: modules/content-types/includes/admin/class-page.php:322
 msgid "Label"
 msgstr "Etiqueta"
 
-#: modules/content-types/includes/admin/class-page.php:323
-#: modules/content-types/includes/admin/class-page.php:339
-#: modules/redirects/includes/admin/class-page.php:268
+#: modules/content-types/includes/admin/class-page.php:324
+#: modules/content-types/includes/admin/class-page.php:340
+#: modules/redirects/includes/admin/class-page.php:269
 #: modules/redirects/includes/admin/class-tables.php:35
 msgid "Type"
 msgstr "Tipus"
 
-#: modules/content-types/includes/admin/class-page.php:324
+#: modules/content-types/includes/admin/class-page.php:325
 msgid "(no label)"
 msgstr "(sense etiqueta)"
 
-#: modules/content-types/includes/admin/class-page.php:325
+#: modules/content-types/includes/admin/class-page.php:326
 msgid "Drag to reorder"
 msgstr "Arrossega per reordenar"
 
 #. translators: %s: a field label
-#: modules/content-types/includes/admin/class-page.php:327
+#: modules/content-types/includes/admin/class-page.php:328
 #, php-format
 msgid "Move “%s” up"
 msgstr "Puja «%s»"
 
 #. translators: %s: a field label
-#: modules/content-types/includes/admin/class-page.php:329
+#: modules/content-types/includes/admin/class-page.php:330
 #, php-format
 msgid "Move “%s” down"
 msgstr "Baixa «%s»"
 
 #. translators: %s: a field label
-#: modules/content-types/includes/admin/class-page.php:331
+#: modules/content-types/includes/admin/class-page.php:332
 #, php-format
 msgid "Remove “%s”"
 msgstr "Treu «%s»"
 
 #. translators: 1: a field label, 2: its new position, 3: how many fields
-#: modules/content-types/includes/admin/class-page.php:333
+#: modules/content-types/includes/admin/class-page.php:334
 #, php-format
 msgid "“%1$s” moved to position %2$d of %3$d."
 msgstr "«%1$s» mogut a la posició %2$d de %3$d."
 
 #. translators: %s: a field label
-#: modules/content-types/includes/admin/class-page.php:335
+#: modules/content-types/includes/admin/class-page.php:336
 #, php-format
 msgid "“%s” removed. Save to keep the change."
 msgstr "«%s» tret. Desa per conservar el canvi."
 
-#: modules/content-types/includes/admin/class-page.php:336
+#: modules/content-types/includes/admin/class-page.php:337
 msgid "Add field"
 msgstr "Afegeix un camp"
 
-#: modules/content-types/includes/admin/class-page.php:337
+#: modules/content-types/includes/admin/class-page.php:338
 msgid "Internal name (meta key)"
 msgstr "Nom intern (clau meta)"
 
-#: modules/content-types/includes/admin/class-page.php:338
+#: modules/content-types/includes/admin/class-page.php:339
 msgid ""
 "It cannot be renamed: its data is stored under this name. To change it, "
 "remove the field and add a new one."
@@ -1483,90 +1494,90 @@ msgstr ""
 "canviar-lo, treu el camp i afegeix-ne un de nou."
 
 #. translators: %s: a language code such as es
-#: modules/content-types/includes/admin/class-page.php:341
+#: modules/content-types/includes/admin/class-page.php:342
 #, php-format
 msgid "Label (%s)"
 msgstr "Etiqueta (%s)"
 
 #. translators: %s: a language code such as es
-#: modules/content-types/includes/admin/class-page.php:343
+#: modules/content-types/includes/admin/class-page.php:344
 #, php-format
 msgid "Help (%s)"
 msgstr "Ajuda (%s)"
 
-#: modules/content-types/includes/admin/class-page.php:344
+#: modules/content-types/includes/admin/class-page.php:345
 msgid "Required to publish"
 msgstr "Obligatori per publicar"
 
-#: modules/content-types/includes/admin/class-page.php:345
+#: modules/content-types/includes/admin/class-page.php:346
 msgid "Default value"
 msgstr "Valor per defecte"
 
-#: modules/content-types/includes/admin/class-page.php:346
+#: modules/content-types/includes/admin/class-page.php:347
 msgid "In translations"
 msgstr "A les traduccions"
 
-#: modules/content-types/includes/admin/class-page.php:347
+#: modules/content-types/includes/admin/class-page.php:348
 msgid "Automatic (texts translated, the rest copied)"
 msgstr "Automàtic (els textos es tradueixen, la resta es copia)"
 
-#: modules/content-types/includes/admin/class-page.php:348
+#: modules/content-types/includes/admin/class-page.php:349
 msgid "Copy from the original"
 msgstr "Copia de l'original"
 
-#: modules/content-types/includes/admin/class-page.php:350
+#: modules/content-types/includes/admin/class-page.php:351
 msgid "Ignore"
 msgstr "Ignora"
 
-#: modules/content-types/includes/admin/class-page.php:351
+#: modules/content-types/includes/admin/class-page.php:352
 msgid "Options, one per line: value | label"
 msgstr "Opcions, una per línia: valor | etiqueta"
 
-#: modules/content-types/includes/admin/class-page.php:352
+#: modules/content-types/includes/admin/class-page.php:353
 msgid "Related types (internal names, separated by commas)"
 msgstr "Tipus relacionats (noms interns, separats per comes)"
 
-#: modules/content-types/includes/admin/class-page.php:353
+#: modules/content-types/includes/admin/class-page.php:354
 msgid "Minimum"
 msgstr "Mínim"
 
-#: modules/content-types/includes/admin/class-page.php:354
+#: modules/content-types/includes/admin/class-page.php:355
 msgid "Maximum"
 msgstr "Màxim"
 
-#: modules/content-types/includes/admin/class-page.php:355
+#: modules/content-types/includes/admin/class-page.php:356
 msgid "Whole numbers only"
 msgstr "Només nombres enters"
 
-#: modules/content-types/includes/admin/class-page.php:356
+#: modules/content-types/includes/admin/class-page.php:357
 msgid "Text when yes (empty: «Yes»)"
 msgstr "Text quan és sí (buit: «Sí»)"
 
-#: modules/content-types/includes/admin/class-page.php:357
+#: modules/content-types/includes/admin/class-page.php:358
 msgid "Text when no (empty: «No»)"
 msgstr "Text quan és no (buit: «No»)"
 
-#: modules/content-types/includes/admin/class-page.php:358
-#: modules/social/includes/class-admin.php:67
+#: modules/content-types/includes/admin/class-page.php:359
+#: modules/social/includes/class-admin.php:68
 msgid "Move up"
 msgstr "Mou amunt"
 
-#: modules/content-types/includes/admin/class-page.php:359
-#: modules/social/includes/class-admin.php:68
+#: modules/content-types/includes/admin/class-page.php:360
+#: modules/social/includes/class-admin.php:69
 msgid "Move down"
 msgstr "Mou avall"
 
-#: modules/content-types/includes/admin/class-page.php:360
+#: modules/content-types/includes/admin/class-page.php:361
 #: modules/content-types/includes/class-fields-panel.php:192
-#: modules/social/includes/class-admin.php:69
+#: modules/social/includes/class-admin.php:70
 msgid "Remove"
 msgstr "Treu"
 
-#: modules/content-types/includes/admin/class-page.php:361
+#: modules/content-types/includes/admin/class-page.php:362
 msgid "JSON (advanced)"
 msgstr "JSON (avançat)"
 
-#: modules/content-types/includes/admin/class-page.php:362
+#: modules/content-types/includes/admin/class-page.php:363
 msgid ""
 "The whole definition. Change it here to set what the form does not show, "
 "then apply it."
@@ -1574,152 +1585,152 @@ msgstr ""
 "La definició sencera. Canvia-la aquí per ajustar el que el formulari no "
 "mostra, i després aplica-la."
 
-#: modules/content-types/includes/admin/class-page.php:363
+#: modules/content-types/includes/admin/class-page.php:364
 msgid "Apply the JSON to the form"
 msgstr "Aplica el JSON al formulari"
 
-#: modules/content-types/includes/admin/class-page.php:365
+#: modules/content-types/includes/admin/class-page.php:366
 msgid "Saving…"
 msgstr "S'està desant…"
 
-#: modules/content-types/includes/admin/class-page.php:366
+#: modules/content-types/includes/admin/class-page.php:367
 msgid "Saved. The changes are visible from the next page you open."
 msgstr "Desat. Els canvis es veuen a partir de la pròxima pàgina que obris."
 
 #. translators: %d: number of redirects
-#: modules/content-types/includes/admin/class-page.php:368
+#: modules/content-types/includes/admin/class-page.php:369
 #, php-format
 msgid "Redirects created for the old addresses: %d."
 msgstr "Redireccions creades per a les adreces velles: %d."
 
-#: modules/content-types/includes/admin/class-page.php:369
+#: modules/content-types/includes/admin/class-page.php:370
 msgid "Before saving"
 msgstr "Abans de desar"
 
-#: modules/content-types/includes/admin/class-page.php:370
+#: modules/content-types/includes/admin/class-page.php:371
 msgid "Save anyway"
 msgstr "Desa igualment"
 
-#: modules/content-types/includes/admin/class-page.php:371
-#: modules/forms/includes/admin/class-admin.php:194
+#: modules/content-types/includes/admin/class-page.php:372
+#: modules/forms/includes/admin/class-admin.php:193
 msgid "Cancel"
 msgstr "Cancel·la"
 
-#: modules/content-types/includes/admin/class-page.php:372
+#: modules/content-types/includes/admin/class-page.php:373
 msgid "Nothing was saved"
 msgstr "No s'ha desat res"
 
-#: modules/content-types/includes/admin/class-page.php:373
+#: modules/content-types/includes/admin/class-page.php:374
 msgid "The list could not be loaded."
 msgstr "No s'ha pogut carregar la llista."
 
-#: modules/content-types/includes/admin/class-page.php:375
+#: modules/content-types/includes/admin/class-page.php:376
 msgid "Text"
 msgstr "Text"
 
-#: modules/content-types/includes/admin/class-page.php:376
+#: modules/content-types/includes/admin/class-page.php:377
 msgid "Text, several lines"
 msgstr "Text de diverses línies"
 
-#: modules/content-types/includes/admin/class-page.php:377
+#: modules/content-types/includes/admin/class-page.php:378
 msgid "Number"
 msgstr "Nombre"
 
-#: modules/content-types/includes/admin/class-page.php:378
+#: modules/content-types/includes/admin/class-page.php:379
 msgid "Web address"
 msgstr "Adreça web"
 
-#: modules/content-types/includes/admin/class-page.php:379
+#: modules/content-types/includes/admin/class-page.php:380
 #: modules/site/includes/class-company.php:133
 #: modules/social/includes/class-icons.php:82
 msgid "Email"
 msgstr "Correu electrònic"
 
-#: modules/content-types/includes/admin/class-page.php:380
+#: modules/content-types/includes/admin/class-page.php:381
 #: modules/site/includes/class-company.php:134
 msgid "Phone"
 msgstr "Telèfon"
 
-#: modules/content-types/includes/admin/class-page.php:381
+#: modules/content-types/includes/admin/class-page.php:382
 msgid "Image"
 msgstr "Imatge"
 
-#: modules/content-types/includes/admin/class-page.php:382
-#: modules/forms/includes/admin/class-admin.php:157
+#: modules/content-types/includes/admin/class-page.php:383
+#: modules/forms/includes/admin/class-admin.php:156
 #: modules/forms/includes/admin/class-submissions-table.php:30
 msgid "Date"
 msgstr "Data"
 
-#: modules/content-types/includes/admin/class-page.php:383
+#: modules/content-types/includes/admin/class-page.php:384
 msgid "Choice from a list"
 msgstr "Tria d'una llista"
 
-#: modules/content-types/includes/admin/class-page.php:384
+#: modules/content-types/includes/admin/class-page.php:385
 msgid "Link to another entry"
 msgstr "Enllaç a una altra entrada"
 
-#: modules/content-types/includes/admin/class-page.php:385
+#: modules/content-types/includes/admin/class-page.php:386
 msgid "Yes / no"
 msgstr "Sí / no"
 
-#: modules/content-types/includes/admin/class-page.php:386
+#: modules/content-types/includes/admin/class-page.php:387
 msgid "Rating (stars)"
 msgstr "Valoració (estrelles)"
 
-#: modules/content-types/includes/admin/class-page.php:387
+#: modules/content-types/includes/admin/class-page.php:388
 msgid "Embedded map or video"
 msgstr "Mapa o vídeo incrustat"
 
-#: modules/content-types/includes/admin/class-page.php:388
+#: modules/content-types/includes/admin/class-page.php:389
 msgid "Image of this site by path"
 msgstr "Imatge d'aquest web per camí"
 
-#: modules/content-types/includes/admin/class-page.php:389
+#: modules/content-types/includes/admin/class-page.php:390
 msgid "Opening hours (days and times)"
 msgstr "Horari (dies i hores)"
 
-#: modules/content-types/includes/admin/class-page.php:392
+#: modules/content-types/includes/admin/class-page.php:393
 msgid "Title"
 msgstr "Títol"
 
-#: modules/content-types/includes/admin/class-page.php:393
+#: modules/content-types/includes/admin/class-page.php:394
 msgid "Content (block editor)"
 msgstr "Contingut (editor de blocs)"
 
-#: modules/content-types/includes/admin/class-page.php:394
+#: modules/content-types/includes/admin/class-page.php:395
 msgid "Author"
 msgstr "Autor"
 
-#: modules/content-types/includes/admin/class-page.php:395
+#: modules/content-types/includes/admin/class-page.php:396
 msgid "Featured image"
 msgstr "Imatge destacada"
 
-#: modules/content-types/includes/admin/class-page.php:396
+#: modules/content-types/includes/admin/class-page.php:397
 msgid "Excerpt"
 msgstr "Extracte"
 
-#: modules/content-types/includes/admin/class-page.php:397
+#: modules/content-types/includes/admin/class-page.php:398
 msgid "Trackbacks"
 msgstr "Retroenllaços"
 
-#: modules/content-types/includes/admin/class-page.php:398
+#: modules/content-types/includes/admin/class-page.php:399
 msgid "Custom fields"
 msgstr "Camps personalitzats"
 
-#: modules/content-types/includes/admin/class-page.php:399
+#: modules/content-types/includes/admin/class-page.php:400
 msgid "Comments"
 msgstr "Comentaris"
 
-#: modules/content-types/includes/admin/class-page.php:400
+#: modules/content-types/includes/admin/class-page.php:401
 msgid "Revisions"
 msgstr "Revisions"
 
-#: modules/content-types/includes/admin/class-page.php:401
-#: modules/social/includes/class-admin.php:93
+#: modules/content-types/includes/admin/class-page.php:402
+#: modules/social/includes/class-admin.php:95
 msgid "Order"
 msgstr "Ordre"
 
-#: modules/content-types/includes/admin/class-page.php:402
+#: modules/content-types/includes/admin/class-page.php:403
 msgid "Formats"
 msgstr "Formats"
 
@@ -1744,7 +1755,7 @@ msgstr ""
 "plantilla o importa un fitxer JSON."
 
 #: modules/content-types/includes/admin/class-types-table.php:114
-#: modules/forms/includes/admin/class-forms-list.php:239
+#: modules/forms/includes/admin/class-forms-list.php:241
 #: modules/redirects/includes/admin/class-tables.php:89
 msgid "Edit"
 msgstr "Edita"
@@ -1788,7 +1799,7 @@ msgid "Not registered: it has errors"
 msgstr "No registrat: té errors"
 
 #: modules/content-types/includes/admin/class-types-table.php:159
-#: modules/redirects/includes/admin/class-page.php:285
+#: modules/redirects/includes/admin/class-page.php:286
 #: modules/redirects/includes/admin/class-tables.php:38
 msgid "Active"
 msgstr "Activa"
@@ -1802,14 +1813,14 @@ msgid "Content field"
 msgstr "Camp de contingut"
 
 #: modules/content-types/includes/class-bindings.php:123
-#: modules/forms/includes/admin/class-admin.php:138
+#: modules/forms/includes/admin/class-admin.php:137
 #: modules/forms/includes/class-notifier.php:159
 #: modules/redirects/includes/admin/class-tables.php:113
 msgid "Yes"
 msgstr "Sí"
 
 #: modules/content-types/includes/class-bindings.php:124
-#: modules/forms/includes/admin/class-admin.php:138
+#: modules/forms/includes/admin/class-admin.php:137
 #: modules/forms/includes/class-notifier.php:159
 #: modules/redirects/includes/admin/class-tables.php:113
 msgid "No"
@@ -1945,12 +1956,12 @@ msgid "Nothing yet."
 msgstr "Encara res."
 
 #: modules/content-types/includes/class-location-fields.php:231
-#: modules/map/blocks/map/render.php:347
+#: modules/map/blocks/map/render.php:352
 msgid "Open in Google Maps"
 msgstr "Obre a Google Maps"
 
 #: modules/content-types/includes/class-location-fields.php:236
-#: modules/site/includes/admin/class-admin.php:116
+#: modules/site/includes/admin/class-admin.php:117
 msgid "Shown on the site (as of the last save):"
 msgstr "El que es veu al web (des de la darrera vegada que has desat):"
 
@@ -3062,135 +3073,140 @@ msgctxt "block description"
 msgid "Several lines of text."
 msgstr "Diverses línies de text."
 
-#: modules/forms/includes/admin/class-admin.php:46
-#: modules/forms/includes/admin/class-admin.php:54
-#: modules/forms/includes/admin/class-admin.php:104
+#: modules/forms/includes/admin/class-admin.php:47
+#: modules/forms/includes/admin/class-admin.php:55
+#: modules/forms/includes/admin/class-admin.php:105
 msgid "Form submissions"
 msgstr "Enviaments de formularis"
 
-#: modules/forms/includes/admin/class-admin.php:47
-#: modules/forms/includes/admin/class-admin.php:59
-#: modules/forms/includes/admin/class-forms-list.php:254
+#: modules/forms/includes/admin/class-admin.php:48
+#: modules/forms/includes/admin/class-admin.php:60
+#: modules/forms/includes/admin/class-forms-list.php:283
 #: modules/forms/includes/class-form-post-type.php:84
 msgid "Forms"
 msgstr "Formularis"
 
-#: modules/forms/includes/admin/class-admin.php:54
+#: modules/forms/includes/admin/class-admin.php:55
 msgid "Submissions"
 msgstr "Enviaments"
 
-#: modules/forms/includes/admin/class-admin.php:55
-#: modules/forms/includes/admin/class-admin.php:272
+#: modules/forms/includes/admin/class-admin.php:56
+#: modules/forms/includes/admin/class-admin.php:271
 msgid "Form settings"
 msgstr "Paràmetres dels formularis"
 
-#: modules/forms/includes/admin/class-admin.php:76
-#: modules/forms/includes/admin/class-admin.php:265
-#: modules/forms/includes/admin/class-forms-list.php:246
+#: modules/forms/includes/admin/class-admin.php:77
+#: modules/forms/includes/admin/class-admin.php:264
+#: modules/forms/includes/admin/class-forms-list.php:273
 msgid "You are not allowed to see this page."
 msgstr "No tens permís per veure aquesta pàgina."
+
+#: modules/forms/includes/admin/class-admin.php:105
+msgid ""
+"Every message sent through the site's forms, with the emails each one sent."
+msgstr "Tots els missatges enviats des dels formularis del web, amb els correus que va enviar cadascun."
 
 #: modules/forms/includes/admin/class-admin.php:105
 msgid "Export CSV"
 msgstr "Exporta en CSV"
 
 #. translators: %d: number of deleted submissions.
-#: modules/forms/includes/admin/class-admin.php:111
+#: modules/forms/includes/admin/class-admin.php:110
 #, php-format
 msgid "%d submission deleted."
 msgid_plural "%d submissions deleted."
 msgstr[0] "S'ha suprimit %d enviament."
 msgstr[1] "S'han suprimit %d enviaments."
 
-#: modules/forms/includes/admin/class-admin.php:128
+#: modules/forms/includes/admin/class-admin.php:127
 msgid "Submission not found"
 msgstr "No s'ha trobat l'enviament"
 
 #. translators: %d: submission number.
-#: modules/forms/includes/admin/class-admin.php:133
+#: modules/forms/includes/admin/class-admin.php:132
 #, php-format
 msgid "Submission #%d"
 msgstr "Enviament núm. %d"
 
-#: modules/forms/includes/admin/class-admin.php:136
+#: modules/forms/includes/admin/class-admin.php:135
 #: modules/forms/includes/admin/class-submissions-table.php:32
 msgid "Data"
 msgstr "Dades"
 
-#: modules/forms/includes/admin/class-admin.php:143
-#: modules/forms/includes/admin/class-forms-list.php:273
+#: modules/forms/includes/admin/class-admin.php:142
+#: modules/forms/includes/admin/class-forms-list.php:301
 #: modules/forms/includes/admin/class-submissions-table.php:34
 msgid "Notifications"
 msgstr "Avisos"
 
-#: modules/forms/includes/admin/class-admin.php:144
+#: modules/forms/includes/admin/class-admin.php:143
 msgid "Notification"
 msgstr "Avís"
 
-#: modules/forms/includes/admin/class-admin.php:144
+#: modules/forms/includes/admin/class-admin.php:143
 msgid "Recipients"
 msgstr "Destinataris"
 
-#: modules/forms/includes/admin/class-admin.php:144
+#: modules/forms/includes/admin/class-admin.php:143
 msgid "Result"
 msgstr "Resultat"
 
-#: modules/forms/includes/admin/class-admin.php:146
+#: modules/forms/includes/admin/class-admin.php:145
 #: modules/forms/includes/admin/class-submissions-table.php:114
 msgid "Failed"
 msgstr "Error"
 
-#: modules/forms/includes/admin/class-admin.php:146
+#: modules/forms/includes/admin/class-admin.php:145
 msgid "Sent"
 msgstr "Enviat"
 
-#: modules/forms/includes/admin/class-admin.php:150
+#: modules/forms/includes/admin/class-admin.php:149
 msgid "This form has no notifications."
 msgstr "Aquest formulari no té avisos."
 
-#: modules/forms/includes/admin/class-admin.php:154
+#: modules/forms/includes/admin/class-admin.php:153
 msgid "Details"
 msgstr "Detalls"
 
-#: modules/forms/includes/admin/class-admin.php:156
-#: modules/forms/includes/admin/class-forms-list.php:271
+#: modules/forms/includes/admin/class-admin.php:155
+#: modules/forms/includes/admin/class-forms-list.php:299
 #: modules/forms/includes/admin/class-submissions-table.php:31
 #: modules/forms/includes/class-form-post-type.php:85
 msgid "Form"
 msgstr "Formulari"
 
-#: modules/forms/includes/admin/class-admin.php:158
+#: modules/forms/includes/admin/class-admin.php:157
 msgid "Page"
 msgstr "Pàgina"
 
-#: modules/forms/includes/admin/class-admin.php:159
+#: modules/forms/includes/admin/class-admin.php:158
 #: modules/forms/includes/admin/class-submissions-table.php:33
 #: modules/language-switcher/blocks/language-switcher/render.php:87
 msgid "Language"
 msgstr "Idioma"
 
-#: modules/forms/includes/admin/class-admin.php:160
+#: modules/forms/includes/admin/class-admin.php:159
 msgid "IP (truncated)"
 msgstr "IP (truncada)"
 
-#: modules/forms/includes/admin/class-admin.php:161
+#: modules/forms/includes/admin/class-admin.php:160
 msgid "User agent"
 msgstr "Navegador (user agent)"
 
-#: modules/forms/includes/admin/class-admin.php:168
+#: modules/forms/includes/admin/class-admin.php:167
 msgid "Delete this submission"
 msgstr "Suprimeix aquest enviament"
 
-#: modules/forms/includes/admin/class-admin.php:175
+#: modules/forms/includes/admin/class-admin.php:174
 msgid "Delete submissions"
 msgstr "Suprimeix els enviaments"
 
-#: modules/forms/includes/admin/class-admin.php:177
+#: modules/forms/includes/admin/class-admin.php:176
 msgid "No submissions selected."
 msgstr "No hi ha cap enviament seleccionat."
 
 #. translators: %d: number of submissions.
-#: modules/forms/includes/admin/class-admin.php:183
+#: modules/forms/includes/admin/class-admin.php:182
 #, php-format
 msgid ""
 "You are about to permanently delete %d submission. This cannot be undone."
@@ -3199,16 +3215,16 @@ msgid_plural ""
 msgstr[0] "Suprimiràs definitivament %d enviament. No es pot desfer."
 msgstr[1] "Suprimiràs definitivament %d enviaments. No es pot desfer."
 
-#: modules/forms/includes/admin/class-admin.php:193
+#: modules/forms/includes/admin/class-admin.php:192
 msgid "Yes, delete"
 msgstr "Sí, suprimeix"
 
-#: modules/forms/includes/admin/class-admin.php:199
-#: modules/forms/includes/admin/class-admin.php:210
+#: modules/forms/includes/admin/class-admin.php:198
+#: modules/forms/includes/admin/class-admin.php:209
 msgid "You are not allowed to do this."
 msgstr "No tens permís per fer això."
 
-#: modules/forms/includes/admin/class-admin.php:273
+#: modules/forms/includes/admin/class-admin.php:271
 msgid ""
 "Fields, notifications and messages of each form are set in the form block, "
 "in the editor. Here only what is common to all forms."
@@ -3216,42 +3232,42 @@ msgstr ""
 "Els camps, els avisos i els missatges de cada formulari es configuren al seu "
 "bloc, a l'editor. Aquí només hi ha el que és comú a tots."
 
-#: modules/forms/includes/admin/class-admin.php:276
+#: modules/forms/includes/admin/class-admin.php:274
 msgid "Submission log"
 msgstr "Registre d'enviaments"
 
-#: modules/forms/includes/admin/class-admin.php:279
+#: modules/forms/includes/admin/class-admin.php:277
 msgid "Keep submissions for (days)"
 msgstr "Conserva els enviaments durant (dies)"
 
-#: modules/forms/includes/admin/class-admin.php:281
+#: modules/forms/includes/admin/class-admin.php:279
 msgid "0 keeps them forever. Older submissions are deleted once a day."
 msgstr ""
 "0 els conserva per sempre. Els més antics se suprimeixen un cop al dia."
 
 #. translators: 1: date of the last purge, 2: deleted submissions.
-#: modules/forms/includes/admin/class-admin.php:285
+#: modules/forms/includes/admin/class-admin.php:283
 #, php-format
 msgid "Last purge: %1$s, %2$d deleted."
 msgstr "Última purga: %1$s, %2$d suprimits."
 
-#: modules/forms/includes/admin/class-admin.php:291
+#: modules/forms/includes/admin/class-admin.php:290
 msgid "Anti-spam"
 msgstr "Antispam"
 
-#: modules/forms/includes/admin/class-admin.php:294
+#: modules/forms/includes/admin/class-admin.php:293
 msgid "Minimum filling time (seconds)"
 msgstr "Temps mínim per emplenar-lo (segons)"
 
-#: modules/forms/includes/admin/class-admin.php:298
+#: modules/forms/includes/admin/class-admin.php:297
 msgid "Submissions allowed per IP"
 msgstr "Enviaments permesos per IP"
 
-#: modules/forms/includes/admin/class-admin.php:300
+#: modules/forms/includes/admin/class-admin.php:299
 msgid "every (minutes)"
 msgstr "cada (minuts)"
 
-#: modules/forms/includes/admin/class-admin.php:302
+#: modules/forms/includes/admin/class-admin.php:301
 msgid "0 submissions disables the limit."
 msgstr "0 enviaments desactiva el límit."
 
@@ -3282,18 +3298,12 @@ msgid "Email footer"
 msgstr "Peu dels correus"
 
 #. translators: %d: post ID.
-#: modules/forms/includes/admin/class-forms-list.php:236
+#: modules/forms/includes/admin/class-forms-list.php:238
 #, php-format
 msgid "(no title, #%d)"
 msgstr "(sense títol, núm. %d)"
 
-#: modules/forms/includes/admin/class-forms-list.php:256
-#: modules/forms/includes/class-form-post-type.php:86
-#: modules/forms/includes/class-form-post-type.php:87
-msgid "Add form"
-msgstr "Afegeix un formulari"
-
-#: modules/forms/includes/admin/class-forms-list.php:259
+#: modules/forms/includes/admin/class-forms-list.php:284
 msgid ""
 "The forms on this site and where they are used. Edit a form here; to show it "
 "on a page, add the «Form» block and choose it. Its name and identifier are "
@@ -3303,8 +3313,14 @@ msgstr ""
 "lo en una pàgina, afegeix el bloc «Formulari» i tria'l. El seu nom i el seu "
 "identificador són els que mostra el registre d'enviaments."
 
+#: modules/forms/includes/admin/class-forms-list.php:285
+#: modules/forms/includes/class-form-post-type.php:86
+#: modules/forms/includes/class-form-post-type.php:87
+msgid "Add form"
+msgstr "Afegeix un formulari"
+
 #. translators: %d: number of forms written inside pages or patterns.
-#: modules/forms/includes/admin/class-forms-list.php:264
+#: modules/forms/includes/admin/class-forms-list.php:292
 #, php-format
 msgid ""
 "%d form is still written inside a page or a pattern. Move it to its own form "
@@ -3314,18 +3330,24 @@ msgid_plural ""
 "%d forms are still written inside a page or a pattern. Move them to their "
 "own forms with the command «wp estrategia-web migrate-forms» (try it first "
 "with --dry-run)."
-msgstr[0] "%d formulari encara és escrit dins una pàgina o un patró. Passa'l a un formulari propi amb l'ordre «wp estrategia-web migrate-forms» (prova-la abans amb --dry-run)."
-msgstr[1] "%d formularis encara són escrits dins una pàgina o un patró. Passa'ls a formularis propis amb l'ordre «wp estrategia-web migrate-forms» (prova-la abans amb --dry-run)."
+msgstr[0] ""
+"%d formulari encara és escrit dins una pàgina o un patró. Passa'l a un "
+"formulari propi amb l'ordre «wp estrategia-web migrate-forms» (prova-la "
+"abans amb --dry-run)."
+msgstr[1] ""
+"%d formularis encara són escrits dins una pàgina o un patró. Passa'ls a "
+"formularis propis amb l'ordre «wp estrategia-web migrate-forms» (prova-la "
+"abans amb --dry-run)."
 
-#: modules/forms/includes/admin/class-forms-list.php:272
+#: modules/forms/includes/admin/class-forms-list.php:300
 msgid "Where it is"
 msgstr "On és"
 
-#: modules/forms/includes/admin/class-forms-list.php:275
+#: modules/forms/includes/admin/class-forms-list.php:303
 msgid "Also in"
 msgstr "També en"
 
-#: modules/forms/includes/admin/class-forms-list.php:281
+#: modules/forms/includes/admin/class-forms-list.php:309
 msgid ""
 "There are no forms yet. Add one with «Add form», then show it on a page with "
 "the «Form» block."
@@ -3333,29 +3355,29 @@ msgstr ""
 "Encara no hi ha formularis. Crea'n un amb «Afegeix un formulari» i mostra'l "
 "en una pàgina amb el bloc «Formulari»."
 
-#: modules/forms/includes/admin/class-forms-list.php:286
+#: modules/forms/includes/admin/class-forms-list.php:314
 msgid "(no name)"
 msgstr "(sense nom)"
 
-#: modules/forms/includes/admin/class-forms-list.php:295
 #: modules/forms/includes/admin/class-forms-list.php:323
+#: modules/forms/includes/admin/class-forms-list.php:351
 msgid "Used in:"
 msgstr "S'utilitza a:"
 
-#: modules/forms/includes/admin/class-forms-list.php:313
+#: modules/forms/includes/admin/class-forms-list.php:341
 msgid "Not used on any page yet."
 msgstr "Encara no s'usa en cap pàgina."
 
-#: modules/forms/includes/admin/class-forms-list.php:317
+#: modules/forms/includes/admin/class-forms-list.php:345
 msgid "Written inside this content (not migrated)."
 msgstr "Escrit dins aquest contingut (sense migrar)."
 
-#: modules/forms/includes/admin/class-forms-list.php:330
+#: modules/forms/includes/admin/class-forms-list.php:358
 msgid "No page uses this pattern."
 msgstr "Cap pàgina no utilitza aquest patró."
 
 #. translators: %d: number of email notifications.
-#: modules/forms/includes/admin/class-forms-list.php:339
+#: modules/forms/includes/admin/class-forms-list.php:367
 #, php-format
 msgid "%d notification"
 msgid_plural "%d notifications"
@@ -3363,7 +3385,7 @@ msgstr[0] "%d avís"
 msgstr[1] "%d avisos"
 
 #. translators: %d: position of the notification in the form.
-#: modules/forms/includes/admin/class-forms-list.php:347
+#: modules/forms/includes/admin/class-forms-list.php:376
 #, php-format
 msgid "Notification %d"
 msgstr "Avís %d"
@@ -3465,18 +3487,18 @@ msgstr "wp_mail() ha retornat false."
 msgid "This form is no longer available. Please reload the page."
 msgstr "Aquest formulari ja no està disponible. Torna a carregar la pàgina."
 
-#: modules/forms/includes/class-rest.php:118
+#: modules/forms/includes/class-rest.php:125
 msgid "The form was sent too quickly. Please wait a few seconds and try again."
 msgstr ""
 "El formulari s'ha enviat massa de pressa. Espera uns segons i torna-ho a "
 "provar."
 
-#: modules/forms/includes/class-rest.php:119
+#: modules/forms/includes/class-rest.php:126
 msgid "The form has expired. Please reload the page and try again."
 msgstr ""
 "El formulari ha caducat. Torna a carregar la pàgina i torna-ho a provar."
 
-#: modules/forms/includes/class-rest.php:127
+#: modules/forms/includes/class-rest.php:134
 msgid "Too many messages from your connection. Please try again later."
 msgstr "Massa missatges des de la teva connexió. Torna-ho a provar més tard."
 
@@ -3683,19 +3705,16 @@ msgid "Language switcher"
 msgstr "Selector d'idioma"
 
 #: modules/language-switcher/module.php
-msgctxt "module description"
-msgid ""
-"Language switcher block for WPML: the current language and links to the same "
-"page in the others, as a drop-down or inline. Without WPML it shows nothing."
-msgstr ""
-"Bloc selector d'idioma per a WPML: l'idioma actual i enllaços a la mateixa "
-"pàgina en els altres, en una llista desplegable o en línia. Sense WPML no "
-"mostra res."
-
-#: modules/language-switcher/module.php
 msgctxt "module category"
 msgid "Languages"
 msgstr "Idiomes"
+
+#: modules/language-switcher/module.php
+msgctxt "module description"
+msgid ""
+"The «ES ▾» of the header: switches language to the same page, keyboard-"
+"accessible and with hreflang. Needs WPML; without it, nothing is shown."
+msgstr "L'«ES ▾» de la capçalera: canvia d'idioma a la mateixa pàgina, es pot fer servir amb el teclat i porta hreflang. Necessita WPML; sense WPML, no es mostra res."
 
 #: modules/local-business/includes/class-settings.php:44
 #: modules/local-business/includes/class-settings.php:77
@@ -3863,7 +3882,7 @@ msgstr "Dins d'una consulta."
 msgid "Image alternative text"
 msgstr "Text alternatiu de la imatge"
 
-#: modules/map/blocks/map/render.php:188
+#: modules/map/blocks/map/render.php:193
 msgid ""
 "Map: add the address and the Google Maps embed URL in the block settings."
 msgstr ""
@@ -3871,30 +3890,30 @@ msgstr ""
 "del bloc."
 
 #. translators: %s: postal address.
-#: modules/map/blocks/map/render.php:213
+#: modules/map/blocks/map/render.php:218
 #, php-format
 msgid "Street map around %s"
 msgstr "Plànol dels carrers al voltant de %s"
 
-#: modules/map/blocks/map/render.php:214
+#: modules/map/blocks/map/render.php:219
 msgid "Street map of the area"
 msgstr "Plànol dels carrers de la zona"
 
 #. translators: %s: postal address.
-#: modules/map/blocks/map/render.php:272
+#: modules/map/blocks/map/render.php:277
 #, php-format
 msgid "Map: %s"
 msgstr "Mapa: %s"
 
-#: modules/map/blocks/map/render.php:273
+#: modules/map/blocks/map/render.php:278
 msgid "Map"
 msgstr "Mapa"
 
-#: modules/map/blocks/map/render.php:322
+#: modules/map/blocks/map/render.php:327
 msgid "Show map"
 msgstr "Mostra el mapa"
 
-#: modules/map/blocks/map/render.php:323
+#: modules/map/blocks/map/render.php:328
 msgid ""
 "The map is served by Google. Loading it sends your IP address to Google, "
 "which may set its own cookies."
@@ -3903,7 +3922,7 @@ msgstr ""
 "Google, que pot instal·lar les seves pròpies galetes."
 
 #. translators: 1: place name (or its address), 2: «(opens in a new tab)». The text before the colon must be the visible text of the link.
-#: modules/map/blocks/map/render.php:341
+#: modules/map/blocks/map/render.php:346
 #, php-format
 msgid "Open in Google Maps: %1$s %2$s"
 msgstr "Obre a Google Maps: %1$s %2$s"
@@ -3975,7 +3994,7 @@ msgstr ""
 
 #: modules/redirects/includes/admin/class-page.php:43
 #: modules/redirects/includes/admin/class-page.php:176
-#: modules/redirects/includes/admin/class-page.php:181
+#: modules/redirects/includes/admin/class-page.php:182
 msgid "Redirects"
 msgstr "Redireccions"
 
@@ -4021,12 +4040,18 @@ msgstr "Registre de 404"
 msgid "Import / export"
 msgstr "Importació / exportació"
 
-#: modules/redirects/includes/admin/class-page.php:185
+#: modules/redirects/includes/admin/class-page.php:182
+msgid ""
+"Old addresses that send visitors to the new ones (301, 302), or say a page "
+"is gone for good (410)."
+msgstr "Adreces velles que porten a les noves (301, 302) o que diuen que una pàgina ja no existeix (410)."
+
+#: modules/redirects/includes/admin/class-page.php:186
 msgid "There are two redirect systems on this website."
 msgstr "Hi ha dos sistemes de redireccions en aquest web."
 
 #. translators: %s: names of other active redirect plugins, e.g. "Rank Math".
-#: modules/redirects/includes/admin/class-page.php:187
+#: modules/redirects/includes/admin/class-page.php:188
 #, php-format
 msgid ""
 "Also active: %s. Both act on the same addresses and the other one usually "
@@ -4037,20 +4062,25 @@ msgstr ""
 "sol anar primer. Mantén les regles només en un, o desactiva aquest mòdul a "
 "Estrategia Web → Mòduls."
 
-#: modules/redirects/includes/admin/class-page.php:196
+#: modules/redirects/includes/admin/class-page.php:197
 msgid "Edit redirect"
 msgstr "Edita la redirecció"
 
-#: modules/redirects/includes/admin/class-page.php:222
+#: modules/redirects/includes/admin/class-page.php:201
+#
+msgid "Redirects sections"
+msgstr "Seccions de les redireccions"
+
+#: modules/redirects/includes/admin/class-page.php:223
 msgid "Search redirects"
 msgstr "Cerca redireccions"
 
-#: modules/redirects/includes/admin/class-page.php:263
+#: modules/redirects/includes/admin/class-page.php:264
 #: modules/redirects/includes/admin/class-tables.php:33
 msgid "Source"
 msgstr "Origen"
 
-#: modules/redirects/includes/admin/class-page.php:265
+#: modules/redirects/includes/admin/class-page.php:266
 msgid ""
 "The old path, without the domain. Upper case, a final slash and any extra ?"
 "parameters are ignored when matching; ?p=123 and ?page_id=123 are the same, "
@@ -4060,24 +4090,24 @@ msgstr ""
 "barra final ni els ?paràmetres de més; ?p=123 i ?page_id=123 són el mateix, "
 "i també %3F i ?."
 
-#: modules/redirects/includes/admin/class-page.php:270
+#: modules/redirects/includes/admin/class-page.php:271
 msgid "301 — moved permanently"
 msgstr "301 — traslladada permanentment"
 
-#: modules/redirects/includes/admin/class-page.php:271
+#: modules/redirects/includes/admin/class-page.php:272
 msgid "302 — moved temporarily"
 msgstr "302 — traslladada temporalment"
 
-#: modules/redirects/includes/admin/class-page.php:272
+#: modules/redirects/includes/admin/class-page.php:273
 msgid "410 — gone, no destination"
 msgstr "410 — ja no existeix, sense destinació"
 
-#: modules/redirects/includes/admin/class-page.php:276
+#: modules/redirects/includes/admin/class-page.php:277
 #: modules/redirects/includes/admin/class-tables.php:34
 msgid "Destination"
 msgstr "Destinació"
 
-#: modules/redirects/includes/admin/class-page.php:278
+#: modules/redirects/includes/admin/class-page.php:279
 msgid ""
 "A path on this website (/new-page/) or a full address (https://…). Empty for "
 "410."
@@ -4085,35 +4115,35 @@ msgstr ""
 "Un camí d'aquest web (/pagina-nova/) o una adreça completa (https://…). Buit "
 "per a 410."
 
-#: modules/redirects/includes/admin/class-page.php:281
+#: modules/redirects/includes/admin/class-page.php:282
 msgid "Note"
 msgstr "Nota"
 
-#: modules/redirects/includes/admin/class-page.php:286
+#: modules/redirects/includes/admin/class-page.php:287
 msgid "This redirect is working"
 msgstr "Aquesta redirecció funciona"
 
-#: modules/redirects/includes/admin/class-page.php:289
+#: modules/redirects/includes/admin/class-page.php:290
 msgid "Add redirect"
 msgstr "Afegeix la redirecció"
 
-#: modules/redirects/includes/admin/class-page.php:289
+#: modules/redirects/includes/admin/class-page.php:290
 msgid "Save redirect"
 msgstr "Desa la redirecció"
 
-#: modules/redirects/includes/admin/class-page.php:300
+#: modules/redirects/includes/admin/class-page.php:301
 msgid "Record the addresses that give a 404 error"
 msgstr "Registra les adreces que donen error 404"
 
-#: modules/redirects/includes/admin/class-page.php:301
+#: modules/redirects/includes/admin/class-page.php:302
 msgid "Forget addresses not seen for"
 msgstr "Oblida les adreces que no s'han vist en"
 
-#: modules/redirects/includes/admin/class-page.php:301
+#: modules/redirects/includes/admin/class-page.php:302
 msgid "days"
 msgstr "dies"
 
-#: modules/redirects/includes/admin/class-page.php:302
+#: modules/redirects/includes/admin/class-page.php:303
 msgid ""
 "Only the path is recorded (and ?p= of old WordPress addresses), with a "
 "counter and dates: no IP address, browser or other personal data."
@@ -4122,39 +4152,39 @@ msgstr ""
 "amb un comptador i dates: ni adreça IP, ni navegador, ni altres dades "
 "personals."
 
-#: modules/redirects/includes/admin/class-page.php:303
+#: modules/redirects/includes/admin/class-page.php:304
 msgid "Save settings"
 msgstr "Desa els paràmetres"
 
-#: modules/redirects/includes/admin/class-page.php:308
+#: modules/redirects/includes/admin/class-page.php:309
 msgid "Empty the 404 log"
 msgstr "Buida el registre de 404"
 
-#: modules/redirects/includes/admin/class-page.php:314
+#: modules/redirects/includes/admin/class-page.php:315
 msgid "Search paths"
 msgstr "Cerca camins"
 
-#: modules/redirects/includes/admin/class-page.php:327
+#: modules/redirects/includes/admin/class-page.php:328
 msgid "Test only, nothing was saved."
 msgstr "Només és una prova, no s'ha desat res."
 
 #. translators: 1: new rules, 2: updated rules, 3: unchanged rules, 4: rows with errors.
-#: modules/redirects/includes/admin/class-page.php:330
+#: modules/redirects/includes/admin/class-page.php:331
 #, php-format
 msgid "%1$d new, %2$d updated, %3$d unchanged, %4$d with errors."
 msgstr "%1$d noves, %2$d actualitzades, %3$d sense canvis, %4$d amb errors."
 
 #. translators: 1: line number in the CSV, 2: source path, 3: error message.
-#: modules/redirects/includes/admin/class-page.php:336
+#: modules/redirects/includes/admin/class-page.php:337
 #, php-format
 msgid "Line %1$d (%2$s): %3$s"
 msgstr "Línia %1$d (%2$s): %3$s"
 
-#: modules/redirects/includes/admin/class-page.php:343
+#: modules/redirects/includes/admin/class-page.php:344
 msgid "Import"
 msgstr "Importa"
 
-#: modules/redirects/includes/admin/class-page.php:344
+#: modules/redirects/includes/admin/class-page.php:345
 msgid ""
 "A CSV with the columns origen, destino, tipo and motivo (or source, target, "
 "type, note). A source that already has a redirect is updated; nothing is "
@@ -4164,19 +4194,19 @@ msgstr ""
 "type, note). Un origen que ja té redirecció s'actualitza; no se suprimeix "
 "res."
 
-#: modules/redirects/includes/admin/class-page.php:349
+#: modules/redirects/includes/admin/class-page.php:350
 msgid "Test only: show what would happen without saving"
 msgstr "Només prova: mostra què passaria sense desar res"
 
-#: modules/redirects/includes/admin/class-page.php:350
+#: modules/redirects/includes/admin/class-page.php:351
 msgid "Import CSV"
 msgstr "Importa el CSV"
 
-#: modules/redirects/includes/admin/class-page.php:352
+#: modules/redirects/includes/admin/class-page.php:353
 msgid "Export"
 msgstr "Exporta"
 
-#: modules/redirects/includes/admin/class-page.php:353
+#: modules/redirects/includes/admin/class-page.php:354
 msgid "Download CSV"
 msgstr "Baixa el CSV"
 
@@ -4279,6 +4309,12 @@ msgctxt "module name"
 msgid "Redirects"
 msgstr "Redireccions"
 
+#. translators: %s: name of the SEO plugin, e.g. "Rank Math".
+#: modules/redirects/module.php:100
+#, php-format
+msgid "Redirects are managed by %s."
+msgstr "Les redireccions les gestiona %s."
+
 #: modules/site/includes/admin/class-admin.php:54
 #: modules/uploads/includes/class-uploads.php:65
 msgid "Media"
@@ -4296,11 +4332,11 @@ msgstr "Pujada de SVG"
 msgid "Allow SVG uploads (administrators only; files are sanitized)"
 msgstr "Permet pujar SVG (només administradors; els fitxers se sanegen)"
 
-#: modules/site/includes/admin/class-admin.php:97
+#: modules/site/includes/admin/class-admin.php:98
 msgid "This site has locations: the opening hours go in each location."
 msgstr "Aquest web té seus: l'horari va a cada seu."
 
-#: modules/site/includes/admin/class-admin.php:113
+#: modules/site/includes/admin/class-admin.php:114
 msgid "One line per day, e.g. 08:00-14:00, 16:00-20:00. Empty: closed."
 msgstr "Una línia per dia, p. ex. 08:00-14:00, 16:00-20:00. Buit: tancat."
 
@@ -4326,15 +4362,15 @@ msgstr ""
 "Tal com apareix a l'avís legal, sense «Inscrita a». Exemple: Registre "
 "Mercantil de Mallorca, tom 1234, foli 56, full PM-7890, inscripció 1a"
 
-#: modules/site/includes/admin/class-admin.php:170
+#: modules/site/includes/admin/class-admin.php:171
 msgid "Contact"
 msgstr "Contacte"
 
-#: modules/site/includes/admin/class-admin.php:176
+#: modules/site/includes/admin/class-admin.php:177
 msgid "International format, digits only, without +. Example: 34600000000."
 msgstr "Format internacional, només xifres, sense +. Exemple: 34600000000."
 
-#: modules/site/includes/admin/class-admin.php:177
+#: modules/site/includes/admin/class-admin.php:178
 msgid "Text that appears already written when the chat opens."
 msgstr "Text que apareix ja escrit quan s'obre el xat."
 
@@ -4420,7 +4456,6 @@ msgstr "Correu electrònic (enllaç)"
 msgid "WhatsApp (link)"
 msgstr "WhatsApp (enllaç)"
 
-#: modules/site/includes/class-legacy-names.php:110
 #: modules/site/includes/class-location.php:74
 msgid "Location details"
 msgstr "Dades de la seu"
@@ -4553,28 +4588,28 @@ msgstr "Xarxes socials: afegeix-les a Estrategia Web › Xarxes socials."
 msgid "%1$s of %2$s"
 msgstr "%1$s de %2$s"
 
-#: modules/social/includes/class-admin.php:46
-#: modules/social/includes/class-admin.php:83
+#: modules/social/includes/class-admin.php:47
+#: modules/social/includes/class-admin.php:85
 msgid "Social networks"
 msgstr "Xarxes socials"
 
-#: modules/social/includes/class-admin.php:70
+#: modules/social/includes/class-admin.php:71
 msgid "Own SVG…"
 msgstr "SVG propi…"
 
-#: modules/social/includes/class-admin.php:71
+#: modules/social/includes/class-admin.php:72
 msgid "Remove own SVG"
 msgstr "Treu l'SVG propi"
 
-#: modules/social/includes/class-admin.php:72
+#: modules/social/includes/class-admin.php:73
 msgid "Choose an SVG icon"
 msgstr "Tria una icona SVG"
 
-#: modules/social/includes/class-admin.php:73
+#: modules/social/includes/class-admin.php:74
 msgid "Use this icon"
 msgstr "Fes servir aquesta icona"
 
-#: modules/social/includes/class-admin.php:84
+#: modules/social/includes/class-admin.php:85
 msgid ""
 "The links shown by the “Social networks” block, in this order. The icon is "
 "guessed from the link; choose one only if it gets it wrong, or use your own "
@@ -4584,25 +4619,30 @@ msgstr ""
 "s'endevina a partir de l'enllaç; tria'n una només si s'equivoca, o fes "
 "servir el teu propi SVG de la mediateca."
 
-#: modules/social/includes/class-admin.php:90
-#: modules/social/includes/class-admin.php:123
+#: modules/social/includes/class-admin.php:87
+#
+msgid "Networks"
+msgstr "Xarxes"
+
+#: modules/social/includes/class-admin.php:92
+#: modules/social/includes/class-admin.php:126
 msgid "Icon"
 msgstr "Icona"
 
-#: modules/social/includes/class-admin.php:92
-#: modules/social/includes/class-admin.php:140
+#: modules/social/includes/class-admin.php:94
+#: modules/social/includes/class-admin.php:143
 msgid "Link"
 msgstr "Enllaç"
 
-#: modules/social/includes/class-admin.php:101
+#: modules/social/includes/class-admin.php:103
 msgid "Add network"
 msgstr "Afegeix una xarxa"
 
-#: modules/social/includes/class-admin.php:102
+#: modules/social/includes/class-admin.php:104
 msgid "To remove a network without JavaScript, empty its link."
 msgstr "Per treure una xarxa sense JavaScript, buida'n l'enllaç."
 
-#: modules/social/includes/class-admin.php:102
+#: modules/social/includes/class-admin.php:104
 msgid ""
 "Your own SVG can only be uploaded if “Allow SVG uploads” is on in Settings › "
 "Media."
@@ -4610,11 +4650,11 @@ msgstr ""
 "Només es pot pujar un SVG propi si «Permet pujar SVG» està marcat a "
 "Paràmetres › Multimèdia."
 
-#: modules/social/includes/class-admin.php:109
+#: modules/social/includes/class-admin.php:112
 msgid "Automatic (from the link)"
 msgstr "Automàtica (segons l'enllaç)"
 
-#: modules/social/includes/class-admin.php:135
+#: modules/social/includes/class-admin.php:138
 msgid "Empty: the icon name"
 msgstr "Buit: el nom de la icona"
 
@@ -4787,10 +4827,20 @@ msgctxt "module name"
 msgid "WhatsApp button"
 msgstr "Botó de WhatsApp"
 
-#: modules/whatsapp/module.php:56
+#: modules/whatsapp/module.php:52
 msgid "WhatsApp phone number in international format, digits only."
 msgstr "Número de WhatsApp en format internacional, només xifres."
 
-#: modules/whatsapp/module.php:67
+#: modules/whatsapp/module.php:63
 msgid "Predefined WhatsApp message."
 msgstr "Missatge predefinit de WhatsApp."
+
+#~ msgctxt "module description"
+#~ msgid ""
+#~ "Language switcher block for WPML: the current language and links to the "
+#~ "same page in the others, as a drop-down or inline. Without WPML it shows "
+#~ "nothing."
+#~ msgstr ""
+#~ "Bloc selector d'idioma per a WPML: l'idioma actual i enllaços a la "
+#~ "mateixa pàgina en els altres, en una llista desplegable o en línia. Sense "
+#~ "WPML no mostra res."

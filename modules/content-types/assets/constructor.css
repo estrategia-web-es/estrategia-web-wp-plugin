@@ -24,12 +24,8 @@ button.page-title-action { cursor: pointer; line-height: 1.5; }
 
 /* The edit screen. */
 .ewct-form { max-width: 70em; }
-.ewct-box { border: 1px solid #c3c4c7; background: #fff; margin: 1em 0 1.5em; }
-.ewct-box-title { font-size: 14px; margin: 0; padding: 0.75em 1em; border-bottom: 1px solid #dcdcde; }
+/* .ewct-box, .ewct-box-title and .ewct-tabs: the plugin's shared admin look since 2.0.1 (assets/admin.css). */
 .ewct-box > .description { margin: 0.75em 1em; }
-.ewct-tabs.nav-tab-wrapper { padding: 0.5em 1em 0; margin: 0; }
-.ewct-tabs .nav-tab { cursor: pointer; font-size: 13px; }
-.ewct-tabs .nav-tab:focus { box-shadow: 0 0 0 2px #2271b1; outline: none; }
 .ewct-panel { padding: 0.5em 1.5em 1em; }
 .ewct-panel:focus { outline: 1px dotted #2271b1; }
 .ewct-item { border: 1px solid #dcdcde; padding: 0.5em 1em; margin: 1em 0; }

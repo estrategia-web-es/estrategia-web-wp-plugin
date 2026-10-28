@@ -28,6 +28,7 @@
 
 namespace EstrategiaWeb\Social;
 
+use EstrategiaWeb\Admin\Admin_UI;
 use EstrategiaWeb\Admin\Menu;
 use EstrategiaWeb\Admin\Settings_Page;
 
@@ -80,9 +81,10 @@ final class Admin {
 			return;
 		}
 		$items = Links::items();
-		echo '<div class="wrap estrategia-web-social"><h1>' . esc_html__( 'Social networks', 'estrategia-web' ) . '</h1>';
-		echo '<p>' . esc_html__( 'The links shown by the “Social networks” block, in this order. The icon is guessed from the link; choose one only if it gets it wrong, or use your own SVG from the media library.', 'estrategia-web' ) . '</p>';
+		echo '<div class="wrap ew-screen estrategia-web-social">';
+		Admin_UI::header( __( 'Social networks', 'estrategia-web' ), __( 'The links shown by the “Social networks” block, in this order. The icon is guessed from the link; choose one only if it gets it wrong, or use your own SVG from the media library.', 'estrategia-web' ) );
 		echo '<form method="post" action="options.php">';
+		Admin_UI::box_open( __( 'Networks', 'estrategia-web' ), 'ew-box-social' );
 		settings_fields( Links::GROUP );
 		// So that an empty list gets through (see the header of Links).
 		printf( '<input type="hidden" name="%s[]" value="">', esc_attr( Links::OPTION ) );
@@ -100,7 +102,8 @@ final class Admin {
 		echo '</tbody></table>';
 		echo '<p><button type="button" class="button estrategia-web-social__add" hidden>' . esc_html__( 'Add network', 'estrategia-web' ) . '</button></p>';
 		echo '<p class="description">' . esc_html__( 'To remove a network without JavaScript, empty its link.', 'estrategia-web' ) . ' <a href="' . esc_url( Settings_Page::url( 'media' ) ) . '">' . esc_html__( 'Your own SVG can only be uploaded if “Allow SVG uploads” is on in Settings › Media.', 'estrategia-web' ) . '</a></p>';
-		submit_button();
+		Admin_UI::box_close();
+		Admin_UI::save();
 		echo '</form></div>';
 	}
 

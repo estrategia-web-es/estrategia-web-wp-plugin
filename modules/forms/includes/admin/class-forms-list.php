@@ -277,13 +277,14 @@ final class Forms_List {
 		$inline = count( array_filter( $rows, static fn( $r ) => Form_Post_Type::TYPE !== $r['post_type'] ) );
 		$add    = current_user_can( 'edit_pages' ) ? admin_url( 'post-new.php?post_type=' . Form_Post_Type::TYPE ) : '';
 		?>
-		<div class="wrap estrategia-web-forms-list">
-			<h1 class="wp-heading-inline"><?php esc_html_e( 'Forms', 'estrategia-web' ); ?></h1>
-			<?php if ( $add ) : ?>
-				<a class="page-title-action" href="<?php echo esc_url( $add ); ?>"><?php esc_html_e( 'Add form', 'estrategia-web' ); ?></a>
-			<?php endif; ?>
-			<hr class="wp-header-end">
-			<p><?php esc_html_e( 'The forms on this site and where they are used. Edit a form here; to show it on a page, add the «Form» block and choose it. Its name and identifier are the ones the submissions log shows.', 'estrategia-web' ); ?></p>
+		<div class="wrap ew-screen estrategia-web-forms-list">
+			<?php
+			\EstrategiaWeb\Admin\Admin_UI::header(
+				__( 'Forms', 'estrategia-web' ),
+				__( 'The forms on this site and where they are used. Edit a form here; to show it on a page, add the «Form» block and choose it. Its name and identifier are the ones the submissions log shows.', 'estrategia-web' ),
+				$add ? '<a class="page-title-action" href="' . esc_url( $add ) . '">' . esc_html__( 'Add form', 'estrategia-web' ) . '</a>' : ''
+			);
+			?>
 			<?php if ( $inline ) : ?>
 				<div class="notice notice-warning inline estrategia-web-forms-list__inline-notice"><p>
 					<?php

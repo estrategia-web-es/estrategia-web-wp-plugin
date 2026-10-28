@@ -5,41 +5,6 @@ it goes to the git history, with the commit that closes it.
 
 ---
 
-## 2.0.1 — agreed with David on 28-10-2026, while reviewing 2.0.0 in Lavandería
-**Date:** 28-10-2026 · **Due:** 2.0.1
-
-1. **Remove the Spanish marker aliases of forms** (was due in 2.0.0 and slipped;
-   David saw `{{todos_los_campos}}` in a notification body next to the help that
-   lists `{{all_fields}}`). First a MIGRATION, like 2.0.0's (dry run with
-   before → after per notification, backup, idempotent): every saved
-   `eweb_form` (all languages) changes `{{todos_los_campos}}`, `{{fecha}}`,
-   `{{url_pagina}}`, `{{nombre_sitio}}` to `{{all_fields}}`,
-   `{{submission_date}}`, `{{page_url}}`, `{{site_name}}`. Then remove
-   `Markers::ALIASES` and `with_aliases()` in
-   `modules/forms/includes/class-markers.php`. Field markers (`{{nombre}}`…)
-   are the field names and don't change.
-2. **Remove the old migrators and their aliases** (prefix `eweb_`, meta prefix,
-   Armazón names; their tests `meta-migration` and `prefix-migration`, ~45 s of
-   battery). Lavandería already went through them; new sites are born with the
-   new names.
-3. **One look for every plugin screen**: a shared admin stylesheet. Every
-   section in a white box with its title (like the location fields box); the
-   SAME tabs everywhere (the content-types builder's, also in Settings, which
-   still uses WordPress's grey `nav-tab`); the same screen header (title + one
-   line saying what it's for) and the save button always in the same place.
-   Applies to Company details, Settings, Social networks, Forms. David: «la
-   página de ajustes parece de otro plugin».
-4. **Forms › Forms list**: each notification in the summary column is a LINK
-   that opens the form with that notification block selected and the sidebar
-   open (fix a recipient in two clicks).
-5. **Language switcher description** in Modules (the module stays: WPML's own
-   block fails keyboard opening, hreflang/lang and aria-controls — measured
-   27-10-2026): «The "ES ▾" of the header: switches language to the same
-   page, keyboard-accessible and with hreflang. Needs WPML; without it,
-   nothing is shown.»
-6. **Redirects module: keep or remove?** Lavandería's redirects live in Rank
-   Math (83 rules). Decide with the next site: if it also uses Rank Math, remove.
-
 ## WPML and the site language: what is left after 1.4.0
 **Date:** 15-10-2026 · **Due:** —
 
@@ -98,10 +63,10 @@ since 1.1.0, not at the «Estrategia Web → Modules» screen either.
 ---
 
 
-## 2.0.0: remove the unprefixed meta aliases
-**Date:** 17-10-2026 · **Due:** 2.0.0
+## After 2.0.1: what Lavandería's repo still calls (its repo, not this one)
+**Date:** 28-10-2026 · **Due:** before Lavandería's next deploy with this repo's main
 
-Remove `Unprefixed_Meta` (modules/site/includes/class-unprefixed-meta.php) and `Meta_Prefix_Migration` (includes/class-meta-prefix-migration.php), together with `Unprefixed_Names` and `Prefix_Migration`, once every site has run the meta migrator (17-10-2026: only Lavandería, with no rows to rename). In Lavandería, remove despliegue/prefijo-metas.php and its part in prefijo-tipos.mjs / desplegar.mjs.
+The migrators removed in 2.0.1 are still read by Lavandería's deployer FROM THIS REPO: `despliegue/prefijo-tipos.mjs` (`script()`) reads `includes/class-prefix-migration.php` on every dry run of `desplegar.mjs`, so its `--seco` now stops; `despliegue/migrar-a-estrategia-web.mjs` reads `includes/class-armazon-migration.php` (only when the site still has the old plugins); `despliegue/tipo-negocio.php` asks `class_exists( Unprefixed_Meta )` to pick the meta key and now falls back to `client_url`; `tests/fixtures/lm-test.php` serves the old prefix routes. In Lavandería: remove `prefijo-tipos.*`, `prefijo-metas.php`, `migrar-a-estrategia-web.mjs` and their steps in `desplegar.mjs`, and make `tipo-negocio.php` use `estrategia_web_client_url` always (or pin `LM_SITE` to a 2.0.0 checkout until then).
 ## Repo remote (row 24)
 **Date:** 02-10-2026 · **Due:** before installing it on the first site
 

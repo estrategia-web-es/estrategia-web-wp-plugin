@@ -70,7 +70,7 @@ test("paginated list with the 83; the two-systems warning with Redirection", asy
   let list;
   [list, , { text: editForm }, { text: importPage }] = await Promise.all([s.get(PAGE), get("/pagina-perdida-xyz/?utm_source=x"), s.get(PAGE + "&view=edit"), s.get(PAGE + "&view=import")]);
   assert.equal(list.status, 200);
-  assert.match(list.text, /<h1>Redirecciones<\/h1>/);
+  assert.match(list.text, /<h1[^>]*>Redirecciones<\/h1>/);
   assert.match(byClass(list.text, "displaying-num"), /83/);
   assert.equal(rows(list.text), 50);
   assert.match(plain(byClass(list.text, "ew-redirects-conflict") || ""), /dos sistemas de redirecciones.*Redirection/s);

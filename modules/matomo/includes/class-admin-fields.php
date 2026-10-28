@@ -49,7 +49,7 @@ final class Admin_Fields {
 		$name = static fn( string $key ): string => Settings::OPTION . '[' . $key . ']';
 		?>
 		<?php // 0.3.0. What each mode does and why: header of modules/matomo/includes/class-matomo.php. ?>
-		<h2><?php esc_html_e( 'Statistics (Matomo)', 'estrategia-web' ); ?></h2>
+		<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Statistics (Matomo)', 'estrategia-web' ), 'ew-box-matomo' ); ?>
 		<p><?php esc_html_e( 'Without the Matomo address or the site ID nothing is added to the site. Logged-in editors and administrators are not counted.', 'estrategia-web' ); ?></p>
 		<table class="form-table" role="presentation">
 			<tr>
@@ -80,5 +80,6 @@ final class Admin_Fields {
 			</tr>
 		</table>
 		<?php
+		\EstrategiaWeb\Admin\Admin_UI::box_close();
 	}
 }

@@ -224,14 +224,16 @@ final class Settings_Page {
 		$in_form  = array_filter( $sections, static fn( $s ) => (bool) $s['options'] );
 		$own      = array_filter( $sections, static fn( $s ) => ! $s['options'] );
 		?>
-		<div class="wrap estrategia-web-settings" data-tab="<?php echo esc_attr( $current ); ?>">
-			<h1><?php esc_html_e( 'Settings', 'estrategia-web' ); ?></h1>
-			<nav class="nav-tab-wrapper" aria-label="<?php esc_attr_e( 'Settings sections', 'estrategia-web' ); ?>">
-				<?php foreach ( $tabs as $id => $tab ) : ?>
-					<a href="<?php echo esc_url( self::url( $id ) ); ?>" class="nav-tab<?php echo $id === $current ? ' nav-tab-active' : ''; ?>" data-tab="<?php echo esc_attr( $id ); ?>"<?php echo $id === $current ? ' aria-current="page"' : ''; ?>><?php echo esc_html( $tab['label'] ); ?></a>
-				<?php endforeach; ?>
-			</nav>
-			<?php settings_errors(); ?>
+		<div class="wrap ew-screen estrategia-web-settings" data-tab="<?php echo esc_attr( $current ); ?>">
+			<?php
+			Admin_UI::header( __( 'Settings', 'estrategia-web' ), __( 'How the site behaves, by topic: the cookie notice, the statistics and what is accepted when uploading images.', 'estrategia-web' ) );
+			$links = array();
+			foreach ( $tabs as $id => $tab ) {
+				$links[ $id ] = array( $tab['label'], self::url( $id ) );
+			}
+			Admin_UI::tabs( $links, $current, __( 'Settings sections', 'estrategia-web' ) );
+			settings_errors();
+			?>
 			<?php if ( $in_form ) : ?>
 				<form method="post" action="options.php">
 					<?php
@@ -239,7 +241,7 @@ final class Settings_Page {
 					foreach ( $in_form as $section ) {
 						call_user_func( $section['render'] );
 					}
-					submit_button();
+					Admin_UI::save();
 					?>
 				</form>
 			<?php endif; ?>

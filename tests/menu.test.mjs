@@ -72,7 +72,7 @@ test("one «Estrategia Web» item right after the Dashboard, opening on Company 
 test("old URLs: Company details keeps its own; Cookies and Google redirect to their Settings tab, keeping the other arguments", () => {
   const { company, cookies, google } = r;
   assert.equal(company.status, 200);
-  assert.match(company.text, /<h1>Datos de la empresa<\/h1>/);
+  assert.match(company.text, /<h1[^>]*>Datos de la empresa<\/h1>/);
   assert.equal(cookies.status, 302);
   assert.match(cookies.location, /admin\.php\?page=estrategia-web-settings&tab=cookies&notice=saved$/);
   assert.equal(google.status, 302);
@@ -93,7 +93,7 @@ test("edge case: «site» loads even when the saved module list lacks it (and so
   for (const slug of ["site", "social", "matomo", "forms"]) assert.ok(m.loaded.includes(slug), `${slug} not loaded: ${m.loaded.join(", ")}`);
   assert.deepEqual(m.blocked, {});
   assert.equal(modules.status, 200);
-  assert.match(modules.text, /<h1>Módulos<\/h1>/);
+  assert.match(modules.text, /<h1[^>]*>Módulos<\/h1>/);
   assert.ok(!modules.text.includes('value="site"'), "and it cannot be switched off on the Modules screen");
-  assert.match(modules.text, /<h2 id="estrategia-web-modules-content">Contenido<\/h2>/, "the screen is grouped by category");
+  assert.match(modules.text, /<h2 class="ew-box-title" id="estrategia-web-modules-content">Contenido<\/h2>/, "the screen is grouped by category");
 });
