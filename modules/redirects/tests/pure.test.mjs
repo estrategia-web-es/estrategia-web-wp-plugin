@@ -83,10 +83,16 @@ test("validate: loops, target equal to source, duplicates, targets and types", (
   assert.equal(v.gone_target, "", "a 410 stores no target");
 });
 
-test("two redirect systems: Rank Math only with its redirects module on (Conflicts::detect)", () => {
-  assert.deepEqual(out.conflicts_none, []);
-  assert.deepEqual(out.conflicts_rank_math_without, [], "Rank Math without its redirects module is not a conflict");
-  assert.deepEqual(out.conflicts_rank_math, ["Rank Math"]);
+// 2.0.1: Rank Math (Redirections on) and Yoast Premium OWN the redirects (the module steps
+// aside); the rest are conflicts (a warning on the screen). Seen red (28-10-2026) with owner()
+// reading the option without checking that Rank Math is loaded («owner_rank_math_absent»).
+test("who owns the redirects (Conflicts::owner) and what is only a conflict (Conflicts::detect)", () => {
+  assert.deepEqual(out.owner_none, ["", []]);
+  assert.deepEqual(out.owner_rank_math_absent, ["", []], "rank_math_modules left by an uninstalled Rank Math: nobody");
+  assert.deepEqual(out.owner_rank_math_off, ["", []], "Rank Math with its Redirections module off: ours works");
+  assert.deepEqual(out.owner_rank_math, ["Rank Math", []], "Rank Math owns them: not a conflict any more");
+  assert.deepEqual(out.owner_rank_math_and_redirection, ["Rank Math", ["Redirection"]]);
+  assert.deepEqual(out.owner_yoast_premium, ["Yoast SEO Premium", ["Redirection"]], "Yoast Premium: no off switch, it owns them");
 });
 
 test("CSV with semicolons, BOM, a «revisar» row (comes in disabled) and no header", () => {

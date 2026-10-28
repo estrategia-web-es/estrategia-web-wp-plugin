@@ -5,9 +5,11 @@
 // POST forms, exporting is a link that answers a CSV — so a cookie session
 // (adminSession(), tests/lib.mjs) sends exactly what a browser sends. If the
 // screen ever gets JavaScript that matters, that part goes back to level 3.
-// Which other redirect systems count as a conflict (Rank Math only with its
-// redirects module on) is Conflicts::detect(), level 1 (pure.test.mjs); here,
-// only that the screen shows the warning.
+// Which other redirect systems count as a conflict is Conflicts::detect(),
+// level 1 (pure.test.mjs); here, only that the screen shows the warning,
+// played with the Redirection plugin (since 2.0.1 Rank Math with its
+// redirects module is not a conflict but the OWNER: the module steps aside
+// and this screen is not there, server.test.mjs).
 //
 // In Spanish (the core test mu-plugin sets es_ES): along the way it checks
 // that the module's texts are translated.
@@ -52,18 +54,18 @@ before(async () => {
   // The core reset, the module's tables and the module on in ONE request (round 2), the login at the same time.
   [, s] = await Promise.all([api("/reset", { method: "POST", body: { core: true, on: true } }), adminSession()]);
   let r;
-  // The 404 log on and Rank Math with its redirects module played from the start (nothing else here depends on them).
+  // The 404 log on and the Redirection plugin played from the start (nothing else here depends on them).
   [r] = await Promise.all([
     api("/import", { method: "POST", body: { csv: CSV } }),
     api("/settings", { method: "POST", body: { log_404: true } }),
-    api("/fake-rank-math", { method: "POST", body: { on: true } }),
+    api("/fake-seo", { method: "POST", body: { plugin: "redirection" } }),
   ]);
   assert.equal(r.created, 83, "seed: Lavandería's 83");
 });
-// The module's tables, its settings and the fake Rank Math: the core reset() does not undo them.
+// The module's tables, its settings and the fake plugin: the core reset() does not undo them.
 after(() => api("/reset", { method: "POST" }));
 
-test("paginated list with the 83; the two-systems warning with Rank Math", async () => {
+test("paginated list with the 83; the two-systems warning with Redirection", async () => {
   // And, at the same time, a lost path for the 404 log test and the forms the next tests send (their nonces last).
   let list;
   [list, , { text: editForm }, { text: importPage }] = await Promise.all([s.get(PAGE), get("/pagina-perdida-xyz/?utm_source=x"), s.get(PAGE + "&view=edit"), s.get(PAGE + "&view=import")]);
@@ -71,7 +73,7 @@ test("paginated list with the 83; the two-systems warning with Rank Math", async
   assert.match(list.text, /<h1>Redirecciones<\/h1>/);
   assert.match(byClass(list.text, "displaying-num"), /83/);
   assert.equal(rows(list.text), 50);
-  assert.match(plain(byClass(list.text, "ew-redirects-conflict") || ""), /dos sistemas de redirecciones.*Rank Math/s);
+  assert.match(plain(byClass(list.text, "ew-redirects-conflict") || ""), /dos sistemas de redirecciones.*Redirection/s);
   assert.match(plain(list.text), /410 Ya no existe/);
 });
 

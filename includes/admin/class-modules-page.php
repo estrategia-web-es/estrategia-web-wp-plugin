@@ -27,6 +27,10 @@
  *   what was loaded in this request. Right after saving they match; if they
  *   do not, one of them is missing a requirement, and that is what the
  *   «Status» column says.
+ * - (2.0.1) A module that is on but has stepped aside by itself says why
+ *   in «Status» through the filter estrategia_web_module_status (today only
+ *   redirects, when Rank Math or Yoast Premium own the redirects). This page
+ *   still knows no module: the module answers for itself.
  */
 
 namespace EstrategiaWeb\Admin;
@@ -125,6 +129,16 @@ final class Modules_Page {
 							$is_on    = in_array( $slug, $wanted, true );
 							$missing  = $blocked[ $slug ] ?? array();
 							$requires = array_values( array_filter( $module['requires'], static fn( $r ) => empty( $available[ $r ]['core'] ) ) );
+							/**
+							 * (2.0.1) What a LOADED module says instead of «On» when it has
+							 * stepped aside by itself (redirects: «Redirects are managed by
+							 * Rank Math»). '' = nothing to say. Only a module that is loaded
+							 * can answer: one that is off says «Off», as always.
+							 *
+							 * @param string $status Text for the Status column.
+							 * @param string $slug   The module.
+							 */
+							$note = $is_on && ! $missing ? (string) apply_filters( 'estrategia_web_module_status', '', $slug ) : '';
 							?>
 							<tr>
 								<td class="column-switch">
@@ -153,6 +167,8 @@ final class Modules_Page {
 										echo esc_html( sprintf( __( 'Not loaded: turn on %s.', 'estrategia-web' ), implode( ', ', array_map( $name, $missing ) ) ) );
 										?>
 										</span>
+									<?php elseif ( '' !== $note ) : ?>
+										<span class="is-stepped-aside" data-module="<?php echo esc_attr( $slug ); ?>"><?php echo esc_html( $note ); ?></span>
 									<?php elseif ( $is_on ) : ?>
 										<?php esc_html_e( 'On', 'estrategia-web' ); ?>
 									<?php else : ?>

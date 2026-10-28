@@ -24,7 +24,10 @@
  *   (only if the user can edit it); for a synced pattern, also the pages
  *   that use it (posts whose content has <!-- wp:block {"ref":ID…);
  * - its notifications: how many, and each one's label and recipients as
- *   written in the block («{{email}}» markers shown as they are).
+ *   written in the block («{{email}}» markers shown as they are). Since
+ *   2.0.1 each label is a LINK that opens the form with that notification
+ *   selected and the sidebar open (notification_url(),
+ *   assets/notification-link.js): a recipient is fixed in two clicks.
  * The fields and notifications are read with Definitions::build(), the SAME
  * function that makes the snapshot a submission is validated against, so
  * this page cannot tell a different story from the one the emails follow.
@@ -240,6 +243,31 @@ final class Forms_List {
 		return $html;
 	}
 
+	/**
+	 * (2.0.1) The editor URL that opens a form with its notification number
+	 * $index (0-based, in the order Definitions reads them) selected and the
+	 * block sidebar open: the post's edit link plus eweb_form (which form, a
+	 * page may hold several) and eweb_notification. The editor side is
+	 * assets/notification-link.js, enqueued only when the URL carries them.
+	 */
+	public static function notification_url( string $edit_link, string $form_id, int $index ): string {
+		return add_query_arg(
+			array(
+				'eweb_form'         => rawurlencode( $form_id ),
+				'eweb_notification' => $index,
+			),
+			$edit_link
+		);
+	}
+
+	/** The editor side of notification_url(): only on a request that carries it. */
+	public static function enqueue_notification_link(): void {
+		if ( ! isset( $_GET['eweb_notification'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- navigation only: it selects a block.
+			return;
+		}
+		wp_enqueue_script( 'estrategia-web-forms-notification-link', ESTRATEGIA_WEB_FORMS_URL . 'assets/notification-link.js', array( 'wp-data', 'wp-block-editor' ), ESTRATEGIA_WEB_FORMS_VERSION, true );
+	}
+
 	public static function render(): void {
 		if ( ! current_user_can( Admin::capability() ) ) {
 			wp_die( esc_html__( 'You are not allowed to see this page.', 'estrategia-web' ), 403 );
@@ -338,12 +366,19 @@ final class Forms_List {
 							echo esc_html( sprintf( _n( '%d notification', '%d notifications', $count, 'estrategia-web' ), $count ) );
 							?>
 							<?php if ( $count ) : ?>
+								<?php $edit = get_edit_post_link( $row['post_id'], 'raw' ); ?>
 								<ul style="margin:.3em 0 0 1.2em;list-style:disc">
 									<?php foreach ( $row['notifications'] as $n => $notification ) : ?>
 										<li>
 											<?php
 											/* translators: %d: position of the notification in the form. */
-											echo esc_html( '' !== $notification['label'] ? $notification['label'] : sprintf( __( 'Notification %d', 'estrategia-web' ), $n + 1 ) );
+											$label = '' !== $notification['label'] ? $notification['label'] : sprintf( __( 'Notification %d', 'estrategia-web' ), $n + 1 );
+											if ( $edit ) {
+												// 2.0.1: opens the form with this notification selected and the block sidebar open (notification-link.js).
+												printf( '<a class="eweb-notification-link" href="%s">%s</a>', esc_url( self::notification_url( $edit, $row['form_id'], $n ) ), esc_html( $label ) );
+											} else {
+												echo esc_html( $label );
+											}
 											?>
 											→ <code><?php echo esc_html( '' !== $notification['to'] ? $notification['to'] : '—' ); ?></code>
 										</li>

@@ -35,6 +35,7 @@ final class Admin {
 		add_action( 'admin_init', array( self::class, 'register_settings' ) );
 		add_action( 'admin_post_estrategia_web_forms_export', array( self::class, 'export_csv' ) );
 		add_action( 'admin_post_estrategia_web_forms_delete', array( self::class, 'delete' ) );
+		add_action( 'enqueue_block_editor_assets', array( Forms_List::class, 'enqueue_notification_link' ) ); // 2.0.1.
 	}
 
 	public static function capability(): string {
