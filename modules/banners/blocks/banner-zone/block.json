@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"__comment": "estrategia-web/banner-zone — the banners of a zone. No editor of its own: supports.autoRegister. Documentation and maintenance in the header of render.php.",
+	"apiVersion": 3,
+	"name": "estrategia-web/banner-zone",
+	"version": "0.1.0",
+	"title": "Banner zone",
+	"category": "widgets",
+	"icon": "megaphone",
+	"description": "Shows the banners of a zone that are inside their dates, and counts their views and clicks.",
+	"keywords": [ "banner", "ad", "advertising" ],
+	"textdomain": "estrategia-web",
+	"attributes": {
+		"zone": { "type": "string", "default": "" },
+		"count": { "type": "integer", "default": 0 }
+	},
+	"supports": {
+		"autoRegister": true,
+		"html": false
+	},
+	"viewScriptModule": "file:./view.min.js",
+	"style": "file:./style.css",
+	"render": "file:./render.php"
+}

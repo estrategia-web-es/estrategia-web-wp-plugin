@@ -1,0 +1,26 @@
+/*
+ * estrategia-web/banner-zone. Only what makes a banner fit its column: the
+ * size and the look of each zone are the theme's (.estrategia-web-banner-zone--<slug>).
+ */
+.estrategia-web-banner-zone {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.estrategia-web-banner-zone[hidden],
+.estrategia-web-banner[hidden] {
+	display: none;
+}
+
+.estrategia-web-banner img {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	margin-inline: auto;
+}
+
+.estrategia-web-banner--code {
+	max-width: 100%;
+	overflow: hidden;
+}
