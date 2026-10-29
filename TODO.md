@@ -53,6 +53,20 @@ open is below, in its own section.
 - Lavandería's `footer-social.test.mjs` failed once in a full sequence and passes alone: cause unknown.
 - `estrategia_web_testimonial_client` empty reads `null` over REST (likely WPML `post-ids`); nothing visible changes.
 - `bajar-contenido.mjs` has not yet brought the definitions back from production (it reads production over ssh).
+## Forms: the success message is too discreet
+**Date:** 29-10-2026 · **Due:** next forms version
+
+David, testing the five forms of web2026.estrategiaweb.es: «el aviso que
+aparece al enviar el formulario es muy discreto». Today
+`.estrategia-web-forms__status` is plain text under the button
+(`assets/style.css`, only a margin-top); only `.is-error` gets a colour.
+To do: a success state that cannot be missed (an `is-success` class set by
+the script, background + border + icon with tokens like the error one, so
+each child can dress it), probably hiding or replacing the form once sent,
+and scrolling/focusing the message on mobile, where the button is often at
+the bottom of the screen. Keep `role="status"` + `aria-live`. Check it on a
+phone, not only on desktop.
+
 ## Forms: level 4
 **Date:** 01-10-2026 · **Due:** —
 
