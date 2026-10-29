@@ -31,7 +31,8 @@ const ROOT = path.resolve(import.meta.dirname, "..");
 
 /** «block/attribute» => why it is NOT translated. */
 const EXCLUDED = {
-  "estrategia-web-forms/form.formId": "a key: it groups the submissions log; translating it would split it",
+  "estrategia-web/banner-zone.zone": "a key: the slug of the eweb_banner_zone term; the zone is the same in every language",
+  "estrategia-web-forms/form.formId":"a key: it groups the submissions log; translating it would split it",
   "estrategia-web-forms/text.name": "a key: the field's name in the log and the {{markers}}",
   "estrategia-web-forms/text.autocomplete": "a browser token (name, organization…), the same in every language",
   "estrategia-web-forms/email.name": "a key: the field's name in the log and the {{markers}}",
