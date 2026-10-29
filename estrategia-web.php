@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Estrategia Web
- * Plugin URI:        https://estrategiaweb.es/
+ * Plugin URI:        https://github.com/estrategia-web-es/estrategia-web-wp-plugin
  * Description:       Site essentials as modules you switch on and off in "Estrategia Web → Modules": cookie consent, block forms, content types, company details, redirects, schema.org, map, carousel, WhatsApp, analytics behind consent, WebP and more.
  * Version:           2.0.1
  * Requires at least: 7.1
