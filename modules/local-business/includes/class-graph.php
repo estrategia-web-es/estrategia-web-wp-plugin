@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\LocalBusiness;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * THE GRAPH, pure: plain arrays in (the company, its locations — gathered
  * from WordPress by class-data.php), schema.org nodes out, and the merge into
@@ -55,11 +59,7 @@
  *   never add one after it.
  */
 
-namespace EstrategiaWeb\LocalBusiness;
-
 use EstrategiaWeb\ContentTypes\Hours;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Graph {
 

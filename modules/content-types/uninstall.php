@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 /**
 <<<<<<< HEAD
  * Deleting the plugin: this module's options. The posts, terms and meta of

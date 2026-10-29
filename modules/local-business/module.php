@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\LocalBusiness;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Module Name: Local business data
  * Description: Tells search engines about the company and its locations with schema.org (Organization and LocalBusiness: address, hours, coordinates), inside Rank Math's or Yoast's graph when they are there.
@@ -76,10 +80,6 @@
  *   (Data::location_id()); and WPML's home_url() has the language in it, so
  *   the Organization's @id is built from the «home» option.
  */
-
-namespace EstrategiaWeb\LocalBusiness;
-
-defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/includes/class-types.php';
 require_once __DIR__ . '/includes/class-graph.php';

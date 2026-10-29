@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 /**
  * On plugin DELETION (not deactivation). Same criterion as the site module:
  * nothing is deleted unless the site asks for it in wp-config.php with

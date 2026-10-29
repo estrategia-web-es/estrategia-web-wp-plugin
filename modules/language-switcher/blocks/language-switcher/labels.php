@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Translated labels for the controls autoRegister generates for this block
  * (block.json doesn't translate an attribute's «label» key).

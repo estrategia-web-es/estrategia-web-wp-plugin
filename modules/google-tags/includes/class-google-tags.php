@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\GoogleTags;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Google tags (GA4, Ads, Tag Manager) behind the cookie notice, with Consent
  * Mode v2.
@@ -80,10 +84,6 @@
  *   A gtag = (...a) => dataLayer.push(a) looks the same and Google IGNORES it
  *   without an error. That is why the script is Google's verbatim, in ES5.
  */
-
-namespace EstrategiaWeb\GoogleTags;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Google_Tags {
 

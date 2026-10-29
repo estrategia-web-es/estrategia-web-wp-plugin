@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Site;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * THIRD-PARTY SERVICES the plugin itself loads, and the cookies each one is
  * known to set. They reach the cookie registry (class-cookie-registry.php)
@@ -68,10 +72,6 @@
  *   texts say «may». Do not «verify» a catalogue entry by loading the embed
  *   once: absence in one browser proves nothing.
  */
-
-namespace EstrategiaWeb\Site;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Cookie_Services {
 

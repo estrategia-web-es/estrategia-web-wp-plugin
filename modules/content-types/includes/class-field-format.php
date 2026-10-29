@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\ContentTypes;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * HOW A STORED FIELD VALUE IS SHOWN: the formatting behind the Block Bindings
  * source `estrategia-web/content-field` (class-bindings.php), one rule per
@@ -55,10 +59,6 @@
  *   the block type. And a link inside a BUTTON's text is invalid HTML: a
  *   button binds «url» to the field and «text» to it without «link».
  */
-
-namespace EstrategiaWeb\ContentTypes;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Field_Format {
 

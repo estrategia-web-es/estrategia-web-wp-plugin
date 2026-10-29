@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\ContentTypes;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Module Name: Content types
  * Description: Build your own content types, taxonomies and fields from the panel (or start from a template: clients, testimonials, locations, projects, portfolio), with the editor panel, Block Bindings and WPML generated.
@@ -219,10 +223,6 @@
  *     (types register at init 5, REST runs later): «Saved. The changes are
  *     visible from the next page you open» says so on purpose.
  */
-
-namespace EstrategiaWeb\ContentTypes;
-
-defined( 'ABSPATH' ) || exit;
 
 define( 'ESTRATEGIA_WEB_CONTENT_TYPES_DIR', __DIR__ . '/' );
 define( 'ESTRATEGIA_WEB_CONTENT_TYPES_URL', plugin_dir_url( __FILE__ ) );

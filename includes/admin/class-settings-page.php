@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Admin;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * «Estrategia Web › Settings» (1.7.0): ONE page with WordPress tabs
  * (?page=estrategia-web-settings&tab=…) for the modules' settings that are
@@ -72,10 +76,6 @@
  * - Tests: tests/settings-page.test.mjs (level 1: layout(); level 2: each tab
  *   iff its module is on, saving does not wipe the other screen's keys).
  */
-
-namespace EstrategiaWeb\Admin;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Settings_Page {
 

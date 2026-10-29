@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Redirects;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Is another redirect system running on the site? If so, the screen warns at
  * the top: two systems at once step on each other and nobody knows which one
@@ -51,10 +55,6 @@
  * - Filter estrategia_web_redirects_owner (string, '' = nobody) for another
  *   system a site wants to give the redirects to.
  */
-
-namespace EstrategiaWeb\Redirects;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Conflicts {
 

@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Social;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Module Name: Social networks
  * Description: Free, ordered list of social network links (name, link, icon from an included collection or your own SVG) and a block that shows them.
@@ -46,10 +50,6 @@
  *
  * Tests: modules/social/tests/ (social: level 2; social-admin: level 3).
  */
-
-namespace EstrategiaWeb\Social;
-
-defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/includes/class-icons.php';
 require_once __DIR__ . '/includes/class-links.php';

@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\ContentTypes;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * THE DEFINITIONS AS DATA OF EACH SITE (17-10-2026): one post of the private
  * type eweb_content_type per content type, with the definition's JSON as its
@@ -49,10 +53,6 @@
  *     nothing to eat, and keep_raw() puts back what was sent for this post
  *     type in any case.
  */
-
-namespace EstrategiaWeb\ContentTypes;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Store {
 

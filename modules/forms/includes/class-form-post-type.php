@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Forms;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * THE FORM AS AN ENTITY (2.0.0): the post type «eweb_form» («Formulario»).
  *
@@ -54,10 +58,6 @@
  *   the editing screen is set by hand (highlight()).
  * - Tests: modules/forms/tests/form-ref.test.mjs (level 2).
  */
-
-namespace EstrategiaWeb\Forms;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Form_Post_Type {
 

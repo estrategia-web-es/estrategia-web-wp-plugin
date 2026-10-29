@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\ContentTypes;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * THE 2.0.0 DATA MIGRATION: a location's duplicated data → stored once
  * (class-location-data.php says why and what is derived). Per site, once,
@@ -65,10 +69,6 @@
  *   the same way, or it would parse the English text into hours the
  *   Spanish post already has.
  */
-
-namespace EstrategiaWeb\ContentTypes;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Location_Migration {
 

@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 /**
  * On DELETING the plugin (not on deactivating it or switching the module off).
  *

@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Matomo;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Matomo (Armazón, row 16): the tracking code in the site's <head>, with the
  * URL, site id and mode from the `estrategia_web_site` option (`matomo_url`,
@@ -82,11 +86,7 @@
  *   Matomo server (Anonymize IP), not in the tracking code.
  */
 
-namespace EstrategiaWeb\Matomo;
-
 use EstrategiaWeb\Site\Settings;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Matomo {
 

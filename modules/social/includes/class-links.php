@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Social;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * The list of networks: option estrategia_web_social_links, its sanitizing
  * and what the block receives already resolved (name, link, icon).
@@ -46,12 +50,8 @@
  *   first, which sanitize() discards (it is not an array).
  */
 
-namespace EstrategiaWeb\Social;
-
 use EstrategiaWeb\Site\Company;
 use EstrategiaWeb\Site\Settings;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Links {
 

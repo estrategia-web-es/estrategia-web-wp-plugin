@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\LocalBusiness;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * WHAT THE GRAPH IS MADE OF, read from WordPress: the company (site's
  * Company and the social module's links), the locations (the location type
@@ -45,13 +49,9 @@
  *   language; without that the front page would list four departments.
  */
 
-namespace EstrategiaWeb\LocalBusiness;
-
 use EstrategiaWeb\Site\Company;
 use EstrategiaWeb\Site\Location;
 use EstrategiaWeb\Site\Type_Names;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Data {
 

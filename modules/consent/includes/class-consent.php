@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Site;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Own, minimal cookie notice (consent) — 0.5.0.
  *
@@ -179,10 +183,6 @@
  *   in 1.0.0 along with everything else: a theme or plugin that hooked
  *   armazon_consent_… stops tuning the notice until it is renamed.
  */
-
-namespace EstrategiaWeb\Site;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Consent {
 

@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\ContentTypes;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * A LOCATION'S DATA, STORED ONCE (2.0.0, David, 27-10-2026: «los datos
  * duplicados se separan»). Up to 1.7.0 a location kept the same thing twice
@@ -64,10 +68,6 @@
  *   what they could not read and compares the derived text with the old one
  *   (a DIFFERENCE is shown, never hidden). Nothing at render time parses.
  */
-
-namespace EstrategiaWeb\ContentTypes;
-
-defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/class-hours.php';
 

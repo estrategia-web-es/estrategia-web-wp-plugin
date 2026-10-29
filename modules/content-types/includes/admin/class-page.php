@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\ContentTypes;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * «Estrategia Web → Content types»: THE CONSTRUCTOR (17-10-2026), made into
  * two screens in 2.0.0 with ACF's field groups as the reference (David: the
@@ -71,11 +75,7 @@
  *   and keyboard).
  */
 
-namespace EstrategiaWeb\ContentTypes;
-
 use EstrategiaWeb\Admin\Menu;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Page {
 

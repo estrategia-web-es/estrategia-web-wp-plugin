@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Site;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Block Bindings source `estrategia-web-site/location`: a block bound to a
  * detail of ONE location (`location` type). Added in 0.2.0.
@@ -52,11 +56,7 @@
  *   the editor.
  */
 
-namespace EstrategiaWeb\Site;
-
 use EstrategiaWeb\ContentTypes\Location_Fields;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Location {
 

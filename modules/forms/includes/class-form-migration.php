@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Forms;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * THE FORMS MIGRATOR (2.0.0): every form written INSIDE a post (a page, a
  * synced pattern, a template part saved in the database…) becomes a form
@@ -83,10 +87,6 @@
  *   is its own. The opener «form» must be followed by a space: «form-ref» is
  *   another block.
  */
-
-namespace EstrategiaWeb\Forms;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Form_Migration {
 

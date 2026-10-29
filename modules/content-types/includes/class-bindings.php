@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\ContentTypes;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Block Bindings source `estrategia-web/content-field`: a block bound to a
  * field of a declared type, shown WITH FORMAT. core/post-meta shows what is
@@ -45,11 +49,7 @@
  *   the editor never gets the Query row (modules/site, class-location.php).
  */
 
-namespace EstrategiaWeb\ContentTypes;
-
 use EstrategiaWeb\Plugin;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Bindings {
 

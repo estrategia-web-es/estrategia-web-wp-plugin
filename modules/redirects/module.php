@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Redirects;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Module Name: Redirects
  * Description: Editable 301, 302 and 410 redirects with hit counters, CSV import and export, and an optional 404 log.
@@ -64,10 +68,6 @@
  * Personal data: none. The 404 log stores the path and a counter; no IP, no
  * browser, no query (except p=, which is an ID).
  */
-
-namespace EstrategiaWeb\Redirects;
-
-defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/includes/class-rules.php';
 require_once __DIR__ . '/includes/class-store.php';
