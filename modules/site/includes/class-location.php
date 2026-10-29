@@ -106,7 +106,7 @@ final class Location {
 				'post_status'      => 'publish',
 				'numberposts'      => 1,
 				'no_found_rows'    => true,
-				'suppress_filters' => true,
+				'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- deliberate: every language, WPML must not narrow it to the request's.
 			)
 		);
 		return $found ? $found[0] : null;
@@ -179,7 +179,7 @@ final class Location {
 					'numberposts'      => 200,
 					'orderby'          => 'title',
 					'order'            => 'ASC',
-					'suppress_filters' => true,
+					'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- deliberate: every language, WPML must not narrow it to the request's.
 				)
 			);
 			foreach ( $posts as $post ) {

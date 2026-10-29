@@ -12,3 +12,23 @@
 *.jpg binary
 *.webp binary
 *.woff2 binary
+
+# What does NOT go in the package (29-10-2026). `git archive` honours these, so
+# the WordPress.org zip (tools/wporg-zip.mjs) and the sites' deployers pack the
+# same thing. The rule: development only (tests, build tools, notes for whoever
+# works on the repo) stays out; anything the plugin reads at runtime, and the
+# sources of minified files (view.js), stays in — WordPress.org requires them.
+# Edge case: modules/*/README.md is developer documentation, so it stays out;
+# the user-facing text is readme.txt.
+# Pitfall: a new folder of development files must be added HERE, or it ships;
+# tools/wporg-zip.mjs lists what goes in, look at it before uploading.
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/tests export-ignore
+/tools export-ignore
+/docs export-ignore
+/README.md export-ignore
+/CHANGELOG.md export-ignore
+/TODO.md export-ignore
+/modules/*/tests export-ignore
+/modules/*/README.md export-ignore

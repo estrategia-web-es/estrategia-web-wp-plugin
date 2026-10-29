@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Estrategia Web
  * Plugin URI:        https://estrategiaweb.es/
- * Description:       Everything but the design in an Estrategia Web site, as modules you switch on and off in "Estrategia Web → Modules": company details and content types, cookie notice, forms, carousel, map, WhatsApp, language switcher, WebP and external links.
+ * Description:       Site essentials as modules you switch on and off in "Estrategia Web → Modules": cookie consent, block forms, content types, company details, redirects, schema.org, map, carousel, WhatsApp, analytics behind consent, WebP and more.
  * Version:           2.0.1
  * Requires at least: 7.1
  * Requires PHP:      8.1

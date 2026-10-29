@@ -11,6 +11,10 @@
  */
 
 define( 'ABSPATH', __DIR__ . '/' );
+// WordPress's wrapper (Plugin Check asks for it); on PHP 8 it is parse_url().
+function wp_parse_url( $url, $component = -1 ) {
+	return parse_url( $url, $component );
+}
 require dirname( __DIR__, 2 ) . '/includes/class-rules.php';
 
 use EstrategiaWeb\Redirects\Rules;

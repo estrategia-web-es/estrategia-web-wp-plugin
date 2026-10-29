@@ -234,7 +234,7 @@ final class Data {
 				'post_status'      => 'publish',
 				'numberposts'      => 100,
 				'orderby'          => array( 'menu_order' => 'ASC', 'title' => 'ASC' ),
-				'suppress_filters' => true,
+				'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- deliberate: every language (see the header).
 			)
 		);
 		$out = array();

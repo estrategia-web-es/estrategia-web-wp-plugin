@@ -108,7 +108,7 @@ final class Store {
 				'numberposts'            => -1,
 				'orderby'                => 'menu_order title',
 				'order'                  => 'ASC',
-				'suppress_filters'       => true, // WPML: every definition, whatever the language of the request.
+				'suppress_filters'       => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- WPML: every definition, whatever the language of the request.
 				'update_post_meta_cache' => false,
 				'update_post_term_cache' => false,
 			)

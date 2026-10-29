@@ -129,7 +129,7 @@ final class Location_Migration {
 				'fields'           => 'ids',
 				'orderby'          => 'ID',
 				'order'            => 'ASC',
-				'suppress_filters' => true,
+				'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- deliberate: every language, WPML must not narrow it to the request's.
 			)
 		);
 		foreach ( $ids as $id ) {

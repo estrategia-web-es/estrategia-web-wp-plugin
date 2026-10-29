@@ -272,7 +272,7 @@ final class Rest {
 				if ( $old['has_archive'] && ( $archive = get_post_type_archive_link( $name ) ) ) {
 					$paths[] = wp_make_link_relative( $archive );
 				}
-				$ids = get_posts( array( 'post_type' => $name, 'post_status' => 'publish', 'numberposts' => -1, 'fields' => 'ids', 'suppress_filters' => true ) );
+				$ids = get_posts( array( 'post_type' => $name, 'post_status' => 'publish', 'numberposts' => -1, 'fields' => 'ids', 'suppress_filters' => true ) ); // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- deliberate: every language, WPML must not narrow it to the request's.
 				foreach ( $ids as $id ) {
 					$paths[] = wp_make_link_relative( (string) get_permalink( $id ) );
 				}

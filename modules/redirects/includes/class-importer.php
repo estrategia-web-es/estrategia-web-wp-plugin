@@ -103,7 +103,7 @@ final class Importer {
 	/** CSV with all rules, in the format import() reads. */
 	public static function export(): string {
 		list( $rows ) = Store::query( '', 0, 1, 'id', 'asc' );
-		$fh           = fopen( 'php://temp', 'r+' );
+		$fh           = fopen( 'php://temp', 'r+' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- in-memory stream for fputcsv(), not a file.
 		fputcsv( $fh, array( 'origen', 'destino', 'tipo', 'motivo', 'activa', 'visitas', 'ultima_visita' ), ',', '"', '' );
 		foreach ( $rows as $row ) {
 			fputcsv(
@@ -124,7 +124,7 @@ final class Importer {
 		}
 		rewind( $fh );
 		$csv = (string) stream_get_contents( $fh );
-		fclose( $fh );
+		fclose( $fh ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- in-memory stream, not a file.
 		return $csv;
 	}
 

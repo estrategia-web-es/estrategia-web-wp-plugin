@@ -10,5 +10,7 @@ tests/.timings.json
 tests/.cache/
 # WPML for the test WordPress (tests/run.mjs, «WPML»): paid and licensed, never in git.
 tests/fixtures/wpml/
+# The WordPress.org zip and its Plugin Check run (tools/wporg.mjs): rebuilt from HEAD each time.
+dist/
 .DS_Store
 Thumbs.db

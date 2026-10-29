@@ -217,7 +217,7 @@ final class Location_Data {
 		if ( '' === $url ) {
 			return null;
 		}
-		$parts = parse_url( $url );
+		$parts = wp_parse_url( $url );
 		if ( ! is_array( $parts ) || ! preg_match( '/(^|\.)google\.[a-z.]+$/i', (string) ( $parts['host'] ?? '' ) ) ) {
 			return null;
 		}
@@ -248,7 +248,7 @@ final class Location_Data {
 			$q = trim( urldecode( $m[1] ) );
 			return '' !== $q ? $q : null;
 		}
-		$parts = parse_url( $url );
+		$parts = wp_parse_url( $url );
 		parse_str( (string) ( is_array( $parts ) ? ( $parts['query'] ?? '' ) : '' ), $args );
 		return isset( $args['q'] ) && is_string( $args['q'] ) && '' !== trim( $args['q'] ) ? trim( $args['q'] ) : null;
 	}

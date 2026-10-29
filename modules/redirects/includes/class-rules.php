@@ -159,8 +159,8 @@ final class Rules {
 		$first = strtok( (string) $csv, "\n" );
 		$sep   = substr_count( (string) $first, ';' ) > substr_count( (string) $first, ',' ) ? ';' : ',';
 
-		$fh = fopen( 'php://temp', 'r+' );
-		fwrite( $fh, (string) $csv );
+		$fh = fopen( 'php://temp', 'r+' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- in-memory stream for fgetcsv(), not a file.
+		fwrite( $fh, (string) $csv ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- same stream.
 		rewind( $fh );
 
 		$aliases = array(
@@ -214,7 +214,7 @@ final class Rules {
 				'active' => $active,
 			);
 		}
-		fclose( $fh );
+		fclose( $fh ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- in-memory stream, not a file.
 		return array( 'rows' => $rows, 'errors' => $errors );
 	}
 
@@ -326,7 +326,7 @@ final class Rules {
 	}
 
 	private static function same_site( string $url, string $home ): bool {
-		$host = static fn( string $u ): string => preg_replace( '/^www\./', '', self::lower( (string) parse_url( $u, PHP_URL_HOST ) ) );
+		$host = static fn( string $u ): string => preg_replace( '/^www\./', '', self::lower( (string) wp_parse_url( $u, PHP_URL_HOST ) ) );
 		return '' !== $home && '' !== $host( $url ) && $host( $url ) === $host( $home );
 	}
 
