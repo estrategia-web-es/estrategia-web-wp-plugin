@@ -66,6 +66,13 @@ function versions() {
   return v.header;
 }
 
+/** HEAD as a tar, with the same export-ignore rules as the zip. */
+function tarOfHead() {
+  const r = spawnSync("git", ["-C", ROOT, "archive", "--format=tar", `--prefix=${SLUG}/`, "HEAD"], { maxBuffer: 512 * 1024 * 1024 });
+  if (r.status !== 0) throw new Error(`git archive: ${r.stderr}`);
+  return r.stdout;
+}
+
 function zip() {
   const version = versions();
   const dirty = git("status", "--porcelain", "--untracked-files=no").trim();
@@ -73,8 +80,9 @@ function zip() {
   fs.mkdirSync(DIST, { recursive: true });
   const file = path.join(DIST, `${SLUG}-${version}.zip`);
   git("archive", "--format=zip", `--prefix=${SLUG}/`, "-o", file, "HEAD");
-  // Relative name and cwd: GNU tar reads «E:\…» as host «E» (remote archive).
-  const t = spawnSync("tar", ["-tf", path.basename(file)], { cwd: DIST, encoding: "utf8" });
+  // Listed from the same HEAD as a TAR through stdin, not from the zip: GNU tar
+  // cannot read zips, and reads a path like «E:\…» as host «E».
+  const t = spawnSync("tar", ["-t"], { input: tarOfHead(), encoding: "utf8" });
   const entries = (t.stdout || "").split("\n").filter((e) => e && !e.endsWith("/"));
   // An empty list would pass every check below: that is a failure, not a clean zip.
   if (t.status !== 0 || !entries.length) throw new Error(`could not list the zip: ${t.stderr}`);
@@ -114,7 +122,7 @@ function check() {
   const work = path.join(DIST, ".check");
   fs.rmSync(work, { recursive: true, force: true });
   fs.mkdirSync(path.join(work, "out"), { recursive: true });
-  const t = spawnSync("tar", ["-xf", path.join("..", path.basename(file))], { cwd: work, encoding: "utf8" });
+  const t = spawnSync("tar", ["-x"], { cwd: work, input: tarOfHead(), encoding: "utf8" });
   if (t.status !== 0) throw new Error(`could not extract the zip: ${t.stderr}`);
   fs.copyFileSync(path.join(ROOT, "tools", "wporg-check.php"), path.join(work, "out", "runner.php"));
   const wp = (show("readme.txt").match(/^Requires at least:\s*(\S+)/m) || [])[1];
