@@ -84,7 +84,9 @@ msgstr "Ajustes"
 msgid ""
 "How the site behaves, by topic: the cookie notice, the statistics and what "
 "is accepted when uploading images."
-msgstr "Cómo se comporta la web, por temas: el aviso de cookies, las estadísticas y lo que se acepta al subir imágenes."
+msgstr ""
+"Cómo se comporta la web, por temas: el aviso de cookies, las estadísticas y "
+"lo que se acepta al subir imágenes."
 
 #: includes/admin/class-settings-page.php:234
 msgid "Settings sections"
@@ -1145,7 +1147,9 @@ msgstr "Volver a la lista"
 msgid ""
 "The type’s settings, in tabs, and its fields: open a row to edit it, drag it "
 "to reorder."
-msgstr "Los ajustes del tipo, en pestañas, y sus campos: abre una fila para editarla y arrástrala para cambiarla de orden."
+msgstr ""
+"Los ajustes del tipo, en pestañas, y sus campos: abre una fila para editarla "
+"y arrástrala para cambiarla de orden."
 
 #: modules/content-types/includes/admin/class-page.php:250
 msgid "Loading…"
@@ -2668,11 +2672,25 @@ msgstr ""
 "rel=\"noopener\" y un «(se abre en una pestaña nueva)» oculto para lectores "
 "de pantalla."
 
-#: modules/external-links/module.php modules/local-business/module.php
-#: modules/redirects/module.php
+#: modules/external-links/module.php modules/faq-schema/module.php
+#: modules/local-business/module.php modules/redirects/module.php
 msgctxt "module category"
 msgid "SEO"
 msgstr "SEO"
+
+#: modules/faq-schema/module.php
+msgctxt "module name"
+msgid "FAQ structured data"
+msgstr "Datos estructurados de preguntas frecuentes"
+
+#: modules/faq-schema/module.php
+msgctxt "module description"
+msgid ""
+"Publishes the page's FAQ accordions as schema.org FAQPage, inside Rank "
+"Math's or Yoast's graph when they are there."
+msgstr ""
+"Publica los acordeones de preguntas frecuentes de la página como FAQPage de "
+"schema.org, dentro del grafo de Rank Math o de Yoast si están."
 
 #: modules/featured-images/module.php
 msgctxt "module name"
@@ -3109,7 +3127,9 @@ msgstr "No tienes permiso para ver esta página."
 #: modules/forms/includes/admin/class-admin.php:105
 msgid ""
 "Every message sent through the site's forms, with the emails each one sent."
-msgstr "Todos los mensajes enviados desde los formularios de la web, con los correos que mandó cada uno."
+msgstr ""
+"Todos los mensajes enviados desde los formularios de la web, con los correos "
+"que mandó cada uno."
 
 #: modules/forms/includes/admin/class-admin.php:105
 msgid "Export CSV"
@@ -3718,7 +3738,9 @@ msgctxt "module description"
 msgid ""
 "The «ES ▾» of the header: switches language to the same page, keyboard-"
 "accessible and with hreflang. Needs WPML; without it, nothing is shown."
-msgstr "El «ES ▾» de la cabecera: cambia de idioma a la misma página, se puede usar con el teclado y lleva hreflang. Necesita WPML; sin él, no se muestra nada."
+msgstr ""
+"El «ES ▾» de la cabecera: cambia de idioma a la misma página, se puede usar "
+"con el teclado y lleva hreflang. Necesita WPML; sin él, no se muestra nada."
 
 #: modules/local-business/includes/class-settings.php:44
 #: modules/local-business/includes/class-settings.php:77
@@ -4048,7 +4070,9 @@ msgstr "Importar / exportar"
 msgid ""
 "Old addresses that send visitors to the new ones (301, 302), or say a page "
 "is gone for good (410)."
-msgstr "Direcciones antiguas que llevan a las nuevas (301, 302) o que dicen que una página ya no existe (410)."
+msgstr ""
+"Direcciones antiguas que llevan a las nuevas (301, 302) o que dicen que una "
+"página ya no existe (410)."
 
 #: modules/redirects/includes/admin/class-page.php:186
 msgid "There are two redirect systems on this website."
@@ -4070,8 +4094,8 @@ msgstr ""
 msgid "Edit redirect"
 msgstr "Editar redirección"
 
-#: modules/redirects/includes/admin/class-page.php:201
 #
+#: modules/redirects/includes/admin/class-page.php:201
 msgid "Redirects sections"
 msgstr "Secciones de las redirecciones"
 
@@ -4625,8 +4649,8 @@ msgstr ""
 "se adivina del enlace; elige uno solo si se equivoca, o usa tu propio SVG de "
 "la mediateca."
 
-#: modules/social/includes/class-admin.php:87
 #
+#: modules/social/includes/class-admin.php:87
 msgid "Networks"
 msgstr "Redes"
 

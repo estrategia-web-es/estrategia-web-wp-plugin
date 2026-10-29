@@ -463,6 +463,8 @@ return array(
 		'module name' . "\x04" . 'External links in a new tab' => 'Enllaços externs en una pestanya nova',
 		'module description' . "\x04" . 'Links to another domain open in a new tab, with rel="noopener" and a hidden «(opens in a new tab)» for screen readers.' => 'Els enllaços a un altre domini s\'obren en una pestanya nova, amb rel="noopener" i un «(s\'obre en una pestanya nova)» ocult per als lectors de pantalla.',
 		'module category' . "\x04" . 'SEO' => 'SEO',
+		'module name' . "\x04" . 'FAQ structured data' => 'Dades estructurades de preguntes freqüents',
+		'module description' . "\x04" . 'Publishes the page\'s FAQ accordions as schema.org FAQPage, inside Rank Math\'s or Yoast\'s graph when they are there.' => 'Publica els acordions de preguntes freqüents de la pàgina com a FAQPage de schema.org, dins del graf de Rank Math o de Yoast si hi són.',
 		'module name' . "\x04" . 'Featured image tuning' => 'Ajusts de la imatge destacada',
 		'module description' . "\x04" . 'Featured images with a fixed width in px download a file of that size, and a logo whose alt text only repeats the title shown next to it is marked as decorative.' => 'Les imatges destacades d\'amplada fixa en px baixen un fitxer d\'aquesta mida, i un logotip amb un text alternatiu que només repeteix el títol que es veu al costat es marca com a decoratiu.',
 		'Message' => 'Missatge',

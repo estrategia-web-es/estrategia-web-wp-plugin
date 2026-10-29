@@ -76,7 +76,9 @@ msgstr "Paràmetres"
 msgid ""
 "How the site behaves, by topic: the cookie notice, the statistics and what "
 "is accepted when uploading images."
-msgstr "Com es comporta el web, per temes: l'avís de galetes, les estadístiques i què s'accepta en pujar imatges."
+msgstr ""
+"Com es comporta el web, per temes: l'avís de galetes, les estadístiques i "
+"què s'accepta en pujar imatges."
 
 #: includes/admin/class-settings-page.php:234
 msgid "Settings sections"
@@ -1141,7 +1143,9 @@ msgstr "Torna a la llista"
 msgid ""
 "The type’s settings, in tabs, and its fields: open a row to edit it, drag it "
 "to reorder."
-msgstr "Els paràmetres del tipus, en pestanyes, i els seus camps: obre una fila per editar-la i arrossega-la per canviar-ne l'ordre."
+msgstr ""
+"Els paràmetres del tipus, en pestanyes, i els seus camps: obre una fila per "
+"editar-la i arrossega-la per canviar-ne l'ordre."
 
 #: modules/content-types/includes/admin/class-page.php:250
 msgid "Loading…"
@@ -2663,11 +2667,25 @@ msgstr ""
 "rel=\"noopener\" i un «(s'obre en una pestanya nova)» ocult per als lectors "
 "de pantalla."
 
-#: modules/external-links/module.php modules/local-business/module.php
-#: modules/redirects/module.php
+#: modules/external-links/module.php modules/faq-schema/module.php
+#: modules/local-business/module.php modules/redirects/module.php
 msgctxt "module category"
 msgid "SEO"
 msgstr "SEO"
+
+#: modules/faq-schema/module.php
+msgctxt "module name"
+msgid "FAQ structured data"
+msgstr "Dades estructurades de preguntes freqüents"
+
+#: modules/faq-schema/module.php
+msgctxt "module description"
+msgid ""
+"Publishes the page's FAQ accordions as schema.org FAQPage, inside Rank "
+"Math's or Yoast's graph when they are there."
+msgstr ""
+"Publica els acordions de preguntes freqüents de la pàgina com a FAQPage de "
+"schema.org, dins del graf de Rank Math o de Yoast si hi són."
 
 #: modules/featured-images/module.php
 msgctxt "module name"
@@ -3104,7 +3122,9 @@ msgstr "No tens permís per veure aquesta pàgina."
 #: modules/forms/includes/admin/class-admin.php:105
 msgid ""
 "Every message sent through the site's forms, with the emails each one sent."
-msgstr "Tots els missatges enviats des dels formularis del web, amb els correus que va enviar cadascun."
+msgstr ""
+"Tots els missatges enviats des dels formularis del web, amb els correus que "
+"va enviar cadascun."
 
 #: modules/forms/includes/admin/class-admin.php:105
 msgid "Export CSV"
@@ -3714,7 +3734,10 @@ msgctxt "module description"
 msgid ""
 "The «ES ▾» of the header: switches language to the same page, keyboard-"
 "accessible and with hreflang. Needs WPML; without it, nothing is shown."
-msgstr "L'«ES ▾» de la capçalera: canvia d'idioma a la mateixa pàgina, es pot fer servir amb el teclat i porta hreflang. Necessita WPML; sense WPML, no es mostra res."
+msgstr ""
+"L'«ES ▾» de la capçalera: canvia d'idioma a la mateixa pàgina, es pot fer "
+"servir amb el teclat i porta hreflang. Necessita WPML; sense WPML, no es "
+"mostra res."
 
 #: modules/local-business/includes/class-settings.php:44
 #: modules/local-business/includes/class-settings.php:77
@@ -4044,7 +4067,9 @@ msgstr "Importació / exportació"
 msgid ""
 "Old addresses that send visitors to the new ones (301, 302), or say a page "
 "is gone for good (410)."
-msgstr "Adreces velles que porten a les noves (301, 302) o que diuen que una pàgina ja no existeix (410)."
+msgstr ""
+"Adreces velles que porten a les noves (301, 302) o que diuen que una pàgina "
+"ja no existeix (410)."
 
 #: modules/redirects/includes/admin/class-page.php:186
 msgid "There are two redirect systems on this website."
@@ -4066,8 +4091,8 @@ msgstr ""
 msgid "Edit redirect"
 msgstr "Edita la redirecció"
 
-#: modules/redirects/includes/admin/class-page.php:201
 #
+#: modules/redirects/includes/admin/class-page.php:201
 msgid "Redirects sections"
 msgstr "Seccions de les redireccions"
 
@@ -4619,8 +4644,8 @@ msgstr ""
 "s'endevina a partir de l'enllaç; tria'n una només si s'equivoca, o fes "
 "servir el teu propi SVG de la mediateca."
 
-#: modules/social/includes/class-admin.php:87
 #
+#: modules/social/includes/class-admin.php:87
 msgid "Networks"
 msgstr "Xarxes"
 

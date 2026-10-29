@@ -2458,10 +2458,22 @@ msgid ""
 "hidden «(opens in a new tab)» for screen readers."
 msgstr ""
 
-#: modules/external-links/module.php modules/local-business/module.php
-#: modules/redirects/module.php
+#: modules/external-links/module.php modules/faq-schema/module.php
+#: modules/local-business/module.php modules/redirects/module.php
 msgctxt "module category"
 msgid "SEO"
+msgstr ""
+
+#: modules/faq-schema/module.php
+msgctxt "module name"
+msgid "FAQ structured data"
+msgstr ""
+
+#: modules/faq-schema/module.php
+msgctxt "module description"
+msgid ""
+"Publishes the page's FAQ accordions as schema.org FAQPage, inside Rank "
+"Math's or Yoast's graph when they are there."
 msgstr ""
 
 #: modules/featured-images/module.php

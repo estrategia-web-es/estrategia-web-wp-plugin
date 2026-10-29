@@ -9,6 +9,22 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.1.0 — 29-10-2026
+
+**What each site must do:** nothing. The new module is OFF by default; a
+site that wants it switches it on in Estrategia Web › Modules.
+
+- New module **`faq-schema`** («FAQ structured data», category SEO): the
+  page's FAQ accordions (`is-style-faq`, Lavandería's child, and
+  `is-style-faq-list`, the parent's 1.2.2) as one schema.org **FAQPage**,
+  inside Rank Math's or Yoast's graph or as its own script; it steps aside
+  if the host already has a FAQPage. Synced patterns are read. Why and what
+  it is worth (Google shows the FAQ rich result only to government and
+  health sites since 2023), in its `module.php`.
+- Tests: `modules/faq-schema/tests/faq.test.mjs` (level 1), and the module
+  in «David's list» of `tests/modules.test.mjs`.
+- Branch `ew-web2026`, for estrategiaweb.es. Not merged into `main` yet.
+
 ## 2.0.1 — 28-10-2026
 
 **What each site must do, in this order (with a backup first):**

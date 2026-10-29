@@ -463,6 +463,8 @@ return array(
 		'module name' . "\x04" . 'External links in a new tab' => 'Enlaces externos en pestaña nueva',
 		'module description' . "\x04" . 'Links to another domain open in a new tab, with rel="noopener" and a hidden «(opens in a new tab)» for screen readers.' => 'Los enlaces a otro dominio se abren en una pestaña nueva, con rel="noopener" y un «(se abre en una pestaña nueva)» oculto para lectores de pantalla.',
 		'module category' . "\x04" . 'SEO' => 'SEO',
+		'module name' . "\x04" . 'FAQ structured data' => 'Datos estructurados de preguntas frecuentes',
+		'module description' . "\x04" . 'Publishes the page\'s FAQ accordions as schema.org FAQPage, inside Rank Math\'s or Yoast\'s graph when they are there.' => 'Publica los acordeones de preguntas frecuentes de la página como FAQPage de schema.org, dentro del grafo de Rank Math o de Yoast si están.',
 		'module name' . "\x04" . 'Featured image tuning' => 'Ajustes de la imagen destacada',
 		'module description' . "\x04" . 'Featured images with a fixed width in px download a file of that size, and a logo whose alt text only repeats the title shown next to it is marked as decorative.' => 'Las imágenes destacadas de ancho fijo en px bajan un archivo de ese tamaño, y un logo cuyo texto alternativo solo repite el título que se ve al lado se marca como decorativo.',
 		'Message' => 'Mensaje',
