@@ -73,7 +73,11 @@ function zip() {
   fs.mkdirSync(DIST, { recursive: true });
   const file = path.join(DIST, `${SLUG}-${version}.zip`);
   git("archive", "--format=zip", `--prefix=${SLUG}/`, "-o", file, "HEAD");
-  const entries = spawnSync("tar", ["-tf", file], { encoding: "utf8" }).stdout.split("\n").filter((e) => e && !e.endsWith("/"));
+  // Relative name and cwd: GNU tar reads «E:\…» as host «E» (remote archive).
+  const t = spawnSync("tar", ["-tf", path.basename(file)], { cwd: DIST, encoding: "utf8" });
+  const entries = (t.stdout || "").split("\n").filter((e) => e && !e.endsWith("/"));
+  // An empty list would pass every check below: that is a failure, not a clean zip.
+  if (t.status !== 0 || !entries.length) throw new Error(`could not list the zip: ${t.stderr}`);
   const dev = entries.filter((e) => /^estrategia-web\/(tests|tools|docs)\/|^estrategia-web\/modules\/[^/]+\/(tests\/|README\.md$)|^estrategia-web\/(README|CHANGELOG|TODO)\.md$/.test(e));
   if (dev.length) throw new Error(`development files in the zip (missing export-ignore in .gitattributes?):\n  ${dev.slice(0, 10).join("\n  ")}`);
   const mb = fs.statSync(file).size / 1024 / 1024;
@@ -110,7 +114,7 @@ function check() {
   const work = path.join(DIST, ".check");
   fs.rmSync(work, { recursive: true, force: true });
   fs.mkdirSync(path.join(work, "out"), { recursive: true });
-  const t = spawnSync("tar", ["-xf", file, "-C", work], { encoding: "utf8" });
+  const t = spawnSync("tar", ["-xf", path.join("..", path.basename(file))], { cwd: work, encoding: "utf8" });
   if (t.status !== 0) throw new Error(`could not extract the zip: ${t.stderr}`);
   fs.copyFileSync(path.join(ROOT, "tools", "wporg-check.php"), path.join(work, "out", "runner.php"));
   const wp = (show("readme.txt").match(/^Requires at least:\s*(\S+)/m) || [])[1];
