@@ -2,8 +2,8 @@
 //
 // Cookie notice (0.5.0, came from the parent theme). What it is and why, in
 // the header of includes/class-consent.php. What happens in the browser
-// (buttons, cookie, JS API, event, contrast) is consent-browser.test.mjs
-// (level 3).
+// (buttons, cookie, JS API, event, contrast) is the browser scenario
+// 12-consent-notice (its check: browser-consent-notice.test.mjs).
 //
 // The «site» that declares categories plays the theme's functions.php: here
 // through ?ew-consent-setup=<json> on the page request itself (the same

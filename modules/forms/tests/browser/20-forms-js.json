@@ -1,0 +1,52 @@
+{
+  "title": "Forms with JavaScript: the browser stops an empty required field, the server marks a bypassed one and announces it, and a filled form is sent without reloading",
+  "description": "A visitor of the forms module's form (the FORM of modules/forms/tests/lib.mjs, the check compares them) with JavaScript, in the order a visitor would hit them on the same form: native HTML5 validation stops an empty required field (no request goes out); with «required» removed by hand the server answers, the page marks the field (aria-invalid, its error, the aria-live status) and puts the focus on it; filled, it is sent through the Interactivity API without reloading, announced in the polite live region, the form cleared, and stored once with its three notifications. The anti-spam minimum fill time is 0 here (min_seconds): it is the server's, tested at level 2 (server.test.mjs), and waiting it out would be a fixed wait. Read by browser-forms-js. It was the JS cases of browser.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-forms-test/v1/reset", "as": "seed", "body": {
+        "settings": { "min_seconds": 0 },
+        "pages": [{ "key": "page", "slug": "contacto", "title": "Contacto", "content": "<!-- wp:estrategia-web-forms/form {\"formId\":\"contacto\",\"title\":\"Contacto\"} -->\n<!-- wp:estrategia-web-forms/text {\"label\":\"Nombre\",\"name\":\"nombre\",\"required\":true,\"width\":\"half\"} /-->\n<!-- wp:estrategia-web-forms/email {\"label\":\"Correo\",\"name\":\"email\",\"required\":true,\"width\":\"half\"} /-->\n<!-- wp:estrategia-web-forms/tel {\"label\":\"Teléfono\",\"name\":\"telefono\"} /-->\n<!-- wp:estrategia-web-forms/select {\"label\":\"Servicio\",\"name\":\"servicio\",\"options\":\"Lavado\\nPlanchado\"} /-->\n<!-- wp:estrategia-web-forms/textarea {\"label\":\"Mensaje\",\"name\":\"mensaje\",\"required\":true} /-->\n<!-- wp:estrategia-web-forms/checkbox {\"name\":\"privacidad\",\"consent\":true} /-->\n<!-- wp:estrategia-web-forms/submit {\"text\":\"Enviar consulta\"} /-->\n<!-- wp:estrategia-web-forms/notification {\"label\":\"Aviso al equipo\",\"to\":\"equipo@ejemplo.test\",\"replyTo\":\"{{email}}\",\"subject\":\"Nuevo mensaje de {{nombre}}\",\"body\":\"Desde {{page_url}} el {{submission_date}} en {{site_name}}:\\n\\n{{all_fields}}\"} /-->\n<!-- wp:estrategia-web-forms/notification {\"label\":\"Acuse al remitente\",\"to\":\"{{email}}\",\"subject\":\"Hemos recibido tu mensaje\",\"body\":\"Hola {{nombre}}, gracias por escribir.\\nServicio: {{servicio}}\\nDesde {{ Page_URL }} el {{submission_date}} en {{site_name}}:\\n{{all_fields}}\"} /-->\n<!-- wp:estrategia-web-forms/notification {\"label\":\"Aviso que falla\",\"to\":\"fail@ejemplo.test\",\"subject\":\"Copia\"} /-->\n<!-- /wp:estrategia-web-forms/form -->" }]
+      } }
+    ] } },
+    { "type": "setViewport", "width": 1280, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/contacto/" },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "window.__sameDocument = true" } },
+    { "type": "change", "selectors": ["#af-contacto-nombre"], "value": "Ana" },
+    { "type": "change", "selectors": ["#af-contacto-email"], "value": "ana@ejemplo.test" },
+    { "type": "change", "selectors": ["#af-contacto-telefono"], "value": "+34 600 000 000" },
+    { "type": "change", "selectors": ["#af-contacto-servicio"], "value": "Planchado" },
+    { "type": "change", "selectors": ["#af-contacto-mensaje"], "value": "" },
+    { "type": "click", "selectors": ["#af-contacto-privacidad"], "offsetX": 5, "offsetY": 5 },
+    { "type": "click", "selectors": ["#af-contacto button[type=submit]", "button[type=submit]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "blocked",
+      "save": ["network"],
+      "values": { "valueMissing": "document.getElementById('af-contacto-mensaje').validity.valueMissing" }
+    } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "document.getElementById('af-contacto-mensaje').removeAttribute('required')" } },
+    { "type": "click", "selectors": ["#af-contacto button[type=submit]", "button[type=submit]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForElement", "selectors": ["#af-contacto-mensaje[aria-invalid=true]"] },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "refused",
+      "values": {
+        "fieldError": "document.getElementById('af-contacto-mensaje-error').textContent.trim()",
+        "status": "document.getElementById('af-contacto-status').textContent.trim()",
+        "focus": "document.activeElement?.id"
+      }
+    } },
+    { "type": "change", "selectors": ["#af-contacto-mensaje"], "value": "Hola,\nquería información." },
+    { "type": "click", "selectors": ["#af-contacto button[type=submit]", "button[type=submit]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForExpression", "expression": "/Thank you|Gracias/.test(document.getElementById('af-contacto-status').textContent)" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "sent",
+      "save": ["console"],
+      "values": {
+        "live": "document.getElementById('af-contacto-status').getAttribute('aria-live')",
+        "sameDocument": "window.__sameDocument === true",
+        "nombre": "document.getElementById('af-contacto-nombre').value",
+        "state": "fetch('/wp-json/estrategia-web-forms-test/v1/state').then((r) => r.json())"
+      }
+    } }
+  ]
+}

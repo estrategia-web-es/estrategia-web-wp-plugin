@@ -1,0 +1,135 @@
+{
+  "title": "Content types constructor: an error goes to the alert region; «Restaurantes» with three fields — tabs, rows, keyboard and drag reordering, a group — saved; a change that moves published things asks first; the type, its menu and its fields appear; «Add from template»",
+  "description": "The «Content types» screens (assets/constructor.js) as a person uses them, logged in as the administrator, in ONE pass: from the list's «Add new», saving empty puts the error in the alert region with the focus; then «Restaurantes» with three fields (tabs as a tablist with arrow keys, the internal name suggested, rows that open on click, every control labelled, Alt + ↑ reorders and is announced, dragging by the handle reorders, a field group in the Advanced tab) is saved and stored as on screen; on the same screen, removing a published field and moving the fields box asks first and «Save anyway» saves it; the type is registered with its menu entry and its fields in the main area; «Add from template» is a menu that Escape closes and adds a template. Controls are found by their data-* hooks, not the translated labels. What was stored is the REST answer to the screen's own saves (network.bodies). The list's HTML, the save with the page's nonce and «a refused save writes nothing» are level 2 (constructor-screens.test.mjs, constructor.test.mjs). Read by browser-ct-constructor. It was constructor-editor.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "timeout": 20000,
+  "dialogs": "accept",
+  "initScripts": ["tests/browser-probes.js"],
+  "network": { "bodies": ["/estrategia-web/v1/content-types"] },
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/reset", "method": "POST" },
+      { "path": "/estrategia-web-ct-test/v1/constructor-reset", "method": "POST" }
+    ] } },
+    { "type": "setViewport", "width": 1400, "height": 1000, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/wp-login.php?redirect_to=%2Fwp-admin%2Fadmin.php%3Fpage%3Destrategia-web-content-types" },
+    { "type": "change", "selectors": ["#user_login"], "value": "admin" },
+    { "type": "change", "selectors": ["#user_pass"], "value": "password" },
+    { "type": "click", "selectors": ["#wp-submit"], "offsetX": 10, "offsetY": 10, "assertedEvents": [{ "type": "navigation" }] },
+    { "type": "waitForElement", "selectors": ["[data-action=\"add\"]"] },
+    { "type": "click", "selectors": ["[data-action=\"add\"]"], "offsetX": 10, "offsetY": 10, "assertedEvents": [{ "type": "navigation" }] },
+    { "type": "waitForElement", "selectors": ["[data-action=\"save\"]"] },
+    { "type": "click", "selectors": ["[data-action=\"save\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForElement", "selectors": [".ewct-alert[role=\"alert\"]"], "visible": true },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "error", "values": {
+      "url": "location.href",
+      "alert": "document.querySelector('.ewct-alert[role=\"alert\"]').textContent",
+      "focused": "!!document.activeElement && document.activeElement.classList.contains('ewct-alert')",
+      "general": "document.querySelector('[data-tab=\"general\"]').getAttribute('aria-selected')"
+    } } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "document.querySelector('[data-tab=\"general\"]').focus()" } },
+    { "type": "keyDown", "key": "ArrowRight" },
+    { "type": "keyUp", "key": "ArrowRight" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "tabs", "values": {
+      "urls": "document.querySelector('[data-tab=\"urls\"]').getAttribute('aria-selected')",
+      "generalHidden": "!__seen(document.getElementById('ewct-panel-general'))"
+    } } },
+    { "type": "click", "selectors": ["[data-tab=\"general\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "change", "selectors": ["[data-key=\"plural\"][data-lang=\"es\"]"], "value": "Restaurantes" },
+    { "type": "change", "selectors": ["[data-key=\"singular\"][data-lang=\"es\"]"], "value": "Restaurante" },
+    { "type": "change", "selectors": ["[data-key=\"prefix\"]"], "value": "gment_" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "named", "values": { "name": "document.querySelector('[data-key=\"name\"]').value" } } },
+    { "type": "change", "selectors": ["[data-key=\"slug\"]"], "value": "restaurantes" },
+    { "type": "click", "selectors": ["[data-action=\"add-field\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "new-field", "values": {
+      "expanded": "document.querySelector('[data-field=\"0\"] [data-action=\"toggle-field\"]').getAttribute('aria-expanded')",
+      "focusInside": "Boolean(document.activeElement.closest('[data-field=\"0\"] .ewct-field-body'))"
+    } } },
+    { "type": "change", "selectors": ["[data-field=\"0\"] [data-key=\"label\"][data-lang=\"es\"]"], "value": "Teléfono" },
+    { "type": "change", "selectors": ["[data-field=\"0\"] [data-key=\"field-name\"]"], "value": "gment_telefono" },
+    { "type": "change", "selectors": ["[data-field=\"0\"] [data-key=\"field-type\"]"], "value": "tel" },
+    { "type": "click", "selectors": ["[data-action=\"add-field\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "change", "selectors": ["[data-field=\"1\"] [data-key=\"field-type\"]"], "value": "select" },
+    { "type": "change", "selectors": ["[data-field=\"1\"] [data-key=\"label\"][data-lang=\"es\"]"], "value": "Precio" },
+    { "type": "change", "selectors": ["[data-field=\"1\"] [data-key=\"field-name\"]"], "value": "gment_precio" },
+    { "type": "change", "selectors": ["[data-field=\"1\"] [data-key=\"options\"]"], "value": "barato | Barato\ncaro | Caro" },
+    { "type": "click", "selectors": ["[data-action=\"add-field\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "change", "selectors": ["[data-field=\"2\"] [data-key=\"field-type\"]"], "value": "boolean" },
+    { "type": "change", "selectors": ["[data-field=\"2\"] [data-key=\"label\"][data-lang=\"es\"]"], "value": "Terraza" },
+    { "type": "change", "selectors": ["[data-field=\"2\"] [data-key=\"field-name\"]"], "value": "gment_terraza" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "three-fields", "values": {
+      "head": "document.querySelector('[data-field=\"2\"] [data-action=\"toggle-field\"]').textContent",
+      "unlabelled": "[...document.querySelectorAll('#estrategia-web-constructor input, #estrategia-web-constructor select, #estrategia-web-constructor textarea')].filter((c) => c.type !== 'hidden' && !(c.id && document.querySelector('label[for=\"' + c.id + '\"]'))).map((c) => c.outerHTML.slice(0, 80))"
+    } } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "__all('[data-action=\"toggle-field\"][aria-expanded=\"true\"]').forEach((b) => b.click())" } },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "collapsed", "values": { "openBodies": "__all('.ewct-field-body').filter(__seen).length" } } },
+    { "type": "click", "selectors": ["[data-field=\"1\"] [data-action=\"toggle-field\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "one-open", "values": { "open": "__seen(document.querySelector('[data-field=\"1\"] .ewct-field-body'))" } } },
+    { "type": "click", "selectors": ["[data-field=\"1\"] [data-action=\"toggle-field\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "document.querySelector('[data-field=\"2\"] [data-action=\"toggle-field\"]').focus()" } },
+    { "type": "keyDown", "key": "Alt" },
+    { "type": "keyDown", "key": "ArrowUp" },
+    { "type": "keyUp", "key": "ArrowUp" },
+    { "type": "keyUp", "key": "Alt" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "keyboard", "values": {
+      "order": "__all('[data-field] .ewct-col-name').map((c) => c.textContent)",
+      "focusField": "document.activeElement.closest('[data-field]')?.dataset.field"
+    } } },
+    { "type": "waitForExpression", "expression": "/Terraza/.test(document.getElementById('a11y-speak-polite')?.textContent || '')" },
+    { "type": "customStep", "name": "drag", "parameters": { "selectors": ["[data-field=\"1\"] [data-action=\"drag\"]"], "to": { "selectors": ["[data-field=\"2\"]"], "x": 40, "y": -4 } } },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "dragged", "values": { "order": "__all('[data-field] .ewct-col-name').map((c) => c.textContent)" } } },
+    { "type": "click", "selectors": ["[data-tab=\"advanced\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "click", "selectors": ["[data-action=\"add-group\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "change", "selectors": ["[data-group=\"0\"] [data-key=\"group-label\"][data-lang=\"es\"]"], "value": "Más datos" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "group", "values": { "key": "document.querySelector('[data-group=\"0\"] [data-key=\"group-key\"]').value" } } },
+    { "type": "click", "selectors": ["[data-group=\"0\"] [data-key=\"group-collapsed\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "click", "selectors": ["[data-field=\"2\"] [data-action=\"toggle-field\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "change", "selectors": ["[data-field=\"2\"] [data-key=\"field-group\"]"], "value": "mas_datos" },
+    { "type": "click", "selectors": ["[data-action=\"save\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "customStep", "name": "request", "parameters": { "url": "/estrategia-web/v1/content-types", "method": "POST", "status": 201 } },
+    { "type": "waitForElement", "selectors": ["[data-saved]"] },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "saved", "save": ["network"], "values": {
+      "url": "location.href",
+      "focusNotice": "document.activeElement?.hasAttribute('data-saved')"
+    } } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "window.__entry = wp.apiFetch({ path: '/wp/v2/gment_restaurante', method: 'POST', data: { title: 'Can Joan', status: 'publish' } }).then((r) => ({ id: r.id, type: r.type, status: r.status }), (e) => ({ error: e.message || String(e) }))" } },
+    { "type": "click", "selectors": ["[data-field=\"2\"] [data-action=\"remove\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "removed", "values": { "focusField": "document.activeElement?.closest('[data-field]')?.dataset.field" } } },
+    { "type": "click", "selectors": ["[data-tab=\"advanced\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "change", "selectors": ["[data-key=\"fields_box\"]"], "value": "main" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "entry", "values": { "entry": "window.__entry" } } },
+    { "type": "click", "selectors": ["[data-action=\"save\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForElement", "selectors": ["[data-action=\"confirm\"]"] },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "asks", "values": { "alert": "document.querySelector('.ewct-alert').textContent" } } },
+    { "type": "click", "selectors": ["[data-action=\"confirm\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "customStep", "name": "request", "parameters": { "url": "/estrategia-web/v1/content-types/gment_restaurante", "method": "POST", "status": 200 } },
+    { "type": "waitForElement", "selectors": ["[data-saved]"] },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "confirmed", "save": ["network"], "values": {
+      "advanced": "document.querySelector('[data-tab=\"advanced\"]').getAttribute('aria-selected')"
+    } } },
+    { "type": "navigate", "url": "/wp-admin/post-new.php?post_type=gment_restaurante" },
+    { "type": "waitForExpression", "timeout": 60000, "expression": "!!window.wp?.data?.select('core/editor')?.getCurrentPostType()" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "new-entry", "settle": [], "values": {
+      "menu": "document.querySelectorAll('#adminmenu a[href=\"edit.php?post_type=gment_restaurante\"]').length",
+      "boxes": "document.querySelectorAll('form.metabox-location-normal #estrategia-web-content-types').length",
+      "keys": "[...document.querySelectorAll('form.metabox-location-normal #estrategia-web-content-types [data-meta-key]')].map((e) => e.dataset.metaKey)"
+    } } },
+    { "type": "navigate", "url": "/wp-admin/admin.php?page=estrategia-web-content-types" },
+    { "type": "waitForElement", "selectors": ["[data-action=\"add\"]"] },
+    { "type": "click", "selectors": ["[data-action=\"templates\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "menu-open", "values": {
+      "expanded": "document.querySelector('[data-action=\"templates\"]').getAttribute('aria-expanded')",
+      "focusTemplate": "document.activeElement?.dataset.template !== undefined"
+    } } },
+    { "type": "keyDown", "key": "Escape" },
+    { "type": "keyUp", "key": "Escape" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "menu-closed", "values": {
+      "hidden": "!__seen(document.getElementById('ewct-templates'))",
+      "focus": "document.activeElement?.dataset.action"
+    } } },
+    { "type": "click", "selectors": ["[data-action=\"templates\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "click", "selectors": ["[data-template=\"testimonial\"]"], "offsetX": 10, "offsetY": 10, "assertedEvents": [{ "type": "navigation" }] },
+    { "type": "waitForElement", "selectors": ["[data-done=\"added\"]"] },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "template", "save": ["console"], "values": { "url": "location.href" } } }
+  ]
+}

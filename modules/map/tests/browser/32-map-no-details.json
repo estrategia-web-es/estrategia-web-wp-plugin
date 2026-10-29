@@ -1,0 +1,57 @@
+{
+  "title": "Map without details, /prueba-mapa-sin-datos/ at 1200 and 402: the address once, only the image in the frame, no empty box, «Ver mapa» paints the map",
+  "description": "estrategia-web/map with showDetails:false (0.6.0): the address is read ONCE on the page (the 03-10-2026 bug: it came out twice); with a static map the frame shows only the image and the two buttons below; without an image there is no empty box before the click, and «Ver mapa» paints the map with its height. Two links to different places never share a name (Lighthouse). One load at 1200; 402 is a resize. Read by browser-map-no-details. It was step 4 of map.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "initScripts": ["tests/browser-probes.js"],
+  "network": {
+    "foreign": "abort",
+    "fulfill": [{ "url": "google\\.com", "status": 200, "contentType": "text/html" }]
+  },
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": { "modules": ["carousel", "map", "whatsapp", "language-switcher"] } },
+      { "path": "/estrategia-web-map-test/v1/seed", "method": "POST" }
+    ] } },
+    { "type": "setViewport", "width": 1200, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/prueba-mapa-sin-datos/" },
+    { "type": "customStep", "name": "scrollIntoView", "parameters": { "selectors": [".estrategia-web-map img.estrategia-web-map__static"] } },
+    { "type": "waitForExpression", "expression": "(() => { const i = __q('.estrategia-web-map img.estrategia-web-map__static'); return i && i.complete && i.naturalWidth > 0; })()" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "wide",
+      "values": {
+        "times": "document.body.innerText.split('Plaça de Cort 1').length - 1",
+        "named": "document.body.innerText.includes('Sede sin recuadro')",
+        "firstCards": "__q('.estrategia-web-map').querySelectorAll('.estrategia-web-map__card').length",
+        "frame": "__box(__q('.estrategia-web-map').querySelector('.estrategia-web-map__frame'))",
+        "image": "__box(__q('.estrategia-web-map').querySelector('img.estrategia-web-map__static'))",
+        "firstLoad": "__seen(__q('.estrategia-web-map').querySelector('.estrategia-web-map__load'))",
+        "firstLink": "__seen(__q('.estrategia-web-map').querySelector('.estrategia-web-map__link'))",
+        "secondCards": "__q('.estrategia-web-map', 1).querySelectorAll('.estrategia-web-map__card').length",
+        "secondFrameSeen": "__seen(__q('.estrategia-web-map', 1).querySelector('.estrategia-web-map__frame'))",
+        "secondLink": "__seen(__q('.estrategia-web-map', 1).querySelector('.estrategia-web-map__link'))",
+        "names": "__all('.estrategia-web-map__link').map((a) => a.getAttribute('aria-label') || a.textContent.trim())"
+      }
+    } },
+    { "type": "setViewport", "width": 402, "height": 900 },
+    { "type": "customStep", "name": "scrollIntoView", "parameters": { "selectors": [".estrategia-web-map img.estrategia-web-map__static"] } },
+    { "type": "waitForExpression", "expression": "(() => { const i = __q('.estrategia-web-map img.estrategia-web-map__static'); return i && i.complete && i.naturalWidth > 0; })()" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "narrow",
+      "values": {
+        "times": "document.body.innerText.split('Plaça de Cort 1').length - 1",
+        "named": "document.body.innerText.includes('Sede sin recuadro')",
+        "firstCards": "__q('.estrategia-web-map').querySelectorAll('.estrategia-web-map__card').length",
+        "frame": "__box(__q('.estrategia-web-map').querySelector('.estrategia-web-map__frame'))",
+        "image": "__box(__q('.estrategia-web-map').querySelector('img.estrategia-web-map__static'))",
+        "firstLoad": "__seen(__q('.estrategia-web-map').querySelector('.estrategia-web-map__load'))",
+        "firstLink": "__seen(__q('.estrategia-web-map').querySelector('.estrategia-web-map__link'))",
+        "secondCards": "__q('.estrategia-web-map', 1).querySelectorAll('.estrategia-web-map__card').length",
+        "secondFrameSeen": "__seen(__q('.estrategia-web-map', 1).querySelector('.estrategia-web-map__frame'))",
+        "secondLink": "__seen(__q('.estrategia-web-map', 1).querySelector('.estrategia-web-map__link'))"
+      }
+    } },
+    { "type": "click", "selectors": ["xpath/(//*[contains(concat(' ', normalize-space(@class), ' '), ' estrategia-web-map ')])[2]//*[contains(concat(' ', normalize-space(@class), ' '), ' estrategia-web-map__load ')]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForExpression", "expression": "(() => { const f = __q('.estrategia-web-map', 1).querySelector('.estrategia-web-map__iframe'); return f && !f.hidden && /google\\.com/.test(f.src) && f.getBoundingClientRect().height > 100; })()" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "painted", "save": ["console"] } }
+  ]
+}

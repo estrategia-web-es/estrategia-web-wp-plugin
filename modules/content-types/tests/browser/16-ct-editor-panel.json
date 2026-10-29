@@ -1,0 +1,76 @@
+{
+  "title": "Content types in the block editor: bound blocks show the formatted value, the source declares its fields, and the «details» panel stores what is typed with its JSON types",
+  "description": "The content-types module with the theme's example files on (gment_restaurant, gment_wine), logged in as the administrator: (1) a draft restaurant whose content is two Queries of paragraphs bound to estrategia-web/content-field — the canvas shows the option's label, the related post's title, the boolean's text, the number, and an empty field's name in brackets; the source has its label, is not editable and lists the fields of the type in context (none for a page); (2) the same restaurant's «Restaurante» panel shows the JSON's fields in the site language (required marked, tel input, select with its default and es labels) and what is typed is stored on publish; (3) a new wine: number, boolean, date and relation travel with their JSON types, and an emptied number goes as null (REST refuses \"\" for a number). What was stored is the editor's own post after its save. Read by browser-ct-editor-panel. It was editor-panel.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "timeout": 20000,
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": { "options": { "estrategia_web_ct_test": 1 } } },
+      { "path": "/estrategia-web-ct-test/v1/batch", "as": "made", "body": { "requests": [
+        { "method": "POST", "path": "/wp/v2/gment_restaurant", "body": { "title": "Ca n'Andreu", "status": "publish", "meta": { "gment_address": "Carrer Major, 1", "gment_price_range": "€€€" } } },
+        { "method": "POST", "path": "/wp/v2/gment_restaurant", "body": { "title": "Es Racó", "status": "draft", "meta": { "gment_address": "Plaça Major, 3" },
+          "content": "<!-- wp:query {\"queryId\":1,\"query\":{\"perPage\":10,\"pages\":0,\"offset\":0,\"postType\":\"gment_restaurant\",\"order\":\"asc\",\"orderBy\":\"title\",\"inherit\":false}} -->\n<div class=\"wp-block-query\"><!-- wp:post-template -->\n<!-- wp:paragraph {\"className\":\"ct-price\",\"metadata\":{\"bindings\":{\"content\":{\"source\":\"estrategia-web/content-field\",\"args\":{\"key\":\"gment_price_range\"}}}}} -->\n<p class=\"ct-price\">x</p>\n<!-- /wp:paragraph -->\n<!-- /wp:post-template --></div>\n<!-- /wp:query -->\n<!-- wp:query {\"queryId\":2,\"query\":{\"perPage\":10,\"pages\":0,\"offset\":0,\"postType\":\"gment_wine\",\"order\":\"asc\",\"orderBy\":\"title\",\"inherit\":false}} -->\n<div class=\"wp-block-query\"><!-- wp:post-template -->\n<!-- wp:paragraph {\"className\":\"ct-winery\",\"metadata\":{\"bindings\":{\"content\":{\"source\":\"estrategia-web/content-field\",\"args\":{\"key\":\"gment_winery\"}}}}} -->\n<p class=\"ct-winery\">x</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph {\"className\":\"ct-organic\",\"metadata\":{\"bindings\":{\"content\":{\"source\":\"estrategia-web/content-field\",\"args\":{\"key\":\"gment_organic\"}}}}} -->\n<p class=\"ct-organic\">x</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph {\"className\":\"ct-alcohol\",\"metadata\":{\"bindings\":{\"content\":{\"source\":\"estrategia-web/content-field\",\"args\":{\"key\":\"gment_alcohol\"}}}}} -->\n<p class=\"ct-alcohol\">x</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph {\"className\":\"ct-released\",\"metadata\":{\"bindings\":{\"content\":{\"source\":\"estrategia-web/content-field\",\"args\":{\"key\":\"gment_released\"}}}}} -->\n<p class=\"ct-released\">x</p>\n<!-- /wp:paragraph -->\n<!-- /wp:post-template --></div>\n<!-- /wp:query -->" } }
+      ] } },
+      { "path": "/estrategia-web-ct-test/v1/batch", "as": "wine", "body": { "requests": [
+        { "method": "POST", "path": "/wp/v2/gment_wine", "body": { "title": "Anima Negra", "status": "publish", "meta": { "gment_winery": "{{@made.0.json.id}}", "gment_vintage": 2019, "gment_alcohol": 13.5, "gment_organic": true } } }
+      ] } }
+    ] } },
+    { "type": "setViewport", "width": 1400, "height": 1000, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/wp-login.php?redirect_to=%2Fwp-admin%2Fpost.php%3Fpost%3D{{@made.1.json.id}}%26action%3Dedit" },
+    { "type": "change", "selectors": ["#user_login"], "value": "admin" },
+    { "type": "change", "selectors": ["#user_pass"], "value": "password" },
+    { "type": "click", "selectors": ["#wp-submit"], "offsetX": 10, "offsetY": 10, "assertedEvents": [{ "type": "navigation" }] },
+    { "type": "waitForExpression", "timeout": 60000, "expression": "!!window.wp?.data?.select('core/editor')?.getCurrentPostType()" },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "(() => { wp.data.dispatch('core/preferences')?.set('core/edit-post', 'welcomeGuide', false); wp.data.dispatch('core/edit-post')?.openGeneralSidebar?.('edit-post/document'); })()" } },
+    { "type": "waitForElement", "selectors": [".estrategia-web-content-types-panel"] },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "(() => { const t = document.querySelector('.estrategia-web-content-types-panel .components-panel__body-toggle'); if (t && t.getAttribute('aria-expanded') === 'false') t.click(); })()" } },
+    { "type": "waitForElement", "selectors": [".estrategia-web-content-types-panel [data-meta-key]"] },
+    { "type": "waitForExpression", "timeout": 60000, "expression": "wp.data.select('core/block-editor').getBlocks().length === 2" },
+    { "type": "waitForExpression", "expression": "[...(document.querySelector('iframe[name=\"editor-canvas\"]')?.contentDocument?.querySelectorAll('p.ct-winery') || [])].some((p) => p.textContent.includes('Andreu'))" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "bindings", "settle": [], "values": {
+      "texts": "Object.fromEntries(['price', 'winery', 'organic', 'alcohol', 'released'].map((n) => [n, document.querySelector('iframe[name=\"editor-canvas\"]').contentDocument.querySelector('p.ct-' + n)?.textContent.trim()]))",
+      "source": "(() => { const s = wp.blocks.getBlockBindingsSource('estrategia-web/content-field'); const list = (postType) => s.getFieldsList({ select: wp.data.select, context: { postType } }); return s && { label: s.label, context: s.usesContext, editable: Boolean(s.setValues || s.canUserEditValue?.({})), wine: list('gment_wine').map((f) => f.args.key + ':' + f.type), page: list('page') }; })()"
+    } } },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "panel", "settle": [], "values": {
+      "title": "document.querySelector('.estrategia-web-content-types-panel .components-panel__body-title')?.textContent",
+      "address": "document.querySelector('.estrategia-web-content-types-panel [data-meta-key=\"gment_address\"] textarea').value",
+      "addressText": "document.querySelector('.estrategia-web-content-types-panel [data-meta-key=\"gment_address\"]').textContent",
+      "phoneType": "document.querySelector('.estrategia-web-content-types-panel [data-meta-key=\"gment_phone\"] input').getAttribute('type')",
+      "price": "document.querySelector('.estrategia-web-content-types-panel [data-meta-key=\"gment_price_range\"] select').value",
+      "priceOptions": "[...document.querySelectorAll('.estrategia-web-content-types-panel [data-meta-key=\"gment_price_range\"] select option')].map((o) => o.textContent)"
+    } } },
+    { "type": "change", "selectors": [".estrategia-web-content-types-panel [data-meta-key=\"gment_phone\"] input"], "value": "971 12 34 56" },
+    { "type": "change", "selectors": [".estrategia-web-content-types-panel [data-meta-key=\"gment_price_range\"] select"], "value": "€€€" },
+    { "type": "change", "selectors": [".estrategia-web-content-types-panel [data-meta-key=\"gment_website\"] input"], "value": "https://esraco.example" },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "(() => { wp.data.dispatch('core/editor').editPost({ status: 'publish' }); return wp.data.dispatch('core/editor').savePost().catch(() => {}); })()" } },
+    { "type": "waitForExpression", "timeout": 30000, "expression": "!wp.data.select('core/editor').isSavingPost() && wp.data.select('core/editor').getCurrentPost().status === 'publish'" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "restaurant", "settle": [], "values": {
+      "post": "(() => { const p = wp.data.select('core/editor').getCurrentPost(); return { status: p.status, meta: p.meta }; })()"
+    } } },
+    { "type": "navigate", "url": "/wp-admin/post-new.php?post_type=gment_wine" },
+    { "type": "waitForExpression", "timeout": 60000, "expression": "!!window.wp?.data?.select('core/editor')?.getCurrentPostType()" },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "(() => { wp.data.dispatch('core/preferences')?.set('core/edit-post', 'welcomeGuide', false); wp.data.dispatch('core/edit-post')?.openGeneralSidebar?.('edit-post/document'); })()" } },
+    { "type": "waitForElement", "selectors": [".estrategia-web-content-types-panel"] },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "(() => { const t = document.querySelector('.estrategia-web-content-types-panel .components-panel__body-toggle'); if (t && t.getAttribute('aria-expanded') === 'false') t.click(); })()" } },
+    { "type": "waitForElement", "selectors": [".estrategia-web-content-types-panel [data-meta-key]"] },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "wp.data.dispatch('core/editor').editPost({ title: 'Ànima Negra' })" } },
+    { "type": "change", "selectors": [".estrategia-web-content-types-panel [data-meta-key=\"gment_vintage\"] input"], "value": "2019" },
+    { "type": "change", "selectors": [".estrategia-web-content-types-panel [data-meta-key=\"gment_alcohol\"] input"], "value": "14.5" },
+    { "type": "change", "selectors": [".estrategia-web-content-types-panel [data-meta-key=\"gment_released\"] input"], "value": "2021-03-01" },
+    { "type": "click", "selectors": [".estrategia-web-content-types-panel [data-meta-key=\"gment_organic\"] input[type=\"checkbox\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "waitForExpression", "timeout": 15000, "expression": "document.querySelectorAll('[data-meta-key=\"gment_winery\"] option').length > 1" },
+    { "type": "change", "selectors": [".estrategia-web-content-types-panel [data-meta-key=\"gment_winery\"] select"], "value": "{{@made.0.json.id}}" },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "(() => { wp.data.dispatch('core/editor').editPost({ status: 'publish' }); return wp.data.dispatch('core/editor').savePost().catch(() => {}); })()" } },
+    { "type": "waitForExpression", "timeout": 30000, "expression": "!wp.data.select('core/editor').isSavingPost() && wp.data.select('core/editor').getCurrentPost().status === 'publish'" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "wine", "settle": [], "values": {
+      "post": "(() => { const p = wp.data.select('core/editor').getCurrentPost(); return { status: p.status, meta: p.meta }; })()"
+    } } },
+    { "type": "change", "selectors": [".estrategia-web-content-types-panel [data-meta-key=\"gment_alcohol\"] input"], "value": "" },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "wp.data.dispatch('core/editor').savePost().catch(() => {})" } },
+    { "type": "waitForExpression", "timeout": 30000, "expression": "!wp.data.select('core/editor').isSavingPost()" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "emptied", "settle": [], "save": ["console"], "values": {
+      "dirty": "wp.data.select('core/editor').isEditedPostDirty()",
+      "rest": "wp.apiFetch({ path: '/wp/v2/gment_wine/' + wp.data.select('core/editor').getCurrentPostId() + '?context=edit' }).then((p) => p.meta.gment_alcohol)"
+    } } }
+  ]
+}

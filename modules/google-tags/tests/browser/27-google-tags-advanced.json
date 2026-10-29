@@ -1,0 +1,19 @@
+{
+  "title": "Google tags, advanced mode: Google is requested RIGHT AWAY, with everything denied, before choosing",
+  "description": "Google tags in advanced mode with GA4 and GTM, carried on the page URL (?ew-options): gtag.js and gtm.js are requested on load, before any choice, and no consent update grants analytics. Google is answered by the runner and recorded. Read by browser-google-tags-advanced. It was test 3 of google-tags-browser.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "initScripts": ["modules/consent/tests/browser/consent-events.js", "modules/google-tags/tests/browser/gtag.js"],
+  "network": {
+    "foreign": "abort",
+    "fulfill": [{ "url": "^https://www\\.googletagmanager\\.com/", "status": 200, "contentType": "text/javascript" }]
+  },
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": { "modules": "all", "consent": { "categories": ["maps"] }, "pages": [{ "slug": "prueba-google", "content": "<!-- wp:paragraph --><p>Hola</p><!-- /wp:paragraph -->" }] } }
+    ] } },
+    { "type": "setViewport", "width": 1200, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/prueba-google/?ew-options=%7B%22estrategia_web_google_tags%22%3A%7B%22ga4%22%3A%22G-TEST12345%22%2C%22ads%22%3A%22%22%2C%22ads_form_label%22%3A%22%22%2C%22gtm%22%3A%22GTM-ABCD123%22%2C%22mode%22%3A%22advanced%22%7D%7D" },
+    { "type": "waitForExpression", "expression": "!!window.estrategiaWebConsent && window.ready.length > 0" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "loaded", "save": ["network", "console"], "values": { "layer": "__layer()" } } }
+  ]
+}

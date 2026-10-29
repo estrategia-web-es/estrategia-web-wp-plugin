@@ -27,9 +27,10 @@
 //              texts and the migration's parsers, PHP without WordPress);
 //     level 2: modules/forms/tests/forms-list.test.mjs (what one screen finds
 //              in a real database, read as HTML with a cookie session);
-//     level 3: modules/map/tests/map.test.mjs, step 1 (a height the layout
-//              engine computes: only exists painted; one page, two widths
-//              by resizing the window, not loading it twice).
+//     the browser (what was level 3): modules/map/tests/browser/29-map-plain.json
+//              and its check modules/map/tests/browser-map-plain.test.mjs (a
+//              height the layout engine computes, the requests before and
+//              after a click: only exist painted and running).
 // - Each test FILE has a time limit, and going over it makes it RED (not an
 //   alarm): LIMIT below, per level. The exception is written in the test, with
 //   its reason, on a line of its header:
@@ -43,6 +44,30 @@
 // ones) and modules/<slug>/tests/*.test.mjs (each module's). The level is
 // given by the FIRST line of each one; a test with no declared level stops
 // the whole run. A new module with tests does not touch this file.
+//
+// THE BROWSER (29-10-2026, ARMAZON row 7, «Los niveles se IMPONEN» point 7;
+// it replaces level 3): the browser tests are SCENARIOS — JSON in the Chrome
+// Recorder format, modules/<slug>/tests/browser/NN-name.json — that
+// tests/browser.mjs runs with ONE Chromium, and CHECKS — level 1,
+// modules/<slug>/tests/browser-<name>.test.mjs — that read what it saved.
+// How a scenario is written, the freshness rule and the no-fixed-wait rule:
+// the header of tests/browser.mjs. Here:
+// - the scenarios are dealt to the shards with the level 2 files (by their
+//   last measured time, «browser:<id>» in tests/.timings.json) and each
+//   shard runs ITS scenarios, after its level 2 files, in ONE process with
+//   ONE browser (tests/browser.mjs --base <that shard>): at most one
+//   Chromium per shard. Inside a shard the scenarios go one after another:
+//   each one starts by setting its WordPress (its setup step);
+//   a scenario is red if a step failed or it took over LIMIT.browser seconds;
+// - once every shard is done, the checks of the scenarios that ran go in ONE
+//   `node --test` (phase «checks»). A check is level 1 but is NOT in the
+//   level 1 phase: before the scenarios run it would read the previous run
+//   (and fail for being older than the code). With --nivel 1 (pre-commit)
+//   they are not run at all, and it says so.
+// - a level 2 file in red stops the browser as it stopped level 3: no
+//   shard STARTS its scenarios once a level 2 file is red.
+// - A file that still declares «NIVEL: 3» runs as before, after level 2;
+//   there are none since 29-10-2026: a new browser test is a scenario.
 //
 // HOW IT IS FAST (28-10-2026). A request to the test WordPress costs ~1,1 s
 // whatever it does (measured with /ping?timing of tests/wp/estrategia-web-site-test.php:
@@ -160,6 +185,7 @@
 // «[object Object]». Launched from here (Node, no MSYS) it does not happen.
 // If you launch it by hand from Git Bash: put MSYS_NO_PATHCONV=1 in front.
 import { spawn, spawnSync } from "node:child_process";
+import { listScenarios, checksOf, checkFiles, OUT_DIR as BROWSER_OUT } from "./browser.mjs";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
@@ -194,7 +220,8 @@ const only = process.argv.includes("--nivel") ? process.argv[process.argv.indexO
 // most runs had one file over by a few seconds, a different one each time: red that says nothing
 // about the code. 90/100 is ~1,3 times the slowest time seen; what keeps the battery fast is the
 // 5-minute TARGET, and a file that hangs is KILLED at twice its limit (runFile()).
-const LIMIT = { 2: 90, 3: 100 };
+// «browser»: per SCENARIO (ARMAZON: 100 s per browser scenario, measured on this plugin).
+const LIMIT = { 2: 90, 3: 100, browser: 100 };
 let stopping = false;
 const TARGET = 5 * 60;
 // Request-handling workers per Playground (see the header, «--workers»).
@@ -220,6 +247,8 @@ const withWpml = WPML_DIR
   : null;
 const baseOf = (wp) => `http://127.0.0.1:${wp.port}`;
 
+// The browser checks (browser-*.test.mjs): level 1, but they run AFTER the scenarios (header, «THE BROWSER»).
+const CHECKS = new Set(checkFiles());
 // All the tests, with their path relative to the root and a short name to pick them.
 const all = [
   ...fs.readdirSync(path.join(ROOT, "tests")).filter((f) => f.endsWith(".test.mjs")).map((f) => path.posix.join("tests", f)),
@@ -227,7 +256,7 @@ const all = [
     const dir = path.join(ROOT, "modules", m, "tests");
     return fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith(".test.mjs")).map((f) => path.posix.join("modules", m, "tests", f)) : [];
   }),
-].sort();
+].filter((rel) => !CHECKS.has(rel)).sort();
 const nameOf = (rel) => (rel.startsWith("modules/") ? rel.split("/")[1] + "/" : "") + path.posix.basename(rel, ".test.mjs");
 const source = (rel) => fs.readFileSync(path.join(ROOT, rel), "utf8");
 const needsWpml = (rel) => /^\/\/ WPML: REAL\b/m.test(source(rel));
@@ -272,7 +301,14 @@ for (const f of files) {
 }
 
 const levels = Object.keys(byLevel).sort().filter((l) => !only || l === only);
-const needsWp = levels.some((l) => l !== "1");
+// The browser scenarios picked like the files (a name, «module/», or all), unless --nivel says otherwise
+// (they replace level 3: --nivel 3 runs them, --nivel 1 and 2 do not).
+const scenarios = only && only !== "3"
+  ? []
+  : listScenarios().filter((s) => !picked.length || picked.some((p) => s.id.startsWith(p) || s.name.startsWith(p) || `${s.module}/${s.name}`.startsWith(p) || `${s.module}/` === p));
+const scenarioKey = (s) => `browser:${s.id}`;
+const scenarioName = (s) => `${s.module}/${s.id}`;
+const needsWp = levels.some((l) => l !== "1") || scenarios.length > 0;
 const wpmlWanted = levels.some((l) => l !== "1" && byLevel[l].some(needsWpml));
 
 async function up(wp) {
@@ -550,9 +586,13 @@ if (process.argv.includes("--serve")) {
  * going over the limit made it red only AFTER it had finished.
  */
 function runFile(rel, env, hard) {
+  return runProcess(["--test", rel], env, hard).then((r) => ({ ...r, rel }));
+}
+/** Runs node with `args` (cwd ROOT); kills its whole tree at `hard` seconds. Resolves to { ok, seconds, output, killed }. */
+function runProcess(args, env, hard) {
   return new Promise((resolve) => {
     const started = Date.now();
-    const child = spawn(process.execPath, ["--test", rel], { cwd: ROOT, env: { ...process.env, ...env } });
+    const child = spawn(process.execPath, args, { cwd: ROOT, env: { ...process.env, ...env } });
     let output = "";
     let killed = false;
     const timer = setTimeout(() => {
@@ -565,7 +605,7 @@ function runFile(rel, env, hard) {
     child.on("close", (code) => {
       clearTimeout(timer);
       if (killed) output += `\nKILLED by tests/run.mjs after ${hard} s (hard limit: twice its limit). It was hanging: the output above shows the last step it reached.\n`;
-      resolve({ rel, ok: code === 0 && !killed, seconds: (Date.now() - started) / 1000, output, killed });
+      resolve({ ok: code === 0 && !killed, seconds: (Date.now() - started) / 1000, output, killed });
     });
   });
 }
@@ -697,20 +737,23 @@ try {
       failed = true;
     }
   }
-  const later = levels.filter((l) => l !== "1").flatMap((l) => byLevel[l]);
+  if (only === "1") console.log(`\n· ${CHECKS.size} browser checks are not run with --nivel 1: they read what the scenarios save, and run after them (header, «THE BROWSER»)`);
+  const later = [...levels.filter((l) => l !== "1").flatMap((l) => byLevel[l]), ...scenarios.map(scenarioKey)];
+  const browserTimes = [];
+  const ranScenarios = [];
   if (!failed && later.length) {
     // Levels 2 and 3 in ONE deal (no idle WordPress waiting at a barrier between them): the WPML
     // files go to the WPML WordPresses, the rest to the normal ones, and inside each pile the
     // level 2 files go first. «Stops at the first red level» becomes: once a level 2 file is
     // red, no level 3 file STARTS (one already running finishes).
     const t = Date.now();
-    const wpmlFiles = withWpml ? later.filter(needsWpml) : [];
+    const wpmlFiles = withWpml ? later.filter((f) => !f.startsWith("browser:") && needsWpml(f)) : [];
     const plain = later.filter((f) => !wpmlFiles.includes(f));
     const piles = [
       ...deal(plain, normal.length).map((p, i) => ({ ...p, wp: normal[i] })),
       ...(wpmlFiles.length ? deal(wpmlFiles, withWpml.length).map((p, i) => ({ ...p, wp: withWpml[i] })) : []),
     ];
-    console.log(`\n=== Levels 2 and 3: ${later.length} files in ${piles.length} WordPress at once`);
+    console.log(`\n=== Levels 2 and 3, and the browser: ${later.length - scenarios.length} files and ${scenarios.length} browser scenarios in ${piles.length} WordPress at once`);
     let red2 = false;
     const notRun = [];
     await Promise.all(
@@ -726,7 +769,7 @@ try {
         // each file asking for its own was one request more per file.
         const users = await fetch((process.env.AS_BASE ?? baseOf(wp)) + "/wp-json/estrategia-web-site-test/v1/users", { method: "POST" });
         const EW_CREDENTIALS = users.ok ? await users.text() : "";
-        for (const rel of [...mine].sort((a, b) => levelOf(a) - levelOf(b))) {
+        for (const rel of [...mine].filter((f) => !f.startsWith("browser:")).sort((a, b) => levelOf(a) - levelOf(b))) {
           if (red2 && levelOf(rel) === 3) {
             notRun.push(rel);
             continue;
@@ -742,11 +785,55 @@ try {
             if (levelOf(rel) === 2) red2 = true;
           }
         }
+        // This shard's browser scenarios: ONE process, ONE Chromium, after its level 2 files.
+        const mineScenarios = scenarios.filter((s) => mine.includes(scenarioKey(s)));
+        if (!mineScenarios.length) return;
+        if (red2) {
+          notRun.push(...mineScenarios.map(scenarioKey));
+          return;
+        }
+        const started = Date.now();
+        const report = path.join(ROOT, "tests", ".cache", `browser-report-${wp.port}.json`);
+        fs.mkdirSync(path.dirname(report), { recursive: true });
+        fs.rmSync(report, { force: true });
+        const r = await runProcess([path.join("tests", "browser.mjs"), "--base", process.env.AS_BASE ?? baseOf(wp), "--report", report, ...mineScenarios.map((s) => String(s.number))], {}, 2 * LIMIT.browser * mineScenarios.length);
+        browserTimes.push((Date.now() - started) / 1000);
+        let results = [];
+        try {
+          results = JSON.parse(fs.readFileSync(report, "utf8")).results;
+        } catch {}
+        for (const s of mineScenarios) {
+          const one = results.find((x) => x.id === s.id);
+          ranScenarios.push(s);
+          measured[scenarioKey(s)] = Math.round((one?.seconds ?? 0) * 10) / 10;
+          const slow = one && one.seconds > LIMIT.browser;
+          const ok = one?.ok && !slow;
+          if (!ok) failed = true;
+          const why = !one ? ` — NO RESULT: the browser process ${r.killed ? "was KILLED (it hung)" : "ended without a report"}` : !one.ok ? ` — ${one.error}` : slow ? ` — OVER ITS LIMIT of ${LIMIT.browser} s per scenario: split it, or make it faster` : "";
+          console.log(`${ok ? "✔" : "✖"} [browser] ${scenarioName(s)} ${(one?.seconds ?? 0).toFixed(1)} s (${wp.port})${why}`);
+        }
+        if (!results.length) console.log(r.output.replace(/^/gm, "    "));
       })
     );
     if (booted.length) times.push(`boot ${Math.min(...booted).toFixed(0)}-${Math.max(...booted).toFixed(0)} s`);
-    times.push(`levels 2 and 3 ${((Date.now() - t) / 1000).toFixed(0)} s`);
-    if (notRun.length) console.error(`\n✖ ${red2 ? "Level 2 in red: these level 3 files were not run" : "Not run"}: ${notRun.map(nameOf).join(", ")}`);
+    times.push(`levels 2 and 3 with the browser ${((Date.now() - t) / 1000).toFixed(0)} s`);
+    if (browserTimes.length) times.push(`browser ${Math.min(...browserTimes).toFixed(0)}-${Math.max(...browserTimes).toFixed(0)} s per shard (${browserTimes.length} Chromium)`);
+    if (notRun.length) console.error(`\n✖ ${red2 ? "Level 2 in red: these level 3 files and browser scenarios were not run" : "Not run"}: ${notRun.map((f) => (f.startsWith("browser:") ? f : nameOf(f))).join(", ")}`);
+  }
+  // The checks of the scenarios that ran: level 1, ONE process, after every shard (header, «THE BROWSER»).
+  const checks = [...new Set(ranScenarios.flatMap((s) => checksOf(s.id)))];
+  if (checks.length) {
+    const t = Date.now();
+    console.log(`\n=== Browser checks: ${checks.length} files (level 1, reading ${BROWSER_OUT})`);
+    const code = await new Promise((resolve) => {
+      const child = spawn(process.execPath, ["--test", ...checks], { cwd: ROOT, stdio: "inherit" });
+      child.on("close", (c) => resolve(c));
+    });
+    times.push(`checks ${((Date.now() - t) / 1000).toFixed(0)} s`);
+    if (code !== 0) {
+      console.error(`\n✖ Browser checks in red.`);
+      failed = true;
+    }
   }
 } catch (e) {
   console.error(e.message);

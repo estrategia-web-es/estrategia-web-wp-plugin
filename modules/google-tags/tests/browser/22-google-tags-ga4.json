@@ -1,0 +1,39 @@
+{
+  "title": "Google tags, basic GA4: nothing to Google before choosing nor with maps only; accepting requests gtag.js and grants ONLY analytics; returning loads it; withdrawing denies, deletes _ga and stops it",
+  "description": "Google tags (1.1.0, modules/google-tags/includes/class-google-tags.php) in basic mode with GA4 only, carried on the page URL (?ew-options): one visitor's story — the Consent Mode «default» is the FIRST thing in dataLayer with everything denied and nothing is requested from Google; «maps» only is not Analytics; «Aceptar todas» requests gtag.js with the id and grants ONLY analytics_storage (the site does not ask about Advertising); returning with the choice saved loads it without clicking; withdrawing denies, deletes _ga and _ga_*, and the next page asks Google for nothing. Google is answered by the runner (fulfill) and recorded, never called. Read by browser-google-tags-ga4. It was test 1 of google-tags-browser.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "initScripts": ["modules/consent/tests/browser/consent-events.js", "modules/google-tags/tests/browser/gtag.js"],
+  "network": {
+    "foreign": "abort",
+    "fulfill": [{ "url": "^https://www\\.googletagmanager\\.com/", "status": 200, "contentType": "text/javascript" }]
+  },
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": { "modules": "all", "consent": { "categories": ["maps"] }, "options": { "estrategia_web_google_tags": { "ga4": "", "ads": "AW-123456789", "ads_form_label": "AW-123456789/AbCd_ef-12", "gtm": "", "mode": "basic" } }, "pages": [{ "slug": "prueba-google", "content": "<!-- wp:paragraph --><p>Hola</p><!-- /wp:paragraph -->" }, { "slug": "prueba-google-form", "content": "<!-- wp:estrategia-web-forms/form {\"formId\":\"contacto\",\"title\":\"Contacto\"} --><!-- wp:estrategia-web-forms/text {\"label\":\"Nombre\",\"name\":\"nombre\",\"required\":true} /--><!-- wp:estrategia-web-forms/submit {\"text\":\"Enviar\"} /--><!-- /wp:estrategia-web-forms/form -->" }] } },
+      { "path": "/estrategia-web-forms-test/v1/reset", "body": { "core": false, "marker": false, "settings": { "min_seconds": 0 } } }
+    ] } },
+    { "type": "setViewport", "width": 1200, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/prueba-google/?ew-options=%7B%22estrategia_web_google_tags%22%3A%7B%22ga4%22%3A%22G-TEST12345%22%2C%22ads%22%3A%22%22%2C%22gtm%22%3A%22%22%2C%22mode%22%3A%22basic%22%7D%7D" },
+    { "type": "waitForExpression", "expression": "!!window.estrategiaWebConsent && window.ready.length > 0" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "start", "save": ["network"], "values": { "first": "__layer()[0]" } } },
+    { "type": "click", "selectors": ["aria/Configurar[role=\"button\"]", "#estrategia-web-consent [data-estrategia-web-consent-action=\"configure\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "click", "selectors": ["#estrategia-web-consent input[value=\"maps\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "click", "selectors": ["aria/Guardar la selección[role=\"button\"]", "#estrategia-web-consent-settings button[type=\"submit\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForExpression", "expression": "window.seen.length >= 1" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "maps-only", "save": ["network"], "values": { "update": "__lastUpdate()" } } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "window.estrategiaWebConsent.open()" } },
+    { "type": "click", "selectors": ["aria/Aceptar todas[role=\"button\"]", "#estrategia-web-consent [data-estrategia-web-consent-action=\"accept\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForExpression", "expression": "window.dataLayer.some((a) => a[0] === 'config')" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "accepted", "save": ["network"], "values": { "update": "__lastUpdate()", "layer": "__layer()" } } },
+    { "type": "navigate", "url": "/prueba-google/?ew-options=%7B%22estrategia_web_google_tags%22%3A%7B%22ga4%22%3A%22G-TEST12345%22%2C%22ads%22%3A%22%22%2C%22gtm%22%3A%22%22%2C%22mode%22%3A%22basic%22%7D%7D" },
+    { "type": "waitForExpression", "expression": "window.dataLayer.some((a) => a[0] === 'config')" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "returned", "save": ["network"] } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "(() => { document.cookie = '_ga=GA1.1.123.456; Path=/'; document.cookie = '_ga_TEST12345=GS1.1.789; Path=/'; window.estrategiaWebConsent.open(); })()" } },
+    { "type": "click", "selectors": ["aria/Rechazar todas[role=\"button\"]", "#estrategia-web-consent [data-estrategia-web-consent-action=\"reject\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForExpression", "expression": "__lastUpdate()?.analytics_storage === 'denied'" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "withdrawn", "save": ["cookies"], "values": { "update": "__lastUpdate()" } } },
+    { "type": "navigate", "url": "/prueba-google/?ew-options=%7B%22estrategia_web_google_tags%22%3A%7B%22ga4%22%3A%22G-TEST12345%22%2C%22ads%22%3A%22%22%2C%22gtm%22%3A%22%22%2C%22mode%22%3A%22basic%22%7D%7D" },
+    { "type": "waitForExpression", "expression": "window.ready.length > 0" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "after-rejecting", "save": ["network", "console"] } }
+  ]
+}

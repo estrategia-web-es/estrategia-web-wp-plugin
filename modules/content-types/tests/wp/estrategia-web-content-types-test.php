@@ -25,6 +25,15 @@
  *   Location_Migration::run() — what WP-CLI would — and /location-meta
  *   (GET ?id=) gives every meta of a post, hidden ones included.
  *
+ * - 29-10-2026, the browser scenarios (17-ct-hours-panel, 18-ct-template-fields):
+ *   /template-copy (POST {type, fields_box?, keep?}) changes the STORED copy of a
+ *   template-made type from what it holds now — another fields box, or only its
+ *   first «keep» fields (a copy made before the template grew) — and saves it
+ *   through the constructor's own REST route as the administrator, with
+ *   confirm: true. A scenario's JSON cannot take a definition and change it; the
+ *   tests did it in JavaScript between two REST calls. Returns {status, answer,
+ *   template}: that route's answer and the definition as it was before.
+ *
  * How to maintain: a new fixture folder goes in the filter below; anything
  * that must be measured from inside WordPress goes in /state.
  */
@@ -324,6 +333,32 @@ add_action(
 						}
 					}
 					return array( 'es' => array( 'id' => (int) $es['id'] ), 'term' => array( 'id' => (int) $term['id'] ), 'en' => $en, 'term_en' => $term_en );
+				},
+			)
+		);
+		register_rest_route(
+			$ns,
+			'/template-copy',
+			array(
+				'methods'             => 'POST',
+				'permission_callback' => '__return_true',
+				'callback'            => static function ( WP_REST_Request $r ) {
+					wp_set_current_user( 1 );
+					$route    = '/estrategia-web/v1/content-types/' . sanitize_key( (string) $r['type'] );
+					$template = (array) ( rest_do_request( new WP_REST_Request( 'GET', $route ) )->get_data()['definition'] ?? array() );
+					$copy     = $template;
+					if ( null !== $r['fields_box'] ) {
+						$copy['fields_box'] = (string) $r['fields_box'];
+					}
+					if ( null !== $r['keep'] ) {
+						$copy['fields'] = array_slice( (array) ( $copy['fields'] ?? array() ), 0, (int) $r['keep'] );
+					}
+					$save = new WP_REST_Request( 'POST', $route );
+					$save->set_header( 'Content-Type', 'application/json' );
+					$save->set_body( (string) wp_json_encode( array( 'definition' => $copy, 'confirm' => true ) ) );
+					$res = rest_do_request( $save );
+					wp_set_current_user( 0 );
+					return array( 'status' => $res->get_status(), 'answer' => rest_get_server()->response_to_data( $res, false ), 'template' => $template );
 				},
 			)
 		);

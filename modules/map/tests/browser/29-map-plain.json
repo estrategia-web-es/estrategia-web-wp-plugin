@@ -1,0 +1,49 @@
+{
+  "title": "Map without the notice, /prueba-mapa/: no shrinking in a vertical Group, the details card, nothing to Google until «Ver mapa»",
+  "description": "estrategia-web/map WITHOUT the cookie notice (consent off on purpose: the map must work without a notice). A map without an image: inside a vertical Group with overflow:hidden it does not shrink (the 03-10-2026 bug, fixed by inline-size: 100%); the details card in real text; no request to Google before the click, the embed after it. Google is answered by the runner (fulfill), nothing goes out. Read by browser-map-plain. It was step 1 of map.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "initScripts": ["tests/browser-probes.js"],
+  "network": {
+    "foreign": "abort",
+    "fulfill": [{ "url": "google\\.com", "status": 200, "contentType": "text/html" }]
+  },
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": { "modules": ["carousel", "map", "whatsapp", "language-switcher"] } },
+      { "path": "/estrategia-web-map-test/v1/seed", "method": "POST" }
+    ] } },
+    { "type": "setViewport", "width": 1200, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/prueba-mapa/" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "flex",
+      "values": {
+        "measure": "(() => { const map = document.querySelector('.estrategia-web-map'); const wrap = document.createElement('div'); wrap.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start'; map.before(wrap); wrap.append(map); map.style.overflow = 'hidden'; const caption = map.querySelector('.estrategia-web-map__caption'); if (caption) caption.style.position = 'absolute'; const frame = map.querySelector('.estrategia-web-map__frame'); const out = { figure: map.getBoundingClientRect().height, frame: frame.getBoundingClientRect().height }; if (caption) caption.style.position = ''; map.style.overflow = ''; wrap.replaceWith(map); return out; })()",
+        "notices": "document.querySelectorAll('#estrategia-web-consent').length",
+        "api": "typeof window.estrategiaWebConsent"
+      }
+    } },
+    { "type": "customStep", "name": "scrollIntoView", "parameters": { "selectors": [".estrategia-web-map"] } },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "card",
+      "save": ["network", "aria"],
+      "values": {
+        "images": "__q('.estrategia-web-map').querySelectorAll('img').length",
+        "cardSeen": "__seen(__q('.estrategia-web-map__card'))",
+        "cardText": "__text(__q('.estrategia-web-map__card'))",
+        "tel": "__q('.estrategia-web-map__card').querySelectorAll('a[href=\"tel:+34971225900\"]').length",
+        "openSeen": "__seen(__all('.estrategia-web-map a').find((a) => /Abrir en Google Maps/.test(a.getAttribute('aria-label') || a.textContent)))",
+        "srcBefore": "__q('.estrategia-web-map__iframe').getAttribute('src')"
+      }
+    } },
+    { "type": "click", "selectors": ["aria/Ver mapa[role=\"button\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "customStep", "name": "request", "parameters": { "url": "google\\.com/maps/embed" } },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "shown",
+      "save": ["console", "network"],
+      "values": {
+        "iframeSeen": "__seen(__q('.estrategia-web-map__iframe'))",
+        "buttonSeen": "__seen(__q('.estrategia-web-map__load'))"
+      }
+    } }
+  ]
+}

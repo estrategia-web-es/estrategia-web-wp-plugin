@@ -1,0 +1,53 @@
+{
+  "title": "Static map, /prueba-mapa-estatico/: the site's own image under the card, nothing to other domains, card below when narrow, «Ver mapa» loads only that map",
+  "description": "estrategia-web/map with staticMapUrl (0.5.0), without the notice: the image is served by the site ITSELF with the card on top on the left (not over the marker, the 17-10-2026 box-sizing bug), nothing is requested from another domain, a staticMapUrl from another domain is discarded; at 375 px the card goes BELOW the map; «Ver mapa» loads THAT map only, and without the notice there is no consent cookie. Read by browser-map-static. It was step 3 of map.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "initScripts": ["tests/browser-probes.js"],
+  "network": {
+    "foreign": "abort",
+    "fulfill": [{ "url": "google\\.com", "status": 200, "contentType": "text/html" }]
+  },
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": { "modules": ["carousel", "map", "whatsapp", "language-switcher"] } },
+      { "path": "/estrategia-web-map-test/v1/seed", "method": "POST" }
+    ] } },
+    { "type": "setViewport", "width": 1200, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/prueba-mapa-estatico/" },
+    { "type": "customStep", "name": "scrollIntoView", "parameters": { "selectors": [".estrategia-web-map img.estrategia-web-map__static"] } },
+    { "type": "waitForExpression", "expression": "(() => { const i = __q('.estrategia-web-map img.estrategia-web-map__static'); return i && i.complete && i.naturalWidth > 0; })()" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "wide",
+      "save": ["network"],
+      "values": {
+        "src": "__q('.estrategia-web-map').querySelector('img.estrategia-web-map__static').getAttribute('src')",
+        "alt": "__q('.estrategia-web-map').querySelector('img.estrategia-web-map__static').getAttribute('alt')",
+        "cardSeen": "__seen(__q('.estrategia-web-map').querySelector('.estrategia-web-map__card'))",
+        "cardText": "__text(__q('.estrategia-web-map').querySelector('.estrategia-web-map__card'))",
+        "image": "__box(__q('.estrategia-web-map').querySelector('img.estrategia-web-map__static'))",
+        "card": "__box(__q('.estrategia-web-map').querySelector('.estrategia-web-map__card'))",
+        "secondImages": "__q('.estrategia-web-map', 1).querySelectorAll('img').length"
+      }
+    } },
+    { "type": "setViewport", "width": 375, "height": 800 },
+    { "type": "customStep", "name": "scrollIntoView", "parameters": { "selectors": [".estrategia-web-map img.estrategia-web-map__static"] } },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "narrow",
+      "values": {
+        "image": "__box(__q('.estrategia-web-map').querySelector('img.estrategia-web-map__static'))",
+        "card": "__box(__q('.estrategia-web-map').querySelector('.estrategia-web-map__card'))"
+      }
+    } },
+    { "type": "setViewport", "width": 1200, "height": 900 },
+    { "type": "click", "selectors": ["aria/Ver mapa[role=\"button\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForExpression", "expression": "(() => { const f = __q('.estrategia-web-map__iframe'); return f && !f.hidden && /google\\.com/.test(f.src); })()" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "loaded",
+      "save": ["console", "cookies"],
+      "values": {
+        "imageSeen": "__seen(__q('.estrategia-web-map').querySelector('img.estrategia-web-map__static'))",
+        "secondSrc": "__q('.estrategia-web-map', 1).querySelector('.estrategia-web-map__iframe')?.getAttribute('src') || ''"
+      }
+    } }
+  ]
+}

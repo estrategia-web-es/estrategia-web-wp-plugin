@@ -1,0 +1,25 @@
+{
+  "title": "Google tags, Ads: the form conversion by JS event only with Advertising accepted",
+  "description": "Google tags with Ads and its form conversion label (stored: the native form cases redirect, and a query on the URL would not survive it): an «estrategia-web:form-sent» event without consent makes no conversion; «Aceptar todas» grants ad_storage, ad_user_data and ad_personalization but not analytics (the site does not ask about Analytics); the next event sends the conversion to the label. Google is answered by the runner. Read by browser-google-tags-ads-event. It was the «by event» visitor of test 2 of google-tags-browser.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "initScripts": ["modules/consent/tests/browser/consent-events.js", "modules/google-tags/tests/browser/gtag.js"],
+  "network": {
+    "foreign": "abort",
+    "fulfill": [{ "url": "^https://www\\.googletagmanager\\.com/", "status": 200, "contentType": "text/javascript" }]
+  },
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": { "modules": "all", "consent": { "categories": ["maps"] }, "options": { "estrategia_web_google_tags": { "ga4": "", "ads": "AW-123456789", "ads_form_label": "AW-123456789/AbCd_ef-12", "gtm": "", "mode": "basic" } }, "pages": [{ "slug": "prueba-google", "content": "<!-- wp:paragraph --><p>Hola</p><!-- /wp:paragraph -->" }, { "slug": "prueba-google-form", "content": "<!-- wp:estrategia-web-forms/form {\"formId\":\"contacto\",\"title\":\"Contacto\"} --><!-- wp:estrategia-web-forms/text {\"label\":\"Nombre\",\"name\":\"nombre\",\"required\":true} /--><!-- wp:estrategia-web-forms/submit {\"text\":\"Enviar\"} /--><!-- /wp:estrategia-web-forms/form -->" }] } },
+      { "path": "/estrategia-web-forms-test/v1/reset", "body": { "core": false, "marker": false, "settings": { "min_seconds": 0 } } }
+    ] } },
+    { "type": "setViewport", "width": 1200, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/prueba-google/" },
+    { "type": "waitForExpression", "expression": "!!window.estrategiaWebConsent && window.ready.length > 0" },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "document.dispatchEvent(new CustomEvent('estrategia-web:form-sent', { detail: { form: 'contacto' } }))" } },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "no-consent", "values": { "conversions": "__conversions()" } } },
+    { "type": "click", "selectors": ["aria/Aceptar todas[role=\"button\"]", "#estrategia-web-consent [data-estrategia-web-consent-action=\"accept\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForExpression", "expression": "window.dataLayer.some((a) => a[0] === 'config')" },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "document.dispatchEvent(new CustomEvent('estrategia-web:form-sent', { detail: { form: 'contacto' } }))" } },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "accepted", "save": ["console"], "values": { "update": "__lastUpdate()", "conversions": "__conversions()" } } }
+  ]
+}

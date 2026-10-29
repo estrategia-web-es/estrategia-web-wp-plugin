@@ -1,0 +1,29 @@
+{
+  "title": "Map inside a Query, /prueba-mapa-consulta/: each map has its post's address and featured image (or the card)",
+  "description": "estrategia-web/map bound to core/post-meta inside a Query: each map carries ITS post's address and, with no image in the block, the post's featured image; the post without one gets the details card, and «Abrir en Google Maps» comes from the bound address. Read by browser-map-query. It was step 2 of map.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "network": {
+    "foreign": "abort",
+    "fulfill": [{ "url": "google\\.com", "status": 200, "contentType": "text/html" }]
+  },
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": { "modules": ["carousel", "map", "whatsapp", "language-switcher"] } },
+      { "path": "/estrategia-web-map-test/v1/seed", "method": "POST" }
+    ] } },
+    { "type": "setViewport", "width": 1200, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/prueba-mapa-consulta/" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "query",
+      "save": ["console"],
+      "values": {
+        "maps": "document.querySelectorAll('.estrategia-web-map').length",
+        "addresses": "[...document.querySelectorAll('.estrategia-web-map__address, .estrategia-web-map__card-address')].map((e) => e.textContent)",
+        "firstImages": "document.querySelectorAll('.estrategia-web-map')[0].querySelectorAll('img.estrategia-web-map__image').length",
+        "firstSrc": "document.querySelectorAll('.estrategia-web-map')[0].querySelector('img')?.getAttribute('src')",
+        "secondCards": "document.querySelectorAll('.estrategia-web-map')[1].querySelectorAll('.estrategia-web-map__card').length",
+        "secondHref": "document.querySelectorAll('.estrategia-web-map')[1].querySelector('.estrategia-web-map__link')?.getAttribute('href')"
+      }
+    } }
+  ]
+}

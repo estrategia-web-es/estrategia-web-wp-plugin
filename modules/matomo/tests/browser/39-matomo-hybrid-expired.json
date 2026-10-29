@@ -1,0 +1,26 @@
+{
+  "title": "Matomo HYBRID, the notice's choice expired: an earlier Matomo consent is FORGOTTEN",
+  "description": "Matomo in hybrid mode with a notice cookie of ANOTHER revision (deadbeef: the choice expired) and an mtm_cookie_consent from before: the notice shows again and mtm_cookie_consent is deleted (seen failing 1 in 3 times in 0.5.0, when the notice hydrated after window.load: fixed with estrategia-web:consent-ready, includes/class-matomo.php pitfall 1). Read by browser-matomo-hybrid-expired. It was the «expired» visitor of test 2 of matomo-browser.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "network": {
+    "foreign": "abort",
+    "fulfill": [
+      { "url": "^https://stats\\.ejemplo\\.test/.*matomo\\.js", "status": 200, "contentType": "application/javascript", "body": "@repo/modules/matomo/tests/fixtures/matomo.js" },
+      { "url": "^https://stats\\.ejemplo\\.test/", "status": 204 }
+    ]
+  },
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": {} }
+    ] } },
+    { "type": "setViewport", "width": 1200, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "customStep", "name": "cookies", "parameters": { "set": [
+      { "name": "estrategia_web_consent", "value": "deadbeef.statistics.{{@now}}" },
+      { "name": "mtm_cookie_consent", "value": "{{@now}}000" }
+    ] } },
+    { "type": "navigate", "url": "/?ew-options=%7B%22estrategia_web_site%22%3A%7B%22matomo_url%22%3A%22https%3A%2F%2Fstats.ejemplo.test%2F%22%2C%22matomo_site_id%22%3A3%2C%22matomo_mode%22%3A%22hybrid%22%7D%7D&ew-consent-setup=%7B%22categories%22%3A%5B%22maps%22%5D%7D" },
+    { "type": "waitForElement", "selectors": ["#estrategia-web-consent"], "visible": true },
+    { "type": "waitForExpression", "expression": "!document.cookie.split('; ').some((c) => c.startsWith('mtm_cookie_consent='))" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "forgotten", "save": ["cookies"] } }
+  ]
+}

@@ -25,7 +25,7 @@
 // message: the test still FAILS without WPML.
 //
 // How to maintain: if the block's markup changes (render.php), the selectors
-// here and in language-switcher-browser.test.mjs change with it, in the same
+// here and in the browser scenario 28-language-switcher change with it, in the same
 // commit. Edge case: a page with no translation gets WPML's front page in
 // the other language (skip_missing 0, render.php); that is not tested here.
 //
