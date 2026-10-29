@@ -1,8 +1,8 @@
 // NIVEL: 2 — Playground WordPress. NOT LEVEL 1 BECAUSE: what is tested is what the site PRINTS (the <head>, for a visitor and for a logged-in editor) from the company option, that option's register_setting sanitization over REST, the categories the notice gets through the filter and what the company bindings source exposes; all of it needs WordPress running.
 //
 // Matomo (0.3.0). What each mode does: header of includes/class-matomo.php.
-// What happens in the browser (cookies, consent) is in
-// tests/matomo-browser.test.mjs (level 3).
+// What happens in the browser (cookies, consent) is in the browser
+// scenarios 36-39 (modules/matomo/tests/browser/).
 //
 // 28-10-2026: one reset for the file (it was one per test); «a logged-in
 // administrator is not measured» came down from matomo-browser.test.mjs: it

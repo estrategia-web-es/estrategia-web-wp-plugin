@@ -8,18 +8,18 @@
  * which came from the parent theme's tests/fixtures/setup/setup.php on
  * 17-10-2026 with the same pages, posts and literals:
  *
- * - /prueba-carrusel/ — five slides, no loop (carousel.test.mjs; in the
+ * - /prueba-carrusel/ — five slides, no loop (scenario 01-carousel-basic; in the
  *   theme it was the carousel of /prueba-modulos/).
- * - /prueba-carrusel-consulta/ — a core/query of six posts (carousel.test.mjs).
+ * - /prueba-carrusel-consulta/ — a core/query of six posts (scenario 02-carousel-query).
  * - /prueba-carrusel-bucle/ — looping ones: blocks, query, a two-row grid
  *   (class rejilla-prueba), three slides with 2.4 in view and a single slide
- *   (carousel-infinite; carousel-loop and -glide were merged into it on 28-10-2026).
+ *   (browser scenarios 09-11, carousel-infinite*; it was carousel-infinite.test.mjs).
  * - /prueba-carrusel-fotos/ — 1920×1280 photos drawn with GD, at the top and
- *   far below (images.mjs, run by carousel.test.mjs).
+ *   far below (browser scenario 03-carousel-photos).
  * - /prueba-carrusel-movil/ — mobileRatio 4/5 and preloadSlides 2
- *   (images.mjs, run by carousel.test.mjs; it was carousel-images, -mobile-crop and -preload).
+ *   (browser scenarios 04-carousel-crop-phone and 05-carousel-crop-desktop).
  * - /prueba-carrusel-impar/ — 7 of 3 and 23 posts in one row and in a
- *   12-column grid (class rejilla-impar) (any-count.mjs, run by carousel.test.mjs).
+ *   12-column grid (class rejilla-impar) (browser scenarios 06-08, carousel-any-count*).
  *
  * POST /wp-json/estrategia-web-carousel-test/v1/seed. Idempotent: pages and
  * posts are rewritten by slug only when they differ (28-10-2026: every test
@@ -30,7 +30,7 @@
  *
  * What the THEME did and is done here instead: the CSS of the two grids
  * (rejilla-prueba, rejilla-impar), which a site's child sets for its client
- * strip. The test runs in Playground's default theme (see tests/browser.mjs).
+ * strip. The scenarios run in Playground's default theme (a plugin block must work in any block theme).
  *
  * The content is in Spanish on purpose: it is test data for a Spanish site and
  * the tests look for those literals.
@@ -49,8 +49,8 @@ if ( ! defined( 'ESTRATEGIA_WEB_BLOCKS_TESTING' ) || true !== ESTRATEGIA_WEB_BLO
 }
 
 // A carousel in a two-row GRID, like Lavandería's client strip
-// (carousel-infinite.test.mjs), and 23 cards in 12 columns
-// (any-count.mjs, run by carousel.test.mjs): the bottom row has 11.
+// (scenario 09-carousel-infinite), and 23 cards in 12 columns
+// (scenarios 06-08, carousel-any-count*): the bottom row has 11.
 // ONLY on those two pages: printed everywhere, the class name in the CSS made
 // tests/modules-page.test.mjs (which checks that a disabled carousel leaves no
 // «estrategia-web-carousel__track» in the HTML) fail (17-10-2026).

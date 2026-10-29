@@ -1,0 +1,24 @@
+{
+  "title": "Carousel with a Query, /prueba-carrusel-consulta/: each post is a slide (two per row, one dot per post), the arrow advances one post, End reaches the last",
+  "description": "estrategia-web/carousel with a core/query inside (0.2.0): each <li> of the post-template is a slide — two are seen per row, in a row, one dot per post (not per inner block) — the arrow advances exactly ONE post, End reaches the last and disables «next» with the last dot marked, and a dot leads to its post. Read by browser-carousel-query. It was the second test of carousel.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "steps": [
+    {"type":"customStep","name":"setup","parameters":{"requests":[{"path":"/estrategia-web-site-test/v1/setup","body":{"modules":["carousel","map","whatsapp","language-switcher"]}},{"path":"/estrategia-web-carousel-test/v1/seed","method":"POST"}]}},
+    {"type":"setViewport","width":1200,"height":900,"deviceScaleFactor":1,"isMobile":false,"hasTouch":false,"isLandscape":false},
+    {"type":"navigate","url":"/prueba-carrusel-consulta/"},
+    {"type":"customStep","name":"scrollIntoView","parameters":{"selectors":[".estrategia-web-carousel"]}},
+    {"type":"waitForExpression","timeout":5000,"expression":"document.querySelector('.estrategia-web-carousel').classList.contains('is-ready')"},
+    {"type":"customStep","name":"capture","parameters":{"label":"loaded","values":{"slides":"document.querySelectorAll('.estrategia-web-carousel__track .wp-block-post-template > li').length","trackWidth":"document.querySelector('.estrategia-web-carousel__track').clientWidth","boxes":"[...document.querySelectorAll('.estrategia-web-carousel__track .wp-block-post-template > li')].map((el) => el.getBoundingClientRect().toJSON())","dots":"document.querySelectorAll('.estrategia-web-carousel__dot').length"}}},
+    {"type":"customStep","name":"run","parameters":{"expression":"window.__offsets = [...document.querySelectorAll('.estrategia-web-carousel__track .wp-block-post-template > li')].map((el, i, all) => el.offsetLeft - all[0].offsetLeft)"}},
+    {"type":"click","selectors":["aria/Diapositiva siguiente[role=\"button\"]"],"offsetX":10,"offsetY":10},
+    {"type":"waitForExpression","expression":"Math.abs(document.querySelector('.estrategia-web-carousel__track').scrollLeft - window.__offsets[1]) < 2"},
+    {"type":"customStep","name":"run","parameters":{"expression":"document.querySelector('.estrategia-web-carousel__track').focus()"}},
+    {"type":"keyDown","key":"End"},
+    {"type":"keyUp","key":"End"},
+    {"type":"waitForExpression","expression":"document.querySelector('.estrategia-web-carousel__next').disabled"},
+    {"type":"waitForExpression","expression":"document.querySelectorAll('.estrategia-web-carousel__dot')[5].getAttribute('aria-current') === 'true'"},
+    {"type":"click","selectors":["aria/Ir a la diapositiva 2[role=\"button\"]"],"offsetX":10,"offsetY":10},
+    {"type":"waitForExpression","expression":"Math.abs(document.querySelector('.estrategia-web-carousel__track').scrollLeft - window.__offsets[1]) < 2"},
+    {"type":"customStep","name":"capture","parameters":{"label":"moved","save":["console"]}}
+  ]
+}

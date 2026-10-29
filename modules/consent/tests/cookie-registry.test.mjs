@@ -4,7 +4,7 @@
 // administrator adds to the notice (1.1.0). What it is and why: headers of
 // includes/class-cookie-registry.php, class-cookie-rest.php and
 // class-cookie-table.php. The detector (what visitors report) is
-// cookies.test.mjs; the «Cookies» screen, cookies-browser.test.mjs.
+// cookies.test.mjs; the «Cookies» screen, the browser scenario 13-cookies-accept.
 //
 // Split from cookies.test.mjs on 28-10-2026 (together they were 41 s, too
 // close to the 45 s limit with several files at once). The policy rows are

@@ -8,7 +8,7 @@
  * came from the parent theme's tests/fixtures/setup/setup.php on 17-10-2026
  * with the same pages, posts and literals:
  *
- * (28-10-2026: the steps of map.test.mjs, one per page.)
+ * (29-10-2026: the browser scenarios 29-32, one per page; they were the steps of map.test.mjs.)
  * - /prueba-mapa/ — a map without an image, with all its details (step 1:
  *   card, flex, no request before the click; in the theme it was the map of
  *   /prueba-modulos/).
@@ -16,7 +16,7 @@
  *   the prueba_direccion field and the first with a featured image (step 2).
  * - /prueba-mapa-estatico/ — a static map served by the site and another one
  *   from a third-party domain, which must be discarded (step 3, and
- *   map-consent.test.mjs / map-consent-html.test.mjs with the notice on).
+ *   the scenarios 33-34 / map-consent-html.test.mjs with the notice on).
  * - /prueba-mapa-sin-datos/ — showDetails:false with and without an image
  *   (step 4).
  *
@@ -46,7 +46,7 @@ if ( ! defined( 'ESTRATEGIA_WEB_BLOCKS_TESTING' ) || true !== ESTRATEGIA_WEB_BLO
 	return;
 }
 
-// A post field to bind estrategia-web/map to core/post-meta inside a Query (map.test.mjs, step 2).
+// A post field to bind estrategia-web/map to core/post-meta inside a Query (the scenario 30-map-query).
 add_action(
 	'init',
 	static function () {

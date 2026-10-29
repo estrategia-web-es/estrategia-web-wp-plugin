@@ -1,0 +1,26 @@
+{
+  "title": "Carousel with any number of slides and «reduce motion»: the 12 + 11 grid wraps around the same, without going back",
+  "description": "Infinite estrategia-web/carousel, the 23-card two-row grid of /prueba-carrusel-impar/ with prefers-reduced-motion: End goes to the last column and → on it goes on to the first one without animation — not rewinding to scrollLeft 0. Read by browser-carousel-any-count-calm. It was ./any-count.mjs (section 5), run by carousel.test.mjs (level 3), until 29-10-2026.",
+  "writes": true,
+  "initScripts": [
+    "modules/carousel/tests/browser/probes.js"
+  ],
+  "emulate": {
+    "reducedMotion": "reduce"
+  },
+  "steps": [
+    {"type":"customStep","name":"setup","parameters":{"requests":[{"path":"/estrategia-web-site-test/v1/setup","body":{"modules":["carousel","map","whatsapp","language-switcher"]}},{"path":"/estrategia-web-carousel-test/v1/seed","method":"POST"}]}},
+    {"type":"setViewport","width":1200,"height":900,"deviceScaleFactor":1,"isMobile":false,"hasTouch":false,"isLandscape":false},
+    {"type":"navigate","url":"/prueba-carrusel-impar/"},
+    {"type":"customStep","name":"scrollIntoView","parameters":{"selectors":["aria/Veintitrés en dos filas[role=\"region\"]"]}},
+    {"type":"waitForExpression","expression":"__track('Veintitrés en dos filas').closest('.estrategia-web-carousel').classList.contains('is-ready')"},
+    {"type":"customStep","name":"run","parameters":{"expression":"__track('Veintitrés en dos filas').focus()"}},
+    {"type":"keyDown","key":"End"},
+    {"type":"keyUp","key":"End"},
+    {"type":"waitForExpression","expression":"__settled('Veintitrés en dos filas', 11, 12)"},
+    {"type":"keyDown","key":"ArrowRight"},
+    {"type":"keyUp","key":"ArrowRight"},
+    {"type":"waitForExpression","expression":"__settled('Veintitrés en dos filas', 0, 12)"},
+    {"type":"customStep","name":"capture","parameters":{"label":"calm","save":["console"],"values":{"scrollLeft":"__track('Veintitrés en dos filas').scrollLeft"}}}
+  ]
+}

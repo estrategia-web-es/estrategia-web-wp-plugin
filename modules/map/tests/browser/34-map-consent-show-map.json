@@ -1,0 +1,26 @@
+{
+  "title": "Map + notice: «Ver mapa» with the notice unanswered loads that map and grants «maps»",
+  "description": "estrategia-web/map WITH the cookie notice, on /prueba-mapa-estatico/, a new visitor who does not answer the notice: «Ver mapa» loads that map's iframe and GRANTS «maps» (window.estrategiaWebConsent.has(\"maps\")). Requests to other hosts are aborted. Read by browser-map-consent. It was the second visitor of map-consent.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "initScripts": ["tests/browser-probes.js"],
+  "network": { "foreign": "abort" },
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": { "modules": ["carousel", "map", "whatsapp", "language-switcher", "consent"], "consent": { "categories": ["maps"] } } },
+      { "path": "/estrategia-web-map-test/v1/seed", "method": "POST" }
+    ] } },
+    { "type": "setViewport", "width": 1280, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/prueba-mapa-estatico/" },
+    { "type": "customStep", "name": "scrollIntoView", "parameters": { "selectors": [".estrategia-web-map"] } },
+    { "type": "click", "selectors": [".estrategia-web-map .estrategia-web-map__load"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForExpression", "expression": "!!document.querySelector('.estrategia-web-map iframe')?.getAttribute('src')" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "shown",
+      "save": ["console"],
+      "values": {
+        "seen": "__seen(__q('.estrategia-web-map').querySelector('iframe'))",
+        "maps": "!!window.estrategiaWebConsent?.has('maps')"
+      }
+    } }
+  ]
+}

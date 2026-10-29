@@ -1,0 +1,41 @@
+{
+  "title": "Matomo HYBRID with the REAL notice: no cookies until «Aceptar todas», _pk_id afterwards, «Rechazar todas» deletes them",
+  "description": "Matomo in hybrid mode (?ew-options; «the theme» declares «maps» with ?ew-consent-setup, as Lavandería does) with the REAL cookie notice of this plugin: its buttons are clicked and its cookie is stored, so what is tested is that the notice and Matomo understand each other (including the load order, the 0.5.0 consent-ready bug). The cookieless visit first; only «maps» is not consent for Matomo; «Aceptar todas» gives mtm_cookie_consent and, on the next hit, _pk_id (the control: without it the «no cookies» steps prove nothing); «Rechazar todas» deletes them. The real matomo.js, served by the runner. Read by browser-matomo-hybrid-notice. It was the first visitor of test 2 of matomo-browser.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "network": {
+    "foreign": "abort",
+    "fulfill": [
+      { "url": "^https://stats\\.ejemplo\\.test/.*matomo\\.js", "status": 200, "contentType": "application/javascript", "body": "@repo/modules/matomo/tests/fixtures/matomo.js" },
+      { "url": "^https://stats\\.ejemplo\\.test/", "status": 204 }
+    ]
+  },
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": {} }
+    ] } },
+    { "type": "setViewport", "width": 1200, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/?ew-options=%7B%22estrategia_web_site%22%3A%7B%22matomo_url%22%3A%22https%3A%2F%2Fstats.ejemplo.test%2F%22%2C%22matomo_site_id%22%3A3%2C%22matomo_mode%22%3A%22hybrid%22%7D%7D&ew-consent-setup=%7B%22categories%22%3A%5B%22maps%22%5D%7D" },
+    { "type": "customStep", "name": "request", "parameters": { "url": "^https://stats\\.ejemplo\\.test/matomo\\.php" } },
+    { "type": "waitForElement", "selectors": ["#estrategia-web-consent"], "visible": true },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "unanswered", "save": ["cookies"] } },
+    { "type": "click", "selectors": ["aria/Configurar[role=\"button\"]", "#estrategia-web-consent [data-estrategia-web-consent-action=\"configure\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "click", "selectors": ["#estrategia-web-consent input[value=\"maps\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "click", "selectors": ["aria/Guardar la selección[role=\"button\"]", "#estrategia-web-consent-settings button[type=\"submit\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForElement", "selectors": ["#estrategia-web-consent"], "visible": false },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "window._paq.push(['trackPageView'])" } },
+    { "type": "customStep", "name": "request", "parameters": { "url": "^https://stats\\.ejemplo\\.test/matomo\\.php", "count": 2 } },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "maps-only", "save": ["cookies"] } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "window.estrategiaWebConsent.open()" } },
+    { "type": "waitForElement", "selectors": ["#estrategia-web-consent"], "visible": true },
+    { "type": "click", "selectors": ["aria/Aceptar todas[role=\"button\"]", "#estrategia-web-consent [data-estrategia-web-consent-action=\"accept\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForExpression", "expression": "document.cookie.split('; ').some((c) => c.startsWith('mtm_cookie_consent='))" },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "window._paq.push(['trackPageView'])" } },
+    { "type": "waitForExpression", "expression": "document.cookie.split('; ').some((c) => c.startsWith('_pk_id'))" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "accepted", "save": ["cookies"] } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "window.estrategiaWebConsent.open()" } },
+    { "type": "waitForElement", "selectors": ["#estrategia-web-consent"], "visible": true },
+    { "type": "click", "selectors": ["aria/Rechazar todas[role=\"button\"]", "#estrategia-web-consent [data-estrategia-web-consent-action=\"reject\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForExpression", "expression": "!document.cookie.split('; ').some((c) => /^(_pk_|mtm_)/.test(c))" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "rejected", "save": ["cookies", "console"] } }
+  ]
+}

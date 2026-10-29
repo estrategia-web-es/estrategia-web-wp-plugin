@@ -22,8 +22,7 @@
 // same way.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { reset, testApi, page, BASE } from "../../../tests/lib.mjs";
-import { BLOCK_MODULES } from "../../../tests/browser.mjs";
+import { reset, testApi, page, BASE, BLOCK_MODULES } from "../../../tests/lib.mjs";
 
 let served;
 before(async () => {

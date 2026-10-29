@@ -1,0 +1,27 @@
+{
+  "title": "Matomo COOKIELESS: it measures (matomo.php is hit), leaves no Matomo cookie, and there is no notice",
+  "description": "Matomo in cookieless mode, for this request only (?ew-options, modules/consent/tests/wp/estrategia-web-cookies-test.php): the REAL matomo.js (modules/matomo/tests/fixtures/matomo.js, 5.4.0, BSD-3) served by the runner, matomo.php answered 204, nothing goes to a Matomo server. The visit and an event reach matomo.php, no _pk_/mtm_ cookie is left, and with nothing to ask there is no notice. Read by browser-matomo-cookieless. It was test 1 of matomo-browser.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "network": {
+    "foreign": "abort",
+    "fulfill": [
+      { "url": "^https://stats\\.ejemplo\\.test/.*matomo\\.js", "status": 200, "contentType": "application/javascript", "body": "@repo/modules/matomo/tests/fixtures/matomo.js" },
+      { "url": "^https://stats\\.ejemplo\\.test/", "status": 204 }
+    ]
+  },
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": {} }
+    ] } },
+    { "type": "setViewport", "width": 1200, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/?ew-options=%7B%22estrategia_web_site%22%3A%7B%22matomo_url%22%3A%22https%3A%2F%2Fstats.ejemplo.test%2F%22%2C%22matomo_site_id%22%3A3%2C%22matomo_mode%22%3A%22cookieless%22%7D%7D" },
+    { "type": "customStep", "name": "request", "parameters": { "url": "^https://stats\\.ejemplo\\.test/matomo\\.php.*idsite=3" } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "window._paq.push(['trackEvent', 'prueba', 'clic'])" } },
+    { "type": "customStep", "name": "request", "parameters": { "url": "^https://stats\\.ejemplo\\.test/matomo\\.php", "count": 2 } },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "measured",
+      "save": ["console", "cookies", "network"],
+      "values": { "notices": "document.querySelectorAll('#estrategia-web-consent').length" }
+    } }
+  ]
+}

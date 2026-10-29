@@ -1,0 +1,21 @@
+{
+  "title": "Carousel with any number of slides on a phone: a finger dragging right on the first column of the 12 + 11 grid shows the last, and back",
+  "description": "Infinite estrategia-web/carousel, the 23-card two-row grid of /prueba-carrusel-impar/ on a 402 px touch phone: a real finger (start, a move per frame, still, lift: the touch customStep) dragging right on the first column shows the last column, and dragging left goes back to the first; no card changes row or leaves its column. Read by browser-carousel-any-count-phone. It was ./any-count.mjs (section 4), run by carousel.test.mjs (level 3), until 29-10-2026.",
+  "writes": true,
+  "initScripts": [
+    "modules/carousel/tests/browser/probes.js"
+  ],
+  "steps": [
+    {"type":"customStep","name":"setup","parameters":{"requests":[{"path":"/estrategia-web-site-test/v1/setup","body":{"modules":["carousel","map","whatsapp","language-switcher"]}},{"path":"/estrategia-web-carousel-test/v1/seed","method":"POST"}]}},
+    {"type":"setViewport","width":402,"height":860,"deviceScaleFactor":1,"isMobile":true,"hasTouch":true,"isLandscape":false},
+    {"type":"navigate","url":"/prueba-carrusel-impar/"},
+    {"type":"customStep","name":"scrollIntoView","parameters":{"selectors":["aria/Veintitrés en dos filas[role=\"region\"]"]}},
+    {"type":"waitForExpression","expression":"__track('Veintitrés en dos filas').closest('.estrategia-web-carousel').classList.contains('is-ready')"},
+    {"type":"waitForExpression","expression":"__settled('Veintitrés en dos filas', 0, 12)"},
+    {"type":"customStep","name":"touch","parameters":{"selectors":[["aria/Veintitrés en dos filas[role=\"region\"]",".estrategia-web-carousel__track"]],"dx":150,"y":20}},
+    {"type":"waitForExpression","expression":"__settled('Veintitrés en dos filas', 11, 12)"},
+    {"type":"customStep","name":"touch","parameters":{"selectors":[["aria/Veintitrés en dos filas[role=\"region\"]",".estrategia-web-carousel__track"]],"dx":-150,"y":20}},
+    {"type":"waitForExpression","expression":"__settled('Veintitrés en dos filas', 0, 12)"},
+    {"type":"customStep","name":"capture","parameters":{"label":"phone","save":["console"],"values":{"layout":"__layout('Veintitrés en dos filas', 12)"}}}
+  ]
+}

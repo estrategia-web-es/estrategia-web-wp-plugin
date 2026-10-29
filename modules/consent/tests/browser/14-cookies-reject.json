@@ -1,0 +1,41 @@
+{
+  "title": "Cookie detector: rejecting sends nothing; a link to #estrategia-web-consent and an element with the class reopen the panel",
+  "description": "The cookie registry's detector (1.1.0) with a visitor who REJECTS: no scan is ever scheduled (timers.js: no timer of the detector's delay) and nothing is sent; then a link to #estrategia-web-consent reopens the panel without navigating, with the focus on its title, Escape closes it, and an element with the estrategia-web-consent-open class reopens it too. The page is served with the detector's delay at 300 ms (network.rewrite) so that its timer is recognised. Read by browser-cookies-reject. It was the «reject» visitor of cookies-browser.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "initScripts": ["modules/consent/tests/browser/timers.js"],
+  "network": {
+    "rewrite": [{ "url": "/test-detector/", "find": "\"delay\":4000", "replace": "\"delay\":300" }]
+  },
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": {
+        "consent": { "categories": ["maps", "statistics"] },
+        "pages": [
+          { "slug": "test-detector", "content": "<!-- wp:paragraph --><p><a href=\"#estrategia-web-consent\">Menu cookies</a></p><!-- /wp:paragraph --><!-- wp:paragraph {\"className\":\"estrategia-web-consent-open\"} --><p class=\"estrategia-web-consent-open\">Button with class</p><!-- /wp:paragraph -->" }
+        ]
+      } },
+      { "path": "/estrategia-web-cookies-test/v1/reset", "body": {} },
+      { "path": "/estrategia-web-cookies-test/v1/setup", "body": { "interval": 0 } }
+    ] } },
+    { "type": "setViewport", "width": 1200, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "customStep", "name": "cookies", "parameters": { "set": [{ "name": "prueba_valor", "value": "SECRET123" }] } },
+    { "type": "navigate", "url": "/test-detector/" },
+    { "type": "waitForExpression", "expression": "!!window.estrategiaWebConsent" },
+    { "type": "click", "selectors": ["aria/Rechazar todas[role=\"button\"]", "#estrategia-web-consent [data-estrategia-web-consent-action=\"reject\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForElement", "selectors": ["#estrategia-web-consent"], "visible": false },
+    { "type": "click", "selectors": ["aria/Menu cookies[role=\"link\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "waitForElement", "selectors": ["#estrategia-web-consent"], "visible": true },
+    { "type": "waitForExpression", "expression": "document.activeElement?.id === 'estrategia-web-consent-title'" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "by-link", "save": ["network"], "values": { "url": "location.href" } } },
+    { "type": "keyDown", "key": "Escape" },
+    { "type": "keyUp", "key": "Escape" },
+    { "type": "waitForElement", "selectors": ["#estrategia-web-consent"], "visible": false },
+    { "type": "click", "selectors": ["aria/Button with class", ".estrategia-web-consent-open"], "offsetX": 5, "offsetY": 5 },
+    { "type": "waitForElement", "selectors": ["#estrategia-web-consent"], "visible": true },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "by-class",
+      "save": ["network", "console"],
+      "values": { "timers": "window.__timers" }
+    } }
+  ]
+}

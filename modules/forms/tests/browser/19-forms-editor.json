@@ -1,0 +1,79 @@
+{
+  "title": "Forms in the block editor: the synced form keeps its preselection on save, the blocks and a new form's template, the preselection follows its TEXT, a notification link opens it selected",
+  "description": "The forms module in the block editor, ONE login and ONE editor boot on the page that uses a synced form: (1) saved as it is, the editor does not drop the content it cannot render (the pattern override with defaultOption) and the page still preselects; (2) the ten blocks are registered, the form is not in the inserter (2.0.0: a page gets the reference block) and a new Form block comes with its template and two notifications; (3) the side panel keeps the preselection on its option's TEXT when the options are reordered or the option removed; (4) «Forms › Forms» links a notification to its form's editor: assets/notification-link.js selects it and opens the sidebar with its «To». The forms seed (/estrategia-web-forms-test/v1/reset) puts the site in en_US. Read by browser-forms-editor. It was admin.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "timeout": 20000,
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-forms-test/v1/reset", "as": "seed", "body": {
+        "forms": [{ "key": "contact", "title": "Contacto (enlace)", "content": "<!-- wp:estrategia-web-forms/form {\"formId\":\"contacto\",\"title\":\"Contacto\"} -->\n<!-- wp:estrategia-web-forms/text {\"label\":\"Nombre\",\"name\":\"nombre\",\"required\":true,\"width\":\"half\"} /-->\n<!-- wp:estrategia-web-forms/email {\"label\":\"Correo\",\"name\":\"email\",\"required\":true,\"width\":\"half\"} /-->\n<!-- wp:estrategia-web-forms/tel {\"label\":\"Teléfono\",\"name\":\"telefono\"} /-->\n<!-- wp:estrategia-web-forms/select {\"label\":\"Servicio\",\"name\":\"servicio\",\"options\":\"Lavado\\nPlanchado\"} /-->\n<!-- wp:estrategia-web-forms/textarea {\"label\":\"Mensaje\",\"name\":\"mensaje\",\"required\":true} /-->\n<!-- wp:estrategia-web-forms/checkbox {\"name\":\"privacidad\",\"consent\":true} /-->\n<!-- wp:estrategia-web-forms/submit {\"text\":\"Enviar consulta\"} /-->\n<!-- wp:estrategia-web-forms/notification {\"label\":\"Aviso al equipo\",\"to\":\"equipo@ejemplo.test\",\"replyTo\":\"{{email}}\",\"subject\":\"Nuevo mensaje de {{nombre}}\",\"body\":\"Desde {{page_url}} el {{submission_date}} en {{site_name}}:\\n\\n{{all_fields}}\"} /-->\n<!-- wp:estrategia-web-forms/notification {\"label\":\"Acuse al remitente\",\"to\":\"{{email}}\",\"subject\":\"Hemos recibido tu mensaje\",\"body\":\"Hola {{nombre}}, gracias por escribir.\\nServicio: {{servicio}}\\nDesde {{ Page_URL }} el {{submission_date}} en {{site_name}}:\\n{{all_fields}}\"} /-->\n<!-- wp:estrategia-web-forms/notification {\"label\":\"Aviso que falla\",\"to\":\"fail@ejemplo.test\",\"subject\":\"Copia\"} /-->\n<!-- /wp:estrategia-web-forms/form -->" }],
+        "pages": [
+          { "key": "pattern", "type": "wp_block", "slug": "presupuesto-sincronizado", "title": "Presupuesto", "content": "<!-- wp:estrategia-web-forms/form {\"formId\":\"presupuesto\"} --><!-- wp:estrategia-web-forms/select {\"label\":\"Servicio\",\"name\":\"servicio\",\"options\":\"Hoteles\\nRestaurantes\\nBarcos\"} /--><!-- /wp:estrategia-web-forms/form -->" },
+          { "key": "page", "slug": "barcos-editor", "title": "Barcos", "content": "<!-- wp:block {\"ref\":{{id:pattern}},\"content\":{\"servicio\":{\"defaultOption\":3}}} /-->" }
+        ]
+      } }
+    ] } },
+    { "type": "setViewport", "width": 1280, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/wp-login.php?redirect_to=%2Fwp-admin%2Fpost.php%3Fpost%3D{{@seed.pages.page.id}}%26action%3Dedit" },
+    { "type": "change", "selectors": ["#user_login"], "value": "admin" },
+    { "type": "change", "selectors": ["#user_pass"], "value": "password" },
+    { "type": "click", "selectors": ["#wp-submit"], "offsetX": 10, "offsetY": 10, "assertedEvents": [{ "type": "navigation" }] },
+    { "type": "waitForExpression", "timeout": 60000, "expression": "!!(window.wp?.data?.select('core/block-editor')?.getBlocks().length > 0 && wp.blocks.getBlockType('estrategia-web-forms/form'))" },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "wp.data.dispatch('core/preferences').set('core/edit-post', 'welcomeGuide', false)" } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "(() => { wp.data.dispatch('core/editor').editPost({ title: 'Barcos (saved in the editor)' }); wp.data.dispatch('core/editor').savePost(); })()" } },
+    { "type": "waitForExpression", "timeout": 30000, "expression": "!wp.data.select('core/editor').isSavingPost() && !wp.data.select('core/editor').isEditedPostDirty()" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "saved",
+      "settle": [],
+      "values": {
+        "content": "fetch('/wp-json/estrategia-web-forms-test/v1/post/{{@seed.pages.page.id}}').then((r) => r.json()).then((j) => j.content)",
+        "html": "fetch('{{@seed.pages.page.url}}', { credentials: 'omit' }).then((r) => r.text())"
+      }
+    } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "wp.data.dispatch('core/block-editor').resetBlocks([wp.blocks.createBlock('estrategia-web-forms/form')])" } },
+    { "type": "waitForExpression", "expression": "wp.data.select('core/block-editor').getBlocks()[0]?.innerBlocks.length > 0" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "new-form",
+      "settle": [],
+      "values": {
+        "names": "wp.blocks.getBlockTypes().map((b) => b.name).filter((n) => n.startsWith('estrategia-web-forms/')).sort()",
+        "inserter": "({ form: wp.blocks.hasBlockSupport('estrategia-web-forms/form', 'inserter', true), ref: wp.blocks.hasBlockSupport('estrategia-web-forms/form-ref', 'inserter', true) })",
+        "form": "(() => { const b = wp.data.select('core/block-editor').getBlocks()[0]; return { formId: b.attributes.formId, inner: b.innerBlocks.map((i) => i.name.replace('estrategia-web-forms/', '')) }; })()"
+      }
+    } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "(() => { const select = wp.blocks.createBlock('estrategia-web-forms/select', { label: 'Servicio', name: 'servicio', options: 'Hoteles\\nRestaurantes\\nBarcos', defaultOption: 2 }); wp.data.dispatch('core/block-editor').resetBlocks([wp.blocks.createBlock('estrategia-web-forms/form', { formId: 'f' }, [select])]); wp.data.dispatch('core/block-editor').selectBlock(select.clientId); wp.data.dispatch('core/edit-post').openGeneralSidebar('edit-post/block'); window.__select = select.clientId; })()" } },
+    { "type": "waitForElement", "selectors": ["aria/Preselected option"] },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "preselect",
+      "settle": [],
+      "values": { "shown": "(() => { const label = [...document.querySelectorAll('label')].find((l) => l.textContent.trim() === 'Preselected option'); return document.getElementById(label.htmlFor).value; })()" }
+    } },
+    { "type": "change", "selectors": ["aria/Options[role=\"textbox\"]"], "value": "Barcos\nHoteles\nRestaurantes" },
+    { "type": "waitForExpression", "expression": "wp.data.select('core/block-editor').getBlockAttributes(window.__select).options.startsWith('Barcos')" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "reordered",
+      "settle": [],
+      "values": { "defaultOption": "wp.data.select('core/block-editor').getBlockAttributes(window.__select).defaultOption" }
+    } },
+    { "type": "change", "selectors": ["aria/Options[role=\"textbox\"]"], "value": "Barcos\nHoteles" },
+    { "type": "waitForExpression", "expression": "!wp.data.select('core/block-editor').getBlockAttributes(window.__select).options.includes('Restaurantes')" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "removed",
+      "settle": [],
+      "save": ["console"],
+      "values": { "defaultOption": "wp.data.select('core/block-editor').getBlockAttributes(window.__select).defaultOption" }
+    } },
+    { "type": "navigate", "url": "/wp-admin/post.php?post={{@seed.forms.contact}}&action=edit&eweb_form=contacto&eweb_notification=1" },
+    { "type": "waitForExpression", "timeout": 60000, "expression": "window.wp?.data?.select('core/block-editor')?.getSelectedBlock()?.name === 'estrategia-web-forms/notification'" },
+    { "type": "waitForElement", "selectors": ["aria/To[role=\"textbox\"]"] },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "notification",
+      "settle": [],
+      "save": ["console"],
+      "values": {
+        "selected": "wp.data.select('core/block-editor').getSelectedBlock().attributes.label",
+        "to": "(() => { const label = [...document.querySelectorAll('label')].find((l) => l.textContent.trim() === 'To'); return document.getElementById(label.htmlFor).value; })()"
+      }
+    } }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "title": "The constructor offers a template's new fields to a copy made before them, and adds them only when asked",
+  "description": "A location type whose stored copy has only the template's first 8 fields (a copy made on 17-10-2026, before the template grew: /estrategia-web-ct-test/v1/template-copy): its edit screen (assets/constructor.js) offers the missing ones with their count; adding them puts them in the draft (the notice goes away) and stores nothing; saving stores the template's fields in the template's order and nothing is missing any more. Read by browser-ct-template-fields. It was the second test of hours-editor.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "timeout": 20000,
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": { "company": { "enabled_types": ["location"] } } },
+      { "path": "/estrategia-web-ct-test/v1/template-copy", "as": "old", "body": { "type": "eweb_location", "keep": 8 } }
+    ] } },
+    { "type": "setViewport", "width": 1400, "height": 1100, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/wp-login.php?redirect_to=%2Fwp-admin%2Fadmin.php%3Fpage%3Destrategia-web-content-types%26type%3Deweb_location" },
+    { "type": "change", "selectors": ["#user_login"], "value": "admin" },
+    { "type": "change", "selectors": ["#user_pass"], "value": "password" },
+    { "type": "click", "selectors": ["#wp-submit"], "offsetX": 10, "offsetY": 10, "assertedEvents": [{ "type": "navigation" }] },
+    { "type": "waitForElement", "selectors": ["[data-action=\"add-template-fields\"]"] },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "offered", "values": { "notice": "document.querySelector('[data-template-fields]').textContent" } } },
+    { "type": "click", "selectors": ["[data-action=\"add-template-fields\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "added", "values": {
+      "notice": "document.querySelector('[data-template-fields]').textContent",
+      "stored": "wp.apiFetch({ path: '/estrategia-web/v1/content-types/eweb_location' }).then((r) => r.definition.fields.length)"
+    } } },
+    { "type": "click", "selectors": ["[data-action=\"save\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForElement", "selectors": ["[data-saved]"] },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "saved", "save": ["console"], "values": {
+      "after": "wp.apiFetch({ path: '/estrategia-web/v1/content-types/eweb_location' }).then((r) => ({ fields: r.definition.fields.map((f) => f.name), missing: r.missingFields }))"
+    } } }
+  ]
+}

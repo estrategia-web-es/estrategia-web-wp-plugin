@@ -1,0 +1,31 @@
+{
+  "title": "Carousel basics, /prueba-carrusel/: arrows, keyboard (← → End) and dots; the arrows get disabled at the ends",
+  "description": "estrategia-web/carousel with five slides and no loop, in Playground's default theme (a plugin block must work in any block theme): it hydrates (is-ready), is a region described as «carrusel», moves forward and back with the arrows, with the keyboard (→ and End) and with the dots, and the arrows get disabled at the ends. Every wait is a FACT (scrollLeft changes, an arrow disabled, a dot marked). Pages seeded by modules/carousel/tests/wp/estrategia-web-carousel-test.php. Read by browser-carousel-basic. It was the first test of carousel.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "steps": [
+    {"type":"customStep","name":"setup","parameters":{"requests":[{"path":"/estrategia-web-site-test/v1/setup","body":{"modules":["carousel","map","whatsapp","language-switcher"]}},{"path":"/estrategia-web-carousel-test/v1/seed","method":"POST"}]}},
+    {"type":"setViewport","width":1200,"height":900,"deviceScaleFactor":1,"isMobile":false,"hasTouch":false,"isLandscape":false},
+    {"type":"navigate","url":"/prueba-carrusel/"},
+    {"type":"customStep","name":"scrollIntoView","parameters":{"selectors":[".estrategia-web-carousel"]}},
+    {"type":"waitForExpression","timeout":5000,"expression":"document.querySelector('.estrategia-web-carousel').classList.contains('is-ready')"},
+    {"type":"customStep","name":"capture","parameters":{"label":"loaded","values":{"roledescription":"document.querySelector('.estrategia-web-carousel').getAttribute('aria-roledescription')","prevDisabled":"document.querySelector('.estrategia-web-carousel__prev').disabled"}}},
+    {"type":"click","selectors":["aria/Diapositiva siguiente[role=\"button\"]"],"offsetX":10,"offsetY":10},
+    {"type":"waitForExpression","expression":"document.querySelector('.estrategia-web-carousel__track').scrollLeft > 50"},
+    {"type":"waitForExpression","expression":"!document.querySelector('.estrategia-web-carousel__prev').disabled"},
+    {"type":"customStep","name":"run","parameters":{"expression":"window.__start = document.querySelector('.estrategia-web-carousel__track').scrollLeft"}},
+    {"type":"customStep","name":"run","parameters":{"expression":"document.querySelector('.estrategia-web-carousel__track').focus()"}},
+    {"type":"keyDown","key":"ArrowRight"},
+    {"type":"keyUp","key":"ArrowRight"},
+    {"type":"waitForExpression","expression":"document.querySelector('.estrategia-web-carousel__track').scrollLeft > window.__start + 50"},
+    {"type":"keyDown","key":"End"},
+    {"type":"keyUp","key":"End"},
+    {"type":"waitForExpression","expression":"document.querySelector('.estrategia-web-carousel__next').disabled"},
+    {"type":"customStep","name":"run","parameters":{"expression":"window.__start = document.querySelector('.estrategia-web-carousel__track').scrollLeft"}},
+    {"type":"click","selectors":["aria/Diapositiva anterior[role=\"button\"]"],"offsetX":10,"offsetY":10},
+    {"type":"waitForExpression","expression":"document.querySelector('.estrategia-web-carousel__track').scrollLeft < window.__start - 50"},
+    {"type":"click","selectors":["aria/Ir a la diapositiva 1[role=\"button\"]"],"offsetX":10,"offsetY":10},
+    {"type":"waitForExpression","expression":"document.querySelector('.estrategia-web-carousel__track').scrollLeft < 1"},
+    {"type":"waitForExpression","expression":"document.querySelector('.estrategia-web-carousel__dot').getAttribute('aria-current') === 'true'"},
+    {"type":"customStep","name":"capture","parameters":{"label":"back","save":["console"]}}
+  ]
+}

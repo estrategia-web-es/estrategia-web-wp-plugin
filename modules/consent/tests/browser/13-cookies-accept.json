@@ -1,0 +1,64 @@
+{
+  "title": "Cookie detector: accepting sends ONLY the names and the next page does not repeat; the Cookies screen confirms what was detected and the policy shows it",
+  "description": "The cookie registry (1.1.0, includes/class-cookie-registry.php): a visitor with a cookie whose value is «SECRET123» ACCEPTS; the browser sends the NAMES of its cookies and no value (the request body as it left), the registry keeps the notice's cookie as pending «necessary» and the unknown one without a suggestion; on the next page nothing is sent again (localStorage). Then, in the same browser, the administrator logs in: on the «Cookies» tab what was detected is pending with its suggestion, it is confirmed with its button, and the policy page's table shows it. The page is served with the detector's delay at 300 ms instead of 4000 (network.rewrite; the check fails if the 4000 was not found) and timers.js says when the scan has run (a fact, not a wait). Read by browser-cookies-accept. It was the «accept» visitor and the «Cookies screen» test of cookies-browser.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "timeout": 20000,
+  "initScripts": ["modules/consent/tests/browser/timers.js"],
+  "network": {
+    "rewrite": [{ "url": "/test-detector/", "find": "\"delay\":4000", "replace": "\"delay\":300" }]
+  },
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": {
+        "consent": { "categories": ["maps", "statistics"] },
+        "pages": [
+          { "slug": "test-detector", "content": "<!-- wp:paragraph --><p><a href=\"#estrategia-web-consent\">Menu cookies</a></p><!-- /wp:paragraph --><!-- wp:paragraph {\"className\":\"estrategia-web-consent-open\"} --><p class=\"estrategia-web-consent-open\">Button with class</p><!-- /wp:paragraph -->" },
+          { "slug": "test-policy", "content": "<!-- wp:estrategia-web/cookie-table /-->" }
+        ]
+      } },
+      { "path": "/estrategia-web-cookies-test/v1/reset", "body": {} },
+      { "path": "/estrategia-web-cookies-test/v1/setup", "body": { "interval": 0 } }
+    ] } },
+    { "type": "setViewport", "width": 1200, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "customStep", "name": "cookies", "parameters": { "set": [{ "name": "prueba_valor", "value": "SECRET123" }] } },
+    { "type": "navigate", "url": "/test-detector/" },
+    { "type": "waitForExpression", "expression": "!!window.estrategiaWebConsent" },
+    { "type": "click", "selectors": ["aria/Aceptar todas[role=\"button\"]", "#estrategia-web-consent [data-estrategia-web-consent-action=\"accept\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "customStep", "name": "request", "parameters": { "url": "/estrategia-web/v1/cookies/seen", "method": "POST" } },
+    { "type": "waitForExpression", "expression": "(window.__timers.fired[300] || 0) >= 1" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "accepted",
+      "save": ["network"],
+      "values": {
+        "scan": "localStorage.getItem('estrategia-web-cookie-scan')",
+        "raw": "fetch('/wp-json/estrategia-web-cookies-test/v1/raw').then((r) => r.json())"
+      }
+    } },
+    { "type": "navigate", "url": "/test-detector/" },
+    { "type": "waitForExpression", "expression": "(window.__timers.fired[300] || 0) >= 1" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "returned",
+      "save": ["network", "console"],
+      "values": { "scan": "localStorage.getItem('estrategia-web-cookie-scan')" }
+    } },
+    { "type": "navigate", "url": "/wp-login.php?redirect_to=%2Fwp-admin%2Fadmin.php%3Fpage%3Destrategia-web-settings%26tab%3Dcookies" },
+    { "type": "change", "selectors": ["#user_login"], "value": "admin" },
+    { "type": "change", "selectors": ["#user_pass"], "value": "password" },
+    { "type": "click", "selectors": ["#wp-submit"], "offsetX": 10, "offsetY": 10, "assertedEvents": [{ "type": "navigation" }] },
+    { "type": "waitForElement", "selectors": [".nav-tab-active[data-tab=\"cookies\"]"] },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "screen",
+      "values": {
+        "row": "(() => { const tr = [...document.querySelectorAll('tr')].find((t) => [...t.querySelectorAll('code')].some((c) => c.textContent === 'estrategia_web_consent')); return tr && { status: tr.querySelector('select[name=\"status\"]').value, category: tr.querySelector('select[name=\"category\"]').value, text: tr.innerText }; })()"
+      }
+    } },
+    { "type": "change", "selectors": ["xpath///tr[.//code[text()='estrategia_web_consent']]//select[@name='status']"], "value": "confirmed" },
+    { "type": "click", "selectors": ["xpath///tr[.//code[text()='estrategia_web_consent']]//button[normalize-space()='Guardar']"], "offsetX": 10, "offsetY": 10, "assertedEvents": [{ "type": "navigation" }] },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "saved",
+      "values": { "notice": "document.querySelector('.notice-success')?.innerText || ''" }
+    } },
+    { "type": "navigate", "url": "/test-policy/?nocache={{@now}}" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "policy", "save": ["html"] } }
+  ]
+}

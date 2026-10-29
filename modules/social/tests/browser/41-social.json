@@ -1,0 +1,51 @@
+{
+  "title": "Social networks: the block's preview in the editor; the screen adds, moves up, removes and saves in the order on screen, and an emptied list stays EMPTY",
+  "description": "The social module: (1) the «Redes sociales» block shows in the editor with the server preview of the network migrated from the company details (Instagram); (2) the «Redes sociales» screen starts from the migrated one plus an empty row, guesses the icon while typing, adds a row, moves rows up, removes one and saves in the ORDER ON SCREEN (the screen renumbers the name=\"…[n]…\" on submit); on the reloaded screen every network is removed and saving leaves the list EMPTY (it does not go back to the company ones). One login, which lands on the editor. Read by browser-social. It was social-admin.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "timeout": 20000,
+  "initScripts": ["tests/browser-probes.js"],
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "as": "site", "body": { "company": { "social": { "instagram": "https://instagram.com/prueba" } }, "pages": [{ "slug": "editor-redes", "content": "<!-- wp:estrategia-web/social-links {\"display\":\"icons-names\"} /-->" }] } }
+    ] } },
+    { "type": "setViewport", "width": 1280, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/wp-login.php?redirect_to=%2Fwp-admin%2Fpost.php%3Fpost%3D{{@site.pages.0.id}}%26action%3Dedit" },
+    { "type": "change", "selectors": ["#user_login"], "value": "admin" },
+    { "type": "change", "selectors": ["#user_pass"], "value": "password" },
+    { "type": "click", "selectors": ["#wp-submit"], "offsetX": 10, "offsetY": 10, "assertedEvents": [{ "type": "navigation" }] },
+    { "type": "waitForExpression", "timeout": 60000, "expression": "window.wp?.data?.select('core/block-editor')?.getBlocks().length === 1" },
+    { "type": "waitForExpression", "expression": "[...(document.querySelector('iframe[name=\"editor-canvas\"]')?.contentDocument?.querySelectorAll('.estrategia-web-social-links__name') || [])].some((e) => e.textContent.includes('Instagram'))" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "editor", "settle": [], "save": ["console"], "values": { "title": "wp.blocks.getBlockType('estrategia-web/social-links')?.title" } } },
+    { "type": "navigate", "url": "/wp-admin/admin.php?page=estrategia-web-social" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "screen", "values": {
+      "h1": "document.querySelector('h1').textContent",
+      "rows": "__all('.estrategia-web-social__row').length",
+      "firstUrl": "__all('.estrategia-web-social__row')[0].querySelector('[data-field=\"url\"]').value",
+      "firstPreview": "__all('.estrategia-web-social__row')[0].querySelector('.estrategia-web-social__preview').innerHTML"
+    } } },
+    { "type": "change", "selectors": ["xpath/(//*[contains(concat(' ', normalize-space(@class), ' '), ' estrategia-web-social__row ')])[2]//*[@data-field='url']"], "value": "https://www.tiktok.com/@prueba" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "typed", "values": {
+      "preview": "__all('.estrategia-web-social__row')[1].querySelector('.estrategia-web-social__preview').innerHTML"
+    } } },
+    { "type": "click", "selectors": [".estrategia-web-social__add"], "offsetX": 10, "offsetY": 10 },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "added", "values": { "rows": "__all('.estrategia-web-social__row').length" } } },
+    { "type": "change", "selectors": ["xpath/(//*[contains(concat(' ', normalize-space(@class), ' '), ' estrategia-web-social__row ')])[3]//*[@data-field='name']"], "value": "Correo" },
+    { "type": "change", "selectors": ["xpath/(//*[contains(concat(' ', normalize-space(@class), ' '), ' estrategia-web-social__row ')])[3]//*[@data-field='url']"], "value": "hola@ejemplo.test" },
+    { "type": "click", "selectors": ["xpath/(//*[contains(concat(' ', normalize-space(@class), ' '), ' estrategia-web-social__row ')])[3]//*[contains(concat(' ', normalize-space(@class), ' '), ' is-up ')]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "click", "selectors": ["xpath/(//*[contains(concat(' ', normalize-space(@class), ' '), ' estrategia-web-social__row ')])[2]//*[contains(concat(' ', normalize-space(@class), ' '), ' is-up ')]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "click", "selectors": ["xpath/(//*[contains(concat(' ', normalize-space(@class), ' '), ' estrategia-web-social__row ')])[3]//*[contains(concat(' ', normalize-space(@class), ' '), ' is-remove ')]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "arranged", "values": { "rows": "__all('.estrategia-web-social__row').length" } } },
+    { "type": "click", "selectors": ["#submit"], "offsetX": 10, "offsetY": 10, "assertedEvents": [{ "type": "navigation" }] },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "saved", "save": ["network"], "values": {
+      "shown": "__all('.estrategia-web-social__row').map((r) => [r.querySelector('[data-field=name]').value, r.querySelector('[data-field=url]').value])"
+    } } },
+    { "type": "click", "selectors": [".estrategia-web-social__row .is-remove"], "offsetX": 5, "offsetY": 5 },
+    { "type": "click", "selectors": [".estrategia-web-social__row .is-remove"], "offsetX": 5, "offsetY": 5 },
+    { "type": "click", "selectors": [".estrategia-web-social__row .is-remove"], "offsetX": 5, "offsetY": 5 },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "emptied", "values": { "rows": "__all('.estrategia-web-social__row').length" } } },
+    { "type": "click", "selectors": ["#submit"], "offsetX": 10, "offsetY": 10, "assertedEvents": [{ "type": "navigation" }] },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "saved-empty", "save": ["console"], "values": {
+      "shown": "__all('.estrategia-web-social__row').map((r) => [r.querySelector('[data-field=name]').value, r.querySelector('[data-field=url]').value])"
+    } } }
+  ]
+}

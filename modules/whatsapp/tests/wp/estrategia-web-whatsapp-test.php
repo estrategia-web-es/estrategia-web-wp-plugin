@@ -14,7 +14,7 @@
  *   and «+», message with accents, bottom-left) and one WITHOUT attributes,
  *   which takes the site options and goes bottom-right. In the theme the
  *   second one was the footer's (parts/footer.html); here the theme is
- *   Playground's default (tests/browser.mjs), so the page carries it.
+ *   Playground's default (a plugin block must work in any block theme), so the page carries it.
  *   28-10-2026: a 3000 px spacer between them makes the page long enough to
  *   scroll, so the same page serves «fixed while scrolling» and «under the
  *   cookie notice» (they had a page of their own, a second load).

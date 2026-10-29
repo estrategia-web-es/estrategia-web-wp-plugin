@@ -1,0 +1,49 @@
+{
+  "title": "WhatsApp: links, new tab, name, fixed in its corner with the safe area; fixed while scrolling and under the cookie notice at 1280 and 402",
+  "description": "The floating estrategia-web/whatsapp button with the cookie notice (two blocks of this plugin that share the bottom corner of a phone), on the whatsapp seed page (a long page with a button with attributes and one with the site option). One load at 1280; 402 is a resize. Read by browser-whatsapp. It was whatsapp.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": { "consent": { "categories": ["maps"] } } },
+      { "path": "/estrategia-web-whatsapp-test/v1/seed", "method": "POST" }
+    ] } },
+    { "type": "setViewport", "width": 1280, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/prueba-whatsapp/" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "top",
+      "save": ["console", "aria"],
+      "boxes": [
+        { "name": "buttons", "selector": ".estrategia-web-whatsapp", "attrs": ["href", "target", "rel", "class"], "styles": ["position"] }
+      ],
+      "values": {
+        "box": "(() => { const r = document.querySelector('.estrategia-web-whatsapp')?.getBoundingClientRect(); return r && { left: Math.round(r.left), bottom: Math.round(innerHeight - r.bottom), width: Math.round(r.width), height: Math.round(r.height) }; })()",
+        "long": "document.documentElement.scrollHeight > innerHeight * 2",
+        "covered": "(() => { const a = document.querySelector('.estrategia-web-whatsapp').getBoundingClientRect(); const notice = document.querySelector('#estrategia-web-consent'); if (!notice || !notice.getBoundingClientRect().height) return 'no notice'; const n = notice.getBoundingClientRect(); const x = Math.max(a.left, n.left) + 1; const y = Math.max(a.top, n.top) + 1; const overlap = x < Math.min(a.right, n.right) && y < Math.min(a.bottom, n.bottom); return overlap ? (notice.contains(document.elementFromPoint(x, y)) ? 'notice on top' : 'button on top') : 'no overlap'; })()",
+        "insets": "(() => { const found = {}; const walk = (rules) => { for (const rule of rules) { if (rule.cssRules) walk(rule.cssRules); if (!rule.selectorText || !rule.selectorText.includes('.estrategia-web-whatsapp')) continue; for (const prop of ['inset-block-end', 'inset-inline-start', 'inset-inline-end']) { const value = rule.style.getPropertyValue(prop); if (value) found[rule.selectorText + ' ' + prop] = value; } } }; for (const sheet of document.styleSheets) { try { walk(sheet.cssRules); } catch {} } return found; })()"
+      }
+    } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "scrollTo({ top: (document.documentElement.scrollHeight - innerHeight) * 0.5, behavior: 'instant' })" } },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "half", "values": {
+      "box": "(() => { const r = document.querySelector('.estrategia-web-whatsapp')?.getBoundingClientRect(); return r && { left: Math.round(r.left), bottom: Math.round(innerHeight - r.bottom), width: Math.round(r.width), height: Math.round(r.height) }; })()"
+    } } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "scrollTo({ top: document.documentElement.scrollHeight - innerHeight, behavior: 'instant' })" } },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "end", "values": {
+      "box": "(() => { const r = document.querySelector('.estrategia-web-whatsapp')?.getBoundingClientRect(); return r && { left: Math.round(r.left), bottom: Math.round(innerHeight - r.bottom), width: Math.round(r.width), height: Math.round(r.height) }; })()"
+    } } },
+    { "type": "setViewport", "width": 402, "height": 900 },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "scrollTo({ top: 0, behavior: 'instant' })" } },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "phone-top", "values": {
+      "box": "(() => { const r = document.querySelector('.estrategia-web-whatsapp')?.getBoundingClientRect(); return r && { left: Math.round(r.left), bottom: Math.round(innerHeight - r.bottom), width: Math.round(r.width), height: Math.round(r.height) }; })()",
+      "long": "document.documentElement.scrollHeight > innerHeight * 2",
+      "covered": "(() => { const a = document.querySelector('.estrategia-web-whatsapp').getBoundingClientRect(); const notice = document.querySelector('#estrategia-web-consent'); if (!notice || !notice.getBoundingClientRect().height) return 'no notice'; const n = notice.getBoundingClientRect(); const x = Math.max(a.left, n.left) + 1; const y = Math.max(a.top, n.top) + 1; const overlap = x < Math.min(a.right, n.right) && y < Math.min(a.bottom, n.bottom); return overlap ? (notice.contains(document.elementFromPoint(x, y)) ? 'notice on top' : 'button on top') : 'no overlap'; })()"
+    } } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "scrollTo({ top: (document.documentElement.scrollHeight - innerHeight) * 0.5, behavior: 'instant' })" } },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "phone-half", "values": {
+      "box": "(() => { const r = document.querySelector('.estrategia-web-whatsapp')?.getBoundingClientRect(); return r && { left: Math.round(r.left), bottom: Math.round(innerHeight - r.bottom), width: Math.round(r.width), height: Math.round(r.height) }; })()"
+    } } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "scrollTo({ top: document.documentElement.scrollHeight - innerHeight, behavior: 'instant' })" } },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "phone-end", "save": ["console"], "values": {
+      "box": "(() => { const r = document.querySelector('.estrategia-web-whatsapp')?.getBoundingClientRect(); return r && { left: Math.round(r.left), bottom: Math.round(innerHeight - r.bottom), width: Math.round(r.width), height: Math.round(r.height) }; })()"
+    } } }
+  ]
+}

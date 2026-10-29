@@ -1,0 +1,30 @@
+{
+  "title": "Forms without JavaScript: a normal POST, the redirect and the message on the page",
+  "description": "A visitor of the forms module's form (the FORM of modules/forms/tests/lib.mjs) with JavaScript OFF: the form is a real <form> that posts, the server redirects back to the page with ?af_result=…#af-contacto-status and the message is on the page; the submission is stored. The minimum fill time is 0 here (it is the server's, level 2). Read by browser-forms-no-js. It was the no-JS case of browser.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "emulate": { "javaScriptEnabled": false },
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-forms-test/v1/reset", "as": "seed", "body": {
+        "settings": { "min_seconds": 0 },
+        "pages": [{ "key": "page", "slug": "contacto", "title": "Contacto", "content": "<!-- wp:estrategia-web-forms/form {\"formId\":\"contacto\",\"title\":\"Contacto\"} -->\n<!-- wp:estrategia-web-forms/text {\"label\":\"Nombre\",\"name\":\"nombre\",\"required\":true,\"width\":\"half\"} /-->\n<!-- wp:estrategia-web-forms/email {\"label\":\"Correo\",\"name\":\"email\",\"required\":true,\"width\":\"half\"} /-->\n<!-- wp:estrategia-web-forms/tel {\"label\":\"Teléfono\",\"name\":\"telefono\"} /-->\n<!-- wp:estrategia-web-forms/select {\"label\":\"Servicio\",\"name\":\"servicio\",\"options\":\"Lavado\\nPlanchado\"} /-->\n<!-- wp:estrategia-web-forms/textarea {\"label\":\"Mensaje\",\"name\":\"mensaje\",\"required\":true} /-->\n<!-- wp:estrategia-web-forms/checkbox {\"name\":\"privacidad\",\"consent\":true} /-->\n<!-- wp:estrategia-web-forms/submit {\"text\":\"Enviar consulta\"} /-->\n<!-- wp:estrategia-web-forms/notification {\"label\":\"Aviso al equipo\",\"to\":\"equipo@ejemplo.test\",\"replyTo\":\"{{email}}\",\"subject\":\"Nuevo mensaje de {{nombre}}\",\"body\":\"Desde {{page_url}} el {{submission_date}} en {{site_name}}:\\n\\n{{all_fields}}\"} /-->\n<!-- wp:estrategia-web-forms/notification {\"label\":\"Acuse al remitente\",\"to\":\"{{email}}\",\"subject\":\"Hemos recibido tu mensaje\",\"body\":\"Hola {{nombre}}, gracias por escribir.\\nServicio: {{servicio}}\\nDesde {{ Page_URL }} el {{submission_date}} en {{site_name}}:\\n{{all_fields}}\"} /-->\n<!-- wp:estrategia-web-forms/notification {\"label\":\"Aviso que falla\",\"to\":\"fail@ejemplo.test\",\"subject\":\"Copia\"} /-->\n<!-- /wp:estrategia-web-forms/form -->" }]
+      } }
+    ] } },
+    { "type": "setViewport", "width": 1280, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/contacto/" },
+    { "type": "change", "selectors": ["#af-contacto-nombre"], "value": "Ana" },
+    { "type": "change", "selectors": ["#af-contacto-email"], "value": "ana@ejemplo.test" },
+    { "type": "change", "selectors": ["#af-contacto-telefono"], "value": "+34 600 000 000" },
+    { "type": "change", "selectors": ["#af-contacto-servicio"], "value": "Planchado" },
+    { "type": "change", "selectors": ["#af-contacto-mensaje"], "value": "Hola,\nquería información." },
+    { "type": "click", "selectors": ["#af-contacto-privacidad"], "offsetX": 5, "offsetY": 5 },
+    { "type": "click", "selectors": ["#af-contacto button[type=submit]", "button[type=submit]"], "offsetX": 10, "offsetY": 10, "assertedEvents": [{ "type": "navigation" }] },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "returned",
+      "values": {
+        "status": "document.getElementById('af-contacto-status').textContent",
+        "state": "fetch('/wp-json/estrategia-web-forms-test/v1/state').then((r) => r.json())"
+      }
+    } }
+  ]
+}
