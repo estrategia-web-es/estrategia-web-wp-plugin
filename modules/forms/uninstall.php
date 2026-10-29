@@ -25,6 +25,6 @@ if ( ! defined( 'ESTRATEGIA_WEB_FORMS_REMOVE_DATA' ) || true !== ESTRATEGIA_WEB_
 global $wpdb;
 $wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}estrategia_web_forms_submissions" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
 $wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}estrategia_web_forms_definitions" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
-foreach ( array( 'estrategia_web_forms_settings', 'estrategia_web_forms_db_version', 'estrategia_web_forms_migrations_log', 'estrategia_web_forms_last_purge' ) as $option ) {
-	delete_option( $option );
+foreach ( array( 'estrategia_web_forms_settings', 'estrategia_web_forms_db_version', 'estrategia_web_forms_migrations_log', 'estrategia_web_forms_last_purge' ) as $estrategia_web_option ) {
+	delete_option( $estrategia_web_option );
 }

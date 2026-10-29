@@ -93,7 +93,7 @@ final class Admin {
 			self::render_confirm_delete( array_values( array_unique( array_filter( $ids ) ) ) );
 			return;
 		}
-		$form_id = Definitions::clean_id( (string) wp_unslash( $_GET['form_id'] ?? '' ) );
+		$form_id = Definitions::clean_id( sanitize_text_field( wp_unslash( $_GET['form_id'] ?? '' ) ) );
 		$deleted = isset( $_GET['deleted'] ) ? (int) $_GET['deleted'] : null;
 		// phpcs:enable
 
@@ -209,7 +209,7 @@ final class Admin {
 			wp_die( esc_html__( 'You are not allowed to do this.', 'estrategia-web' ), 403 );
 		}
 		check_admin_referer( 'estrategia_web_forms_export' );
-		$form_id = Definitions::clean_id( (string) wp_unslash( $_GET['form_id'] ?? '' ) );
+		$form_id = Definitions::clean_id( sanitize_text_field( wp_unslash( $_GET['form_id'] ?? '' ) ) );
 		$rows    = Submissions::query( $form_id, 0 )['rows'];
 
 		// Data columns: the union of the fields of all submissions, in order of appearance.
