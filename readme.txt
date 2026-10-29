@@ -29,7 +29,7 @@ Translations: Spanish and Catalan included. WPML is supported throughout.
 
 = Source code =
 
-Everything is in the plugin as it runs, unminified sources included. The minified `view.min.js` files are built from the `view.js` next to them with esbuild. Development, tests and build tools: https://github.com/dpereztomas/estrategia-web
+Everything is in the plugin as it runs, unminified sources included. The minified `view.min.js` files are built from the `view.js` next to them with esbuild. Development, tests and build tools: https://github.com/estrategia-web-es/estrategia-web-wp-plugin
 
 == External services ==
 
