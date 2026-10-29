@@ -96,3 +96,21 @@ in the example. A level 2 test in types.test.mjs closes it.
 The tests check that it works, not that it looks right. Nobody has yet
 looked with human eyes at the «Company details» screen, a block's
 «Attributes» panel with the source, or an SVG in the media library.
+
+## llms.txt module
+**Date:** 29-10-2026 · **Due:** —
+
+David, 29-10-2026: what applies to every site goes in the plugin or the
+parent theme, and `/llms.txt` is the example. Today estrategiaweb.es serves
+it as a loose file in public_html (from `content/semilla/llms.txt` of the
+estrategiaweb-es repo), with `Content-Type: text/plain` and no charset, so a
+browser can show the accents wrong. Why it exists: the SEO plan
+(`estrategiaweb-es/docs/plan-seo.md`), copied from Virtux Digital, whose
+`llms.txt` gives the AI the paragraph it should repeat.
+
+- A module `llms` that answers `/llms.txt` with `text/plain; charset=utf-8`.
+- The text is editable in the panel; the first draft is built from Company
+  details (`site`) and the pages with their Rank Math description.
+- Per language with WPML (open: one file with sections or one per language).
+- When it is published on estrategiaweb.es, the loose file is deleted there
+  (a static file wins over WordPress in nginx, so it would hide the module).
