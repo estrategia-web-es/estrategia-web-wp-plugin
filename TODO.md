@@ -125,3 +125,11 @@ company paragraph from Company details, and anything per WPML language. So
 the open question is whether our module replaces it or only feeds its
 `rank_math/llms_txt/extra_content` filter; if both are on, they fight for
 the same URL.
+
+**Decided by David, 31-10-2026: like `redirects`.** Our own module, that can
+be switched on and off in Estrategia Web → Modules so it does not compete
+with Rank Math, and that WARNS in its own screen when Rank Math's `llms`
+module is also on (both serve `/llms.txt`). The pattern to copy is
+`modules/redirects/includes/class-conflicts.php` (`Conflicts::detect()`) and
+the notice in `modules/redirects/includes/admin/class-page.php`. To be built
+in another session.
