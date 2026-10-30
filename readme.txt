@@ -4,7 +4,7 @@ Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.3.0
+Stable tag: 2.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,6 +20,7 @@ Most small business sites need the same dozen things besides their design. Estra
 * **Company details**: write your company name, address or phone once and use them anywhere with Block Bindings or a shortcode.
 * **Local business schema**: schema.org Organization and LocalBusiness data, merged into Rank Math's or Yoast's graph when they are active.
 * **Redirects**: 301, 302 and 410 redirects with hit counters, CSV import and export and an optional 404 log. It steps aside when your SEO plugin manages redirects.
+* **llms.txt**: the text AI assistants read to describe your site, written in the panel (with a draft from your company details and pages) and served at /llms.txt, one per language with WPML.
 * **Blocks**: carousel, two-click map, WhatsApp button, social links and a language switcher for WPML.
 * **Analytics behind consent**: Google Analytics 4, Google Ads and Google Tag Manager with Consent Mode v2, and Matomo without cookies. Nothing loads until you fill in an ID.
 * **Media**: WebP image sizes, phone photo uploads scaled down to 2560 px, sanitised SVG uploads and correctly sized featured images.
@@ -74,6 +75,9 @@ Its settings, yes. Your data (form submissions, redirects, company details) is k
 The cookie list includes an extract of the Open Cookie Database (https://github.com/jkwakman/Open-Cookie-Database), © Jan Kwakman and contributors, Apache License 2.0. Details in modules/consent/data/NOTICE.
 
 == Changelog ==
+
+= 2.4.0 =
+* New module: llms.txt, written in Settings and served at /llms.txt with the right charset; one per language with WPML. Off by default.
 
 = 2.3.0 =
 * Forms: once sent, the fields are hidden and the success message is a box that cannot be missed, focused and scrolled into view.

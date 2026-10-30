@@ -9,6 +9,29 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.4.0 — 31-10-2026
+
+**What each site must do:** nothing; the module is off. A site that switches
+it on writes its text in «Estrategia Web › Settings › llms.txt» and, if it
+had a loose llms.txt in its root (estrategiaweb.es), deletes that file: the
+web server serves it before WordPress and hides the module (the tab warns).
+
+- New module `llms` (David, 29 and 31-10-2026: «what applies to every site
+  goes in the plugin»). /llms.txt answered on parse_request with
+  `text/plain; charset=utf-8`, `X-Robots-Tag: noindex` and nosniff; no text,
+  no file (WordPress's 404). The text is written in a Settings tab with a
+  «Generate draft» button (Company details and the published pages with
+  their Rank Math or Yoast description).
+- One per WPML language (David, 31-10-2026): /en/llms.txt with directories,
+  each domain's with a domain per language, ?lang= otherwise; the default
+  language's file ends with «Other languages» linking the rest. llmstxt.org
+  says nothing about languages; the reasoning is in module.php.
+- Warns, does not step aside, when Rank Math's «LLMS Txt» module is on (its
+  slug is `llms-txt`, checked in seo-by-rank-math 1.0.280) or there is a
+  loose llms.txt in the root.
+- Tests: modules/llms/tests (level 1 the paths, the body and the draft;
+  level 2 the headers, the 404 log, the tab; level 2 with real WPML).
+
 ## 2.3.0 — 30-10-2026
 
 **What each site must do:** nothing, but it LOOKS different: after a

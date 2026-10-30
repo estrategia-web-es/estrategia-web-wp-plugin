@@ -128,11 +128,11 @@ msgctxt "block keyword"
 msgid "banner"
 msgstr "banner"
 
-#: modules/banners/blocks/banner-zone/labels.php:8
+#: modules/banners/blocks/banner-zone/labels.php:10
 msgid "Zone (its slug)"
 msgstr "Zona (su slug)"
 
-#: modules/banners/blocks/banner-zone/labels.php:9
+#: modules/banners/blocks/banner-zone/labels.php:11
 msgid "How many at a time (0: all, one under another)"
 msgstr "Cuántos a la vez (0: todos, uno debajo de otro)"
 
@@ -1851,6 +1851,7 @@ msgid "The list could not be loaded."
 msgstr "No se ha podido cargar la lista."
 
 #: modules/content-types/includes/admin/class-page.php:376
+#: modules/llms/includes/admin/class-tab.php:82
 msgid "Text"
 msgstr "Texto"
 
@@ -2891,7 +2892,8 @@ msgstr ""
 "de pantalla."
 
 #: modules/external-links/module.php modules/faq-schema/module.php
-#: modules/local-business/module.php modules/redirects/module.php
+#: modules/llms/module.php modules/local-business/module.php
+#: modules/redirects/module.php
 msgctxt "module category"
 msgid "SEO"
 msgstr "SEO"
@@ -3660,29 +3662,29 @@ msgstr "Todos enviados"
 msgid "Some failed"
 msgstr "Alguno falló"
 
-#: modules/forms/includes/class-blocks.php:81
+#: modules/forms/includes/class-blocks.php:82
 msgid ""
 "The message could not be sent. Please check your connection and try again."
 msgstr ""
 "No se ha podido enviar el mensaje. Comprueba tu conexión y vuelve a "
 "intentarlo."
 
-#: modules/forms/includes/class-blocks.php:104
+#: modules/forms/includes/class-blocks.php:106
 msgid "Leave this field empty"
 msgstr "Deja este campo vacío"
 
-#: modules/forms/includes/class-blocks.php:232
+#: modules/forms/includes/class-blocks.php:234
 msgid "Choose an option"
 msgstr "Elige una opción"
 
-#: modules/forms/includes/class-blocks.php:258
+#: modules/forms/includes/class-blocks.php:260
 msgid "Send"
 msgstr "Enviar"
 
 #. translators: the text between braces becomes the link to the privacy policy.
 #. translators: the text between braces becomes the link to the privacy policy; {text|url} links to that url.
-#: modules/forms/includes/class-blocks.php:307
-#: modules/forms/includes/class-blocks.php:333
+#: modules/forms/includes/class-blocks.php:309
+#: modules/forms/includes/class-blocks.php:335
 msgid "I have read and accept the {privacy policy}."
 msgstr "He leído y acepto la {política de privacidad}."
 
@@ -3959,6 +3961,78 @@ msgid ""
 msgstr ""
 "El «ES ▾» de la cabecera: cambia de idioma a la misma página, se puede usar "
 "con el teclado y lleva hreflang. Necesita WPML; sin él, no se muestra nada."
+
+#: modules/llms/includes/admin/class-tab.php:50
+#: modules/llms/includes/admin/class-tab.php:73
+msgid "llms.txt"
+msgstr "llms.txt"
+
+#: modules/llms/includes/admin/class-tab.php:75
+msgid ""
+"What AI assistants read to describe this website: what the business is, "
+"where, for whom, and the pages that answer the usual questions. Markdown, as "
+"on llmstxt.org. A language without text serves nothing."
+msgstr "Lo que leen los asistentes de IA para describir esta web: qué es el negocio, dónde, para quién y las páginas que responden a las preguntas habituales. En Markdown, como en llmstxt.org. Un idioma sin texto no sirve nada."
+
+#: modules/llms/includes/admin/class-tab.php:77
+msgid ""
+"One per language. The default language's file links the others at the end by "
+"itself."
+msgstr "Uno por idioma. El fichero del idioma principal enlaza los demás al final por sí solo."
+
+#: modules/llms/includes/admin/class-tab.php:90
+msgid "Replace the text with the draft? Nothing is saved until you press Save."
+msgstr "¿Sustituir el texto por el borrador? No se guarda nada hasta que pulses Guardar."
+
+#: modules/llms/includes/admin/class-tab.php:91
+msgid "Generate draft"
+msgstr "Generar borrador"
+
+#: modules/llms/includes/admin/class-tab.php:105
+msgid ""
+"Its «LLMS Txt» module is on, and while this module is on, the file served is "
+"this one: Rank Math's is not seen. Turn one of the two off (in Rank Math → "
+"Dashboard → Modules, or in Estrategia Web → Modules)."
+msgstr "Su módulo «LLMS Txt» está encendido y, mientras este módulo lo esté, el fichero que se sirve es este: el de Rank Math no se ve. Apaga uno de los dos (en Rank Math → Panel → Módulos, o en Estrategia Web → Módulos)."
+
+#: modules/llms/includes/admin/class-tab.php:105
+msgid "Rank Math also serves /llms.txt."
+msgstr "Rank Math también sirve /llms.txt."
+
+#: modules/llms/includes/admin/class-tab.php:108
+msgid ""
+"The web server sends that file before WordPress runs, so what is written "
+"here is not seen. Delete the file from the server (it is next to wp-config."
+"php)."
+msgstr "El servidor web envía ese fichero antes de que se ejecute WordPress, así que lo que se escribe aquí no se ve. Borra el fichero del servidor (está junto a wp-config.php)."
+
+#: modules/llms/includes/admin/class-tab.php:108
+msgid "There is a llms.txt file in the website's folder."
+msgstr "Hay un fichero llms.txt en la carpeta de la web."
+
+#: modules/llms/includes/admin/class-tab.php:153
+msgid "Pages"
+msgstr "Páginas"
+
+#: modules/llms/includes/class-runtime.php:36
+msgid "The llms.txt text of each language, by language code."
+msgstr "El texto de llms.txt de cada idioma, por código de idioma."
+
+#: modules/llms/includes/class-runtime.php:88
+msgid "Other languages"
+msgstr "Otros idiomas"
+
+#: modules/llms/module.php
+msgctxt "module description"
+msgid ""
+"Serves /llms.txt, the text AI assistants read to describe the site, written "
+"in «Estrategia Web › Settings › llms.txt», one per language with WPML."
+msgstr "Sirve /llms.txt, el texto que leen los asistentes de IA para describir la web, escrito en «Estrategia Web › Ajustes › llms.txt», uno por idioma con WPML."
+
+#: modules/llms/module.php
+msgctxt "module name"
+msgid "llms.txt"
+msgstr "llms.txt"
 
 #: modules/local-business/includes/class-settings.php:44
 #: modules/local-business/includes/class-settings.php:77

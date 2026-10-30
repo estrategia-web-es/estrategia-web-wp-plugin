@@ -120,11 +120,11 @@ msgctxt "block keyword"
 msgid "banner"
 msgstr "bàner"
 
-#: modules/banners/blocks/banner-zone/labels.php:8
+#: modules/banners/blocks/banner-zone/labels.php:10
 msgid "Zone (its slug)"
 msgstr "Zona (el seu slug)"
 
-#: modules/banners/blocks/banner-zone/labels.php:9
+#: modules/banners/blocks/banner-zone/labels.php:11
 msgid "How many at a time (0: all, one under another)"
 msgstr "Quants alhora (0: tots, un davall l'altre)"
 
@@ -1847,6 +1847,7 @@ msgid "The list could not be loaded."
 msgstr "No s'ha pogut carregar la llista."
 
 #: modules/content-types/includes/admin/class-page.php:376
+#: modules/llms/includes/admin/class-tab.php:82
 msgid "Text"
 msgstr "Text"
 
@@ -2886,7 +2887,8 @@ msgstr ""
 "de pantalla."
 
 #: modules/external-links/module.php modules/faq-schema/module.php
-#: modules/local-business/module.php modules/redirects/module.php
+#: modules/llms/module.php modules/local-business/module.php
+#: modules/redirects/module.php
 msgctxt "module category"
 msgid "SEO"
 msgstr "SEO"
@@ -3656,28 +3658,28 @@ msgstr "Tots enviats"
 msgid "Some failed"
 msgstr "Algun ha fallat"
 
-#: modules/forms/includes/class-blocks.php:81
+#: modules/forms/includes/class-blocks.php:82
 msgid ""
 "The message could not be sent. Please check your connection and try again."
 msgstr ""
 "No s'ha pogut enviar el missatge. Comprova la connexió i torna-ho a provar."
 
-#: modules/forms/includes/class-blocks.php:104
+#: modules/forms/includes/class-blocks.php:106
 msgid "Leave this field empty"
 msgstr "Deixa aquest camp buit"
 
-#: modules/forms/includes/class-blocks.php:232
+#: modules/forms/includes/class-blocks.php:234
 msgid "Choose an option"
 msgstr "Tria una opció"
 
-#: modules/forms/includes/class-blocks.php:258
+#: modules/forms/includes/class-blocks.php:260
 msgid "Send"
 msgstr "Envia"
 
 #. translators: the text between braces becomes the link to the privacy policy.
 #. translators: the text between braces becomes the link to the privacy policy; {text|url} links to that url.
-#: modules/forms/includes/class-blocks.php:307
-#: modules/forms/includes/class-blocks.php:333
+#: modules/forms/includes/class-blocks.php:309
+#: modules/forms/includes/class-blocks.php:335
 msgid "I have read and accept the {privacy policy}."
 msgstr "He llegit i accepto la {política de privadesa}."
 
@@ -3956,6 +3958,78 @@ msgstr ""
 "L'«ES ▾» de la capçalera: canvia d'idioma a la mateixa pàgina, es pot fer "
 "servir amb el teclat i porta hreflang. Necessita WPML; sense WPML, no es "
 "mostra res."
+
+#: modules/llms/includes/admin/class-tab.php:50
+#: modules/llms/includes/admin/class-tab.php:73
+msgid "llms.txt"
+msgstr "llms.txt"
+
+#: modules/llms/includes/admin/class-tab.php:75
+msgid ""
+"What AI assistants read to describe this website: what the business is, "
+"where, for whom, and the pages that answer the usual questions. Markdown, as "
+"on llmstxt.org. A language without text serves nothing."
+msgstr "El que llegeixen els assistents d'IA per descriure aquest web: què és el negoci, on, per a qui i les pàgines que responen a les preguntes habituals. En Markdown, com a llmstxt.org. Un idioma sense text no serveix res."
+
+#: modules/llms/includes/admin/class-tab.php:77
+msgid ""
+"One per language. The default language's file links the others at the end by "
+"itself."
+msgstr "Un per idioma. El fitxer de l'idioma principal enllaça els altres al final tot sol."
+
+#: modules/llms/includes/admin/class-tab.php:90
+msgid "Replace the text with the draft? Nothing is saved until you press Save."
+msgstr "Vols substituir el text per l'esborrany? No es desa res fins que premis Desa."
+
+#: modules/llms/includes/admin/class-tab.php:91
+msgid "Generate draft"
+msgstr "Genera un esborrany"
+
+#: modules/llms/includes/admin/class-tab.php:105
+msgid ""
+"Its «LLMS Txt» module is on, and while this module is on, the file served is "
+"this one: Rank Math's is not seen. Turn one of the two off (in Rank Math → "
+"Dashboard → Modules, or in Estrategia Web → Modules)."
+msgstr "El seu mòdul «LLMS Txt» està activat i, mentre aquest mòdul ho estigui, el fitxer que se serveix és aquest: el de Rank Math no es veu. Desactiva'n un dels dos (a Rank Math → Tauler → Mòduls, o a Estrategia Web → Mòduls)."
+
+#: modules/llms/includes/admin/class-tab.php:105
+msgid "Rank Math also serves /llms.txt."
+msgstr "Rank Math també serveix /llms.txt."
+
+#: modules/llms/includes/admin/class-tab.php:108
+msgid ""
+"The web server sends that file before WordPress runs, so what is written "
+"here is not seen. Delete the file from the server (it is next to wp-config."
+"php)."
+msgstr "El servidor web envia aquest fitxer abans que s'executi WordPress, així que el que s'escriu aquí no es veu. Esborra el fitxer del servidor (és al costat de wp-config.php)."
+
+#: modules/llms/includes/admin/class-tab.php:108
+msgid "There is a llms.txt file in the website's folder."
+msgstr "Hi ha un fitxer llms.txt a la carpeta del web."
+
+#: modules/llms/includes/admin/class-tab.php:153
+msgid "Pages"
+msgstr "Pàgines"
+
+#: modules/llms/includes/class-runtime.php:36
+msgid "The llms.txt text of each language, by language code."
+msgstr "El text de llms.txt de cada idioma, per codi d'idioma."
+
+#: modules/llms/includes/class-runtime.php:88
+msgid "Other languages"
+msgstr "Altres idiomes"
+
+#: modules/llms/module.php
+msgctxt "module description"
+msgid ""
+"Serves /llms.txt, the text AI assistants read to describe the site, written "
+"in «Estrategia Web › Settings › llms.txt», one per language with WPML."
+msgstr "Serveix /llms.txt, el text que llegeixen els assistents d'IA per descriure el web, escrit a «Estrategia Web › Paràmetres › llms.txt», un per idioma amb WPML."
+
+#: modules/llms/module.php
+msgctxt "module name"
+msgid "llms.txt"
+msgstr "llms.txt"
 
 #: modules/local-business/includes/class-settings.php:44
 #: modules/local-business/includes/class-settings.php:77
