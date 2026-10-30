@@ -47,6 +47,11 @@ test( 'with JS: submits without reloading, announces via aria-live and is stored
 	assert.equal( c.values.live, 'polite' );
 	assert.equal( c.values.sameDocument, true, 'there was no reload' );
 	assert.equal( c.values.nombre, '', 'the form is cleared after submitting' );
+	// 2.3.0: a success that cannot be missed (David, 29-10-2026).
+	assert.equal( c.values.sentClass, true, 'the form is marked is-sent' );
+	assert.equal( c.values.successClass, true, 'the message is dressed as a success' );
+	assert.equal( c.values.fieldsShown, false, 'the fields are hidden once sent' );
+	assert.equal( c.values.focus, 'af-contacto-status', 'the focus goes to the message' );
 	assert.equal( c.values.state.submissions.length, 1, 'this one: the rejected one was not stored' );
 	assert.equal( c.values.state.mails.length, 3, 'three notifications' );
 	// The 422 of the case before (the server's answer to the rejected one) is the only expected console line.

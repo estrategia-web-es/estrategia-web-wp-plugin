@@ -8,7 +8,11 @@
  *
  * What it does:
  * - submit: sends the form with fetch, shows the message in the aria-live
- *   area and marks the fields the server reports as invalid.
+ *   area and marks the fields the server reports as invalid. When it went
+ *   well (2.3.0) context.sent hides the fields (.is-sent) and dresses the
+ *   message (.is-success), and the focus goes to the message, scrolled to
+ *   the middle of the screen: on a phone the button is often at the bottom
+ *   and a line of text under it went unseen (David, 29-10-2026).
  * - start (first focus): if the page comes from an old cache and its token
  *   is older than 12 hours, it asks for a new one. It does not always ask:
  *   the token carries the time the page was rendered, which is what measures
@@ -54,6 +58,19 @@ function showErrors( form, errors ) {
 	}
 }
 
+// After the class change has been painted: hidden fields shorten the page.
+function showSent( form ) {
+	const status = form.querySelector( '.estrategia-web-forms__status' );
+	if ( ! status ) {
+		return;
+	}
+	window.requestAnimationFrame( () => {
+		const still = window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
+		status.focus( { preventScroll: true } );
+		status.scrollIntoView( { block: 'center', behavior: still ? 'auto' : 'smooth' } );
+	} );
+}
+
 store( 'estrategia-web-forms', {
 	actions: {
 		*start() {
@@ -94,6 +111,7 @@ store( 'estrategia-web-forms', {
 			ctx.busy = true;
 			ctx.message = '';
 			ctx.isError = false;
+			ctx.sent = false;
 			clearErrors( form );
 
 			const body = new FormData( form );
@@ -110,6 +128,8 @@ store( 'estrategia-web-forms', {
 				ctx.message = data.message || '';
 				if ( data.ok ) {
 					form.reset();
+					ctx.sent = true;
+					showSent( form );
 					// 1.1.0: signal for whoever measures conversions (modules/google-tags).
 					// Only the form name, never what was typed. Without JS (submission
 					// with redirect) the page that comes back fires it instead

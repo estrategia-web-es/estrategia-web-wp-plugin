@@ -9,6 +9,23 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.3.0 — 30-10-2026
+
+**What each site must do:** nothing, but it LOOKS different: after a
+successful submission the form's fields disappear and only the message
+stays, now a green box with a check. A child that wants other colours sets
+`--estrategia-web-forms-success` (and `-success-background`) on
+`.estrategia-web-forms`. Check it on each site's forms when it is deployed.
+
+- Forms: David, 29-10-2026, testing estrategiaweb.es: «el aviso que aparece
+  al enviar el formulario es muy discreto». `context.sent` (rendered by the
+  server too, so the no-JS return looks the same) puts `.is-sent` on the
+  form and `.is-success` on the message; with JS the focus moves to the
+  message and it is scrolled to the middle of the screen (on a phone the
+  button is often at the bottom). `role="status"` and `aria-live` stay.
+- Tests: the scenarios 20-forms-js and 21-forms-no-js capture both classes,
+  the hidden fields and the focus.
+
 ## 2.2.0 — 30-10-2026 (the `ew-web2026` branch joins `main`)
 
 **What each site must do:** nothing. Both new modules are OFF by default.

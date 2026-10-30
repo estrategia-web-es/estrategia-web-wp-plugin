@@ -23,6 +23,8 @@
       "label": "returned",
       "values": {
         "status": "document.getElementById('af-contacto-status').textContent",
+        "sentClass": "document.getElementById('af-contacto').classList.contains('is-sent')",
+        "successClass": "document.getElementById('af-contacto-status').classList.contains('is-success')",
         "state": "fetch('/wp-json/estrategia-web-forms-test/v1/state').then((r) => r.json())"
       }
     } }

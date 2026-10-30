@@ -4,7 +4,7 @@ Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.2.0
+Stable tag: 2.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,9 @@ Its settings, yes. Your data (form submissions, redirects, company details) is k
 The cookie list includes an extract of the Open Cookie Database (https://github.com/jkwakman/Open-Cookie-Database), © Jan Kwakman and contributors, Apache License 2.0. Details in modules/consent/data/NOTICE.
 
 == Changelog ==
+
+= 2.3.0 =
+* Forms: once sent, the fields are hidden and the success message is a box that cannot be missed, focused and scrolled into view.
 
 = 2.2.0 =
 * New module: Banners, by zone and dates, with view and click statistics and a migration from AdRotate. Off by default.

@@ -161,6 +161,13 @@ Nothing to code: install the plugin and use the blocks. To style it:
   and error colour are variables: `--estrategia-web-forms-border`,
   `--estrategia-web-forms-radius`, `--estrategia-web-forms-padding`, `--estrategia-web-forms-gap`,
   `--estrategia-web-forms-error`, in the child's CSS on `.estrategia-web-forms`.
+- **Once sent** (2.3.0) the form gets `.is-sent`, which hides its fields,
+  and the message `.estrategia-web-forms__status.is-success`: a box with a
+  check, in `--estrategia-web-forms-success` and
+  `--estrategia-web-forms-success-background`; the text colour is inherited.
+  With JS the focus goes to it and it is scrolled to the middle of the
+  screen; without JS the page comes back at its anchor showing the same.
+  To send another one, reload.
 - The `.estrategia-web-forms__*` classes are stable across minor versions.
 - **The dropdown arrow** is the browser's native one: the plugin does not
   remove it. A theme that wants its own chevron sets `appearance: none` and

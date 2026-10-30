@@ -45,6 +45,10 @@
         "live": "document.getElementById('af-contacto-status').getAttribute('aria-live')",
         "sameDocument": "window.__sameDocument === true",
         "nombre": "document.getElementById('af-contacto-nombre').value",
+        "sentClass": "document.getElementById('af-contacto').classList.contains('is-sent')",
+        "successClass": "document.getElementById('af-contacto-status').classList.contains('is-success')",
+        "fieldsShown": "getComputedStyle(document.querySelector('#af-contacto .estrategia-web-forms__fields')).display !== 'none'",
+        "focus": "new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r(document.activeElement?.id))))",
         "state": "fetch('/wp-json/estrategia-web-forms-test/v1/state').then((r) => r.json())"
       }
     } }

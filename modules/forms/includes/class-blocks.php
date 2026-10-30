@@ -75,6 +75,7 @@ final class Blocks {
 		$context = array(
 			'message'  => $result['message'] ?? '',
 			'isError'  => isset( $result['status'] ) && 'ok' !== $result['status'],
+			'sent'     => 'ok' === ( $result['status'] ?? '' ),
 			'busy'     => false,
 			'started'  => false,
 			'tokenUrl'     => rest_url( 'estrategia-web-forms/v1/token' ),
@@ -95,6 +96,7 @@ final class Blocks {
 		<form <?php echo $wrapper; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes. ?>
 			data-wp-interactive="estrategia-web-forms"
 			<?php echo wp_interactivity_data_wp_context( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			data-wp-class--is-sent="context.sent"
 			data-wp-on--submit="actions.submit"
 			data-wp-on--focusin="actions.start">
 			<input type="hidden" name="_af_def" value="<?php echo esc_attr( $hash ); ?>">
@@ -109,7 +111,7 @@ final class Blocks {
 				<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML of the inner blocks, already escaped by each one. ?>
 			</div>
 			<div id="<?php echo esc_attr( $dom_id ); ?>-status" class="estrategia-web-forms__status" role="status" aria-live="polite" tabindex="-1"
-				data-wp-text="context.message" data-wp-class--is-error="context.isError"><?php echo esc_html( $context['message'] ); ?></div>
+				data-wp-text="context.message" data-wp-class--is-error="context.isError" data-wp-class--is-success="context.sent"><?php echo esc_html( $context['message'] ); ?></div>
 		</form>
 		<?php
 		return (string) ob_get_clean() . self::announce( $dom_id, $result );

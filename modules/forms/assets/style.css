@@ -29,6 +29,8 @@
 	--estrategia-web-forms-radius: 4px;
 	--estrategia-web-forms-padding: 0.6em 0.75em;
 	--estrategia-web-forms-error: #b32d2e;
+	--estrategia-web-forms-success: #1d7a3e;
+	--estrategia-web-forms-success-background: color-mix(in srgb, var(--estrategia-web-forms-success) 10%, transparent);
 	position: relative;
 }
 
@@ -105,6 +107,50 @@
 
 .estrategia-web-forms__status {
 	margin-top: var(--estrategia-web-forms-gap);
+}
+
+/* Sent (2.3.0): the fields go away and the message is a box that cannot be
+   missed (David, 29-10-2026: «el aviso es muy discreto»). Text colour is
+   inherited, so it reads on any background; the theme dresses it with
+   --estrategia-web-forms-success and -success-background. The fields rule
+   needs two classes (the form's state): the exception to the one-class
+   rule above, and nothing a theme should want to override. Without JS the
+   page that comes back after sending shows the same thing (the server
+   renders context.sent). */
+.estrategia-web-forms.is-sent .estrategia-web-forms__fields {
+	display: none;
+}
+
+.estrategia-web-forms__status.is-success {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.75em;
+	margin-top: 0;
+	padding: 1em 1.25em;
+	border: 1px solid var(--estrategia-web-forms-success);
+	border-inline-start-width: 4px;
+	border-radius: var(--estrategia-web-forms-radius);
+	background-color: var(--estrategia-web-forms-success-background);
+	font-weight: 600;
+}
+
+.estrategia-web-forms__status.is-success::before {
+	content: "";
+	flex: none;
+	inline-size: 1.25em;
+	block-size: 1.25em;
+	margin-top: 0.1em;
+	border-radius: 50%;
+	background: var(--estrategia-web-forms-success) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3.2L15 6.8' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 80% no-repeat;
+}
+
+.estrategia-web-forms__status.is-success:focus {
+	outline: none;
+}
+
+.estrategia-web-forms__status.is-success:focus-visible {
+	outline: 2px solid var(--estrategia-web-forms-success);
+	outline-offset: 2px;
 }
 
 [aria-invalid="true"] {

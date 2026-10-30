@@ -24,5 +24,7 @@ test( 'without JS: normal POST, redirect and message on the page, stored', () =>
 	const c = get( null, 'returned' );
 	assert.match( c.page.url, /\/contacto\/\?af_result=[a-z0-9]+#af-contacto-status$/ );
 	assert.match( c.values.status, /Thank you|Gracias/ );
+	assert.equal( c.values.sentClass, true, 'the server renders the form as sent (2.3.0)' );
+	assert.equal( c.values.successClass, true, 'and the message dressed as a success' );
 	assert.equal( c.values.state.submissions.filter( ( row ) => row.page_url.includes( '/contacto/' ) ).length, 1, 'the no-JS submission is stored' );
 } );
