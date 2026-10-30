@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Site;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * The company data: ONE option, `estrategia_web_site` (array), registered with
  * the Settings API and exposed over REST (/wp/v2/settings) with its schema.
@@ -68,10 +72,6 @@
  *   removing a value from the enabled_types or matomo_mode enum is a major
  *   version.
  */
-
-namespace EstrategiaWeb\Site;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Settings {
 

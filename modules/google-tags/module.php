@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\GoogleTags;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Module Name: Google tags
  * Description: Google Analytics 4, Google Ads (with an optional conversion for form submissions) and Google Tag Manager behind the cookie notice, with Consent Mode v2. An empty field loads nothing.
@@ -46,10 +50,6 @@
  *   sends data to Google before consent (cookieless pings, with the IP). That
  *   is why it is not the default. See the class header.
  */
-
-namespace EstrategiaWeb\GoogleTags;
-
-defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/includes/class-google-tags.php';
 

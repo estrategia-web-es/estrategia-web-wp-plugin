@@ -1,0 +1,42 @@
+{
+  "title": "Map + notice: nothing to third parties before consent; the Google Maps iframe after «Accept all»",
+  "description": "estrategia-web/map WITH the cookie notice (consent on, a theme that declares «maps», as Lavandería's functions.php does), on /prueba-mapa-estatico/: with the notice unanswered the page asks NOTHING from another host (that would send the visitor's IP to a third party), no iframe has a src, the static map is seen and served by the site itself (currentSrc, the srcset size the browser picked); after «Accept all» the Google Maps iframe has its src and is seen. Requests to other hosts are ABORTED and recorded. Read by browser-map-consent. It was the first visitor of map-consent.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "initScripts": ["tests/browser-probes.js"],
+  "network": { "foreign": "abort" },
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": { "modules": ["carousel", "map", "whatsapp", "language-switcher", "consent"], "consent": { "categories": ["maps"] } } },
+      { "path": "/estrategia-web-map-test/v1/seed", "method": "POST" }
+    ] } },
+    { "type": "setViewport", "width": 1280, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/prueba-mapa-estatico/" },
+    { "type": "scroll", "x": 0, "y": 20000 },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "unanswered",
+      "values": {
+        "noticeSeen": "__seen(document.getElementById('estrategia-web-consent'))",
+        "framed": "__all('iframe').map((e) => e.getAttribute('src') || '').filter(Boolean)",
+        "statics": "document.querySelectorAll('.estrategia-web-map img.estrategia-web-map__static').length"
+      }
+    } },
+    { "type": "customStep", "name": "scrollIntoView", "parameters": { "selectors": [".estrategia-web-map img.estrategia-web-map__static"] } },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "static",
+      "save": ["console", "network"],
+      "values": {
+        "info": "(() => { const e = __q('.estrategia-web-map img.estrategia-web-map__static'); return { src: e.currentSrc || e.src, natural: e.naturalWidth, width: e.getBoundingClientRect().width }; })()"
+      }
+    } },
+    { "type": "click", "selectors": ["aria/Aceptar todas[role=\"button\"]", "#estrategia-web-consent [data-estrategia-web-consent-action=\"accept\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "customStep", "name": "scrollIntoView", "parameters": { "selectors": [".estrategia-web-map iframe.estrategia-web-map__iframe"] } },
+    { "type": "waitForExpression", "expression": "!!document.querySelector('.estrategia-web-map iframe')?.getAttribute('src')" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "accepted",
+      "values": {
+        "src": "__q('.estrategia-web-map iframe.estrategia-web-map__iframe').getAttribute('src')",
+        "seen": "__seen(__q('.estrategia-web-map iframe.estrategia-web-map__iframe'))"
+      }
+    } }
+  ]
+}

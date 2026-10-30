@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\ContentTypes;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * A LOCATION'S DATA, STORED ONCE (2.0.0, David, 27-10-2026: «los datos
  * duplicados se separan»). Up to 1.7.0 a location kept the same thing twice
@@ -64,10 +68,6 @@
  *   what they could not read and compares the derived text with the old one
  *   (a DIFFERENCE is shown, never hidden). Nothing at render time parses.
  */
-
-namespace EstrategiaWeb\ContentTypes;
-
-defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/class-hours.php';
 
@@ -217,7 +217,7 @@ final class Location_Data {
 		if ( '' === $url ) {
 			return null;
 		}
-		$parts = parse_url( $url );
+		$parts = wp_parse_url( $url );
 		if ( ! is_array( $parts ) || ! preg_match( '/(^|\.)google\.[a-z.]+$/i', (string) ( $parts['host'] ?? '' ) ) ) {
 			return null;
 		}
@@ -248,7 +248,7 @@ final class Location_Data {
 			$q = trim( urldecode( $m[1] ) );
 			return '' !== $q ? $q : null;
 		}
-		$parts = parse_url( $url );
+		$parts = wp_parse_url( $url );
 		parse_str( (string) ( is_array( $parts ) ? ( $parts['query'] ?? '' ) : '' ), $args );
 		return isset( $args['q'] ) && is_string( $args['q'] ) && '' !== trim( $args['q'] ) ? trim( $args['q'] ) : null;
 	}

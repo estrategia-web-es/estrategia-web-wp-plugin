@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Site;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * The site's COOKIE REGISTRY: which cookies exist, whose they are, what they
  * are for, how long they last and which notice category they belong to. It
@@ -60,10 +64,6 @@
  *   (_ga_*, wp-settings-*) and the lookup checks the EXACT name (_ga) before
  *   any pattern.
  */
-
-namespace EstrategiaWeb\Site;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Cookie_Registry {
 

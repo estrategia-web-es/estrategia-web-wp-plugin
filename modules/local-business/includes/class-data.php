@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\LocalBusiness;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * WHAT THE GRAPH IS MADE OF, read from WordPress: the company (site's
  * Company and the social module's links), the locations (the location type
@@ -45,13 +49,9 @@
  *   language; without that the front page would list four departments.
  */
 
-namespace EstrategiaWeb\LocalBusiness;
-
 use EstrategiaWeb\Site\Company;
 use EstrategiaWeb\Site\Location;
 use EstrategiaWeb\Site\Type_Names;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Data {
 
@@ -234,7 +234,7 @@ final class Data {
 				'post_status'      => 'publish',
 				'numberposts'      => 100,
 				'orderby'          => array( 'menu_order' => 'ASC', 'title' => 'ASC' ),
-				'suppress_filters' => true,
+				'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- deliberate: every language (see the header).
 			)
 		);
 		$out = array();

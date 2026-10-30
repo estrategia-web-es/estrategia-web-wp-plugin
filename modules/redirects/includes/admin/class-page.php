@@ -263,7 +263,7 @@ final class Page {
 				<tr>
 					<th scope="row"><label for="ew-source"><?php esc_html_e( 'Source', 'estrategia-web' ); ?></label></th>
 					<td><input name="source" id="ew-source" type="text" class="large-text code" required value="<?php echo esc_attr( $rule['source'] ); ?>" placeholder="/old-page/" />
-					<p class="description"><?php esc_html_e( 'The old path, without the domain. Upper case, a final slash and any extra ?parameters are ignored when matching; ?p=123 and ?page_id=123 are the same, and so are %3F and ?.', 'estrategia-web' ); ?></p></td>
+					<p class="description"><?php /* translators: "%3F" is the URL-encoded "?", not a placeholder: keep it as is. */ esc_html_e( 'The old path, without the domain. Upper case, a final slash and any extra ?parameters are ignored when matching; ?p=123 and ?page_id=123 are the same, and so are %3F and ?.', 'estrategia-web' ); ?></p></td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="ew-type"><?php esc_html_e( 'Type', 'estrategia-web' ); ?></label></th>

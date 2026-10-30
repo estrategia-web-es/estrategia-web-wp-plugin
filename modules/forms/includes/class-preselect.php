@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Forms;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Which option of a dropdown comes preselected when the form is rendered.
  *
@@ -51,10 +55,6 @@
  *   preselection included. Opening and saving the page does NOT wipe it:
  *   tests/admin.test.mjs checks that.
  */
-
-namespace EstrategiaWeb\Forms;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Preselect {
 

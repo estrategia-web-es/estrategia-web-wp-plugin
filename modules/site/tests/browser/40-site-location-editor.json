@@ -1,0 +1,69 @@
+{
+  "title": "A location in the block editor: bound paragraphs show their values, the sources declare their fields, and the wide «Datos de la sede» box saves what is typed with the editor's Save",
+  "description": "The site module's sources and the location's fields box, ONE login and ONE editor boot on a location whose content is four paragraphs bound to estrategia-web-site/company (phone, tax_id) and estrategia-web-site/location (maioris: phone, email): the canvas shows the values, or the field's name in brackets when empty; the sources declare their label, fields and the Query context, and are not editable. Since 2.0.0 the location edits its fields in a wide box in the MAIN area, grouped, with no sidebar panel; what is typed there — and filled by its JavaScript, «Copiar el lunes» — is saved by the editor's Save (the legacy meta box posted after the post's own save: the scenario waits for that request, not a time). The real case: changing the Maioris location's phone from its edit screen (07-10-2026). Read by browser-site-location-editor. It was meta-panel-editor.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "timeout": 20000,
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": { "company": { "phone": "971 12 34 56", "email": "hola@ejemplo.test", "enabled_types": ["location"] } } },
+      { "path": "/estrategia-web-ct-test/v1/batch", "as": "loc", "body": { "requests": [
+        { "method": "POST", "path": "/wp/v2/eweb_location", "body": { "title": "Maioris", "slug": "maioris", "status": "publish", "meta": { "estrategia_web_location_phone": "971 00 00 00", "estrategia_web_location_locality": "Llucmajor" },
+          "content": "<!-- wp:paragraph {\"metadata\":{\"bindings\":{\"content\":{\"source\":\"estrategia-web-site/company\",\"args\":{\"key\":\"phone\"}}}}} -->\n<p>Placeholder text</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph {\"metadata\":{\"bindings\":{\"content\":{\"source\":\"estrategia-web-site/company\",\"args\":{\"key\":\"tax_id\"}}}}} -->\n<p>Placeholder text</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph {\"metadata\":{\"bindings\":{\"content\":{\"source\":\"estrategia-web-site/location\",\"args\":{\"slug\":\"maioris\",\"key\":\"estrategia_web_location_phone\"}}}}} -->\n<p>Placeholder text</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph {\"metadata\":{\"bindings\":{\"content\":{\"source\":\"estrategia-web-site/location\",\"args\":{\"slug\":\"maioris\",\"key\":\"estrategia_web_location_email\"}}}}} -->\n<p>Placeholder text</p>\n<!-- /wp:paragraph -->" } }
+      ] } }
+    ] } },
+    { "type": "setViewport", "width": 1400, "height": 1000, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/wp-login.php?redirect_to=%2Fwp-admin%2Fpost.php%3Fpost%3D{{@loc.0.json.id}}%26action%3Dedit" },
+    { "type": "change", "selectors": ["#user_login"], "value": "admin" },
+    { "type": "change", "selectors": ["#user_pass"], "value": "password" },
+    { "type": "click", "selectors": ["#wp-submit"], "offsetX": 10, "offsetY": 10, "assertedEvents": [{ "type": "navigation" }] },
+    { "type": "waitForExpression", "timeout": 60000, "expression": "window.wp?.data?.select('core/block-editor')?.getBlocks().length === 4" },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "window.wp.data.dispatch('core/preferences')?.set('core/edit-post', 'welcomeGuide', false)" } },
+    { "type": "waitForElement", "selectors": ["#estrategia-web-content-types"] },
+    { "type": "waitForExpression", "expression": "[...(document.querySelector('iframe[name=\"editor-canvas\"]')?.contentDocument?.querySelectorAll('p.wp-block-paragraph') || [])].some((p) => p.textContent.includes('971 12 34 56'))" },
+    { "type": "waitForExpression", "expression": "[...(document.querySelector('iframe[name=\"editor-canvas\"]')?.contentDocument?.querySelectorAll('p.wp-block-paragraph') || [])].some((p) => p.textContent.includes('971 00 00 00'))" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "bindings",
+      "settle": [],
+      "values": {
+        "paragraphs": "[...document.querySelector('iframe[name=\"editor-canvas\"]').contentDocument.querySelectorAll('p.wp-block-paragraph')].map((p) => p.textContent.trim())",
+        "company": "(() => { const s = wp.blocks.getBlockBindingsSource('estrategia-web-site/company'); return s && { label: s.label, fields: s.getFieldsList?.({}).map((f) => f.args.key), editable: Boolean(s.setValues || s.canUserEditValue?.({})) }; })()",
+        "location": "(() => { const s = wp.blocks.getBlockBindingsSource('estrategia-web-site/location'); return s && { label: s.label, fields: s.getFieldsList?.({}).map((f) => f.args.key), context: s.usesContext }; })()"
+      }
+    } },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "box",
+      "settle": [],
+      "values": {
+        "title": "document.querySelector('#estrategia-web-content-types h2')?.textContent",
+        "panels": "document.querySelectorAll('.estrategia-web-content-types-panel').length",
+        "panelScript": "typeof window.estrategiaWebContentTypesPanel",
+        "groups": "[...document.querySelectorAll('#estrategia-web-content-types details.estrategia-web-ct-group > summary')].map((s) => s.textContent)",
+        "googleOpen": "document.querySelector('#estrategia-web-content-types details[data-group=\"google\"]')?.getAttribute('open')",
+        "width": "document.getElementById('estrategia-web-content-types').getBoundingClientRect().width",
+        "phone": "document.querySelector('#estrategia-web-content-types [data-meta-key=\"estrategia_web_location_phone\"] input').value"
+      }
+    } },
+    { "type": "change", "selectors": ["#estrategia-web-content-types [data-meta-key=\"estrategia_web_location_phone\"] input"], "value": "971 99 88 77" },
+    { "type": "change", "selectors": ["#estrategia-web-content-types [data-meta-key=\"estrategia_web_location_street\"] textarea"], "value": "Centro Comercial Maioris\nCalle Imperial, 2, Local 12" },
+    { "type": "change", "selectors": ["#estrategia-web-content-types [data-meta-key=\"estrategia_web_location_hours\"] input[data-day=\"mo\"]"], "value": "08:00-23:00" },
+    { "type": "click", "selectors": ["xpath///*[@id='estrategia-web-content-types']//*[@data-meta-key='estrategia_web_location_hours']//button[contains(., 'Copiar el lunes')]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "filled",
+      "settle": [],
+      "values": {
+        "sunday": "document.querySelector('#estrategia-web-content-types [data-meta-key=\"estrategia_web_location_hours\"] input[data-day=\"su\"]').value",
+        "mediaButton": "document.querySelector('#estrategia-web-content-types [data-meta-key=\"estrategia_web_location_static_map_id\"] button')?.textContent"
+      }
+    } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "window.wp.data.dispatch('core/editor').savePost()" } },
+    { "type": "waitForExpression", "timeout": 30000, "expression": "!window.wp.data.select('core/editor').isSavingPost()" },
+    { "type": "customStep", "name": "request", "timeout": 30000, "parameters": { "url": "meta-box-loader=1", "method": "POST" } },
+    { "type": "waitForExpression", "timeout": 30000, "expression": "!window.wp.data.select('core/edit-post').isSavingMetaBoxes?.()" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "saved",
+      "settle": [],
+      "save": ["console"],
+      "values": { "meta": "wp.apiFetch({ path: '/wp/v2/eweb_location/{{@loc.0.json.id}}?context=edit' }).then((p) => p.meta)" }
+    } }
+  ]
+}

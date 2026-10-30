@@ -1,0 +1,53 @@
+{
+  "title": "The «hours» control of the fields panel: a week entered there — ranges, «same as the day before», the warning on a range that will not be kept — is stored canonical",
+  "description": "The content-types fields panel's hours control (assets/fields-panel.js) on a location draft whose stored copy of the location template is switched to the sidebar (fields_box: sidebar, which a site may do; since 2.0.0 the template edits in the main area: /estrategia-web-ct-test/v1/template-copy). A person adds Monday's range, copies it down to Saturday, gets the warning on Sunday's 10:00-10:00 (tied to the range), and the save stores Monday to Saturday canonical and not Sunday. The day names are core's (WP_Locale: Spanish only if WordPress has its es_ES pack): what OUR code does — the day's name as the group's legend and in each input's label — is checked in either language. Read by browser-ct-hours-panel. It was the first test of hours-editor.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "timeout": 20000,
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": { "company": { "enabled_types": ["location"] } } },
+      { "path": "/estrategia-web-ct-test/v1/template-copy", "as": "side", "body": { "type": "eweb_location", "fields_box": "sidebar" } },
+      { "path": "/estrategia-web-ct-test/v1/batch", "as": "loc", "body": { "requests": [{ "method": "POST", "path": "/wp/v2/eweb_location", "body": { "title": "Son Oms", "status": "draft" } }] } }
+    ] } },
+    { "type": "setViewport", "width": 1400, "height": 1100, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/wp-login.php?redirect_to=%2Fwp-admin%2Fpost.php%3Fpost%3D{{@loc.0.json.id}}%26action%3Dedit" },
+    { "type": "change", "selectors": ["#user_login"], "value": "admin" },
+    { "type": "change", "selectors": ["#user_pass"], "value": "password" },
+    { "type": "click", "selectors": ["#wp-submit"], "offsetX": 10, "offsetY": 10, "assertedEvents": [{ "type": "navigation" }] },
+    { "type": "waitForExpression", "timeout": 60000, "expression": "!!window.wp?.data?.select('core/editor')?.getCurrentPostType()" },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "(() => { wp.data.dispatch('core/preferences')?.set('core/edit-post', 'welcomeGuide', false); wp.data.dispatch('core/edit-post')?.openGeneralSidebar?.('edit-post/document'); })()" } },
+    { "type": "waitForElement", "selectors": ["[data-meta-key=\"estrategia_web_location_hours\"]"] },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "empty", "settle": [], "values": {
+      "legend": "document.querySelector('[data-meta-key=\"estrategia_web_location_hours\"] [data-day=\"mo\"] legend').textContent",
+      "monday": "document.querySelector('[data-meta-key=\"estrategia_web_location_hours\"] [data-day=\"mo\"]').textContent"
+    } } },
+    { "type": "click", "selectors": ["[data-meta-key=\"estrategia_web_location_hours\"] [data-day=\"mo\"] [data-action=\"add-range\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "monday-range", "settle": [], "values": {
+      "inputs": "document.querySelectorAll('[data-meta-key=\"estrategia_web_location_hours\"] [data-day=\"mo\"] [data-range=\"0\"] input[type=\"time\"]').length"
+    } } },
+    { "type": "change", "selectors": ["xpath/(//*[@data-meta-key='estrategia_web_location_hours']//*[@data-day='mo']//*[@data-range='0']//input[@type='time'])[1]"], "value": "08:00" },
+    { "type": "change", "selectors": ["xpath/(//*[@data-meta-key='estrategia_web_location_hours']//*[@data-day='mo']//*[@data-range='0']//input[@type='time'])[2]"], "value": "16:00" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "labels", "settle": [], "values": {
+      "id": "document.querySelector('[data-meta-key=\"estrategia_web_location_hours\"] [data-day=\"mo\"] [data-range=\"0\"] input[type=\"time\"]').id",
+      "label": "(() => { const id = document.querySelector('[data-meta-key=\"estrategia_web_location_hours\"] [data-day=\"mo\"] [data-range=\"0\"] input[type=\"time\"]').id; return document.querySelector('label[for=\"' + id + '\"]')?.textContent; })()"
+    } } },
+    { "type": "click", "selectors": ["[data-meta-key=\"estrategia_web_location_hours\"] [data-day=\"tu\"] [data-action=\"copy-previous\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "click", "selectors": ["[data-meta-key=\"estrategia_web_location_hours\"] [data-day=\"we\"] [data-action=\"copy-previous\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "click", "selectors": ["[data-meta-key=\"estrategia_web_location_hours\"] [data-day=\"th\"] [data-action=\"copy-previous\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "click", "selectors": ["[data-meta-key=\"estrategia_web_location_hours\"] [data-day=\"fr\"] [data-action=\"copy-previous\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "click", "selectors": ["[data-meta-key=\"estrategia_web_location_hours\"] [data-day=\"sa\"] [data-action=\"copy-previous\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "click", "selectors": ["[data-meta-key=\"estrategia_web_location_hours\"] [data-day=\"su\"] [data-action=\"add-range\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "change", "selectors": ["xpath/(//*[@data-meta-key='estrategia_web_location_hours']//*[@data-day='su']//*[@data-range='0']//input[@type='time'])[1]"], "value": "10:00" },
+    { "type": "change", "selectors": ["xpath/(//*[@data-meta-key='estrategia_web_location_hours']//*[@data-day='su']//*[@data-range='0']//input[@type='time'])[2]"], "value": "10:00" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "warning", "settle": [], "values": {
+      "text": "document.querySelector('[data-meta-key=\"estrategia_web_location_hours\"] [data-day=\"su\"] [role=\"status\"]')?.textContent",
+      "id": "document.querySelector('[data-meta-key=\"estrategia_web_location_hours\"] [data-day=\"su\"] [role=\"status\"]')?.id",
+      "describedby": "document.querySelector('[data-meta-key=\"estrategia_web_location_hours\"] [data-day=\"su\"] [data-range=\"0\"] input[type=\"time\"]').getAttribute('aria-describedby')"
+    } } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "wp.data.dispatch('core/editor').savePost()" } },
+    { "type": "waitForExpression", "timeout": 30000, "expression": "!wp.data.select('core/editor').isSavingPost()" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "stored", "settle": [], "save": ["console"], "values": {
+      "hours": "wp.data.select('core/editor').getCurrentPost().meta.estrategia_web_location_hours"
+    } } }
+  ]
+}

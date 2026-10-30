@@ -1,0 +1,29 @@
+{
+  "title": "The map, WhatsApp and carousel blocks in the editor: registered and translated, insert valid, the map's server preview arrives",
+  "description": "The three block modules that came from the theme, in ONE editor boot: estrategia-web/map, estrategia-web/whatsapp and estrategia-web/carousel exist with their Spanish titles (the test site's locale), the WhatsApp autoRegister control carries its translated label (labels.php), they insert valid (the carousel with two inner blocks) and the map's server preview (ServerSideRender) arrives in the canvas. Logs in through wp-login.php (Playground's --login does not serve a new browser). Read by browser-blocks-editor. It was map-editor.test.mjs and the editor test of carousel.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "timeout": 30000,
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": { "modules": ["carousel", "map", "whatsapp", "language-switcher"] } }
+    ] } },
+    { "type": "setViewport", "width": 1400, "height": 1000, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/wp-login.php?redirect_to=%2Fwp-admin%2Fpost-new.php%3Fpost_type%3Dpage" },
+    { "type": "change", "selectors": ["#user_login"], "value": "admin" },
+    { "type": "change", "selectors": ["#user_pass"], "value": "password" },
+    { "type": "click", "selectors": ["#wp-submit"], "offsetX": 10, "offsetY": 10, "assertedEvents": [{ "type": "navigation" }] },
+    { "type": "waitForExpression", "timeout": 60000, "expression": "!!(window.wp?.blocks?.getBlockType?.('core/paragraph') && wp.blocks.getBlockType('estrategia-web/map') && wp.blocks.getBlockType('estrategia-web/whatsapp') && wp.blocks.getBlockType('estrategia-web/carousel'))" },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "(() => { const { createBlock } = wp.blocks; wp.data.dispatch('core/block-editor').insertBlocks([createBlock('estrategia-web/map', { address: 'Calle Falsa 1' }), createBlock('estrategia-web/whatsapp', { phone: '34600111222' }), createBlock('estrategia-web/carousel', {}, [createBlock('core/paragraph', { content: 'Uno' }), createBlock('core/paragraph', { content: 'Dos' })])]); })()" } },
+    { "type": "waitForExpression", "expression": "!!document.querySelector('iframe[name=\"editor-canvas\"]')?.contentDocument?.body?.innerText.includes('Calle Falsa 1')" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "editor",
+      "save": ["console"],
+      "settle": [],
+      "values": {
+        "titles": "({ map: wp.blocks.getBlockType('estrategia-web/map').title, whatsapp: wp.blocks.getBlockType('estrategia-web/whatsapp').title, carousel: wp.blocks.getBlockType('estrategia-web/carousel').title })",
+        "label": "wp.blocks.getBlockType('estrategia-web/whatsapp').attributes.phone?.label",
+        "inserted": "wp.data.select('core/block-editor').getBlocks().map((b) => [b.name, b.isValid, b.innerBlocks.length])"
+      }
+    } }
+  ]
+}

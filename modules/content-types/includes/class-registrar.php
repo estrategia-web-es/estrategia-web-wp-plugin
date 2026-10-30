@@ -124,7 +124,7 @@ final class Registrar {
 		if ( ! in_array( $what, array( 'draft', 'kept' ), true ) || ! $def ) {
 			return;
 		}
-		$keys   = array_map( 'sanitize_key', explode( ',', isset( $_GET['estrategia_web_ct_fields'] ) ? (string) wp_unslash( $_GET['estrategia_web_ct_fields'] ) : '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$keys   = array_map( 'sanitize_key', explode( ',', isset( $_GET['estrategia_web_ct_fields'] ) ? sanitize_text_field( wp_unslash( $_GET['estrategia_web_ct_fields'] ) ) : '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$locale = determine_locale();
 		$labels = array();
 		foreach ( $def['fields'] as $field ) {

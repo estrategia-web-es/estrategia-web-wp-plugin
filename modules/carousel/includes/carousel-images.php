@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Carousel;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * estrategia-web/carousel — priority, lazy loading and sizes of its images (0.7.4).
  *
@@ -62,10 +66,6 @@
  * theme) and in the EstrategiaWeb\Carousel namespace: images_register(),
  * images_mark()… The FILTERS keep their original names.
  */
-
-namespace EstrategiaWeb\Carousel;
-
-defined( 'ABSPATH' ) || exit;
 
 const PRELOAD_MEDIA = '(min-width: 782px)';
 

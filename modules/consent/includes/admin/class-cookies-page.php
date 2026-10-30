@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Site;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * «Estrategia Web › Settings › Cookies» (manage_options): the cookie registry
  * (includes/class-cookie-registry.php) and the notice settings that are not
@@ -44,12 +48,8 @@
  *   not. Hence one form per row.
  */
 
-namespace EstrategiaWeb\Site;
-
 use EstrategiaWeb\Admin\Admin_UI;
 use EstrategiaWeb\Admin\Settings_Page;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Cookies_Page {
 

@@ -76,7 +76,7 @@ test("1.7.0: only «site» is core, and every other module has a known Category"
   const core = Object.entries(out.available).filter(([, m]) => m.core).map(([s]) => s);
   assert.deepEqual(core, ["site"]);
   const expected = {
-    Content: ["carousel", "comments-off", "content-types", "featured-images", "map"],
+    Content: ["banners", "carousel", "comments-off", "content-types", "featured-images", "map"],
     Contact: ["forms", "social", "whatsapp"],
     "Privacy & analytics": ["consent", "google-tags", "matomo"],
     SEO: ["external-links", "faq-schema", "local-business", "redirects"],

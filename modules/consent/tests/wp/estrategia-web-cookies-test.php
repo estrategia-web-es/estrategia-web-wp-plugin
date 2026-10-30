@@ -69,7 +69,7 @@ add_filter(
 // always (merging defaults and cleaning), so what is tested is what it does
 // with that value; HOW it is saved (REST validation) keeps its own cases.
 // Used by google-tags, matomo, cookie-services, consent and cookie-registry
-// (level 2) and google-tags-browser and matomo-browser (level 3, on the page
+// (level 2) and the google-tags and matomo browser scenarios (on the page
 // URL: reloads keep it) to read several configurations at once instead of
 // save + read each. A new option is added to the list below only if a test
 // needs it; reading pages must not depend on it being there.

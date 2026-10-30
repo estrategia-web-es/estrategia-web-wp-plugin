@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Forms;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * «Forms → Forms» (1.7.0): the forms that exist on the site, the first item
  * of the Forms menu. Read only: a form is edited where it lives (the block,
@@ -58,10 +62,6 @@
  *   the pattern and, under it, the pages using the pattern (one level, the
  *   same rule as above).
  */
-
-namespace EstrategiaWeb\Forms;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Forms_List {
 

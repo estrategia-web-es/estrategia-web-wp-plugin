@@ -1,0 +1,114 @@
+{
+  "title": "The cookie notice, one visitor: first visit, reject, the parent's cookie, the link, accept",
+  "description": "The cookie notice (0.5.0, with the parent theme's contract), ONE visitor's journey on a page with the footer's «Configurar cookies» button: (1) first visit, no choice — consent-ready fires ONCE with null and the API set; Accept and Reject weigh the same (AEPD); «Powered by» visible, smaller, AA contrast MEASURED; ≥ 16 px between text and buttons at 402 and 1512 with Lavandería's :root :where(p) (played by consent-setup); the notice is the first thing when tabbing, Tab leaves it, Escape does not close it without a choice; the JS contract (categories, get, has, grant); (2) «Rechazar todas» stores the cookie in the PARENT's format and revision; the cookie the parent's notice wrote (≤ 0.6.0) is still valid; (3) the link reopens it with focus inside and Escape closes it once chosen; (4) open() + «Aceptar todas»: the event, the deferred script runs; on return the event fires on boot and open() shows the choices ticked. The events are recorded from the first instant by consent-events.js. Read by browser-consent-notice. It was consent-browser.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "initScripts": ["tests/browser-probes.js", "modules/consent/tests/browser/consent-events.js"],
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": {
+        "consent": { "categories": ["statistics", "maps"], "script": true, "powered_by": { "show": true }, "theme_css": ":root :where(p){margin-top:0;margin-bottom:0}" },
+        "pages": [{ "slug": "test-notice", "content": "<!-- wp:paragraph --><p>Footer</p><!-- /wp:paragraph --><!-- wp:estrategia-web-site/consent /-->" }]
+      } }
+    ] } },
+    { "type": "setViewport", "width": 1200, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/test-notice/" },
+    { "type": "waitForElement", "selectors": ["#estrategia-web-consent"], "visible": true },
+    { "type": "waitForExpression", "expression": "window.ready.length > 0" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "first",
+      "save": ["aria"],
+      "values": {
+        "ready": "window.ready",
+        "accept": "(() => { const el = document.querySelector('#estrategia-web-consent [data-estrategia-web-consent-action=\"accept\"]'); const s = getComputedStyle(el); return [s.backgroundColor, s.color, s.fontSize, s.fontWeight, s.paddingTop, s.paddingLeft, s.borderTopWidth, el.offsetHeight].join('|'); })()",
+        "reject": "(() => { const el = document.querySelector('#estrategia-web-consent [data-estrategia-web-consent-action=\"reject\"]'); const s = getComputedStyle(el); return [s.backgroundColor, s.color, s.fontSize, s.fontWeight, s.paddingTop, s.paddingLeft, s.borderTopWidth, el.offsetHeight].join('|'); })()",
+        "powered": "(() => { const el = document.querySelector('.estrategia-web-consent__powered a'); if (!el) return null; let bg = 'rgba(0, 0, 0, 0)'; for (let n = el; n; n = n.parentElement) { const c = getComputedStyle(n).backgroundColor; if (!/rgba\\(.*,\\s*0\\)$/.test(c) && c !== 'transparent') { bg = c; break; } } const s = getComputedStyle(el); const button = getComputedStyle(document.querySelector('.estrategia-web-consent__button')); return { seen: __seen(el), rel: el.getAttribute('rel'), target: el.getAttribute('target'), color: s.color, bg, opacity: s.opacity, size: parseFloat(s.fontSize), buttonSize: parseFloat(button.fontSize) }; })()"
+      }
+    } },
+    { "type": "setViewport", "width": 402, "height": 900 },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "gap-402", "values": {
+      "gap": "(() => { const text = document.querySelector('.estrategia-web-consent__text'); const title = document.querySelector('.estrategia-web-consent__title'); const range = document.createRange(); range.selectNodeContents(text); const lastLine = Math.max(...[...range.getClientRects()].map((r) => r.bottom)); const button = document.querySelector('.estrategia-web-consent__actions').getBoundingClientRect().top; return { gap: button - lastLine, titleGap: text.getBoundingClientRect().top - title.getBoundingClientRect().bottom }; })()"
+    } } },
+    { "type": "setViewport", "width": 1512, "height": 900 },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "gap-1512", "values": {
+      "gap": "(() => { const text = document.querySelector('.estrategia-web-consent__text'); const title = document.querySelector('.estrategia-web-consent__title'); const range = document.createRange(); range.selectNodeContents(text); const lastLine = Math.max(...[...range.getClientRects()].map((r) => r.bottom)); const button = document.querySelector('.estrategia-web-consent__actions').getBoundingClientRect().top; return { gap: button - lastLine, titleGap: text.getBoundingClientRect().top - title.getBoundingClientRect().bottom }; })()"
+    } } },
+    { "type": "setViewport", "width": 1200, "height": 900 },
+    { "type": "keyDown", "key": "Tab" },
+    { "type": "keyUp", "key": "Tab" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "first-tab", "values": {
+      "inside": "!!document.activeElement?.closest('#estrategia-web-consent')",
+      "focused": "document.activeElement?.outerHTML.slice(0, 80)"
+    } } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "__all('#estrategia-web-consent a[href], #estrategia-web-consent button:not([disabled])').filter(__seen).at(-1).focus()" } },
+    { "type": "keyDown", "key": "Tab" },
+    { "type": "keyUp", "key": "Tab" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "tab-out", "values": {
+      "inside": "!!document.activeElement?.closest('#estrategia-web-consent')",
+      "noticeSeen": "__seen(document.getElementById('estrategia-web-consent'))"
+    } } },
+    { "type": "keyDown", "key": "Shift" },
+    { "type": "keyDown", "key": "Tab" },
+    { "type": "keyUp", "key": "Tab" },
+    { "type": "keyUp", "key": "Shift" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "shift-tab", "values": {
+      "inside": "!!document.activeElement?.closest('#estrategia-web-consent')"
+    } } },
+    { "type": "keyDown", "key": "Escape" },
+    { "type": "keyUp", "key": "Escape" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "escape-unchosen", "values": {
+      "noticeSeen": "__seen(document.getElementById('estrategia-web-consent'))",
+      "categories": "window.estrategiaWebConsent.categories",
+      "get": "window.estrategiaWebConsent.get()",
+      "necessary": "window.estrategiaWebConsent.has('necessary')"
+    } } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "window.estrategiaWebConsent.grant('maps')" } },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "granted", "values": {
+      "seen": "window.seen",
+      "get": "window.estrategiaWebConsent.get()",
+      "noticeSeen": "__seen(document.getElementById('estrategia-web-consent'))"
+    } } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "window.estrategiaWebConsent.grant('chat')" } },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "undeclared", "values": {
+      "get": "window.estrategiaWebConsent.get()"
+    } } },
+    { "type": "click", "selectors": ["aria/Rechazar todas[role=\"button\"]", "#estrategia-web-consent [data-estrategia-web-consent-action=\"reject\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForElement", "selectors": ["#estrategia-web-consent"], "visible": false },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "rejected", "save": ["cookies"], "values": {
+      "statistics": "typeof window.estrategiaWebTestStatistics"
+    } } },
+    { "type": "customStep", "name": "cookies", "parameters": { "set": [{ "name": "estrategia_web_consent", "value": "8d6a64a0.maps.{{@now}}" }] } },
+    { "type": "navigate", "url": "/test-notice/" },
+    { "type": "waitForExpression", "expression": "window.ready.length > 0" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "parent-cookie", "values": {
+      "noticeSeen": "__seen(document.getElementById('estrategia-web-consent'))",
+      "get": "window.estrategiaWebConsent.get()",
+      "ready": "window.ready",
+      "statistics": "typeof window.estrategiaWebTestStatistics"
+    } } },
+    { "type": "click", "selectors": ["aria/Configurar cookies[role=\"button\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForElement", "selectors": ["#estrategia-web-consent"], "visible": true },
+    { "type": "waitForExpression", "expression": "document.activeElement?.id === 'estrategia-web-consent-title'" },
+    { "type": "keyDown", "key": "Escape" },
+    { "type": "keyUp", "key": "Escape" },
+    { "type": "waitForElement", "selectors": ["#estrategia-web-consent"], "visible": false },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "window.estrategiaWebConsent.open()" } },
+    { "type": "waitForElement", "selectors": ["#estrategia-web-consent"], "visible": true },
+    { "type": "click", "selectors": ["aria/Aceptar todas[role=\"button\"]", "#estrategia-web-consent [data-estrategia-web-consent-action=\"accept\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForExpression", "expression": "window.estrategiaWebTestStatistics === true" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "accepted", "values": {
+      "last": "window.seen.at(-1)",
+      "statistics": "window.estrategiaWebConsent.has('statistics')"
+    } } },
+    { "type": "navigate", "url": "/test-notice/" },
+    { "type": "waitForExpression", "expression": "window.estrategiaWebTestStatistics === true" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "returned", "values": {
+      "noticeSeen": "__seen(document.getElementById('estrategia-web-consent'))",
+      "seen": "window.seen"
+    } } },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "window.estrategiaWebConsent.open()" } },
+    { "type": "waitForElement", "selectors": ["#estrategia-web-consent"], "visible": true },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "reopened", "save": ["console", "aria"], "values": {
+      "statistics": "(() => { const box = document.querySelector('#estrategia-web-consent input[value=\"statistics\"]'); return { checked: box.checked, label: box.closest('label').textContent.replace(/\\s+/g, ' ').trim() }; })()"
+    } } }
+  ]
+}

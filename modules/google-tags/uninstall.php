@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 /**
  * When the plugin is DELETED (called by the root uninstall.php): the Google
  * ids belong to the client, like the company details; they are only deleted

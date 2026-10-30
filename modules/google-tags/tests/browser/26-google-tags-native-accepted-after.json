@@ -1,0 +1,25 @@
+{
+  "title": "Google tags, Ads: a form sent WITHOUT JavaScript before choosing is counted when the visitor accepts on the page that comes back",
+  "description": "Google tags with Ads and its form conversion label: the visitor has not chosen and the form is sent natively; on the page that comes back the visitor accepts, and the pending conversion is sent then, once (seen failing on 17-10-2026 without the «pending» queue: the signal arrived before the notice said what was accepted, and was lost). The anti-spam minimum fill time is 0 here. Read by browser-google-tags-native-accepted-after. It was the «native 3» visitor of test 2 of google-tags-browser.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "initScripts": ["modules/consent/tests/browser/consent-events.js", "modules/google-tags/tests/browser/gtag.js"],
+  "network": {
+    "foreign": "abort",
+    "fulfill": [{ "url": "^https://www\\.googletagmanager\\.com/", "status": 200, "contentType": "text/javascript" }]
+  },
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": { "modules": "all", "consent": { "categories": ["maps"] }, "options": { "estrategia_web_google_tags": { "ga4": "", "ads": "AW-123456789", "ads_form_label": "AW-123456789/AbCd_ef-12", "gtm": "", "mode": "basic" } }, "pages": [{ "slug": "prueba-google", "content": "<!-- wp:paragraph --><p>Hola</p><!-- /wp:paragraph -->" }, { "slug": "prueba-google-form", "content": "<!-- wp:estrategia-web-forms/form {\"formId\":\"contacto\",\"title\":\"Contacto\"} --><!-- wp:estrategia-web-forms/text {\"label\":\"Nombre\",\"name\":\"nombre\",\"required\":true} /--><!-- wp:estrategia-web-forms/submit {\"text\":\"Enviar\"} /--><!-- /wp:estrategia-web-forms/form -->" }] } },
+      { "path": "/estrategia-web-forms-test/v1/reset", "body": { "core": false, "marker": false, "settings": { "min_seconds": 0 } } }
+    ] } },
+    { "type": "setViewport", "width": 1200, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/prueba-google-form/" },
+    { "type": "waitForExpression", "expression": "!!window.estrategiaWebConsent && window.ready.length > 0" },
+    { "type": "change", "selectors": ["#af-contacto-nombre"], "value": "Ana" },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "document.getElementById('af-contacto').submit()" }, "assertedEvents": [{ "type": "navigation" }] },
+    { "type": "waitForExpression", "expression": "window.ready.length > 0 && window.formSent.length > 0" },
+    { "type": "click", "selectors": ["aria/Aceptar todas[role=\"button\"]", "#estrategia-web-consent [data-estrategia-web-consent-action=\"accept\"]"], "offsetX": 10, "offsetY": 10 },
+    { "type": "waitForExpression", "expression": "__conversions().length > 0" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "accepted", "save": ["console"], "values": { "conversions": "__conversions()" } } }
+  ]
+}

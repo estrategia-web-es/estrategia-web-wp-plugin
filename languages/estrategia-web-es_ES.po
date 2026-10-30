@@ -70,6 +70,7 @@ msgid "Not loaded: turn on %s."
 msgstr "No se carga: enciende %s."
 
 #: includes/admin/class-modules-page.php:173
+#: modules/banners/includes/class-post-type.php:256
 msgid "Off"
 msgstr "Apagado"
 
@@ -96,6 +97,230 @@ msgstr "Secciones de los ajustes"
 msgctxt "module category"
 msgid "Other"
 msgstr "Otros"
+
+#: modules/banners/blocks/banner-zone/block.json
+msgctxt "block title"
+msgid "Banner zone"
+msgstr "Zona de banners"
+
+#: modules/banners/blocks/banner-zone/block.json
+msgctxt "block description"
+msgid ""
+"Shows the banners of a zone that are inside their dates, and counts their "
+"views and clicks."
+msgstr ""
+"Muestra los banners de una zona que están dentro de sus fechas y cuenta sus "
+"vistas y clics."
+
+#: modules/banners/blocks/banner-zone/block.json
+msgctxt "block keyword"
+msgid "ad"
+msgstr "anuncio"
+
+#
+#: modules/banners/blocks/banner-zone/block.json
+msgctxt "block keyword"
+msgid "advertising"
+msgstr "publicidad"
+
+#: modules/banners/blocks/banner-zone/block.json
+msgctxt "block keyword"
+msgid "banner"
+msgstr "banner"
+
+#: modules/banners/blocks/banner-zone/labels.php:8
+msgid "Zone (its slug)"
+msgstr "Zona (su slug)"
+
+#: modules/banners/blocks/banner-zone/labels.php:9
+msgid "How many at a time (0: all, one under another)"
+msgstr "Cuántos a la vez (0: todos, uno debajo de otro)"
+
+#: modules/banners/includes/class-post-type.php:62
+msgid "Banners"
+msgstr "Banners"
+
+#: modules/banners/includes/class-post-type.php:63
+#: modules/banners/includes/class-post-type.php:151
+msgid "Banner"
+msgstr "Banner"
+
+#
+#: modules/banners/includes/class-post-type.php:64
+#: modules/banners/includes/class-post-type.php:65
+msgid "Add banner"
+msgstr "Añadir banner"
+
+#
+#: modules/banners/includes/class-post-type.php:66
+msgid "Edit banner"
+msgstr "Editar banner"
+
+#: modules/banners/includes/class-post-type.php:67
+msgid "New banner"
+msgstr "Nuevo banner"
+
+#
+#: modules/banners/includes/class-post-type.php:68
+msgid "Search banners"
+msgstr "Buscar banners"
+
+#
+#: modules/banners/includes/class-post-type.php:69
+msgid "No banners found."
+msgstr "No hay banners."
+
+#
+#: modules/banners/includes/class-post-type.php:70
+msgid "No banners found in Trash."
+msgstr "No hay banners en la papelera."
+
+#
+#: modules/banners/includes/class-post-type.php:71
+msgid "Banner image"
+msgstr "Imagen del banner"
+
+#
+#: modules/banners/includes/class-post-type.php:72
+msgid "Set banner image"
+msgstr "Poner imagen del banner"
+
+#: modules/banners/includes/class-post-type.php:97
+msgid "Banner zones"
+msgstr "Zonas de banners"
+
+#: modules/banners/includes/class-post-type.php:98
+msgid "Banner zone"
+msgstr "Zona de banners"
+
+#: modules/banners/includes/class-post-type.php:99
+msgid "Zones"
+msgstr "Zonas"
+
+#
+#: modules/banners/includes/class-post-type.php:100
+msgid "Add zone"
+msgstr "Añadir zona"
+
+#
+#: modules/banners/includes/class-post-type.php:152
+msgid "Statistics"
+msgstr "Estadísticas"
+
+#: modules/banners/includes/class-post-type.php:173
+msgid ""
+"With a banner image (box on the right) it is an image banner with its link; "
+"without one, the code below is shown."
+msgstr ""
+"Con imagen del banner (caja de la derecha) es un banner de imagen con su "
+"enlace; sin imagen, se muestra el código de abajo."
+
+#: modules/banners/includes/class-post-type.php:174
+#: modules/social/includes/class-admin.php:94
+#: modules/social/includes/class-admin.php:143
+msgid "Link"
+msgstr "Enlace"
+
+#: modules/banners/includes/class-post-type.php:176
+msgid "Code (adserver, iframe)"
+msgstr "Código (adserver, iframe)"
+
+#: modules/banners/includes/class-post-type.php:179
+msgid "Starts"
+msgstr "Empieza"
+
+#: modules/banners/includes/class-post-type.php:180
+msgid "Ends"
+msgstr "Termina"
+
+#: modules/banners/includes/class-post-type.php:181
+msgid "Weight (1-10)"
+msgstr "Peso (1-10)"
+
+#: modules/banners/includes/class-post-type.php:183
+msgid ""
+"Empty dates: no limit. The weight only matters when a zone shows fewer "
+"banners than it has."
+msgstr ""
+"Fechas vacías: sin límite. El peso solo cuenta cuando una zona muestra menos "
+"banners de los que tiene."
+
+#. translators: 1: views, 2: clicks.
+#: modules/banners/includes/class-post-type.php:191
+#, php-format
+msgid "Total: %1$s views, %2$s clicks"
+msgstr "Total: %1$s vistas, %2$s clics"
+
+#
+#: modules/banners/includes/class-post-type.php:193
+msgid "No statistics yet."
+msgstr "Todavía no hay estadísticas."
+
+#: modules/banners/includes/class-post-type.php:196
+#: modules/banners/includes/class-post-type.php:231
+msgid "Clicks"
+msgstr "Clics"
+
+#: modules/banners/includes/class-post-type.php:196
+msgid "Day"
+msgstr "Día"
+
+#
+#: modules/banners/includes/class-post-type.php:196
+#: modules/banners/includes/class-post-type.php:230
+msgid "Views"
+msgstr "Vistas"
+
+#: modules/banners/includes/class-post-type.php:200
+msgid ""
+"Last 60 days with activity. A view is counted when the banner is on screen; "
+"code banners (adservers) count their clicks on their own side."
+msgstr ""
+"Últimos 60 días con actividad. Una vista se cuenta cuando el banner está en "
+"pantalla; los banners de código (adservers) cuentan sus clics por su cuenta."
+
+#
+#: modules/banners/includes/class-post-type.php:228
+msgid "Dates"
+msgstr "Fechas"
+
+#
+#: modules/banners/includes/class-post-type.php:229
+msgid "State"
+msgstr "Estado"
+
+#: modules/banners/includes/class-post-type.php:253
+msgid "Showing"
+msgstr "Se muestra"
+
+#: modules/banners/includes/class-post-type.php:254
+msgid "Scheduled"
+msgstr "Programado"
+
+#: modules/banners/includes/class-post-type.php:255
+msgid "Expired"
+msgstr "Caducado"
+
+#: modules/banners/module.php
+msgctxt "module name"
+msgid "Banners"
+msgstr "Banners"
+
+#: modules/banners/module.php modules/carousel/module.php
+#: modules/comments-off/module.php modules/content-types/module.php
+#: modules/featured-images/module.php modules/map/module.php
+msgctxt "module category"
+msgid "Content"
+msgstr "Contenido"
+
+#: modules/banners/module.php
+msgctxt "module description"
+msgid ""
+"Image or code banners by zone and dates, with daily views and clicks, and "
+"AdRotate migration."
+msgstr ""
+"Banners de imagen o de código por zonas y fechas, con vistas y clics "
+"diarios, y migración desde AdRotate."
 
 #: modules/carousel/blocks/carousel/block.json
 msgctxt "block title"
@@ -233,13 +458,6 @@ msgstr ""
 "entradas de una Consulta), con flechas, puntos opcionales, bucle infinito y "
 "paso automático solo si se pide."
 
-#: modules/carousel/module.php modules/comments-off/module.php
-#: modules/content-types/module.php modules/featured-images/module.php
-#: modules/map/module.php
-msgctxt "module category"
-msgid "Content"
-msgstr "Contenido"
-
 #: modules/comments-off/module.php
 msgctxt "module name"
 msgid "No comments"
@@ -318,11 +536,11 @@ msgctxt "block keyword"
 msgid "policy"
 msgstr "política"
 
-#: modules/consent/blocks/cookie-table/labels.php:8
+#: modules/consent/blocks/cookie-table/labels.php:10
 msgid "Category (empty: all)"
 msgstr "Categoría (vacío: todas)"
 
-#: modules/consent/blocks/cookie-table/labels.php:9
+#: modules/consent/blocks/cookie-table/labels.php:11
 msgid "Heading level of each category"
 msgstr "Nivel del título de cada categoría"
 
@@ -3715,7 +3933,7 @@ msgctxt "block keyword"
 msgid "wpml"
 msgstr "wpml"
 
-#: modules/language-switcher/blocks/language-switcher/labels.php:8
+#: modules/language-switcher/blocks/language-switcher/labels.php:10
 msgid "Show the current language as (code: “ES”, name: “Español”)"
 msgstr "Mostrar el idioma actual como (code: «ES», name: «Español»)"
 
@@ -4108,6 +4326,7 @@ msgstr "Buscar redirecciones"
 msgid "Source"
 msgstr "Origen"
 
+#. translators: "%3F" is the URL-encoded "?", not a placeholder: keep it as is.
 #: modules/redirects/includes/admin/class-page.php:266
 msgid ""
 "The old path, without the domain. Upper case, a final slash and any extra ?"
@@ -4600,11 +4819,11 @@ msgctxt "block keyword"
 msgid "social"
 msgstr "sociales"
 
-#: modules/social/blocks/social-links/labels.php:8
+#: modules/social/blocks/social-links/labels.php:10
 msgid "Show (icons: only icons; icons-names: icon and name)"
 msgstr "Mostrar (icons: solo iconos; icons-names: icono y nombre)"
 
-#: modules/social/blocks/social-links/labels.php:9
+#: modules/social/blocks/social-links/labels.php:11
 msgid "Icon size"
 msgstr "Tamaño del icono"
 
@@ -4658,11 +4877,6 @@ msgstr "Redes"
 #: modules/social/includes/class-admin.php:126
 msgid "Icon"
 msgstr "Icono"
-
-#: modules/social/includes/class-admin.php:94
-#: modules/social/includes/class-admin.php:143
-msgid "Link"
-msgstr "Enlace"
 
 #: modules/social/includes/class-admin.php:103
 msgid "Add network"
@@ -4812,19 +5026,19 @@ msgctxt "block keyword"
 msgid "whatsapp"
 msgstr "whatsapp"
 
-#: modules/whatsapp/blocks/whatsapp/labels.php:8
+#: modules/whatsapp/blocks/whatsapp/labels.php:10
 msgid "Phone in international format (empty: site option)"
 msgstr "Teléfono en formato internacional (vacío: la opción del sitio)"
 
-#: modules/whatsapp/blocks/whatsapp/labels.php:9
+#: modules/whatsapp/blocks/whatsapp/labels.php:11
 msgid "Predefined message (empty: site option)"
 msgstr "Mensaje predefinido (vacío: la opción del sitio)"
 
-#: modules/whatsapp/blocks/whatsapp/labels.php:10
+#: modules/whatsapp/blocks/whatsapp/labels.php:12
 msgid "Position"
 msgstr "Posición"
 
-#: modules/whatsapp/blocks/whatsapp/labels.php:11
+#: modules/whatsapp/blocks/whatsapp/labels.php:13
 msgid "Accessible name (empty: “Chat on WhatsApp”)"
 msgstr "Nombre accesible (vacío: «Escríbenos por WhatsApp»)"
 

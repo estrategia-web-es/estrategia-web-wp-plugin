@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\ContentTypes;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * THE OLD TYPES OF modules/site, NOW TEMPLATES (17-10-2026). Up to 1.4.x the
  * site module registered clients, testimonials, locations, projects and
@@ -56,10 +60,6 @@
  *   (modules/site/includes/admin/class-admin.php). That is why this module
  *   is Default: on since this release.
  */
-
-namespace EstrategiaWeb\ContentTypes;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Site_Types {
 

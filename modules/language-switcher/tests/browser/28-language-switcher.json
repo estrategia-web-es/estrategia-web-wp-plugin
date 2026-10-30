@@ -1,0 +1,39 @@
+{
+  "title": "Language switcher on an English page: opens, closes with Escape and gives the focus back; a new visitor sees the cookie notice",
+  "description": "estrategia-web/language-switcher on a page read with the WPML double in English (?wpml-double=en&wpml-double-switcher=1, tests/wp/estrategia-web-site-test.php): the list is hidden until the button is pressed, pressing turns aria-expanded true and shows it, Escape closes it and gives the focus back to the button; a new visitor of the English page SEES the cookie notice. Read by browser-language-switcher. It was language-switcher-browser.test.mjs (level 3) until 29-10-2026.",
+  "writes": true,
+  "initScripts": ["tests/browser-probes.js"],
+  "steps": [
+    { "type": "customStep", "name": "setup", "parameters": { "requests": [
+      { "path": "/estrategia-web-site-test/v1/setup", "body": { "consent": { "categories": ["maps"] }, "pages": [{ "slug": "prueba-idiomas", "content": "<!-- wp:estrategia-web/language-switcher /-->\n<!-- wp:paragraph --><p>Idiomas</p><!-- /wp:paragraph -->" }] } }
+    ] } },
+    { "type": "setViewport", "width": 1280, "height": 900, "deviceScaleFactor": 1, "isMobile": false, "hasTouch": false, "isLandscape": false },
+    { "type": "navigate", "url": "/prueba-idiomas/?wpml-double=en&wpml-double-switcher=1" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "closed",
+      "values": {
+        "noticeSeen": "__seen(__q('.estrategia-web-consent'))",
+        "lang": "__q('.estrategia-web-language .estrategia-web-language__toggle span[lang]')?.textContent.trim()",
+        "listSeen": "__seen(__q('.estrategia-web-language .estrategia-web-language__list'))"
+      }
+    } },
+    { "type": "click", "selectors": [".estrategia-web-language .estrategia-web-language__toggle"], "offsetX": 10, "offsetY": 10 },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "open",
+      "values": {
+        "expanded": "__q('.estrategia-web-language .estrategia-web-language__toggle').getAttribute('aria-expanded')",
+        "listSeen": "__seen(__q('.estrategia-web-language .estrategia-web-language__list'))"
+      }
+    } },
+    { "type": "keyDown", "key": "Escape" },
+    { "type": "keyUp", "key": "Escape" },
+    { "type": "customStep", "name": "capture", "parameters": {
+      "label": "escaped",
+      "save": ["console"],
+      "values": {
+        "expanded": "__q('.estrategia-web-language .estrategia-web-language__toggle').getAttribute('aria-expanded')",
+        "focusBack": "__q('.estrategia-web-language .estrategia-web-language__toggle') === document.activeElement"
+      }
+    } }
+  ]
+}

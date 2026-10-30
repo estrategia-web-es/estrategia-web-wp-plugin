@@ -1,0 +1,7 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"preferredVersions": { "php": "8.3", "wp": "https://downloads.wordpress.org/release/wordpress-7.1.4.zip" },
+	"steps": [
+		{ "step": "runPHP", "code": "<?php require_once '/wordpress/wp-load.php'; wp_upload_dir( null, true ); // A WordPress started from the WPML snapshot (tests/run.mjs, «THE WPML SNAPSHOT») already has everything tests/blueprint.json does, except this month's uploads folder if the snapshot is from another month. Keep preferredVersions equal to tests/blueprint.json's." }
+	]
+}

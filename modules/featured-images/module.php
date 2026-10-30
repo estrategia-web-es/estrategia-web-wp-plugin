@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\FeaturedImages;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Module Name: Featured image tuning
  * Description: Featured images with a fixed width in px download a file of that size, and a logo whose alt text only repeats the title shown next to it is marked as decorative.
@@ -52,10 +56,6 @@
  *   too. That is why it now respects a sizes that is already "Npx".
  * - Test: modules/featured-images/tests/ (level 2).
  */
-
-namespace EstrategiaWeb\FeaturedImages;
-
-defined( 'ABSPATH' ) || exit;
 
 const SMALL = 'estrategia-web-small';
 

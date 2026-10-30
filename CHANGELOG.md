@@ -9,7 +9,23 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
-## 2.1.0 — 29-10-2026
+## 2.2.0 — 30-10-2026 (the `ew-web2026` branch joins `main`)
+
+**What each site must do:** nothing. Both new modules are OFF by default.
+
+- Everything in `main` since 2.0.1, which had no version of its own: the
+  **`banners`** module (banners by zone and dates, with statistics and
+  `wp estrategia-web banners migrate-adrotate`, for Gastronòmicament; see its
+  commit and `README.md`), the WordPress.org fixes (ABSPATH guard at the top
+  of every PHP, sanitised `$_GET`, Plugin URI on GitHub) and the browser test
+  scenarios.
+- Plus the 2.1.0 below, which only existed in the `ew-web2026` branch.
+- **The trap with the number:** there are TWO «2.1.0». The one below is the
+  build that runs on estrategiaweb.es since 29-10-2026; the branch `v2.1.0`
+  (duplicate, language per page, required taxonomy…) is another one, not
+  merged. Whoever merges `v2.1.0` gives it the next free number, not 2.1.0.
+
+## 2.1.0 (`ew-web2026`, estrategiaweb.es only) — 29-10-2026
 
 **What each site must do:** nothing. The new module is OFF by default; a
 site that wants it switches it on in Estrategia Web › Modules.
@@ -23,7 +39,7 @@ site that wants it switches it on in Estrategia Web › Modules.
   health sites since 2023), in its `module.php`.
 - Tests: `modules/faq-schema/tests/faq.test.mjs` (level 1), and the module
   in «David's list» of `tests/modules.test.mjs`.
-- Branch `ew-web2026`, for estrategiaweb.es. Not merged into `main` yet.
+- Branch `ew-web2026`, for estrategiaweb.es. Merged into `main` with 2.2.0.
 
 ## 2.0.1 — 28-10-2026
 

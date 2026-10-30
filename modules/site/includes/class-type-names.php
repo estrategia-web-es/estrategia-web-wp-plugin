@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Site;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * THE REGISTERED NAMES of the content types and their taxonomies: the plugin
  * key («client») with the prefix in front («eweb_client»). Unpublished
@@ -63,10 +67,6 @@
  *   (desplegar.mjs), where the old plugin is still running. It cannot use
  *   anything that is not in 1.1.0: only PHP and WordPress.
  */
-
-namespace EstrategiaWeb\Site;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Type_Names {
 

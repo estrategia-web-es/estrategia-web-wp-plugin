@@ -4,7 +4,8 @@
 // and why: headers of includes/class-cookie-registry.php and
 // class-cookie-rest.php. The admin route, the policy table and the notice's
 // «Preferences» are cookie-registry.test.mjs; the browser side (that
-// accepting sends only the names) is cookies-browser.test.mjs (level 3).
+// accepting sends only the names) is the browser scenarios 13-cookies-accept
+// and 14-cookies-reject.
 //
 // Helper routes: /consent-setup (tests/wp/, plays a theme that declares
 // categories) and those of modules/consent/tests/wp/estrategia-web-cookies-test.php

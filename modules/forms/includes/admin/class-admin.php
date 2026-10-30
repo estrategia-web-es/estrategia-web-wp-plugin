@@ -93,7 +93,7 @@ final class Admin {
 			self::render_confirm_delete( array_values( array_unique( array_filter( $ids ) ) ) );
 			return;
 		}
-		$form_id = Definitions::clean_id( (string) wp_unslash( $_GET['form_id'] ?? '' ) );
+		$form_id = Definitions::clean_id( sanitize_text_field( wp_unslash( $_GET['form_id'] ?? '' ) ) );
 		$deleted = isset( $_GET['deleted'] ) ? (int) $_GET['deleted'] : null;
 		// phpcs:enable
 
@@ -209,7 +209,7 @@ final class Admin {
 			wp_die( esc_html__( 'You are not allowed to do this.', 'estrategia-web' ), 403 );
 		}
 		check_admin_referer( 'estrategia_web_forms_export' );
-		$form_id = Definitions::clean_id( (string) wp_unslash( $_GET['form_id'] ?? '' ) );
+		$form_id = Definitions::clean_id( sanitize_text_field( wp_unslash( $_GET['form_id'] ?? '' ) ) );
 		$rows    = Submissions::query( $form_id, 0 )['rows'];
 
 		// Data columns: the union of the fields of all submissions, in order of appearance.
@@ -227,7 +227,7 @@ final class Admin {
 		header( 'Content-Type: text/csv; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename="estrategia-web-forms-' . ( $form_id ?: 'all' ) . '-' . gmdate( 'Y-m-d' ) . '.csv"' );
 		$out = fopen( 'php://output', 'w' );
-		fwrite( $out, "\xEF\xBB\xBF" ); // BOM: without it Excel misreads accented characters.
+		fwrite( $out, "\xEF\xBB\xBF" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- php://output, not a file. BOM: without it Excel misreads accented characters.
 
 		$header = array( 'id', 'date_utc', 'form_id', 'form', 'page', 'language', 'status', 'notifications', 'ip', 'user_agent' );
 		fputcsv( $out, array_merge( $header, array_values( $fields ) ), $sep, '"', '' );
@@ -246,7 +246,7 @@ final class Admin {
 			}
 			fputcsv( $out, array_map( array( self::class, 'csv_cell' ), $line ), $sep, '"', '' );
 		}
-		fclose( $out );
+		fclose( $out ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- php://output, not a file.
 		exit;
 	}
 

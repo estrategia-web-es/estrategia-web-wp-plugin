@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Forms;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * THE MARKERS MIGRATOR (2.0.1): the four fixed email markers that were in
  * Spanish until 1.4.0 are renamed in every saved form, so that the read
@@ -76,10 +80,6 @@
  *   parse_blocks() + serialize_blocks(): re-serializing would rewrite the
  *   whole post and every page would come out «changed».
  */
-
-namespace EstrategiaWeb\Forms;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Marker_Migration {
 

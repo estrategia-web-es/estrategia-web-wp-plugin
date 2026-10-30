@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\ContentTypes;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * THE «hours» FIELD TYPE (22-10-2026): opening hours as DATA — the days of
  * the week, each with zero or more opening ranges — instead of a sentence.
@@ -50,10 +54,6 @@
  *   too — an empty JSON object and an empty JSON list are the same thing
  *   here. That is why an empty week is stored as "" and never as {} or [].
  */
-
-namespace EstrategiaWeb\ContentTypes;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Hours {
 

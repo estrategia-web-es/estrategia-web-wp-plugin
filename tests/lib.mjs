@@ -11,6 +11,12 @@ import fs from "node:fs";
 
 export const BASE = process.env.AS_BASE || "http://127.0.0.1:9404";
 
+// The block modules that came from the parent theme (17-10-2026): their tests and browser scenarios run
+// with ONLY these on (the seed of each one is its module's mu-plugin). Moved here from the old
+// tests/browser.mjs helper on 29-10-2026, when that file became the browser scenarios' runner; the
+// scenarios write the same list in their setup step (a JSON cannot import it).
+export const BLOCK_MODULES = ["carousel", "map", "whatsapp", "language-switcher"];
+
 // The REGISTERED name of a post type or taxonomy of the site module (1.2.0):
 // type("client") → "eweb_client" (also its REST route). The prefix is read
 // from Type_Names so that no test hard-codes it.

@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 /**
  * On DELETING the plugin (not on deactivating it or switching the module off).
  *
@@ -22,6 +24,6 @@ if ( ! defined( 'ESTRATEGIA_WEB_REDIRECTS_REMOVE_DATA' ) || true !== ESTRATEGIA_
 global $wpdb;
 $wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}estrategia_web_redirects" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
 $wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}estrategia_web_redirects_404" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
-foreach ( array( 'estrategia_web_redirects_settings', 'estrategia_web_redirects_db_version' ) as $option ) {
-	delete_option( $option );
+foreach ( array( 'estrategia_web_redirects_settings', 'estrategia_web_redirects_db_version' ) as $estrategia_web_option ) {
+	delete_option( $estrategia_web_option );
 }

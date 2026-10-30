@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\ContentTypes;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * A LOCATION'S DERIVED VALUES, read from WordPress (2.0.0). The rules are
  * pure and live in class-location-data.php; this class only knows WHICH
@@ -57,10 +61,6 @@
  *   its parts were corrected in the meantime. That is why the migration
  *   lists every DIFFERENCE before it removes a text.
  */
-
-namespace EstrategiaWeb\ContentTypes;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Location_Fields {
 

@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Site;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * REST routes of the cookie registry (estrategia-web/v1 namespace).
  *
@@ -69,10 +73,6 @@
  *   itself, and the tests delete estrategia_web_cs_* (the reset route of
  *   their mu-plugin).
  */
-
-namespace EstrategiaWeb\Site;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Cookie_Rest {
 

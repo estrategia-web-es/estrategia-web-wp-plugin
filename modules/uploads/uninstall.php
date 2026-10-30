@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 /**
  * When the plugin is DELETED: the uploads option is deleted (three
  * configuration numbers, nothing the client wrote). Uploaded photos and

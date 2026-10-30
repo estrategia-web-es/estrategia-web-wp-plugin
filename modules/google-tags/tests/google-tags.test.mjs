@@ -3,7 +3,7 @@
 // Google tags (1.1.0). What it does and why: header of
 // modules/google-tags/includes/class-google-tags.php. The browser side (what
 // is requested from Google before and after accepting, Consent Mode) is in
-// google-tags-browser.test.mjs (level 3).
+// the browser scenarios 22-27 (modules/google-tags/tests/browser/).
 //
 // 28-10-2026: the module is switched on ONCE in before() (it was switched
 // on again in every test: three requests each). Round 2 (28-10-2026): the

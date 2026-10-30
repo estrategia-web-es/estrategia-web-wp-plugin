@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Matomo;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Matomo (Armazón, row 16): the tracking code in the site's <head>, with the
  * URL, site id and mode from the `estrategia_web_site` option (`matomo_url`,
@@ -82,11 +86,7 @@
  *   Matomo server (Anonymize IP), not in the tracking code.
  */
 
-namespace EstrategiaWeb\Matomo;
-
 use EstrategiaWeb\Site\Settings;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Matomo {
 
@@ -171,45 +171,28 @@ final class Matomo {
 		$hybrid   = 'hybrid' === $config['mode'];
 		$first    = $hybrid ? "_paq.push(['requireCookieConsent']);" : "_paq.push(['disableCookies']);";
 
-		$js = <<<JS
-var _paq = window._paq = window._paq || [];
-{$first}
-_paq.push(['trackPageView']);
-_paq.push(['enableLinkTracking']);
-(function () {
-	var u = {$url};
-	_paq.push(['setTrackerUrl', u + 'matomo.php']);
-	_paq.push(['setSiteId', {$site_id}]);
-	var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
-	g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
-})();
-JS;
+		$js = strtr(
+			self::template( 'matomo.js' ),
+			array(
+				'__FIRST__'   => $first,
+				'__URL__'     => $url,
+				'__SITE_ID__' => $site_id,
+			)
+		);
 		if ( ! $hybrid ) {
 			return $js;
 		}
 		// Hybrid: follows the cookie notice (through its JS contract). See the header (the two channels and pitfall 1).
-		$js .= <<<JS
-
-(function () {
-	var given = null;
-	function sync(accepted) {
-		var yes = Array.isArray(accepted) && accepted.indexOf({$category}) !== -1;
-		if (yes === given) { return; }
-		given = yes;
-		window._paq.push([yes ? 'rememberCookieConsentGiven' : 'forgetCookieConsentGiven']);
-	}
-	document.addEventListener('estrategia-web:consent', function (e) { sync(e.detail && e.detail.accepted); });
-	function current() {
-		if (given === null && window.estrategiaWebConsent && typeof window.estrategiaWebConsent.get === 'function') {
-			var choice = window.estrategiaWebConsent.get();
-			sync(choice || []);
-		}
-	}
-	current();
-	window.addEventListener('load', current);
-	document.addEventListener('estrategia-web:consent-ready', current);
-})();
-JS;
+		$js .= "\n" . strtr( self::template( 'matomo-hybrid.js' ), array( '__CATEGORY__' => $category ) );
 		return $js;
+	}
+
+	/**
+	 * A JS template from ../assets/, without its header comment and its final
+	 * newline: the header is for whoever opens the file, not for the page.
+	 */
+	private static function template( string $file ): string {
+		$js = (string) file_get_contents( dirname( __DIR__ ) . '/assets/' . $file );
+		return rtrim( (string) preg_replace( '#^/\*.*?\*/\n#s', '', $js, 1 ), "\n" );
 	}
 }

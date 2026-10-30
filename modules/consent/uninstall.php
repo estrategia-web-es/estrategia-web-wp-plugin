@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 /**
  * On plugin DELETION (called by the root uninstall.php).
  *

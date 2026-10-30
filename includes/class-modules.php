@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * THE MODULE LOADER. Decides which folder of modules/ is loaded on each
  * request. If you are going to add a module, this is the only thing you need
@@ -161,10 +165,6 @@
  * turning a module off removes its block) and tests/menu.test.mjs (level 2:
  * site loads even when the saved list lacks it).
  */
-
-namespace EstrategiaWeb;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Modules {
 

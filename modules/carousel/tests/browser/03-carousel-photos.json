@@ -1,0 +1,16 @@
+{
+  "title": "Carousel photos, /prueba-carrusel-fotos/ at 1512 and 402: priority only for the first, the rest deferred, the downloaded size fits the slide, no preload",
+  "description": "estrategia-web/carousel with 1920×1280 photos and no preloadSlides (0.7.4, 0.7.9): in the TOP carousel the first photo has fetchpriority=\"high\" and only it, the other visible ones load now without priority, none is lazy; the fourth, not seen, is deferred (loading=\"lazy\", no priority, sizes=\"auto, …\"); the BOTTOM carousel (3000 px down) is all deferred; at both widths the downloaded photo of each visible slide is at least its painted width and at most twice (the sizes gives the slide's width); the internal mark data-estrategia-web-carousel does not reach the page; no image preload. Which file the browser picks only exists painted. The capture waits until every photo request has finished. Read by browser-carousel-photos. It was part of ./images.mjs, run by carousel.test.mjs (level 3), until 29-10-2026.",
+  "writes": true,
+  "widths": [
+    1512,
+    402
+  ],
+  "steps": [
+    {"type":"customStep","name":"setup","parameters":{"requests":[{"path":"/estrategia-web-site-test/v1/setup","body":{"modules":["carousel","map","whatsapp","language-switcher"]}},{"path":"/estrategia-web-carousel-test/v1/seed","method":"POST"}]}},
+    {"type":"setViewport","width":1512,"height":900,"deviceScaleFactor":1,"isMobile":false,"hasTouch":false,"isLandscape":false},
+    {"type":"navigate","url":"/prueba-carrusel-fotos/"},
+    {"type":"waitForExpression","expression":"(() => { const first = [...document.querySelectorAll('.estrategia-web-carousel')][0]?.querySelectorAll('.estrategia-web-carousel__track img') ?? []; return first.length && [...first].slice(0, 3).every((i) => i.complete && i.currentSrc); })()"},
+    {"type":"customStep","name":"capture","parameters":{"label":"photos","save":["console","network"],"settle":["\\.(webp|jpe?g|png)(\\?|$)"],"values":{"inspect":"(() => ({ preloads: [...document.head.querySelectorAll('link[rel=\"preload\"][as=\"image\"]')].map((l) => ({ media: l.getAttribute('media'), priority: l.getAttribute('fetchpriority'), srcset: l.getAttribute('imagesrcset'), sizes: l.getAttribute('imagesizes') })), carousels: [...document.querySelectorAll('.estrategia-web-carousel')].map((carousel) => ({ label: carousel.getAttribute('aria-label'), images: [...carousel.querySelectorAll('.estrategia-web-carousel__track img')].map((img) => { const r = img.getBoundingClientRect(); const t = carousel.querySelector('.estrategia-web-carousel__track').getBoundingClientRect(); return { alt: img.alt, loading: img.getAttribute('loading'), priority: img.getAttribute('fetchpriority'), sizes: img.getAttribute('sizes'), srcset: img.getAttribute('srcset'), marker: img.hasAttribute('data-estrategia-web-carousel'), src: img.currentSrc, natural: [img.naturalWidth, img.naturalHeight], width: r.width, visible: r.right > t.left + 1 && r.left < t.right - 1 && r.top < innerHeight, inPicture: img.parentElement.tagName === 'PICTURE', media: img.parentElement.querySelector('source')?.getAttribute('media'), source: img.parentElement.querySelector('source')?.getAttribute('srcset') }; }), })), }))()"}}}
+  ]
+}

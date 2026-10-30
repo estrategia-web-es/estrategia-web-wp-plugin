@@ -253,7 +253,7 @@ final class Fields_Panel {
 			$attrs = ( $field['disabled'] ? ' disabled' : '' ) . ( $field['required'] ? ' aria-required="true"' : '' );
 			$label = $field['label'] . ( $field['required'] ? ' *' : '' );
 			$wide  = in_array( $field['kind'], array( 'textarea', 'embed', 'hours', 'image' ), true ) ? ' estrategia-web-ct-field--wide' : '';
-			echo '<div class="estrategia-web-ct-field estrategia-web-ct-field--' . esc_attr( $field['kind'] ) . $wide . '" data-meta-key="' . esc_attr( $field['key'] ) . '">';
+			echo '<div class="estrategia-web-ct-field estrategia-web-ct-field--' . esc_attr( $field['kind'] . $wide ) . '" data-meta-key="' . esc_attr( $field['key'] ) . '">';
 			if ( 'hours' !== $field['kind'] ) {
 				echo '<label for="' . esc_attr( $id ) . '">' . esc_html( $label ) . '</label>';
 			}

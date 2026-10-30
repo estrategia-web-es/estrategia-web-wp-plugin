@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\ContentTypes;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * THE 2.0.0 DATA MIGRATION: a location's duplicated data → stored once
  * (class-location-data.php says why and what is derived). Per site, once,
@@ -66,10 +70,6 @@
  *   Spanish post already has.
  */
 
-namespace EstrategiaWeb\ContentTypes;
-
-defined( 'ABSPATH' ) || exit;
-
 final class Location_Migration {
 
 	public const BACKUP_META = '_estrategia_web_location_backup_1_8_0';
@@ -129,7 +129,7 @@ final class Location_Migration {
 				'fields'           => 'ids',
 				'orderby'          => 'ID',
 				'order'            => 'ASC',
-				'suppress_filters' => true,
+				'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- deliberate: every language, WPML must not narrow it to the request's.
 			)
 		);
 		foreach ( $ids as $id ) {

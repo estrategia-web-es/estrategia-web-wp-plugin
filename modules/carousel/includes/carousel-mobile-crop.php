@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Carousel;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * estrategia-web/carousel — mobile crop of the images (1.1.x).
  *
@@ -71,10 +75,6 @@
  * - Test: modules/carousel/tests/carousel.test.mjs (level 3; the mobile crop part is in ./images.mjs) and
  *   modules/carousel/tests/mobile-crop-pure.test.mjs (level 1, the geometry).
  */
-
-namespace EstrategiaWeb\Carousel;
-
-defined( 'ABSPATH' ) || exit;
 
 const MOBILE_MEDIA  = '(max-width: 781px)';
 const MOBILE_WIDTHS = array( 480, 720, 960, 1200 );

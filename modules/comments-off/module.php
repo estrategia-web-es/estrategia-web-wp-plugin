@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\CommentsOff;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Module Name: No comments
  * Description: Turns comments off everywhere: closed on every post, no Comments menu, dashboard widget or toolbar item, no comment blocks on the site and no comment feeds.
@@ -51,10 +55,6 @@
  *   on registered_post_type for those arriving even later.
  * - Test: modules/comments-off/tests/comments-off.test.mjs (level 2).
  */
-
-namespace EstrategiaWeb\CommentsOff;
-
-defined( 'ABSPATH' ) || exit;
 
 /** Blocks that are not rendered: by name prefix. */
 const BLOCKS = array( 'core/comment', 'core/post-comments', 'core/latest-comments' );

@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Site;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * WebP (0.5.1): the sizes WordPress generates from an uploaded JPEG or PNG
  * are saved as WebP.
@@ -56,10 +60,6 @@
  * - Edge case: a theme that wants AVIF is a tweak of the same WordPress
  *   filter in its functions.php, with priority higher than 10; this is not touched.
  */
-
-namespace EstrategiaWeb\Site;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Webp {
 

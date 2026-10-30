@@ -68,10 +68,11 @@ add_action( 'init', static fn() => $GLOBALS['estrategia_web_test_t_init'] = micr
 // in the first run with shards, consent-links, where the order of the files is no longer fixed).
 // Any module's /reset (…-test/v1/reset) reads the list as not saved, i.e. every default module;
 // the reset itself deletes the saved list for the requests after it. Seed routes are left alone
-// on purpose: tests/browser.mjs seeds with ONLY the block modules on.
+// on purpose: the block modules' browser scenarios seed with ONLY those modules on.
 // The same for /setup (any module's): it runs /reset first and then seeds through module code
 // (consent-setup needs the consent module: «Class "EstrategiaWeb\Site\Consent" not found» when
-// map.test.mjs, which leaves only the block modules on, ran before consent-browser.test.mjs).
+// map.test.mjs, which left only the block modules on, ran before consent-browser.test.mjs; both
+// are browser scenarios since 29-10-2026).
 // The filter only lives until plugins_loaded, when the modules are already loaded: after that
 // the request reads and WRITES the real list (with it, an update_option of the list inside the
 // request updated 0 rows and saved nothing).
@@ -156,7 +157,7 @@ if ( ! isset( $_GET['wpml-double'] ) ) { // phpcs:ignore WordPress.Security.Nonc
 	);
 	// &wpml-double-switcher (28-10-2026): es and en as wpml_active_languages returns them (the
 	// current one «active»), so the language switcher block renders on the normal WordPress.
-	// For modules/language-switcher/tests/language-switcher-browser.test.mjs, which tests the
+	// For the browser scenario 28-language-switcher (modules/language-switcher/tests/browser/), which tests the
 	// block's JavaScript; the URLs here are NOT WPML's (the real-WPML level 2 test checks those).
 	// Opt-in because forms and content-types read this filter too, and their tests with the
 	// double expect no language list.
@@ -444,6 +445,10 @@ add_action(
 				delete_option( 'icl_sitepress_settings#custom_posts_sync_option' ); // Those from legacy-types (1.2.0).
 				delete_option( 'WPML(setup/translate-everything-taxonomies)' );
 				delete_option( 'rank_math_known_post_types' );
+				// 29-10-2026: the content-types example files (modules/content-types/tests/wp). editor-panel.test.mjs
+				// switched them off in its after(); its browser scenario (16-ct-editor-panel) has no after(), so
+				// the next reset does it. Their gment_ posts are left: unregistered, nobody sees them.
+				delete_option( 'estrategia_web_ct_test' );
 				// 17-10-2026: the site's types are definitions of the content-types module. As freshly installed: none, not migrated.
 				foreach ( $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'eweb_content_type'" ) as $def_id ) { // phpcs:ignore
 					wp_delete_post( (int) $def_id, true );

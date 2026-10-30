@@ -27,9 +27,10 @@
 //              texts and the migration's parsers, PHP without WordPress);
 //     level 2: modules/forms/tests/forms-list.test.mjs (what one screen finds
 //              in a real database, read as HTML with a cookie session);
-//     level 3: modules/map/tests/map.test.mjs, step 1 (a height the layout
-//              engine computes: only exists painted; one page, two widths
-//              by resizing the window, not loading it twice).
+//     the browser (what was level 3): modules/map/tests/browser/29-map-plain.json
+//              and its check modules/map/tests/browser-map-plain.test.mjs (a
+//              height the layout engine computes, the requests before and
+//              after a click: only exist painted and running).
 // - Each test FILE has a time limit, and going over it makes it RED (not an
 //   alarm): LIMIT below, per level. The exception is written in the test, with
 //   its reason, on a line of its header:
@@ -44,6 +45,30 @@
 // given by the FIRST line of each one; a test with no declared level stops
 // the whole run. A new module with tests does not touch this file.
 //
+// THE BROWSER (29-10-2026, ARMAZON row 7, «Los niveles se IMPONEN» point 7;
+// it replaces level 3): the browser tests are SCENARIOS — JSON in the Chrome
+// Recorder format, modules/<slug>/tests/browser/NN-name.json — that
+// tests/browser.mjs runs with ONE Chromium, and CHECKS — level 1,
+// modules/<slug>/tests/browser-<name>.test.mjs — that read what it saved.
+// How a scenario is written, the freshness rule and the no-fixed-wait rule:
+// the header of tests/browser.mjs. Here:
+// - the scenarios are dealt to the shards with the level 2 files (by their
+//   last measured time, «browser:<id>» in tests/.timings.json) and each
+//   shard runs ITS scenarios, after its level 2 files, in ONE process with
+//   ONE browser (tests/browser.mjs --base <that shard>): at most one
+//   Chromium per shard. Inside a shard the scenarios go one after another:
+//   each one starts by setting its WordPress (its setup step);
+//   a scenario is red if a step failed or it took over LIMIT.browser seconds;
+// - once every shard is done, the checks of the scenarios that ran go in ONE
+//   `node --test` (phase «checks»). A check is level 1 but is NOT in the
+//   level 1 phase: before the scenarios run it would read the previous run
+//   (and fail for being older than the code). With --nivel 1 (pre-commit)
+//   they are not run at all, and it says so.
+// - a level 2 file in red stops the browser as it stopped level 3: no
+//   shard STARTS its scenarios once a level 2 file is red.
+// - A file that still declares «NIVEL: 3» runs as before, after level 2;
+//   there are none since 29-10-2026: a new browser test is a scenario.
+//
 // HOW IT IS FAST (28-10-2026). A request to the test WordPress costs ~1,1 s
 // whatever it does (measured with /ping?timing of tests/wp/estrategia-web-site-test.php:
 // ~800 ms are WordPress and the SQLite drop-in BEFORE any plugin loads, the
@@ -53,18 +78,27 @@
 // minutes. Hence the cuts (each test file's header says what it proves) and:
 // - SHARDS: levels 2 and 3 are split across several WordPresses that run at
 //   the same time, each its own Playground and its own database (EW_SHARDS,
-///   default 5, plus EW_WPML_SHARDS, default 1, for the WPML ones: measured
-//   28-10-2026, the WPML files are ~15 % of the work and a WPML boot takes
-//   twice as long, so one WPML WordPress ends with the five others). Inside a
+//   by default one per three logical CPUs (AUTO_SHARDS: 4 here, chosen by
+//   measuring 3 to 6), plus EW_WPML_SHARDS, default 1, for the WPML ones: the
+//   WPML files are ~15 % of the work, and with its snapshot the WPML
+//   WordPress ends before the others). Inside a
 //   shard the files run one after another, as before: a test still has the
 //   WordPress to itself and still starts with its reset().
 // - The files are dealt by their last measured time (tests/.timings.json,
 //   written at the end of each run, gitignored; a file never measured counts
 //   30 s), longest first to the least loaded shard.
 // - Every Playground boots while level 1 runs (level 1 needs none), and each
-//   one starts its files as soon as IT is ready: alone a boot is ~45 s (15 of
-//   them npx), six at once 75-140 s, the WPML ones last (they also open
-//   String Translation's screen once, warmWpml()).
+//   one starts its files as soon as IT is ready. Since 28-10-2026 (evening) a
+//   normal shard starts from a copy of the golden WordPress and the WPML one
+//   from the WPML snapshot (both explained where they are built, below):
+//   ready at 31-45 s and ~55 s, against 75-155 s before.
+// - SAME RESULT EVERY RUN (28-10-2026, evening): the CLI and WordPress are
+//   pinned (CLI_VERSION, the URL in tests/blueprint.json), the test WordPress
+//   is offline and without WP-cron (tests/wp/estrategia-web-test-env.php),
+//   a file that hangs is killed (runFile()), a boot fails only if Playground
+//   exits or never says «Ready!», and the «machine:» line at the start says
+//   how busy the machine was (a slow run is then explainable, not a mystery).
+//   PHP's errors go to a log per shard and are printed under a red file.
 // - Levels 2 and 3 are dealt together, level 2 first inside each pile: no
 //   WordPress waits idle at a barrier between the levels.
 // - Playground gets --workers=2: a test can send two requests at once (an
@@ -79,7 +113,7 @@
 // the others are PORT + 16 + n (9421, 9422…) and WPML_PORT + 16 + n (9431…).
 //
 // If level 2 or 3 is needed and there is no WordPress on a shard's port, it
-// STARTS Playground (WP 7.1, PHP 8.3, the plugin mounted as
+// STARTS Playground (WP 7.1.4, PHP 8.3, the plugin mounted as
 // plugins/estrategia-web and tests/blueprint.json, which loads the test
 // mu-plugin of each module that has one) and KILLS it at the end with
 // taskkill /T /F: killing the parent does not kill the children on Windows.
@@ -132,8 +166,13 @@
 //   (content-types/editor-panel went red that way, 28-10-2026), so
 //   tests/blueprint.json switches the guide off at boot for user 1.
 // - The trap of the shards: memory. Each Playground is ~0,5 GB with two
-//   workers, plus a Chromium per browser test; 6 of them fit in the 15,7 GB
-//   of this machine with room to spare. On a smaller machine, EW_SHARDS=2.
+//   workers, plus a Chromium per browser test; AUTO_SHARDS takes fewer when
+//   the free memory at the start does not hold ~0,8 GB per WordPress.
+// - The trap of the CPU: the battery is CPU-bound (80-95 % busy during the
+//   run). Windows Defender scanning Playground's files used ~1000-1400 CPU
+//   seconds per run, nearly as much as all the Playgrounds (1400-2000); an
+//   exclusion for %TEMP%\estrategia-web-tests is the owner's decision, not
+//   this file's.
 // - The trap of WPML on SQLite: it failed SILENTLY at three things (advisory
 //   locks, an INSERT … LAST_INSERT_ID(), the String Translation collation);
 //   the fixes, and how to find a new one, in tests/wp/estrategia-web-wpml-test.php.
@@ -146,7 +185,10 @@
 // «[object Object]». Launched from here (Node, no MSYS) it does not happen.
 // If you launch it by hand from Git Bash: put MSYS_NO_PATHCONV=1 in front.
 import { spawn, spawnSync } from "node:child_process";
+import { listScenarios, checksOf, checkFiles, OUT_DIR as BROWSER_OUT } from "./browser.mjs";
+import crypto from "node:crypto";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
@@ -155,14 +197,31 @@ const ROOT = path.resolve(import.meta.dirname, "..");
 // modules' lib.mjs files), which is set here for each shard so they inherit it.
 const PORT = Number(process.env.EW_PORT || process.env.AS_PORT) || 9404;
 const WPML_PORT = Number(process.env.EW_WPML_PORT) || PORT + 10;
-const SHARDS = Math.max(1, Number(process.env.EW_SHARDS) || 5);
+// How many normal WordPresses, by default (28-10-2026, evening): ONE PER THREE LOGICAL CPUs, and
+// fewer if the free memory does not hold them (~0,8 GB each with its browser). Measured on this
+// machine (12 logical CPUs, 6 cores; same code, back to back, plus the WPML one each time):
+//   3: 433 s (CPU 75 %)   4: 349 s (83 %)   5: 368 s (95 %)   6: 432 s (98 %, and one editor
+//   wait timed out: starved, not wrong).
+// The sum of the files' times grows faster than the shards past four (1454 s → 1903 → 2476):
+// past that point they only share the same CPU. EW_SHARDS=n still forces it.
+const AUTO_SHARDS = Math.max(1, Math.min(Math.floor(os.cpus().length / 3), Math.floor(os.freemem() / 2 ** 30 / 0.8) - 1));
+const SHARDS = Math.max(1, Number(process.env.EW_SHARDS) || AUTO_SHARDS);
+const SHARDS_WHY = process.env.EW_SHARDS ? `EW_SHARDS=${SHARDS}` : `${SHARDS} WordPress (one per 3 logical CPUs, within the free memory; EW_SHARDS=n to force)`;
 const WPML_SHARDS = Math.max(1, Number(process.env.EW_WPML_SHARDS) || 1);
 const only = process.argv.includes("--nivel") ? process.argv[process.argv.indexOf("--nivel") + 1] : null;
 // Seconds per test FILE, per level (see the header). Over it, the file is red.
 // Level 1 runs as one process (all its files at once) and is not timed per file.
 // Measured INSIDE the whole battery (28-10-2026), where six WordPresses share the machine
 // and a file takes ~1,4 times what it takes alone.
-const LIMIT = { 2: 60, 3: 75 };
+// Raised from 60/75 (28-10-2026, evening): across ten full runs of the SAME code the same file
+// took between 1,3 and 2 times its fastest time (redirects/server 43-70 s, site/types 38-64 s,
+// content-types/editor-panel 47-78 s), because this machine is shared (Defender, other sessions'
+// WordPresses and browsers: the «machine:» line at the start says how busy it was). With 60/75,
+// most runs had one file over by a few seconds, a different one each time: red that says nothing
+// about the code. 90/100 is ~1,3 times the slowest time seen; what keeps the battery fast is the
+// 5-minute TARGET, and a file that hangs is KILLED at twice its limit (runFile()).
+// «browser»: per SCENARIO (ARMAZON: 100 s per browser scenario, measured on this plugin).
+const LIMIT = { 2: 90, 3: 100, browser: 100 };
 let stopping = false;
 const TARGET = 5 * 60;
 // Request-handling workers per Playground (see the header, «--workers»).
@@ -178,7 +237,7 @@ const WPML_DIR = (() => {
 const wpmlMounts = () =>
   ["sitepress-multilingual-cms", "wpml-string-translation"]
     .filter((p) => fs.existsSync(path.join(WPML_DIR, p)))
-    .flatMap((p) => ["--mount-dir", path.join(WPML_DIR, p), `/wordpress/wp-content/plugins/${p}`]);
+    .flatMap((p) => ["--mount-dir-before-install", path.join(WPML_DIR, p), `/wordpress/wp-content/plugins/${p}`]);
 
 // The WordPresses: SHARDS normal ones and, with a WPML copy, WPML_SHARDS with WPML.
 const shardPort = (base, n) => (n === 0 ? base : base + 16 + n);
@@ -188,6 +247,8 @@ const withWpml = WPML_DIR
   : null;
 const baseOf = (wp) => `http://127.0.0.1:${wp.port}`;
 
+// The browser checks (browser-*.test.mjs): level 1, but they run AFTER the scenarios (header, «THE BROWSER»).
+const CHECKS = new Set(checkFiles());
 // All the tests, with their path relative to the root and a short name to pick them.
 const all = [
   ...fs.readdirSync(path.join(ROOT, "tests")).filter((f) => f.endsWith(".test.mjs")).map((f) => path.posix.join("tests", f)),
@@ -195,7 +256,7 @@ const all = [
     const dir = path.join(ROOT, "modules", m, "tests");
     return fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith(".test.mjs")).map((f) => path.posix.join("modules", m, "tests", f)) : [];
   }),
-].sort();
+].filter((rel) => !CHECKS.has(rel)).sort();
 const nameOf = (rel) => (rel.startsWith("modules/") ? rel.split("/")[1] + "/" : "") + path.posix.basename(rel, ".test.mjs");
 const source = (rel) => fs.readFileSync(path.join(ROOT, rel), "utf8");
 const needsWpml = (rel) => /^\/\/ WPML: REAL\b/m.test(source(rel));
@@ -240,7 +301,14 @@ for (const f of files) {
 }
 
 const levels = Object.keys(byLevel).sort().filter((l) => !only || l === only);
-const needsWp = levels.some((l) => l !== "1");
+// The browser scenarios picked like the files (a name, «module/», or all), unless --nivel says otherwise
+// (they replace level 3: --nivel 3 runs them, --nivel 1 and 2 do not).
+const scenarios = only && only !== "3"
+  ? []
+  : listScenarios().filter((s) => !picked.length || picked.some((p) => s.id.startsWith(p) || s.name.startsWith(p) || `${s.module}/${s.name}`.startsWith(p) || `${s.module}/` === p));
+const scenarioKey = (s) => `browser:${s.id}`;
+const scenarioName = (s) => `${s.module}/${s.id}`;
+const needsWp = levels.some((l) => l !== "1") || scenarios.length > 0;
 const wpmlWanted = levels.some((l) => l !== "1" && byLevel[l].some(needsWpml));
 
 async function up(wp) {
@@ -251,40 +319,223 @@ async function up(wp) {
   }
 }
 
+// PINNED, NOT «latest» (28-10-2026, «A battery that gives the same result every run»). Measured
+// causes of the boots that failed with `npx @wp-playground/cli@latest --wp=7.1`:
+// - --wp=7.1 asks api.wordpress.org on EVERY boot which 7.1.x is the newest. The day 7.1.4 came
+//   out, five shards found no 7.1.4.zip in the CLI's cache (~/.wordpress-playground) and the five
+//   downloaded it at once into the SAME «7.1.4.zip.partial»: «ENOENT … rename '7.1.4.zip.partial'
+//   -> '7.1.4.zip'» and that WordPress never booted. Now the version is a URL in
+//   tests/blueprint.json (the blueprint's preferredVersions WIN over --wp in the CLI), the CLI
+//   caches a URL as custom-<sha1 of the URL, 8 hex>.zip, and ensureWordPressZip() downloads it
+//   ONCE, before any boot, with a rename of its own.
+// - @latest made npx check the registry and, on a release day, install the new CLI from five
+//   processes at once; the run used whatever came out that week. The CLI is now installed once
+//   into tests/.cache/playground-cli-<version>/ (gitignored) and started with node directly: no
+//   npx, no shell (also ~10 s less per boot).
+// - Each CLI, when it starts, lstat()s EVERY entry of the system temp folder looking for stale
+//   Playground folders of dead processes (5382 entries here on 28-10-2026). Another program
+//   deleting one of them meanwhile gives the WARNING «Failed to find stale Playground temp dirs:
+//   Error: ENOENT …», and this runner rejected the boot because the output contained «Error».
+//   Now each shard gets its own TEMP (tempOf(), emptied before its boot) and a boot fails only
+//   when Playground EXITS or does not say «Ready!» within BOOT_LIMIT.
+// How to maintain: to move to a newer CLI or WordPress, change CLI_VERSION or the URL in
+// tests/blueprint.json, run the whole battery once and commit both with that run's «Time:» line.
+const CLI_VERSION = "3.1.61";
+const CLI_DIR = path.join(ROOT, "tests", ".cache", `playground-cli-${CLI_VERSION}`);
+const CLI_BIN = path.join(CLI_DIR, "node_modules", "@wp-playground", "cli", "wp-playground.js");
+const BLUEPRINT = path.join(ROOT, "tests", "blueprint.json");
+const WP_ZIP_URL = JSON.parse(fs.readFileSync(BLUEPRINT, "utf8")).preferredVersions.wp;
+const BOOT_LIMIT = 300;
+// Per shard, outside the repo: Playground's temp folder (the whole WordPress lives there) and the PHP error log.
+const tempOf = (wp) => path.join(os.tmpdir(), "estrategia-web-tests", String(wp.port));
+const phpLogOf = (wp) => path.join(tempOf(wp), "logs", "php-errors.log");
+
+function ensureCli() {
+  if (fs.existsSync(CLI_BIN)) return;
+  console.log(`· installing @wp-playground/cli@${CLI_VERSION} into ${path.relative(ROOT, CLI_DIR)} (once)`);
+  fs.mkdirSync(CLI_DIR, { recursive: true });
+  const r = spawnSync("npm", ["install", "--prefix", CLI_DIR, "--no-save", "--no-audit", "--no-fund", `@wp-playground/cli@${CLI_VERSION}`], { shell: true, stdio: "inherit" });
+  if (r.status !== 0 || !fs.existsSync(CLI_BIN)) throw new Error(`could not install @wp-playground/cli@${CLI_VERSION}`);
+}
+
+async function ensureWordPressZip() {
+  if (!/^https:\/\//.test(WP_ZIP_URL)) return; // A plain version: the CLI resolves it (and races, see above).
+  const sha = crypto.createHash("sha1").update(WP_ZIP_URL).digest("hex").slice(0, 8);
+  const target = path.join(os.homedir(), ".wordpress-playground", `custom-${sha}.zip`);
+  if (fs.existsSync(target)) return;
+  console.log(`· downloading ${WP_ZIP_URL} into Playground's cache (once)`);
+  const res = await fetch(WP_ZIP_URL);
+  if (!res.ok) throw new Error(`${WP_ZIP_URL} -> ${res.status}`);
+  const partial = `${target}.${process.pid}.partial`;
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(partial, Buffer.from(await res.arrayBuffer()));
+  fs.renameSync(partial, target);
+}
+
+/** Starts the pinned CLI; resolves with the child once it says «Ready!» (rejects if it exits or takes over BOOT_LIMIT). */
+function launch(name, args, temp, log) {
+  fs.mkdirSync(temp, { recursive: true });
+  const child = spawn(process.execPath, [CLI_BIN, "server", `--wp=${WP_ZIP_URL}`, "--php=8.3", `--workers=${WORKERS}`, ...args], {
+    cwd: ROOT,
+    stdio: ["ignore", "pipe", "pipe"],
+    env: { ...process.env, TEMP: temp, TMP: temp, TMPDIR: temp },
+  });
+  const ready = new Promise((resolve, reject) => {
+    let text = "";
+    const timer = setTimeout(() => reject(new Error(`${name}: no «Ready!» after ${BOOT_LIMIT} s. See ${log}`)), BOOT_LIMIT * 1000);
+    const onData = (d) => {
+      text += d;
+      fs.appendFileSync(log, d);
+      if (text.includes("Ready!")) clearTimeout(timer), resolve();
+    };
+    child.stdout.on("data", onData);
+    child.stderr.on("data", onData);
+    child.on("exit", (code) => (clearTimeout(timer), reject(new Error(`${name}: Playground exited with ${code}\n${text}`))));
+  });
+  return { child, ready };
+}
+const kill = (child) => {
+  if (process.platform === "win32") spawnSync("taskkill", ["/pid", String(child.pid), "/T", "/F"], { stdio: "ignore" });
+  else child.kill();
+};
+
+// THE GOLDEN WORDPRESS (28-10-2026). Measured: a boot alone was ~35 s, and six at once 70-135 s,
+// while level 1 takes 10: the boots were a third of the battery. Of the 35 s, ~23 are Playground
+// unzipping WordPress INSIDE WebAssembly (3300 files through its virtual filesystem) and installing
+// it; the rest, the blueprint. So WordPress is unzipped and installed ONCE per CLI and WordPress
+// version (here, cached across runs) and each shard starts from a native copy of it (~3 s) with
+// --wordpress-install-mode=install-from-existing-files-if-needed: six at once went from 70-80 s to
+// ~40 s (scratch measurement, same machine, same hour). Each shard still gets its own fresh copy
+// and its own database, so nothing a test writes survives to another shard or another run.
+// How to maintain: nothing — the key changes with CLI_VERSION and the WordPress URL, and a stale
+// golden-* folder is deleted when a new one is built. The trap: the golden is built WITHOUT the
+// plugin and without the blueprint; anything plugin-specific belongs in the blueprint, which still
+// runs on every boot. (Its home/siteurl rows name the golden's port; Playground defines WP_HOME and
+// WP_SITEURL per shard, which is what WordPress reads.)
+const GOLDEN_KEY = crypto.createHash("sha1").update(`${CLI_VERSION}|${WP_ZIP_URL}|8.3`).digest("hex").slice(0, 10);
+const GOLDEN_ROOT = path.join(os.tmpdir(), "estrategia-web-tests");
+const GOLDEN = path.join(GOLDEN_ROOT, `golden-${GOLDEN_KEY}`, "wordpress");
+async function ensureGolden() {
+  if (fs.existsSync(path.join(GOLDEN, "wp-config.php"))) return;
+  const t = Date.now();
+  const building = path.join(GOLDEN_ROOT, `golden-${GOLDEN_KEY}.${process.pid}.building`);
+  fs.rmSync(building, { recursive: true, force: true });
+  fs.mkdirSync(path.join(building, "wordpress"), { recursive: true });
+  const log = path.join(ROOT, "tests", ".playground-golden.log");
+  fs.writeFileSync(log, "");
+  const { child, ready } = launch("golden WordPress", ["--mount-dir-before-install", path.join(building, "wordpress"), "/wordpress"], path.join(building, "tmp"), log);
+  try {
+    await ready;
+  } finally {
+    kill(child);
+  }
+  fs.rmSync(path.join(building, "tmp"), { recursive: true, force: true });
+  try {
+    fs.renameSync(building, path.dirname(GOLDEN));
+  } catch {
+    fs.rmSync(building, { recursive: true, force: true }); // Another run built it first: theirs is as good.
+  }
+  for (const old of fs.readdirSync(GOLDEN_ROOT)) {
+    if (/^golden-/.test(old) && old !== `golden-${GOLDEN_KEY}`) fs.rmSync(path.join(GOLDEN_ROOT, old), { recursive: true, force: true });
+  }
+  console.log(`· built the golden WordPress (once per CLI and WordPress version) in ${((Date.now() - t) / 1000).toFixed(0)} s`);
+}
+
+// THE WPML SNAPSHOT (28-10-2026). With the golden WordPress the normal shards were ready at 33-45 s,
+// and the WPML one at 100-136 s: every WPML request costs 4-5 s alone (2160 PHP files and WPML's
+// own init, against 658 without it) and 13-17 s with the machine busy, and its boot is five of
+// them (WPML's two setup passes, the /state fact, the login and String Translation's first
+// screen, warmWpml()). It was the critical path of the whole battery. So a WPML WordPress that
+// has finished all that is kept (wordpress/ after warmWpml(), database included) and each WPML
+// shard starts from a copy of it, running only BLUEPRINT_SNAPSHOT (the month's uploads folder).
+// What makes it safe: its key is a hash of EVERYTHING that could change that state — the golden's
+// key, every .php/.json/.xml of this repo (the plugin's activation, the test mu-plugins and their
+// WPML-on-SQLite fixes, the blueprint, setup-*.php) and the WPML copy's main files — so a change
+// to any of them builds a new one (that run pays the old boot once). A test still gets a fresh
+// copy and a database nobody else touched.
+// How to maintain: if a WPML shard ever behaves differently from a fresh boot, delete
+// %TEMP%/estrategia-web-tests/wpml-* and compare; an input that matters and is not hashed goes
+// into snapshotKey(). The trap: the snapshot is made by KILLING Playground; it is taken only after
+// warmWpml() has returned, i.e. after the last request that writes.
+const BLUEPRINT_SNAPSHOT = path.join(ROOT, "tests", "blueprint-snapshot.json");
+function snapshotKey() {
+  const h = crypto.createHash("sha1").update(GOLDEN_KEY);
+  const walk = (dir) => {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) {
+        if (![".git", ".cache", "fixtures", "node_modules"].includes(e.name)) walk(p);
+      } else if (/\.(php|json|xml)$/.test(e.name) && !e.name.startsWith(".")) {
+        h.update(path.relative(ROOT, p)).update(fs.readFileSync(p));
+      }
+    }
+  };
+  walk(ROOT);
+  for (const f of ["sitepress-multilingual-cms/sitepress.php", "wpml-string-translation/plugin.php"]) {
+    if (fs.existsSync(path.join(WPML_DIR, f))) h.update(f).update(fs.readFileSync(path.join(WPML_DIR, f)));
+  }
+  return h.digest("hex").slice(0, 10);
+}
+const snapshotOf = (key) => path.join(GOLDEN_ROOT, `wpml-${key}`, "wordpress");
+
 async function startPlayground(wp) {
   if ((await up(wp)) || stopping) return;
   const log = path.join(ROOT, "tests", `.playground-${wp.port}.log`);
   fs.writeFileSync(log, "");
-  wp.child = spawn(
-    "npx",
-    ["-y", "@wp-playground/cli@latest", "server", "--wp=7.1", "--php=8.3", `--port=${wp.port}`, `--workers=${WORKERS}`,
-      "--mount-dir", ROOT, "/wordpress/wp-content/plugins/estrategia-web",
+  const key = wp.wpml ? snapshotKey() : null;
+  const snapshot = key && fs.existsSync(path.join(snapshotOf(key), "wp-config.php")) ? snapshotOf(key) : null;
+  await fs.promises.rm(tempOf(wp), { recursive: true, force: true });
+  await fs.promises.cp(snapshot ?? GOLDEN, path.join(tempOf(wp), "wordpress"), { recursive: true });
+  fs.mkdirSync(path.dirname(phpLogOf(wp)), { recursive: true });
+  // EW_TRACE=1: every request's ms and URL to logs/trace.log (tests/wp/estrategia-web-test-env.php).
+  if (process.env.EW_TRACE === "1") fs.writeFileSync(path.join(path.dirname(phpLogOf(wp)), "trace.on"), "");
+  const launched = launch(
+    wp.name,
+    [`--port=${wp.port}`,
+      // This shard's own copy of the golden WordPress (above), installed already.
+      "--mount-dir-before-install", path.join(tempOf(wp), "wordpress"), "/wordpress", "--wordpress-install-mode=install-from-existing-files-if-needed",
+      // Every mount BEFORE the install check: Playground loads WordPress (wp-load.php, so the
+      // mu-plugins) to see whether it is installed, and the WPML snapshot already has the test
+      // mu-plugin loader, which requires files of the plugin («Failed opening required …
+      // estrategia-web-test-env.php» and the boot died, 28-10-2026, when they were --mount-dir).
+      "--mount-dir-before-install", ROOT, "/wordpress/wp-content/plugins/estrategia-web",
+      // PHP's error log (tests/wp/estrategia-web-test-env.php points error_log here): read after a red file.
+      "--mount-dir-before-install", path.dirname(phpLogOf(wp)), "/wordpress/wp-content/estrategia-web-test-logs",
       ...wp.mounts(),
-      "--blueprint=" + path.join(ROOT, "tests", "blueprint.json"), "--login"],
-    { cwd: ROOT, shell: true, stdio: ["ignore", "pipe", "pipe"] }
+      "--blueprint=" + (snapshot ? BLUEPRINT_SNAPSHOT : BLUEPRINT), "--login"],
+    path.join(tempOf(wp), "tmp"),
+    log
   );
-  await new Promise((resolve, reject) => {
-    let text = "";
-    const onData = (d) => {
-      text += d;
-      fs.appendFileSync(log, d);
-      if (text.includes("Ready!")) resolve();
-      else if (/\bError\b/.test(text)) reject(new Error(`${wp.name}: ${text}`));
-    };
-    wp.child.stdout.on("data", onData);
-    wp.child.stderr.on("data", onData);
-    wp.child.on("exit", (code) => reject(new Error(`${wp.name}: Playground exited with ${code}\n${text}`)));
-  });
+  wp.child = launched.child;
+  await launched.ready;
   // «Ready!» is not enough: it waits for the FACT the tests need, that the
   // routes of the test mu-plugins respond (and, with WPML, that it is set up).
   const fact = wp.wpml ? "/wp-json/estrategia-web-wpml-test/v1/state" : "/wp-json/estrategia-web-site-test/v1/ping";
-  for (let i = 0; i < 240; i++) {
+  for (let i = 0; ; i++) {
     try {
-      if ((await fetch(baseOf(wp) + fact)).ok) return wp.wpml ? warmWpml(wp) : undefined;
+      if ((await fetch(baseOf(wp) + fact)).ok) break;
     } catch {}
+    if (i === 240) throw new Error(`${wp.name} started but ${fact} does not respond (did the blueprint fail?). See ${log}`);
     await new Promise((r) => setTimeout(r, 500));
   }
-  throw new Error(`${wp.name} started but ${fact} does not respond (did the blueprint fail?). See ${log}`);
+  if (!wp.wpml || snapshot) return;
+  await warmWpml(wp);
+  // Kept NOW, before this shard's first test (its files wait for wp.ready): no request is in flight
+  // and SQLite closes the database at the end of each request; Playground's opcache and temp files
+  // live outside wordpress/. A copy taken after the tests would carry what they wrote.
+  const target = path.dirname(snapshotOf(key));
+  const building = `${target}.${process.pid}.building`;
+  try {
+    await fs.promises.rm(building, { recursive: true, force: true });
+    await fs.promises.cp(path.join(tempOf(wp), "wordpress"), path.join(building, "wordpress"), { recursive: true });
+    fs.renameSync(building, target);
+    for (const old of fs.readdirSync(GOLDEN_ROOT)) {
+      if (/^wpml-[0-9a-f]+$/.test(old) && old !== path.basename(target)) await fs.promises.rm(path.join(GOLDEN_ROOT, old), { recursive: true, force: true });
+    }
+    console.log(`· kept the WPML snapshot ${path.basename(target)} (the next runs start their WPML WordPress from it)`);
+  } catch {
+    await fs.promises.rm(building, { recursive: true, force: true }); // Another run kept one first: theirs is as good.
+  }
 }
 
 // On a fresh WPML WordPress the FIRST wp-admin request that opens String
@@ -305,8 +556,7 @@ async function warmWpml(wp) {
 
 function stopPlayground(wp) {
   if (!wp.child) return;
-  if (process.platform === "win32") spawnSync("taskkill", ["/pid", String(wp.child.pid), "/T", "/F"], { stdio: "ignore" });
-  else wp.child.kill();
+  kill(wp.child);
   wp.child = null;
 }
 const everyWp = () => [...normal, ...(withWpml ?? [])];
@@ -317,6 +567,9 @@ process.on("SIGINT", () => {
 });
 
 if (process.argv.includes("--serve")) {
+  ensureCli();
+  await ensureWordPressZip();
+  await ensureGolden();
   for (const wp of [normal[0], ...(withWpml ? [withWpml[0]] : [])]) {
     if (await up(wp)) console.log(`There is already a WordPress on ${baseOf(wp)}: left as it is.`);
     else await startPlayground(wp);
@@ -326,15 +579,86 @@ if (process.argv.includes("--serve")) {
   await new Promise(() => {});
 }
 
-/** Runs one test file in its own process; resolves to { rel, ok, seconds, output }. */
-function runFile(rel, env) {
+/**
+ * Runs one test file in its own process; resolves to { rel, ok, seconds, output, killed }.
+ * HARD LIMIT (28-10-2026): a file still running at `hard` seconds is killed (its whole tree:
+ * the browser too) and is red saying so. carousel/carousel once hung 1289 s and held its shard;
+ * going over the limit made it red only AFTER it had finished.
+ */
+function runFile(rel, env, hard) {
+  return runProcess(["--test", rel], env, hard).then((r) => ({ ...r, rel }));
+}
+/** Runs node with `args` (cwd ROOT); kills its whole tree at `hard` seconds. Resolves to { ok, seconds, output, killed }. */
+function runProcess(args, env, hard) {
   return new Promise((resolve) => {
     const started = Date.now();
-    const child = spawn(process.execPath, ["--test", rel], { cwd: ROOT, env: { ...process.env, ...env } });
+    const child = spawn(process.execPath, args, { cwd: ROOT, env: { ...process.env, ...env } });
     let output = "";
+    let killed = false;
+    const timer = setTimeout(() => {
+      killed = true;
+      if (process.platform === "win32") spawnSync("taskkill", ["/pid", String(child.pid), "/T", "/F"], { stdio: "ignore" });
+      else child.kill("SIGKILL");
+    }, hard * 1000);
     child.stdout.on("data", (d) => (output += d));
     child.stderr.on("data", (d) => (output += d));
-    child.on("close", (code) => resolve({ rel, ok: code === 0, seconds: (Date.now() - started) / 1000, output }));
+    child.on("close", (code) => {
+      clearTimeout(timer);
+      if (killed) output += `\nKILLED by tests/run.mjs after ${hard} s (hard limit: twice its limit). It was hanging: the output above shows the last step it reached.\n`;
+      resolve({ ok: code === 0 && !killed, seconds: (Date.now() - started) / 1000, output, killed });
+    });
+  });
+}
+
+// The logs read when a file goes red: PHP's (tests/wp/estrategia-web-test-env.php sends error_log
+// there) and wp-content/debug.log, where WPML writes its own database errors.
+const logsOf = (wp) => [phpLogOf(wp), path.join(tempOf(wp), "wordpress", "wp-content", "debug.log")];
+const sizeOf = (file) => {
+  try {
+    return fs.statSync(file).size;
+  } catch {
+    return 0;
+  }
+};
+const phpLogSize = (wp) => logsOf(wp).map(sizeOf);
+/** What was logged on this shard since the sizes `from` (phpLogSize()), at most 4 KB per log. */
+function phpErrorsSince(wp, from) {
+  return logsOf(wp)
+    .map((file, i) => {
+      try {
+        const text = fs.readFileSync(file).subarray(from[i]).toString("utf8").trim();
+        return text ? `${file}:\n${text.length > 4096 ? text.slice(0, 4096) + "\n[…]" : text}` : "";
+      } catch {
+        return "";
+      }
+    })
+    .filter(Boolean)
+    .join("\n");
+}
+
+// Machine load (28-10-2026): other processes share this machine (Defender scanning, Docker, other
+// sessions' node), and a slow run must be explainable. CPU busy % from os.cpus() between two samples.
+const cpuSample = () => os.cpus().reduce((a, c) => ({ idle: a.idle + c.times.idle, total: a.total + Object.values(c.times).reduce((x, y) => x + y, 0) }), { idle: 0, total: 0 });
+const busySince = (s) => {
+  const n = cpuSample();
+  return Math.round(100 * (1 - (n.idle - s.idle) / Math.max(1, n.total - s.total)));
+};
+const load = { samples: [], last: cpuSample() };
+const loadTimer = setInterval(() => {
+  load.samples.push(busySince(load.last));
+  load.last = cpuSample();
+}, 5000);
+loadTimer.unref();
+/** The top CPU users right now (WMI; class names are not localized). ~9 s: started in the background. */
+function topProcesses() {
+  return new Promise((resolve) => {
+    if (process.platform !== "win32") return resolve("");
+    const ps = spawn("powershell", ["-NoProfile", "-Command",
+      `Get-CimInstance Win32_PerfFormattedData_PerfProc_Process | Where-Object { $_.Name -notin '_Total','Idle' } | Sort-Object PercentProcessorTime -Descending | Select-Object -First 5 | ForEach-Object { $_.Name + ' ' + [math]::Round($_.PercentProcessorTime / ${os.cpus().length}) + '%' }`],
+      { stdio: ["ignore", "pipe", "ignore"] });
+    let out = "";
+    ps.stdout.on("data", (d) => (out += d));
+    ps.on("close", () => resolve(out.trim().split(/\r?\n/).filter(Boolean).join(", ")));
   });
 }
 
@@ -365,7 +689,7 @@ function verdict(level, r, where) {
   const slow = r.seconds > limit;
   const ok = r.ok && !slow;
   const why = !r.ok ? "" : slow ? ` — OVER ITS LIMIT of ${limit} s (${own ? "its «TIEMPO»" : `level ${level}`}): make it faster, or write a «// TIEMPO:» line with the reason` : "";
-  console.log(`${ok ? "✔" : "✖"} [${level}] ${nameOf(r.rel)} ${r.seconds.toFixed(1)} s${where}${why}`);
+  console.log(`${ok ? "✔" : "✖"} [${level}] ${nameOf(r.rel)} ${r.seconds.toFixed(1)} s${where}${why}${r.killed ? " — KILLED: it hung (see below)" : ""}`);
   if (!r.ok) console.log(r.output.replace(/^/gm, "    "));
   return ok;
 }
@@ -379,9 +703,22 @@ try {
   // starts its files as soon as IT is ready (a WPML one takes twice as long).
   const wanted = needsWp ? [...normal, ...(wpmlWanted && withWpml ? withWpml : [])] : [];
   const booted = [];
+  if (wanted.length) {
+    const s = cpuSample();
+    await new Promise((r) => setTimeout(r, 1000));
+    console.log(`· machine: ${os.cpus().length} logical CPUs, ${busySince(s)} % busy before starting, ${(os.freemem() / 2 ** 30).toFixed(1)} of ${(os.totalmem() / 2 ** 30).toFixed(1)} GB free; ${SHARDS_WHY}`);
+    topProcesses().then((top) => top && console.log(`· top CPU users at the start: ${top}`));
+    ensureCli();
+    await ensureWordPressZip();
+    await ensureGolden();
+  }
   for (const wp of wanted) {
     wp.ready = startPlayground(wp).then(
-      () => (booted.push((Date.now() - t0) / 1000), null),
+      () => {
+        booted.push((Date.now() - t0) / 1000);
+        console.log(`· ${wp.port} ready at ${booted.at(-1).toFixed(0)} s`);
+        return null;
+      },
       (e) => e
     );
   }
@@ -400,20 +737,23 @@ try {
       failed = true;
     }
   }
-  const later = levels.filter((l) => l !== "1").flatMap((l) => byLevel[l]);
+  if (only === "1") console.log(`\n· ${CHECKS.size} browser checks are not run with --nivel 1: they read what the scenarios save, and run after them (header, «THE BROWSER»)`);
+  const later = [...levels.filter((l) => l !== "1").flatMap((l) => byLevel[l]), ...scenarios.map(scenarioKey)];
+  const browserTimes = [];
+  const ranScenarios = [];
   if (!failed && later.length) {
     // Levels 2 and 3 in ONE deal (no idle WordPress waiting at a barrier between them): the WPML
     // files go to the WPML WordPresses, the rest to the normal ones, and inside each pile the
     // level 2 files go first. «Stops at the first red level» becomes: once a level 2 file is
     // red, no level 3 file STARTS (one already running finishes).
     const t = Date.now();
-    const wpmlFiles = withWpml ? later.filter(needsWpml) : [];
+    const wpmlFiles = withWpml ? later.filter((f) => !f.startsWith("browser:") && needsWpml(f)) : [];
     const plain = later.filter((f) => !wpmlFiles.includes(f));
     const piles = [
       ...deal(plain, normal.length).map((p, i) => ({ ...p, wp: normal[i] })),
       ...(wpmlFiles.length ? deal(wpmlFiles, withWpml.length).map((p, i) => ({ ...p, wp: withWpml[i] })) : []),
     ];
-    console.log(`\n=== Levels 2 and 3: ${later.length} files in ${piles.length} WordPress at once`);
+    console.log(`\n=== Levels 2 and 3, and the browser: ${later.length - scenarios.length} files and ${scenarios.length} browser scenarios in ${piles.length} WordPress at once`);
     let red2 = false;
     const notRun = [];
     await Promise.all(
@@ -429,22 +769,71 @@ try {
         // each file asking for its own was one request more per file.
         const users = await fetch((process.env.AS_BASE ?? baseOf(wp)) + "/wp-json/estrategia-web-site-test/v1/users", { method: "POST" });
         const EW_CREDENTIALS = users.ok ? await users.text() : "";
-        for (const rel of [...mine].sort((a, b) => levelOf(a) - levelOf(b))) {
+        for (const rel of [...mine].filter((f) => !f.startsWith("browser:")).sort((a, b) => levelOf(a) - levelOf(b))) {
           if (red2 && levelOf(rel) === 3) {
             notRun.push(rel);
             continue;
           }
-          const r = await runFile(rel, { AS_BASE: process.env.AS_BASE ?? baseOf(wp), EW_CREDENTIALS });
+          const logFrom = phpLogSize(wp);
+          const r = await runFile(rel, { AS_BASE: process.env.AS_BASE ?? baseOf(wp), EW_CREDENTIALS }, 2 * (ownLimit(rel)?.seconds ?? LIMIT[levelOf(rel)]));
+          if (!r.ok) {
+            const php = phpErrorsSince(wp, logFrom);
+            if (php) r.output += `\nPHP logged during this file:\n${php}\n`;
+          }
           if (!verdict(levelOf(rel), r, ` (${wp.port})`)) {
             failed = true;
             if (levelOf(rel) === 2) red2 = true;
           }
         }
+        // This shard's browser scenarios: ONE process, ONE Chromium, after its level 2 files.
+        const mineScenarios = scenarios.filter((s) => mine.includes(scenarioKey(s)));
+        if (!mineScenarios.length) return;
+        if (red2) {
+          notRun.push(...mineScenarios.map(scenarioKey));
+          return;
+        }
+        const started = Date.now();
+        const report = path.join(ROOT, "tests", ".cache", `browser-report-${wp.port}.json`);
+        fs.mkdirSync(path.dirname(report), { recursive: true });
+        fs.rmSync(report, { force: true });
+        const r = await runProcess([path.join("tests", "browser.mjs"), "--base", process.env.AS_BASE ?? baseOf(wp), "--report", report, ...mineScenarios.map((s) => String(s.number))], {}, 2 * LIMIT.browser * mineScenarios.length);
+        browserTimes.push((Date.now() - started) / 1000);
+        let results = [];
+        try {
+          results = JSON.parse(fs.readFileSync(report, "utf8")).results;
+        } catch {}
+        for (const s of mineScenarios) {
+          const one = results.find((x) => x.id === s.id);
+          ranScenarios.push(s);
+          measured[scenarioKey(s)] = Math.round((one?.seconds ?? 0) * 10) / 10;
+          const slow = one && one.seconds > LIMIT.browser;
+          const ok = one?.ok && !slow;
+          if (!ok) failed = true;
+          const why = !one ? ` — NO RESULT: the browser process ${r.killed ? "was KILLED (it hung)" : "ended without a report"}` : !one.ok ? ` — ${one.error}` : slow ? ` — OVER ITS LIMIT of ${LIMIT.browser} s per scenario: split it, or make it faster` : "";
+          console.log(`${ok ? "✔" : "✖"} [browser] ${scenarioName(s)} ${(one?.seconds ?? 0).toFixed(1)} s (${wp.port})${why}`);
+        }
+        if (!results.length) console.log(r.output.replace(/^/gm, "    "));
       })
     );
     if (booted.length) times.push(`boot ${Math.min(...booted).toFixed(0)}-${Math.max(...booted).toFixed(0)} s`);
-    times.push(`levels 2 and 3 ${((Date.now() - t) / 1000).toFixed(0)} s`);
-    if (notRun.length) console.error(`\n✖ ${red2 ? "Level 2 in red: these level 3 files were not run" : "Not run"}: ${notRun.map(nameOf).join(", ")}`);
+    times.push(`levels 2 and 3 with the browser ${((Date.now() - t) / 1000).toFixed(0)} s`);
+    if (browserTimes.length) times.push(`browser ${Math.min(...browserTimes).toFixed(0)}-${Math.max(...browserTimes).toFixed(0)} s per shard (${browserTimes.length} Chromium)`);
+    if (notRun.length) console.error(`\n✖ ${red2 ? "Level 2 in red: these level 3 files and browser scenarios were not run" : "Not run"}: ${notRun.map((f) => (f.startsWith("browser:") ? f : nameOf(f))).join(", ")}`);
+  }
+  // The checks of the scenarios that ran: level 1, ONE process, after every shard (header, «THE BROWSER»).
+  const checks = [...new Set(ranScenarios.flatMap((s) => checksOf(s.id)))];
+  if (checks.length) {
+    const t = Date.now();
+    console.log(`\n=== Browser checks: ${checks.length} files (level 1, reading ${BROWSER_OUT})`);
+    const code = await new Promise((resolve) => {
+      const child = spawn(process.execPath, ["--test", ...checks], { cwd: ROOT, stdio: "inherit" });
+      child.on("close", (c) => resolve(c));
+    });
+    times.push(`checks ${((Date.now() - t) / 1000).toFixed(0)} s`);
+    if (code !== 0) {
+      console.error(`\n✖ Browser checks in red.`);
+      failed = true;
+    }
   }
 } catch (e) {
   console.error(e.message);
@@ -461,6 +850,7 @@ const slowest = Object.entries(measured).sort((a, b) => b[1] - a[1]).slice(0, 8)
 if (slowest.length) console.log(`\nSlowest files: ${slowest.map(([f, s]) => `${nameOf(f)} ${s} s`).join(" · ")}`);
 if (exceptions.size) console.log(`Own time limits («// TIEMPO:»): ${[...exceptions].map(([f, e]) => `${nameOf(f)} ${e.seconds} s (${e.why})`).join(" · ")}`);
 const total = (Date.now() - t0) / 1000;
-console.log(`\nTime: ${total.toFixed(0)} s — ${times.join(" · ")}${WPML_DIR ? "" : " (no WPML copy: the WPML tests ran without it)"}`);
+const cpu = load.samples.length ? ` · CPU ${Math.round(load.samples.reduce((a, b) => a + b, 0) / load.samples.length)} % avg, ${Math.max(...load.samples)} % max` : "";
+console.log(`\nTime: ${total.toFixed(0)} s — ${times.join(" · ")}${cpu} · ${normal.length}+${withWpml?.length ?? 0} WordPress${WPML_DIR ? "" : " (no WPML copy: the WPML tests ran without it)"}`);
 if (!only && !picked.length && total > TARGET) console.log(`⚠ Over the ${TARGET / 60} min target (header of tests/run.mjs): look at «Slowest files» first.`);
 process.exit(failed ? 1 : 0);

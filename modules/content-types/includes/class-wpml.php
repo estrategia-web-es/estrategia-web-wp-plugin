@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\ContentTypes;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * WPML FOR THE DECLARED TYPES: the equivalent of a wpml-config.xml, built
  * from the definitions, plus the copy on save that WPML misses.
@@ -59,10 +63,6 @@
  * this fix failing. Complete the setup first (Lavandería: semilla/v1/idiomas
  * accion=activar).
  */
-
-namespace EstrategiaWeb\ContentTypes;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Wpml {
 
