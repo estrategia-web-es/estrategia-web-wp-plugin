@@ -122,7 +122,7 @@ final class Tab {
 			}
 			return Languages::company( $key, \EstrategiaWeb\Site\Company::value( $key ), $code );
 		};
-		$facts = array( $company( 'legal_name' ), $company( 'tax_id' ), str_replace( "\n", ', ', $company( 'address' ) ), $company( 'phone' ), $company( 'email' ), home_url( '/' ) );
+		$facts = array( $company( 'legal_name' ), $company( 'tax_id' ), str_replace( "\n", ', ', $company( 'address' ) ), $company( 'phone' ), $company( 'email' ), Languages::home( $code ) );
 		$pages = array();
 		$posts = get_posts(
 			array(

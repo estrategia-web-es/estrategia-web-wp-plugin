@@ -76,5 +76,7 @@ test("the tab: one text per language, and each draft with the pages and the addr
   assert.match(en, /\[Self-service llms\]\([^)]*\/en\/self-service-llms\/\)/);
   assert.doesNotMatch(en, /Autoservicio llms/);
   assert.match(en, new RegExp(ADDRESS_EN));
+  assert.match(en, new RegExp(` · ${BASE}/en/\n`), "the English home, not the Spanish one");
+  assert.match(es, new RegExp(` · ${BASE}/\n`));
   assert.match(en, /## Pages/);
 });

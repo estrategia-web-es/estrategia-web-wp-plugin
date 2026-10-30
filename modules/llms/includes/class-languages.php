@@ -96,13 +96,23 @@ final class Languages {
 	 * went. Without it, WPML's URL converter, which converts any URL.
 	 */
 	public static function url( string $code ): string {
+		$home  = self::home( $code );
+		$query = (string) wp_parse_url( $home, PHP_URL_QUERY );
+		$base  = '' !== $query ? substr( $home, 0, (int) strpos( $home, '?' ) ) : $home;
+		return trailingslashit( $base ) . 'llms.txt' . ( '' !== $query ? '?' . $query : '' );
+	}
+
+	/**
+	 * A language's home page. Asked to WPML, not to home_url(): in wp-admin,
+	 * with WPML switched to «en», home_url() still gives the default
+	 * language's (seen 31-10-2026 in the English draft).
+	 */
+	public static function home( string $code ): string {
 		$home = trailingslashit( (string) get_option( 'home' ) );
 		if ( self::wpml() && self::default() !== $code ) {
 			$home = (string) apply_filters( 'wpml_permalink', $home, $code );
 		}
-		$query = (string) wp_parse_url( $home, PHP_URL_QUERY );
-		$base  = '' !== $query ? substr( $home, 0, (int) strpos( $home, '?' ) ) : $home;
-		return trailingslashit( $base ) . 'llms.txt' . ( '' !== $query ? '?' . $query : '' );
+		return $home;
 	}
 
 	/**
