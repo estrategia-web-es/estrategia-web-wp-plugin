@@ -114,3 +114,14 @@ browser can show the accents wrong. Why it exists: the SEO plan
 - Per language with WPML (open: one file with sections or one per language).
 - When it is published on estrategiaweb.es, the loose file is deleted there
   (a static file wins over WordPress in nginx, so it would hide the module).
+
+David, 31-10-2026: it goes in this plugin, not in an SEO plugin. **Checked
+the same day, to be decided before coding:** Rank Math 1.0.280 (installed on
+estrategiaweb.es) DOES ship an `llms` module (`includes/modules/llms/`),
+switched off there. It serves `/llms.txt` with `text/plain; charset=utf-8`,
+lists posts and taxonomies with their description (limit 100 per type) and
+has an «extra content» field editable in the panel. What it does NOT do: the
+company paragraph from Company details, and anything per WPML language. So
+the open question is whether our module replaces it or only feeds its
+`rank_math/llms_txt/extra_content` filter; if both are on, they fight for
+the same URL.
