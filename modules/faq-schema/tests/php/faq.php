@@ -12,6 +12,12 @@
 
 define( 'ABSPATH', __DIR__ . '/' );
 
+// WordPress's own wp_strip_all_tags() (wp-includes/formatting.php), the only
+// WordPress function Faq calls: Plugin Check rejects plain strip_tags() (2.2.0).
+function wp_strip_all_tags( $text ) {
+	return trim( strip_tags( preg_replace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $text ) ) );
+}
+
 require __DIR__ . '/../../includes/class-faq.php';
 
 use EstrategiaWeb\FaqSchema\Faq;

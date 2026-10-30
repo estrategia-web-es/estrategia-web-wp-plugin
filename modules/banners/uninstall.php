@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 /**
  * When the plugin is DELETED (not deactivated). Like forms: the statistics
  * are an advertiser's history and are NOT deleted unless the site asks for
