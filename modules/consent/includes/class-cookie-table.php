@@ -62,11 +62,18 @@ final class Cookie_Table {
 		return $labels;
 	}
 
-	/** Registers a row's free texts in WPML (when it is saved). */
+	/**
+	 * Registers a row's free texts in WPML (when it is saved), in the site's
+	 * DEFAULT language. Without it WPML assumes English (the same trap as the
+	 * forms, Language::register_string): on Gastronòmicament, Catalan by
+	 * default, the texts were registered as English and /en/cookie-policy
+	 * showed the Catalan text, with no error (31-10-2026).
+	 */
 	public static function register_strings( string $key, array $entry ): void {
+		$source = (string) apply_filters( 'wpml_default_language', null );
 		foreach ( array( 'provider', 'purpose', 'duration' ) as $field ) {
 			if ( '' !== (string) $entry[ $field ] && ( 'duration' !== $field || null === self::duration_parts( (string) $entry[ $field ] ) ) ) {
-				do_action( 'wpml_register_single_string', self::WPML_CONTEXT, $field . ' ' . $key, (string) $entry[ $field ] );
+				do_action( 'wpml_register_single_string', self::WPML_CONTEXT, $field . ' ' . $key, (string) $entry[ $field ], false, $source );
 			}
 		}
 	}

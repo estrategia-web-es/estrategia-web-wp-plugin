@@ -918,8 +918,10 @@ that the simulated test was hiding (see CHANGELOG, 0.5.0).
 before, `estrategia-web-site` and `estrategia-web-forms`; the theme uses the
 same one and WordPress merges both files). `languages/`:
 [estrategia-web.pot](languages/estrategia-web.pot),
-[estrategia-web-es_ES.po](languages/estrategia-web-es_ES.po) and its
-`.l10n.php`. They are generated with `node tools/i18n.mjs` (see its header),
+[estrategia-web-es_ES.po](languages/estrategia-web-es_ES.po),
+[estrategia-web-ca.po](languages/estrategia-web-ca.po) and
+[estrategia-web-de_DE.po](languages/estrategia-web-de_DE.po) (2.4.0), each
+with its `.l10n.php`. They are generated with `node tools/i18n.mjs` (see its header),
 which also extracts the name and description of each `module.php`. The
 `msgid` is the **English text** (WordPress convention). There is no editor
 JSON: core passes the translations to `wp.i18n` inline

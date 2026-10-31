@@ -5,8 +5,8 @@
 //   node tools/i18n.mjs new <locale> start a language: estrategia-web-<locale>.po with
 //                                    every string empty, then everything as above
 //
-// Languages: every languages/estrategia-web-<locale>.po there is (today es_ES
-// and ca). Nothing here lists them: a new .po is merged and compiled like the others.
+// Languages: every languages/estrategia-web-<locale>.po there is (today es_ES,
+// ca and de_DE). Nothing here lists them: a new .po is merged and compiled like the others.
 //
 // ONE text domain for the whole plugin, estrategia-web (since 1.1.0, which merged
 // Site, Forms and the theme's blocks). What it produces in languages/:

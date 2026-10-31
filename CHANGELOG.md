@@ -9,6 +9,28 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.4.0 — 31-10-2026
+
+**What each site must do:** nothing. A site with German (de_DE) now shows
+the notice, the forms and the blocks in German instead of English. A site
+whose default language is not English and that already has rows in the
+cookie table: the strings registered before stay as English in String
+Translation; re-save each row on «Estrategia Web → Cookies» (or set their
+language in String Translation) and add the translations.
+
+- **German translation (de_DE)**: languages/estrategia-web-de_DE.po and
+  .l10n.php, all the strings. Sie, German quotes „…“, das Cookie; cookie
+  categories Notwendig / Präferenzen / Statistik / Marketing, as the usual
+  German consent tools. First site: Gastronòmicament (ca, es, en, de), which
+  until now had a site-level copy of the notice strings only in
+  wp-content/languages/plugins/.
+- Cookie table: `Cookie_Table::register_strings()` passes the default
+  language to `wpml_register_single_string`, like the forms
+  (`Language::register_string`). Without it WPML assumed English: on
+  Gastronòmicament (Catalan by default) the provider and purpose were
+  registered as English and /en/cookie-policy showed the Catalan text, with
+  no error.
+
 ## 2.3.0 — 30-10-2026
 
 **What each site must do:** nothing, but it LOOKS different: after a

@@ -121,11 +121,11 @@ msgctxt "block keyword"
 msgid "banner"
 msgstr ""
 
-#: modules/banners/blocks/banner-zone/labels.php:8
+#: modules/banners/blocks/banner-zone/labels.php:10
 msgid "Zone (its slug)"
 msgstr ""
 
-#: modules/banners/blocks/banner-zone/labels.php:9
+#: modules/banners/blocks/banner-zone/labels.php:11
 msgid "How many at a time (0: all, one under another)"
 msgstr ""
 
@@ -613,7 +613,7 @@ msgid "Confirm all pending proposals"
 msgstr ""
 
 #: modules/consent/includes/admin/class-cookies-page.php:252
-#: modules/consent/includes/class-cookie-table.php:163
+#: modules/consent/includes/class-cookie-table.php:170
 msgid "Cookie"
 msgstr ""
 
@@ -624,19 +624,19 @@ msgstr ""
 
 #: modules/consent/includes/admin/class-cookies-page.php:255
 #: modules/consent/includes/admin/class-cookies-page.php:332
-#: modules/consent/includes/class-cookie-table.php:164
+#: modules/consent/includes/class-cookie-table.php:171
 msgid "Provider"
 msgstr ""
 
 #: modules/consent/includes/admin/class-cookies-page.php:256
 #: modules/consent/includes/admin/class-cookies-page.php:333
-#: modules/consent/includes/class-cookie-table.php:165
+#: modules/consent/includes/class-cookie-table.php:172
 msgid "Purpose"
 msgstr ""
 
 #: modules/consent/includes/admin/class-cookies-page.php:257
 #: modules/consent/includes/admin/class-cookies-page.php:334
-#: modules/consent/includes/class-cookie-table.php:166
+#: modules/consent/includes/class-cookie-table.php:173
 msgid "Duration"
 msgstr ""
 
@@ -988,12 +988,12 @@ msgstr ""
 msgid "Matomo, hybrid mode (Matomo module)"
 msgstr ""
 
-#: modules/consent/includes/class-cookie-table.php:103
+#: modules/consent/includes/class-cookie-table.php:110
 msgid "Session"
 msgstr ""
 
 #. translators: %d: number of seconds.
-#: modules/consent/includes/class-cookie-table.php:106
+#: modules/consent/includes/class-cookie-table.php:113
 #, php-format
 msgid "%d second"
 msgid_plural "%d seconds"
@@ -1001,7 +1001,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of minutes.
-#: modules/consent/includes/class-cookie-table.php:109
+#: modules/consent/includes/class-cookie-table.php:116
 #, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
@@ -1009,7 +1009,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of hours.
-#: modules/consent/includes/class-cookie-table.php:112
+#: modules/consent/includes/class-cookie-table.php:119
 #, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
@@ -1017,7 +1017,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of days.
-#: modules/consent/includes/class-cookie-table.php:115
+#: modules/consent/includes/class-cookie-table.php:122
 #, php-format
 msgid "%d day"
 msgid_plural "%d days"
@@ -1025,7 +1025,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of weeks.
-#: modules/consent/includes/class-cookie-table.php:118
+#: modules/consent/includes/class-cookie-table.php:125
 #, php-format
 msgid "%d week"
 msgid_plural "%d weeks"
@@ -1033,7 +1033,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of months.
-#: modules/consent/includes/class-cookie-table.php:121
+#: modules/consent/includes/class-cookie-table.php:128
 #, php-format
 msgid "%d month"
 msgid_plural "%d months"
@@ -1041,14 +1041,14 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of years.
-#: modules/consent/includes/class-cookie-table.php:124
+#: modules/consent/includes/class-cookie-table.php:131
 #, php-format
 msgid "%d year"
 msgid_plural "%d years"
 msgstr[0] ""
 msgstr[1] ""
 
-#: modules/consent/includes/class-cookie-table.php:146
+#: modules/consent/includes/class-cookie-table.php:153
 msgid ""
 "Cookie table: there are no confirmed cookies yet. Confirm them in Estrategia "
 "Web → Cookies and they will appear here."
@@ -3361,27 +3361,27 @@ msgstr ""
 msgid "Some failed"
 msgstr ""
 
-#: modules/forms/includes/class-blocks.php:81
+#: modules/forms/includes/class-blocks.php:82
 msgid ""
 "The message could not be sent. Please check your connection and try again."
 msgstr ""
 
-#: modules/forms/includes/class-blocks.php:104
+#: modules/forms/includes/class-blocks.php:106
 msgid "Leave this field empty"
 msgstr ""
 
-#: modules/forms/includes/class-blocks.php:232
+#: modules/forms/includes/class-blocks.php:234
 msgid "Choose an option"
 msgstr ""
 
-#: modules/forms/includes/class-blocks.php:258
+#: modules/forms/includes/class-blocks.php:260
 msgid "Send"
 msgstr ""
 
 #. translators: the text between braces becomes the link to the privacy policy.
 #. translators: the text between braces becomes the link to the privacy policy; {text|url} links to that url.
-#: modules/forms/includes/class-blocks.php:307
-#: modules/forms/includes/class-blocks.php:333
+#: modules/forms/includes/class-blocks.php:309
+#: modules/forms/includes/class-blocks.php:335
 msgid "I have read and accept the {privacy policy}."
 msgstr ""
 
