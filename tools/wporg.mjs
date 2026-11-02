@@ -43,6 +43,8 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = path.join(ROOT, "dist");
 // The WordPress.org slug (2.4.1; header of estrategia-web.php, «THE NAME»): the zip's folder and the text domain.
 const SLUG = "estrategiaweb-toolkit";
+// The main file keeps its name (header of estrategia-web.php, «THE NAME»): it is NOT «<slug>.php».
+const MAIN = "estrategia-web.php";
 const MAX_MB = 10; // WordPress.org's upload limit.
 
 const git = (...args) => {
@@ -53,7 +55,7 @@ const git = (...args) => {
 const show = (file) => git("show", `HEAD:${file}`);
 
 function versions() {
-  const main = show(`${SLUG}.php`);
+  const main = show(MAIN);
   const readme = show("readme.txt");
   const v = {
     header: (main.match(/^\s*\*\s*Version:\s*(\S+)/m) || [])[1],
@@ -131,7 +133,7 @@ function check() {
     preferredVersions: { php: "8.3", wp },
     steps: [
       { step: "installPlugin", pluginData: { resource: "wordpress.org/plugins", slug: "plugin-check" } },
-      { step: "runPHP", code: `<?php require_once '/wordpress/wp-load.php'; require_once ABSPATH . 'wp-admin/includes/plugin.php'; activate_plugin('${SLUG}/${SLUG}.php');` },
+      { step: "runPHP", code: `<?php require_once '/wordpress/wp-load.php'; require_once ABSPATH . 'wp-admin/includes/plugin.php'; activate_plugin('${SLUG}/${MAIN}');` },
       { step: "runPHP", code: PATCH },
       { step: "runPHP", code: "<?php require '/out/runner.php';" },
     ],
