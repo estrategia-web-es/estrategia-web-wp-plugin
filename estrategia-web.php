@@ -3,7 +3,7 @@
  * Plugin Name:       Estrategia Web
  * Plugin URI:        https://github.com/estrategia-web-es/estrategia-web-wp-plugin
  * Description:       Site essentials as modules you switch on and off in "Estrategia Web → Modules": cookie consent, block forms, content types, company details, redirects, schema.org, map, carousel, WhatsApp, analytics behind consent, WebP and more.
- * Version:           2.4.0
+ * Version:           2.5.0
  * Requires at least: 7.1
  * Requires PHP:      8.1
  * Author:            Estrategia Web
@@ -33,7 +33,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const ESTRATEGIA_WEB_VERSION = '2.4.0';
+const ESTRATEGIA_WEB_VERSION = '2.5.0';
 const ESTRATEGIA_WEB_FILE    = __FILE__;
 define( 'ESTRATEGIA_WEB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'ESTRATEGIA_WEB_URL', plugin_dir_url( __FILE__ ) );
@@ -42,6 +42,7 @@ require_once ESTRATEGIA_WEB_DIR . 'includes/class-modules.php';
 require_once ESTRATEGIA_WEB_DIR . 'includes/class-plugin.php';
 require_once ESTRATEGIA_WEB_DIR . 'includes/class-blocks.php';
 require_once ESTRATEGIA_WEB_DIR . 'includes/admin/class-admin-ui.php';
+require_once ESTRATEGIA_WEB_DIR . 'includes/admin/class-admin-list.php';
 require_once ESTRATEGIA_WEB_DIR . 'includes/admin/class-menu.php';
 require_once ESTRATEGIA_WEB_DIR . 'includes/admin/class-settings-page.php';
 require_once ESTRATEGIA_WEB_DIR . 'includes/admin/class-modules-page.php';

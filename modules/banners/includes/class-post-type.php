@@ -51,7 +51,80 @@ final class Post_Type {
 			add_action( 'save_post_' . self::TYPE, array( self::class, 'save' ), 10, 2 );
 			add_filter( 'manage_' . self::TYPE . '_posts_columns', array( self::class, 'columns' ) );
 			add_action( 'manage_' . self::TYPE . '_posts_custom_column', array( self::class, 'column' ), 10, 2 );
+			self::list_tools();
 		}
+	}
+
+	/**
+	 * The list: views by state with their count, the zone dropdown and sorting by dates (2.5.0, Juan,
+	 * 02-11-2026). WordPress's own list table through \EstrategiaWeb\Admin\Admin_List; «Off» is
+	 * WordPress's «Draft» view, so it is not repeated. The conditions are Rules::state()'s, in SQL.
+	 */
+	private static function list_tools(): void {
+		$start = self::FIELDS['start'];
+		$end   = self::FIELDS['end'];
+		// «No limit» is 0 or a missing meta (banners from before the field): both count as open.
+		$no_end   = array(
+			'relation' => 'OR',
+			array( 'key' => $end, 'compare' => 'NOT EXISTS' ),
+			array( 'key' => $end, 'value' => 0, 'type' => 'NUMERIC' ),
+		);
+		$open_end = static fn () => array(
+			'relation' => 'OR',
+			$no_end,
+			array( 'key' => $end, 'value' => time(), 'compare' => '>=', 'type' => 'NUMERIC' ),
+		);
+		\EstrategiaWeb\Admin\Admin_List::views(
+			self::TYPE,
+			'ewb_state',
+			array(
+				Rules::ACTIVE    => array(
+					'label' => __( 'Showing', 'estrategia-web' ),
+					'args'  => static fn () => array(
+						'post_status' => 'publish',
+						'meta_query'  => array(
+							array(
+								'relation' => 'OR',
+								array( 'key' => $start, 'compare' => 'NOT EXISTS' ),
+								array( 'key' => $start, 'value' => time(), 'compare' => '<=', 'type' => 'NUMERIC' ),
+							),
+							$open_end(),
+						),
+					),
+				),
+				Rules::SCHEDULED => array(
+					'label' => __( 'Scheduled', 'estrategia-web' ),
+					'args'  => static fn () => array(
+						'post_status' => 'publish',
+						'meta_query'  => array( array( 'key' => $start, 'value' => time(), 'compare' => '>', 'type' => 'NUMERIC' ) ),
+					),
+				),
+				Rules::EXPIRED   => array(
+					'label' => __( 'Expired', 'estrategia-web' ),
+					'args'  => static fn () => array(
+						'post_status' => 'publish',
+						'meta_query'  => array(
+							array( 'key' => $end, 'value' => 0, 'compare' => '>', 'type' => 'NUMERIC' ),
+							array( 'key' => $end, 'value' => time(), 'compare' => '<', 'type' => 'NUMERIC' ),
+						),
+					),
+				),
+			)
+		);
+		\EstrategiaWeb\Admin\Admin_List::taxonomy_filter( self::TYPE, self::ZONE );
+		\EstrategiaWeb\Admin\Admin_List::sortable( self::TYPE, array( 'ewb_dates' => $start ) );
+		add_action(
+			'admin_head-edit.php',
+			static function (): void {
+				if ( self::TYPE !== ( $GLOBALS['typenow'] ?? '' ) ) {
+					return;
+				}
+				// The state as a pill: green showing, blue scheduled, grey expired or off. WordPress's admin colours.
+				echo '<style>.ewb-state{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;line-height:20px;background:#f0f0f1;color:#50575e}'
+					. '.ewb-state--active{background:#edfaef;color:#00650f}.ewb-state--scheduled{background:#f0f6fc;color:#0a4b78}'
+					. '.column-ewb_state,.column-ewb_views,.column-ewb_clicks{width:9%}.column-ewb_dates{width:16%}</style>';
+			}
+		);
 	}
 
 	public static function register(): void {
@@ -98,6 +171,7 @@ final class Post_Type {
 					'singular_name' => __( 'Banner zone', 'estrategia-web' ),
 					'menu_name'     => __( 'Zones', 'estrategia-web' ),
 					'add_new_item'  => __( 'Add zone', 'estrategia-web' ),
+					'all_items'     => __( 'All zones', 'estrategia-web' ), // The list's zone dropdown (Admin_List::taxonomy_filter).
 				),
 				'public'            => false,
 				'show_ui'           => true,
@@ -255,7 +329,7 @@ final class Post_Type {
 					Rules::EXPIRED   => __( 'Expired', 'estrategia-web' ),
 					Rules::OFF       => __( 'Off', 'estrategia-web' ),
 				);
-				echo esc_html( $labels[ $d['state'] ] );
+				printf( '<span class="ewb-state ewb-state--%s">%s</span>', esc_attr( $d['state'] ), esc_html( $labels[ $d['state'] ] ) );
 				break;
 			case 'ewb_views':
 			case 'ewb_clicks':

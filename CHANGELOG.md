@@ -9,6 +9,24 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.5.0 — 02-11-2026
+
+**What each site must do:** nothing. The banners list looks different.
+
+- Banners list (Juan's review of Gastronòmicament, 02-11-2026: «ninguno de
+  los campos tiene filtro… está todo agrupado»): views by state with their
+  count next to WordPress's («Showing (12) | Scheduled (3) | Expired (20)»;
+  «Off» is WordPress's «Draft»), a zone dropdown («All zones»), the «Dates»
+  column sorts by start, and the state is a coloured label.
+- New: `includes/admin/class-admin-list.php` (`Admin_List`). Not a new
+  list: it declares WordPress's own views, sortable columns and taxonomy
+  dropdown for a module's post type, in three calls. Banners is the first;
+  content types, forms and redirects come next (its header says how). The
+  trap it solves: sorting by a meta with meta_key hides the posts without
+  it, so old banners without dates vanished.
+- Test: modules/banners/tests/admin-list.test.mjs (level 2), with the old
+  banner without date fields as the edge case.
+
 ## 2.4.0 — 31-10-2026
 
 **What each site must do:** nothing. A site with German (de_DE) now shows
