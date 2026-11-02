@@ -41,34 +41,34 @@ msgstr ""
 "apagarlo no borra nada de lo que guardó: al volver a encenderlo, vuelve tal "
 "como estaba."
 
-#: includes/admin/class-modules-page.php:130
-#: includes/admin/class-modules-page.php:184
+#: includes/admin/class-modules-page.php:120
+#: includes/admin/class-modules-page.php:174
 msgid "On"
 msgstr "Encendido"
 
-#: includes/admin/class-modules-page.php:131
+#: includes/admin/class-modules-page.php:121
 msgid "Module"
 msgstr "Módulo"
 
-#: includes/admin/class-modules-page.php:132
+#: includes/admin/class-modules-page.php:122
 #: modules/consent/includes/admin/class-cookies-page.php:253
 #: modules/content-types/includes/admin/class-types-table.php:61
 msgid "Status"
 msgstr "Estado"
 
 #. translators: %s: names of other modules, comma separated.
-#: includes/admin/class-modules-page.php:168
+#: includes/admin/class-modules-page.php:158
 #, php-format
 msgid "Needs: %s."
 msgstr "Necesita: %s."
 
 #. translators: %s: names of the modules that are missing.
-#: includes/admin/class-modules-page.php:178
+#: includes/admin/class-modules-page.php:168
 #, php-format
 msgid "Not loaded: turn on %s."
 msgstr "No se carga: enciende %s."
 
-#: includes/admin/class-modules-page.php:186
+#: includes/admin/class-modules-page.php:176
 #: modules/banners/includes/class-post-type.php:256
 msgid "Off"
 msgstr "Apagado"
@@ -766,7 +766,7 @@ msgstr "Elegir diapositiva"
 msgid "Go to slide %d"
 msgstr "Ir a la diapositiva %d"
 
-#: modules/comments-off/module.php:147
+#: modules/comments-off/module.php:151
 msgid "Comments are closed."
 msgstr "Los comentarios están cerrados."
 
