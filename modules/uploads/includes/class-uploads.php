@@ -62,7 +62,7 @@ final class Uploads {
 
 	/** On Settings_Page::HOOK: the Media tab and this section (after site's SVG, 10). */
 	public static function settings_section(): void {
-		\EstrategiaWeb\Admin\Settings_Page::add_tab( 'media', __( 'Media', 'estrategia-web' ), 30 );
+		\EstrategiaWeb\Admin\Settings_Page::add_tab( 'media', __( 'Media', 'estrategiaweb-toolkit' ), 30 );
 		\EstrategiaWeb\Admin\Settings_Page::add_section(
 			'media',
 			array(
@@ -221,28 +221,28 @@ final class Uploads {
 	public static function render_section(): void {
 		$settings = self::settings();
 		?>
-		<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Image uploads', 'estrategia-web' ), 'ew-box-uploads' ); ?>
-		<p><?php esc_html_e( 'Applies to images uploaded from now on. Images already in the library do not change.', 'estrategia-web' ); ?></p>
+		<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Image uploads', 'estrategiaweb-toolkit' ), 'ew-box-uploads' ); ?>
+		<p><?php esc_html_e( 'Applies to images uploaded from now on. Images already in the library do not change.', 'estrategiaweb-toolkit' ); ?></p>
 		<input type="hidden" name="<?php echo esc_attr( self::OPTION ); ?>[_form]" value="1">
 		<table class="form-table" role="presentation">
 			<tr>
-				<th scope="row"><label for="estrategia_web_uploads_max_mb"><?php esc_html_e( 'Maximum upload size (MB)', 'estrategia-web' ); ?></label></th>
+				<th scope="row"><label for="estrategia_web_uploads_max_mb"><?php esc_html_e( 'Maximum upload size (MB)', 'estrategiaweb-toolkit' ); ?></label></th>
 				<td>
 					<input type="number" min="0" step="1" class="small-text" id="estrategia_web_uploads_max_mb" name="<?php echo esc_attr( self::OPTION ); ?>[max_mb]" value="<?php echo (int) $settings['max_mb']; ?>">
-					<p class="description"><?php esc_html_e( 'The server limit still applies if it is lower. 0 = only the server limit.', 'estrategia-web' ); ?></p>
+					<p class="description"><?php esc_html_e( 'The server limit still applies if it is lower. 0 = only the server limit.', 'estrategiaweb-toolkit' ); ?></p>
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><label for="estrategia_web_uploads_threshold"><?php esc_html_e( 'Scale down images larger than (px)', 'estrategia-web' ); ?></label></th>
+				<th scope="row"><label for="estrategia_web_uploads_threshold"><?php esc_html_e( 'Scale down images larger than (px)', 'estrategiaweb-toolkit' ); ?></label></th>
 				<td>
 					<input type="number" min="0" step="1" class="small-text" id="estrategia_web_uploads_threshold" name="<?php echo esc_attr( self::OPTION ); ?>[threshold]" value="<?php echo (int) $settings['threshold']; ?>">
-					<p class="description"><?php esc_html_e( 'Longest side. WordPress default: 2560. 0 = never scale down.', 'estrategia-web' ); ?></p>
+					<p class="description"><?php esc_html_e( 'Longest side. WordPress default: 2560. 0 = never scale down.', 'estrategiaweb-toolkit' ); ?></p>
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><?php esc_html_e( 'Original file', 'estrategia-web' ); ?></th>
+				<th scope="row"><?php esc_html_e( 'Original file', 'estrategiaweb-toolkit' ); ?></th>
 				<td>
-					<label><input type="checkbox" name="<?php echo esc_attr( self::OPTION ); ?>[delete_original]" value="1" <?php checked( $settings['delete_original'] ); ?>> <?php esc_html_e( 'Delete the original after scaling it down (only the scaled copy is kept).', 'estrategia-web' ); ?></label>
+					<label><input type="checkbox" name="<?php echo esc_attr( self::OPTION ); ?>[delete_original]" value="1" <?php checked( $settings['delete_original'] ); ?>> <?php esc_html_e( 'Delete the original after scaling it down (only the scaled copy is kept).', 'estrategiaweb-toolkit' ); ?></label>
 				</td>
 			</tr>
 		</table>

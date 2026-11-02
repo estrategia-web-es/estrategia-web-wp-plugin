@@ -1,37 +1,35 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the estrategia-web package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Spanish translations for EstrategiaWeb Toolkit.
+# Copyright (C) 2026 Estrategia Web
+# This file is distributed under the same license as the plugin (GPL-2.0-or-later).
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: estrategia-web\n"
+"Project-Id-Version: estrategiaweb-toolkit\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: includes/admin/class-menu.php:80 includes/admin/class-menu.php:88
 #: modules/site/includes/admin/class-admin.php:152
 #: modules/site/includes/class-bindings.php:51
 #: modules/site/includes/class-settings.php:168
 msgid "Company details"
-msgstr ""
+msgstr "Datos de la empresa"
 
 #: includes/admin/class-menu.php:81
 msgid "Estrategia Web"
-msgstr ""
+msgstr "Estrategia Web"
 
 #: includes/admin/class-modules-page.php:76
 #: includes/admin/class-modules-page.php:97
 msgid "Modules"
-msgstr ""
+msgstr "Módulos"
 
 #: includes/admin/class-modules-page.php:97
 msgid ""
@@ -39,65 +37,70 @@ msgid ""
 "nothing, and turning it off does not delete anything it saved: turning it on "
 "again brings it back as it was."
 msgstr ""
+"Cada módulo añade una función a la web. Un módulo apagado no carga nada, y "
+"apagarlo no borra nada de lo que guardó: al volver a encenderlo, vuelve tal "
+"como estaba."
 
 #: includes/admin/class-modules-page.php:117
 #: includes/admin/class-modules-page.php:171
 msgid "On"
-msgstr ""
+msgstr "Encendido"
 
 #: includes/admin/class-modules-page.php:118
 msgid "Module"
-msgstr ""
+msgstr "Módulo"
 
 #: includes/admin/class-modules-page.php:119
 #: modules/consent/includes/admin/class-cookies-page.php:253
 #: modules/content-types/includes/admin/class-types-table.php:61
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #. translators: %s: names of other modules, comma separated.
 #: includes/admin/class-modules-page.php:155
 #, php-format
 msgid "Needs: %s."
-msgstr ""
+msgstr "Necesita: %s."
 
 #. translators: %s: names of the modules that are missing.
 #: includes/admin/class-modules-page.php:165
 #, php-format
 msgid "Not loaded: turn on %s."
-msgstr ""
+msgstr "No se carga: enciende %s."
 
 #: includes/admin/class-modules-page.php:173
 #: modules/banners/includes/class-post-type.php:256
 msgid "Off"
-msgstr ""
+msgstr "Apagado"
 
-#: includes/admin/class-settings-page.php:211
-#: includes/admin/class-settings-page.php:229
+#: includes/admin/class-settings-page.php:212
+#: includes/admin/class-settings-page.php:230
 #: modules/content-types/includes/admin/class-page.php:269
 #: modules/forms/includes/admin/class-admin.php:56
 msgid "Settings"
-msgstr ""
+msgstr "Ajustes"
 
-#: includes/admin/class-settings-page.php:229
+#: includes/admin/class-settings-page.php:230
 msgid ""
 "How the site behaves, by topic: the cookie notice, the statistics and what "
 "is accepted when uploading images."
 msgstr ""
+"Cómo se comporta la web, por temas: el aviso de cookies, las estadísticas y "
+"lo que se acepta al subir imágenes."
 
-#: includes/admin/class-settings-page.php:234
+#: includes/admin/class-settings-page.php:235
 msgid "Settings sections"
-msgstr ""
+msgstr "Secciones de los ajustes"
 
 #: includes/class-modules.php
 msgctxt "module category"
 msgid "Other"
-msgstr ""
+msgstr "Otros"
 
 #: modules/banners/blocks/banner-zone/block.json
 msgctxt "block title"
 msgid "Banner zone"
-msgstr ""
+msgstr "Zona de banners"
 
 #: modules/banners/blocks/banner-zone/block.json
 msgctxt "block description"
@@ -105,187 +108,209 @@ msgid ""
 "Shows the banners of a zone that are inside their dates, and counts their "
 "views and clicks."
 msgstr ""
+"Muestra los banners de una zona que están dentro de sus fechas y cuenta sus "
+"vistas y clics."
 
 #: modules/banners/blocks/banner-zone/block.json
 msgctxt "block keyword"
 msgid "ad"
-msgstr ""
+msgstr "anuncio"
 
+#
 #: modules/banners/blocks/banner-zone/block.json
 msgctxt "block keyword"
 msgid "advertising"
-msgstr ""
+msgstr "publicidad"
 
 #: modules/banners/blocks/banner-zone/block.json
 msgctxt "block keyword"
 msgid "banner"
-msgstr ""
+msgstr "banner"
 
 #: modules/banners/blocks/banner-zone/labels.php:10
 msgid "Zone (its slug)"
-msgstr ""
+msgstr "Zona (su slug)"
 
 #: modules/banners/blocks/banner-zone/labels.php:11
 msgid "How many at a time (0: all, one under another)"
-msgstr ""
+msgstr "Cuántos a la vez (0: todos, uno debajo de otro)"
 
 #: modules/banners/includes/class-post-type.php:62
 msgid "Banners"
-msgstr ""
+msgstr "Banners"
 
 #: modules/banners/includes/class-post-type.php:63
 #: modules/banners/includes/class-post-type.php:151
 msgid "Banner"
-msgstr ""
+msgstr "Banner"
 
+#
 #: modules/banners/includes/class-post-type.php:64
 #: modules/banners/includes/class-post-type.php:65
 msgid "Add banner"
-msgstr ""
+msgstr "Añadir banner"
 
+#
 #: modules/banners/includes/class-post-type.php:66
 msgid "Edit banner"
-msgstr ""
+msgstr "Editar banner"
 
 #: modules/banners/includes/class-post-type.php:67
 msgid "New banner"
-msgstr ""
+msgstr "Nuevo banner"
 
+#
 #: modules/banners/includes/class-post-type.php:68
 msgid "Search banners"
-msgstr ""
+msgstr "Buscar banners"
 
+#
 #: modules/banners/includes/class-post-type.php:69
 msgid "No banners found."
-msgstr ""
+msgstr "No hay banners."
 
+#
 #: modules/banners/includes/class-post-type.php:70
 msgid "No banners found in Trash."
-msgstr ""
+msgstr "No hay banners en la papelera."
 
+#
 #: modules/banners/includes/class-post-type.php:71
 msgid "Banner image"
-msgstr ""
+msgstr "Imagen del banner"
 
+#
 #: modules/banners/includes/class-post-type.php:72
 msgid "Set banner image"
-msgstr ""
+msgstr "Poner imagen del banner"
 
 #: modules/banners/includes/class-post-type.php:97
 msgid "Banner zones"
-msgstr ""
+msgstr "Zonas de banners"
 
 #: modules/banners/includes/class-post-type.php:98
 msgid "Banner zone"
-msgstr ""
+msgstr "Zona de banners"
 
 #: modules/banners/includes/class-post-type.php:99
 msgid "Zones"
-msgstr ""
+msgstr "Zonas"
 
+#
 #: modules/banners/includes/class-post-type.php:100
 msgid "Add zone"
-msgstr ""
+msgstr "Añadir zona"
 
+#
 #: modules/banners/includes/class-post-type.php:152
 msgid "Statistics"
-msgstr ""
+msgstr "Estadísticas"
 
 #: modules/banners/includes/class-post-type.php:173
 msgid ""
 "With a banner image (box on the right) it is an image banner with its link; "
 "without one, the code below is shown."
 msgstr ""
+"Con imagen del banner (caja de la derecha) es un banner de imagen con su "
+"enlace; sin imagen, se muestra el código de abajo."
 
 #: modules/banners/includes/class-post-type.php:174
 #: modules/social/includes/class-admin.php:94
 #: modules/social/includes/class-admin.php:143
 msgid "Link"
-msgstr ""
+msgstr "Enlace"
 
 #: modules/banners/includes/class-post-type.php:176
 msgid "Code (adserver, iframe)"
-msgstr ""
+msgstr "Código (adserver, iframe)"
 
 #: modules/banners/includes/class-post-type.php:179
 msgid "Starts"
-msgstr ""
+msgstr "Empieza"
 
 #: modules/banners/includes/class-post-type.php:180
 msgid "Ends"
-msgstr ""
+msgstr "Termina"
 
 #: modules/banners/includes/class-post-type.php:181
 msgid "Weight (1-10)"
-msgstr ""
+msgstr "Peso (1-10)"
 
 #: modules/banners/includes/class-post-type.php:183
 msgid ""
 "Empty dates: no limit. The weight only matters when a zone shows fewer "
 "banners than it has."
 msgstr ""
+"Fechas vacías: sin límite. El peso solo cuenta cuando una zona muestra menos "
+"banners de los que tiene."
 
 #. translators: 1: views, 2: clicks.
 #: modules/banners/includes/class-post-type.php:191
 #, php-format
 msgid "Total: %1$s views, %2$s clicks"
-msgstr ""
+msgstr "Total: %1$s vistas, %2$s clics"
 
+#
 #: modules/banners/includes/class-post-type.php:193
 msgid "No statistics yet."
-msgstr ""
+msgstr "Todavía no hay estadísticas."
 
 #: modules/banners/includes/class-post-type.php:196
 #: modules/banners/includes/class-post-type.php:231
 msgid "Clicks"
-msgstr ""
+msgstr "Clics"
 
 #: modules/banners/includes/class-post-type.php:196
 msgid "Day"
-msgstr ""
+msgstr "Día"
 
+#
 #: modules/banners/includes/class-post-type.php:196
 #: modules/banners/includes/class-post-type.php:230
 msgid "Views"
-msgstr ""
+msgstr "Vistas"
 
 #: modules/banners/includes/class-post-type.php:200
 msgid ""
 "Last 60 days with activity. A view is counted when the banner is on screen; "
 "code banners (adservers) count their clicks on their own side."
 msgstr ""
+"Últimos 60 días con actividad. Una vista se cuenta cuando el banner está en "
+"pantalla; los banners de código (adservers) cuentan sus clics por su cuenta."
 
+#
 #: modules/banners/includes/class-post-type.php:228
 msgid "Dates"
-msgstr ""
+msgstr "Fechas"
 
+#
 #: modules/banners/includes/class-post-type.php:229
 msgid "State"
-msgstr ""
+msgstr "Estado"
 
 #: modules/banners/includes/class-post-type.php:253
 msgid "Showing"
-msgstr ""
+msgstr "Se muestra"
 
 #: modules/banners/includes/class-post-type.php:254
 msgid "Scheduled"
-msgstr ""
+msgstr "Programado"
 
 #: modules/banners/includes/class-post-type.php:255
 msgid "Expired"
-msgstr ""
+msgstr "Caducado"
 
 #: modules/banners/module.php
 msgctxt "module name"
 msgid "Banners"
-msgstr ""
+msgstr "Banners"
 
 #: modules/banners/module.php modules/carousel/module.php
 #: modules/comments-off/module.php modules/content-types/module.php
 #: modules/featured-images/module.php modules/map/module.php
 msgctxt "module category"
 msgid "Content"
-msgstr ""
+msgstr "Contenido"
 
 #: modules/banners/module.php
 msgctxt "module description"
@@ -293,11 +318,13 @@ msgid ""
 "Image or code banners by zone and dates, with daily views and clicks, and "
 "AdRotate migration."
 msgstr ""
+"Banners de imagen o de código por zonas y fechas, con vistas y clics "
+"diarios, y migración desde AdRotate."
 
 #: modules/carousel/blocks/carousel/block.json
 msgctxt "block title"
 msgid "Carousel"
-msgstr ""
+msgstr "Carrusel"
 
 #: modules/carousel/blocks/carousel/block.json
 msgctxt "block description"
@@ -305,113 +332,119 @@ msgid ""
 "Horizontal scrolling row of any blocks, with previous/next arrows and "
 "optional dots."
 msgstr ""
+"Fila desplazable en horizontal con cualquier bloque, con flechas de anterior "
+"y siguiente y puntos opcionales."
 
 #: modules/carousel/blocks/carousel/block.json
 msgctxt "block keyword"
 msgid "carousel"
-msgstr ""
+msgstr "carrusel"
 
 #: modules/carousel/blocks/carousel/block.json
 msgctxt "block keyword"
 msgid "gallery"
-msgstr ""
+msgstr "galería"
 
 #: modules/carousel/blocks/carousel/block.json
 msgctxt "block keyword"
 msgid "slider"
-msgstr ""
+msgstr "pase de diapositivas"
 
 #: modules/carousel/blocks/carousel/edit.js:58
 msgid "Carousel settings"
-msgstr ""
+msgstr "Ajustes del carrusel"
 
 #: modules/carousel/blocks/carousel/edit.js:60
 msgid "Accessible name"
-msgstr ""
+msgstr "Nombre accesible"
 
 #: modules/carousel/blocks/carousel/edit.js:61
 msgid "Read by screen readers. Defaults to “Carousel”."
-msgstr ""
+msgstr "Lo leen los lectores de pantalla. Si se deja vacío: «Carrusel»."
 
 #: modules/carousel/blocks/carousel/edit.js:66
 msgid "Show arrows"
-msgstr ""
+msgstr "Mostrar flechas"
 
 #: modules/carousel/blocks/carousel/edit.js:71
 msgid "Show dots"
-msgstr ""
+msgstr "Mostrar puntos"
 
 #: modules/carousel/blocks/carousel/edit.js:76
 msgid "Loop"
-msgstr ""
+msgstr "En bucle"
 
 #: modules/carousel/blocks/carousel/edit.js:77
 msgid ""
 "After the last slide, go back to the first one (and from the first to the "
 "last)."
 msgstr ""
+"Tras la última diapositiva, vuelve a la primera (y de la primera, a la "
+"última)."
 
 #: modules/carousel/blocks/carousel/edit.js:81
 msgid "Visible on mobile"
-msgstr ""
+msgstr "Visibles en móvil"
 
 #: modules/carousel/blocks/carousel/edit.js:82
 msgid "Visible on tablet"
-msgstr ""
+msgstr "Visibles en tableta"
 
 #: modules/carousel/blocks/carousel/edit.js:83
 msgid "Visible on desktop"
-msgstr ""
+msgstr "Visibles en escritorio"
 
 #: modules/carousel/blocks/carousel/edit.js:85
 msgid "Autoplay"
-msgstr ""
+msgstr "Reproducción automática"
 
 #: modules/carousel/blocks/carousel/edit.js:86
 msgid ""
 "Off by default for accessibility. Ignored when the visitor asks for reduced "
 "motion."
 msgstr ""
+"Desactivada por defecto por accesibilidad. No se aplica si el visitante pide "
+"reducir el movimiento."
 
 #: modules/carousel/blocks/carousel/render.php:159
 msgid "Carousel"
-msgstr ""
+msgstr "Carrusel"
 
 #: modules/carousel/blocks/carousel/render.php:179
 msgid "Pause carousel"
-msgstr ""
+msgstr "Pausar el carrusel"
 
 #: modules/carousel/blocks/carousel/render.php:180
 msgid "Play carousel"
-msgstr ""
+msgstr "Reanudar el carrusel"
 
 #: modules/carousel/blocks/carousel/render.php:187
 msgctxt "ARIA role description"
 msgid "carousel"
-msgstr ""
+msgstr "carrusel"
 
 #: modules/carousel/blocks/carousel/render.php:240
 msgid "Previous slide"
-msgstr ""
+msgstr "Diapositiva anterior"
 
 #: modules/carousel/blocks/carousel/render.php:250
 msgid "Next slide"
-msgstr ""
+msgstr "Diapositiva siguiente"
 
 #: modules/carousel/blocks/carousel/render.php:261
 msgid "Choose slide"
-msgstr ""
+msgstr "Elegir diapositiva"
 
 #. translators: %d: slide number.
 #: modules/carousel/blocks/carousel/render.php:267
 #, php-format
 msgid "Go to slide %d"
-msgstr ""
+msgstr "Ir a la diapositiva %d"
 
 #: modules/carousel/module.php
 msgctxt "module name"
 msgid "Carousel"
-msgstr ""
+msgstr "Carrusel"
 
 #: modules/carousel/module.php
 msgctxt "module description"
@@ -420,11 +453,14 @@ msgid ""
 "Query) with arrows, optional dots, infinite loop and autoplay only if asked "
 "for."
 msgstr ""
+"Bloque de carrusel: una fila desplazable con cualquier bloque (o las "
+"entradas de una Consulta), con flechas, puntos opcionales, bucle infinito y "
+"paso automático solo si se pide."
 
 #: modules/comments-off/module.php
 msgctxt "module name"
 msgid "No comments"
-msgstr ""
+msgstr "Sin comentarios"
 
 #: modules/comments-off/module.php
 msgctxt "module description"
@@ -433,15 +469,18 @@ msgid ""
 "dashboard widget or toolbar item, no comment blocks on the site and no "
 "comment feeds."
 msgstr ""
+"Quita los comentarios de toda la web: cerrados en todas las entradas, sin "
+"menú Comentarios, sin widget del escritorio ni globo en la barra, sin "
+"bloques de comentarios en la web y sin feeds de comentarios."
 
 #: modules/comments-off/module.php:147
 msgid "Comments are closed."
-msgstr ""
+msgstr "Los comentarios están cerrados."
 
 #: modules/consent/blocks/consent/block.json
 msgctxt "block title"
 msgid "Cookie settings link"
-msgstr ""
+msgstr "Enlace de configuración de cookies"
 
 #: modules/consent/blocks/consent/block.json
 msgctxt "block description"
@@ -449,34 +488,36 @@ msgid ""
 "Reopens the cookie consent notice. Renders nothing when the site declares no "
 "optional cookie categories."
 msgstr ""
+"Vuelve a abrir el aviso de cookies. No muestra nada si el sitio no declara "
+"categorías de cookies opcionales."
 
 #: modules/consent/blocks/consent/block.json
 msgctxt "block keyword"
 msgid "consent"
-msgstr ""
+msgstr "consentimiento"
 
 #: modules/consent/blocks/consent/block.json
 #: modules/consent/blocks/cookie-table/block.json
 msgctxt "block keyword"
 msgid "cookies"
-msgstr ""
+msgstr "cookies"
 
 #: modules/consent/blocks/consent/block.json
 #: modules/consent/blocks/cookie-table/block.json
 msgctxt "block keyword"
 msgid "gdpr"
-msgstr ""
+msgstr "rgpd"
 
 #: modules/consent/blocks/consent/block.json
 #: modules/consent/blocks/cookie-table/block.json
 msgctxt "block keyword"
 msgid "privacy"
-msgstr ""
+msgstr "privacidad"
 
 #: modules/consent/blocks/cookie-table/block.json
 msgctxt "block title"
 msgid "Cookie table"
-msgstr ""
+msgstr "Tabla de cookies"
 
 #: modules/consent/blocks/cookie-table/block.json
 msgctxt "block description"
@@ -485,75 +526,82 @@ msgid ""
 "duration), from the list confirmed in Estrategia Web → Cookies. For the "
 "cookie policy page."
 msgstr ""
+"Tabla de las cookies de la web por categoría (nombre, proveedor, finalidad y "
+"duración), sacada de la lista confirmada en Estrategia Web → Cookies. Para "
+"la página de Política de cookies."
 
 #: modules/consent/blocks/cookie-table/block.json
 msgctxt "block keyword"
 msgid "policy"
-msgstr ""
+msgstr "política"
 
 #: modules/consent/blocks/cookie-table/labels.php:10
 msgid "Category (empty: all)"
-msgstr ""
+msgstr "Categoría (vacío: todas)"
 
 #: modules/consent/blocks/cookie-table/labels.php:11
 msgid "Heading level of each category"
-msgstr ""
+msgstr "Nivel del título de cada categoría"
 
 #: modules/consent/includes/admin/class-cookies-page.php:68
 #: modules/consent/includes/class-consent.php:533
 #: modules/matomo/includes/class-admin-fields.php:67
 msgid "Cookies"
-msgstr ""
+msgstr "Cookies"
 
 #: modules/consent/includes/admin/class-cookies-page.php:86
 #: modules/forms/includes/class-form-post-type.php:148
 msgid "Sorry, you are not allowed to do that."
-msgstr ""
+msgstr "No tienes permiso para hacer esto."
 
 #: modules/consent/includes/admin/class-cookies-page.php:146
 #: modules/forms/includes/admin/class-submissions-table.php:115
 msgid "Pending"
-msgstr ""
+msgstr "Pendiente"
 
 #: modules/consent/includes/admin/class-cookies-page.php:147
 msgid "Confirmed"
-msgstr ""
+msgstr "Confirmada"
 
 #: modules/consent/includes/admin/class-cookies-page.php:148
 msgid "Ignored"
-msgstr ""
+msgstr "Ignorada"
 
 #: modules/consent/includes/admin/class-cookies-page.php:175
 msgid "Changes saved."
-msgstr ""
+msgstr "Cambios guardados."
 
 #: modules/consent/includes/admin/class-cookies-page.php:175
 msgid "Cookie deleted."
-msgstr ""
+msgstr "Cookie borrada."
 
 #: modules/consent/includes/admin/class-cookies-page.php:177
 msgid ""
 "Not saved: check the cookie name (exact name, or a prefix ending in *) and "
 "that the list is not full."
 msgstr ""
+"No se ha guardado: revisa el nombre de la cookie (nombre exacto, o un "
+"prefijo acabado en *) y que la lista no esté llena."
 
 #: modules/consent/includes/admin/class-cookies-page.php:180
 msgid ""
 "The active theme brings its own cookie notice: these settings do not apply "
 "to it."
 msgstr ""
+"El tema activo trae su propio aviso de cookies: estos ajustes no se le "
+"aplican."
 
 #: modules/consent/includes/admin/class-cookies-page.php:184
 msgid "Cookie notice"
-msgstr ""
+msgstr "Aviso de cookies"
 
 #: modules/consent/includes/admin/class-cookies-page.php:188
 msgid "Categories the notice asks about"
-msgstr ""
+msgstr "Categorías que pregunta el aviso"
 
 #: modules/consent/includes/admin/class-cookies-page.php:197
 msgid "declared by the code (theme or a module)"
-msgstr ""
+msgstr "la declara el código (el tema o un módulo)"
 
 #: modules/consent/includes/admin/class-cookies-page.php:202
 msgid ""
@@ -561,10 +609,12 @@ msgid ""
 "being asked about something new. Without any category, the notice does not "
 "appear."
 msgstr ""
+"Cambiar las categorías vuelve a enseñar el aviso a todos los visitantes: se "
+"les pregunta por algo nuevo. Sin ninguna categoría, el aviso no sale."
 
 #: modules/consent/includes/admin/class-cookies-page.php:206
 msgid "Cookie detector"
-msgstr ""
+msgstr "Detector de cookies"
 
 #: modules/consent/includes/admin/class-cookies-page.php:210
 msgid ""
@@ -572,10 +622,14 @@ msgid ""
 "values) of the cookies it sees on this site, at most once a week or when the "
 "list changes. New names appear below as pending."
 msgstr ""
+"Cuando un visitante acepta cookies, su navegador manda los NOMBRES (nunca "
+"los valores) de las cookies que ve en esta web, como mucho una vez por "
+"semana o cuando cambia la lista. Los nombres nuevos salen abajo como "
+"pendientes."
 
 #: modules/consent/includes/admin/class-cookies-page.php:216
 msgid "Save notice settings"
-msgstr ""
+msgstr "Guardar los ajustes del aviso"
 
 #. translators: 1: category name, 2: list of cookie names.
 #: modules/consent/includes/admin/class-cookies-page.php:232
@@ -585,10 +639,13 @@ msgid ""
 "it: %2$s. Either the notice should ask about it (above), or the cookies "
 "should not be set."
 msgstr ""
+"El aviso no pregunta por «%1$s», pero estas cookies confirmadas son de esa "
+"categoría: %2$s. O el aviso pregunta por ella (arriba), o esas cookies no se "
+"deberían poner."
 
 #: modules/consent/includes/admin/class-cookies-page.php:240
 msgid "Cookies of this site"
-msgstr ""
+msgstr "Cookies de esta web"
 
 #: modules/consent/includes/admin/class-cookies-page.php:241
 msgid ""
@@ -597,6 +654,10 @@ msgid ""
 "from our own list and from the Open Cookie Database: check them. A name "
 "ending in * covers every cookie that starts like that."
 msgstr ""
+"Solo las cookies confirmadas salen en la tabla de cookies de la política "
+"(bloque «Tabla de cookies» o shortcode [estrategia_web_cookie_table]). Las "
+"propuestas salen de nuestra lista y de la Open Cookie Database: revísalas. "
+"Un nombre acabado en * cubre todas las cookies que empiezan así."
 
 #: modules/consent/includes/admin/class-cookies-page.php:242
 msgid ""
@@ -607,87 +668,96 @@ msgid ""
 "you delete it, it comes back as a proposal while its module still loads the "
 "service."
 msgstr ""
+"Las cookies marcadas «Declarada por el plugin» son de servicios de terceros "
+"que cargan los módulos activos (el mapa de Google, las etiquetas de Google, "
+"Matomo): el detector no ve las que se ponen en el dominio del propio "
+"proveedor, y el resto solo las ve cuando un visitante acepta. Para dejar una "
+"fuera de la política, márcala como Ignorada: si la borras, vuelve como "
+"propuesta mientras su módulo siga cargando el servicio."
 
 #: modules/consent/includes/admin/class-cookies-page.php:246
 msgid "Confirm all pending proposals"
-msgstr ""
+msgstr "Confirmar todas las propuestas pendientes"
 
 #: modules/consent/includes/admin/class-cookies-page.php:252
 #: modules/consent/includes/class-cookie-table.php:163
 msgid "Cookie"
-msgstr ""
+msgstr "Cookie"
 
 #: modules/consent/includes/admin/class-cookies-page.php:254
 #: modules/consent/includes/admin/class-cookies-page.php:331
 msgid "Category"
-msgstr ""
+msgstr "Categoría"
 
 #: modules/consent/includes/admin/class-cookies-page.php:255
 #: modules/consent/includes/admin/class-cookies-page.php:332
 #: modules/consent/includes/class-cookie-table.php:164
 msgid "Provider"
-msgstr ""
+msgstr "Proveedor"
 
 #: modules/consent/includes/admin/class-cookies-page.php:256
 #: modules/consent/includes/admin/class-cookies-page.php:333
 #: modules/consent/includes/class-cookie-table.php:165
 msgid "Purpose"
-msgstr ""
+msgstr "Finalidad"
 
 #: modules/consent/includes/admin/class-cookies-page.php:257
 #: modules/consent/includes/admin/class-cookies-page.php:334
 #: modules/consent/includes/class-cookie-table.php:166
 msgid "Duration"
-msgstr ""
+msgstr "Duración"
 
 #: modules/consent/includes/admin/class-cookies-page.php:258
 msgid "Seen"
-msgstr ""
+msgstr "Vista"
 
 #: modules/consent/includes/admin/class-cookies-page.php:259
 msgid "Actions"
-msgstr ""
+msgstr "Acciones"
 
 #: modules/consent/includes/admin/class-cookies-page.php:264
 msgid ""
 "No cookies yet. They appear when a visitor accepts the notice, or add them "
 "below."
 msgstr ""
+"Todavía no hay cookies. Salen cuando un visitante acepta el aviso, o "
+"añádelas abajo."
 
 #. translators: %s: a concrete cookie name.
 #: modules/consent/includes/admin/class-cookies-page.php:275
 #, php-format
 msgid "e.g. %s"
-msgstr ""
+msgstr "p. ej. %s"
 
 #. translators: %s: name of a third-party service, e.g. «Google Maps (map block)».
 #: modules/consent/includes/admin/class-cookies-page.php:294
 #, php-format
 msgid "Declared by the plugin: %s"
-msgstr ""
+msgstr "Declarada por el plugin: %s"
 
 #: modules/consent/includes/admin/class-cookies-page.php:297
 msgid ""
 "Its module no longer loads this service: delete the cookie if the site does "
 "not use it any more."
 msgstr ""
+"Su módulo ya no carga este servicio: borra la cookie si la web ya no lo usa."
 
 #: modules/consent/includes/admin/class-cookies-page.php:302
 msgid "Added by hand"
-msgstr ""
+msgstr "Añadida a mano"
 
 #: modules/consent/includes/admin/class-cookies-page.php:305
 msgid "Proposal: Open Cookie Database"
-msgstr ""
+msgstr "Propuesta: Open Cookie Database"
 
 #: modules/consent/includes/admin/class-cookies-page.php:307
 msgid "Proposal: Estrategia Web"
-msgstr ""
+msgstr "Propuesta: Estrategia Web"
 
 #: modules/consent/includes/admin/class-cookies-page.php:315
 #: modules/content-types/includes/admin/class-page.php:365
 msgid "Save"
-msgstr ""
+msgstr "Guardar"
 
 #: modules/consent/includes/admin/class-cookies-page.php:316
 #: modules/content-types/includes/admin/class-types-table.php:121
@@ -697,11 +767,11 @@ msgstr ""
 #: modules/redirects/includes/admin/class-tables.php:90
 #: modules/redirects/includes/admin/class-tables.php:149
 msgid "Delete"
-msgstr ""
+msgstr "Borrar"
 
 #: modules/consent/includes/admin/class-cookies-page.php:326
 msgid "Add a cookie by hand"
-msgstr ""
+msgstr "Añadir una cookie a mano"
 
 #: modules/consent/includes/admin/class-cookies-page.php:327
 msgid ""
@@ -709,6 +779,9 @@ msgid ""
 "example, a video or a chat embedded by hand). Empty fields are filled with "
 "the proposal, if there is one."
 msgstr ""
+"Para las cookies de terceros que el detector no puede ver y que ningún "
+"módulo declara (por ejemplo, un vídeo o un chat insertados a mano). Los "
+"campos vacíos se rellenan con la propuesta, si la hay."
 
 #: modules/consent/includes/admin/class-cookies-page.php:330
 #: modules/content-types/includes/admin/class-page.php:323
@@ -716,17 +789,19 @@ msgstr ""
 #: modules/social/includes/class-admin.php:93
 #: modules/social/includes/class-admin.php:135
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #: modules/consent/includes/admin/class-cookies-page.php:334
 msgid ""
 "Like «2 years», «30 minutes» or «session» to have it translated "
 "automatically; anything else is shown as written."
 msgstr ""
+"Como «2 years», «30 minutes» o «session» para que se traduzca sola; "
+"cualquier otra cosa sale tal cual se escribe."
 
 #: modules/consent/includes/admin/class-cookies-page.php:337
 msgid "Add cookie"
-msgstr ""
+msgstr "Añadir cookie"
 
 #. translators: 1: link to the Open Cookie Database, 2: licence name, 3: date.
 #: modules/consent/includes/admin/class-cookies-page.php:344
@@ -734,59 +809,66 @@ msgstr ""
 msgid ""
 "Proposals use data from the %1$s, licensed under %2$s (extract of %3$s)."
 msgstr ""
+"Las propuestas usan datos de la %1$s, con licencia %2$s (extracto del %3$s)."
 
 #: modules/consent/includes/class-consent.php:269
 #: modules/google-tags/includes/admin/class-google-tags-page.php:40
 #: modules/matomo/includes/class-admin-fields.php:35
 msgid "Analytics"
-msgstr ""
+msgstr "Analítica"
 
 #: modules/consent/includes/class-consent.php:270
 msgid "Help us understand how the site is used."
-msgstr ""
+msgstr "Nos ayudan a entender cómo se usa el sitio."
 
 #: modules/consent/includes/class-consent.php:273
 msgid "Maps and third-party content"
-msgstr ""
+msgstr "Mapas y contenido de terceros"
 
 #: modules/consent/includes/class-consent.php:274
 msgid ""
 "Load embedded maps and other content served by third parties, which may set "
 "their own cookies."
 msgstr ""
+"Cargan mapas y otro contenido servido por terceros, que pueden instalar sus "
+"propias cookies."
 
 #: modules/consent/includes/class-consent.php:277
 msgid "Advertising"
-msgstr ""
+msgstr "Publicidad"
 
 #: modules/consent/includes/class-consent.php:278
 msgid "Measure campaigns and show relevant advertising."
-msgstr ""
+msgstr "Miden campañas y muestran publicidad relevante."
 
 #: modules/consent/includes/class-consent.php:281
 msgid "Preferences"
-msgstr ""
+msgstr "Preferencias"
 
 #: modules/consent/includes/class-consent.php:282
 msgid ""
 "Remember choices that change how the site behaves or looks, such as the "
 "region or recently viewed items."
 msgstr ""
+"Recuerdan elecciones que cambian cómo funciona o se ve la web, como la "
+"región o lo último que has visto."
 
 #. translators: %s: name of the company that built the site (a brand, not translated).
 #: modules/consent/includes/class-consent.php:378
 #, php-format
 msgid "Powered by %s"
-msgstr ""
+msgstr "Powered by %s"
 
 #: modules/consent/includes/class-consent.php:411
 msgid ""
 "Cookie notice: detector on or off, and categories added by the administrator."
 msgstr ""
+"Aviso de cookies: detector encendido o apagado y categorías que añade el "
+"administrador."
 
 #: modules/consent/includes/class-consent.php:438
 msgid "Link text (empty: “Cookie settings”)"
-msgstr ""
+msgstr "Texto del enlace (vacío: «Configurar cookies»)"
 
 #: modules/consent/includes/class-consent.php:514
 msgid ""
@@ -794,19 +876,22 @@ msgid ""
 "can accept them, reject them or choose which ones to allow. Necessary "
 "cookies are always active."
 msgstr ""
+"Usamos cookies propias y de terceros para los fines que se indican. Puedes "
+"aceptarlas, rechazarlas o elegir cuáles permites. Las cookies necesarias "
+"están siempre activas."
 
 #: modules/consent/includes/class-consent.php:537
 msgid "Privacy and cookie policy"
-msgstr ""
+msgstr "Política de privacidad y cookies"
 
 #: modules/consent/includes/class-consent.php:543
 msgid "Cookie categories"
-msgstr ""
+msgstr "Categorías de cookies"
 
 #: modules/consent/includes/class-consent.php:546
 #: modules/consent/includes/class-cookie-table.php:53
 msgid "Necessary"
-msgstr ""
+msgstr "Necesarias"
 
 #: modules/consent/includes/class-consent.php:546
 #: modules/consent/includes/class-cookie-table.php:54
@@ -814,22 +899,24 @@ msgid ""
 "Required for the site to work, including remembering this choice. Always "
 "active."
 msgstr ""
+"Imprescindibles para que el sitio funcione, también para recordar esta "
+"elección. Siempre activas."
 
 #: modules/consent/includes/class-consent.php:562
 msgid "Save choices"
-msgstr ""
+msgstr "Guardar la selección"
 
 #: modules/consent/includes/class-consent.php:566
 msgid "Accept all"
-msgstr ""
+msgstr "Aceptar todas"
 
 #: modules/consent/includes/class-consent.php:567
 msgid "Reject all"
-msgstr ""
+msgstr "Rechazar todas"
 
 #: modules/consent/includes/class-consent.php:568
 msgid "Configure"
-msgstr ""
+msgstr "Configurar"
 
 #: modules/consent/includes/class-consent.php:573
 #: modules/external-links/includes/class-external-links.php:101
@@ -837,92 +924,105 @@ msgstr ""
 #: modules/social/blocks/social-links/render.php:74
 #: modules/whatsapp/blocks/whatsapp/render.php:74
 msgid "(opens in a new tab)"
-msgstr ""
+msgstr "(se abre en una pestaña nueva)"
 
 #: modules/consent/includes/class-consent.php:600
 msgid ""
 "Cookie settings: this site declares no optional cookie categories, so there "
 "is no notice to reopen and this link is not shown."
 msgstr ""
+"Configurar cookies: este sitio no declara categorías de cookies opcionales, "
+"así que no hay aviso que reabrir y el enlace no se muestra."
 
 #: modules/consent/includes/class-consent.php:606
 msgid "Cookie settings"
-msgstr ""
+msgstr "Configurar cookies"
 
 #: modules/consent/includes/class-cookie-registry.php:139
 msgid "This website"
-msgstr ""
+msgstr "Este sitio web"
 
 #: modules/consent/includes/class-cookie-registry.php:144
 msgid "Remembers your choice in the cookie notice."
-msgstr ""
+msgstr "Recuerda tu elección en el aviso de cookies."
 
 #: modules/consent/includes/class-cookie-registry.php:150
 msgid ""
 "Previous name of the cookie that remembers your choice in the cookie notice; "
 "it is replaced on the next visit."
 msgstr ""
+"Nombre anterior de la cookie que recuerda tu elección en el aviso de "
+"cookies; se sustituye en la siguiente visita."
 
 #: modules/consent/includes/class-cookie-registry.php:156
 #: modules/consent/includes/class-cookie-registry.php:162
 #: modules/consent/includes/class-cookie-registry.php:168
 msgid "Remembers the language in which you are browsing the site."
-msgstr ""
+msgstr "Recuerda el idioma en el que navegas por la web."
 
 #: modules/consent/includes/class-cookie-registry.php:174
 msgid "Checks that the browser accepts cookies. Only on the login page."
 msgstr ""
+"Comprueba que el navegador acepta cookies. Solo en la página de acceso."
 
 #: modules/consent/includes/class-cookie-registry.php:180
 msgid "Keeps the session of the site’s users (editors and administrators)."
 msgstr ""
+"Mantiene la sesión de los usuarios de la web (editores y administradores)."
 
 #: modules/consent/includes/class-cookie-registry.php:186
 msgid ""
 "Remembers the dashboard settings of the site’s users (editors and "
 "administrators)."
 msgstr ""
+"Recuerda los ajustes del escritorio de los usuarios de la web (editores y "
+"administradores)."
 
 #: modules/consent/includes/class-cookie-registry.php:195
 msgid ""
 "Statistics: recognises a returning visitor (an anonymous identifier). Only "
 "after accepting analytics."
 msgstr ""
+"Estadísticas: reconoce a un visitante que vuelve (con un identificador "
+"anónimo). Solo tras aceptar la analítica."
 
 #: modules/consent/includes/class-cookie-registry.php:201
 msgid "Statistics: groups the pages viewed in the same visit."
-msgstr ""
+msgstr "Estadísticas: agrupa las páginas vistas en una misma visita."
 
 #: modules/consent/includes/class-cookie-registry.php:207
 msgid "Statistics: remembers the website the visitor came from."
-msgstr ""
+msgstr "Estadísticas: recuerda desde qué web llegó el visitante."
 
 #: modules/consent/includes/class-cookie-registry.php:213
 msgid "Statistics: remembers that analytics cookies were accepted."
-msgstr ""
+msgstr "Estadísticas: recuerda que se aceptaron las cookies de analítica."
 
 #: modules/consent/includes/class-cookie-registry.php:219
 msgid ""
 "Remembers your name and email for the next comment, only if you ask for it."
 msgstr ""
+"Recuerda tu nombre y tu correo para el próximo comentario, solo si lo pides."
 
 #: modules/consent/includes/class-cookie-registry.php:360
 msgid ""
 "Invalid cookie name. Use the exact name, or a prefix ending in * for a "
 "family of cookies (e.g. _ga_*)."
 msgstr ""
+"Nombre de cookie no válido. Usa el nombre exacto, o un prefijo acabado en * "
+"para una familia de cookies (p. ej. _ga_*)."
 
 #: modules/consent/includes/class-cookie-registry.php:365
 msgid "The cookie list is full. Delete the cookies you do not need."
-msgstr ""
+msgstr "La lista de cookies está llena. Borra las que no necesites."
 
 #: modules/consent/includes/class-cookie-services.php:87
 msgid "Google (google.com), only if the map is shown"
-msgstr ""
+msgstr "Google (google.com), solo si se muestra el mapa"
 
 #: modules/consent/includes/class-cookie-services.php:93
 msgid "Google Maps (map block)"
-msgstr ""
+msgstr "Google Maps (bloque de mapa)"
 
 #: modules/consent/includes/class-cookie-services.php:98
 #: modules/consent/includes/class-cookie-services.php:104
@@ -930,134 +1030,150 @@ msgid ""
 "Google may set it when the map loads: it remembers preferences such as the "
 "language."
 msgstr ""
+"Google puede ponerla al cargar el mapa: recuerda preferencias como el idioma."
 
 #: modules/consent/includes/class-cookie-services.php:110
 msgid "Google may set it when the map loads: it detects spam, fraud and abuse."
-msgstr ""
+msgstr "Google puede ponerla al cargar el mapa: detecta spam, fraude y abusos."
 
 #: modules/consent/includes/class-cookie-services.php:116
 msgid ""
 "Google may set it when the map loads: it stores the choice made about "
 "Google’s own cookies."
 msgstr ""
+"Google puede ponerla al cargar el mapa: guarda la elección hecha sobre las "
+"cookies del propio Google."
 
 #: modules/consent/includes/class-cookie-services.php:126
 msgid "Google Analytics (Google tags module)"
-msgstr ""
+msgstr "Google Analytics (módulo de etiquetas de Google)"
 
 #: modules/consent/includes/class-cookie-services.php:131
 msgid ""
 "Statistics: distinguishes one visitor from another. Only after accepting "
 "analytics."
 msgstr ""
+"Estadísticas: distingue a un visitante de otro. Solo tras aceptar la "
+"analítica."
 
 #: modules/consent/includes/class-cookie-services.php:137
 msgid ""
 "Statistics: keeps the state of the visit. Only after accepting analytics."
 msgstr ""
+"Estadísticas: guarda el estado de la visita. Solo tras aceptar la analítica."
 
 #: modules/consent/includes/class-cookie-services.php:146
 msgid "Google Ads (Google tags module)"
-msgstr ""
+msgstr "Google Ads (módulo de etiquetas de Google)"
 
 #: modules/consent/includes/class-cookie-services.php:151
 msgid ""
 "Advertising: measures the conversions that come from ads. Only after "
 "accepting advertising."
 msgstr ""
+"Publicidad: mide las conversiones que llegan desde los anuncios. Solo tras "
+"aceptar la publicidad."
 
 #: modules/consent/includes/class-cookie-services.php:157
 msgid ""
 "Advertising: remembers the ad click that brought the visitor, to measure the "
 "conversion. Only after accepting advertising."
 msgstr ""
+"Publicidad: recuerda el clic en el anuncio que trajo al visitante, para "
+"medir la conversión. Solo tras aceptar la publicidad."
 
 #: modules/consent/includes/class-cookie-services.php:163
 msgid ""
 "Advertising: Google uses it to show and measure ads on other websites. Only "
 "after accepting advertising."
 msgstr ""
+"Publicidad: Google la usa para mostrar y medir anuncios en otras webs. Solo "
+"tras aceptar la publicidad."
 
 #: modules/consent/includes/class-cookie-services.php:169
 msgid ""
 "Advertising: Google checks whether the browser accepts cookies. Only after "
 "accepting advertising."
 msgstr ""
+"Publicidad: Google comprueba si el navegador acepta cookies. Solo tras "
+"aceptar la publicidad."
 
 #: modules/consent/includes/class-cookie-services.php:178
 msgid "Matomo, hybrid mode (Matomo module)"
-msgstr ""
+msgstr "Matomo, modo híbrido (módulo Matomo)"
 
 #: modules/consent/includes/class-cookie-table.php:103
 msgid "Session"
-msgstr ""
+msgstr "Sesión"
 
 #. translators: %d: number of seconds.
 #: modules/consent/includes/class-cookie-table.php:106
 #, php-format
 msgid "%d second"
 msgid_plural "%d seconds"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d segundo"
+msgstr[1] "%d segundos"
 
 #. translators: %d: number of minutes.
 #: modules/consent/includes/class-cookie-table.php:109
 #, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d minuto"
+msgstr[1] "%d minutos"
 
 #. translators: %d: number of hours.
 #: modules/consent/includes/class-cookie-table.php:112
 #, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d hora"
+msgstr[1] "%d horas"
 
 #. translators: %d: number of days.
 #: modules/consent/includes/class-cookie-table.php:115
 #, php-format
 msgid "%d day"
 msgid_plural "%d days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d día"
+msgstr[1] "%d días"
 
 #. translators: %d: number of weeks.
 #: modules/consent/includes/class-cookie-table.php:118
 #, php-format
 msgid "%d week"
 msgid_plural "%d weeks"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d semana"
+msgstr[1] "%d semanas"
 
 #. translators: %d: number of months.
 #: modules/consent/includes/class-cookie-table.php:121
 #, php-format
 msgid "%d month"
 msgid_plural "%d months"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d mes"
+msgstr[1] "%d meses"
 
 #. translators: %d: number of years.
 #: modules/consent/includes/class-cookie-table.php:124
 #, php-format
 msgid "%d year"
 msgid_plural "%d years"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d año"
+msgstr[1] "%d años"
 
 #: modules/consent/includes/class-cookie-table.php:146
 msgid ""
 "Cookie table: there are no confirmed cookies yet. Confirm them in Estrategia "
 "Web → Cookies and they will appear here."
 msgstr ""
+"Tabla de cookies: todavía no hay cookies confirmadas. Confírmalas en "
+"Estrategia Web → Cookies y saldrán aquí."
 
 #: modules/consent/module.php
 msgctxt "module name"
 msgid "Cookie notice"
-msgstr ""
+msgstr "Aviso de cookies"
 
 #: modules/consent/module.php
 msgctxt "module description"
@@ -1067,78 +1183,83 @@ msgid ""
 "and JavaScript, plus a cookie list fed by a detector and a cookie table "
 "block for the cookie policy."
 msgstr ""
+"Aviso de cookies propio (Aceptar / Rechazar / Configurar, con categorías "
+"declarables), el bloque del enlace «Configurar cookies» y la API del "
+"consentimiento para PHP y JavaScript, además de una lista de cookies que "
+"alimenta un detector y un bloque con la tabla de cookies para la política de "
+"cookies."
 
 #: modules/consent/module.php modules/google-tags/module.php
 #: modules/matomo/module.php
 msgctxt "module category"
 msgid "Privacy & analytics"
-msgstr ""
+msgstr "Privacidad y analítica"
 
 #: modules/content-types/assets/fields-panel.js:95
 msgid "Incomplete: this range will not be saved."
-msgstr ""
+msgstr "Incompleta: esta franja no se guardará."
 
 #: modules/content-types/assets/fields-panel.js:97
 msgid "Opening and closing are the same time: this range will not be saved."
-msgstr ""
+msgstr "Abre y cierra a la misma hora: esta franja no se guardará."
 
 #: modules/content-types/assets/fields-panel.js:117
 #, javascript-format
 msgid "%1$s, range %2$d: closes"
-msgstr ""
+msgstr "%1$s, franja %2$d: cierra"
 
 #. translators: 1: a day of the week, 2: the number of the range in that day
 #: modules/content-types/assets/fields-panel.js:117
 #, javascript-format
 msgid "%1$s, range %2$d: opens"
-msgstr ""
+msgstr "%1$s, franja %2$d: abre"
 
 #: modules/content-types/assets/fields-panel.js:147
 msgid "Closed"
-msgstr ""
+msgstr "Cerrado"
 
 #. translators: 1: a day of the week, 2: the number of the range in that day
 #: modules/content-types/assets/fields-panel.js:161
 #, javascript-format
 msgid "Remove %1$s, range %2$d"
-msgstr ""
+msgstr "Quitar %1$s, franja %2$d"
 
 #. translators: %s: a day of the week. Keep the words of «Add hours» in it: it is the button's visible text.
 #: modules/content-types/assets/fields-panel.js:177
 #, javascript-format
 msgid "Add hours on %s"
-msgstr ""
+msgstr "Añadir horas el %s"
 
 #: modules/content-types/assets/fields-panel.js:179
 msgid "Add hours"
-msgstr ""
+msgstr "Añadir horas"
 
 #. translators: %s: a day of the week. Keep the words of «Same as the day before» in it: it is the button's visible text.
 #: modules/content-types/assets/fields-panel.js:186
 #, javascript-format
 msgid "%s: same as the day before"
-msgstr ""
+msgstr "%s: igual que el día anterior"
 
 #: modules/content-types/assets/fields-panel.js:188
 msgid "Same as the day before"
-msgstr ""
+msgstr "Igual que el día anterior"
 
 #: modules/content-types/includes/admin/class-page.php:97
 #: modules/content-types/includes/admin/class-page.php:189
 msgid "Content types"
-msgstr ""
+msgstr "Tipos de contenido"
 
 #. translators: %s: internal name of a content type
 #: modules/content-types/includes/admin/class-page.php:169
 #, php-format
 msgid "Template added as “%s”. You can change it here."
-msgstr ""
+msgstr "Plantilla añadida como «%s». Puedes cambiarla aquí."
 
 #. translators: %s: internal name of a content type
 #: modules/content-types/includes/admin/class-page.php:171
 #, php-format
 msgid "Content type “%s” activated."
-msgstr ""
+msgstr "Tipo de contenido «%s» activado."
 
 #. translators: %s: internal name of a content type
 #: modules/content-types/includes/admin/class-page.php:173
@@ -1147,12 +1268,14 @@ msgid ""
 "Content type “%s” deactivated. Its entries stay and come back when you "
 "activate it."
 msgstr ""
+"Tipo de contenido «%s» desactivado. Sus entradas se quedan y vuelven al "
+"activarlo."
 
 #. translators: %s: internal name of a content type
 #: modules/content-types/includes/admin/class-page.php:175
 #, php-format
 msgid "Content type “%s” deleted."
-msgstr ""
+msgstr "Tipo de contenido «%s» eliminado."
 
 #. translators: %s: internal name of a content type
 #: modules/content-types/includes/admin/class-page.php:177
@@ -1161,82 +1284,93 @@ msgid ""
 "There is no content type “%s” (it may have been deleted or renamed). These "
 "are the ones there are."
 msgstr ""
+"No hay ningún tipo de contenido «%s» (puede que se haya eliminado o "
+"renombrado). Estos son los que hay."
 
 #: modules/content-types/includes/admin/class-page.php:190
 #: modules/redirects/includes/admin/class-page.php:177
 msgid "Add new"
-msgstr ""
+msgstr "Añadir"
 
 #: modules/content-types/includes/admin/class-page.php:192
 msgid "Add from template"
-msgstr ""
+msgstr "Añadir desde plantilla"
 
 #: modules/content-types/includes/admin/class-page.php:193
 msgid ""
 "Ready-made types of a corporate site. Adding one copies it into this panel, "
 "where you can change it."
 msgstr ""
+"Tipos ya hechos de una web corporativa. Al añadir uno se copia a este panel, "
+"donde puedes cambiarlo."
 
 #: modules/content-types/includes/admin/class-page.php:195
 msgid "Already added"
-msgstr ""
+msgstr "Ya añadido"
 
 #: modules/content-types/includes/admin/class-page.php:195
 msgid ""
 "Not available: a type with this name is registered elsewhere (Company "
 "details › Content types)."
 msgstr ""
+"No disponible: hay un tipo con este nombre registrado en otro sitio (Datos "
+"de la empresa › Tipos de contenido)."
 
 #: modules/content-types/includes/admin/class-page.php:207
 msgid "Import JSON"
-msgstr ""
+msgstr "Importar JSON"
 
 #: modules/content-types/includes/admin/class-page.php:210
 msgid ""
 "Your own content types — restaurants, courses, team members… — with their "
 "fields, taxonomies and addresses. They are saved in this site’s database."
 msgstr ""
+"Tus propios tipos de contenido —restaurantes, cursos, miembros del equipo…— "
+"con sus campos, taxonomías y direcciones. Se guardan en la base de datos de "
+"esta web."
 
 #: modules/content-types/includes/admin/class-page.php:215
 msgid "Files with errors (not registered)"
-msgstr ""
+msgstr "Ficheros con errores (no se registran)"
 
 #: modules/content-types/includes/admin/class-page.php:225
 msgid "Folders searched for JSON files"
-msgstr ""
+msgstr "Carpetas donde se buscan ficheros JSON"
 
 #: modules/content-types/includes/admin/class-page.php:230
 #: modules/content-types/includes/admin/class-page.php:251
 msgid "This screen needs JavaScript."
-msgstr ""
+msgstr "Esta pantalla necesita JavaScript."
 
 #: modules/content-types/includes/admin/class-page.php:234
 msgid "New content type"
-msgstr ""
+msgstr "Nuevo tipo de contenido"
 
 #. translators: %s: a content type name
 #: modules/content-types/includes/admin/class-page.php:240
 #: modules/content-types/includes/admin/class-page.php:268
 #, php-format
 msgid "Edit “%s”"
-msgstr ""
+msgstr "Editar «%s»"
 
 #: modules/content-types/includes/admin/class-page.php:246
 #: modules/forms/includes/admin/class-admin.php:128
 #: modules/forms/includes/admin/class-admin.php:133
 #: modules/forms/includes/admin/class-admin.php:176
 msgid "Back to the list"
-msgstr ""
+msgstr "Volver a la lista"
 
 #: modules/content-types/includes/admin/class-page.php:248
 msgid ""
 "The type’s settings, in tabs, and its fields: open a row to edit it, drag it "
 "to reorder."
 msgstr ""
+"Los ajustes del tipo, en pestañas, y sus campos: abre una fila para editarla "
+"y arrástrala para cambiarla de orden."
 
 #: modules/content-types/includes/admin/class-page.php:250
 msgid "Loading…"
-msgstr ""
+msgstr "Cargando…"
 
 #. translators: %s: a content type name
 #: modules/content-types/includes/admin/class-page.php:258
@@ -1245,20 +1379,22 @@ msgid ""
 "Deactivate “%s”? Its menu and its addresses disappear; its entries stay and "
 "come back when you activate it."
 msgstr ""
+"¿Desactivar «%s»? Desaparecen su menú y sus direcciones; sus entradas se "
+"quedan y vuelven al activarlo."
 
 #. translators: %s: a content type name
 #: modules/content-types/includes/admin/class-page.php:260
 #, php-format
 msgid "Delete the definition of “%s”? This cannot be undone."
-msgstr ""
+msgstr "¿Borrar la definición de «%s»? No se puede deshacer."
 
 #: modules/content-types/includes/admin/class-page.php:261
 msgid "JSON file"
-msgstr ""
+msgstr "Fichero JSON"
 
 #: modules/content-types/includes/admin/class-page.php:262
 msgid "That is not valid JSON."
-msgstr ""
+msgstr "Eso no es un JSON válido."
 
 #. translators: 1: how many fields, 2: their names, comma separated
 #: modules/content-types/includes/admin/class-page.php:264
@@ -1267,626 +1403,654 @@ msgid ""
 "The template this type comes from has new fields (%1$d): %2$s. They are not "
 "added by themselves: add them here and save."
 msgstr ""
+"La plantilla de la que viene este tipo tiene campos nuevos (%1$d): %2$s. No "
+"se añaden solos: añádelos aquí y guarda."
 
 #: modules/content-types/includes/admin/class-page.php:265
 msgid "Add the new fields of the template"
-msgstr ""
+msgstr "Añadir los campos nuevos de la plantilla"
 
 #: modules/content-types/includes/admin/class-page.php:266
 msgid ""
 "This type is defined in a file, which is read-only. Saving here creates its "
 "copy in this panel, which wins from then on."
 msgstr ""
+"Este tipo está definido en un archivo, que es de solo lectura. Al guardar "
+"aquí se crea su copia en este panel, que manda desde entonces."
 
 #: modules/content-types/includes/admin/class-page.php:270
 msgid "General"
-msgstr ""
+msgstr "General"
 
 #: modules/content-types/includes/admin/class-page.php:271
 msgid "URLs & languages"
-msgstr ""
+msgstr "URLs e idiomas"
 
 #: modules/content-types/includes/admin/class-page.php:272
 msgid "Advanced"
-msgstr ""
+msgstr "Avanzado"
 
 #. translators: %s: a language code such as es
 #: modules/content-types/includes/admin/class-page.php:274
 #, php-format
 msgid "Name, plural (%s)"
-msgstr ""
+msgstr "Nombre, plural (%s)"
 
 #. translators: %s: a language code such as es
 #: modules/content-types/includes/admin/class-page.php:276
 #, php-format
 msgid "Name, singular (%s)"
-msgstr ""
+msgstr "Nombre, singular (%s)"
 
 #: modules/content-types/includes/admin/class-page.php:277
 msgid "Prefix"
-msgstr ""
+msgstr "Prefijo"
 
 #: modules/content-types/includes/admin/class-page.php:278
 msgid ""
 "The site’s own, 2 to 9 letters or digits and “_” (e.g. “gment_”). Every "
 "internal name starts with it."
 msgstr ""
+"El propio de la web, de 2 a 9 letras o cifras y «_» (p. ej. «gment_»). Todos "
+"los nombres internos empiezan por él."
 
 #: modules/content-types/includes/admin/class-page.php:279
 #: modules/content-types/includes/admin/class-types-table.php:57
 msgid "Internal name"
-msgstr ""
+msgstr "Nombre interno"
 
 #: modules/content-types/includes/admin/class-page.php:280
 msgid ""
 "Lowercase letters, digits and “_”, at most 20 characters. It cannot be "
 "changed once there are entries."
 msgstr ""
+"Minúsculas, cifras y «_», 20 caracteres como mucho. No se puede cambiar "
+"cuando ya hay entradas."
 
 #: modules/content-types/includes/admin/class-page.php:281
 msgid "Address (URL)"
-msgstr ""
+msgstr "Dirección (URL)"
 
 #: modules/content-types/includes/admin/class-page.php:282
 msgid ""
 "The part of the address after the domain: /restaurants/. Changing it moves "
 "the published addresses."
 msgstr ""
+"La parte de la dirección tras el dominio: /restaurantes/. Cambiarla mueve "
+"las direcciones publicadas."
 
 #: modules/content-types/includes/admin/class-page.php:283
 msgid ""
 "The address of this type in the other languages of the site. Empty: the "
 "first language’s is used."
 msgstr ""
+"La dirección de este tipo en los demás idiomas del sitio. Vacía: se usa la "
+"del primer idioma."
 
 #: modules/content-types/includes/admin/class-page.php:284
 msgid "The site has one language: the address is set in General."
-msgstr ""
+msgstr "El sitio tiene un solo idioma: la dirección se pone en General."
 
 #: modules/content-types/includes/admin/class-page.php:285
 msgid "Menu icon"
-msgstr ""
+msgstr "Icono del menú"
 
 #: modules/content-types/includes/admin/class-page.php:286
 msgid "A Dashicons name, e.g. dashicons-food."
-msgstr ""
+msgstr "Un nombre de Dashicons, p. ej. dashicons-food."
 
 #: modules/content-types/includes/admin/class-page.php:287
 msgid "Position in the menu"
-msgstr ""
+msgstr "Posición en el menú"
 
 #: modules/content-types/includes/admin/class-page.php:288
 msgid ""
 "A whole number: 5 below Posts, 20 below Pages, 25 below Comments. Empty: at "
 "the end."
 msgstr ""
+"Un número entero: 5 debajo de Entradas, 20 debajo de Páginas, 25 debajo de "
+"Comentarios. Vacío: al final."
 
 #: modules/content-types/includes/admin/class-page.php:289
 msgid "What the editor offers"
-msgstr ""
+msgstr "Qué ofrece el editor"
 
 #: modules/content-types/includes/admin/class-page.php:290
 msgid "Public (has its own pages on the site)"
-msgstr ""
+msgstr "Público (tiene sus propias páginas en la web)"
 
 #: modules/content-types/includes/admin/class-page.php:291
 msgid "Has a list page at its address"
-msgstr ""
+msgstr "Tiene una página de listado en su dirección"
 
 #: modules/content-types/includes/admin/class-page.php:292
 msgid "Translation (WPML)"
-msgstr ""
+msgstr "Traducción (WPML)"
 
 #: modules/content-types/includes/admin/class-page.php:293
 #: modules/content-types/includes/admin/class-page.php:350
 msgid "Translate"
-msgstr ""
+msgstr "Traducir"
 
 #: modules/content-types/includes/admin/class-page.php:294
 msgid "Translate, and show the original until it is translated"
-msgstr ""
+msgstr "Traducir, y mostrar el original mientras no esté traducido"
 
 #: modules/content-types/includes/admin/class-page.php:295
 msgid "Do not translate"
-msgstr ""
+msgstr "No traducir"
 
 #: modules/content-types/includes/admin/class-page.php:296
 msgid "Where the fields are edited"
-msgstr ""
+msgstr "Dónde se editan los campos"
 
 #: modules/content-types/includes/admin/class-page.php:297
 msgid "In the editor’s sidebar (the «details» panel)"
-msgstr ""
+msgstr "En la barra lateral del editor (el panel «datos»)"
 
 #: modules/content-types/includes/admin/class-page.php:298
 msgid "In a wide box under the content, with its groups"
-msgstr ""
+msgstr "En una caja ancha bajo el contenido, con sus grupos"
 
 #: modules/content-types/includes/admin/class-page.php:299
 msgid ""
 "A type without «Content (block editor)» always gets the box under the "
 "content."
 msgstr ""
+"Un tipo sin «Contenido (editor de bloques)» siempre tiene la caja bajo el "
+"contenido."
 
 #: modules/content-types/includes/admin/class-page.php:300
 msgid "Field groups"
-msgstr ""
+msgstr "Grupos de campos"
 
 #: modules/content-types/includes/admin/class-page.php:301
 msgid ""
 "Sections of the box under the content. A field joins one in its settings "
 "(«Group»); fields without a group go first."
 msgstr ""
+"Secciones de la caja bajo el contenido. Un campo entra en una desde sus "
+"ajustes («Grupo»); los campos sin grupo van primero."
 
 #. translators: %d: position of a group in the list
 #: modules/content-types/includes/admin/class-page.php:303
 #, php-format
 msgid "Group %d"
-msgstr ""
+msgstr "Grupo %d"
 
 #: modules/content-types/includes/admin/class-page.php:304
 msgid "Add group"
-msgstr ""
+msgstr "Añadir grupo"
 
 #: modules/content-types/includes/admin/class-page.php:305
 msgid "Key"
-msgstr ""
+msgstr "Clave"
 
 #: modules/content-types/includes/admin/class-page.php:306
 msgid ""
 "Lowercase letters, digits and “_”, starting with a letter. The fields refer "
 "to it."
 msgstr ""
+"Minúsculas, cifras y «_», empezando por una letra. Los campos se refieren a "
+"ella."
 
 #. translators: %s: a language code such as es
 #: modules/content-types/includes/admin/class-page.php:308
 #, php-format
 msgid "Title (%s)"
-msgstr ""
+msgstr "Título (%s)"
 
 #: modules/content-types/includes/admin/class-page.php:309
 msgid "Closed when the screen opens"
-msgstr ""
+msgstr "Cerrado al abrir la pantalla"
 
 #: modules/content-types/includes/admin/class-page.php:310
 msgid "Group"
-msgstr ""
+msgstr "Grupo"
 
 #: modules/content-types/includes/admin/class-page.php:311
 msgid "No group"
-msgstr ""
+msgstr "Sin grupo"
 
 #: modules/content-types/includes/admin/class-page.php:312
 msgid "Taxonomies"
-msgstr ""
+msgstr "Taxonomías"
 
 #. translators: %d: position of a taxonomy in the list
 #: modules/content-types/includes/admin/class-page.php:314
 #, php-format
 msgid "Taxonomy %d"
-msgstr ""
+msgstr "Taxonomía %d"
 
 #: modules/content-types/includes/admin/class-page.php:315
 msgid "Add taxonomy"
-msgstr ""
+msgstr "Añadir taxonomía"
 
 #: modules/content-types/includes/admin/class-page.php:316
 msgid "Hierarchical (like categories)"
-msgstr ""
+msgstr "Jerárquica (como las categorías)"
 
 #. translators: %s: a taxonomy name
 #: modules/content-types/includes/admin/class-page.php:318
 #, php-format
 msgid "Uses the taxonomy “%s”, declared elsewhere."
-msgstr ""
+msgstr "Usa la taxonomía «%s», declarada en otro sitio."
 
 #: modules/content-types/includes/admin/class-page.php:319
 #: modules/content-types/includes/admin/class-types-table.php:59
 msgid "Fields"
-msgstr ""
+msgstr "Campos"
 
 #: modules/content-types/includes/admin/class-page.php:320
 msgid "No fields yet."
-msgstr ""
+msgstr "Aún no hay campos."
 
 #: modules/content-types/includes/admin/class-page.php:321
 msgid ""
 "Open a field to change it. To reorder, drag a row by its handle, or use Alt "
 "+ Up or Down arrow on a field (or its Move buttons)."
 msgstr ""
+"Abre un campo para cambiarlo. Para reordenar, arrastra una fila por su asa o "
+"usa Alt + flecha arriba o abajo sobre un campo (o sus botones Subir y Bajar)."
 
 #: modules/content-types/includes/admin/class-page.php:322
 msgid "Label"
-msgstr ""
+msgstr "Etiqueta"
 
 #: modules/content-types/includes/admin/class-page.php:324
 #: modules/content-types/includes/admin/class-page.php:340
 #: modules/redirects/includes/admin/class-page.php:269
 #: modules/redirects/includes/admin/class-tables.php:35
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: modules/content-types/includes/admin/class-page.php:325
 msgid "(no label)"
-msgstr ""
+msgstr "(sin etiqueta)"
 
 #: modules/content-types/includes/admin/class-page.php:326
 msgid "Drag to reorder"
-msgstr ""
+msgstr "Arrastra para reordenar"
 
 #. translators: %s: a field label
 #: modules/content-types/includes/admin/class-page.php:328
 #, php-format
 msgid "Move “%s” up"
-msgstr ""
+msgstr "Subir «%s»"
 
 #. translators: %s: a field label
 #: modules/content-types/includes/admin/class-page.php:330
 #, php-format
 msgid "Move “%s” down"
-msgstr ""
+msgstr "Bajar «%s»"
 
 #. translators: %s: a field label
 #: modules/content-types/includes/admin/class-page.php:332
 #, php-format
 msgid "Remove “%s”"
-msgstr ""
+msgstr "Quitar «%s»"
 
 #. translators: 1: a field label, 2: its new position, 3: how many fields
 #: modules/content-types/includes/admin/class-page.php:334
 #, php-format
 msgid "“%1$s” moved to position %2$d of %3$d."
-msgstr ""
+msgstr "«%1$s» movido a la posición %2$d de %3$d."
 
 #. translators: %s: a field label
 #: modules/content-types/includes/admin/class-page.php:336
 #, php-format
 msgid "“%s” removed. Save to keep the change."
-msgstr ""
+msgstr "«%s» quitado. Guarda para conservar el cambio."
 
 #: modules/content-types/includes/admin/class-page.php:337
 msgid "Add field"
-msgstr ""
+msgstr "Añadir campo"
 
 #: modules/content-types/includes/admin/class-page.php:338
 msgid "Internal name (meta key)"
-msgstr ""
+msgstr "Nombre interno (clave meta)"
 
 #: modules/content-types/includes/admin/class-page.php:339
 msgid ""
 "It cannot be renamed: its data is stored under this name. To change it, "
 "remove the field and add a new one."
 msgstr ""
+"No se puede renombrar: sus datos están guardados con este nombre. Para "
+"cambiarlo, quita el campo y añade uno nuevo."
 
 #. translators: %s: a language code such as es
 #: modules/content-types/includes/admin/class-page.php:342
 #, php-format
 msgid "Label (%s)"
-msgstr ""
+msgstr "Etiqueta (%s)"
 
 #. translators: %s: a language code such as es
 #: modules/content-types/includes/admin/class-page.php:344
 #, php-format
 msgid "Help (%s)"
-msgstr ""
+msgstr "Ayuda (%s)"
 
 #: modules/content-types/includes/admin/class-page.php:345
 msgid "Required to publish"
-msgstr ""
+msgstr "Obligatorio para publicar"
 
 #: modules/content-types/includes/admin/class-page.php:346
 msgid "Default value"
-msgstr ""
+msgstr "Valor por defecto"
 
 #: modules/content-types/includes/admin/class-page.php:347
 msgid "In translations"
-msgstr ""
+msgstr "En las traducciones"
 
 #: modules/content-types/includes/admin/class-page.php:348
 msgid "Automatic (texts translated, the rest copied)"
-msgstr ""
+msgstr "Automático (los textos se traducen, el resto se copia)"
 
 #: modules/content-types/includes/admin/class-page.php:349
 msgid "Copy from the original"
-msgstr ""
+msgstr "Copiar del original"
 
 #: modules/content-types/includes/admin/class-page.php:351
 msgid "Ignore"
-msgstr ""
+msgstr "Ignorar"
 
 #: modules/content-types/includes/admin/class-page.php:352
 msgid "Options, one per line: value | label"
-msgstr ""
+msgstr "Opciones, una por línea: valor | etiqueta"
 
 #: modules/content-types/includes/admin/class-page.php:353
 msgid "Related types (internal names, separated by commas)"
-msgstr ""
+msgstr "Tipos relacionados (nombres internos, separados por comas)"
 
 #: modules/content-types/includes/admin/class-page.php:354
 msgid "Minimum"
-msgstr ""
+msgstr "Mínimo"
 
 #: modules/content-types/includes/admin/class-page.php:355
 msgid "Maximum"
-msgstr ""
+msgstr "Máximo"
 
 #: modules/content-types/includes/admin/class-page.php:356
 msgid "Whole numbers only"
-msgstr ""
+msgstr "Solo números enteros"
 
 #: modules/content-types/includes/admin/class-page.php:357
 msgid "Text when yes (empty: «Yes»)"
-msgstr ""
+msgstr "Texto cuando es sí (vacío: «Sí»)"
 
 #: modules/content-types/includes/admin/class-page.php:358
 msgid "Text when no (empty: «No»)"
-msgstr ""
+msgstr "Texto cuando es no (vacío: «No»)"
 
 #: modules/content-types/includes/admin/class-page.php:359
 #: modules/social/includes/class-admin.php:68
 msgid "Move up"
-msgstr ""
+msgstr "Subir"
 
 #: modules/content-types/includes/admin/class-page.php:360
 #: modules/social/includes/class-admin.php:69
 msgid "Move down"
-msgstr ""
+msgstr "Bajar"
 
 #: modules/content-types/includes/admin/class-page.php:361
 #: modules/content-types/includes/class-fields-panel.php:192
 #: modules/social/includes/class-admin.php:70
 msgid "Remove"
-msgstr ""
+msgstr "Quitar"
 
 #: modules/content-types/includes/admin/class-page.php:362
 msgid "JSON (advanced)"
-msgstr ""
+msgstr "JSON (avanzado)"
 
 #: modules/content-types/includes/admin/class-page.php:363
 msgid ""
 "The whole definition. Change it here to set what the form does not show, "
 "then apply it."
 msgstr ""
+"La definición entera. Cámbiala aquí para ajustar lo que el formulario no "
+"muestra, y luego aplícala."
 
 #: modules/content-types/includes/admin/class-page.php:364
 msgid "Apply the JSON to the form"
-msgstr ""
+msgstr "Aplicar el JSON al formulario"
 
 #: modules/content-types/includes/admin/class-page.php:366
 msgid "Saving…"
-msgstr ""
+msgstr "Guardando…"
 
 #: modules/content-types/includes/admin/class-page.php:367
 msgid "Saved. The changes are visible from the next page you open."
-msgstr ""
+msgstr "Guardado. Los cambios se ven a partir de la próxima página que abras."
 
 #. translators: %d: number of redirects
 #: modules/content-types/includes/admin/class-page.php:369
 #, php-format
 msgid "Redirects created for the old addresses: %d."
-msgstr ""
+msgstr "Redirecciones creadas para las direcciones viejas: %d."
 
 #: modules/content-types/includes/admin/class-page.php:370
 msgid "Before saving"
-msgstr ""
+msgstr "Antes de guardar"
 
 #: modules/content-types/includes/admin/class-page.php:371
 msgid "Save anyway"
-msgstr ""
+msgstr "Guardar igualmente"
 
 #: modules/content-types/includes/admin/class-page.php:372
 #: modules/forms/includes/admin/class-admin.php:193
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: modules/content-types/includes/admin/class-page.php:373
 msgid "Nothing was saved"
-msgstr ""
+msgstr "No se ha guardado nada"
 
 #: modules/content-types/includes/admin/class-page.php:374
 msgid "The list could not be loaded."
-msgstr ""
+msgstr "No se ha podido cargar la lista."
 
 #: modules/content-types/includes/admin/class-page.php:376
 #: modules/llms/includes/admin/class-tab.php:82
 msgid "Text"
-msgstr ""
+msgstr "Texto"
 
 #: modules/content-types/includes/admin/class-page.php:377
 msgid "Text, several lines"
-msgstr ""
+msgstr "Texto de varias líneas"
 
 #: modules/content-types/includes/admin/class-page.php:378
 msgid "Number"
-msgstr ""
+msgstr "Número"
 
 #: modules/content-types/includes/admin/class-page.php:379
 msgid "Web address"
-msgstr ""
+msgstr "Dirección web"
 
 #: modules/content-types/includes/admin/class-page.php:380
 #: modules/site/includes/class-company.php:133
 #: modules/social/includes/class-icons.php:82
 msgid "Email"
-msgstr ""
+msgstr "Correo electrónico"
 
 #: modules/content-types/includes/admin/class-page.php:381
 #: modules/site/includes/class-company.php:134
 msgid "Phone"
-msgstr ""
+msgstr "Teléfono"
 
 #: modules/content-types/includes/admin/class-page.php:382
 msgid "Image"
-msgstr ""
+msgstr "Imagen"
 
 #: modules/content-types/includes/admin/class-page.php:383
 #: modules/forms/includes/admin/class-admin.php:156
 #: modules/forms/includes/admin/class-submissions-table.php:30
 msgid "Date"
-msgstr ""
+msgstr "Fecha"
 
 #: modules/content-types/includes/admin/class-page.php:384
 msgid "Choice from a list"
-msgstr ""
+msgstr "Elección de una lista"
 
 #: modules/content-types/includes/admin/class-page.php:385
 msgid "Link to another entry"
-msgstr ""
+msgstr "Enlace a otra entrada"
 
 #: modules/content-types/includes/admin/class-page.php:386
 msgid "Yes / no"
-msgstr ""
+msgstr "Sí / no"
 
 #: modules/content-types/includes/admin/class-page.php:387
 msgid "Rating (stars)"
-msgstr ""
+msgstr "Valoración (estrellas)"
 
 #: modules/content-types/includes/admin/class-page.php:388
 msgid "Embedded map or video"
-msgstr ""
+msgstr "Mapa o vídeo incrustado"
 
 #: modules/content-types/includes/admin/class-page.php:389
 msgid "Image of this site by path"
-msgstr ""
+msgstr "Imagen de esta web por ruta"
 
 #: modules/content-types/includes/admin/class-page.php:390
 msgid "Opening hours (days and times)"
-msgstr ""
+msgstr "Horario (días y horas)"
 
 #: modules/content-types/includes/admin/class-page.php:393
 msgid "Title"
-msgstr ""
+msgstr "Título"
 
 #: modules/content-types/includes/admin/class-page.php:394
 msgid "Content (block editor)"
-msgstr ""
+msgstr "Contenido (editor de bloques)"
 
 #: modules/content-types/includes/admin/class-page.php:395
 msgid "Author"
-msgstr ""
+msgstr "Autor"
 
 #: modules/content-types/includes/admin/class-page.php:396
 msgid "Featured image"
-msgstr ""
+msgstr "Imagen destacada"
 
 #: modules/content-types/includes/admin/class-page.php:397
 msgid "Excerpt"
-msgstr ""
+msgstr "Extracto"
 
 #: modules/content-types/includes/admin/class-page.php:398
 msgid "Trackbacks"
-msgstr ""
+msgstr "Trackbacks"
 
 #: modules/content-types/includes/admin/class-page.php:399
 msgid "Custom fields"
-msgstr ""
+msgstr "Campos personalizados"
 
 #: modules/content-types/includes/admin/class-page.php:400
 msgid "Comments"
-msgstr ""
+msgstr "Comentarios"
 
 #: modules/content-types/includes/admin/class-page.php:401
 msgid "Revisions"
-msgstr ""
+msgstr "Revisiones"
 
 #: modules/content-types/includes/admin/class-page.php:402
 #: modules/social/includes/class-admin.php:95
 msgid "Order"
-msgstr ""
+msgstr "Orden"
 
 #: modules/content-types/includes/admin/class-page.php:403
 msgid "Formats"
-msgstr ""
+msgstr "Formatos"
 
 #: modules/content-types/includes/admin/class-types-table.php:58
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: modules/content-types/includes/admin/class-types-table.php:60
 msgid "Where it is defined"
-msgstr ""
+msgstr "Dónde se define"
 
 #: modules/content-types/includes/admin/class-types-table.php:62
 msgid "Entries"
-msgstr ""
+msgstr "Entradas"
 
 #: modules/content-types/includes/admin/class-types-table.php:72
 msgid ""
 "There are no content types yet. Add one, start from a template or import a "
 "JSON file."
 msgstr ""
+"Todavía no hay tipos de contenido. Añade uno, empieza desde una plantilla o "
+"importa un fichero JSON."
 
 #: modules/content-types/includes/admin/class-types-table.php:114
 #: modules/forms/includes/admin/class-forms-list.php:241
 #: modules/redirects/includes/admin/class-tables.php:89
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 #: modules/content-types/includes/admin/class-types-table.php:115
 #: modules/redirects/includes/admin/class-tables.php:54
 msgid "Activate"
-msgstr ""
+msgstr "Activar"
 
 #: modules/content-types/includes/admin/class-types-table.php:115
 #: modules/redirects/includes/admin/class-tables.php:55
 msgid "Deactivate"
-msgstr ""
+msgstr "Desactivar"
 
 #: modules/content-types/includes/admin/class-types-table.php:117
 msgid "Copy to this panel"
-msgstr ""
+msgstr "Copiar a este panel"
 
 #: modules/content-types/includes/admin/class-types-table.php:119
 msgid "Export JSON"
-msgstr ""
+msgstr "Exportar JSON"
 
 #. translators: %s: a file path
 #: modules/content-types/includes/admin/class-types-table.php:143
 #, php-format
 msgid "File (read-only): %s"
-msgstr ""
+msgstr "Fichero (solo lectura): %s"
 
 #. translators: %s: a template name, e.g. Testimonials
 #: modules/content-types/includes/admin/class-types-table.php:148
 #, php-format
 msgid "This panel (from the template “%s”)"
-msgstr ""
+msgstr "Este panel (de la plantilla «%s»)"
 
 #: modules/content-types/includes/admin/class-types-table.php:151
 msgid "This panel"
-msgstr ""
+msgstr "Este panel"
 
 #: modules/content-types/includes/admin/class-types-table.php:157
 msgid "Not registered: it has errors"
-msgstr ""
+msgstr "No registrado: tiene errores"
 
 #: modules/content-types/includes/admin/class-types-table.php:159
 #: modules/redirects/includes/admin/class-page.php:286
 #: modules/redirects/includes/admin/class-tables.php:38
 msgid "Active"
-msgstr ""
+msgstr "Activa"
 
 #: modules/content-types/includes/admin/class-types-table.php:159
 msgid "Inactive"
-msgstr ""
+msgstr "Inactivo"
 
 #: modules/content-types/includes/class-bindings.php:68
 msgid "Content field"
-msgstr ""
+msgstr "Campo de contenido"
 
 #: modules/content-types/includes/class-bindings.php:123
 #: modules/forms/includes/admin/class-admin.php:137
 #: modules/forms/includes/class-notifier.php:159
 #: modules/redirects/includes/admin/class-tables.php:113
 msgid "Yes"
-msgstr ""
+msgstr "Sí"
 
 #: modules/content-types/includes/class-bindings.php:124
 #: modules/forms/includes/admin/class-admin.php:137
 #: modules/forms/includes/class-notifier.php:159
 #: modules/redirects/includes/admin/class-tables.php:113
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #. translators: 1: old type name, 2: number of entries
 #: modules/content-types/includes/class-changes.php:67
@@ -1895,6 +2059,8 @@ msgid ""
 "The internal name “%1$s” cannot change: it has %2$d entries, which would "
 "stay under the old name. Create a new type instead."
 msgstr ""
+"El nombre interno «%1$s» no puede cambiar: tiene %2$d entradas, que se "
+"quedarían con el nombre viejo. Crea un tipo nuevo en su lugar."
 
 #. translators: 1: taxonomy name, 2: number of terms
 #: modules/content-types/includes/class-changes.php:76
@@ -1904,6 +2070,9 @@ msgid ""
 "longer attached to this type. Adding it back with the same name brings them "
 "back."
 msgstr ""
+"Se quita la taxonomía «%1$s»: sus %2$d términos se quedan en la base de "
+"datos, ya sin unir a este tipo. Si se vuelve a añadir con el mismo nombre, "
+"vuelven."
 
 #. translators: 1: old taxonomy name, 2: new taxonomy name
 #: modules/content-types/includes/class-changes.php:86
@@ -1912,6 +2081,8 @@ msgid ""
 "The taxonomy “%1$s” cannot be renamed to “%2$s”: it has terms, which would "
 "stay under the old name."
 msgstr ""
+"La taxonomía «%1$s» no se puede renombrar a «%2$s»: tiene términos, que se "
+"quedarían con el nombre viejo."
 
 #. translators: %s: field name
 #: modules/content-types/includes/class-changes.php:95
@@ -1920,6 +2091,8 @@ msgid ""
 "The field “%s” is removed: what the entries have in it stays in the "
 "database, hidden. Add a field with the same name to see it again."
 msgstr ""
+"Se quita el campo «%s»: lo que tienen las entradas en él se queda en la base "
+"de datos, oculto. Añade un campo con el mismo nombre para volver a verlo."
 
 #. translators: 1: field name, 2: old field type, 3: new field type
 #: modules/content-types/includes/class-changes.php:98
@@ -1928,6 +2101,8 @@ msgid ""
 "The field “%1$s” changes from %2$s to %3$s: each entry’s value is cleaned "
 "for the new type the next time it is saved."
 msgstr ""
+"El campo «%1$s» pasa de %2$s a %3$s: el valor de cada entrada se limpia para "
+"el tipo nuevo la próxima vez que se guarde."
 
 #. translators: 1: type or taxonomy name, 2: old URL base, 3: new URL base
 #: modules/content-types/includes/class-changes.php:112
@@ -1936,57 +2111,61 @@ msgid ""
 "The URL of “%1$s” changes from /%2$s/ to /%3$s/: its published addresses "
 "move."
 msgstr ""
+"La URL de «%1$s» pasa de /%2$s/ a /%3$s/: sus direcciones publicadas se "
+"mueven."
 
 #: modules/content-types/includes/class-fields-panel.php:63
 msgid "No rating"
-msgstr ""
+msgstr "Sin valoración"
 
 #: modules/content-types/includes/class-fields-panel.php:91
 msgid "Changed in the original language: it is copied to the translations."
-msgstr ""
+msgstr "Se cambia en el idioma original: se copia a las traducciones."
 
 #. translators: %s: singular name of a content type, e.g. Restaurant
 #: modules/content-types/includes/class-fields-panel.php:110
 #, php-format
 msgid "%s details"
-msgstr ""
+msgstr "%s: datos"
 
 #: modules/content-types/includes/class-fields-panel.php:113
 msgid ""
 "Fields that are the same in every language are copied to the translations "
 "when you save; the others are translated in each language."
 msgstr ""
+"Los campos que son iguales en todos los idiomas se copian a las traducciones "
+"al guardar; los demás se traducen en cada idioma."
 
 #: modules/content-types/includes/class-fields-panel.php:190
 msgid "Choose image"
-msgstr ""
+msgstr "Elegir imagen"
 
 #: modules/content-types/includes/class-fields-panel.php:191
 msgid "Replace image"
-msgstr ""
+msgstr "Cambiar la imagen"
 
 #: modules/content-types/includes/class-fields-panel.php:193
 msgid "Copy Monday to every day"
-msgstr ""
+msgstr "Copiar el lunes a todos los días"
 
 #: modules/content-types/includes/class-fields-panel.php:194
 msgid "Monday’s hours copied to every day."
-msgstr ""
+msgstr "Horario del lunes copiado a todos los días."
 
 #: modules/content-types/includes/class-fields-panel.php:348
 #: modules/content-types/includes/class-fields-panel.php:354
 msgid "— None —"
-msgstr ""
+msgstr "— Ninguno —"
 
 #: modules/content-types/includes/class-loader.php:88
 msgid "The stored definition is not valid JSON."
-msgstr ""
+msgstr "La definición guardada no es un JSON válido."
 
 #. translators: %s: the JSON parser's message
 #: modules/content-types/includes/class-loader.php:107
 #, php-format
 msgid "Not valid JSON: %s."
-msgstr ""
+msgstr "No es un JSON válido: %s."
 
 #. translators: %s: post type name
 #: modules/content-types/includes/class-loader.php:112
@@ -1995,20 +2174,22 @@ msgid ""
 "The type “%s” is defined in the database (Estrategia Web → Content types), "
 "which wins: this file is ignored."
 msgstr ""
+"El tipo «%s» está definido en la base de datos (Estrategia Web → Tipos de "
+"contenido), que manda: este fichero no se usa."
 
 #: modules/content-types/includes/class-location-fields.php:221
 msgid "Nothing yet."
-msgstr ""
+msgstr "Todavía nada."
 
 #: modules/content-types/includes/class-location-fields.php:231
 #: modules/map/blocks/map/render.php:352
 msgid "Open in Google Maps"
-msgstr ""
+msgstr "Abrir en Google Maps"
 
 #: modules/content-types/includes/class-location-fields.php:236
 #: modules/site/includes/admin/class-admin.php:117
 msgid "Shown on the site (as of the last save):"
-msgstr ""
+msgstr "Lo que se ve en la web (desde el último guardado):"
 
 #: modules/content-types/includes/class-location-migration.php:109
 msgid ""
@@ -2017,6 +2198,10 @@ msgid ""
 "look as before. Read its dry run, check its DIFFERENCES, then run it without "
 "--dry-run."
 msgstr ""
+"Estrategia Web 2.0.0: algunas sedes aún guardan sus datos dos veces "
+"(dirección y horario como texto, el mapa como dos enlaces). Hasta que se "
+"ejecute la migración de datos se ven como antes. Lee su simulacro, revisa "
+"sus DIFERENCIAS (DIFFERENCES) y luego ejecútala sin --dry-run."
 
 #. translators: %s: list of field names
 #: modules/content-types/includes/class-registrar.php:140
@@ -2025,6 +2210,8 @@ msgid ""
 "Not published: it has been saved as a draft. Fill in these fields to publish "
 "it: %s."
 msgstr ""
+"No se ha publicado: se ha guardado como borrador. Rellena estos campos para "
+"publicarlo: %s."
 
 #. translators: %s: list of field names
 #: modules/content-types/includes/class-registrar.php:142
@@ -2033,13 +2220,15 @@ msgid ""
 "These fields cannot be empty in a published item, so they keep their "
 "previous value: %s."
 msgstr ""
+"Estos campos no pueden quedar vacíos en un elemento publicado, así que "
+"conservan su valor anterior: %s."
 
 #. translators: %s: post type name
 #: modules/content-types/includes/class-registrar.php:162
 #, php-format
 msgid ""
 "The type “%s” is already registered by other code: this file is ignored."
-msgstr ""
+msgstr "El tipo «%s» ya lo registra otro código: este fichero no se usa."
 
 #. translators: %s: taxonomy name
 #: modules/content-types/includes/class-registrar.php:194
@@ -2048,6 +2237,7 @@ msgid ""
 "The taxonomy “%s” is already registered by other code: it is not registered "
 "again."
 msgstr ""
+"La taxonomía «%s» ya la registra otro código: no se vuelve a registrar."
 
 #. translators: %s: singular name of a taxonomy, e.g. Cuisine
 #. translators: %s: singular name of a content type, e.g. Restaurant
@@ -2055,7 +2245,7 @@ msgstr ""
 #: modules/content-types/includes/class-registrar.php:297
 #, php-format
 msgid "Add %s"
-msgstr ""
+msgstr "Añadir %s"
 
 #. translators: %s: singular name of a taxonomy
 #. translators: %s: singular name of a content type
@@ -2063,7 +2253,7 @@ msgstr ""
 #: modules/content-types/includes/class-registrar.php:299
 #, php-format
 msgid "Edit %s"
-msgstr ""
+msgstr "Editar %s"
 
 #. translators: 1: field name, 2: post type name
 #: modules/content-types/includes/class-registrar.php:282
@@ -2072,41 +2262,43 @@ msgid ""
 "The relation “%1$s” points to the type “%2$s”, which is not registered: it "
 "can only store 0."
 msgstr ""
+"La relación «%1$s» apunta al tipo «%2$s», que no está registrado: solo podrá "
+"guardar 0."
 
 #. translators: %s: singular name of a content type
 #: modules/content-types/includes/class-registrar.php:301
 #, php-format
 msgid "View %s"
-msgstr ""
+msgstr "Ver %s"
 
 #. translators: %s: plural name of a content type, e.g. Restaurants
 #: modules/content-types/includes/class-registrar.php:303
 #, php-format
 msgid "Search %s"
-msgstr ""
+msgstr "Buscar %s"
 
 #: modules/content-types/includes/class-registrar.php:304
 msgid "Nothing found."
-msgstr ""
+msgstr "No se ha encontrado nada."
 
 #: modules/content-types/includes/class-registrar.php:305
 msgid "Nothing found in the trash."
-msgstr ""
+msgstr "No hay nada en la papelera."
 
 #. translators: %s: list of field names
 #: modules/content-types/includes/class-registrar.php:384
 #, php-format
 msgid "Fill in these fields before publishing: %s."
-msgstr ""
+msgstr "Rellena estos campos antes de publicar: %s."
 
 #: modules/content-types/includes/class-rest.php:130
 msgid "There is no content type with that name."
-msgstr ""
+msgstr "No hay ningún tipo de contenido con ese nombre."
 
 #: modules/content-types/includes/class-rest.php:137
 #: modules/content-types/includes/class-rest.php:157
 msgid "Send the definition as a JSON object in “definition”."
-msgstr ""
+msgstr "Envía la definición como un objeto JSON en «definition»."
 
 #. translators: %s: post type name
 #: modules/content-types/includes/class-rest.php:141
@@ -2114,13 +2306,15 @@ msgstr ""
 #: modules/content-types/includes/class-rest.php:203
 #, php-format
 msgid "The type “%s” already exists: edit it instead (or import it over it)."
-msgstr ""
+msgstr "El tipo «%s» ya existe: edítalo (o impórtalo encima)."
 
 #: modules/content-types/includes/class-rest.php:167
 msgid ""
 "There is no content type with that name in the database (a type from a file "
 "is deleted in its file)."
 msgstr ""
+"No hay ningún tipo de contenido con ese nombre en la base de datos (un tipo "
+"de un fichero se borra en su fichero)."
 
 #. translators: %d: number of entries
 #: modules/content-types/includes/class-rest.php:172
@@ -2133,11 +2327,15 @@ msgid_plural ""
 "entries stay and come back when you switch it on), or empty it first, trash "
 "included."
 msgstr[0] ""
+"Tiene %d entrada, así que no se puede borrar: apágalo (sus entradas se "
+"quedan y vuelven al encenderlo), o vacíalo antes, papelera incluida."
 msgstr[1] ""
+"Tiene %d entradas, así que no se puede borrar: apágalo (sus entradas se "
+"quedan y vuelven al encenderlo), o vacíalo antes, papelera incluida."
 
 #: modules/content-types/includes/class-rest.php:182
 msgid "There is no template with that name."
-msgstr ""
+msgstr "No hay ninguna plantilla con ese nombre."
 
 #. translators: %s: post type name
 #: modules/content-types/includes/class-rest.php:217
@@ -2146,11 +2344,12 @@ msgid ""
 "The name “%s” is already a post type of WordPress or of other code: choose "
 "another."
 msgstr ""
+"El nombre «%s» ya es un tipo de WordPress o de otro código: elige otro."
 
 #: modules/content-types/includes/class-rest.php:220
 #: modules/content-types/includes/class-rest.php:234
 msgid "The definition has errors: nothing was saved."
-msgstr ""
+msgstr "La definición tiene errores: no se ha guardado nada."
 
 #: modules/content-types/includes/class-rest.php:237
 msgid ""
@@ -2158,34 +2357,40 @@ msgid ""
 "will give «not found» (404). Switch it on in Estrategia Web → Modules before "
 "saving to keep them working."
 msgstr ""
+"El módulo Redirecciones está apagado, así que no se crean redirecciones: las "
+"direcciones viejas darán «no encontrada» (404). Enciéndelo en Estrategia Web "
+"→ Módulos antes de guardar para que sigan funcionando."
 
 #: modules/content-types/includes/class-rest.php:240
 msgid ""
 "Saving this changes things that are already published. Read the list and "
 "confirm."
 msgstr ""
+"Guardar esto cambia cosas que ya están publicadas. Lee la lista y confirma."
 
 #. translators: %s: type or taxonomy name
 #: modules/content-types/includes/class-rest.php:295
 #, php-format
 msgid "URL of “%s” changed in Content types"
-msgstr ""
+msgstr "URL de «%s» cambiada en Tipos de contenido"
 
 #: modules/content-types/includes/class-schema.php:111
 msgid "The file is not a JSON object."
-msgstr ""
+msgstr "El fichero no es un objeto JSON."
 
 #. translators: %s: a template key such as testimonial
 #: modules/content-types/includes/class-schema.php:118
 #, php-format
 msgid "“template”: there is no template “%s” in the plugin."
-msgstr ""
+msgstr "«template»: el plugin no tiene ninguna plantilla «%s»."
 
 #: modules/content-types/includes/class-schema.php:128
 msgid ""
 "“prefix” must be 2 to 9 lowercase letters or digits followed by “_” (e.g. "
 "“gment_”)."
 msgstr ""
+"«prefix» tiene que ser de 2 a 9 letras minúsculas o cifras seguidas de "
+"«_» (por ejemplo, «gment_»)."
 
 #. translators: %s: a prefix such as eweb_
 #: modules/content-types/includes/class-schema.php:132
@@ -2194,69 +2399,71 @@ msgid ""
 "The prefix “%s” is reserved (Estrategia Web or WordPress). Choose the site’s "
 "own prefix."
 msgstr ""
+"El prefijo «%s» está reservado (Estrategia Web o WordPress). Elige el "
+"prefijo propio de la web."
 
 #. translators: 1: a type name, 2: a template key
 #: modules/content-types/includes/class-schema.php:137
 #, php-format
 msgid "“name” must be “%1$s”: it is the type of the template “%2$s”."
-msgstr ""
+msgstr "«name» tiene que ser «%1$s»: es el tipo de la plantilla «%2$s»."
 
 #: modules/content-types/includes/class-schema.php:175
 msgid "“description” must be a string or an object of locale → string."
-msgstr ""
+msgstr "«description» tiene que ser un texto o un objeto idioma → texto."
 
 #: modules/content-types/includes/class-schema.php:178
 msgid "“icon” must be a Dashicons class such as “dashicons-food”."
-msgstr ""
+msgstr "«icon» tiene que ser una clase de Dashicons, como «dashicons-food»."
 
 #: modules/content-types/includes/class-schema.php:182
 msgid "“supports” must be a list."
-msgstr ""
+msgstr "«supports» tiene que ser una lista."
 
 #. translators: %s: a value from the JSON file
 #: modules/content-types/includes/class-schema.php:187
 #, php-format
 msgid "“supports”: unknown value “%s”."
-msgstr ""
+msgstr "«supports»: valor desconocido «%s»."
 
 #. translators: %s: a key of the JSON file
 #: modules/content-types/includes/class-schema.php:195
 #, php-format
 msgid "“%s” must be true or false."
-msgstr ""
+msgstr "«%s» tiene que ser true o false."
 
 #: modules/content-types/includes/class-schema.php:199
 msgid "“menu_position” must be a whole number from 0."
-msgstr ""
+msgstr "«menu_position» tiene que ser un número entero desde 0."
 
 #. translators: %s: list of allowed values
 #: modules/content-types/includes/class-schema.php:203
 #, php-format
 msgid "“wpml” must be one of: %s."
-msgstr ""
+msgstr "«wpml» tiene que ser uno de: %s."
 
 #. translators: %s: list of allowed values
 #: modules/content-types/includes/class-schema.php:208
 #, php-format
 msgid "“fields_box” must be one of: %s."
-msgstr ""
+msgstr "«fields_box» tiene que ser uno de: %s."
 
 #: modules/content-types/includes/class-schema.php:226
 msgid "“groups” must be a list."
-msgstr ""
+msgstr "«groups» tiene que ser una lista."
 
 #. translators: %d: position in the list, from 1
 #: modules/content-types/includes/class-schema.php:232
 #, php-format
 msgid "groups[%d]"
-msgstr ""
+msgstr "groups[%d]"
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:235
 #: modules/content-types/includes/class-schema.php:530
 #, php-format
 msgid "%s: must be an object."
-msgstr ""
+msgstr "%s: tiene que ser un objeto."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:242
@@ -2264,37 +2471,39 @@ msgstr ""
 msgid ""
 "%s.key must be lowercase letters, digits and “_”, starting with a letter."
 msgstr ""
+"%s.key tiene que llevar letras minúsculas, cifras y «_», y empezar por una "
+"letra."
 
 #. translators: %s: a group key
 #: modules/content-types/includes/class-schema.php:245
 #, php-format
 msgid "The group “%s” is declared twice."
-msgstr ""
+msgstr "El grupo «%s» está declarado dos veces."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:251
 #: modules/content-types/includes/class-schema.php:551
 #, php-format
 msgid "%s.label is required (a string or an object of locale → string)."
-msgstr ""
+msgstr "%s.label es obligatorio (un texto o un objeto idioma → texto)."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:255
 #, php-format
 msgid "%s.collapsed must be true or false."
-msgstr ""
+msgstr "%s.collapsed tiene que ser true o false."
 
 #. translators: 1: type name, 2: another file name
 #: modules/content-types/includes/class-schema.php:276
 #, php-format
 msgid "The type “%1$s” is already declared in %2$s."
-msgstr ""
+msgstr "El tipo «%1$s» ya está declarado en %2$s."
 
 #. translators: 1: taxonomy name, 2: another file name
 #: modules/content-types/includes/class-schema.php:283
 #, php-format
 msgid "The name “%1$s” is already declared in %2$s."
-msgstr ""
+msgstr "El nombre «%1$s» ya está declarado en %2$s."
 
 #. translators: 1: field name, 2: WPML mode, 3: another file name, 4: WPML mode there
 #: modules/content-types/includes/class-schema.php:299
@@ -2303,6 +2512,8 @@ msgid ""
 "The field “%1$s” has wpml “%2$s” here and “%4$s” in %3$s: WPML keeps one "
 "mode per meta key."
 msgstr ""
+"El campo «%1$s» tiene wpml «%2$s» aquí y «%4$s» en %3$s: WPML guarda un solo "
+"modo por clave de meta."
 
 #. translators: %s: taxonomy name
 #: modules/content-types/includes/class-schema.php:308
@@ -2311,6 +2522,8 @@ msgid ""
 "The taxonomy “%s” is not declared in any file (declare it as an object in "
 "one of them)."
 msgstr ""
+"La taxonomía «%s» no está declarada en ningún fichero (declárala como objeto "
+"en uno de ellos)."
 
 #. translators: 1: a URL slug, 2: a language code, 3: type or taxonomy name, 4: a file name
 #: modules/content-types/includes/class-schema.php:353
@@ -2319,93 +2532,95 @@ msgid ""
 "The slug “%1$s” (language “%2$s”) is already the URL of “%3$s” in %4$s: two "
 "types or taxonomies cannot share a URL."
 msgstr ""
+"El slug «%1$s» (idioma «%2$s») ya es la URL de «%3$s» en %4$s: dos tipos o "
+"taxonomías no pueden compartir URL."
 
 #: modules/content-types/includes/class-schema.php:482
 msgid "“taxonomies” must be a list."
-msgstr ""
+msgstr "«taxonomies» tiene que ser una lista."
 
 #. translators: %d: position in the list, from 1
 #: modules/content-types/includes/class-schema.php:487
 #, php-format
 msgid "taxonomies[%d]"
-msgstr ""
+msgstr "taxonomies[%d]"
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:491
 #, php-format
 msgid "%s: a reference must be a taxonomy name."
-msgstr ""
+msgstr "%s: una referencia tiene que ser el nombre de una taxonomía."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:497
 #, php-format
 msgid "%s: must be a taxonomy name or an object."
-msgstr ""
+msgstr "%s: tiene que ser el nombre de una taxonomía o un objeto."
 
 #. translators: 1: where in the file, 2: a key
 #: modules/content-types/includes/class-schema.php:507
 #, php-format
 msgid "%1$s.%2$s must be true or false."
-msgstr ""
+msgstr "%1$s.%2$s tiene que ser true o false."
 
 #. translators: 1: where in the file, 2: allowed values
 #: modules/content-types/includes/class-schema.php:512
 #: modules/content-types/includes/class-schema.php:563
 #, php-format
 msgid "%1$s.wpml must be one of: %2$s."
-msgstr ""
+msgstr "%1$s.wpml tiene que ser uno de: %2$s."
 
 #: modules/content-types/includes/class-schema.php:521
 msgid "“fields” must be a list."
-msgstr ""
+msgstr "«fields» tiene que ser una lista."
 
 #. translators: %d: position in the list, from 1
 #: modules/content-types/includes/class-schema.php:527
 #, php-format
 msgid "fields[%d]"
-msgstr ""
+msgstr "fields[%d]"
 
 #. translators: %s: field name
 #: modules/content-types/includes/class-schema.php:539
 #, php-format
 msgid "The field “%s” is declared twice."
-msgstr ""
+msgstr "El campo «%s» está declarado dos veces."
 
 #. translators: 1: where in the file, 2: allowed values
 #: modules/content-types/includes/class-schema.php:546
 #, php-format
 msgid "%1$s.type must be one of: %2$s."
-msgstr ""
+msgstr "%1$s.type tiene que ser uno de: %2$s."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:555
 #, php-format
 msgid "%s.help must be a string or an object of locale → string."
-msgstr ""
+msgstr "%s.help tiene que ser un texto o un objeto idioma → texto."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:559
 #, php-format
 msgid "%s.required must be true or false."
-msgstr ""
+msgstr "%s.required tiene que ser true o false."
 
 #. translators: 1: where in the file, 2: a value from the JSON file
 #: modules/content-types/includes/class-schema.php:567
 #, php-format
 msgid "%1$s.group “%2$s” is not one of the definition’s «groups»."
-msgstr ""
+msgstr "%1$s.group «%2$s» no es ninguno de los «groups» de la definición."
 
 #. translators: 1: where in the file, 2: a key, 3: a field type
 #: modules/content-types/includes/class-schema.php:574
 #, php-format
 msgid "%1$s.%2$s is only for fields of type “%3$s”."
-msgstr ""
+msgstr "%1$s.%2$s solo vale para campos de tipo «%3$s»."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:592
 #, php-format
 msgid "%s: a select needs “options”, a non-empty list."
-msgstr ""
+msgstr "%s: un select necesita «options», una lista no vacía."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:599
@@ -2414,48 +2629,53 @@ msgid ""
 "%s.options: each option is a non-empty string or {\"value\": \"…\", "
 "\"label\": …}."
 msgstr ""
+"%s.options: cada opción es un texto no vacío o {\"value\": \"…\", \"label\": "
+"…}."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:606
 #, php-format
 msgid "%s.options: two options have the same value."
-msgstr ""
+msgstr "%s.options: dos opciones tienen el mismo valor."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:610
 #, php-format
 msgid "%s.default must be the value of one of the options."
-msgstr ""
+msgstr "%s.default tiene que ser el valor de una de las opciones."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:618
 #, php-format
 msgid "%s: a relation needs “post_type”, a post type name or a list of them."
 msgstr ""
+"%s: una relación necesita «post_type», el nombre de un tipo o una lista de "
+"ellos."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:622
 #, php-format
 msgid "%s: a relation cannot have a default (it is the ID of a post)."
 msgstr ""
+"%s: una relación no puede tener valor por defecto (es el ID de una entrada)."
 
 #. translators: 1: where in the file, 2: min or max
 #: modules/content-types/includes/class-schema.php:628
 #, php-format
 msgid "%1$s.%2$s must be a number."
-msgstr ""
+msgstr "%1$s.%2$s tiene que ser un número."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:633
 #, php-format
 msgid "%s.integer must be true or false."
-msgstr ""
+msgstr "%s.integer tiene que ser true o false."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:637
 #, php-format
 msgid "%s: min is greater than max."
-msgstr ""
+msgstr "%s: min es mayor que max."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:642
@@ -2463,18 +2683,21 @@ msgstr ""
 msgid ""
 "%s.default must be a number within min and max (a whole number if “integer”)."
 msgstr ""
+"%s.default tiene que ser un número entre min y max (entero si lleva "
+"«integer»)."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:647
 #, php-format
 msgid "%s: a boolean cannot be required (“no” is an answer)."
 msgstr ""
+"%s: un booleano no puede ser obligatorio («no» también es una respuesta)."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:651
 #, php-format
 msgid "%s.default must be true or false."
-msgstr ""
+msgstr "%s.default tiene que ser true o false."
 
 #. translators: 1: where in the file, 2: true_label or false_label
 #: modules/content-types/includes/class-schema.php:657
@@ -2483,18 +2706,21 @@ msgid ""
 "%1$s.%2$s must be a string (\"\" to show nothing) or an object of locale → "
 "string."
 msgstr ""
+"%1$s.%2$s tiene que ser un texto (\"\" para no mostrar nada) o un objeto "
+"idioma → texto."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:663
 #, php-format
 msgid "%s.default must be a whole number from 0 (no rating) to 5."
-msgstr ""
+msgstr "%s.default tiene que ser un número entero de 0 (sin valoración) a 5."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:668
 #, php-format
 msgid "%s: an image cannot have a default (it is the ID of an attachment)."
 msgstr ""
+"%s: una imagen no puede tener valor por defecto (es el ID de un adjunto)."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:672
@@ -2503,43 +2729,46 @@ msgid ""
 "%s.default must be opening hours as stored, e.g. {\"mo\":[\"08:00-14:00\"]}, "
 "or \"\"."
 msgstr ""
+"%s.default tiene que ser un horario tal como se guarda, p. ej. {\"mo\":"
+"[\"08:00-14:00\"]}, o \"\"."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:675
 #, php-format
 msgid "%s.default must be a string."
-msgstr ""
+msgstr "%s.default tiene que ser un texto."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:678
 #, php-format
 msgid "%s.default must be a date as YYYY-MM-DD."
-msgstr ""
+msgstr "%s.default tiene que ser una fecha AAAA-MM-DD."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:691
 #, php-format
 msgid "%s must be lowercase letters, digits and “_”, starting with a letter."
 msgstr ""
+"%s tiene que llevar letras minúsculas, cifras y «_», y empezar por una letra."
 
 #. translators: 1: where in the file, 2: the name, 3: max length, 4: its length
 #: modules/content-types/includes/class-schema.php:696
 #, php-format
 msgid ""
 "%1$s “%2$s” is longer than %3$d characters (%4$d): WordPress would cut it."
-msgstr ""
+msgstr "%1$s «%2$s» pasa de %3$d caracteres (%4$d): WordPress lo cortaría."
 
 #. translators: 1: where in the file, 2: the name, 3: the prefix
 #: modules/content-types/includes/class-schema.php:703
 #, php-format
 msgid "%1$s “%2$s” must start with the prefix “%3$s”."
-msgstr ""
+msgstr "%1$s «%2$s» tiene que empezar por el prefijo «%3$s»."
 
 #. translators: 1: where in the file, 2: the name, 3: a reserved prefix
 #: modules/content-types/includes/class-schema.php:708
 #, php-format
 msgid "%1$s “%2$s” uses the reserved prefix “%3$s”."
-msgstr ""
+msgstr "%1$s «%2$s» usa el prefijo reservado «%3$s»."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:729
@@ -2549,84 +2778,86 @@ msgid ""
 "%s must be a URL path (lowercase ASCII letters, digits, “-” and “/”, no "
 "slashes at the ends) or an object of locale → such a path."
 msgstr ""
+"%s tiene que ser una ruta de URL (letras ASCII minúsculas, cifras, «-» y "
+"«/», sin barras en los extremos) o un objeto de locale → una ruta así."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:771
 #, php-format
 msgid "%s is required: {\"singular\": …, \"plural\": …}."
-msgstr ""
+msgstr "%s es obligatorio: {\"singular\": …, \"plural\": …}."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:775
 #, php-format
 msgid "%s must be an object: {\"singular\": …, \"plural\": …}."
-msgstr ""
+msgstr "%s tiene que ser un objeto: {\"singular\": …, \"plural\": …}."
 
 #. translators: 1: where in the file, 2: singular or plural
 #: modules/content-types/includes/class-schema.php:781
 #, php-format
 msgid "%1$s.%2$s is required: a string or an object of locale → string."
-msgstr ""
+msgstr "%1$s.%2$s es obligatorio: un texto o un objeto idioma → texto."
 
 #. translators: 1: where in the file, 2: a label key such as details
 #: modules/content-types/includes/class-schema.php:787
 #, php-format
 msgid "%1$s.%2$s must be a string or an object of locale → string."
-msgstr ""
+msgstr "%1$s.%2$s tiene que ser un texto o un objeto locale → texto."
 
 #. translators: 1: a key, 2: allowed keys
 #: modules/content-types/includes/class-schema.php:814
 #, php-format
 msgid "Unknown key “%1$s”. Allowed: %2$s."
-msgstr ""
+msgstr "Clave desconocida «%1$s». Se admiten: %2$s."
 
 #: modules/content-types/includes/class-site-types.php:200
 msgctxt "URL slug"
 msgid "clients"
-msgstr ""
+msgstr "clientes"
 
 #: modules/content-types/includes/class-site-types.php:201
 msgctxt "URL slug"
 msgid "client-sector"
-msgstr ""
+msgstr "sector"
 
 #: modules/content-types/includes/class-site-types.php:202
 msgctxt "URL slug"
 msgid "testimonials"
-msgstr ""
+msgstr "opiniones"
 
 #: modules/content-types/includes/class-site-types.php:203
 msgctxt "URL slug"
 msgid "locations"
-msgstr ""
+msgstr "sedes"
 
 #: modules/content-types/includes/class-site-types.php:204
 msgctxt "URL slug"
 msgid "projects"
-msgstr ""
+msgstr "proyectos"
 
 #: modules/content-types/includes/class-site-types.php:205
 msgctxt "URL slug"
 msgid "project-category"
-msgstr ""
+msgstr "categoria-proyecto"
 
 #: modules/content-types/includes/class-site-types.php:206
 msgctxt "URL slug"
 msgid "portfolio"
-msgstr ""
+msgstr "portfolio"
 
 #: modules/content-types/includes/class-site-types.php:207
 msgctxt "URL slug"
 msgid "portfolio-category"
-msgstr ""
+msgstr "categoria-portfolio"
 
 #: modules/content-types/includes/class-store.php:78
 msgid "Content type definitions"
-msgstr ""
+msgstr "Definiciones de tipos de contenido"
 
 #: modules/content-types/includes/class-store.php:79
 msgid "Content type definition"
-msgstr ""
+msgstr "Definición de tipo de contenido"
 
 #: modules/content-types/module.php
 msgctxt "module description"
@@ -2635,16 +2866,19 @@ msgid ""
 "from a template: clients, testimonials, locations, projects, portfolio), "
 "with the editor panel, Block Bindings and WPML generated."
 msgstr ""
+"Crea tus propios tipos de contenido, taxonomías y campos desde el panel (o "
+"empieza desde una plantilla: clientes, opiniones, sedes, proyectos, "
+"portfolio), con el panel del editor, los Block Bindings y WPML generados."
 
 #: modules/content-types/module.php
 msgctxt "module name"
 msgid "Content types"
-msgstr ""
+msgstr "Tipos de contenido"
 
 #: modules/external-links/module.php
 msgctxt "module name"
 msgid "External links in a new tab"
-msgstr ""
+msgstr "Enlaces externos en pestaña nueva"
 
 #: modules/external-links/module.php
 msgctxt "module description"
@@ -2652,18 +2886,21 @@ msgid ""
 "Links to another domain open in a new tab, with rel=\"noopener\" and a "
 "hidden «(opens in a new tab)» for screen readers."
 msgstr ""
+"Los enlaces a otro dominio se abren en una pestaña nueva, con "
+"rel=\"noopener\" y un «(se abre en una pestaña nueva)» oculto para lectores "
+"de pantalla."
 
 #: modules/external-links/module.php modules/faq-schema/module.php
 #: modules/llms/module.php modules/local-business/module.php
 #: modules/redirects/module.php
 msgctxt "module category"
 msgid "SEO"
-msgstr ""
+msgstr "SEO"
 
 #: modules/faq-schema/module.php
 msgctxt "module name"
 msgid "FAQ structured data"
-msgstr ""
+msgstr "Datos estructurados de preguntas frecuentes"
 
 #: modules/faq-schema/module.php
 msgctxt "module description"
@@ -2671,11 +2908,13 @@ msgid ""
 "Publishes the page's FAQ accordions as schema.org FAQPage, inside Rank "
 "Math's or Yoast's graph when they are there."
 msgstr ""
+"Publica los acordeones de preguntas frecuentes de la página como FAQPage de "
+"schema.org, dentro del grafo de Rank Math o de Yoast si están."
 
 #: modules/featured-images/module.php
 msgctxt "module name"
 msgid "Featured image tuning"
-msgstr ""
+msgstr "Ajustes de la imagen destacada"
 
 #: modules/featured-images/module.php
 msgctxt "module description"
@@ -2684,19 +2923,22 @@ msgid ""
 "logo whose alt text only repeats the title shown next to it is marked as "
 "decorative."
 msgstr ""
+"Las imágenes destacadas de ancho fijo en px bajan un archivo de ese tamaño, "
+"y un logo cuyo texto alternativo solo repite el título que se ve al lado se "
+"marca como decorativo."
 
 #: modules/forms/assets/editor.js:58 modules/forms/assets/editor.js:416
 msgid "Message"
-msgstr ""
+msgstr "Mensaje"
 
 #: modules/forms/assets/editor.js:64
 msgid "Notice to the site"
-msgstr ""
+msgstr "Aviso a la web"
 
 #. translators: {{name}} is a marker: do not translate it.
 #: modules/forms/assets/editor.js:67
 msgid "New message from {{name}}"
-msgstr ""
+msgstr "Nuevo mensaje de {{name}}"
 
 #. translators: what goes between {{ }} are markers: do not translate them.
 #: modules/forms/assets/editor.js:69
@@ -2705,14 +2947,17 @@ msgid ""
 "\n"
 "{{all_fields}}"
 msgstr ""
+"Nuevo mensaje enviado desde {{page_url}} el {{submission_date}}:\n"
+"\n"
+"{{all_fields}}"
 
 #: modules/forms/assets/editor.js:75
 msgid "Acknowledgement to the sender"
-msgstr ""
+msgstr "Acuse al remitente"
 
 #: modules/forms/assets/editor.js:77
 msgid "We have received your message"
-msgstr ""
+msgstr "Hemos recibido tu mensaje"
 
 #. translators: what goes between {{ }} are markers: do not translate them.
 #: modules/forms/assets/editor.js:79
@@ -2726,186 +2971,211 @@ msgid ""
 "\n"
 "{{site_name}}"
 msgstr ""
+"Hola, {{name}}:\n"
+"\n"
+"Gracias por escribirnos. Hemos recibido tu mensaje y te responderemos "
+"pronto.\n"
+"\n"
+"{{all_fields}}\n"
+"\n"
+"{{site_name}}"
 
 #: modules/forms/assets/editor.js:102
 msgid "Name in the submissions log"
-msgstr ""
+msgstr "Nombre en el registro de envíos"
 
 #: modules/forms/assets/editor.js:108
 msgid "Form identifier"
-msgstr ""
+msgstr "Identificador del formulario"
 
 #: modules/forms/assets/editor.js:109
 msgid ""
 "Groups the submissions of this form in the log, in every language. Change it "
 "only if two copies of the form must be counted apart."
 msgstr ""
+"Agrupa los envíos de este formulario en el registro, en todos los idiomas. "
+"Cámbialo solo si dos copias del formulario deben contarse por separado."
 
 #: modules/forms/assets/editor.js:117
 msgid "Messages"
-msgstr ""
+msgstr "Mensajes"
 
 #: modules/forms/assets/editor.js:120 modules/forms/assets/editor.js:127
 msgid "Empty: the default message from Forms → Settings."
-msgstr ""
+msgstr "Vacío: el mensaje por defecto de Formularios → Ajustes."
 
 #: modules/forms/assets/editor.js:153
 msgid ""
 "The text between braces becomes the link to the privacy policy. Empty: the "
 "default text."
 msgstr ""
+"El texto entre llaves se convierte en el enlace a la política de privacidad. "
+"Vacío: el texto por defecto."
 
 #: modules/forms/assets/editor.js:161
 msgid "Name (key)"
-msgstr ""
+msgstr "Nombre (clave)"
 
 #: modules/forms/assets/editor.js:162
 msgid ""
 "Used in the email markers, e.g. {{name}}, and in the log. Lowercase letters, "
 "numbers, - and _."
 msgstr ""
+"Se usa en los marcadores de los correos, p. ej. {{name}}, y en el registro. "
+"Minúsculas, números, - y _."
 
 #: modules/forms/assets/editor.js:172
 msgid "Required"
-msgstr ""
+msgstr "Obligatorio"
 
 #: modules/forms/assets/editor.js:183
 msgid "First option (empty value)"
-msgstr ""
+msgstr "Primera opción (valor vacío)"
 
 #: modules/forms/assets/editor.js:183
 msgid "Placeholder"
-msgstr ""
+msgstr "Texto de ejemplo"
 
 #: modules/forms/assets/editor.js:191
 msgid "Autocomplete"
-msgstr ""
+msgstr "Autocompletar"
 
 #: modules/forms/assets/editor.js:192
 msgid ""
 "What the browser may fill in: name, organization, email, tel, street-"
 "address… Empty: email and phone fields still get email and tel."
 msgstr ""
+"Lo que puede rellenar el navegador: name, organization, email, tel, street-"
+"address… Vacío: los campos de correo y teléfono llevan igualmente email y "
+"tel."
 
 #: modules/forms/assets/editor.js:203
 msgid "Options"
-msgstr ""
+msgstr "Opciones"
 
 #: modules/forms/assets/editor.js:204
 msgid "One per line."
-msgstr ""
+msgstr "Una por línea."
 
 #: modules/forms/assets/editor.js:211
 msgid "Preselected option"
-msgstr ""
+msgstr "Opción preseleccionada"
 
 #: modules/forms/assets/editor.js:212
 msgid ""
 "In a synced pattern, set it per page in the pattern block instead. A link "
 "can also choose it with ?af_ followed by the field name."
 msgstr ""
+"En un patrón sincronizado se fija por página, en el bloque del patrón. Un "
+"enlace también puede elegirla con ?af_ y el nombre del campo."
 
 #: modules/forms/assets/editor.js:214
 msgid "None"
-msgstr ""
+msgstr "Ninguna"
 
 #: modules/forms/assets/editor.js:226
 msgid "Privacy consent"
-msgstr ""
+msgstr "Consentimiento de privacidad"
 
 #: modules/forms/assets/editor.js:227
 msgid "Always required, and links to the privacy policy."
-msgstr ""
+msgstr "Siempre obligatorio, y enlaza a la política de privacidad."
 
 #: modules/forms/assets/editor.js:237
 msgid "Privacy policy URL"
-msgstr ""
+msgstr "URL de la política de privacidad"
 
 #: modules/forms/assets/editor.js:238
 msgid ""
 "Empty: the privacy policy page set in Settings → Privacy (translated, with "
 "WPML)."
 msgstr ""
+"Vacío: la página de política de privacidad de Ajustes → Privacidad "
+"(traducida, con WPML)."
 
 #: modules/forms/assets/editor.js:249
 msgid "Width"
-msgstr ""
+msgstr "Ancho"
 
 #: modules/forms/assets/editor.js:252
 msgid "Full"
-msgstr ""
+msgstr "Completo"
 
 #: modules/forms/assets/editor.js:253
 msgid "Half"
-msgstr ""
+msgstr "Medio"
 
 #: modules/forms/assets/editor.js:259
 msgid "Field"
-msgstr ""
+msgstr "Campo"
 
 #: modules/forms/assets/editor.js:359
 msgid "Button text"
-msgstr ""
+msgstr "Texto del botón"
 
 #: modules/forms/assets/editor.js:409 modules/forms/assets/editor.js:428
 msgid "Email notification"
-msgstr ""
+msgstr "Aviso por correo"
 
 #: modules/forms/assets/editor.js:410
 msgid "Name of this notification"
-msgstr ""
+msgstr "Nombre de este aviso"
 
 #: modules/forms/assets/editor.js:411
 msgid ""
 "Addresses separated by commas, or a marker such as {{email}}. Empty: the "
 "site administrator email."
 msgstr ""
+"Direcciones separadas por comas, o un marcador como {{email}}. Vacío: el "
+"correo del administrador de la web."
 
 #: modules/forms/assets/editor.js:411 modules/forms/assets/editor.js:429
 msgid "To"
-msgstr ""
+msgstr "Para"
 
 #: modules/forms/assets/editor.js:412
 msgid "An address or a marker such as {{email}}. Optional."
-msgstr ""
+msgstr "Una dirección o un marcador como {{email}}. Opcional."
 
 #: modules/forms/assets/editor.js:412
 msgid "Reply to"
-msgstr ""
+msgstr "Responder a"
 
 #: modules/forms/assets/editor.js:413 modules/forms/assets/editor.js:430
 msgid "Subject"
-msgstr ""
+msgstr "Asunto"
 
 #: modules/forms/assets/editor.js:417
 msgid "Available markers:"
-msgstr ""
+msgstr "Marcadores disponibles:"
 
 #: modules/forms/assets/editor.js:429
 msgid "site administrator"
-msgstr ""
+msgstr "administrador de la web"
 
 #: modules/forms/assets/editor.js:431
 msgid "Not shown to visitors. Edit it in the side panel."
-msgstr ""
+msgstr "No lo ven los visitantes. Se edita en el panel lateral."
 
 #: modules/forms/assets/editor.js:466
 msgid "Choose a form"
-msgstr ""
+msgstr "Elige un formulario"
 
 #: modules/forms/assets/editor.js:469
 msgid "not published"
-msgstr ""
+msgstr "sin publicar"
 
 #: modules/forms/assets/editor.js:481
 msgid "Edit this form"
-msgstr ""
+msgstr "Editar este formulario"
 
 #: modules/forms/assets/editor.js:494
 msgid ""
 "Choose which of the site's forms to show here. Forms are created and edited "
 "in Forms → Forms."
 msgstr ""
+"Elige qué formulario del sitio se muestra aquí. Los formularios se crean y "
+"se editan en Formularios → Formularios."
 
 #: modules/forms/blocks/checkbox/block.json
 msgctxt "block description"
@@ -2913,57 +3183,61 @@ msgid ""
 "A checkbox. As a privacy consent it is always required and links to the "
 "privacy policy."
 msgstr ""
+"Una casilla. Como consentimiento de privacidad es siempre obligatoria y "
+"enlaza a la política de privacidad."
 
 #: modules/forms/blocks/checkbox/block.json
 msgctxt "block title"
 msgid "Checkbox"
-msgstr ""
+msgstr "Casilla"
 
 #: modules/forms/blocks/email/block.json
 msgctxt "block description"
 msgid "An email address, checked in the browser and on the server."
-msgstr ""
+msgstr "Una dirección de correo, comprobada en el navegador y en el servidor."
 
 #: modules/forms/blocks/email/block.json
 msgctxt "block title"
 msgid "Email field"
-msgstr ""
+msgstr "Campo de correo"
 
 #: modules/forms/blocks/form-ref/block.json
 #: modules/forms/blocks/form/block.json
 msgctxt "block title"
 msgid "Form"
-msgstr ""
+msgstr "Formulario"
 
 #: modules/forms/blocks/form-ref/block.json
 msgctxt "block description"
 msgid ""
 "Shows one of the site's forms. The form itself is edited in Forms → Forms."
 msgstr ""
+"Muestra uno de los formularios del sitio. El formulario se edita en "
+"Formularios → Formularios."
 
 #: modules/forms/blocks/form-ref/block.json
 #: modules/forms/blocks/form/block.json
 #: modules/whatsapp/blocks/whatsapp/block.json
 msgctxt "block keyword"
 msgid "contact"
-msgstr ""
+msgstr "contacto"
 
 #: modules/forms/blocks/form-ref/block.json
 #: modules/forms/blocks/form/block.json
 msgctxt "block keyword"
 msgid "email"
-msgstr ""
+msgstr "correo"
 
 #: modules/forms/blocks/form-ref/block.json
 #: modules/forms/blocks/form/block.json
 msgctxt "block keyword"
 msgid "form"
-msgstr ""
+msgstr "formulario"
 
 #: modules/forms/blocks/form-ref/block.json
 msgctxt "block keyword"
 msgid "quote"
-msgstr ""
+msgstr "presupuesto"
 
 #: modules/forms/blocks/form/block.json
 msgctxt "block description"
@@ -2971,6 +3245,9 @@ msgid ""
 "The form itself, edited in Forms → Forms. Its fields go inside; its email "
 "notifications too. Pages show it with the «Form» block."
 msgstr ""
+"El formulario en sí, que se edita en Formularios → Formularios. Dentro van "
+"sus campos, y también sus avisos por correo. Las páginas lo muestran con el "
+"bloque «Formulario»."
 
 #: modules/forms/blocks/notification/block.json
 msgctxt "block description"
@@ -2978,194 +3255,199 @@ msgid ""
 "An email sent on every submission. Add one per recipient group: the site "
 "team, an acknowledgement to the sender… Never shown to visitors."
 msgstr ""
+"Un correo que sale con cada envío. Añade uno por grupo de destinatarios: el "
+"equipo de la web, un acuse al remitente… Los visitantes no lo ven nunca."
 
 #: modules/forms/blocks/notification/block.json
 msgctxt "block title"
 msgid "Email notification"
-msgstr ""
+msgstr "Aviso por correo"
 
 #: modules/forms/blocks/select/block.json
 msgctxt "block description"
 msgid "Choose one option from a list."
-msgstr ""
+msgstr "Elegir una opción de una lista."
 
 #: modules/forms/blocks/select/block.json
 msgctxt "block title"
 msgid "Dropdown field"
-msgstr ""
+msgstr "Campo desplegable"
 
 #: modules/forms/blocks/submit/block.json
 msgctxt "block title"
 msgid "Send button"
-msgstr ""
+msgstr "Botón de enviar"
 
 #: modules/forms/blocks/submit/block.json
 msgctxt "block description"
 msgid ""
 "The button that sends the form. Styled by the theme like any other button."
 msgstr ""
+"El botón que envía el formulario. Lo viste el tema como cualquier otro botón."
 
 #: modules/forms/blocks/tel/block.json
 msgctxt "block description"
 msgid "A phone number."
-msgstr ""
+msgstr "Un número de teléfono."
 
 #: modules/forms/blocks/tel/block.json
 msgctxt "block title"
 msgid "Phone field"
-msgstr ""
+msgstr "Campo de teléfono"
 
 #: modules/forms/blocks/text/block.json
 msgctxt "block description"
 msgid "A single line of text."
-msgstr ""
+msgstr "Una línea de texto."
 
 #: modules/forms/blocks/text/block.json
 msgctxt "block title"
 msgid "Text field"
-msgstr ""
+msgstr "Campo de texto"
 
 #: modules/forms/blocks/textarea/block.json
 msgctxt "block title"
 msgid "Message field"
-msgstr ""
+msgstr "Campo de mensaje"
 
 #: modules/forms/blocks/textarea/block.json
 msgctxt "block description"
 msgid "Several lines of text."
-msgstr ""
+msgstr "Varias líneas de texto."
 
 #: modules/forms/includes/admin/class-admin.php:47
 #: modules/forms/includes/admin/class-admin.php:55
 #: modules/forms/includes/admin/class-admin.php:105
 msgid "Form submissions"
-msgstr ""
+msgstr "Envíos de formularios"
 
 #: modules/forms/includes/admin/class-admin.php:48
 #: modules/forms/includes/admin/class-admin.php:60
 #: modules/forms/includes/admin/class-forms-list.php:283
 #: modules/forms/includes/class-form-post-type.php:84
 msgid "Forms"
-msgstr ""
+msgstr "Formularios"
 
 #: modules/forms/includes/admin/class-admin.php:55
 msgid "Submissions"
-msgstr ""
+msgstr "Envíos"
 
 #: modules/forms/includes/admin/class-admin.php:56
 #: modules/forms/includes/admin/class-admin.php:271
 msgid "Form settings"
-msgstr ""
+msgstr "Ajustes de formularios"
 
 #: modules/forms/includes/admin/class-admin.php:77
 #: modules/forms/includes/admin/class-admin.php:264
 #: modules/forms/includes/admin/class-forms-list.php:273
 msgid "You are not allowed to see this page."
-msgstr ""
+msgstr "No tienes permiso para ver esta página."
 
 #: modules/forms/includes/admin/class-admin.php:105
 msgid ""
 "Every message sent through the site's forms, with the emails each one sent."
 msgstr ""
+"Todos los mensajes enviados desde los formularios de la web, con los correos "
+"que mandó cada uno."
 
 #: modules/forms/includes/admin/class-admin.php:105
 msgid "Export CSV"
-msgstr ""
+msgstr "Exportar CSV"
 
 #. translators: %d: number of deleted submissions.
 #: modules/forms/includes/admin/class-admin.php:110
 #, php-format
 msgid "%d submission deleted."
 msgid_plural "%d submissions deleted."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d envío borrado."
+msgstr[1] "%d envíos borrados."
 
 #: modules/forms/includes/admin/class-admin.php:127
 msgid "Submission not found"
-msgstr ""
+msgstr "Envío no encontrado"
 
 #. translators: %d: submission number.
 #: modules/forms/includes/admin/class-admin.php:132
 #, php-format
 msgid "Submission #%d"
-msgstr ""
+msgstr "Envío n.º %d"
 
 #: modules/forms/includes/admin/class-admin.php:135
 #: modules/forms/includes/admin/class-submissions-table.php:32
 msgid "Data"
-msgstr ""
+msgstr "Datos"
 
 #: modules/forms/includes/admin/class-admin.php:142
 #: modules/forms/includes/admin/class-forms-list.php:301
 #: modules/forms/includes/admin/class-submissions-table.php:34
 msgid "Notifications"
-msgstr ""
+msgstr "Avisos"
 
 #: modules/forms/includes/admin/class-admin.php:143
 msgid "Notification"
-msgstr ""
+msgstr "Aviso"
 
 #: modules/forms/includes/admin/class-admin.php:143
 msgid "Recipients"
-msgstr ""
+msgstr "Destinatarios"
 
 #: modules/forms/includes/admin/class-admin.php:143
 msgid "Result"
-msgstr ""
+msgstr "Resultado"
 
 #: modules/forms/includes/admin/class-admin.php:145
 #: modules/forms/includes/admin/class-submissions-table.php:114
 msgid "Failed"
-msgstr ""
+msgstr "Fallo"
 
 #: modules/forms/includes/admin/class-admin.php:145
 msgid "Sent"
-msgstr ""
+msgstr "Enviado"
 
 #: modules/forms/includes/admin/class-admin.php:149
 msgid "This form has no notifications."
-msgstr ""
+msgstr "Este formulario no tiene avisos."
 
 #: modules/forms/includes/admin/class-admin.php:153
 msgid "Details"
-msgstr ""
+msgstr "Detalles"
 
 #: modules/forms/includes/admin/class-admin.php:155
 #: modules/forms/includes/admin/class-forms-list.php:299
 #: modules/forms/includes/admin/class-submissions-table.php:31
 #: modules/forms/includes/class-form-post-type.php:85
 msgid "Form"
-msgstr ""
+msgstr "Formulario"
 
 #: modules/forms/includes/admin/class-admin.php:157
 msgid "Page"
-msgstr ""
+msgstr "Página"
 
 #: modules/forms/includes/admin/class-admin.php:158
 #: modules/forms/includes/admin/class-submissions-table.php:33
 #: modules/language-switcher/blocks/language-switcher/render.php:87
 msgid "Language"
-msgstr ""
+msgstr "Idioma"
 
 #: modules/forms/includes/admin/class-admin.php:159
 msgid "IP (truncated)"
-msgstr ""
+msgstr "IP (truncada)"
 
 #: modules/forms/includes/admin/class-admin.php:160
 msgid "User agent"
-msgstr ""
+msgstr "Navegador (user agent)"
 
 #: modules/forms/includes/admin/class-admin.php:167
 msgid "Delete this submission"
-msgstr ""
+msgstr "Borrar este envío"
 
 #: modules/forms/includes/admin/class-admin.php:174
 msgid "Delete submissions"
-msgstr ""
+msgstr "Borrar envíos"
 
 #: modules/forms/includes/admin/class-admin.php:176
 msgid "No submissions selected."
-msgstr ""
+msgstr "No hay envíos seleccionados."
 
 #. translators: %d: number of submissions.
 #: modules/forms/includes/admin/class-admin.php:182
@@ -3174,65 +3456,67 @@ msgid ""
 "You are about to permanently delete %d submission. This cannot be undone."
 msgid_plural ""
 "You are about to permanently delete %d submissions. This cannot be undone."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Vas a borrar definitivamente %d envío. No se puede deshacer."
+msgstr[1] "Vas a borrar definitivamente %d envíos. No se puede deshacer."
 
 #: modules/forms/includes/admin/class-admin.php:192
 msgid "Yes, delete"
-msgstr ""
+msgstr "Sí, borrar"
 
 #: modules/forms/includes/admin/class-admin.php:198
 #: modules/forms/includes/admin/class-admin.php:209
 msgid "You are not allowed to do this."
-msgstr ""
+msgstr "No tienes permiso para hacer esto."
 
 #: modules/forms/includes/admin/class-admin.php:271
 msgid ""
 "Fields, notifications and messages of each form are set in the form block, "
 "in the editor. Here only what is common to all forms."
 msgstr ""
+"Los campos, los avisos y los mensajes de cada formulario se configuran en su "
+"bloque, en el editor. Aquí solo lo común a todos."
 
 #: modules/forms/includes/admin/class-admin.php:274
 msgid "Submission log"
-msgstr ""
+msgstr "Registro de envíos"
 
 #: modules/forms/includes/admin/class-admin.php:277
 msgid "Keep submissions for (days)"
-msgstr ""
+msgstr "Conservar los envíos durante (días)"
 
 #: modules/forms/includes/admin/class-admin.php:279
 msgid "0 keeps them forever. Older submissions are deleted once a day."
-msgstr ""
+msgstr "0 los conserva siempre. Los más antiguos se borran una vez al día."
 
 #. translators: 1: date of the last purge, 2: deleted submissions.
 #: modules/forms/includes/admin/class-admin.php:283
 #, php-format
 msgid "Last purge: %1$s, %2$d deleted."
-msgstr ""
+msgstr "Última purga: %1$s, %2$d borrados."
 
 #: modules/forms/includes/admin/class-admin.php:290
 msgid "Anti-spam"
-msgstr ""
+msgstr "Antispam"
 
 #: modules/forms/includes/admin/class-admin.php:293
 msgid "Minimum filling time (seconds)"
-msgstr ""
+msgstr "Tiempo mínimo de relleno (segundos)"
 
 #: modules/forms/includes/admin/class-admin.php:297
 msgid "Submissions allowed per IP"
-msgstr ""
+msgstr "Envíos permitidos por IP"
 
 #: modules/forms/includes/admin/class-admin.php:299
 msgid "every (minutes)"
-msgstr ""
+msgstr "cada (minutos)"
 
 #: modules/forms/includes/admin/class-admin.php:301
 msgid "0 submissions disables the limit."
-msgstr ""
+msgstr "0 envíos desactiva el límite."
 
 #: modules/forms/includes/admin/class-admin.php:305
 msgid "Default texts"
-msgstr ""
+msgstr "Textos por defecto"
 
 #: modules/forms/includes/admin/class-admin.php:306
 msgid ""
@@ -3240,24 +3524,27 @@ msgid ""
 "in and the site uses WPML, translate them in WPML → String Translation "
 "(domain estrategia-web-forms)."
 msgstr ""
+"Déjalos vacíos para usar el texto incorporado, ya traducido. Si los rellenas "
+"y la web usa WPML, se traducen en WPML → Traducción de cadenas (dominio "
+"estrategia-web-forms)."
 
 #: modules/forms/includes/admin/class-admin.php:309
 msgid "Success message"
-msgstr ""
+msgstr "Mensaje de éxito"
 
 #: modules/forms/includes/admin/class-admin.php:313
 msgid "Error message"
-msgstr ""
+msgstr "Mensaje de error"
 
 #: modules/forms/includes/admin/class-admin.php:317
 msgid "Email footer"
-msgstr ""
+msgstr "Pie de los correos"
 
 #. translators: %d: post ID.
 #: modules/forms/includes/admin/class-forms-list.php:238
 #, php-format
 msgid "(no title, #%d)"
-msgstr ""
+msgstr "(sin título, n.º %d)"
 
 #: modules/forms/includes/admin/class-forms-list.php:284
 msgid ""
@@ -3265,12 +3552,15 @@ msgid ""
 "on a page, add the «Form» block and choose it. Its name and identifier are "
 "the ones the submissions log shows."
 msgstr ""
+"Los formularios del sitio y dónde se usan. Edita aquí cada formulario; para "
+"mostrarlo en una página, añade el bloque «Formulario» y elígelo. Su nombre y "
+"su identificador son los que muestra el registro de envíos."
 
 #: modules/forms/includes/admin/class-forms-list.php:285
 #: modules/forms/includes/class-form-post-type.php:86
 #: modules/forms/includes/class-form-post-type.php:87
 msgid "Add form"
-msgstr ""
+msgstr "Añadir formulario"
 
 #. translators: %d: number of forms written inside pages or patterns.
 #: modules/forms/includes/admin/class-forms-list.php:292
@@ -3284,196 +3574,210 @@ msgid_plural ""
 "own forms with the command «wp estrategia-web migrate-forms» (try it first "
 "with --dry-run)."
 msgstr[0] ""
+"%d formulario sigue escrito dentro de una página o un patrón. Pásalo a un "
+"formulario propio con la orden «wp estrategia-web migrate-forms» (pruébala "
+"antes con --dry-run)."
 msgstr[1] ""
+"%d formularios siguen escritos dentro de una página o un patrón. Pásalos a "
+"formularios propios con la orden «wp estrategia-web migrate-forms» (pruébala "
+"antes con --dry-run)."
 
 #: modules/forms/includes/admin/class-forms-list.php:300
 msgid "Where it is"
-msgstr ""
+msgstr "Dónde está"
 
 #: modules/forms/includes/admin/class-forms-list.php:303
 msgid "Also in"
-msgstr ""
+msgstr "También en"
 
 #: modules/forms/includes/admin/class-forms-list.php:309
 msgid ""
 "There are no forms yet. Add one with «Add form», then show it on a page with "
 "the «Form» block."
 msgstr ""
+"Todavía no hay formularios. Crea uno con «Añadir formulario» y muéstralo en "
+"una página con el bloque «Formulario»."
 
 #: modules/forms/includes/admin/class-forms-list.php:314
 msgid "(no name)"
-msgstr ""
+msgstr "(sin nombre)"
 
 #: modules/forms/includes/admin/class-forms-list.php:323
 #: modules/forms/includes/admin/class-forms-list.php:351
 msgid "Used in:"
-msgstr ""
+msgstr "Se usa en:"
 
 #: modules/forms/includes/admin/class-forms-list.php:341
 msgid "Not used on any page yet."
-msgstr ""
+msgstr "Todavía no se usa en ninguna página."
 
 #: modules/forms/includes/admin/class-forms-list.php:345
 msgid "Written inside this content (not migrated)."
-msgstr ""
+msgstr "Escrito dentro de este contenido (sin migrar)."
 
 #: modules/forms/includes/admin/class-forms-list.php:358
 msgid "No page uses this pattern."
-msgstr ""
+msgstr "Ninguna página usa este patrón."
 
 #. translators: %d: number of email notifications.
 #: modules/forms/includes/admin/class-forms-list.php:367
 #, php-format
 msgid "%d notification"
 msgid_plural "%d notifications"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d aviso"
+msgstr[1] "%d avisos"
 
 #. translators: %d: position of the notification in the form.
 #: modules/forms/includes/admin/class-forms-list.php:376
 #, php-format
 msgid "Notification %d"
-msgstr ""
+msgstr "Aviso %d"
 
 #: modules/forms/includes/admin/class-submissions-table.php:56
 msgid "No submissions yet."
-msgstr ""
+msgstr "Todavía no hay envíos."
 
 #: modules/forms/includes/admin/class-submissions-table.php:64
 msgid "Filter by form"
-msgstr ""
+msgstr "Filtrar por formulario"
 
 #: modules/forms/includes/admin/class-submissions-table.php:65
 msgid "All forms"
-msgstr ""
+msgstr "Todos los formularios"
 
 #: modules/forms/includes/admin/class-submissions-table.php:70
 msgid "Filter"
-msgstr ""
+msgstr "Filtrar"
 
 #: modules/forms/includes/admin/class-submissions-table.php:85
 msgid "View"
-msgstr ""
+msgstr "Ver"
 
 #: modules/forms/includes/admin/class-submissions-table.php:112
 msgid "All sent"
-msgstr ""
+msgstr "Todos enviados"
 
 #: modules/forms/includes/admin/class-submissions-table.php:113
 msgid "Some failed"
-msgstr ""
+msgstr "Alguno falló"
 
 #: modules/forms/includes/class-blocks.php:82
 msgid ""
 "The message could not be sent. Please check your connection and try again."
 msgstr ""
+"No se ha podido enviar el mensaje. Comprueba tu conexión y vuelve a "
+"intentarlo."
 
 #: modules/forms/includes/class-blocks.php:106
 msgid "Leave this field empty"
-msgstr ""
+msgstr "Deja este campo vacío"
 
 #: modules/forms/includes/class-blocks.php:234
 msgid "Choose an option"
-msgstr ""
+msgstr "Elige una opción"
 
 #: modules/forms/includes/class-blocks.php:260
 msgid "Send"
-msgstr ""
+msgstr "Enviar"
 
 #. translators: the text between braces becomes the link to the privacy policy.
 #. translators: the text between braces becomes the link to the privacy policy; {text|url} links to that url.
 #: modules/forms/includes/class-blocks.php:309
 #: modules/forms/includes/class-blocks.php:335
 msgid "I have read and accept the {privacy policy}."
-msgstr ""
+msgstr "He leído y acepto la {política de privacidad}."
 
 #: modules/forms/includes/class-form-post-type.php:88
 msgid "Edit form"
-msgstr ""
+msgstr "Editar formulario"
 
 #: modules/forms/includes/class-form-post-type.php:89
 msgid "New form"
-msgstr ""
+msgstr "Nuevo formulario"
 
 #: modules/forms/includes/class-form-post-type.php:90
 msgid "Search forms"
-msgstr ""
+msgstr "Buscar formularios"
 
 #: modules/forms/includes/class-form-post-type.php:91
 msgid "No forms found."
-msgstr ""
+msgstr "No hay formularios."
 
 #: modules/forms/includes/class-form-post-type.php:92
 msgid "No forms found in Trash."
-msgstr ""
+msgstr "No hay formularios en la papelera."
 
 #: modules/forms/includes/class-form-post-type.php:93
 msgid "Form published."
-msgstr ""
+msgstr "Formulario publicado."
 
 #: modules/forms/includes/class-form-post-type.php:94
 msgid "Form updated."
-msgstr ""
+msgstr "Formulario actualizado."
 
 #: modules/forms/includes/class-notifier.php:61
 msgid "No valid recipient."
-msgstr ""
+msgstr "Ningún destinatario válido."
 
 #: modules/forms/includes/class-notifier.php:65
 msgid "New message"
-msgstr ""
+msgstr "Nuevo mensaje"
 
 #: modules/forms/includes/class-notifier.php:111
 msgid "wp_mail() returned false."
-msgstr ""
+msgstr "wp_mail() devolvió false."
 
 #: modules/forms/includes/class-rest.php:82
 msgid "This form is no longer available. Please reload the page."
-msgstr ""
+msgstr "Este formulario ya no está disponible. Recarga la página."
 
 #: modules/forms/includes/class-rest.php:125
 msgid "The form was sent too quickly. Please wait a few seconds and try again."
 msgstr ""
+"El formulario se ha enviado demasiado rápido. Espera unos segundos y vuelve "
+"a intentarlo."
 
 #: modules/forms/includes/class-rest.php:126
 msgid "The form has expired. Please reload the page and try again."
-msgstr ""
+msgstr "El formulario ha caducado. Recarga la página y vuelve a intentarlo."
 
 #: modules/forms/includes/class-rest.php:134
 msgid "Too many messages from your connection. Please try again later."
-msgstr ""
+msgstr "Demasiados mensajes desde tu conexión. Vuelve a intentarlo más tarde."
 
 #: modules/forms/includes/class-settings.php:105
 msgid "Thank you. Your message has been sent."
-msgstr ""
+msgstr "Gracias. Tu mensaje se ha enviado."
 
 #: modules/forms/includes/class-settings.php:106
 msgid "The message could not be sent. Please check the form and try again."
 msgstr ""
+"No se ha podido enviar el mensaje. Revisa el formulario y vuelve a "
+"intentarlo."
 
 #: modules/forms/includes/class-validator.php:54
 msgid "You must check this box to continue."
-msgstr ""
+msgstr "Tienes que marcar esta casilla para continuar."
 
 #: modules/forms/includes/class-validator.php:55
 msgid "This field is required."
-msgstr ""
+msgstr "Este campo es obligatorio."
 
 #: modules/forms/includes/class-validator.php:62
 msgid "This text is too long."
-msgstr ""
+msgstr "Este texto es demasiado largo."
 
 #: modules/forms/includes/class-validator.php:69
 msgid "Please enter a valid email address."
-msgstr ""
+msgstr "Escribe una dirección de correo válida."
 
 #: modules/forms/includes/class-validator.php:74
 msgid "Please enter a valid phone number."
-msgstr ""
+msgstr "Escribe un número de teléfono válido."
 
 #: modules/forms/includes/class-validator.php:79
 msgid "Please choose one of the options."
-msgstr ""
+msgstr "Elige una de las opciones."
 
 #: modules/forms/module.php
 msgctxt "module description"
@@ -3481,21 +3785,23 @@ msgid ""
 "Block-based forms with several email notifications made from templates, a "
 "log of everything sent and WPML support."
 msgstr ""
+"Formularios por bloques con varios avisos por correo hechos con plantillas, "
+"registro de todo lo enviado y compatibles con WPML."
 
 #: modules/forms/module.php modules/social/module.php
 #: modules/whatsapp/module.php
 msgctxt "module category"
 msgid "Contact"
-msgstr ""
+msgstr "Contacto"
 
 #: modules/forms/module.php
 msgctxt "module name"
 msgid "Forms"
-msgstr ""
+msgstr "Formularios"
 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:67
 msgid "Google tags"
-msgstr ""
+msgstr "Etiquetas de Google"
 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:68
 msgid ""
@@ -3503,26 +3809,29 @@ msgid ""
 "notice: Analytics needs «Analytics», Ads needs «Advertising», and Tag "
 "Manager asks for both. Logged-in editors and administrators are not measured."
 msgstr ""
+"Un campo vacío no carga nada. Lo que se rellene espera al aviso de cookies: "
+"Analytics necesita «Analítica», Ads necesita «Publicidad» y Tag Manager pide "
+"las dos. A los editores y administradores con sesión no se les mide."
 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:71
 msgid "Google Analytics 4"
-msgstr ""
+msgstr "Google Analytics 4"
 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:71
 msgid "Measurement ID of the GA4 web stream."
-msgstr ""
+msgstr "ID de medición del flujo web de GA4."
 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:72
 msgid "Conversion ID of the Google Ads account."
-msgstr ""
+msgstr "ID de conversión de la cuenta de Google Ads."
 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:72
 msgid "Google Ads"
-msgstr ""
+msgstr "Google Ads"
 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:73
 msgid "Conversion: form sent"
-msgstr ""
+msgstr "Conversión: formulario enviado"
 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:73
 msgid ""
@@ -3530,24 +3839,29 @@ msgid ""
 "each time a form of the site is sent correctly, if the visitor accepted "
 "«Advertising»."
 msgstr ""
+"Opcional. ID y etiqueta de la conversión (el «send_to» de la conversión). Se "
+"cuenta cada vez que se envía bien un formulario de la web, si el visitante "
+"aceptó «Publicidad»."
 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:74
 msgid "Container ID. The tags inside the container follow Consent Mode."
 msgstr ""
+"ID del contenedor. Las etiquetas del contenedor siguen el Consent Mode."
 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:74
 msgid "Google Tag Manager"
-msgstr ""
+msgstr "Google Tag Manager"
 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:77
 msgid "Loading"
-msgstr ""
+msgstr "Carga"
 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:82
 msgid ""
 "Basic (recommended): nothing is requested from Google until the visitor "
 "accepts."
 msgstr ""
+"Básico (recomendado): no se pide nada a Google hasta que el visitante acepta."
 
 #: modules/google-tags/includes/admin/class-google-tags-page.php:86
 msgid ""
@@ -3555,16 +3869,20 @@ msgid ""
 "cookieless pings. Better measurement, but data reaches Google before the "
 "visitor decides: decide it with the client."
 msgstr ""
+"Avanzado: Google se carga desde el principio con el consentimiento denegado "
+"y manda avisos sin cookies. Mide mejor, pero llegan datos a Google antes de "
+"que el visitante decida: decídelo con el cliente."
 
 #: modules/google-tags/includes/class-google-tags.php:150
 msgid "Google tags: GA4, Ads and Tag Manager IDs and the loading mode."
 msgstr ""
+"Etiquetas de Google: los ID de GA4, Ads y Tag Manager y el modo de carga."
 
 #. translators: %s: the value that was not saved.
 #: modules/google-tags/includes/class-google-tags.php:181
 #, php-format
 msgid "«%s» does not look like a valid ID and was not saved."
-msgstr ""
+msgstr "«%s» no parece un ID válido y no se ha guardado."
 
 #: modules/google-tags/module.php
 msgctxt "module description"
@@ -3573,11 +3891,14 @@ msgid ""
 "submissions) and Google Tag Manager behind the cookie notice, with Consent "
 "Mode v2. An empty field loads nothing."
 msgstr ""
+"Google Analytics 4, Google Ads (con una conversión opcional por envío de "
+"formulario) y Google Tag Manager detrás del aviso de cookies, con Consent "
+"Mode v2. Un campo vacío no carga nada."
 
 #: modules/google-tags/module.php
 msgctxt "module name"
 msgid "Google tags"
-msgstr ""
+msgstr "Etiquetas de Google"
 
 #: modules/language-switcher/blocks/language-switcher/block.json
 msgctxt "block description"
@@ -3585,49 +3906,51 @@ msgid ""
 "Current language with a drop-down list of the other languages, linking to "
 "the same page translated. Uses WPML; without WPML it shows nothing."
 msgstr ""
+"Idioma actual con un desplegable de los demás idiomas, que enlaza a la misma "
+"página traducida. Usa WPML; sin WPML no se muestra nada."
 
 #: modules/language-switcher/blocks/language-switcher/block.json
 msgctxt "block title"
 msgid "Language switcher"
-msgstr ""
+msgstr "Selector de idioma"
 
 #: modules/language-switcher/blocks/language-switcher/block.json
 msgctxt "block keyword"
 msgid "idioma"
-msgstr ""
+msgstr "idioma"
 
 #: modules/language-switcher/blocks/language-switcher/block.json
 msgctxt "block keyword"
 msgid "language"
-msgstr ""
+msgstr "idioma"
 
 #: modules/language-switcher/blocks/language-switcher/block.json
 msgctxt "block keyword"
 msgid "translation"
-msgstr ""
+msgstr "traducción"
 
 #: modules/language-switcher/blocks/language-switcher/block.json
 msgctxt "block keyword"
 msgid "wpml"
-msgstr ""
+msgstr "wpml"
 
 #: modules/language-switcher/blocks/language-switcher/labels.php:10
 msgid "Show the current language as (code: “ES”, name: “Español”)"
-msgstr ""
+msgstr "Mostrar el idioma actual como (code: «ES», name: «Español»)"
 
 #: modules/language-switcher/blocks/language-switcher/render.php:117
 msgid "Language:"
-msgstr ""
+msgstr "Idioma:"
 
 #: modules/language-switcher/module.php
 msgctxt "module name"
 msgid "Language switcher"
-msgstr ""
+msgstr "Selector de idioma"
 
 #: modules/language-switcher/module.php
 msgctxt "module category"
 msgid "Languages"
-msgstr ""
+msgstr "Idiomas"
 
 #: modules/language-switcher/module.php
 msgctxt "module description"
@@ -3635,11 +3958,13 @@ msgid ""
 "The «ES ▾» of the header: switches language to the same page, keyboard-"
 "accessible and with hreflang. Needs WPML; without it, nothing is shown."
 msgstr ""
+"El «ES ▾» de la cabecera: cambia de idioma a la misma página, se puede usar "
+"con el teclado y lleva hreflang. Necesita WPML; sin él, no se muestra nada."
 
 #: modules/llms/includes/admin/class-tab.php:50
 #: modules/llms/includes/admin/class-tab.php:73
 msgid "llms.txt"
-msgstr ""
+msgstr "llms.txt"
 
 #: modules/llms/includes/admin/class-tab.php:75
 msgid ""
@@ -3647,20 +3972,27 @@ msgid ""
 "where, for whom, and the pages that answer the usual questions. Markdown, as "
 "on llmstxt.org. A language without text serves nothing."
 msgstr ""
+"Lo que leen los asistentes de IA para describir esta web: qué es el negocio, "
+"dónde, para quién y las páginas que responden a las preguntas habituales. En "
+"Markdown, como en llmstxt.org. Un idioma sin texto no sirve nada."
 
 #: modules/llms/includes/admin/class-tab.php:77
 msgid ""
 "One per language. The default language's file links the others at the end by "
 "itself."
 msgstr ""
+"Uno por idioma. El fichero del idioma principal enlaza los demás al final "
+"por sí solo."
 
 #: modules/llms/includes/admin/class-tab.php:90
 msgid "Replace the text with the draft? Nothing is saved until you press Save."
 msgstr ""
+"¿Sustituir el texto por el borrador? No se guarda nada hasta que pulses "
+"Guardar."
 
 #: modules/llms/includes/admin/class-tab.php:91
 msgid "Generate draft"
-msgstr ""
+msgstr "Generar borrador"
 
 #: modules/llms/includes/admin/class-tab.php:105
 msgid ""
@@ -3668,10 +4000,13 @@ msgid ""
 "this one: Rank Math's is not seen. Turn one of the two off (in Rank Math → "
 "Dashboard → Modules, or in Estrategia Web → Modules)."
 msgstr ""
+"Su módulo «LLMS Txt» está encendido y, mientras este módulo lo esté, el "
+"fichero que se sirve es este: el de Rank Math no se ve. Apaga uno de los dos "
+"(en Rank Math → Panel → Módulos, o en Estrategia Web → Módulos)."
 
 #: modules/llms/includes/admin/class-tab.php:105
 msgid "Rank Math also serves /llms.txt."
-msgstr ""
+msgstr "Rank Math también sirve /llms.txt."
 
 #: modules/llms/includes/admin/class-tab.php:108
 msgid ""
@@ -3679,22 +4014,25 @@ msgid ""
 "here is not seen. Delete the file from the server (it is next to wp-config."
 "php)."
 msgstr ""
+"El servidor web envía ese fichero antes de que se ejecute WordPress, así que "
+"lo que se escribe aquí no se ve. Borra el fichero del servidor (está junto a "
+"wp-config.php)."
 
 #: modules/llms/includes/admin/class-tab.php:108
 msgid "There is a llms.txt file in the website's folder."
-msgstr ""
+msgstr "Hay un fichero llms.txt en la carpeta de la web."
 
 #: modules/llms/includes/admin/class-tab.php:153
 msgid "Pages"
-msgstr ""
+msgstr "Páginas"
 
 #: modules/llms/includes/class-runtime.php:36
 msgid "The llms.txt text of each language, by language code."
-msgstr ""
+msgstr "El texto de llms.txt de cada idioma, por código de idioma."
 
 #: modules/llms/includes/class-runtime.php:88
 msgid "Other languages"
-msgstr ""
+msgstr "Otros idiomas"
 
 #: modules/llms/module.php
 msgctxt "module description"
@@ -3702,29 +4040,32 @@ msgid ""
 "Serves /llms.txt, the text AI assistants read to describe the site, written "
 "in «Estrategia Web › Settings › llms.txt», one per language with WPML."
 msgstr ""
+"Sirve /llms.txt, el texto que leen los asistentes de IA para describir la "
+"web, escrito en «Estrategia Web › Ajustes › llms.txt», uno por idioma con "
+"WPML."
 
 #: modules/llms/module.php
 msgctxt "module name"
 msgid "llms.txt"
-msgstr ""
+msgstr "llms.txt"
 
 #: modules/local-business/includes/class-settings.php:44
 #: modules/local-business/includes/class-settings.php:77
 msgid "Type of business"
-msgstr ""
+msgstr "Tipo de negocio"
 
 #: modules/local-business/includes/class-settings.php:45
 msgid "The schema.org type search engines are told the company is."
-msgstr ""
+msgstr "El tipo de schema.org que se dice a los buscadores que es la empresa."
 
 #: modules/local-business/includes/class-settings.php:65
 msgid ""
 "That type of business is not in the list. The previous one has been kept."
-msgstr ""
+msgstr "Ese tipo de negocio no está en la lista. Se ha mantenido el anterior."
 
 #: modules/local-business/includes/class-settings.php:73
 msgid "Search engines (schema.org)"
-msgstr ""
+msgstr "Buscadores (schema.org)"
 
 #: modules/local-business/includes/class-settings.php:74
 msgid ""
@@ -3732,17 +4073,22 @@ msgid ""
 "The locations' addresses, hours and coordinates are filled in on each "
 "location."
 msgstr ""
+"Lo que se le dice a Google de la empresa y sus sedes (datos estructurados). "
+"La dirección, el horario y las coordenadas de cada sede se rellenan en la "
+"propia sede."
 
 #: modules/local-business/includes/class-settings.php:84
 msgid ""
 "The schema.org name, as Google reads it (e.g. DryCleaningOrLaundry for a "
 "laundry, Restaurant, Store). LocalBusiness if none fits."
 msgstr ""
+"El nombre de schema.org, tal como lo lee Google (p. ej. DryCleaningOrLaundry "
+"para una lavandería, Restaurant, Store). LocalBusiness si no encaja ninguno."
 
 #: modules/local-business/module.php
 msgctxt "module name"
 msgid "Local business data"
-msgstr ""
+msgstr "Datos de negocio local"
 
 #: modules/local-business/module.php
 msgctxt "module description"
@@ -3751,11 +4097,14 @@ msgid ""
 "(Organization and LocalBusiness: address, hours, coordinates), inside Rank "
 "Math's or Yoast's graph when they are there."
 msgstr ""
+"Cuenta a los buscadores la empresa y sus sedes con schema.org (Organization "
+"y LocalBusiness: dirección, horario, coordenadas), dentro del grafo de Rank "
+"Math o Yoast si están."
 
 #: modules/map/blocks/map/block.json
 msgctxt "block title"
 msgid "Map (two clicks)"
-msgstr ""
+msgstr "Mapa (en dos clics)"
 
 #: modules/map/blocks/map/block.json
 msgctxt "block description"
@@ -3763,146 +4112,158 @@ msgid ""
 "Static image with the address. The Google Maps embed only loads after the "
 "visitor asks for it."
 msgstr ""
+"Imagen estática con la dirección. El mapa de Google Maps solo se carga "
+"cuando el visitante lo pide."
 
 #: modules/map/blocks/map/block.json
 msgctxt "block keyword"
 msgid "address"
-msgstr ""
+msgstr "dirección"
 
 #: modules/map/blocks/map/block.json
 msgctxt "block keyword"
 msgid "google maps"
-msgstr ""
+msgstr "google maps"
 
 #: modules/map/blocks/map/block.json
 msgctxt "block keyword"
 msgid "location"
-msgstr ""
+msgstr "ubicación"
 
 #: modules/map/blocks/map/block.json
 msgctxt "block keyword"
 msgid "map"
-msgstr ""
+msgstr "mapa"
 
 #: modules/map/blocks/map/edit.js:34
 msgid "Map settings"
-msgstr ""
+msgstr "Ajustes del mapa"
 
 #: modules/map/blocks/map/edit.js:36
 msgid "Show the place details"
-msgstr ""
+msgstr "Mostrar los datos del sitio"
 
 #: modules/map/blocks/map/edit.js:37
 msgid "Turn it off when the address is already next to the map."
-msgstr ""
+msgstr "Desactívalo cuando la dirección ya está al lado del mapa."
 
 #: modules/map/blocks/map/edit.js:41
 msgid "Place name"
-msgstr ""
+msgstr "Nombre del sitio"
 
 #: modules/map/blocks/map/edit.js:54
 msgid "Google Maps embed URL"
-msgstr ""
+msgstr "URL para insertar de Google Maps"
 
 #: modules/map/blocks/map/edit.js:55
 msgid "Google Maps › Share › Embed a map. You can paste the whole iframe code."
 msgstr ""
+"Google Maps › Compartir › Insertar un mapa. Puedes pegar el código del "
+"iframe entero."
 
 #: modules/map/blocks/map/edit.js:62
 msgid "Optional. Empty: a search for the address."
-msgstr ""
+msgstr "Opcional. Vacío: una búsqueda de la dirección."
 
 #: modules/map/blocks/map/edit.js:67
 msgid "Static map"
-msgstr ""
+msgstr "Mapa estático"
 
 #: modules/map/blocks/map/edit.js:68
 msgid ""
 "An OpenStreetMap image made with tools/static-map.mjs, shown under the place "
 "details until the visitor loads Google Maps. It must be served by this site."
 msgstr ""
+"Una imagen de OpenStreetMap hecha con tools/static-map.mjs; se ve bajo los "
+"datos del sitio hasta que el visitante carga Google Maps. Tiene que servirla "
+"este sitio."
 
 #: modules/map/blocks/map/edit.js:70
 msgid "Static map image"
-msgstr ""
+msgstr "Imagen estática del mapa"
 
 #: modules/map/blocks/map/edit.js:72
 msgid "A theme path (assets/maps/place.webp) or a URL of this site."
-msgstr ""
+msgstr "Una ruta del tema (assets/maps/sede.webp) o una URL de este sitio."
 
 #: modules/map/blocks/map/edit.js:85
 msgid "Choose from the media library"
-msgstr ""
+msgstr "Elegir de la mediateca"
 
 #: modules/map/blocks/map/edit.js:93 modules/map/blocks/map/edit.js:135
 msgid "Remove image"
-msgstr ""
+msgstr "Quitar la imagen"
 
 #: modules/map/blocks/map/edit.js:99
 msgid "Static image"
-msgstr ""
+msgstr "Imagen estática"
 
 #: modules/map/blocks/map/edit.js:100
 msgid "Optional. Without an image the map shows a box with the place details."
 msgstr ""
+"Opcional. Sin imagen, el mapa enseña un recuadro con los datos del sitio."
 
 #: modules/map/blocks/map/edit.js:102
 msgid "Use the featured image of the post"
-msgstr ""
+msgstr "Usar la imagen destacada de la entrada"
 
 #: modules/map/blocks/map/edit.js:103
 msgid "Inside a Query Loop."
-msgstr ""
+msgstr "Dentro de una Consulta."
 
 #: modules/map/blocks/map/edit.js:138
 msgid "Image alternative text"
-msgstr ""
+msgstr "Texto alternativo de la imagen"
 
 #: modules/map/blocks/map/render.php:193
 msgid ""
 "Map: add the address and the Google Maps embed URL in the block settings."
 msgstr ""
+"Mapa: añade la dirección y la URL para insertar de Google Maps en los "
+"ajustes del bloque."
 
 #. translators: %s: postal address.
 #: modules/map/blocks/map/render.php:218
 #, php-format
 msgid "Street map around %s"
-msgstr ""
+msgstr "Plano de las calles alrededor de %s"
 
 #: modules/map/blocks/map/render.php:219
 msgid "Street map of the area"
-msgstr ""
+msgstr "Plano de las calles de la zona"
 
 #. translators: %s: postal address.
 #: modules/map/blocks/map/render.php:277
 #, php-format
 msgid "Map: %s"
-msgstr ""
+msgstr "Mapa: %s"
 
 #: modules/map/blocks/map/render.php:278
 msgid "Map"
-msgstr ""
+msgstr "Mapa"
 
 #: modules/map/blocks/map/render.php:327
 msgid "Show map"
-msgstr ""
+msgstr "Ver mapa"
 
 #: modules/map/blocks/map/render.php:328
 msgid ""
 "The map is served by Google. Loading it sends your IP address to Google, "
 "which may set its own cookies."
 msgstr ""
+"El mapa lo sirve Google. Al cargarlo, tu dirección IP se envía a Google, que "
+"puede instalar sus propias cookies."
 
 #. translators: 1: place name (or its address), 2: «(opens in a new tab)». The text before the colon must be the visible text of the link.
 #: modules/map/blocks/map/render.php:346
 #, php-format
 msgid "Open in Google Maps: %1$s %2$s"
-msgstr ""
+msgstr "Abrir en Google Maps: %1$s %2$s"
 
 #: modules/map/module.php
 msgctxt "module name"
 msgid "Map"
-msgstr ""
+msgstr "Mapa"
 
 #: modules/map/module.php
 msgctxt "module description"
@@ -3910,43 +4271,50 @@ msgid ""
 "Two-click map block: a static image with the address; the Google Maps embed "
 "only loads after the visitor asks for it (or accepted the maps cookies)."
 msgstr ""
+"Bloque de mapa en dos clics: una imagen fija con la dirección; el mapa de "
+"Google Maps solo se carga cuando el visitante lo pide (o si aceptó las "
+"cookies de mapas)."
 
 #: modules/matomo/includes/class-admin-fields.php:52
 msgid "Statistics (Matomo)"
-msgstr ""
+msgstr "Estadísticas (Matomo)"
 
 #: modules/matomo/includes/class-admin-fields.php:53
 msgid ""
 "Without the Matomo address or the site ID nothing is added to the site. "
 "Logged-in editors and administrators are not counted."
 msgstr ""
+"Sin la dirección de Matomo o sin el ID del sitio no se añade nada a la web. "
+"Los editores y administradores con sesión iniciada no se cuentan."
 
 #: modules/matomo/includes/class-admin-fields.php:56
 msgid "Matomo address"
-msgstr ""
+msgstr "Dirección de Matomo"
 
 #: modules/matomo/includes/class-admin-fields.php:59
 msgid "Example: https://stats.example.com/"
-msgstr ""
+msgstr "Ejemplo: https://stats.ejemplo.com/"
 
 #: modules/matomo/includes/class-admin-fields.php:63
 msgid "Site ID"
-msgstr ""
+msgstr "ID del sitio"
 
 #: modules/matomo/includes/class-admin-fields.php:72
 msgid "Without cookies (recommended): nothing to ask the visitor."
-msgstr ""
+msgstr "Sin cookies (recomendado): no hay nada que preguntar al visitante."
 
 #: modules/matomo/includes/class-admin-fields.php:76
 msgid ""
 "Hybrid: without cookies until the visitor accepts «Analytics» in the cookie "
 "notice."
 msgstr ""
+"Híbrido: sin cookies hasta que el visitante acepta «Analítica» en el aviso "
+"de cookies."
 
 #: modules/matomo/module.php
 msgctxt "module name"
 msgid "Matomo"
-msgstr ""
+msgstr "Matomo"
 
 #: modules/matomo/module.php
 msgctxt "module description"
@@ -3954,16 +4322,18 @@ msgid ""
 "Matomo tracking code, cookieless or hybrid (no cookies until the visitor "
 "accepts analytics in the cookie notice)."
 msgstr ""
+"Código de seguimiento de Matomo, sin cookies o híbrido (sin cookies hasta "
+"que el visitante acepta la analítica en el aviso de cookies)."
 
 #: modules/redirects/includes/admin/class-page.php:43
 #: modules/redirects/includes/admin/class-page.php:176
 #: modules/redirects/includes/admin/class-page.php:182
 msgid "Redirects"
-msgstr ""
+msgstr "Redirecciones"
 
 #: modules/redirects/includes/admin/class-page.php:154
 msgid "Redirect saved."
-msgstr ""
+msgstr "Redirección guardada."
 
 #: modules/redirects/includes/admin/class-page.php:155
 msgid ""
@@ -3971,44 +4341,49 @@ msgid ""
 "redirect only works on addresses that give a 404. It will start working when "
 "the page is deleted or unpublished."
 msgstr ""
+"Redirección guardada, pero ese origen es una página que existe en la web: "
+"las redirecciones solo actúan en direcciones que dan 404. Empezará a "
+"funcionar cuando la página se borre o se despublique."
 
 #: modules/redirects/includes/admin/class-page.php:156
 msgid "Deleted."
-msgstr ""
+msgstr "Borrado."
 
 #: modules/redirects/includes/admin/class-page.php:157
 msgid "Updated."
-msgstr ""
+msgstr "Actualizado."
 
 #: modules/redirects/includes/admin/class-page.php:158
 msgid "Choose a CSV file."
-msgstr ""
+msgstr "Elige un fichero CSV."
 
 #: modules/redirects/includes/admin/class-page.php:159
 msgid "Settings saved."
-msgstr ""
+msgstr "Ajustes guardados."
 
 #: modules/redirects/includes/admin/class-page.php:160
 msgid "The 404 log is empty."
-msgstr ""
+msgstr "El registro de 404 está vacío."
 
 #: modules/redirects/includes/admin/class-page.php:178
 msgid "404 log"
-msgstr ""
+msgstr "Registro de 404"
 
 #: modules/redirects/includes/admin/class-page.php:179
 msgid "Import / export"
-msgstr ""
+msgstr "Importar / exportar"
 
 #: modules/redirects/includes/admin/class-page.php:182
 msgid ""
 "Old addresses that send visitors to the new ones (301, 302), or say a page "
 "is gone for good (410)."
 msgstr ""
+"Direcciones antiguas que llevan a las nuevas (301, 302) o que dicen que una "
+"página ya no existe (410)."
 
 #: modules/redirects/includes/admin/class-page.php:186
 msgid "There are two redirect systems on this website."
-msgstr ""
+msgstr "Hay dos sistemas de redirecciones en esta web."
 
 #. translators: %s: names of other active redirect plugins, e.g. "Rank Math".
 #: modules/redirects/includes/admin/class-page.php:188
@@ -4018,23 +4393,27 @@ msgid ""
 "goes first. Keep the rules in only one of them, or turn this module off in "
 "Estrategia Web → Modules."
 msgstr ""
+"También está activo: %s. Los dos actúan sobre las mismas direcciones y el "
+"otro suele ir primero. Mantén las reglas en uno solo, o apaga este módulo en "
+"Estrategia Web → Módulos."
 
 #: modules/redirects/includes/admin/class-page.php:197
 msgid "Edit redirect"
-msgstr ""
+msgstr "Editar redirección"
 
+#
 #: modules/redirects/includes/admin/class-page.php:201
 msgid "Redirects sections"
-msgstr ""
+msgstr "Secciones de las redirecciones"
 
 #: modules/redirects/includes/admin/class-page.php:223
 msgid "Search redirects"
-msgstr ""
+msgstr "Buscar redirecciones"
 
 #: modules/redirects/includes/admin/class-page.php:264
 #: modules/redirects/includes/admin/class-tables.php:33
 msgid "Source"
-msgstr ""
+msgstr "Origen"
 
 #. translators: "%3F" is the URL-encoded "?", not a placeholder: keep it as is.
 #: modules/redirects/includes/admin/class-page.php:266
@@ -4043,95 +4422,102 @@ msgid ""
 "parameters are ignored when matching; ?p=123 and ?page_id=123 are the same, "
 "and so are %3F and ?."
 msgstr ""
+"La ruta antigua, sin el dominio. Al comparar dan igual las mayúsculas, la "
+"barra final y los ?parámetros de más; ?p=123 y ?page_id=123 son lo mismo, y "
+"también %3F y ?."
 
 #: modules/redirects/includes/admin/class-page.php:271
 msgid "301 — moved permanently"
-msgstr ""
+msgstr "301 — movida para siempre"
 
 #: modules/redirects/includes/admin/class-page.php:272
 msgid "302 — moved temporarily"
-msgstr ""
+msgstr "302 — movida temporalmente"
 
 #: modules/redirects/includes/admin/class-page.php:273
 msgid "410 — gone, no destination"
-msgstr ""
+msgstr "410 — ya no existe, sin destino"
 
 #: modules/redirects/includes/admin/class-page.php:277
 #: modules/redirects/includes/admin/class-tables.php:34
 msgid "Destination"
-msgstr ""
+msgstr "Destino"
 
 #: modules/redirects/includes/admin/class-page.php:279
 msgid ""
 "A path on this website (/new-page/) or a full address (https://…). Empty for "
 "410."
 msgstr ""
+"Una ruta de esta web (/pagina-nueva/) o una dirección completa (https://…). "
+"Vacío para 410."
 
 #: modules/redirects/includes/admin/class-page.php:282
 msgid "Note"
-msgstr ""
+msgstr "Nota"
 
 #: modules/redirects/includes/admin/class-page.php:287
 msgid "This redirect is working"
-msgstr ""
+msgstr "Esta redirección funciona"
 
 #: modules/redirects/includes/admin/class-page.php:290
 msgid "Add redirect"
-msgstr ""
+msgstr "Añadir redirección"
 
 #: modules/redirects/includes/admin/class-page.php:290
 msgid "Save redirect"
-msgstr ""
+msgstr "Guardar redirección"
 
 #: modules/redirects/includes/admin/class-page.php:301
 msgid "Record the addresses that give a 404 error"
-msgstr ""
+msgstr "Apuntar las direcciones que dan error 404"
 
 #: modules/redirects/includes/admin/class-page.php:302
 msgid "Forget addresses not seen for"
-msgstr ""
+msgstr "Olvidar las direcciones que no se ven en"
 
 #: modules/redirects/includes/admin/class-page.php:302
 msgid "days"
-msgstr ""
+msgstr "días"
 
 #: modules/redirects/includes/admin/class-page.php:303
 msgid ""
 "Only the path is recorded (and ?p= of old WordPress addresses), with a "
 "counter and dates: no IP address, browser or other personal data."
 msgstr ""
+"Solo se apunta la ruta (y el ?p= de las direcciones viejas de WordPress), "
+"con un contador y fechas: ni IP, ni navegador, ni otros datos personales."
 
 #: modules/redirects/includes/admin/class-page.php:304
 msgid "Save settings"
-msgstr ""
+msgstr "Guardar ajustes"
 
 #: modules/redirects/includes/admin/class-page.php:309
 msgid "Empty the 404 log"
-msgstr ""
+msgstr "Vaciar el registro de 404"
 
 #: modules/redirects/includes/admin/class-page.php:315
 msgid "Search paths"
-msgstr ""
+msgstr "Buscar rutas"
 
 #: modules/redirects/includes/admin/class-page.php:328
 msgid "Test only, nothing was saved."
-msgstr ""
+msgstr "Solo prueba, no se ha guardado nada."
 
 #. translators: 1: new rules, 2: updated rules, 3: unchanged rules, 4: rows with errors.
 #: modules/redirects/includes/admin/class-page.php:331
 #, php-format
 msgid "%1$d new, %2$d updated, %3$d unchanged, %4$d with errors."
-msgstr ""
+msgstr "%1$d nuevas, %2$d actualizadas, %3$d sin cambios, %4$d con errores."
 
 #. translators: 1: line number in the CSV, 2: source path, 3: error message.
 #: modules/redirects/includes/admin/class-page.php:337
 #, php-format
 msgid "Line %1$d (%2$s): %3$s"
-msgstr ""
+msgstr "Línea %1$d (%2$s): %3$s"
 
 #: modules/redirects/includes/admin/class-page.php:344
 msgid "Import"
-msgstr ""
+msgstr "Importar"
 
 #: modules/redirects/includes/admin/class-page.php:345
 msgid ""
@@ -4139,103 +4525,110 @@ msgid ""
 "type, note). A source that already has a redirect is updated; nothing is "
 "deleted."
 msgstr ""
+"Un CSV con las columnas origen, destino, tipo y motivo (o source, target, "
+"type, note). Un origen que ya tiene redirección se actualiza; no se borra "
+"nada."
 
 #: modules/redirects/includes/admin/class-page.php:350
 msgid "Test only: show what would happen without saving"
-msgstr ""
+msgstr "Solo probar: enseña qué pasaría sin guardar"
 
 #: modules/redirects/includes/admin/class-page.php:351
 msgid "Import CSV"
-msgstr ""
+msgstr "Importar CSV"
 
 #: modules/redirects/includes/admin/class-page.php:353
 msgid "Export"
-msgstr ""
+msgstr "Exportar"
 
 #: modules/redirects/includes/admin/class-page.php:354
 msgid "Download CSV"
-msgstr ""
+msgstr "Descargar CSV"
 
 #: modules/redirects/includes/admin/class-tables.php:36
 #: modules/redirects/includes/admin/class-tables.php:134
 msgid "Hits"
-msgstr ""
+msgstr "Visitas"
 
 #: modules/redirects/includes/admin/class-tables.php:37
 msgid "Last hit"
-msgstr ""
+msgstr "Última visita"
 
 #: modules/redirects/includes/admin/class-tables.php:78
 msgid "No redirects yet."
-msgstr ""
+msgstr "Todavía no hay redirecciones."
 
 #: modules/redirects/includes/admin/class-tables.php:90
 msgid "Delete this redirect?"
-msgstr ""
+msgstr "¿Borrar esta redirección?"
 
 #: modules/redirects/includes/admin/class-tables.php:101
 msgid "410 Gone"
-msgstr ""
+msgstr "410 Ya no existe"
 
 #: modules/redirects/includes/admin/class-tables.php:133
 msgid "Path"
-msgstr ""
+msgstr "Ruta"
 
 #: modules/redirects/includes/admin/class-tables.php:135
 msgid "First seen"
-msgstr ""
+msgstr "Primera vez"
 
 #: modules/redirects/includes/admin/class-tables.php:136
 msgid "Last seen"
-msgstr ""
+msgstr "Última vez"
 
 #: modules/redirects/includes/admin/class-tables.php:170
 msgid "No 404 errors recorded."
-msgstr ""
+msgstr "No hay errores 404 apuntados."
 
 #: modules/redirects/includes/admin/class-tables.php:180
 msgid "Create redirect"
-msgstr ""
+msgstr "Crear redirección"
 
 #: modules/redirects/includes/class-importer.php:135
 msgid "The source is empty."
-msgstr ""
+msgstr "El origen está vacío."
 
 #: modules/redirects/includes/class-importer.php:137
 msgid ""
 "The source is an address of another website. Write the path only (/old-"
 "page/)."
 msgstr ""
+"El origen es una dirección de otra web. Escribe solo la ruta (/pagina-"
+"vieja/)."
 
 #: modules/redirects/includes/class-importer.php:139
 msgid "The home page itself cannot be redirected."
-msgstr ""
+msgstr "La portada no se puede redirigir."
 
 #: modules/redirects/includes/class-importer.php:141
 msgid "The type must be 301, 302 or 410."
-msgstr ""
+msgstr "El tipo tiene que ser 301, 302 o 410."
 
 #: modules/redirects/includes/class-importer.php:143
 msgid "A 301 or 302 redirect needs a destination."
-msgstr ""
+msgstr "Una redirección 301 o 302 necesita un destino."
 
 #: modules/redirects/includes/class-importer.php:145
 msgid ""
 "The destination must be a path starting with / or a full http(s) address, "
 "without spaces."
 msgstr ""
+"El destino tiene que ser una ruta que empiece por / o una dirección http(s) "
+"completa, sin espacios."
 
 #: modules/redirects/includes/class-importer.php:147
 msgid "The destination is the same as the source."
-msgstr ""
+msgstr "El destino es el mismo que el origen."
 
 #: modules/redirects/includes/class-importer.php:149
 msgid "There is already a rule for this source."
-msgstr ""
+msgstr "Ya hay una redirección para este origen."
 
 #: modules/redirects/includes/class-importer.php:151
 msgid "This rule would create a redirect loop with other rules."
-msgstr ""
+msgstr "Esta redirección haría un bucle con otras."
 
 #: modules/redirects/module.php
 msgctxt "module description"
@@ -4243,42 +4636,44 @@ msgid ""
 "Editable 301, 302 and 410 redirects with hit counters, CSV import and "
 "export, and an optional 404 log."
 msgstr ""
+"Redirecciones 301, 302 y 410 editables, con contador de visitas, importación "
+"y exportación CSV y un registro de 404 opcional."
 
 #: modules/redirects/module.php
 msgctxt "module name"
 msgid "Redirects"
-msgstr ""
+msgstr "Redirecciones"
 
 #. translators: %s: name of the SEO plugin, e.g. "Rank Math".
 #: modules/redirects/module.php:100
 #, php-format
 msgid "Redirects are managed by %s."
-msgstr ""
+msgstr "Las redirecciones las gestiona %s."
 
 #: modules/site/includes/admin/class-admin.php:54
 #: modules/uploads/includes/class-uploads.php:65
 msgid "Media"
-msgstr ""
+msgstr "Medios"
 
 #: modules/site/includes/admin/class-admin.php:70
 msgid "SVG images"
-msgstr ""
+msgstr "Imágenes SVG"
 
 #: modules/site/includes/admin/class-admin.php:73
 msgid "SVG uploads"
-msgstr ""
+msgstr "Subida de SVG"
 
 #: modules/site/includes/admin/class-admin.php:78
 msgid "Allow SVG uploads (administrators only; files are sanitized)"
-msgstr ""
+msgstr "Permitir subir SVG (solo administradores; los ficheros se sanean)"
 
 #: modules/site/includes/admin/class-admin.php:98
 msgid "This site has locations: the opening hours go in each location."
-msgstr ""
+msgstr "Esta web tiene sedes: el horario va en cada sede."
 
 #: modules/site/includes/admin/class-admin.php:114
 msgid "One line per day, e.g. 08:00-14:00, 16:00-20:00. Empty: closed."
-msgstr ""
+msgstr "Una línea por día, p. ej. 08:00-14:00, 16:00-20:00. Vacío: cerrado."
 
 #: modules/site/includes/admin/class-admin.php:152
 msgid ""
@@ -4286,10 +4681,13 @@ msgid ""
 "source «Company details»). Change them here and they change across the whole "
 "site."
 msgstr ""
+"Estos datos salen allí donde un bloque esté enlazado a ellos (Block "
+"Bindings, fuente «Datos de la empresa»). Si los cambias aquí, cambian en "
+"toda la web."
 
 #: modules/site/includes/admin/class-admin.php:157
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #: modules/site/includes/admin/class-admin.php:163
 msgid ""
@@ -4297,142 +4695,147 @@ msgid ""
 "Registro Mercantil de Mallorca, tomo 1234, folio 56, hoja PM-7890, "
 "inscripción 1.ª"
 msgstr ""
+"Tal como aparece en el aviso legal, sin «Inscrita en». Ejemplo: Registro "
+"Mercantil de Mallorca, tomo 1234, folio 56, hoja PM-7890, inscripción 1.ª"
 
 #: modules/site/includes/admin/class-admin.php:171
 msgid "Contact"
-msgstr ""
+msgstr "Contacto"
 
 #: modules/site/includes/admin/class-admin.php:177
 msgid "International format, digits only, without +. Example: 34600000000."
-msgstr ""
+msgstr "Formato internacional, solo dígitos, sin +. Ejemplo: 34600000000."
 
 #: modules/site/includes/admin/class-admin.php:178
 msgid "Text that appears already written when the chat opens."
-msgstr ""
+msgstr "Texto que aparece ya escrito al abrir el chat."
 
 #: modules/site/includes/class-company.php:129
 msgid "Company name"
-msgstr ""
+msgstr "Nombre comercial"
 
 #: modules/site/includes/class-company.php:130
 msgid "Legal name"
-msgstr ""
+msgstr "Razón social"
 
 #: modules/site/includes/class-company.php:131
 msgid "Tax ID"
-msgstr ""
+msgstr "NIF/CIF"
 
 #: modules/site/includes/class-company.php:132
 msgid "Company registry"
-msgstr ""
+msgstr "Inscripción registral"
 
 #: modules/site/includes/class-company.php:135
 msgid "Secondary phone"
-msgstr ""
+msgstr "Teléfono secundario"
 
 #: modules/site/includes/class-company.php:136
 msgid "WhatsApp"
-msgstr ""
+msgstr "WhatsApp"
 
 #: modules/site/includes/class-company.php:137
 msgid "WhatsApp message"
-msgstr ""
+msgstr "Mensaje de WhatsApp"
 
 #: modules/site/includes/class-company.php:138
 msgid "Address"
-msgstr ""
+msgstr "Dirección"
 
 #: modules/site/includes/class-company.php:139
 msgid "Opening hours"
-msgstr ""
+msgstr "Horario"
 
 #: modules/site/includes/class-company.php:140
 msgid "Map link"
-msgstr ""
+msgstr "Enlace al mapa"
 
 #: modules/site/includes/class-company.php:141
 msgid "Facebook"
-msgstr ""
+msgstr "Facebook"
 
 #: modules/site/includes/class-company.php:142
 msgid "Instagram"
-msgstr ""
+msgstr "Instagram"
 
 #: modules/site/includes/class-company.php:143
 msgid "LinkedIn"
-msgstr ""
+msgstr "LinkedIn"
 
 #: modules/site/includes/class-company.php:144
 msgid "X (Twitter)"
-msgstr ""
+msgstr "X (Twitter)"
 
 #: modules/site/includes/class-company.php:145
 msgid "YouTube"
-msgstr ""
+msgstr "YouTube"
 
 #: modules/site/includes/class-company.php:146
 msgid "TikTok"
-msgstr ""
+msgstr "TikTok"
 
 #: modules/site/includes/class-company.php:147
 #: modules/site/includes/class-location.php:161
 msgid "Phone (link)"
-msgstr ""
+msgstr "Teléfono (enlace)"
 
 #: modules/site/includes/class-company.php:148
 msgid "Secondary phone (link)"
-msgstr ""
+msgstr "Teléfono secundario (enlace)"
 
 #: modules/site/includes/class-company.php:149
 #: modules/site/includes/class-location.php:162
 msgid "Email (link)"
-msgstr ""
+msgstr "Correo electrónico (enlace)"
 
 #: modules/site/includes/class-company.php:150
 msgid "WhatsApp (link)"
-msgstr ""
+msgstr "WhatsApp (enlace)"
 
 #: modules/site/includes/class-location.php:74
 msgid "Location details"
-msgstr ""
+msgstr "Datos de la sede"
 
 #: modules/site/includes/class-location.php:151
 msgid "Address (text)"
-msgstr ""
+msgstr "Dirección (texto)"
 
 #: modules/site/includes/class-location.php:152
 msgid "Opening hours (text)"
-msgstr ""
+msgstr "Horario (texto)"
 
 #: modules/site/includes/class-location.php:153
 msgid "Google Maps link"
-msgstr ""
+msgstr "Enlace a Google Maps"
 
 #: modules/site/includes/class-location.php:154
 msgid "Map embed URL"
-msgstr ""
+msgstr "URL para incrustar el mapa"
 
 #: modules/site/includes/class-location.php:155
 msgid "Static map image (URL)"
-msgstr ""
+msgstr "Imagen estática del mapa (URL)"
 
 #: modules/site/includes/class-location.php:157
 msgid "Location name"
-msgstr ""
+msgstr "Nombre de la sede"
 
 #: modules/site/includes/class-settings.php:169
 msgid "Company details and site options of the Estrategia Web Site plugin."
 msgstr ""
+"Datos de la empresa y opciones de la web del plugin Estrategia Web Site."
 
 #: modules/site/includes/class-settings.php:320
 msgid "The email address is not valid. The previous one has been kept."
-msgstr ""
+msgstr "El correo electrónico no es válido. Se ha mantenido el anterior."
 
 #: modules/site/includes/class-settings.php:333
 msgid ""
 "The WhatsApp number is not valid (international format, digits only). The "
 "previous one has been kept."
 msgstr ""
+"El número de WhatsApp no es válido (formato internacional, solo dígitos). Se "
+"ha mantenido el anterior."
 
 #. translators: %s: the field name.
 #: modules/site/includes/class-settings.php:407
@@ -4441,20 +4844,24 @@ msgid ""
 "The address in «%s» is not a valid web address. The previous one has been "
 "kept."
 msgstr ""
+"La dirección de «%s» no es una dirección web válida. Se ha mantenido la "
+"anterior."
 
 #: modules/site/includes/class-svg.php:91
 msgid "You are not allowed to upload SVG files."
-msgstr ""
+msgstr "No tienes permiso para subir ficheros SVG."
 
 #: modules/site/includes/class-svg.php:98
 msgid ""
 "This SVG file could not be read or is not safe, so it has not been uploaded."
 msgstr ""
+"Este fichero SVG no se ha podido leer o no es seguro, así que no se ha "
+"subido."
 
 #: modules/site/module.php
 msgctxt "module name"
 msgid "Company data"
-msgstr ""
+msgstr "Datos de la empresa"
 
 #: modules/site/module.php
 msgctxt "module description"
@@ -4463,11 +4870,14 @@ msgid ""
 "shortcode, the details of one location as a Block Bindings source, and "
 "sanitised SVG uploads."
 msgstr ""
+"Datos de la empresa con Block Bindings y el shortcode "
+"[estrategia_web_company], los datos de una sede como fuente de Block "
+"Bindings y subida de SVG saneados."
 
 #: modules/social/blocks/social-links/block.json
 msgctxt "block title"
 msgid "Social networks"
-msgstr ""
+msgstr "Redes sociales"
 
 #: modules/social/blocks/social-links/block.json
 msgctxt "block description"
@@ -4475,65 +4885,67 @@ msgid ""
 "The site's social network links, from Estrategia Web › Social networks. "
 "Icons take the text colour."
 msgstr ""
+"Los enlaces a las redes sociales de la web, de Estrategia Web › Redes "
+"sociales. Los iconos toman el color del texto."
 
 #: modules/social/blocks/social-links/block.json
 msgctxt "block keyword"
 msgid "facebook"
-msgstr ""
+msgstr "facebook"
 
 #: modules/social/blocks/social-links/block.json
 msgctxt "block keyword"
 msgid "instagram"
-msgstr ""
+msgstr "instagram"
 
 #: modules/social/blocks/social-links/block.json
 msgctxt "block keyword"
 msgid "redes"
-msgstr ""
+msgstr "redes"
 
 #: modules/social/blocks/social-links/block.json
 msgctxt "block keyword"
 msgid "social"
-msgstr ""
+msgstr "sociales"
 
 #: modules/social/blocks/social-links/labels.php:10
 msgid "Show (icons: only icons; icons-names: icon and name)"
-msgstr ""
+msgstr "Mostrar (icons: solo iconos; icons-names: icono y nombre)"
 
 #: modules/social/blocks/social-links/labels.php:11
 msgid "Icon size"
-msgstr ""
+msgstr "Tamaño del icono"
 
 #: modules/social/blocks/social-links/render.php:58
 msgid "Social networks: add them in Estrategia Web › Social networks."
-msgstr ""
+msgstr "Redes sociales: añádelas en Estrategia Web › Redes sociales."
 
 #. translators: 1: network name («Instagram»), 2: company name.
 #: modules/social/blocks/social-links/render.php:72
 #, php-format
 msgid "%1$s of %2$s"
-msgstr ""
+msgstr "%1$s de %2$s"
 
 #: modules/social/includes/class-admin.php:47
 #: modules/social/includes/class-admin.php:85
 msgid "Social networks"
-msgstr ""
+msgstr "Redes sociales"
 
 #: modules/social/includes/class-admin.php:71
 msgid "Own SVG…"
-msgstr ""
+msgstr "SVG propio…"
 
 #: modules/social/includes/class-admin.php:72
 msgid "Remove own SVG"
-msgstr ""
+msgstr "Quitar el SVG propio"
 
 #: modules/social/includes/class-admin.php:73
 msgid "Choose an SVG icon"
-msgstr ""
+msgstr "Elige un icono SVG"
 
 #: modules/social/includes/class-admin.php:74
 msgid "Use this icon"
-msgstr ""
+msgstr "Usar este icono"
 
 #: modules/social/includes/class-admin.php:85
 msgid ""
@@ -4541,49 +4953,55 @@ msgid ""
 "guessed from the link; choose one only if it gets it wrong, or use your own "
 "SVG from the media library."
 msgstr ""
+"Los enlaces que enseña el bloque «Redes sociales», en este orden. El icono "
+"se adivina del enlace; elige uno solo si se equivoca, o usa tu propio SVG de "
+"la mediateca."
 
+#
 #: modules/social/includes/class-admin.php:87
 msgid "Networks"
-msgstr ""
+msgstr "Redes"
 
 #: modules/social/includes/class-admin.php:92
 #: modules/social/includes/class-admin.php:126
 msgid "Icon"
-msgstr ""
+msgstr "Icono"
 
 #: modules/social/includes/class-admin.php:103
 msgid "Add network"
-msgstr ""
+msgstr "Añadir red"
 
 #: modules/social/includes/class-admin.php:104
 msgid "To remove a network without JavaScript, empty its link."
-msgstr ""
+msgstr "Para quitar una red sin JavaScript, vacía su enlace."
 
 #: modules/social/includes/class-admin.php:104
 msgid ""
 "Your own SVG can only be uploaded if “Allow SVG uploads” is on in Settings › "
 "Media."
 msgstr ""
+"Solo se puede subir un SVG propio si «Permitir subir SVG» está marcado en "
+"Ajustes › Medios."
 
 #: modules/social/includes/class-admin.php:112
 msgid "Automatic (from the link)"
-msgstr ""
+msgstr "Automático (según el enlace)"
 
 #: modules/social/includes/class-admin.php:138
 msgid "Empty: the icon name"
-msgstr ""
+msgstr "Vacío: el nombre del icono"
 
 #: modules/social/includes/class-icons.php:76
 msgid "Google (Business Profile)"
-msgstr ""
+msgstr "Google (Perfil de Empresa)"
 
 #: modules/social/includes/class-icons.php:83
 msgid "Website"
-msgstr ""
+msgstr "Web"
 
 #: modules/social/includes/class-links.php:78
 msgid "Social network links, in order."
-msgstr ""
+msgstr "Enlaces a las redes sociales, en orden."
 
 #: modules/social/module.php
 msgctxt "module description"
@@ -4591,57 +5009,64 @@ msgid ""
 "Free, ordered list of social network links (name, link, icon from an "
 "included collection or your own SVG) and a block that shows them."
 msgstr ""
+"Lista libre y ordenada de enlaces a redes sociales (nombre, enlace e icono "
+"de una colección incluida o un SVG propio) y un bloque que los enseña."
 
 #: modules/social/module.php
 msgctxt "module name"
 msgid "Social networks"
-msgstr ""
+msgstr "Redes sociales"
 
 #: modules/uploads/includes/class-uploads.php:224
 msgid "Image uploads"
-msgstr ""
+msgstr "Subidas de imágenes"
 
 #: modules/uploads/includes/class-uploads.php:225
 msgid ""
 "Applies to images uploaded from now on. Images already in the library do not "
 "change."
 msgstr ""
+"Se aplica a las imágenes que se suban a partir de ahora. Las que ya están en "
+"la biblioteca no cambian."
 
 #: modules/uploads/includes/class-uploads.php:229
 msgid "Maximum upload size (MB)"
-msgstr ""
+msgstr "Tamaño máximo de subida (MB)"
 
 #: modules/uploads/includes/class-uploads.php:232
 msgid ""
 "The server limit still applies if it is lower. 0 = only the server limit."
 msgstr ""
+"Si el límite del servidor es menor, manda ese. 0 = solo el límite del "
+"servidor."
 
 #: modules/uploads/includes/class-uploads.php:236
 msgid "Scale down images larger than (px)"
-msgstr ""
+msgstr "Reducir las imágenes mayores de (px)"
 
 #: modules/uploads/includes/class-uploads.php:239
 msgid "Longest side. WordPress default: 2560. 0 = never scale down."
-msgstr ""
+msgstr "Lado más largo. El de serie de WordPress: 2560. 0 = no reducir nunca."
 
 #: modules/uploads/includes/class-uploads.php:243
 msgid "Original file"
-msgstr ""
+msgstr "Archivo original"
 
 #: modules/uploads/includes/class-uploads.php:245
 msgid ""
 "Delete the original after scaling it down (only the scaled copy is kept)."
 msgstr ""
+"Borrar el original después de reducirlo (solo se guarda la copia reducida)."
 
 #: modules/uploads/module.php
 msgctxt "module name"
 msgid "Image uploads"
-msgstr ""
+msgstr "Subidas de imágenes"
 
 #: modules/uploads/module.php modules/webp/module.php
 msgctxt "module category"
 msgid "Media & performance"
-msgstr ""
+msgstr "Medios y rendimiento"
 
 #: modules/uploads/module.php
 msgctxt "module description"
@@ -4649,6 +5074,8 @@ msgid ""
 "Phone photos can be uploaded (up to 20 MB by default); WordPress scales them "
 "down to 2560 px and only the scaled copy is kept on disk."
 msgstr ""
+"Deja subir fotos del móvil (hasta 20 MB por defecto); WordPress las reduce a "
+"2560 px y en el disco solo se guarda la copia reducida."
 
 #: modules/webp/module.php
 msgctxt "module description"
@@ -4656,11 +5083,13 @@ msgid ""
 "Image sizes generated from JPEG and PNG uploads are saved as WebP (quality "
 "75)."
 msgstr ""
+"Los tamaños que se generan al subir un JPEG o un PNG se guardan en WebP "
+"(calidad 75)."
 
 #: modules/webp/module.php
 msgctxt "module name"
 msgid "WebP images"
-msgstr ""
+msgstr "Imágenes en WebP"
 
 #: modules/whatsapp/blocks/whatsapp/block.json
 msgctxt "block description"
@@ -4668,47 +5097,51 @@ msgid ""
 "Floating button that opens a WhatsApp chat with a predefined message. Meant "
 "for the footer template part."
 msgstr ""
+"Botón flotante que abre un chat de WhatsApp con un mensaje predefinido. "
+"Pensado para la parte de pie."
 
 #: modules/whatsapp/blocks/whatsapp/block.json
 msgctxt "block title"
 msgid "WhatsApp button"
-msgstr ""
+msgstr "Botón de WhatsApp"
 
 #: modules/whatsapp/blocks/whatsapp/block.json
 msgctxt "block keyword"
 msgid "chat"
-msgstr ""
+msgstr "chat"
 
 #: modules/whatsapp/blocks/whatsapp/block.json
 msgctxt "block keyword"
 msgid "whatsapp"
-msgstr ""
+msgstr "whatsapp"
 
 #: modules/whatsapp/blocks/whatsapp/labels.php:10
 msgid "Phone in international format (empty: site option)"
-msgstr ""
+msgstr "Teléfono en formato internacional (vacío: la opción del sitio)"
 
 #: modules/whatsapp/blocks/whatsapp/labels.php:11
 msgid "Predefined message (empty: site option)"
-msgstr ""
+msgstr "Mensaje predefinido (vacío: la opción del sitio)"
 
 #: modules/whatsapp/blocks/whatsapp/labels.php:12
 msgid "Position"
-msgstr ""
+msgstr "Posición"
 
 #: modules/whatsapp/blocks/whatsapp/labels.php:13
 msgid "Accessible name (empty: “Chat on WhatsApp”)"
-msgstr ""
+msgstr "Nombre accesible (vacío: «Escríbenos por WhatsApp»)"
 
 #: modules/whatsapp/blocks/whatsapp/render.php:51
 msgid ""
 "WhatsApp button: set the phone number in the block settings or in the "
 "estrategia_web_whatsapp_phone site option."
 msgstr ""
+"Botón de WhatsApp: pon el número de teléfono en los ajustes del bloque o en "
+"la opción del sitio estrategia_web_whatsapp_phone."
 
 #: modules/whatsapp/blocks/whatsapp/render.php:62
 msgid "Chat on WhatsApp"
-msgstr ""
+msgstr "Escríbenos por WhatsApp"
 
 #: modules/whatsapp/module.php
 msgctxt "module description"
@@ -4716,16 +5149,28 @@ msgid ""
 "Floating button that opens a WhatsApp chat with a predefined message. The "
 "number and the message are site options, not per page."
 msgstr ""
+"Botón flotante que abre un chat de WhatsApp con un mensaje predefinido. El "
+"número y el mensaje son opciones del sitio, no de cada página."
 
 #: modules/whatsapp/module.php
 msgctxt "module name"
 msgid "WhatsApp button"
-msgstr ""
+msgstr "Botón de WhatsApp"
 
 #: modules/whatsapp/module.php:52
 msgid "WhatsApp phone number in international format, digits only."
-msgstr ""
+msgstr "Número de WhatsApp en formato internacional, solo dígitos."
 
 #: modules/whatsapp/module.php:63
 msgid "Predefined WhatsApp message."
-msgstr ""
+msgstr "Mensaje predefinido de WhatsApp."
+
+#~ msgctxt "module description"
+#~ msgid ""
+#~ "Language switcher block for WPML: the current language and links to the "
+#~ "same page in the others, as a drop-down or inline. Without WPML it shows "
+#~ "nothing."
+#~ msgstr ""
+#~ "Bloque selector de idioma para WPML: el idioma actual y enlaces a la "
+#~ "misma página en los demás, en desplegable o en línea. Sin WPML no pinta "
+#~ "nada."

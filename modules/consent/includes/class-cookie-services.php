@@ -84,36 +84,36 @@ final class Cookie_Services {
 	 * @return array<string, array{label: string, cookies: array<string, array>}>
 	 */
 	public static function catalogue(): array {
-		$maps = __( 'Google (google.com), only if the map is shown', 'estrategia-web' );
+		$maps = __( 'Google (google.com), only if the map is shown', 'estrategiaweb-toolkit' );
 		return array(
 			// Source: «How Google uses cookies», https://policies.google.com/technologies/cookies
 			// (read on 17-10-2026). Only the functionality/security ones a
 			// signed-out visitor may get from an embed; not YouTube, Search or sign-in.
 			'google-maps'      => array(
-				'label'   => __( 'Google Maps (map block)', 'estrategia-web' ),
+				'label'   => __( 'Google Maps (map block)', 'estrategiaweb-toolkit' ),
 				'cookies' => array(
 					'NID'           => array(
 						'provider' => $maps,
 						'category' => 'maps',
-						'purpose'  => __( 'Google may set it when the map loads: it remembers preferences such as the language.', 'estrategia-web' ),
+						'purpose'  => __( 'Google may set it when the map loads: it remembers preferences such as the language.', 'estrategiaweb-toolkit' ),
 						'duration' => '6 months',
 					),
 					'__Secure-ENID' => array(
 						'provider' => $maps,
 						'category' => 'maps',
-						'purpose'  => __( 'Google may set it when the map loads: it remembers preferences such as the language.', 'estrategia-web' ),
+						'purpose'  => __( 'Google may set it when the map loads: it remembers preferences such as the language.', 'estrategiaweb-toolkit' ),
 						'duration' => '13 months',
 					),
 					'AEC'           => array(
 						'provider' => $maps,
 						'category' => 'maps',
-						'purpose'  => __( 'Google may set it when the map loads: it detects spam, fraud and abuse.', 'estrategia-web' ),
+						'purpose'  => __( 'Google may set it when the map loads: it detects spam, fraud and abuse.', 'estrategiaweb-toolkit' ),
 						'duration' => '6 months',
 					),
 					'SOCS'          => array(
 						'provider' => $maps,
 						'category' => 'maps',
-						'purpose'  => __( 'Google may set it when the map loads: it stores the choice made about Google’s own cookies.', 'estrategia-web' ),
+						'purpose'  => __( 'Google may set it when the map loads: it stores the choice made about Google’s own cookies.', 'estrategiaweb-toolkit' ),
 						'duration' => '13 months',
 					),
 				),
@@ -123,18 +123,18 @@ final class Cookie_Services {
 			// «Cookie information for Google's ad products»,
 			// https://business.safety.google/adscookies/ (both read on 17-10-2026).
 			'google-analytics' => array(
-				'label'   => __( 'Google Analytics (Google tags module)', 'estrategia-web' ),
+				'label'   => __( 'Google Analytics (Google tags module)', 'estrategiaweb-toolkit' ),
 				'cookies' => array(
 					'_ga'   => array(
 						'provider' => 'Google Analytics',
 						'category' => 'statistics',
-						'purpose'  => __( 'Statistics: distinguishes one visitor from another. Only after accepting analytics.', 'estrategia-web' ),
+						'purpose'  => __( 'Statistics: distinguishes one visitor from another. Only after accepting analytics.', 'estrategiaweb-toolkit' ),
 						'duration' => '2 years',
 					),
 					'_ga_*' => array(
 						'provider' => 'Google Analytics',
 						'category' => 'statistics',
-						'purpose'  => __( 'Statistics: keeps the state of the visit. Only after accepting analytics.', 'estrategia-web' ),
+						'purpose'  => __( 'Statistics: keeps the state of the visit. Only after accepting analytics.', 'estrategiaweb-toolkit' ),
 						'duration' => '2 years',
 					),
 				),
@@ -143,30 +143,30 @@ final class Cookie_Services {
 			// https://business.safety.google/adscookies/ (read on 17-10-2026).
 			// IDE: 13 months is the EEA/UK figure (24 elsewhere).
 			'google-ads'       => array(
-				'label'   => __( 'Google Ads (Google tags module)', 'estrategia-web' ),
+				'label'   => __( 'Google Ads (Google tags module)', 'estrategiaweb-toolkit' ),
 				'cookies' => array(
 					'_gcl_au'     => array(
 						'provider' => 'Google Ads',
 						'category' => 'marketing',
-						'purpose'  => __( 'Advertising: measures the conversions that come from ads. Only after accepting advertising.', 'estrategia-web' ),
+						'purpose'  => __( 'Advertising: measures the conversions that come from ads. Only after accepting advertising.', 'estrategiaweb-toolkit' ),
 						'duration' => '90 days',
 					),
 					'_gcl_aw'     => array(
 						'provider' => 'Google Ads',
 						'category' => 'marketing',
-						'purpose'  => __( 'Advertising: remembers the ad click that brought the visitor, to measure the conversion. Only after accepting advertising.', 'estrategia-web' ),
+						'purpose'  => __( 'Advertising: remembers the ad click that brought the visitor, to measure the conversion. Only after accepting advertising.', 'estrategiaweb-toolkit' ),
 						'duration' => '90 days',
 					),
 					'IDE'         => array(
 						'provider' => 'Google (doubleclick.net)',
 						'category' => 'marketing',
-						'purpose'  => __( 'Advertising: Google uses it to show and measure ads on other websites. Only after accepting advertising.', 'estrategia-web' ),
+						'purpose'  => __( 'Advertising: Google uses it to show and measure ads on other websites. Only after accepting advertising.', 'estrategiaweb-toolkit' ),
 						'duration' => '13 months',
 					),
 					'test_cookie' => array(
 						'provider' => 'Google (doubleclick.net)',
 						'category' => 'marketing',
-						'purpose'  => __( 'Advertising: Google checks whether the browser accepts cookies. Only after accepting advertising.', 'estrategia-web' ),
+						'purpose'  => __( 'Advertising: Google checks whether the browser accepts cookies. Only after accepting advertising.', 'estrategiaweb-toolkit' ),
 						'duration' => '15 minutes',
 					),
 				),
@@ -175,7 +175,7 @@ final class Cookie_Services {
 			// https://matomo.org/faq/general/faq_146/ (read on 17-10-2026). The
 			// texts are base()'s (no fields here): one place for them.
 			'matomo'           => array(
-				'label'   => __( 'Matomo, hybrid mode (Matomo module)', 'estrategia-web' ),
+				'label'   => __( 'Matomo, hybrid mode (Matomo module)', 'estrategiaweb-toolkit' ),
 				'cookies' => array(
 					'_pk_id.*'           => array(),
 					'_pk_ses.*'          => array(),

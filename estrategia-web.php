@@ -1,16 +1,16 @@
 <?php
 /**
- * Plugin Name:       Estrategia Web
+ * Plugin Name:       EstrategiaWeb Toolkit
  * Plugin URI:        https://github.com/estrategia-web-es/estrategia-web-wp-plugin
- * Description:       Site essentials as modules you switch on and off in "Estrategia Web → Modules": cookie consent, block forms, content types, company details, redirects, schema.org, map, carousel, WhatsApp, analytics behind consent, WebP and more.
- * Version:           2.4.0
+ * Description:       Site essentials as modules you switch on and off in "Estrategia Web → Modules": cookie consent, block forms, content types, company details, redirects, schema.org, map, carousel, WhatsApp, analytics behind consent, llms.txt, WebP and more.
+ * Version:           2.4.1
  * Requires at least: 7.1
  * Requires PHP:      8.1
  * Author:            Estrategia Web
  * Author URI:        https://estrategiaweb.es/
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       estrategia-web
+ * Text Domain:       estrategiaweb-toolkit
  * Domain Path:       /languages
  *
  * Entry point. Defines the plugin constants, loads the CORE (includes/) and
@@ -18,6 +18,16 @@
  * decides which folder of modules/ gets loaded. Nothing module-specific is
  * added here: a new module is a new folder, see the header of
  * class-modules.php.
+ *
+ * THE NAME (2.4.1, WordPress.org review of 02-11-2026: «Estrategia Web» is
+ * too generic a phrase for the directory). On WordPress.org it is
+ * «EstrategiaWeb Toolkit», slug and text domain «estrategiaweb-toolkit»
+ * (Plugin::DOMAIN), and the folder on a site is that slug. NOT renamed, on
+ * purpose: this file, the PHP namespace, the options, metas, tables, block
+ * names, REST routes, hooks and CSS classes (all «estrategia_web» /
+ * «estrategia-web»): they are the plugin's public names, a unique prefix is
+ * all the directory asks of them, and changing them would mean migrating
+ * every site's data. The admin menu still says «Estrategia Web».
  *
  * Born on 14-10-2026 by merging three pieces that were separate up to 1.0.0:
  * the «Estrategia Web Site» plugin, the «Estrategia Web Forms» plugin and the
@@ -33,7 +43,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const ESTRATEGIA_WEB_VERSION = '2.4.0';
+const ESTRATEGIA_WEB_VERSION = '2.4.1';
 const ESTRATEGIA_WEB_FILE    = __FILE__;
 define( 'ESTRATEGIA_WEB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'ESTRATEGIA_WEB_URL', plugin_dir_url( __FILE__ ) );

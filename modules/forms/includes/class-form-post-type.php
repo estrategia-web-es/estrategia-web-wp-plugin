@@ -81,17 +81,17 @@ final class Form_Post_Type {
 			self::TYPE,
 			array(
 				'labels'              => array(
-					'name'               => __( 'Forms', 'estrategia-web' ),
-					'singular_name'      => __( 'Form', 'estrategia-web' ),
-					'add_new'            => __( 'Add form', 'estrategia-web' ),
-					'add_new_item'       => __( 'Add form', 'estrategia-web' ),
-					'edit_item'          => __( 'Edit form', 'estrategia-web' ),
-					'new_item'           => __( 'New form', 'estrategia-web' ),
-					'search_items'       => __( 'Search forms', 'estrategia-web' ),
-					'not_found'          => __( 'No forms found.', 'estrategia-web' ),
-					'not_found_in_trash' => __( 'No forms found in Trash.', 'estrategia-web' ),
-					'item_published'     => __( 'Form published.', 'estrategia-web' ),
-					'item_updated'       => __( 'Form updated.', 'estrategia-web' ),
+					'name'               => __( 'Forms', 'estrategiaweb-toolkit' ),
+					'singular_name'      => __( 'Form', 'estrategiaweb-toolkit' ),
+					'add_new'            => __( 'Add form', 'estrategiaweb-toolkit' ),
+					'add_new_item'       => __( 'Add form', 'estrategiaweb-toolkit' ),
+					'edit_item'          => __( 'Edit form', 'estrategiaweb-toolkit' ),
+					'new_item'           => __( 'New form', 'estrategiaweb-toolkit' ),
+					'search_items'       => __( 'Search forms', 'estrategiaweb-toolkit' ),
+					'not_found'          => __( 'No forms found.', 'estrategiaweb-toolkit' ),
+					'not_found_in_trash' => __( 'No forms found in Trash.', 'estrategiaweb-toolkit' ),
+					'item_published'     => __( 'Form published.', 'estrategiaweb-toolkit' ),
+					'item_updated'       => __( 'Form updated.', 'estrategiaweb-toolkit' ),
 				),
 				'public'              => false,
 				'publicly_queryable'  => false,
@@ -145,7 +145,7 @@ final class Form_Post_Type {
 		if ( current_user_can( 'edit_pages' ) ) {
 			return $result;
 		}
-		return new \WP_Error( 'rest_forbidden', __( 'Sorry, you are not allowed to do that.', 'estrategia-web' ), array( 'status' => rest_authorization_required_code() ) );
+		return new \WP_Error( 'rest_forbidden', __( 'Sorry, you are not allowed to do that.', 'estrategiaweb-toolkit' ), array( 'status' => rest_authorization_required_code() ) );
 	}
 
 	/**

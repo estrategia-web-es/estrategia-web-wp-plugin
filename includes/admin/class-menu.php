@@ -77,15 +77,15 @@ final class Menu {
 
 	public static function register(): void {
 		add_menu_page(
-			__( 'Company details', 'estrategia-web' ),
-			__( 'Estrategia Web', 'estrategia-web' ),
+			__( 'Company details', 'estrategiaweb-toolkit' ),
+			__( 'Estrategia Web', 'estrategiaweb-toolkit' ),
 			'manage_options',
 			self::PARENT,
 			self::home(),
 			'dashicons-screenoptions',
 			self::POSITION
 		);
-		add_submenu_page( self::PARENT, __( 'Company details', 'estrategia-web' ), __( 'Company details', 'estrategia-web' ), 'manage_options', self::PARENT, self::home() );
+		add_submenu_page( self::PARENT, __( 'Company details', 'estrategiaweb-toolkit' ), __( 'Company details', 'estrategiaweb-toolkit' ), 'manage_options', self::PARENT, self::home() );
 	}
 
 	/**

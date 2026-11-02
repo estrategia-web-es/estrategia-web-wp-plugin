@@ -7,7 +7,7 @@
 	"category": "widgets",
 	"icon": "email-alt",
 	"description": "An email sent on every submission. Add one per recipient group: the site team, an acknowledgement to the sender… Never shown to visitors.",
-	"textdomain": "estrategia-web",
+	"textdomain": "estrategiaweb-toolkit",
 	"ancestor": [ "estrategia-web-forms/form" ],
 	"attributes": {
 		"label": { "type": "string", "default": "" },

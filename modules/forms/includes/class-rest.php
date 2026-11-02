@@ -79,7 +79,7 @@ final class Rest {
 		$page_url   = esc_url_raw( (string) ( $params['_af_page'] ?? '' ) );
 
 		if ( ! $definition ) {
-			return self::respond( $is_js, $page_url, '', 400, 'unknown_form', __( 'This form is no longer available. Please reload the page.', 'estrategia-web' ) );
+			return self::respond( $is_js, $page_url, '', 400, 'unknown_form', __( 'This form is no longer available. Please reload the page.', 'estrategiaweb-toolkit' ) );
 		}
 
 		$lang  = (string) $definition['lang'];
@@ -122,8 +122,8 @@ final class Rest {
 		if ( Token::OK !== $check ) {
 			do_action( 'estrategia_web_forms_rejected', 'token_' . $check, $definition );
 			$message = Token::TOO_FAST === $check
-				? __( 'The form was sent too quickly. Please wait a few seconds and try again.', 'estrategia-web' )
-				: __( 'The form has expired. Please reload the page and try again.', 'estrategia-web' );
+				? __( 'The form was sent too quickly. Please wait a few seconds and try again.', 'estrategiaweb-toolkit' )
+				: __( 'The form has expired. Please reload the page and try again.', 'estrategiaweb-toolkit' );
 			return self::respond( $is_js, $page_url, $form_id, 403, 'token_' . $check, $message );
 		}
 
@@ -131,7 +131,7 @@ final class Rest {
 		$ip = self::client_ip();
 		if ( ! self::within_rate_limit( $ip ) ) {
 			do_action( 'estrategia_web_forms_rejected', 'rate_limit', $definition );
-			return self::respond( $is_js, $page_url, $form_id, 429, 'rate_limit', __( 'Too many messages from your connection. Please try again later.', 'estrategia-web' ) );
+			return self::respond( $is_js, $page_url, $form_id, 429, 'rate_limit', __( 'Too many messages from your connection. Please try again later.', 'estrategiaweb-toolkit' ) );
 		}
 
 		// 4. Server-side validation, field by field, according to the definition.

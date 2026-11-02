@@ -9,7 +9,7 @@
 	"icon": "translation",
 	"description": "Current language with a drop-down list of the other languages, linking to the same page translated. Uses WPML; without WPML it shows nothing.",
 	"keywords": [ "language", "wpml", "translation", "idioma" ],
-	"textdomain": "estrategia-web",
+	"textdomain": "estrategiaweb-toolkit",
 	"attributes": {
 		"display": { "type": "string", "enum": [ "code", "name" ], "default": "code" },
 		"layout": { "type": "string", "enum": [ "dropdown", "inline" ], "default": "dropdown" }

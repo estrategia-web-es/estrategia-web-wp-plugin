@@ -32,7 +32,7 @@ final class Admin_Fields {
 
 	/** On Settings_Page::HOOK: the Analytics tab and this section. */
 	public static function register(): void {
-		Settings_Page::add_tab( 'analytics', __( 'Analytics', 'estrategia-web' ), 20 );
+		Settings_Page::add_tab( 'analytics', __( 'Analytics', 'estrategiaweb-toolkit' ), 20 );
 		Settings_Page::add_section(
 			'analytics',
 			array(
@@ -49,31 +49,31 @@ final class Admin_Fields {
 		$name = static fn( string $key ): string => Settings::OPTION . '[' . $key . ']';
 		?>
 		<?php // 0.3.0. What each mode does and why: header of modules/matomo/includes/class-matomo.php. ?>
-		<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Statistics (Matomo)', 'estrategia-web' ), 'ew-box-matomo' ); ?>
-		<p><?php esc_html_e( 'Without the Matomo address or the site ID nothing is added to the site. Logged-in editors and administrators are not counted.', 'estrategia-web' ); ?></p>
+		<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Statistics (Matomo)', 'estrategiaweb-toolkit' ), 'ew-box-matomo' ); ?>
+		<p><?php esc_html_e( 'Without the Matomo address or the site ID nothing is added to the site. Logged-in editors and administrators are not counted.', 'estrategiaweb-toolkit' ); ?></p>
 		<table class="form-table" role="presentation">
 			<tr>
-				<th scope="row"><label for="estrategia-web-site-matomo_url"><?php esc_html_e( 'Matomo address', 'estrategia-web' ); ?></label></th>
+				<th scope="row"><label for="estrategia-web-site-matomo_url"><?php esc_html_e( 'Matomo address', 'estrategiaweb-toolkit' ); ?></label></th>
 				<td>
 					<input type="url" class="regular-text" id="estrategia-web-site-matomo_url" name="<?php echo esc_attr( $name( 'matomo_url' ) ); ?>" value="<?php echo esc_attr( (string) $data['matomo_url'] ); ?>">
-					<p class="description"><?php esc_html_e( 'Example: https://stats.example.com/', 'estrategia-web' ); ?></p>
+					<p class="description"><?php esc_html_e( 'Example: https://stats.example.com/', 'estrategiaweb-toolkit' ); ?></p>
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><label for="estrategia-web-site-matomo_site_id"><?php esc_html_e( 'Site ID', 'estrategia-web' ); ?></label></th>
+				<th scope="row"><label for="estrategia-web-site-matomo_site_id"><?php esc_html_e( 'Site ID', 'estrategiaweb-toolkit' ); ?></label></th>
 				<td><input type="number" min="0" step="1" class="small-text" id="estrategia-web-site-matomo_site_id" name="<?php echo esc_attr( $name( 'matomo_site_id' ) ); ?>" value="<?php echo esc_attr( (string) ( $data['matomo_site_id'] ?: '' ) ); ?>"></td>
 			</tr>
 			<tr>
-				<th scope="row"><?php esc_html_e( 'Cookies', 'estrategia-web' ); ?></th>
+				<th scope="row"><?php esc_html_e( 'Cookies', 'estrategiaweb-toolkit' ); ?></th>
 				<td>
 					<fieldset>
 						<label style="display:block;margin:.4em 0">
 							<input type="radio" name="<?php echo esc_attr( $name( 'matomo_mode' ) ); ?>" value="cookieless" <?php checked( 'cookieless', $data['matomo_mode'] ); ?>>
-							<?php esc_html_e( 'Without cookies (recommended): nothing to ask the visitor.', 'estrategia-web' ); ?>
+							<?php esc_html_e( 'Without cookies (recommended): nothing to ask the visitor.', 'estrategiaweb-toolkit' ); ?>
 						</label>
 						<label style="display:block;margin:.4em 0">
 							<input type="radio" name="<?php echo esc_attr( $name( 'matomo_mode' ) ); ?>" value="hybrid" <?php checked( 'hybrid', $data['matomo_mode'] ); ?>>
-							<?php esc_html_e( 'Hybrid: without cookies until the visitor accepts «Analytics» in the cookie notice.', 'estrategia-web' ); ?>
+							<?php esc_html_e( 'Hybrid: without cookies until the visitor accepts «Analytics» in the cookie notice.', 'estrategiaweb-toolkit' ); ?>
 						</label>
 					</fieldset>
 				</td>

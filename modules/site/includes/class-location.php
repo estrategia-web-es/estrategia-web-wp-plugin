@@ -71,7 +71,7 @@ final class Location {
 		register_block_bindings_source(
 			self::SOURCE,
 			array(
-				'label'              => __( 'Location details', 'estrategia-web' ),
+				'label'              => __( 'Location details', 'estrategiaweb-toolkit' ),
 				'get_value_callback' => array( self::class, 'get_value' ),
 				'uses_context'       => array( 'postId', 'postType' ),
 			)
@@ -148,18 +148,18 @@ final class Location {
 	/** @return array<string,string> Human-readable name of each key, in order: the editor builds the list from this. */
 	public static function labels(): array {
 		$derived = class_exists( Location_Fields::class ) ? array(
-			'estrategia_web_location_address'    => __( 'Address (text)', 'estrategia-web' ),
-			'estrategia_web_location_schedule'   => __( 'Opening hours (text)', 'estrategia-web' ),
-			'estrategia_web_location_map_url'    => __( 'Google Maps link', 'estrategia-web' ),
-			'estrategia_web_location_map_embed'  => __( 'Map embed URL', 'estrategia-web' ),
-			'estrategia_web_location_static_map' => __( 'Static map image (URL)', 'estrategia-web' ),
+			'estrategia_web_location_address'    => __( 'Address (text)', 'estrategiaweb-toolkit' ),
+			'estrategia_web_location_schedule'   => __( 'Opening hours (text)', 'estrategiaweb-toolkit' ),
+			'estrategia_web_location_map_url'    => __( 'Google Maps link', 'estrategiaweb-toolkit' ),
+			'estrategia_web_location_map_embed'  => __( 'Map embed URL', 'estrategiaweb-toolkit' ),
+			'estrategia_web_location_static_map' => __( 'Static map image (URL)', 'estrategiaweb-toolkit' ),
 		) : array();
-		return array( 'title' => __( 'Location name', 'estrategia-web' ) )
+		return array( 'title' => __( 'Location name', 'estrategiaweb-toolkit' ) )
 			+ $derived
 			+ Content_Types::meta_fields( self::TYPE )
 			+ array(
-				'estrategia_web_location_phone_href' => __( 'Phone (link)', 'estrategia-web' ),
-				'estrategia_web_location_email_href' => __( 'Email (link)', 'estrategia-web' ),
+				'estrategia_web_location_phone_href' => __( 'Phone (link)', 'estrategiaweb-toolkit' ),
+				'estrategia_web_location_email_href' => __( 'Email (link)', 'estrategiaweb-toolkit' ),
 			);
 	}
 

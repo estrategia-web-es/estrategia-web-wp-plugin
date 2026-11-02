@@ -94,7 +94,7 @@ final class Page {
 	}
 
 	public static function menu(): void {
-		$hook = add_submenu_page( Menu::PARENT, __( 'Content types', 'estrategia-web' ), __( 'Content types', 'estrategia-web' ), 'manage_options', self::SLUG, array( self::class, 'render' ) );
+		$hook = add_submenu_page( Menu::PARENT, __( 'Content types', 'estrategiaweb-toolkit' ), __( 'Content types', 'estrategiaweb-toolkit' ), 'manage_options', self::SLUG, array( self::class, 'render' ) );
 		if ( $hook ) {
 			add_action( 'load-' . $hook, array( self::class, 'load' ) );
 		}
@@ -166,15 +166,15 @@ final class Page {
 		}
 		$texts = array(
 			/* translators: %s: internal name of a content type */
-			'added'       => __( 'Template added as “%s”. You can change it here.', 'estrategia-web' ),
+			'added'       => __( 'Template added as “%s”. You can change it here.', 'estrategiaweb-toolkit' ),
 			/* translators: %s: internal name of a content type */
-			'activated'   => __( 'Content type “%s” activated.', 'estrategia-web' ),
+			'activated'   => __( 'Content type “%s” activated.', 'estrategiaweb-toolkit' ),
 			/* translators: %s: internal name of a content type */
-			'deactivated' => __( 'Content type “%s” deactivated. Its entries stay and come back when you activate it.', 'estrategia-web' ),
+			'deactivated' => __( 'Content type “%s” deactivated. Its entries stay and come back when you activate it.', 'estrategiaweb-toolkit' ),
 			/* translators: %s: internal name of a content type */
-			'deleted'     => __( 'Content type “%s” deleted.', 'estrategia-web' ),
+			'deleted'     => __( 'Content type “%s” deleted.', 'estrategiaweb-toolkit' ),
 			/* translators: %s: internal name of a content type */
-			'not-found'   => __( 'There is no content type “%s” (it may have been deleted or renamed). These are the ones there are.', 'estrategia-web' ),
+			'not-found'   => __( 'There is no content type “%s” (it may have been deleted or renamed). These are the ones there are.', 'estrategiaweb-toolkit' ),
 		);
 		$kind = 'not-found' === $done ? 'warning' : 'success';
 		printf( '<div class="notice notice-%1$s is-dismissible" data-done="%2$s"><p>%3$s</p></div>', esc_attr( $kind ), esc_attr( $done ), esc_html( sprintf( $texts[ $done ], $name ) ) );
@@ -186,13 +186,13 @@ final class Page {
 		$table->prepare_items();
 
 		echo '<div class="wrap ew-screen estrategia-web-content-types">';
-		echo '<h1 class="wp-heading-inline">' . esc_html__( 'Content types', 'estrategia-web' ) . '</h1> ';
-		echo '<a href="' . esc_url( self::url( array( 'new' => '1' ) ) ) . '" class="page-title-action" data-action="add">' . esc_html__( 'Add new', 'estrategia-web' ) . '</a> ';
+		echo '<h1 class="wp-heading-inline">' . esc_html__( 'Content types', 'estrategiaweb-toolkit' ) . '</h1> ';
+		echo '<a href="' . esc_url( self::url( array( 'new' => '1' ) ) ) . '" class="page-title-action" data-action="add">' . esc_html__( 'Add new', 'estrategiaweb-toolkit' ) . '</a> ';
 		echo '<span class="ewct-menu-wrap">';
-		echo '<button type="button" class="page-title-action ewct-menu-button" aria-expanded="false" aria-controls="ewct-templates" data-action="templates">' . esc_html__( 'Add from template', 'estrategia-web' ) . '</button>';
-		echo '<div id="ewct-templates" class="ewct-menu" hidden><p class="description">' . esc_html__( 'Ready-made types of a corporate site. Adding one copies it into this panel, where you can change it.', 'estrategia-web' ) . '</p><ul>';
+		echo '<button type="button" class="page-title-action ewct-menu-button" aria-expanded="false" aria-controls="ewct-templates" data-action="templates">' . esc_html__( 'Add from template', 'estrategiaweb-toolkit' ) . '</button>';
+		echo '<div id="ewct-templates" class="ewct-menu" hidden><p class="description">' . esc_html__( 'Ready-made types of a corporate site. Adding one copies it into this panel, where you can change it.', 'estrategiaweb-toolkit' ) . '</p><ul>';
 		foreach ( $data['templates'] as $tpl ) {
-			$why = $tpl['added'] ? __( 'Already added', 'estrategia-web' ) : ( $tpl['taken'] ? __( 'Not available: a type with this name is registered elsewhere (Company details › Content types).', 'estrategia-web' ) : '' );
+			$why = $tpl['added'] ? __( 'Already added', 'estrategiaweb-toolkit' ) : ( $tpl['taken'] ? __( 'Not available: a type with this name is registered elsewhere (Company details › Content types).', 'estrategiaweb-toolkit' ) : '' );
 			printf(
 				'<li><button type="button" class="button-link" data-template="%1$s" data-name="%2$s"%3$s%4$s>%5$s</button>%6$s</li>',
 				esc_attr( $tpl['key'] ),
@@ -204,15 +204,15 @@ final class Page {
 			);
 		}
 		echo '</ul></div></span> ';
-		echo '<a href="' . esc_url( self::url( array( 'new' => '1', 'import' => '1' ) ) ) . '" class="page-title-action" data-action="import">' . esc_html__( 'Import JSON', 'estrategia-web' ) . '</a>';
+		echo '<a href="' . esc_url( self::url( array( 'new' => '1', 'import' => '1' ) ) ) . '" class="page-title-action" data-action="import">' . esc_html__( 'Import JSON', 'estrategiaweb-toolkit' ) . '</a>';
 		echo '<hr class="wp-header-end">';
 		self::notice();
-		echo '<p class="ew-lead">' . esc_html__( 'Your own content types — restaurants, courses, team members… — with their fields, taxonomies and addresses. They are saved in this site’s database.', 'estrategia-web' ) . '</p>';
+		echo '<p class="ew-lead">' . esc_html__( 'Your own content types — restaurants, courses, team members… — with their fields, taxonomies and addresses. They are saved in this site’s database.', 'estrategiaweb-toolkit' ) . '</p>';
 		// constructor.js puts its two regions (progress, errors) here and wires the buttons of the rows.
 		echo '<div id="estrategia-web-constructor" data-view="list"></div>';
 		$table->display();
 		if ( $data['broken'] ) {
-			echo '<h2>' . esc_html__( 'Files with errors (not registered)', 'estrategia-web' ) . '</h2>';
+			echo '<h2>' . esc_html__( 'Files with errors (not registered)', 'estrategiaweb-toolkit' ) . '</h2>';
 			foreach ( $data['broken'] as $broken ) {
 				$file = basename( (string) $broken['source'] );
 				echo '<div class="notice notice-error inline" data-file="' . esc_attr( $file ) . '"><p><code>' . esc_html( (string) $broken['source'] ) . '</code></p><ul class="ul-disc">';
@@ -222,185 +222,185 @@ final class Page {
 				echo '</ul></div>';
 			}
 		}
-		echo '<details class="ewct-dirs"><summary>' . esc_html__( 'Folders searched for JSON files', 'estrategia-web' ) . '</summary><ul class="ul-disc">';
+		echo '<details class="ewct-dirs"><summary>' . esc_html__( 'Folders searched for JSON files', 'estrategiaweb-toolkit' ) . '</summary><ul class="ul-disc">';
 		foreach ( $data['dirs'] as $dir ) {
 			echo '<li><code>' . esc_html( (string) $dir ) . '</code></li>';
 		}
 		echo '</ul></details>';
-		echo '<noscript><p>' . esc_html__( 'This screen needs JavaScript.', 'estrategia-web' ) . '</p></noscript></div>';
+		echo '<noscript><p>' . esc_html__( 'This screen needs JavaScript.', 'estrategiaweb-toolkit' ) . '</p></noscript></div>';
 	}
 
 	private static function render_edit( string $name ): void {
-		$title = __( 'New content type', 'estrategia-web' );
+		$title = __( 'New content type', 'estrategiaweb-toolkit' );
 		if ( '' !== $name ) {
 			$data  = Rest::index();
 			$item  = current( array_filter( $data['types'], static fn( $t ) => $t['name'] === $name ) );
 			$label = $item ? ( new Types_Table( $data ) )->label( $item ) : $name;
 			/* translators: %s: a content type name */
-			$title = sprintf( __( 'Edit “%s”', 'estrategia-web' ), $label );
+			$title = sprintf( __( 'Edit “%s”', 'estrategiaweb-toolkit' ), $label );
 		}
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- navigation only.
 		$import = ! empty( $_GET['import'] );
 		echo '<div class="wrap ew-screen estrategia-web-content-types">';
 		echo '<h1 class="wp-heading-inline" id="ewct-title">' . esc_html( $title ) . '</h1> ';
-		echo '<a href="' . esc_url( self::url() ) . '" class="page-title-action" data-action="back">' . esc_html__( 'Back to the list', 'estrategia-web' ) . '</a>';
+		echo '<a href="' . esc_url( self::url() ) . '" class="page-title-action" data-action="back">' . esc_html__( 'Back to the list', 'estrategiaweb-toolkit' ) . '</a>';
 		echo '<hr class="wp-header-end">';
-		echo '<p class="ew-lead">' . esc_html__( 'The type’s settings, in tabs, and its fields: open a row to edit it, drag it to reorder.', 'estrategia-web' ) . '</p>';
+		echo '<p class="ew-lead">' . esc_html__( 'The type’s settings, in tabs, and its fields: open a row to edit it, drag it to reorder.', 'estrategiaweb-toolkit' ) . '</p>';
 		self::notice();
-		printf( '<div id="estrategia-web-constructor" data-view="edit" data-type="%1$s"%2$s data-loading="1"><p>%3$s</p></div>', esc_attr( $name ), $import ? ' data-import="1"' : '', esc_html__( 'Loading…', 'estrategia-web' ) );
-		echo '<noscript><p>' . esc_html__( 'This screen needs JavaScript.', 'estrategia-web' ) . '</p></noscript></div>';
+		printf( '<div id="estrategia-web-constructor" data-view="edit" data-type="%1$s"%2$s data-loading="1"><p>%3$s</p></div>', esc_attr( $name ), $import ? ' data-import="1"' : '', esc_html__( 'Loading…', 'estrategiaweb-toolkit' ) );
+		echo '<noscript><p>' . esc_html__( 'This screen needs JavaScript.', 'estrategiaweb-toolkit' ) . '</p></noscript></div>';
 	}
 
 	/** Every text of assets/constructor.js, translated. */
 	public static function strings(): array {
 		return array(
 			/* translators: %s: a content type name */
-			'confirmOff'       => __( 'Deactivate “%s”? Its menu and its addresses disappear; its entries stay and come back when you activate it.', 'estrategia-web' ),
+			'confirmOff'       => __( 'Deactivate “%s”? Its menu and its addresses disappear; its entries stay and come back when you activate it.', 'estrategiaweb-toolkit' ),
 			/* translators: %s: a content type name */
-			'confirmDelete'    => __( 'Delete the definition of “%s”? This cannot be undone.', 'estrategia-web' ),
-			'importFile'       => __( 'JSON file', 'estrategia-web' ),
-			'importBad'        => __( 'That is not valid JSON.', 'estrategia-web' ),
+			'confirmDelete'    => __( 'Delete the definition of “%s”? This cannot be undone.', 'estrategiaweb-toolkit' ),
+			'importFile'       => __( 'JSON file', 'estrategiaweb-toolkit' ),
+			'importBad'        => __( 'That is not valid JSON.', 'estrategiaweb-toolkit' ),
 			/* translators: 1: how many fields, 2: their names, comma separated */
-			'templateNewFields' => __( 'The template this type comes from has new fields (%1$d): %2$s. They are not added by themselves: add them here and save.', 'estrategia-web' ),
-			'templateAddFields' => __( 'Add the new fields of the template', 'estrategia-web' ),
-			'fileNotice'       => __( 'This type is defined in a file, which is read-only. Saving here creates its copy in this panel, which wins from then on.', 'estrategia-web' ),
+			'templateNewFields' => __( 'The template this type comes from has new fields (%1$d): %2$s. They are not added by themselves: add them here and save.', 'estrategiaweb-toolkit' ),
+			'templateAddFields' => __( 'Add the new fields of the template', 'estrategiaweb-toolkit' ),
+			'fileNotice'       => __( 'This type is defined in a file, which is read-only. Saving here creates its copy in this panel, which wins from then on.', 'estrategiaweb-toolkit' ),
 			/* translators: %s: a content type name */
-			'editing'          => __( 'Edit “%s”', 'estrategia-web' ),
-			'settings'         => __( 'Settings', 'estrategia-web' ),
-			'tabGeneral'       => __( 'General', 'estrategia-web' ),
-			'tabUrls'          => __( 'URLs & languages', 'estrategia-web' ),
-			'tabAdvanced'      => __( 'Advanced', 'estrategia-web' ),
+			'editing'          => __( 'Edit “%s”', 'estrategiaweb-toolkit' ),
+			'settings'         => __( 'Settings', 'estrategiaweb-toolkit' ),
+			'tabGeneral'       => __( 'General', 'estrategiaweb-toolkit' ),
+			'tabUrls'          => __( 'URLs & languages', 'estrategiaweb-toolkit' ),
+			'tabAdvanced'      => __( 'Advanced', 'estrategiaweb-toolkit' ),
 			/* translators: %s: a language code such as es */
-			'plural'           => __( 'Name, plural (%s)', 'estrategia-web' ),
+			'plural'           => __( 'Name, plural (%s)', 'estrategiaweb-toolkit' ),
 			/* translators: %s: a language code such as es */
-			'singular'         => __( 'Name, singular (%s)', 'estrategia-web' ),
-			'prefix'           => __( 'Prefix', 'estrategia-web' ),
-			'prefixHelp'       => __( 'The site’s own, 2 to 9 letters or digits and “_” (e.g. “gment_”). Every internal name starts with it.', 'estrategia-web' ),
-			'internal'         => __( 'Internal name', 'estrategia-web' ),
-			'internalHelp'     => __( 'Lowercase letters, digits and “_”, at most 20 characters. It cannot be changed once there are entries.', 'estrategia-web' ),
-			'slug'             => __( 'Address (URL)', 'estrategia-web' ),
-			'slugHelp'         => __( 'The part of the address after the domain: /restaurants/. Changing it moves the published addresses.', 'estrategia-web' ),
-			'urlsHelp'         => __( 'The address of this type in the other languages of the site. Empty: the first language’s is used.', 'estrategia-web' ),
-			'urlsOneLanguage'  => __( 'The site has one language: the address is set in General.', 'estrategia-web' ),
-			'icon'             => __( 'Menu icon', 'estrategia-web' ),
-			'iconHelp'         => __( 'A Dashicons name, e.g. dashicons-food.', 'estrategia-web' ),
-			'menuPosition'     => __( 'Position in the menu', 'estrategia-web' ),
-			'menuPositionHelp' => __( 'A whole number: 5 below Posts, 20 below Pages, 25 below Comments. Empty: at the end.', 'estrategia-web' ),
-			'supports'         => __( 'What the editor offers', 'estrategia-web' ),
-			'public'           => __( 'Public (has its own pages on the site)', 'estrategia-web' ),
-			'hasArchive'       => __( 'Has a list page at its address', 'estrategia-web' ),
-			'wpmlType'         => __( 'Translation (WPML)', 'estrategia-web' ),
-			'wpmlTranslate'    => __( 'Translate', 'estrategia-web' ),
-			'wpmlDisplay'      => __( 'Translate, and show the original until it is translated', 'estrategia-web' ),
-			'wpmlIgnore'       => __( 'Do not translate', 'estrategia-web' ),
-			'fieldsBox'        => __( 'Where the fields are edited', 'estrategia-web' ),
-			'fieldsBoxSidebar' => __( 'In the editor’s sidebar (the «details» panel)', 'estrategia-web' ),
-			'fieldsBoxMain'    => __( 'In a wide box under the content, with its groups', 'estrategia-web' ),
-			'fieldsBoxHelp'    => __( 'A type without «Content (block editor)» always gets the box under the content.', 'estrategia-web' ),
-			'groups'           => __( 'Field groups', 'estrategia-web' ),
-			'groupsHelp'       => __( 'Sections of the box under the content. A field joins one in its settings («Group»); fields without a group go first.', 'estrategia-web' ),
+			'singular'         => __( 'Name, singular (%s)', 'estrategiaweb-toolkit' ),
+			'prefix'           => __( 'Prefix', 'estrategiaweb-toolkit' ),
+			'prefixHelp'       => __( 'The site’s own, 2 to 9 letters or digits and “_” (e.g. “gment_”). Every internal name starts with it.', 'estrategiaweb-toolkit' ),
+			'internal'         => __( 'Internal name', 'estrategiaweb-toolkit' ),
+			'internalHelp'     => __( 'Lowercase letters, digits and “_”, at most 20 characters. It cannot be changed once there are entries.', 'estrategiaweb-toolkit' ),
+			'slug'             => __( 'Address (URL)', 'estrategiaweb-toolkit' ),
+			'slugHelp'         => __( 'The part of the address after the domain: /restaurants/. Changing it moves the published addresses.', 'estrategiaweb-toolkit' ),
+			'urlsHelp'         => __( 'The address of this type in the other languages of the site. Empty: the first language’s is used.', 'estrategiaweb-toolkit' ),
+			'urlsOneLanguage'  => __( 'The site has one language: the address is set in General.', 'estrategiaweb-toolkit' ),
+			'icon'             => __( 'Menu icon', 'estrategiaweb-toolkit' ),
+			'iconHelp'         => __( 'A Dashicons name, e.g. dashicons-food.', 'estrategiaweb-toolkit' ),
+			'menuPosition'     => __( 'Position in the menu', 'estrategiaweb-toolkit' ),
+			'menuPositionHelp' => __( 'A whole number: 5 below Posts, 20 below Pages, 25 below Comments. Empty: at the end.', 'estrategiaweb-toolkit' ),
+			'supports'         => __( 'What the editor offers', 'estrategiaweb-toolkit' ),
+			'public'           => __( 'Public (has its own pages on the site)', 'estrategiaweb-toolkit' ),
+			'hasArchive'       => __( 'Has a list page at its address', 'estrategiaweb-toolkit' ),
+			'wpmlType'         => __( 'Translation (WPML)', 'estrategiaweb-toolkit' ),
+			'wpmlTranslate'    => __( 'Translate', 'estrategiaweb-toolkit' ),
+			'wpmlDisplay'      => __( 'Translate, and show the original until it is translated', 'estrategiaweb-toolkit' ),
+			'wpmlIgnore'       => __( 'Do not translate', 'estrategiaweb-toolkit' ),
+			'fieldsBox'        => __( 'Where the fields are edited', 'estrategiaweb-toolkit' ),
+			'fieldsBoxSidebar' => __( 'In the editor’s sidebar (the «details» panel)', 'estrategiaweb-toolkit' ),
+			'fieldsBoxMain'    => __( 'In a wide box under the content, with its groups', 'estrategiaweb-toolkit' ),
+			'fieldsBoxHelp'    => __( 'A type without «Content (block editor)» always gets the box under the content.', 'estrategiaweb-toolkit' ),
+			'groups'           => __( 'Field groups', 'estrategiaweb-toolkit' ),
+			'groupsHelp'       => __( 'Sections of the box under the content. A field joins one in its settings («Group»); fields without a group go first.', 'estrategiaweb-toolkit' ),
 			/* translators: %d: position of a group in the list */
-			'group'            => __( 'Group %d', 'estrategia-web' ),
-			'addGroup'         => __( 'Add group', 'estrategia-web' ),
-			'groupKey'         => __( 'Key', 'estrategia-web' ),
-			'groupKeyHelp'     => __( 'Lowercase letters, digits and “_”, starting with a letter. The fields refer to it.', 'estrategia-web' ),
+			'group'            => __( 'Group %d', 'estrategiaweb-toolkit' ),
+			'addGroup'         => __( 'Add group', 'estrategiaweb-toolkit' ),
+			'groupKey'         => __( 'Key', 'estrategiaweb-toolkit' ),
+			'groupKeyHelp'     => __( 'Lowercase letters, digits and “_”, starting with a letter. The fields refer to it.', 'estrategiaweb-toolkit' ),
 			/* translators: %s: a language code such as es */
-			'groupLabel'       => __( 'Title (%s)', 'estrategia-web' ),
-			'groupCollapsed'   => __( 'Closed when the screen opens', 'estrategia-web' ),
-			'fieldGroup'       => __( 'Group', 'estrategia-web' ),
-			'noGroup'          => __( 'No group', 'estrategia-web' ),
-			'sectionTaxonomies' => __( 'Taxonomies', 'estrategia-web' ),
+			'groupLabel'       => __( 'Title (%s)', 'estrategiaweb-toolkit' ),
+			'groupCollapsed'   => __( 'Closed when the screen opens', 'estrategiaweb-toolkit' ),
+			'fieldGroup'       => __( 'Group', 'estrategiaweb-toolkit' ),
+			'noGroup'          => __( 'No group', 'estrategiaweb-toolkit' ),
+			'sectionTaxonomies' => __( 'Taxonomies', 'estrategiaweb-toolkit' ),
 			/* translators: %d: position of a taxonomy in the list */
-			'taxonomy'         => __( 'Taxonomy %d', 'estrategia-web' ),
-			'addTaxonomy'      => __( 'Add taxonomy', 'estrategia-web' ),
-			'hierarchical'     => __( 'Hierarchical (like categories)', 'estrategia-web' ),
+			'taxonomy'         => __( 'Taxonomy %d', 'estrategiaweb-toolkit' ),
+			'addTaxonomy'      => __( 'Add taxonomy', 'estrategiaweb-toolkit' ),
+			'hierarchical'     => __( 'Hierarchical (like categories)', 'estrategiaweb-toolkit' ),
 			/* translators: %s: a taxonomy name */
-			'taxonomyRef'      => __( 'Uses the taxonomy “%s”, declared elsewhere.', 'estrategia-web' ),
-			'sectionFields'    => __( 'Fields', 'estrategia-web' ),
-			'noFields'         => __( 'No fields yet.', 'estrategia-web' ),
-			'reorderHelp'      => __( 'Open a field to change it. To reorder, drag a row by its handle, or use Alt + Up or Down arrow on a field (or its Move buttons).', 'estrategia-web' ),
-			'colLabel'         => __( 'Label', 'estrategia-web' ),
-			'colFieldName'     => __( 'Name', 'estrategia-web' ),
-			'colFieldType'     => __( 'Type', 'estrategia-web' ),
-			'noLabel'          => __( '(no label)', 'estrategia-web' ),
-			'dragHandle'       => __( 'Drag to reorder', 'estrategia-web' ),
+			'taxonomyRef'      => __( 'Uses the taxonomy “%s”, declared elsewhere.', 'estrategiaweb-toolkit' ),
+			'sectionFields'    => __( 'Fields', 'estrategiaweb-toolkit' ),
+			'noFields'         => __( 'No fields yet.', 'estrategiaweb-toolkit' ),
+			'reorderHelp'      => __( 'Open a field to change it. To reorder, drag a row by its handle, or use Alt + Up or Down arrow on a field (or its Move buttons).', 'estrategiaweb-toolkit' ),
+			'colLabel'         => __( 'Label', 'estrategiaweb-toolkit' ),
+			'colFieldName'     => __( 'Name', 'estrategiaweb-toolkit' ),
+			'colFieldType'     => __( 'Type', 'estrategiaweb-toolkit' ),
+			'noLabel'          => __( '(no label)', 'estrategiaweb-toolkit' ),
+			'dragHandle'       => __( 'Drag to reorder', 'estrategiaweb-toolkit' ),
 			/* translators: %s: a field label */
-			'moveUpField'      => __( 'Move “%s” up', 'estrategia-web' ),
+			'moveUpField'      => __( 'Move “%s” up', 'estrategiaweb-toolkit' ),
 			/* translators: %s: a field label */
-			'moveDownField'    => __( 'Move “%s” down', 'estrategia-web' ),
+			'moveDownField'    => __( 'Move “%s” down', 'estrategiaweb-toolkit' ),
 			/* translators: %s: a field label */
-			'removeField'      => __( 'Remove “%s”', 'estrategia-web' ),
+			'removeField'      => __( 'Remove “%s”', 'estrategiaweb-toolkit' ),
 			/* translators: 1: a field label, 2: its new position, 3: how many fields */
-			'moved'            => __( '“%1$s” moved to position %2$d of %3$d.', 'estrategia-web' ),
+			'moved'            => __( '“%1$s” moved to position %2$d of %3$d.', 'estrategiaweb-toolkit' ),
 			/* translators: %s: a field label */
-			'removed'          => __( '“%s” removed. Save to keep the change.', 'estrategia-web' ),
-			'addField'         => __( 'Add field', 'estrategia-web' ),
-			'fieldName'        => __( 'Internal name (meta key)', 'estrategia-web' ),
-			'fieldNameLocked'  => __( 'It cannot be renamed: its data is stored under this name. To change it, remove the field and add a new one.', 'estrategia-web' ),
-			'fieldType'        => __( 'Type', 'estrategia-web' ),
+			'removed'          => __( '“%s” removed. Save to keep the change.', 'estrategiaweb-toolkit' ),
+			'addField'         => __( 'Add field', 'estrategiaweb-toolkit' ),
+			'fieldName'        => __( 'Internal name (meta key)', 'estrategiaweb-toolkit' ),
+			'fieldNameLocked'  => __( 'It cannot be renamed: its data is stored under this name. To change it, remove the field and add a new one.', 'estrategiaweb-toolkit' ),
+			'fieldType'        => __( 'Type', 'estrategiaweb-toolkit' ),
 			/* translators: %s: a language code such as es */
-			'label'            => __( 'Label (%s)', 'estrategia-web' ),
+			'label'            => __( 'Label (%s)', 'estrategiaweb-toolkit' ),
 			/* translators: %s: a language code such as es */
-			'help'             => __( 'Help (%s)', 'estrategia-web' ),
-			'required'         => __( 'Required to publish', 'estrategia-web' ),
-			'default'          => __( 'Default value', 'estrategia-web' ),
-			'wpmlField'        => __( 'In translations', 'estrategia-web' ),
-			'wpmlAuto'         => __( 'Automatic (texts translated, the rest copied)', 'estrategia-web' ),
-			'wpmlCopy'         => __( 'Copy from the original', 'estrategia-web' ),
-			'wpmlFieldTranslate' => __( 'Translate', 'estrategia-web' ),
-			'wpmlFieldIgnore'  => __( 'Ignore', 'estrategia-web' ),
-			'options'          => __( 'Options, one per line: value | label', 'estrategia-web' ),
-			'postTypes'        => __( 'Related types (internal names, separated by commas)', 'estrategia-web' ),
-			'min'              => __( 'Minimum', 'estrategia-web' ),
-			'max'              => __( 'Maximum', 'estrategia-web' ),
-			'integer'          => __( 'Whole numbers only', 'estrategia-web' ),
-			'trueLabel'        => __( 'Text when yes (empty: «Yes»)', 'estrategia-web' ),
-			'falseLabel'       => __( 'Text when no (empty: «No»)', 'estrategia-web' ),
-			'moveUp'           => __( 'Move up', 'estrategia-web' ),
-			'moveDown'         => __( 'Move down', 'estrategia-web' ),
-			'remove'           => __( 'Remove', 'estrategia-web' ),
-			'json'             => __( 'JSON (advanced)', 'estrategia-web' ),
-			'jsonHelp'         => __( 'The whole definition. Change it here to set what the form does not show, then apply it.', 'estrategia-web' ),
-			'jsonApply'        => __( 'Apply the JSON to the form', 'estrategia-web' ),
-			'save'             => __( 'Save', 'estrategia-web' ),
-			'saving'           => __( 'Saving…', 'estrategia-web' ),
-			'saved'            => __( 'Saved. The changes are visible from the next page you open.', 'estrategia-web' ),
+			'help'             => __( 'Help (%s)', 'estrategiaweb-toolkit' ),
+			'required'         => __( 'Required to publish', 'estrategiaweb-toolkit' ),
+			'default'          => __( 'Default value', 'estrategiaweb-toolkit' ),
+			'wpmlField'        => __( 'In translations', 'estrategiaweb-toolkit' ),
+			'wpmlAuto'         => __( 'Automatic (texts translated, the rest copied)', 'estrategiaweb-toolkit' ),
+			'wpmlCopy'         => __( 'Copy from the original', 'estrategiaweb-toolkit' ),
+			'wpmlFieldTranslate' => __( 'Translate', 'estrategiaweb-toolkit' ),
+			'wpmlFieldIgnore'  => __( 'Ignore', 'estrategiaweb-toolkit' ),
+			'options'          => __( 'Options, one per line: value | label', 'estrategiaweb-toolkit' ),
+			'postTypes'        => __( 'Related types (internal names, separated by commas)', 'estrategiaweb-toolkit' ),
+			'min'              => __( 'Minimum', 'estrategiaweb-toolkit' ),
+			'max'              => __( 'Maximum', 'estrategiaweb-toolkit' ),
+			'integer'          => __( 'Whole numbers only', 'estrategiaweb-toolkit' ),
+			'trueLabel'        => __( 'Text when yes (empty: «Yes»)', 'estrategiaweb-toolkit' ),
+			'falseLabel'       => __( 'Text when no (empty: «No»)', 'estrategiaweb-toolkit' ),
+			'moveUp'           => __( 'Move up', 'estrategiaweb-toolkit' ),
+			'moveDown'         => __( 'Move down', 'estrategiaweb-toolkit' ),
+			'remove'           => __( 'Remove', 'estrategiaweb-toolkit' ),
+			'json'             => __( 'JSON (advanced)', 'estrategiaweb-toolkit' ),
+			'jsonHelp'         => __( 'The whole definition. Change it here to set what the form does not show, then apply it.', 'estrategiaweb-toolkit' ),
+			'jsonApply'        => __( 'Apply the JSON to the form', 'estrategiaweb-toolkit' ),
+			'save'             => __( 'Save', 'estrategiaweb-toolkit' ),
+			'saving'           => __( 'Saving…', 'estrategiaweb-toolkit' ),
+			'saved'            => __( 'Saved. The changes are visible from the next page you open.', 'estrategiaweb-toolkit' ),
 			/* translators: %d: number of redirects */
-			'redirectsMade'    => __( 'Redirects created for the old addresses: %d.', 'estrategia-web' ),
-			'confirmTitle'     => __( 'Before saving', 'estrategia-web' ),
-			'confirmSave'      => __( 'Save anyway', 'estrategia-web' ),
-			'cancel'           => __( 'Cancel', 'estrategia-web' ),
-			'errorsTitle'      => __( 'Nothing was saved', 'estrategia-web' ),
-			'loadError'        => __( 'The list could not be loaded.', 'estrategia-web' ),
+			'redirectsMade'    => __( 'Redirects created for the old addresses: %d.', 'estrategiaweb-toolkit' ),
+			'confirmTitle'     => __( 'Before saving', 'estrategiaweb-toolkit' ),
+			'confirmSave'      => __( 'Save anyway', 'estrategiaweb-toolkit' ),
+			'cancel'           => __( 'Cancel', 'estrategiaweb-toolkit' ),
+			'errorsTitle'      => __( 'Nothing was saved', 'estrategiaweb-toolkit' ),
+			'loadError'        => __( 'The list could not be loaded.', 'estrategiaweb-toolkit' ),
 			'fieldTypes'       => array(
-				'text'        => __( 'Text', 'estrategia-web' ),
-				'textarea'    => __( 'Text, several lines', 'estrategia-web' ),
-				'number'      => __( 'Number', 'estrategia-web' ),
-				'url'         => __( 'Web address', 'estrategia-web' ),
-				'email'       => __( 'Email', 'estrategia-web' ),
-				'tel'         => __( 'Phone', 'estrategia-web' ),
-				'image'       => __( 'Image', 'estrategia-web' ),
-				'date'        => __( 'Date', 'estrategia-web' ),
-				'select'      => __( 'Choice from a list', 'estrategia-web' ),
-				'relation'    => __( 'Link to another entry', 'estrategia-web' ),
-				'boolean'     => __( 'Yes / no', 'estrategia-web' ),
-				'rating'      => __( 'Rating (stars)', 'estrategia-web' ),
-				'embed'       => __( 'Embedded map or video', 'estrategia-web' ),
-				'local_image' => __( 'Image of this site by path', 'estrategia-web' ),
-				'hours'       => __( 'Opening hours (days and times)', 'estrategia-web' ),
+				'text'        => __( 'Text', 'estrategiaweb-toolkit' ),
+				'textarea'    => __( 'Text, several lines', 'estrategiaweb-toolkit' ),
+				'number'      => __( 'Number', 'estrategiaweb-toolkit' ),
+				'url'         => __( 'Web address', 'estrategiaweb-toolkit' ),
+				'email'       => __( 'Email', 'estrategiaweb-toolkit' ),
+				'tel'         => __( 'Phone', 'estrategiaweb-toolkit' ),
+				'image'       => __( 'Image', 'estrategiaweb-toolkit' ),
+				'date'        => __( 'Date', 'estrategiaweb-toolkit' ),
+				'select'      => __( 'Choice from a list', 'estrategiaweb-toolkit' ),
+				'relation'    => __( 'Link to another entry', 'estrategiaweb-toolkit' ),
+				'boolean'     => __( 'Yes / no', 'estrategiaweb-toolkit' ),
+				'rating'      => __( 'Rating (stars)', 'estrategiaweb-toolkit' ),
+				'embed'       => __( 'Embedded map or video', 'estrategiaweb-toolkit' ),
+				'local_image' => __( 'Image of this site by path', 'estrategiaweb-toolkit' ),
+				'hours'       => __( 'Opening hours (days and times)', 'estrategiaweb-toolkit' ),
 			),
 			'supportNames'     => array(
-				'title'           => __( 'Title', 'estrategia-web' ),
-				'editor'          => __( 'Content (block editor)', 'estrategia-web' ),
-				'author'          => __( 'Author', 'estrategia-web' ),
-				'thumbnail'       => __( 'Featured image', 'estrategia-web' ),
-				'excerpt'         => __( 'Excerpt', 'estrategia-web' ),
-				'trackbacks'      => __( 'Trackbacks', 'estrategia-web' ),
-				'custom-fields'   => __( 'Custom fields', 'estrategia-web' ),
-				'comments'        => __( 'Comments', 'estrategia-web' ),
-				'revisions'       => __( 'Revisions', 'estrategia-web' ),
-				'page-attributes' => __( 'Order', 'estrategia-web' ),
-				'post-formats'    => __( 'Formats', 'estrategia-web' ),
+				'title'           => __( 'Title', 'estrategiaweb-toolkit' ),
+				'editor'          => __( 'Content (block editor)', 'estrategiaweb-toolkit' ),
+				'author'          => __( 'Author', 'estrategiaweb-toolkit' ),
+				'thumbnail'       => __( 'Featured image', 'estrategiaweb-toolkit' ),
+				'excerpt'         => __( 'Excerpt', 'estrategiaweb-toolkit' ),
+				'trackbacks'      => __( 'Trackbacks', 'estrategiaweb-toolkit' ),
+				'custom-fields'   => __( 'Custom fields', 'estrategiaweb-toolkit' ),
+				'comments'        => __( 'Comments', 'estrategiaweb-toolkit' ),
+				'revisions'       => __( 'Revisions', 'estrategiaweb-toolkit' ),
+				'page-attributes' => __( 'Order', 'estrategiaweb-toolkit' ),
+				'post-formats'    => __( 'Formats', 'estrategiaweb-toolkit' ),
 			),
 		);
 	}

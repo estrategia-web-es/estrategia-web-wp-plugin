@@ -209,7 +209,7 @@ final class Settings_Page {
 		if ( ! self::tabs() ) {
 			return; // No module with settings: no page.
 		}
-		add_submenu_page( Menu::PARENT, __( 'Settings', 'estrategia-web' ), __( 'Settings', 'estrategia-web' ), 'manage_options', self::SLUG, array( self::class, 'render' ) );
+		add_submenu_page( Menu::PARENT, __( 'Settings', 'estrategiaweb-toolkit' ), __( 'Settings', 'estrategiaweb-toolkit' ), 'manage_options', self::SLUG, array( self::class, 'render' ) );
 	}
 
 	public static function render(): void {
@@ -227,12 +227,12 @@ final class Settings_Page {
 		?>
 		<div class="wrap ew-screen estrategia-web-settings" data-tab="<?php echo esc_attr( $current ); ?>">
 			<?php
-			Admin_UI::header( __( 'Settings', 'estrategia-web' ), __( 'How the site behaves, by topic: the cookie notice, the statistics and what is accepted when uploading images.', 'estrategia-web' ) );
+			Admin_UI::header( __( 'Settings', 'estrategiaweb-toolkit' ), __( 'How the site behaves, by topic: the cookie notice, the statistics and what is accepted when uploading images.', 'estrategiaweb-toolkit' ) );
 			$links = array();
 			foreach ( $tabs as $id => $tab ) {
 				$links[ $id ] = array( $tab['label'], self::url( $id ) );
 			}
-			Admin_UI::tabs( $links, $current, __( 'Settings sections', 'estrategia-web' ) );
+			Admin_UI::tabs( $links, $current, __( 'Settings sections', 'estrategiaweb-toolkit' ) );
 			settings_errors();
 			?>
 			<?php if ( $in_form ) : ?>

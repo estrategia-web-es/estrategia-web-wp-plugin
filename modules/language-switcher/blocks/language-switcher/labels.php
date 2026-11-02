@@ -7,5 +7,5 @@ defined( 'ABSPATH' ) || exit;
  * A new attribute in block.json gets its line here.
  */
 return array(
-	'display' => __( 'Show the current language as (code: “ES”, name: “Español”)', 'estrategia-web' ),
+	'display' => __( 'Show the current language as (code: “ES”, name: “Español”)', 'estrategiaweb-toolkit' ),
 );

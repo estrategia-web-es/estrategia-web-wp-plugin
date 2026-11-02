@@ -7,7 +7,7 @@
 	"category": "widgets",
 	"icon": "email",
 	"description": "An email address, checked in the browser and on the server.",
-	"textdomain": "estrategia-web",
+	"textdomain": "estrategiaweb-toolkit",
 	"ancestor": [ "estrategia-web-forms/form" ],
 	"usesContext": [ "estrategia-web-forms/formId" ],
 	"attributes": {

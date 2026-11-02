@@ -1,4 +1,4 @@
-// NIVEL: 1 — no browser or emulator. Every languages/estrategia-web-<locale>.po is complete (no empty or fuzzy string), keeps the placeholders of the English, has every string of the .pot and is compiled into its .l10n.php.
+// NIVEL: 1 — no browser or emulator. Every languages/estrategiaweb-toolkit-<locale>.po is complete (no empty or fuzzy string), keeps the placeholders of the English, has every string of the .pot and is compiled into its .l10n.php.
 //
 // Why: a fuzzy or empty string is NOT compiled (tools/i18n.mjs), so the site
 // shows it in English with no warning; a placeholder lost in a translation
@@ -22,7 +22,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const LANG = path.resolve(import.meta.dirname, "..", "languages");
-const DOMAIN = "estrategia-web";
+const DOMAIN = "estrategiaweb-toolkit";
 
 function parsePo(text) {
   const entries = [];

@@ -64,7 +64,7 @@ final class Changes {
 		$entries = (int) ( $counts['entries'] ?? 0 );
 		if ( $old['name'] !== $new['name'] && $entries > 0 ) {
 			/* translators: 1: old type name, 2: number of entries */
-			$errors[] = sprintf( __( 'The internal name “%1$s” cannot change: it has %2$d entries, which would stay under the old name. Create a new type instead.', 'estrategia-web' ), $old['name'], $entries );
+			$errors[] = sprintf( __( 'The internal name “%1$s” cannot change: it has %2$d entries, which would stay under the old name. Create a new type instead.', 'estrategiaweb-toolkit' ), $old['name'], $entries );
 		}
 
 		$old_taxes = self::taxonomies( $old );
@@ -73,7 +73,7 @@ final class Changes {
 			$terms = (int) ( $counts['terms'][ $name ] ?? 0 );
 			if ( ! isset( $new_taxes[ $name ] ) && $terms > 0 ) {
 				/* translators: 1: taxonomy name, 2: number of terms */
-				$warnings[] = sprintf( __( 'The taxonomy “%1$s” is removed: its %2$d terms stay in the database, no longer attached to this type. Adding it back with the same name brings them back.', 'estrategia-web' ), $name, $terms );
+				$warnings[] = sprintf( __( 'The taxonomy “%1$s” is removed: its %2$d terms stay in the database, no longer attached to this type. Adding it back with the same name brings them back.', 'estrategiaweb-toolkit' ), $name, $terms );
 			}
 		}
 		// A taxonomy «renamed» is one gone and one new at the same position: with terms, that is refused like a type.
@@ -83,7 +83,7 @@ final class Changes {
 			$other = $new_list[ $i ] ?? null;
 			if ( null !== $other && $other !== $name && ! isset( $new_taxes[ $name ] ) && ! isset( $old_taxes[ $other ] ) && (int) ( $counts['terms'][ $name ] ?? 0 ) > 0 ) {
 				/* translators: 1: old taxonomy name, 2: new taxonomy name */
-				$errors[] = sprintf( __( 'The taxonomy “%1$s” cannot be renamed to “%2$s”: it has terms, which would stay under the old name.', 'estrategia-web' ), $name, $other );
+				$errors[] = sprintf( __( 'The taxonomy “%1$s” cannot be renamed to “%2$s”: it has terms, which would stay under the old name.', 'estrategiaweb-toolkit' ), $name, $other );
 			}
 		}
 
@@ -92,10 +92,10 @@ final class Changes {
 		foreach ( $old_fields as $name => $field ) {
 			if ( ! isset( $new_fields[ $name ] ) ) {
 				/* translators: %s: field name */
-				$warnings[] = sprintf( __( 'The field “%s” is removed: what the entries have in it stays in the database, hidden. Add a field with the same name to see it again.', 'estrategia-web' ), $name );
+				$warnings[] = sprintf( __( 'The field “%s” is removed: what the entries have in it stays in the database, hidden. Add a field with the same name to see it again.', 'estrategiaweb-toolkit' ), $name );
 			} elseif ( $new_fields[ $name ]['type'] !== $field['type'] ) {
 				/* translators: 1: field name, 2: old field type, 3: new field type */
-				$warnings[] = sprintf( __( 'The field “%1$s” changes from %2$s to %3$s: each entry’s value is cleaned for the new type the next time it is saved.', 'estrategia-web' ), $name, $field['type'], $new_fields[ $name ]['type'] );
+				$warnings[] = sprintf( __( 'The field “%1$s” changes from %2$s to %3$s: each entry’s value is cleaned for the new type the next time it is saved.', 'estrategiaweb-toolkit' ), $name, $field['type'], $new_fields[ $name ]['type'] );
 			}
 		}
 
@@ -109,7 +109,7 @@ final class Changes {
 		}
 		foreach ( $slugs as [ $kind, $name, $from, $to ] ) {
 			/* translators: 1: type or taxonomy name, 2: old URL base, 3: new URL base */
-			$warnings[] = sprintf( __( 'The URL of “%1$s” changes from /%2$s/ to /%3$s/: its published addresses move.', 'estrategia-web' ), $name, $from, $to );
+			$warnings[] = sprintf( __( 'The URL of “%1$s” changes from /%2$s/ to /%3$s/: its published addresses move.', 'estrategiaweb-toolkit' ), $name, $from, $to );
 		}
 		return compact( 'errors', 'warnings', 'slugs' );
 	}

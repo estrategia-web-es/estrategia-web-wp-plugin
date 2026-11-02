@@ -53,13 +53,13 @@ final class Types_Table extends \WP_List_Table {
 
 	public function get_columns(): array {
 		return array(
-			'title'   => __( 'Name', 'estrategia-web' ),
-			'name'    => __( 'Internal name', 'estrategia-web' ),
-			'url'     => __( 'URL', 'estrategia-web' ),
-			'fields'  => __( 'Fields', 'estrategia-web' ),
-			'source'  => __( 'Where it is defined', 'estrategia-web' ),
-			'status'  => __( 'Status', 'estrategia-web' ),
-			'entries' => __( 'Entries', 'estrategia-web' ),
+			'title'   => __( 'Name', 'estrategiaweb-toolkit' ),
+			'name'    => __( 'Internal name', 'estrategiaweb-toolkit' ),
+			'url'     => __( 'URL', 'estrategiaweb-toolkit' ),
+			'fields'  => __( 'Fields', 'estrategiaweb-toolkit' ),
+			'source'  => __( 'Where it is defined', 'estrategiaweb-toolkit' ),
+			'status'  => __( 'Status', 'estrategiaweb-toolkit' ),
+			'entries' => __( 'Entries', 'estrategiaweb-toolkit' ),
 		);
 	}
 
@@ -69,7 +69,7 @@ final class Types_Table extends \WP_List_Table {
 	}
 
 	public function no_items(): void {
-		esc_html_e( 'There are no content types yet. Add one, start from a template or import a JSON file.', 'estrategia-web' );
+		esc_html_e( 'There are no content types yet. Add one, start from a template or import a JSON file.', 'estrategiaweb-toolkit' );
 	}
 
 	/** No bulk actions, no pagination: the nav bars would be empty. */
@@ -111,14 +111,14 @@ final class Types_Table extends \WP_List_Table {
 		$link  = static fn( string $action, string $text ) => '<button type="button" class="button-link" data-action="' . $action . '"' . $data . '>' . esc_html( $text ) . '</button>';
 		$actions = array();
 		if ( 'database' === $item['source'] ) {
-			$actions['edit'] = '<a href="' . esc_url( $edit ) . '" data-action="edit">' . esc_html__( 'Edit', 'estrategia-web' ) . '</a>';
-			$actions['toggle'] = '<button type="button" class="button-link" data-action="toggle" data-active="' . ( $item['active'] ? '1' : '0' ) . '"' . $data . '>' . esc_html( $item['active'] ? __( 'Deactivate', 'estrategia-web' ) : __( 'Activate', 'estrategia-web' ) ) . '</button>';
+			$actions['edit'] = '<a href="' . esc_url( $edit ) . '" data-action="edit">' . esc_html__( 'Edit', 'estrategiaweb-toolkit' ) . '</a>';
+			$actions['toggle'] = '<button type="button" class="button-link" data-action="toggle" data-active="' . ( $item['active'] ? '1' : '0' ) . '"' . $data . '>' . esc_html( $item['active'] ? __( 'Deactivate', 'estrategiaweb-toolkit' ) : __( 'Activate', 'estrategiaweb-toolkit' ) ) . '</button>';
 		} else {
-			$actions['copy'] = '<a href="' . esc_url( $edit ) . '" data-action="copy">' . esc_html__( 'Copy to this panel', 'estrategia-web' ) . '</a>';
+			$actions['copy'] = '<a href="' . esc_url( $edit ) . '" data-action="copy">' . esc_html__( 'Copy to this panel', 'estrategiaweb-toolkit' ) . '</a>';
 		}
-		$actions['export'] = $link( 'export', __( 'Export JSON', 'estrategia-web' ) );
+		$actions['export'] = $link( 'export', __( 'Export JSON', 'estrategiaweb-toolkit' ) );
 		if ( 'database' === $item['source'] ) {
-			$actions['delete'] = '<button type="button" class="button-link button-link-delete" data-action="delete"' . $data . '>' . esc_html__( 'Delete', 'estrategia-web' ) . '</button>';
+			$actions['delete'] = '<button type="button" class="button-link button-link-delete" data-action="delete"' . $data . '>' . esc_html__( 'Delete', 'estrategiaweb-toolkit' ) . '</button>';
 		}
 		return '<strong><a class="row-title" href="' . esc_url( $edit ) . '">' . esc_html( $label ) . '</a></strong>' . $this->row_actions( $actions );
 	}
@@ -140,23 +140,23 @@ final class Types_Table extends \WP_List_Table {
 	protected function column_source( array $item ): string {
 		if ( 'file' === $item['source'] ) {
 			/* translators: %s: a file path */
-			return esc_html( sprintf( __( 'File (read-only): %s', 'estrategia-web' ), $item['file'] ) );
+			return esc_html( sprintf( __( 'File (read-only): %s', 'estrategiaweb-toolkit' ), $item['file'] ) );
 		}
 		foreach ( $this->data['templates'] as $template ) {
 			if ( $item['template'] && $template['key'] === $item['template'] ) {
 				/* translators: %s: a template name, e.g. Testimonials */
-				return esc_html( sprintf( __( 'This panel (from the template “%s”)', 'estrategia-web' ), $template['label'] ) );
+				return esc_html( sprintf( __( 'This panel (from the template “%s”)', 'estrategiaweb-toolkit' ), $template['label'] ) );
 			}
 		}
-		return esc_html__( 'This panel', 'estrategia-web' );
+		return esc_html__( 'This panel', 'estrategiaweb-toolkit' );
 	}
 
 	protected function column_status( array $item ): string {
 		if ( $item['errors'] ) {
 			$list = '<ul class="ul-disc">' . implode( '', array_map( static fn( $e ) => '<li>' . esc_html( (string) $e ) . '</li>', $item['errors'] ) ) . '</ul>';
-			return '<strong>' . esc_html__( 'Not registered: it has errors', 'estrategia-web' ) . '</strong>' . $list;
+			return '<strong>' . esc_html__( 'Not registered: it has errors', 'estrategiaweb-toolkit' ) . '</strong>' . $list;
 		}
-		return $item['active'] ? esc_html__( 'Active', 'estrategia-web' ) : '<strong>' . esc_html__( 'Inactive', 'estrategia-web' ) . '</strong>';
+		return $item['active'] ? esc_html__( 'Active', 'estrategiaweb-toolkit' ) : '<strong>' . esc_html__( 'Inactive', 'estrategiaweb-toolkit' ) . '</strong>';
 	}
 
 	protected function column_entries( array $item ): string {

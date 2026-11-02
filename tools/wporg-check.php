@@ -25,7 +25,7 @@ $estrategia_web_runner = new class() extends Abstract_Check_Runner {
 		return true;
 	}
 	protected function get_plugin_param() {
-		return 'estrategia-web';
+		return 'estrategiaweb-toolkit';
 	}
 	protected function get_check_slugs_param() {
 		return array();
@@ -40,7 +40,7 @@ $estrategia_web_runner = new class() extends Abstract_Check_Runner {
 		return array();
 	}
 	protected function get_slug_param() {
-		return 'estrategia-web';
+		return 'estrategiaweb-toolkit';
 	}
 	protected function get_mode_param() {
 		return 'new';
@@ -51,7 +51,7 @@ $estrategia_web_runner = new class() extends Abstract_Check_Runner {
 };
 
 try {
-	$estrategia_web_runner->set_plugin( 'estrategia-web' );
+	$estrategia_web_runner->set_plugin( 'estrategiaweb-toolkit' );
 	$estrategia_web_runner->set_experimental_flag( true );
 	$estrategia_web_runner->prepare();
 	$estrategia_web_result = $estrategia_web_runner->run();

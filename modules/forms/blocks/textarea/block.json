@@ -7,7 +7,7 @@
 	"category": "widgets",
 	"icon": "text",
 	"description": "Several lines of text.",
-	"textdomain": "estrategia-web",
+	"textdomain": "estrategiaweb-toolkit",
 	"ancestor": [ "estrategia-web-forms/form" ],
 	"usesContext": [ "estrategia-web-forms/formId" ],
 	"attributes": {

@@ -73,7 +73,7 @@ final class Modules_Page {
 	}
 
 	public static function menu(): void {
-		add_submenu_page( Menu::PARENT, __( 'Modules', 'estrategia-web' ), __( 'Modules', 'estrategia-web' ), 'manage_options', self::SLUG, array( self::class, 'render' ) );
+		add_submenu_page( Menu::PARENT, __( 'Modules', 'estrategiaweb-toolkit' ), __( 'Modules', 'estrategiaweb-toolkit' ), 'manage_options', self::SLUG, array( self::class, 'render' ) );
 	}
 
 	public static function render(): void {
@@ -84,7 +84,7 @@ final class Modules_Page {
 		$wanted    = Modules::wanted( $available, get_option( Modules::OPTION, null ), get_option( Modules::KNOWN_OPTION, null ) );
 		list( , $blocked ) = Modules::resolve( $available, $wanted );
 		$name = static fn( string $slug ): string => isset( $available[ $slug ] )
-			? _x( $available[ $slug ]['name'], 'module name', 'estrategia-web' ) // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- comes from the module header; tools/i18n.mjs extracts it.
+			? _x( $available[ $slug ]['name'], 'module name', 'estrategiaweb-toolkit' ) // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- comes from the module header; tools/i18n.mjs extracts it.
 			: $slug;
 		// Alphabetical in the reader's language: grouped() sorts by the name it is given.
 		$translated = array();
@@ -94,7 +94,7 @@ final class Modules_Page {
 		$groups = Modules::grouped( $translated );
 		?>
 		<div class="wrap ew-screen estrategia-web-modules">
-			<?php Admin_UI::header( __( 'Modules', 'estrategia-web' ), __( 'Each module adds one feature to the site. A module that is off loads nothing, and turning it off does not delete anything it saved: turning it on again brings it back as it was.', 'estrategia-web' ) ); ?>
+			<?php Admin_UI::header( __( 'Modules', 'estrategiaweb-toolkit' ), __( 'Each module adds one feature to the site. A module that is off loads nothing, and turning it off does not delete anything it saved: turning it on again brings it back as it was.', 'estrategiaweb-toolkit' ) ); ?>
 			<style>
 				.estrategia-web-modules td, .estrategia-web-modules th { vertical-align: middle; }
 				.estrategia-web-modules .column-switch { width: 4.5em; }
@@ -110,13 +110,13 @@ final class Modules_Page {
 				<input type="hidden" name="<?php echo esc_attr( Modules::OPTION ); ?>[]" value="">
 				<?php foreach ( $groups as $category => $slugs ) : ?>
 					<?php $heading = 'estrategia-web-modules-' . sanitize_title( $category ); ?>
-					<?php Admin_UI::box_open( _x( $category, 'module category', 'estrategia-web' ), $heading ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Modules::CATEGORIES; tools/i18n.mjs extracts the headers. ?>
+					<?php Admin_UI::box_open( _x( $category, 'module category', 'estrategiaweb-toolkit' ), $heading ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Modules::CATEGORIES; tools/i18n.mjs extracts the headers. ?>
 					<table class="widefat striped" aria-labelledby="<?php echo esc_attr( $heading ); ?>" data-category="<?php echo esc_attr( $category ); ?>">
 						<thead>
 							<tr>
-								<th class="column-switch"><?php esc_html_e( 'On', 'estrategia-web' ); ?></th>
-								<th><?php esc_html_e( 'Module', 'estrategia-web' ); ?></th>
-								<th><?php esc_html_e( 'Status', 'estrategia-web' ); ?></th>
+								<th class="column-switch"><?php esc_html_e( 'On', 'estrategiaweb-toolkit' ); ?></th>
+								<th><?php esc_html_e( 'Module', 'estrategiaweb-toolkit' ); ?></th>
+								<th><?php esc_html_e( 'Status', 'estrategiaweb-toolkit' ); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -147,12 +147,12 @@ final class Modules_Page {
 									<p class="description" id="<?php echo esc_attr( $id ); ?>-description">
 										<?php
 										if ( '' !== $module['description'] ) {
-											echo esc_html( _x( $module['description'], 'module description', 'estrategia-web' ) ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- see $name.
+											echo esc_html( _x( $module['description'], 'module description', 'estrategiaweb-toolkit' ) ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- see $name.
 										}
 										if ( $requires ) {
 											echo ' ';
 											/* translators: %s: names of other modules, comma separated. */
-											echo esc_html( sprintf( __( 'Needs: %s.', 'estrategia-web' ), implode( ', ', array_map( $name, $requires ) ) ) );
+											echo esc_html( sprintf( __( 'Needs: %s.', 'estrategiaweb-toolkit' ), implode( ', ', array_map( $name, $requires ) ) ) );
 										}
 										?>
 									</p>
@@ -162,15 +162,15 @@ final class Modules_Page {
 										<span class="is-blocked">
 										<?php
 										/* translators: %s: names of the modules that are missing. */
-										echo esc_html( sprintf( __( 'Not loaded: turn on %s.', 'estrategia-web' ), implode( ', ', array_map( $name, $missing ) ) ) );
+										echo esc_html( sprintf( __( 'Not loaded: turn on %s.', 'estrategiaweb-toolkit' ), implode( ', ', array_map( $name, $missing ) ) ) );
 										?>
 										</span>
 									<?php elseif ( '' !== $note ) : ?>
 										<span class="is-stepped-aside" data-module="<?php echo esc_attr( $slug ); ?>"><?php echo esc_html( $note ); ?></span>
 									<?php elseif ( $is_on ) : ?>
-										<?php esc_html_e( 'On', 'estrategia-web' ); ?>
+										<?php esc_html_e( 'On', 'estrategiaweb-toolkit' ); ?>
 									<?php else : ?>
-										<?php esc_html_e( 'Off', 'estrategia-web' ); ?>
+										<?php esc_html_e( 'Off', 'estrategiaweb-toolkit' ); ?>
 									<?php endif; ?>
 								</td>
 							</tr>

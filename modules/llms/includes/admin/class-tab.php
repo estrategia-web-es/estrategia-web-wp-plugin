@@ -47,7 +47,7 @@ final class Tab {
 	}
 
 	public static function register(): void {
-		Settings_Page::add_tab( self::TAB, __( 'llms.txt', 'estrategia-web' ), 40 );
+		Settings_Page::add_tab( self::TAB, __( 'llms.txt', 'estrategiaweb-toolkit' ), 40 );
 		Settings_Page::add_section(
 			self::TAB,
 			array(
@@ -70,16 +70,16 @@ final class Tab {
 		$languages = Languages::all();
 		$texts     = Runtime::texts();
 		$several   = count( $languages ) > 1;
-		\EstrategiaWeb\Admin\Admin_UI::box_open( __( 'llms.txt', 'estrategia-web' ), 'ew-box-llms' );
+		\EstrategiaWeb\Admin\Admin_UI::box_open( __( 'llms.txt', 'estrategiaweb-toolkit' ), 'ew-box-llms' );
 		self::warnings();
-		echo '<p>' . esc_html__( 'What AI assistants read to describe this website: what the business is, where, for whom, and the pages that answer the usual questions. Markdown, as on llmstxt.org. A language without text serves nothing.', 'estrategia-web' ) . '</p>';
+		echo '<p>' . esc_html__( 'What AI assistants read to describe this website: what the business is, where, for whom, and the pages that answer the usual questions. Markdown, as on llmstxt.org. A language without text serves nothing.', 'estrategiaweb-toolkit' ) . '</p>';
 		if ( $several ) {
-			echo '<p>' . esc_html__( 'One per language. The default language\'s file links the others at the end by itself.', 'estrategia-web' ) . '</p>';
+			echo '<p>' . esc_html__( 'One per language. The default language\'s file links the others at the end by itself.', 'estrategiaweb-toolkit' ) . '</p>';
 		}
 		echo '<table class="form-table" role="presentation">';
 		foreach ( $languages as $code => $lang ) {
 			$id    = 'estrategia-web-llms-' . $code;
-			$label = $several ? ( '' !== $lang['name'] ? $lang['name'] : $code ) : __( 'Text', 'estrategia-web' );
+			$label = $several ? ( '' !== $lang['name'] ? $lang['name'] : $code ) : __( 'Text', 'estrategiaweb-toolkit' );
 			printf(
 				'<tr><th scope="row"><label for="%1$s">%2$s</label></th><td><textarea class="large-text code" rows="18" id="%1$s" name="%3$s">%4$s</textarea><textarea hidden readonly id="%1$s-draft">%5$s</textarea><p><button type="button" class="button" data-ew-llms-draft="%1$s" data-confirm="%6$s">%7$s</button> <a href="%8$s" target="_blank" rel="noopener"><code>%9$s</code></a></p></td></tr>',
 				esc_attr( $id ),
@@ -87,8 +87,8 @@ final class Tab {
 				esc_attr( Runtime::OPTION . '[' . $code . ']' ),
 				esc_textarea( $texts[ $code ] ?? '' ),
 				esc_textarea( self::draft( $code ) ),
-				esc_attr__( 'Replace the text with the draft? Nothing is saved until you press Save.', 'estrategia-web' ),
-				esc_html__( 'Generate draft', 'estrategia-web' ),
+				esc_attr__( 'Replace the text with the draft? Nothing is saved until you press Save.', 'estrategiaweb-toolkit' ),
+				esc_html__( 'Generate draft', 'estrategiaweb-toolkit' ),
 				esc_url( Languages::url( $code ) ),
 				esc_html( Languages::url( $code ) )
 			);
@@ -102,10 +102,10 @@ final class Tab {
 			echo '<div class="notice notice-warning inline ew-llms-conflict"><p><strong>' . esc_html( $title ) . '</strong> ' . esc_html( $text ) . '</p></div>';
 		};
 		if ( Conflicts::rank_math() ) {
-			$warn( __( 'Rank Math also serves /llms.txt.', 'estrategia-web' ), __( 'Its «LLMS Txt» module is on, and while this module is on, the file served is this one: Rank Math\'s is not seen. Turn one of the two off (in Rank Math → Dashboard → Modules, or in Estrategia Web → Modules).', 'estrategia-web' ) );
+			$warn( __( 'Rank Math also serves /llms.txt.', 'estrategiaweb-toolkit' ), __( 'Its «LLMS Txt» module is on, and while this module is on, the file served is this one: Rank Math\'s is not seen. Turn one of the two off (in Rank Math → Dashboard → Modules, or in Estrategia Web → Modules).', 'estrategiaweb-toolkit' ) );
 		}
 		if ( Conflicts::loose_file( ABSPATH ) ) {
-			$warn( __( 'There is a llms.txt file in the website\'s folder.', 'estrategia-web' ), __( 'The web server sends that file before WordPress runs, so what is written here is not seen. Delete the file from the server (it is next to wp-config.php).', 'estrategia-web' ) );
+			$warn( __( 'There is a llms.txt file in the website\'s folder.', 'estrategiaweb-toolkit' ), __( 'The web server sends that file before WordPress runs, so what is written here is not seen. Delete the file from the server (it is next to wp-config.php).', 'estrategiaweb-toolkit' ) );
 		}
 	}
 
@@ -150,7 +150,7 @@ final class Tab {
 			'name'    => '' !== $company( 'company_name' ) ? $company( 'company_name' ) : (string) get_bloginfo( 'name' ),
 			'summary' => (string) get_bloginfo( 'description' ),
 			'facts'   => $facts,
-			'heading' => __( 'Pages', 'estrategia-web' ),
+			'heading' => __( 'Pages', 'estrategiaweb-toolkit' ),
 			'pages'   => $pages,
 		);
 	}

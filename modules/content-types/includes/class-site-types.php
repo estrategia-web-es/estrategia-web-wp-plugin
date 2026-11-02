@@ -197,14 +197,14 @@ final class Site_Types {
 	 */
 	public static function gettext_slug( string $key, $template_slug ): string {
 		$slugs = array(
-			'client'             => _x( 'clients', 'URL slug', 'estrategia-web' ),
-			'client_sector'      => _x( 'client-sector', 'URL slug', 'estrategia-web' ),
-			'testimonial'        => _x( 'testimonials', 'URL slug', 'estrategia-web' ),
-			'location'           => _x( 'locations', 'URL slug', 'estrategia-web' ),
-			'project'            => _x( 'projects', 'URL slug', 'estrategia-web' ),
-			'project_category'   => _x( 'project-category', 'URL slug', 'estrategia-web' ),
-			'portfolio'          => _x( 'portfolio', 'URL slug', 'estrategia-web' ),
-			'portfolio_category' => _x( 'portfolio-category', 'URL slug', 'estrategia-web' ),
+			'client'             => _x( 'clients', 'URL slug', 'estrategiaweb-toolkit' ),
+			'client_sector'      => _x( 'client-sector', 'URL slug', 'estrategiaweb-toolkit' ),
+			'testimonial'        => _x( 'testimonials', 'URL slug', 'estrategiaweb-toolkit' ),
+			'location'           => _x( 'locations', 'URL slug', 'estrategiaweb-toolkit' ),
+			'project'            => _x( 'projects', 'URL slug', 'estrategiaweb-toolkit' ),
+			'project_category'   => _x( 'project-category', 'URL slug', 'estrategiaweb-toolkit' ),
+			'portfolio'          => _x( 'portfolio', 'URL slug', 'estrategiaweb-toolkit' ),
+			'portfolio_category' => _x( 'portfolio-category', 'URL slug', 'estrategiaweb-toolkit' ),
 		);
 		return $slugs[ $key ] ?? Schema::text( $template_slug, \EstrategiaWeb\Plugin::site_locale() );
 	}

@@ -73,14 +73,14 @@ final class Icons {
 			'whatsapp'    => 'WhatsApp',
 			'telegram'    => 'Telegram',
 			'pinterest'   => 'Pinterest',
-			'google'      => __( 'Google (Business Profile)', 'estrategia-web' ),
+			'google'      => __( 'Google (Business Profile)', 'estrategiaweb-toolkit' ),
 			'google-maps' => 'Google Maps',
 			'tripadvisor' => 'Tripadvisor',
 			'threads'     => 'Threads',
 			'bluesky'     => 'Bluesky',
 			'vimeo'       => 'Vimeo',
-			'email'       => __( 'Email', 'estrategia-web' ),
-			'website'     => __( 'Website', 'estrategia-web' ),
+			'email'       => __( 'Email', 'estrategiaweb-toolkit' ),
+			'website'     => __( 'Website', 'estrategiaweb-toolkit' ),
 		);
 	}
 

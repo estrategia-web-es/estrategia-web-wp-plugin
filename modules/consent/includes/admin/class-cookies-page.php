@@ -65,7 +65,7 @@ final class Cookies_Page {
 
 	/** On Settings_Page::HOOK: the Cookies tab, first, with this section. */
 	public static function register(): void {
-		Settings_Page::add_tab( self::TAB, __( 'Cookies', 'estrategia-web' ), 10 );
+		Settings_Page::add_tab( self::TAB, __( 'Cookies', 'estrategiaweb-toolkit' ), 10 );
 		Settings_Page::add_section(
 			self::TAB,
 			array(
@@ -83,7 +83,7 @@ final class Cookies_Page {
 	/** Saves whatever comes from any of the screen's forms. */
 	public static function handle(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'estrategia-web' ), 403 );
+			wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'estrategiaweb-toolkit' ), 403 );
 		}
 		check_admin_referer( self::ACTION );
 		$do     = sanitize_key( wp_unslash( $_POST['do'] ?? '' ) );
@@ -143,9 +143,9 @@ final class Cookies_Page {
 
 	private static function status_labels(): array {
 		return array(
-			'pending'   => __( 'Pending', 'estrategia-web' ),
-			'confirmed' => __( 'Confirmed', 'estrategia-web' ),
-			'ignored'   => __( 'Ignored', 'estrategia-web' ),
+			'pending'   => __( 'Pending', 'estrategiaweb-toolkit' ),
+			'confirmed' => __( 'Confirmed', 'estrategiaweb-toolkit' ),
+			'ignored'   => __( 'Ignored', 'estrategiaweb-toolkit' ),
 		);
 	}
 
@@ -172,20 +172,20 @@ final class Cookies_Page {
 		?>
 		<div class="estrategia-web-cookies">
 			<?php if ( 'saved' === $notice || 'deleted' === $notice ) : ?>
-				<div class="notice notice-success is-dismissible"><p><?php echo 'deleted' === $notice ? esc_html__( 'Cookie deleted.', 'estrategia-web' ) : esc_html__( 'Changes saved.', 'estrategia-web' ); ?></p></div>
+				<div class="notice notice-success is-dismissible"><p><?php echo 'deleted' === $notice ? esc_html__( 'Cookie deleted.', 'estrategiaweb-toolkit' ) : esc_html__( 'Changes saved.', 'estrategiaweb-toolkit' ); ?></p></div>
 			<?php elseif ( str_starts_with( $notice, 'error-' ) ) : ?>
-				<div class="notice notice-error"><p><?php esc_html_e( 'Not saved: check the cookie name (exact name, or a prefix ending in *) and that the list is not full.', 'estrategia-web' ); ?></p></div>
+				<div class="notice notice-error"><p><?php esc_html_e( 'Not saved: check the cookie name (exact name, or a prefix ending in *) and that the list is not full.', 'estrategiaweb-toolkit' ); ?></p></div>
 			<?php endif; ?>
 			<?php if ( ! Consent::active() ) : ?>
-				<div class="notice notice-warning"><p><?php esc_html_e( 'The active theme brings its own cookie notice: these settings do not apply to it.', 'estrategia-web' ); ?></p></div>
+				<div class="notice notice-warning"><p><?php esc_html_e( 'The active theme brings its own cookie notice: these settings do not apply to it.', 'estrategiaweb-toolkit' ); ?></p></div>
 			<?php endif; ?>
 
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-				<?php Admin_UI::box_open( __( 'Cookie notice', 'estrategia-web' ), 'ew-box-cookie-notice' ); ?>
+				<?php Admin_UI::box_open( __( 'Cookie notice', 'estrategiaweb-toolkit' ), 'ew-box-cookie-notice' ); ?>
 				<?php self::hidden( 'settings' ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Categories the notice asks about', 'estrategia-web' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Categories the notice asks about', 'estrategiaweb-toolkit' ); ?></th>
 						<td>
 							<fieldset>
 								<?php foreach ( Consent::display_order( array_keys( Consent::known_categories() ) ) as $slug ) : ?>
@@ -194,26 +194,26 @@ final class Cookies_Page {
 										<input type="checkbox" name="ask[]" value="<?php echo esc_attr( $slug ); ?>" <?php checked( $by_code || in_array( $slug, $settings['ask'], true ) ); ?> <?php disabled( $by_code ); ?>>
 										<strong><?php echo esc_html( $labels[ $slug ]['label'] ); ?></strong>
 										<?php if ( $by_code ) : ?>
-											— <?php esc_html_e( 'declared by the code (theme or a module)', 'estrategia-web' ); ?>
+											— <?php esc_html_e( 'declared by the code (theme or a module)', 'estrategiaweb-toolkit' ); ?>
 										<?php endif; ?>
 									</label>
 								<?php endforeach; ?>
 							</fieldset>
-							<p class="description"><?php esc_html_e( 'Changing the categories shows the notice again to every visitor: they are being asked about something new. Without any category, the notice does not appear.', 'estrategia-web' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Changing the categories shows the notice again to every visitor: they are being asked about something new. Without any category, the notice does not appear.', 'estrategiaweb-toolkit' ); ?></p>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Cookie detector', 'estrategia-web' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Cookie detector', 'estrategiaweb-toolkit' ); ?></th>
 						<td>
 							<label>
 								<input type="checkbox" name="detector" value="1" <?php checked( $settings['detector'] ); ?>>
-								<?php esc_html_e( 'When a visitor accepts cookies, their browser sends the NAMES (never the values) of the cookies it sees on this site, at most once a week or when the list changes. New names appear below as pending.', 'estrategia-web' ); ?>
+								<?php esc_html_e( 'When a visitor accepts cookies, their browser sends the NAMES (never the values) of the cookies it sees on this site, at most once a week or when the list changes. New names appear below as pending.', 'estrategiaweb-toolkit' ); ?>
 							</label>
 						</td>
 					</tr>
 				</table>
 				<?php Admin_UI::box_close(); ?>
-				<?php Admin_UI::save( __( 'Save notice settings', 'estrategia-web' ) ); ?>
+				<?php Admin_UI::save( __( 'Save notice settings', 'estrategiaweb-toolkit' ) ); ?>
 			</form>
 
 			<?php
@@ -229,7 +229,7 @@ final class Cookies_Page {
 					<?php
 					printf(
 						/* translators: 1: category name, 2: list of cookie names. */
-						esc_html__( 'The notice does not ask about «%1$s», but these confirmed cookies belong to it: %2$s. Either the notice should ask about it (above), or the cookies should not be set.', 'estrategia-web' ),
+						esc_html__( 'The notice does not ask about «%1$s», but these confirmed cookies belong to it: %2$s. Either the notice should ask about it (above), or the cookies should not be set.', 'estrategiaweb-toolkit' ),
 						esc_html( $labels[ $category ]['label'] ?? $category ),
 						'<code>' . implode( '</code>, <code>', array_map( 'esc_html', $keys ) ) . '</code>' // phpcs:ignore WordPress.Security.EscapeOutput
 					);
@@ -237,31 +237,31 @@ final class Cookies_Page {
 				</p></div>
 			<?php endforeach; ?>
 
-			<?php Admin_UI::box_open( __( 'Cookies of this site', 'estrategia-web' ), 'ew-box-cookies' ); ?>
-			<p><?php esc_html_e( 'Only confirmed cookies appear in the cookie table of the policy (block «Cookie table» or shortcode [estrategia_web_cookie_table]). Proposals come from our own list and from the Open Cookie Database: check them. A name ending in * covers every cookie that starts like that.', 'estrategia-web' ); ?></p>
-			<p><?php esc_html_e( 'The cookies «Declared by the plugin» belong to third-party services that the active modules load (the Google map, Google tags, Matomo): the detector cannot see the ones set on the provider’s own domain, and sees the rest only after a visitor accepts. To leave one out of the policy, mark it Ignored: if you delete it, it comes back as a proposal while its module still loads the service.', 'estrategia-web' ); ?></p>
+			<?php Admin_UI::box_open( __( 'Cookies of this site', 'estrategiaweb-toolkit' ), 'ew-box-cookies' ); ?>
+			<p><?php esc_html_e( 'Only confirmed cookies appear in the cookie table of the policy (block «Cookie table» or shortcode [estrategia_web_cookie_table]). Proposals come from our own list and from the Open Cookie Database: check them. A name ending in * covers every cookie that starts like that.', 'estrategiaweb-toolkit' ); ?></p>
+			<p><?php esc_html_e( 'The cookies «Declared by the plugin» belong to third-party services that the active modules load (the Google map, Google tags, Matomo): the detector cannot see the ones set on the provider’s own domain, and sees the rest only after a visitor accepts. To leave one out of the policy, mark it Ignored: if you delete it, it comes back as a proposal while its module still loads the service.', 'estrategiaweb-toolkit' ); ?></p>
 			<?php if ( in_array( 'pending', array_column( $entries, 'status' ), true ) ) : ?>
 				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="margin:.5em 0">
 					<?php self::hidden( 'confirm-all' ); ?>
-					<?php submit_button( __( 'Confirm all pending proposals', 'estrategia-web' ), 'secondary', 'submit', false ); ?>
+					<?php submit_button( __( 'Confirm all pending proposals', 'estrategiaweb-toolkit' ), 'secondary', 'submit', false ); ?>
 				</form>
 			<?php endif; ?>
 			<table class="widefat striped">
 				<thead>
 					<tr>
-						<th scope="col"><?php esc_html_e( 'Cookie', 'estrategia-web' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Status', 'estrategia-web' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Category', 'estrategia-web' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Provider', 'estrategia-web' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Purpose', 'estrategia-web' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Duration', 'estrategia-web' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Seen', 'estrategia-web' ); ?></th>
-						<th scope="col"><span class="screen-reader-text"><?php esc_html_e( 'Actions', 'estrategia-web' ); ?></span></th>
+						<th scope="col"><?php esc_html_e( 'Cookie', 'estrategiaweb-toolkit' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Status', 'estrategiaweb-toolkit' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Category', 'estrategiaweb-toolkit' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Provider', 'estrategiaweb-toolkit' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Purpose', 'estrategiaweb-toolkit' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Duration', 'estrategiaweb-toolkit' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Seen', 'estrategiaweb-toolkit' ); ?></th>
+						<th scope="col"><span class="screen-reader-text"><?php esc_html_e( 'Actions', 'estrategiaweb-toolkit' ); ?></span></th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php if ( ! $entries ) : ?>
-						<tr><td colspan="8"><?php esc_html_e( 'No cookies yet. They appear when a visitor accepts the notice, or add them below.', 'estrategia-web' ); ?></td></tr>
+						<tr><td colspan="8"><?php esc_html_e( 'No cookies yet. They appear when a visitor accepts the notice, or add them below.', 'estrategiaweb-toolkit' ); ?></td></tr>
 					<?php endif; ?>
 					<?php
 					$i = 0;
@@ -272,7 +272,7 @@ final class Cookies_Page {
 							<td>
 								<code><?php echo esc_html( (string) $key ); ?></code>
 								<?php if ( '' !== $entry['example'] && $entry['example'] !== $key ) : ?>
-									<br><small><?php /* translators: %s: a concrete cookie name. */ printf( esc_html__( 'e.g. %s', 'estrategia-web' ), '<code>' . esc_html( $entry['example'] ) . '</code>' ); ?></small>
+									<br><small><?php /* translators: %s: a concrete cookie name. */ printf( esc_html__( 'e.g. %s', 'estrategiaweb-toolkit' ), '<code>' . esc_html( $entry['example'] ) . '</code>' ); ?></small>
 								<?php endif; ?>
 							</td>
 							<td>
@@ -291,20 +291,20 @@ final class Cookies_Page {
 									<?php if ( 'module' === $entry['source'] ) : ?>
 										<?php
 										/* translators: %s: name of a third-party service, e.g. «Google Maps (map block)». */
-										printf( esc_html__( 'Declared by the plugin: %s', 'estrategia-web' ), esc_html( Cookie_Services::label( $entry['service'] ) ?: $entry['service'] ) );
+										printf( esc_html__( 'Declared by the plugin: %s', 'estrategiaweb-toolkit' ), esc_html( Cookie_Services::label( $entry['service'] ) ?: $entry['service'] ) );
 										?>
 										<?php if ( ! in_array( $entry['service'], $services, true ) ) : ?>
-											<br><strong><?php esc_html_e( 'Its module no longer loads this service: delete the cookie if the site does not use it any more.', 'estrategia-web' ); ?></strong>
+											<br><strong><?php esc_html_e( 'Its module no longer loads this service: delete the cookie if the site does not use it any more.', 'estrategiaweb-toolkit' ); ?></strong>
 										<?php elseif ( (int) $entry['last_seen'] ) : ?>
 											<br><?php echo esc_html( $date( (int) $entry['last_seen'] ) ); ?>
 										<?php endif; ?>
 									<?php else : ?>
-										<?php echo 'manual' === $entry['source'] ? esc_html__( 'Added by hand', 'estrategia-web' ) : esc_html( $date( (int) $entry['last_seen'] ) ); ?>
+										<?php echo 'manual' === $entry['source'] ? esc_html__( 'Added by hand', 'estrategiaweb-toolkit' ) : esc_html( $date( (int) $entry['last_seen'] ) ); ?>
 									<?php endif; ?>
 									<?php if ( 'ocd' === $entry['suggested'] ) : ?>
-										<br><?php esc_html_e( 'Proposal: Open Cookie Database', 'estrategia-web' ); ?>
+										<br><?php esc_html_e( 'Proposal: Open Cookie Database', 'estrategiaweb-toolkit' ); ?>
 									<?php elseif ( 'base' === $entry['suggested'] ) : ?>
-										<br><?php esc_html_e( 'Proposal: Estrategia Web', 'estrategia-web' ); ?>
+										<br><?php esc_html_e( 'Proposal: Estrategia Web', 'estrategiaweb-toolkit' ); ?>
 									<?php endif; ?>
 								</small>
 							</td>
@@ -312,8 +312,8 @@ final class Cookies_Page {
 								<form id="<?php echo esc_attr( $form ); ?>" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 									<?php self::hidden( 'row' ); ?>
 									<input type="hidden" name="name" value="<?php echo esc_attr( (string) $key ); ?>">
-									<button type="submit" class="button button-primary"><?php esc_html_e( 'Save', 'estrategia-web' ); ?></button>
-									<button type="submit" class="button-link button-link-delete" name="delete" value="1"><?php esc_html_e( 'Delete', 'estrategia-web' ); ?></button>
+									<button type="submit" class="button button-primary"><?php esc_html_e( 'Save', 'estrategiaweb-toolkit' ); ?></button>
+									<button type="submit" class="button-link button-link-delete" name="delete" value="1"><?php esc_html_e( 'Delete', 'estrategiaweb-toolkit' ); ?></button>
 								</form>
 							</td>
 						</tr>
@@ -323,25 +323,25 @@ final class Cookies_Page {
 			<?php Admin_UI::box_close(); ?>
 
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-				<?php Admin_UI::box_open( __( 'Add a cookie by hand', 'estrategia-web' ), 'ew-box-cookie-add' ); ?>
-				<p><?php esc_html_e( 'For third-party cookies the detector cannot see and no module declares (for example, a video or a chat embedded by hand). Empty fields are filled with the proposal, if there is one.', 'estrategia-web' ); ?></p>
+				<?php Admin_UI::box_open( __( 'Add a cookie by hand', 'estrategiaweb-toolkit' ), 'ew-box-cookie-add' ); ?>
+				<p><?php esc_html_e( 'For third-party cookies the detector cannot see and no module declares (for example, a video or a chat embedded by hand). Empty fields are filled with the proposal, if there is one.', 'estrategiaweb-toolkit' ); ?></p>
 				<?php self::hidden( 'add' ); ?>
 				<table class="form-table" role="presentation">
-					<tr><th scope="row"><label for="estrategia-web-cookie-name"><?php esc_html_e( 'Name', 'estrategia-web' ); ?></label></th><td><input type="text" class="regular-text" id="estrategia-web-cookie-name" name="name" required maxlength="129"></td></tr><?php // No «pattern»: browsers compile it in «v» mode and an unescaped «|» inside [] silently invalidates it. The server validates (Cookie_Registry::name_ok). ?>
-					<tr><th scope="row"><label for="estrategia-web-cookie-category"><?php esc_html_e( 'Category', 'estrategia-web' ); ?></label></th><td><?php echo str_replace( '<select ', '<select id="estrategia-web-cookie-category" ', self::category_select( 'category', 'maps' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?></td></tr>
-					<tr><th scope="row"><label for="estrategia-web-cookie-provider"><?php esc_html_e( 'Provider', 'estrategia-web' ); ?></label></th><td><input type="text" class="regular-text" id="estrategia-web-cookie-provider" name="provider"></td></tr>
-					<tr><th scope="row"><label for="estrategia-web-cookie-purpose"><?php esc_html_e( 'Purpose', 'estrategia-web' ); ?></label></th><td><textarea class="large-text" rows="2" id="estrategia-web-cookie-purpose" name="purpose"></textarea></td></tr>
-					<tr><th scope="row"><label for="estrategia-web-cookie-duration"><?php esc_html_e( 'Duration', 'estrategia-web' ); ?></label></th><td><input type="text" id="estrategia-web-cookie-duration" name="duration"><p class="description"><?php esc_html_e( 'Like «2 years», «30 minutes» or «session» to have it translated automatically; anything else is shown as written.', 'estrategia-web' ); ?></p></td></tr>
+					<tr><th scope="row"><label for="estrategia-web-cookie-name"><?php esc_html_e( 'Name', 'estrategiaweb-toolkit' ); ?></label></th><td><input type="text" class="regular-text" id="estrategia-web-cookie-name" name="name" required maxlength="129"></td></tr><?php // No «pattern»: browsers compile it in «v» mode and an unescaped «|» inside [] silently invalidates it. The server validates (Cookie_Registry::name_ok). ?>
+					<tr><th scope="row"><label for="estrategia-web-cookie-category"><?php esc_html_e( 'Category', 'estrategiaweb-toolkit' ); ?></label></th><td><?php echo str_replace( '<select ', '<select id="estrategia-web-cookie-category" ', self::category_select( 'category', 'maps' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?></td></tr>
+					<tr><th scope="row"><label for="estrategia-web-cookie-provider"><?php esc_html_e( 'Provider', 'estrategiaweb-toolkit' ); ?></label></th><td><input type="text" class="regular-text" id="estrategia-web-cookie-provider" name="provider"></td></tr>
+					<tr><th scope="row"><label for="estrategia-web-cookie-purpose"><?php esc_html_e( 'Purpose', 'estrategiaweb-toolkit' ); ?></label></th><td><textarea class="large-text" rows="2" id="estrategia-web-cookie-purpose" name="purpose"></textarea></td></tr>
+					<tr><th scope="row"><label for="estrategia-web-cookie-duration"><?php esc_html_e( 'Duration', 'estrategiaweb-toolkit' ); ?></label></th><td><input type="text" id="estrategia-web-cookie-duration" name="duration"><p class="description"><?php esc_html_e( 'Like «2 years», «30 minutes» or «session» to have it translated automatically; anything else is shown as written.', 'estrategiaweb-toolkit' ); ?></p></td></tr>
 				</table>
 				<?php Admin_UI::box_close(); ?>
-				<?php Admin_UI::save( __( 'Add cookie', 'estrategia-web' ) ); ?>
+				<?php Admin_UI::save( __( 'Add cookie', 'estrategiaweb-toolkit' ) ); ?>
 			</form>
 
 			<p class="description">
 				<?php
 				printf(
 					/* translators: 1: link to the Open Cookie Database, 2: licence name, 3: date. */
-					esc_html__( 'Proposals use data from the %1$s, licensed under %2$s (extract of %3$s).', 'estrategia-web' ),
+					esc_html__( 'Proposals use data from the %1$s, licensed under %2$s (extract of %3$s).', 'estrategiaweb-toolkit' ),
 					'<a href="' . esc_url( (string) ( $ocd['source'] ?? '' ) ) . '">Open Cookie Database</a>', // phpcs:ignore WordPress.Security.EscapeOutput
 					'Apache 2.0',
 					esc_html( (string) ( $ocd['generated'] ?? '' ) )

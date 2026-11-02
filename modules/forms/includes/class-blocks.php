@@ -79,7 +79,7 @@ final class Blocks {
 			'busy'     => false,
 			'started'  => false,
 			'tokenUrl'     => rest_url( 'estrategia-web-forms/v1/token' ),
-			'networkError' => __( 'The message could not be sent. Please check your connection and try again.', 'estrategia-web' ),
+			'networkError' => __( 'The message could not be sent. Please check your connection and try again.', 'estrategiaweb-toolkit' ),
 		);
 
 		$wrapper = get_block_wrapper_attributes(
@@ -103,7 +103,7 @@ final class Blocks {
 			<input type="hidden" name="_af_token" value="<?php echo esc_attr( Token::create( $hash, time(), wp_salt( 'nonce' ) ) ); ?>">
 			<input type="hidden" name="_af_page" value="<?php echo esc_url( self::current_url() ); ?>">
 			<div class="estrategia-web-forms__hp" aria-hidden="true">
-				<label><?php esc_html_e( 'Leave this field empty', 'estrategia-web' ); ?>
+				<label><?php esc_html_e( 'Leave this field empty', 'estrategiaweb-toolkit' ); ?>
 					<input type="text" name="af_website" value="" tabindex="-1" autocomplete="off">
 				</label>
 			</div>
@@ -231,7 +231,7 @@ final class Blocks {
 				echo '<textarea' . self::atts( $input_atts + array( 'rows' => 5 ) ) . '>' . esc_textarea( $value ) . '</textarea>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			} elseif ( 'select' === $type ) {
 				echo '<select' . self::atts( $input_atts ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				$first = '' !== $placeholder ? $placeholder : __( 'Choose an option', 'estrategia-web' );
+				$first = '' !== $placeholder ? $placeholder : __( 'Choose an option', 'estrategiaweb-toolkit' );
 				echo '<option value="">' . esc_html( $first ) . '</option>';
 				$options = self::options( (string) ( $attributes['options'] ?? '' ) );
 				if ( null === $result ) {
@@ -257,7 +257,7 @@ final class Blocks {
 	public static function render_submit( array $attributes ): string {
 		$text = trim( (string) ( $attributes['text'] ?? '' ) );
 		if ( '' === $text ) {
-			$text = __( 'Send', 'estrategia-web' );
+			$text = __( 'Send', 'estrategiaweb-toolkit' );
 		}
 		return sprintf(
 			'<div class="estrategia-web-forms__field estrategia-web-forms__field--submit wp-block-button"><button type="submit" class="wp-block-button__link wp-element-button" data-wp-bind--disabled="context.busy">%s</button></div>',
@@ -306,7 +306,7 @@ final class Blocks {
 		$label = trim( (string) ( $attributes['label'] ?? '' ) );
 		if ( '' === $label && 'checkbox' === $type && ! empty( $attributes['consent'] ) ) {
 			/* translators: the text between braces becomes the link to the privacy policy. */
-			$label = __( 'I have read and accept the {privacy policy}.', 'estrategia-web' );
+			$label = __( 'I have read and accept the {privacy policy}.', 'estrategiaweb-toolkit' );
 		}
 		return str_replace( array( '{', '}' ), '', $label );
 	}
@@ -332,7 +332,7 @@ final class Blocks {
 		$label = trim( (string) ( $attributes['label'] ?? '' ) );
 		if ( '' === $label ) {
 			/* translators: the text between braces becomes the link to the privacy policy; {text|url} links to that url. */
-			$label = __( 'I have read and accept the {privacy policy}.', 'estrategia-web' );
+			$label = __( 'I have read and accept the {privacy policy}.', 'estrategiaweb-toolkit' );
 		}
 		$privacy = trim( (string) ( $attributes['privacyUrl'] ?? '' ) );
 		if ( '' === $privacy ) {

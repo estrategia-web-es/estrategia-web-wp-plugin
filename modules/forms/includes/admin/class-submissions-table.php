@@ -27,16 +27,16 @@ final class Submissions_Table extends \WP_List_Table {
 	public function get_columns(): array {
 		return array(
 			'cb'      => '<input type="checkbox">',
-			'date'    => __( 'Date', 'estrategia-web' ),
-			'form'    => __( 'Form', 'estrategia-web' ),
-			'summary' => __( 'Data', 'estrategia-web' ),
-			'lang'    => __( 'Language', 'estrategia-web' ),
-			'status'  => __( 'Notifications', 'estrategia-web' ),
+			'date'    => __( 'Date', 'estrategiaweb-toolkit' ),
+			'form'    => __( 'Form', 'estrategiaweb-toolkit' ),
+			'summary' => __( 'Data', 'estrategiaweb-toolkit' ),
+			'lang'    => __( 'Language', 'estrategiaweb-toolkit' ),
+			'status'  => __( 'Notifications', 'estrategiaweb-toolkit' ),
 		);
 	}
 
 	public function get_bulk_actions(): array {
-		return array( 'delete' => __( 'Delete', 'estrategia-web' ) );
+		return array( 'delete' => __( 'Delete', 'estrategiaweb-toolkit' ) );
 	}
 
 	public function prepare_items(): void {
@@ -53,7 +53,7 @@ final class Submissions_Table extends \WP_List_Table {
 	}
 
 	public function no_items(): void {
-		esc_html_e( 'No submissions yet.', 'estrategia-web' );
+		esc_html_e( 'No submissions yet.', 'estrategiaweb-toolkit' );
 	}
 
 	protected function extra_tablenav( $which ): void {
@@ -61,13 +61,13 @@ final class Submissions_Table extends \WP_List_Table {
 			return;
 		}
 		$forms = Submissions::forms();
-		echo '<div class="alignleft actions"><label class="screen-reader-text" for="af-filter-form">' . esc_html__( 'Filter by form', 'estrategia-web' ) . '</label>';
-		echo '<select name="form_id" id="af-filter-form"><option value="">' . esc_html__( 'All forms', 'estrategia-web' ) . '</option>';
+		echo '<div class="alignleft actions"><label class="screen-reader-text" for="af-filter-form">' . esc_html__( 'Filter by form', 'estrategiaweb-toolkit' ) . '</label>';
+		echo '<select name="form_id" id="af-filter-form"><option value="">' . esc_html__( 'All forms', 'estrategiaweb-toolkit' ) . '</option>';
 		foreach ( $forms as $id => $title ) {
 			printf( '<option value="%1$s"%2$s>%3$s</option>', esc_attr( $id ), selected( $this->form_id, $id, false ), esc_html( $title ) );
 		}
 		echo '</select>';
-		submit_button( __( 'Filter', 'estrategia-web' ), '', 'filter_action', false );
+		submit_button( __( 'Filter', 'estrategiaweb-toolkit' ), '', 'filter_action', false );
 		echo '</div>';
 	}
 
@@ -82,8 +82,8 @@ final class Submissions_Table extends \WP_List_Table {
 		return sprintf( '<strong><a href="%s">%s</a></strong>', esc_url( $view ), esc_html( $date ) )
 			. $this->row_actions(
 				array(
-					'view'   => sprintf( '<a href="%s">%s</a>', esc_url( $view ), esc_html__( 'View', 'estrategia-web' ) ),
-					'delete' => sprintf( '<a href="%s" class="submitdelete">%s</a>', esc_url( $delete ), esc_html__( 'Delete', 'estrategia-web' ) ),
+					'view'   => sprintf( '<a href="%s">%s</a>', esc_url( $view ), esc_html__( 'View', 'estrategiaweb-toolkit' ) ),
+					'delete' => sprintf( '<a href="%s" class="submitdelete">%s</a>', esc_url( $delete ), esc_html__( 'Delete', 'estrategiaweb-toolkit' ) ),
 				)
 			);
 	}
@@ -109,10 +109,10 @@ final class Submissions_Table extends \WP_List_Table {
 
 	protected function column_status( $item ): string {
 		$labels = array(
-			'sent'    => __( 'All sent', 'estrategia-web' ),
-			'partial' => __( 'Some failed', 'estrategia-web' ),
-			'failed'  => __( 'Failed', 'estrategia-web' ),
-			'pending' => __( 'Pending', 'estrategia-web' ),
+			'sent'    => __( 'All sent', 'estrategiaweb-toolkit' ),
+			'partial' => __( 'Some failed', 'estrategiaweb-toolkit' ),
+			'failed'  => __( 'Failed', 'estrategiaweb-toolkit' ),
+			'pending' => __( 'Pending', 'estrategiaweb-toolkit' ),
 		);
 		return esc_html( $labels[ $item['status'] ] ?? $item['status'] );
 	}

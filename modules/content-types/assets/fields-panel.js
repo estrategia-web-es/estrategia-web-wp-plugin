@@ -50,9 +50,9 @@
 							allowedTypes: [ 'image' ],
 							value,
 							onSelect: ( m ) => onChange( m && m.id ? m.id : 0 ),
-							render: ( { open } ) => h( Button, { variant: 'secondary', onClick: open, id: idOf( field ) }, value ? __( 'Replace image', 'estrategia-web' ) : __( 'Choose image', 'estrategia-web' ) ),
+							render: ( { open } ) => h( Button, { variant: 'secondary', onClick: open, id: idOf( field ) }, value ? __( 'Replace image', 'estrategiaweb-toolkit' ) : __( 'Choose image', 'estrategiaweb-toolkit' ) ),
 						} ),
-						value ? h( Button, { variant: 'link', isDestructive: true, onClick: () => onChange( 0 ), style: { marginLeft: '8px' } }, __( 'Remove', 'estrategia-web' ) ) : null
+						value ? h( Button, { variant: 'link', isDestructive: true, onClick: () => onChange( 0 ), style: { marginLeft: '8px' } }, __( 'Remove', 'estrategiaweb-toolkit' ) ) : null
 				  )
 		);
 	}
@@ -63,7 +63,7 @@
 				field.postTypes.flatMap( ( type ) => select( 'core' ).getEntityRecords( 'postType', type, { per_page: 100, orderby: 'title', order: 'asc', status: 'publish,draft,private', _fields: 'id,title' } ) || [] ),
 			[]
 		);
-		const options = [ { value: '0', label: __( '— None —', 'estrategia-web' ) } ].concat(
+		const options = [ { value: '0', label: __( '— None —', 'estrategiaweb-toolkit' ) } ].concat(
 			posts.map( ( p ) => ( { value: String( p.id ), label: ( p.title && p.title.rendered ) || '#' + p.id } ) )
 		);
 		return h( SelectControl, { label: labelOf( field ), help: field.help, disabled: field.disabled, value: String( value || 0 ), options, onChange: ( v ) => onChange( parseInt( v, 10 ) || 0 ), __nextHasNoMarginBottom: true, __next40pxDefaultSize: true } );
@@ -92,9 +92,9 @@
 	const rangeError = ( range ) => {
 		const [ open, close ] = String( range ).split( '-' );
 		if ( ! TIME.test( open || '' ) || ! TIME.test( close || '' ) ) {
-			return __( 'Incomplete: this range will not be saved.', 'estrategia-web' );
+			return __( 'Incomplete: this range will not be saved.', 'estrategiaweb-toolkit' );
 		}
-		return open === close ? __( 'Opening and closing are the same time: this range will not be saved.', 'estrategia-web' ) : '';
+		return open === close ? __( 'Opening and closing are the same time: this range will not be saved.', 'estrategiaweb-toolkit' ) : '';
 	};
 
 	function HoursField( { field, value, onChange } ) {
@@ -114,7 +114,7 @@
 			const [ open, close ] = String( ranges[ i ] ).split( '-' );
 			const id = idOf( field ) + '-' + day + '-' + i + '-' + part;
 			/* translators: 1: a day of the week, 2: the number of the range in that day */
-			const label = ( part === 0 ? __( '%1$s, range %2$d: opens', 'estrategia-web' ) : __( '%1$s, range %2$d: closes', 'estrategia-web' ) ).replace( '%1$s', names[ DAYS.indexOf( day ) ] ).replace( '%2$d', i + 1 );
+			const label = ( part === 0 ? __( '%1$s, range %2$d: opens', 'estrategiaweb-toolkit' ) : __( '%1$s, range %2$d: closes', 'estrategiaweb-toolkit' ) ).replace( '%1$s', names[ DAYS.indexOf( day ) ] ).replace( '%2$d', i + 1 );
 			return h(
 				'span',
 				{ style: { display: 'inline-flex', flexDirection: 'column', marginRight: '8px' } },
@@ -144,7 +144,7 @@
 					'fieldset',
 					{ key: day, 'data-day': day, style: { border: 0, padding: 0, margin: '0 0 8px' } },
 					h( 'legend', { style: { fontWeight: 500 } }, names[ d ] ),
-					ranges.length ? null : h( 'p', { style: { margin: '2px 0', color: '#757575' } }, __( 'Closed', 'estrategia-web' ) ),
+					ranges.length ? null : h( 'p', { style: { margin: '2px 0', color: '#757575' } }, __( 'Closed', 'estrategiaweb-toolkit' ) ),
 					ranges.map( ( range, i ) => {
 						const error = rangeError( range );
 						return h(
@@ -158,9 +158,9 @@
 										variant: 'link',
 										isDestructive: true,
 										/* translators: 1: a day of the week, 2: the number of the range in that day */
-										label: __( 'Remove %1$s, range %2$d', 'estrategia-web' ).replace( '%1$s', names[ d ] ).replace( '%2$d', i + 1 ),
+										label: __( 'Remove %1$s, range %2$d', 'estrategiaweb-toolkit' ).replace( '%1$s', names[ d ] ).replace( '%2$d', i + 1 ),
 										onClick: () => setDay( day, ranges.filter( ( x, j ) => j !== i ) ),
-								  }, __( 'Remove', 'estrategia-web' ) ),
+								  }, __( 'Remove', 'estrategiaweb-toolkit' ) ),
 							error ? h( 'p', { id: idOf( field ) + '-' + day + '-' + i + '-error', role: 'status', style: { color: '#cc1818', margin: '2px 0' } }, error ) : null
 						);
 					} ),
@@ -174,18 +174,18 @@
 									size: 'small',
 									'data-action': 'add-range',
 									/* translators: %s: a day of the week. Keep the words of «Add hours» in it: it is the button's visible text. */
-									label: __( 'Add hours on %s', 'estrategia-web' ).replace( '%s', names[ d ] ),
+									label: __( 'Add hours on %s', 'estrategiaweb-toolkit' ).replace( '%s', names[ d ] ),
 									onClick: () => setDay( day, ranges.concat( [ ranges.length ? '16:00-20:00' : '09:00-14:00' ] ) ),
-								}, __( 'Add hours', 'estrategia-web' ) ),
+								}, __( 'Add hours', 'estrategiaweb-toolkit' ) ),
 								d > 0
 									? h( Button, {
 											variant: 'tertiary',
 											size: 'small',
 											'data-action': 'copy-previous',
 											/* translators: %s: a day of the week. Keep the words of «Same as the day before» in it: it is the button's visible text. */
-											label: __( '%s: same as the day before', 'estrategia-web' ).replace( '%s', names[ d ] ),
+											label: __( '%s: same as the day before', 'estrategiaweb-toolkit' ).replace( '%s', names[ d ] ),
 											onClick: () => setDay( day, ( Array.isArray( week[ DAYS[ d - 1 ] ] ) ? week[ DAYS[ d - 1 ] ] : [] ).slice() ),
-									  }, __( 'Same as the day before', 'estrategia-web' ) )
+									  }, __( 'Same as the day before', 'estrategiaweb-toolkit' ) )
 									: null
 						  )
 				);
@@ -203,7 +203,7 @@
 				// The choices (No rating, ★ … ★★★★★) come from PHP: Fields_Panel::rating_options().
 				return h( SelectControl, { ...common, __next40pxDefaultSize: true, value: String( value || 0 ), options: field.options, onChange: ( v ) => onChange( parseInt( v, 10 ) || 0 ) } );
 			case 'select': {
-				const none = ! field.required && field.default === '' ? [ { value: '', label: __( '— None —', 'estrategia-web' ) } ] : [];
+				const none = ! field.required && field.default === '' ? [ { value: '', label: __( '— None —', 'estrategiaweb-toolkit' ) } ] : [];
 				return h( SelectControl, { ...common, __next40pxDefaultSize: true, value: value === undefined || value === null ? field.default : String( value ), options: none.concat( field.options ), onChange } );
 			}
 			case 'boolean':

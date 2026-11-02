@@ -1,4 +1,4 @@
-=== Estrategia Web ===
+=== EstrategiaWeb Toolkit ===
 Contributors: estrategiaweb
 Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
@@ -12,7 +12,7 @@ Site essentials as modules you switch on and off: cookie consent, block forms, c
 
 == Description ==
 
-Most small business sites need the same dozen things besides their design. Estrategia Web puts them in one plugin, each as a module you can switch on or off in **Estrategia Web → Modules**. A module that is off loads no code at all.
+Most small business sites need the same dozen things besides their design. EstrategiaWeb Toolkit puts them in one plugin, each as a module you can switch on or off in **Estrategia Web → Modules**. A module that is off loads no code at all.
 
 * **Cookie consent**: your own notice (Accept / Reject / Settings) with categories, a "Cookie settings" link block, a cookie table block for the cookie policy and a consent API for PHP and JavaScript.
 * **Forms**: block-based forms with several email notifications from templates, a log of every submission, CSV export and spam protection without third-party services (honeypot, minimum time, rate limit).

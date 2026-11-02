@@ -281,8 +281,8 @@ add_action(
 			'GET',
 			static function () {
 				$now = static fn() => array(
-					'text' => __( 'Accept all', 'estrategia-web' ),
-					'slug' => _x( 'locations', 'URL slug', 'estrategia-web' ),
+					'text' => __( 'Accept all', 'estrategiaweb-toolkit' ),
+					'slug' => _x( 'locations', 'URL slug', 'estrategiaweb-toolkit' ),
 				);
 				$out = array(
 					'determine_locale' => determine_locale(),
@@ -305,7 +305,7 @@ add_action(
 			static function () {
 				$out = array();
 				foreach ( array( 'clients', 'client-sector', 'testimonials', 'locations', 'projects', 'project-category', 'portfolio', 'portfolio-category' ) as $slug ) {
-					$out[ $slug ] = _x( $slug, 'URL slug', 'estrategia-web' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
+					$out[ $slug ] = _x( $slug, 'URL slug', 'estrategiaweb-toolkit' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
 				}
 				return $out;
 			}

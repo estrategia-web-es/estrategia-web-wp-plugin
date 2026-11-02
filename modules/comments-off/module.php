@@ -144,7 +144,7 @@ add_action(
 	'template_redirect',
 	static function (): void {
 		if ( is_comment_feed() ) {
-			wp_die( esc_html__( 'Comments are closed.', 'estrategia-web' ), '', array( 'response' => 404 ) );
+			wp_die( esc_html__( 'Comments are closed.', 'estrategiaweb-toolkit' ), '', array( 'response' => 404 ) );
 		}
 	},
 	1

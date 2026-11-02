@@ -9,7 +9,7 @@
 	"icon": "shield",
 	"description": "Reopens the cookie consent notice. Renders nothing when the site declares no optional cookie categories.",
 	"keywords": [ "cookies", "consent", "privacy", "gdpr" ],
-	"textdomain": "estrategia-web",
+	"textdomain": "estrategiaweb-toolkit",
 	"attributes": {
 		"label": { "type": "string", "default": "" }
 	},

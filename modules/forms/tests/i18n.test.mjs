@@ -1,8 +1,8 @@
-// NIVEL: 2 — Playground WordPress. NOT LEVEL 1 BECAUSE: what is tested is that WordPress, in es_ES, loads the plugin's .l10n.php for the domain estrategia-web: in the page it renders, in the submission endpoint's answers, in the log and the email, and in what it hands the block editor (the inline wp.i18n locale data and the block definitions). Only exists with WordPress choosing and loading the translation files.
+// NIVEL: 2 — Playground WordPress. NOT LEVEL 1 BECAUSE: what is tested is that WordPress, in es_ES, loads the plugin's .l10n.php for the domain estrategiaweb-toolkit: in the page it renders, in the submission endpoint's answers, in the log and the email, and in what it hands the block editor (the inline wp.i18n locale data and the block definitions). Only exists with WordPress choosing and loading the translation files.
 //
 // Puts the site in es_ES (the forms test locale; WPLANG needs core's language
 // pack, which the test WordPress does not have) and checks that the plugin's
-// .l10n.php (estrategia-web domain, one for everything) is loaded on the
+// .l10n.php (estrategiaweb-toolkit domain since 2.4.1, one for everything) is loaded on the
 // server and for the editor: form default texts, server errors, the recorded
 // language, the email's «Sí» and the editor texts. No WPML: the language is
 // the WordPress locale.
@@ -57,12 +57,12 @@ test("server in es_ES: default texts, errors, recorded language and email", asyn
   assert.match(mail.text, /He leído y acepto la política de privacidad\.: Sí/, "{{all_fields}} in the submission's language");
 });
 
-test("editor in es_ES: it gets the translations of the estrategia-web domain, and the blocks' texts translated", () => {
+test("editor in es_ES: it gets the translations of the estrategiaweb-toolkit domain, and the blocks' texts translated", () => {
   // What WordPress writes before the forms editor script (assets/editor.js) from the block's textdomain.
-  const inline = editor.match(/<script id="estrategia-web-forms-editor-js-before">\s*wp\.i18n\.setLocaleData\( (\{[\s\S]*?\})\s*,\s*["']estrategia-web["']\s*\);/);
+  const inline = editor.match(/<script id="estrategia-web-forms-editor-js-before">\s*wp\.i18n\.setLocaleData\( (\{[\s\S]*?\})\s*,\s*["']estrategiaweb-toolkit["']\s*\);/);
   assert.ok(inline, "no wp.i18n locale data for the forms editor script");
   const data = JSON.parse(inline[1]);
-  assert.equal(data[""]?.domain, "estrategia-web");
+  assert.equal(data[""]?.domain, "estrategiaweb-toolkit");
   assert.equal(data[""]?.lang, "es_ES");
   assert.equal(data["Email notification"]?.[0], "Aviso por correo", "the editor script's translations: «Email notification»");
   assert.ok(/"estrategia-web-forms\\?\/form":\{[^{}]*?"title":"Formulario"/.test(editor),"the Form block's title, from block.json, in Spanish");

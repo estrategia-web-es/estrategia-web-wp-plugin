@@ -147,7 +147,7 @@ final class Google_Tags {
 			self::OPTION,
 			array(
 				'type'              => 'object',
-				'description'       => __( 'Google tags: GA4, Ads and Tag Manager IDs and the loading mode.', 'estrategia-web' ),
+				'description'       => __( 'Google tags: GA4, Ads and Tag Manager IDs and the loading mode.', 'estrategiaweb-toolkit' ),
 				'sanitize_callback' => array( self::class, 'sanitize' ),
 				'default'           => self::defaults(),
 				'show_in_rest'      => array(
@@ -178,7 +178,7 @@ final class Google_Tags {
 			}
 			if ( '' !== $raw && $out[ $field ] !== $raw && function_exists( 'add_settings_error' ) ) {
 				/* translators: %s: the value that was not saved. */
-				add_settings_error( self::OPTION, 'estrategia-web-google-' . $field, sprintf( __( '«%s» does not look like a valid ID and was not saved.', 'estrategia-web' ), $raw ) );
+				add_settings_error( self::OPTION, 'estrategia-web-google-' . $field, sprintf( __( '«%s» does not look like a valid ID and was not saved.', 'estrategiaweb-toolkit' ), $raw ) );
 			}
 		}
 		return $out;

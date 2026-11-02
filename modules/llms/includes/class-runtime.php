@@ -33,7 +33,7 @@ final class Runtime {
 			self::OPTION,
 			array(
 				'type'              => 'object',
-				'description'       => __( 'The llms.txt text of each language, by language code.', 'estrategia-web' ),
+				'description'       => __( 'The llms.txt text of each language, by language code.', 'estrategiaweb-toolkit' ),
 				'sanitize_callback' => array( self::class, 'sanitize' ),
 				'default'           => array(),
 				'show_in_rest'      => array(
@@ -85,7 +85,7 @@ final class Runtime {
 				}
 			}
 		}
-		$heading = $others ? Languages::with( $code, static fn(): string => __( 'Other languages', 'estrategia-web' ) ) : '';
+		$heading = $others ? Languages::with( $code, static fn(): string => __( 'Other languages', 'estrategiaweb-toolkit' ) ) : '';
 		return Text::body( $texts[ $code ], $heading, $others );
 	}
 

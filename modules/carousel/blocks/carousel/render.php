@@ -156,7 +156,7 @@ $estrategia_web_track_id = wp_unique_id( 'estrategia-web-carousel-' );
 $content = \EstrategiaWeb\Carousel\images_mark( (string) $content, $estrategia_web_track_id );
 
 $estrategia_web_loop    = ! empty( $attributes['loop'] );
-$estrategia_web_label    = '' !== trim( (string) $attributes['label'] ) ? $attributes['label'] : __( 'Carousel', 'estrategia-web' );
+$estrategia_web_label    = '' !== trim( (string) $attributes['label'] ) ? $attributes['label'] : __( 'Carousel', 'estrategiaweb-toolkit' );
 
 $estrategia_web_per_view = array(
 	'mobile'  => max( 1, (float) $attributes['perViewMobile'] ),
@@ -176,15 +176,15 @@ $estrategia_web_context = array(
 	'playing'    => false,
 	'hover'      => false,
 	'focused'    => false,
-	'labelPause' => __( 'Pause carousel', 'estrategia-web' ),
-	'labelPlay'  => __( 'Play carousel', 'estrategia-web' ),
+	'labelPause' => __( 'Pause carousel', 'estrategiaweb-toolkit' ),
+	'labelPlay'  => __( 'Play carousel', 'estrategiaweb-toolkit' ),
 );
 
 $estrategia_web_wrapper = get_block_wrapper_attributes(
 	array(
 		'class'                => 'estrategia-web-carousel',
 		'role'                 => 'region',
-		'aria-roledescription' => _x( 'carousel', 'ARIA role description', 'estrategia-web' ),
+		'aria-roledescription' => _x( 'carousel', 'ARIA role description', 'estrategiaweb-toolkit' ),
 		'aria-label'           => $estrategia_web_label,
 		'style'                => sprintf(
 			'--estrategia-web-carousel-per-view-mobile:%s;--estrategia-web-carousel-per-view-tablet:%s;--estrategia-web-carousel-per-view-desktop:%s;',
@@ -237,7 +237,7 @@ $estrategia_web_wrapper = get_block_wrapper_attributes(
 			type="button"
 			class="estrategia-web-carousel__arrow estrategia-web-carousel__prev"
 			aria-controls="<?php echo esc_attr( $estrategia_web_track_id ); ?>"
-			aria-label="<?php echo esc_attr__( 'Previous slide', 'estrategia-web' ); ?>"
+			aria-label="<?php echo esc_attr__( 'Previous slide', 'estrategiaweb-toolkit' ); ?>"
 			data-wp-on--click="actions.prev"
 			<?php echo $estrategia_web_loop ? '' : 'data-wp-bind--disabled="context.atStart"'; ?>
 		>
@@ -247,7 +247,7 @@ $estrategia_web_wrapper = get_block_wrapper_attributes(
 			type="button"
 			class="estrategia-web-carousel__arrow estrategia-web-carousel__next"
 			aria-controls="<?php echo esc_attr( $estrategia_web_track_id ); ?>"
-			aria-label="<?php echo esc_attr__( 'Next slide', 'estrategia-web' ); ?>"
+			aria-label="<?php echo esc_attr__( 'Next slide', 'estrategiaweb-toolkit' ); ?>"
 			data-wp-on--click="actions.next"
 			<?php echo $estrategia_web_loop ? '' : 'data-wp-bind--disabled="context.atEnd"'; ?>
 		>
@@ -258,13 +258,13 @@ $estrategia_web_wrapper = get_block_wrapper_attributes(
 	<?php endif; ?>
 
 	<?php if ( $attributes['showDots'] && $estrategia_web_count > 1 ) : ?>
-	<div class="estrategia-web-carousel__dots" role="group" aria-label="<?php echo esc_attr__( 'Choose slide', 'estrategia-web' ); ?>">
+	<div class="estrategia-web-carousel__dots" role="group" aria-label="<?php echo esc_attr__( 'Choose slide', 'estrategiaweb-toolkit' ); ?>">
 		<?php for ( $estrategia_web_i = 0; $estrategia_web_i < $estrategia_web_count; $estrategia_web_i++ ) : ?>
 		<button
 			type="button"
 			class="estrategia-web-carousel__dot"
 			aria-controls="<?php echo esc_attr( $estrategia_web_track_id ); ?>"
-			aria-label="<?php echo esc_attr( sprintf( /* translators: %d: slide number. */ __( 'Go to slide %d', 'estrategia-web' ), $estrategia_web_i + 1 ) ); ?>"
+			aria-label="<?php echo esc_attr( sprintf( /* translators: %d: slide number. */ __( 'Go to slide %d', 'estrategiaweb-toolkit' ), $estrategia_web_i + 1 ) ); ?>"
 			<?php echo wp_interactivity_data_wp_context( array( 'index' => $estrategia_web_i ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 			data-wp-on--click="actions.goTo"
 			data-wp-bind--aria-current="state.isCurrentDot"

@@ -62,7 +62,7 @@ import path from "node:path";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const LANG = path.join(ROOT, "languages");
-const DOMAIN = "estrategia-web";
+const DOMAIN = "estrategiaweb-toolkit"; // = the WordPress.org slug since 2.4.1 (Plugin::DOMAIN)
 const POT = path.join(LANG, `${DOMAIN}.pot`);
 
 function run(cmd, args) {
@@ -218,7 +218,7 @@ function start(locale) {
     console.error(`${path.basename(file)} already exists: nothing is overwritten.`);
     process.exit(1);
   }
-  const header = ["Project-Id-Version: estrategia-web", "Language: " + locale, "MIME-Version: 1.0", "Content-Type: text/plain; charset=UTF-8", "Content-Transfer-Encoding: 8bit", "Plural-Forms: " + PLURALS[locale]];
+  const header = ["Project-Id-Version: " + DOMAIN, "Language: " + locale, "MIME-Version: 1.0", "Content-Type: text/plain; charset=UTF-8", "Content-Transfer-Encoding: 8bit", "Plural-Forms: " + PLURALS[locale]];
   fs.writeFileSync(file, `msgid ""\nmsgstr ""\n${header.map((h) => q(h + "\n")).join("\n")}\n`);
   console.log(`${path.basename(file)}: created`);
 }

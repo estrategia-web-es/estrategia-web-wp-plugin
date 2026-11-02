@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: estrategia-web\n"
+"Project-Id-Version: estrategiaweb-toolkit\n"
 "Report-Msgid-Bugs-To: \n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
@@ -66,14 +66,14 @@ msgstr "No es carrega: activa %s."
 msgid "Off"
 msgstr "Desactivat"
 
-#: includes/admin/class-settings-page.php:211
-#: includes/admin/class-settings-page.php:229
+#: includes/admin/class-settings-page.php:212
+#: includes/admin/class-settings-page.php:230
 #: modules/content-types/includes/admin/class-page.php:269
 #: modules/forms/includes/admin/class-admin.php:56
 msgid "Settings"
 msgstr "Paràmetres"
 
-#: includes/admin/class-settings-page.php:229
+#: includes/admin/class-settings-page.php:230
 msgid ""
 "How the site behaves, by topic: the cookie notice, the statistics and what "
 "is accepted when uploading images."
@@ -81,7 +81,7 @@ msgstr ""
 "Com es comporta el web, per temes: l'avís de galetes, les estadístiques i "
 "què s'accepta en pujar imatges."
 
-#: includes/admin/class-settings-page.php:234
+#: includes/admin/class-settings-page.php:235
 msgid "Settings sections"
 msgstr "Seccions dels paràmetres"
 
@@ -3969,17 +3969,23 @@ msgid ""
 "What AI assistants read to describe this website: what the business is, "
 "where, for whom, and the pages that answer the usual questions. Markdown, as "
 "on llmstxt.org. A language without text serves nothing."
-msgstr "El que llegeixen els assistents d'IA per descriure aquest web: què és el negoci, on, per a qui i les pàgines que responen a les preguntes habituals. En Markdown, com a llmstxt.org. Un idioma sense text no serveix res."
+msgstr ""
+"El que llegeixen els assistents d'IA per descriure aquest web: què és el "
+"negoci, on, per a qui i les pàgines que responen a les preguntes habituals. "
+"En Markdown, com a llmstxt.org. Un idioma sense text no serveix res."
 
 #: modules/llms/includes/admin/class-tab.php:77
 msgid ""
 "One per language. The default language's file links the others at the end by "
 "itself."
-msgstr "Un per idioma. El fitxer de l'idioma principal enllaça els altres al final tot sol."
+msgstr ""
+"Un per idioma. El fitxer de l'idioma principal enllaça els altres al final "
+"tot sol."
 
 #: modules/llms/includes/admin/class-tab.php:90
 msgid "Replace the text with the draft? Nothing is saved until you press Save."
-msgstr "Vols substituir el text per l'esborrany? No es desa res fins que premis Desa."
+msgstr ""
+"Vols substituir el text per l'esborrany? No es desa res fins que premis Desa."
 
 #: modules/llms/includes/admin/class-tab.php:91
 msgid "Generate draft"
@@ -3990,7 +3996,10 @@ msgid ""
 "Its «LLMS Txt» module is on, and while this module is on, the file served is "
 "this one: Rank Math's is not seen. Turn one of the two off (in Rank Math → "
 "Dashboard → Modules, or in Estrategia Web → Modules)."
-msgstr "El seu mòdul «LLMS Txt» està activat i, mentre aquest mòdul ho estigui, el fitxer que se serveix és aquest: el de Rank Math no es veu. Desactiva'n un dels dos (a Rank Math → Tauler → Mòduls, o a Estrategia Web → Mòduls)."
+msgstr ""
+"El seu mòdul «LLMS Txt» està activat i, mentre aquest mòdul ho estigui, el "
+"fitxer que se serveix és aquest: el de Rank Math no es veu. Desactiva'n un "
+"dels dos (a Rank Math → Tauler → Mòduls, o a Estrategia Web → Mòduls)."
 
 #: modules/llms/includes/admin/class-tab.php:105
 msgid "Rank Math also serves /llms.txt."
@@ -4001,7 +4010,10 @@ msgid ""
 "The web server sends that file before WordPress runs, so what is written "
 "here is not seen. Delete the file from the server (it is next to wp-config."
 "php)."
-msgstr "El servidor web envia aquest fitxer abans que s'executi WordPress, així que el que s'escriu aquí no es veu. Esborra el fitxer del servidor (és al costat de wp-config.php)."
+msgstr ""
+"El servidor web envia aquest fitxer abans que s'executi WordPress, així que "
+"el que s'escriu aquí no es veu. Esborra el fitxer del servidor (és al costat "
+"de wp-config.php)."
 
 #: modules/llms/includes/admin/class-tab.php:108
 msgid "There is a llms.txt file in the website's folder."
@@ -4024,7 +4036,10 @@ msgctxt "module description"
 msgid ""
 "Serves /llms.txt, the text AI assistants read to describe the site, written "
 "in «Estrategia Web › Settings › llms.txt», one per language with WPML."
-msgstr "Serveix /llms.txt, el text que llegeixen els assistents d'IA per descriure el web, escrit a «Estrategia Web › Paràmetres › llms.txt», un per idioma amb WPML."
+msgstr ""
+"Serveix /llms.txt, el text que llegeixen els assistents d'IA per descriure "
+"el web, escrit a «Estrategia Web › Paràmetres › llms.txt», un per idioma amb "
+"WPML."
 
 #: modules/llms/module.php
 msgctxt "module name"

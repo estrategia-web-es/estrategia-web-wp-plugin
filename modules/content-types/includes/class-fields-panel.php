@@ -60,7 +60,7 @@ final class Fields_Panel {
 
 	/** The choices of a rating field: the same here (classic screen) and in fields-panel.js (it gets them in config). */
 	public static function rating_options(): array {
-		return array( 0 => __( 'No rating', 'estrategia-web' ), 1 => '★ (1)', 2 => '★★ (2)', 3 => '★★★ (3)', 4 => '★★★★ (4)', 5 => '★★★★★ (5)' );
+		return array( 0 => __( 'No rating', 'estrategiaweb-toolkit' ), 1 => '★ (1)', 2 => '★★ (2)', 3 => '★★★ (3)', 4 => '★★★★ (4)', 5 => '★★★★★ (5)' );
 	}
 
 	/** @return string[] The seven day names of an «hours» field, Monday first, in the editor's language. */
@@ -88,7 +88,7 @@ final class Fields_Panel {
 				'key'       => $field['name'],
 				'kind'      => $field['type'],
 				'label'     => Schema::text( $field['label'], $locale ),
-				'help'      => $locked && $copy ? __( 'Changed in the original language: it is copied to the translations.', 'estrategia-web' ) : Schema::text( $field['help'], $locale ),
+				'help'      => $locked && $copy ? __( 'Changed in the original language: it is copied to the translations.', 'estrategiaweb-toolkit' ) : Schema::text( $field['help'], $locale ),
 				'required'  => $field['required'],
 				'disabled'  => $locked && $copy,
 				'integer'   => 'integer' === $field['meta_type'],
@@ -107,10 +107,10 @@ final class Fields_Panel {
 			'box'      => self::uses_box( $type, $def ),
 			'groups'   => array_map( static fn( $g ) => array( 'key' => $g['key'], 'label' => Schema::text( $g['label'], $locale ), 'collapsed' => $g['collapsed'] ), $def['groups'] ),
 			/* translators: %s: singular name of a content type, e.g. Restaurant */
-			'title'    => isset( $def['labels']['details'] ) ? Schema::text( $def['labels']['details'], $locale ) : sprintf( __( '%s details', 'estrategia-web' ), Schema::text( $def['labels']['singular'], $locale ) ),
+			'title'    => isset( $def['labels']['details'] ) ? Schema::text( $def['labels']['details'], $locale ) : sprintf( __( '%s details', 'estrategiaweb-toolkit' ), Schema::text( $def['labels']['singular'], $locale ) ),
 			'fields'   => $fields,
 			'days'     => self::day_names(),
-			'note'     => Wpml::active() && ! $locked && Wpml::copy_keys( $def ) ? __( 'Fields that are the same in every language are copied to the translations when you save; the others are translated in each language.', 'estrategia-web' ) : '',
+			'note'     => Wpml::active() && ! $locked && Wpml::copy_keys( $def ) ? __( 'Fields that are the same in every language are copied to the translations when you save; the others are translated in each language.', 'estrategiaweb-toolkit' ) : '',
 		);
 	}
 
@@ -187,11 +187,11 @@ final class Fields_Panel {
 			'estrategia-web-ct-box',
 			'window.estrategiaWebCtBox = ' . wp_json_encode(
 				array(
-					'choose'  => __( 'Choose image', 'estrategia-web' ),
-					'replace' => __( 'Replace image', 'estrategia-web' ),
-					'remove'  => __( 'Remove', 'estrategia-web' ),
-					'copy'    => __( 'Copy Monday to every day', 'estrategia-web' ),
-					'copied'  => __( 'Monday’s hours copied to every day.', 'estrategia-web' ),
+					'choose'  => __( 'Choose image', 'estrategiaweb-toolkit' ),
+					'replace' => __( 'Replace image', 'estrategiaweb-toolkit' ),
+					'remove'  => __( 'Remove', 'estrategiaweb-toolkit' ),
+					'copy'    => __( 'Copy Monday to every day', 'estrategiaweb-toolkit' ),
+					'copied'  => __( 'Monday’s hours copied to every day.', 'estrategiaweb-toolkit' ),
 				)
 			) . ';',
 			'before'
@@ -345,13 +345,13 @@ final class Fields_Panel {
 		}
 		if ( 'select' === $field['kind'] ) {
 			// «None» only when it can be stored: with a default, '' becomes the default.
-			$out = $field['required'] || '' !== $field['default'] ? array() : array( '' => __( '— None —', 'estrategia-web' ) );
+			$out = $field['required'] || '' !== $field['default'] ? array() : array( '' => __( '— None —', 'estrategiaweb-toolkit' ) );
 			foreach ( $field['options'] as $option ) {
 				$out[ $option['value'] ] = $option['label'];
 			}
 			return $out;
 		}
-		$out = array( 0 => __( '— None —', 'estrategia-web' ) );
+		$out = array( 0 => __( '— None —', 'estrategiaweb-toolkit' ) );
 		foreach ( get_posts( array( 'post_type' => $field['postTypes'], 'post_status' => array( 'publish', 'draft', 'private' ), 'numberposts' => 200, 'orderby' => 'title', 'order' => 'ASC' ) ) as $related ) {
 			$out[ $related->ID ] = $related->post_title;
 		}

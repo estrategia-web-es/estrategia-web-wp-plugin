@@ -235,10 +235,10 @@ final class Forms_List {
 			$label .= ', ' . $status_object->label;
 		}
 		/* translators: %d: post ID. */
-		$html = '<strong>' . esc_html( '' !== $title ? $title : sprintf( __( '(no title, #%d)', 'estrategia-web' ), $id ) ) . '</strong> <span class="description">(' . esc_html( $label ) . ')</span>';
+		$html = '<strong>' . esc_html( '' !== $title ? $title : sprintf( __( '(no title, #%d)', 'estrategiaweb-toolkit' ), $id ) ) . '</strong> <span class="description">(' . esc_html( $label ) . ')</span>';
 		$edit = get_edit_post_link( $id, 'raw' );
 		if ( $edit ) {
-			$html .= ' — <a href="' . esc_url( $edit ) . '">' . esc_html__( 'Edit', 'estrategia-web' ) . '</a>';
+			$html .= ' — <a href="' . esc_url( $edit ) . '">' . esc_html__( 'Edit', 'estrategiaweb-toolkit' ) . '</a>';
 		}
 		return $html;
 	}
@@ -270,7 +270,7 @@ final class Forms_List {
 
 	public static function render(): void {
 		if ( ! current_user_can( Admin::capability() ) ) {
-			wp_die( esc_html__( 'You are not allowed to see this page.', 'estrategia-web' ), 403 );
+			wp_die( esc_html__( 'You are not allowed to see this page.', 'estrategiaweb-toolkit' ), 403 );
 		}
 		$rows   = self::rows();
 		$wpml   = Language::wpml_active();
@@ -280,38 +280,38 @@ final class Forms_List {
 		<div class="wrap ew-screen estrategia-web-forms-list">
 			<?php
 			\EstrategiaWeb\Admin\Admin_UI::header(
-				__( 'Forms', 'estrategia-web' ),
-				__( 'The forms on this site and where they are used. Edit a form here; to show it on a page, add the «Form» block and choose it. Its name and identifier are the ones the submissions log shows.', 'estrategia-web' ),
-				$add ? '<a class="page-title-action" href="' . esc_url( $add ) . '">' . esc_html__( 'Add form', 'estrategia-web' ) . '</a>' : ''
+				__( 'Forms', 'estrategiaweb-toolkit' ),
+				__( 'The forms on this site and where they are used. Edit a form here; to show it on a page, add the «Form» block and choose it. Its name and identifier are the ones the submissions log shows.', 'estrategiaweb-toolkit' ),
+				$add ? '<a class="page-title-action" href="' . esc_url( $add ) . '">' . esc_html__( 'Add form', 'estrategiaweb-toolkit' ) . '</a>' : ''
 			);
 			?>
 			<?php if ( $inline ) : ?>
 				<div class="notice notice-warning inline estrategia-web-forms-list__inline-notice"><p>
 					<?php
 					/* translators: %d: number of forms written inside pages or patterns. */
-					echo esc_html( sprintf( _n( '%d form is still written inside a page or a pattern. Move it to its own form with the command «wp estrategia-web migrate-forms» (try it first with --dry-run).', '%d forms are still written inside a page or a pattern. Move them to their own forms with the command «wp estrategia-web migrate-forms» (try it first with --dry-run).', $inline, 'estrategia-web' ), $inline ) );
+					echo esc_html( sprintf( _n( '%d form is still written inside a page or a pattern. Move it to its own form with the command «wp estrategia-web migrate-forms» (try it first with --dry-run).', '%d forms are still written inside a page or a pattern. Move them to their own forms with the command «wp estrategia-web migrate-forms» (try it first with --dry-run).', $inline, 'estrategiaweb-toolkit' ), $inline ) );
 					?>
 				</p></div>
 			<?php endif; ?>
 			<table class="widefat striped">
 				<thead>
 					<tr>
-						<th scope="col"><?php esc_html_e( 'Form', 'estrategia-web' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Where it is', 'estrategia-web' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Notifications', 'estrategia-web' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Form', 'estrategiaweb-toolkit' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Where it is', 'estrategiaweb-toolkit' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Notifications', 'estrategiaweb-toolkit' ); ?></th>
 						<?php if ( $wpml ) : ?>
-							<th scope="col"><?php esc_html_e( 'Also in', 'estrategia-web' ); ?></th>
+							<th scope="col"><?php esc_html_e( 'Also in', 'estrategiaweb-toolkit' ); ?></th>
 						<?php endif; ?>
 					</tr>
 				</thead>
 				<tbody>
 				<?php if ( ! $rows ) : ?>
-					<tr><td colspan="<?php echo $wpml ? 4 : 3; ?>"><?php esc_html_e( 'There are no forms yet. Add one with «Add form», then show it on a page with the «Form» block.', 'estrategia-web' ); ?></td></tr>
+					<tr><td colspan="<?php echo $wpml ? 4 : 3; ?>"><?php esc_html_e( 'There are no forms yet. Add one with «Add form», then show it on a page with the «Form» block.', 'estrategiaweb-toolkit' ); ?></td></tr>
 				<?php endif; ?>
 				<?php foreach ( $rows as $row ) : ?>
 					<tr data-form-id="<?php echo esc_attr( $row['form_id'] ); ?>" data-post-id="<?php echo (int) $row['post_id']; ?>">
 						<td>
-							<strong class="estrategia-web-forms-list__title"><?php echo esc_html( '' !== $row['title'] ? $row['title'] : __( '(no name)', 'estrategia-web' ) ); ?></strong><br>
+							<strong class="estrategia-web-forms-list__title"><?php echo esc_html( '' !== $row['title'] ? $row['title'] : __( '(no name)', 'estrategiaweb-toolkit' ) ); ?></strong><br>
 							<code class="estrategia-web-forms-list__id"><?php echo esc_html( '' !== $row['form_id'] ? $row['form_id'] : '—' ); ?></code>
 						</td>
 						<td class="estrategia-web-forms-list__where">
@@ -320,7 +320,7 @@ final class Forms_List {
 								<?php $users = self::form_users( $row['ids'] ?? array( $row['post_id'] ) ); ?>
 								<div class="estrategia-web-forms-list__users">
 									<?php if ( $users ) : ?>
-										<?php esc_html_e( 'Used in:', 'estrategia-web' ); ?>
+										<?php esc_html_e( 'Used in:', 'estrategiaweb-toolkit' ); ?>
 										<ul style="margin:.3em 0 0 1.2em;list-style:disc">
 											<?php foreach ( $users as $user ) : ?>
 												<li data-post-id="<?php echo (int) $user->ID; ?>"><?php echo self::place( (int) $user->ID, (string) $user->post_title, (string) $user->post_type, (string) $user->post_status ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
@@ -338,24 +338,24 @@ final class Forms_List {
 											<?php endforeach; ?>
 										</ul>
 									<?php else : ?>
-										<span class="description"><?php esc_html_e( 'Not used on any page yet.', 'estrategia-web' ); ?></span>
+										<span class="description"><?php esc_html_e( 'Not used on any page yet.', 'estrategiaweb-toolkit' ); ?></span>
 									<?php endif; ?>
 								</div>
 							<?php else : ?>
-								<div class="description estrategia-web-forms-list__inline"><?php esc_html_e( 'Written inside this content (not migrated).', 'estrategia-web' ); ?></div>
+								<div class="description estrategia-web-forms-list__inline"><?php esc_html_e( 'Written inside this content (not migrated).', 'estrategiaweb-toolkit' ); ?></div>
 							<?php endif; ?>
 							<?php if ( 'wp_block' === $row['post_type'] ) : ?>
 								<?php $users = self::pattern_users( $row['post_id'] ); ?>
 								<div class="estrategia-web-forms-list__users">
 									<?php if ( $users ) : ?>
-										<?php esc_html_e( 'Used in:', 'estrategia-web' ); ?>
+										<?php esc_html_e( 'Used in:', 'estrategiaweb-toolkit' ); ?>
 										<ul style="margin:.3em 0 0 1.2em;list-style:disc">
 											<?php foreach ( $users as $user ) : ?>
 												<li data-post-id="<?php echo (int) $user->ID; ?>"><?php echo self::place( (int) $user->ID, (string) $user->post_title, (string) $user->post_type, (string) $user->post_status ); // phpcs:ignore WordPress.Security.EscapeOutput ?></li>
 											<?php endforeach; ?>
 										</ul>
 									<?php else : ?>
-										<span class="description"><?php esc_html_e( 'No page uses this pattern.', 'estrategia-web' ); ?></span>
+										<span class="description"><?php esc_html_e( 'No page uses this pattern.', 'estrategiaweb-toolkit' ); ?></span>
 									<?php endif; ?>
 								</div>
 							<?php endif; ?>
@@ -364,7 +364,7 @@ final class Forms_List {
 							<?php
 							$count = count( $row['notifications'] );
 							/* translators: %d: number of email notifications. */
-							echo esc_html( sprintf( _n( '%d notification', '%d notifications', $count, 'estrategia-web' ), $count ) );
+							echo esc_html( sprintf( _n( '%d notification', '%d notifications', $count, 'estrategiaweb-toolkit' ), $count ) );
 							?>
 							<?php if ( $count ) : ?>
 								<?php $edit = get_edit_post_link( $row['post_id'], 'raw' ); ?>
@@ -373,7 +373,7 @@ final class Forms_List {
 										<li>
 											<?php
 											/* translators: %d: position of the notification in the form. */
-											$label = '' !== $notification['label'] ? $notification['label'] : sprintf( __( 'Notification %d', 'estrategia-web' ), $n + 1 );
+											$label = '' !== $notification['label'] ? $notification['label'] : sprintf( __( 'Notification %d', 'estrategiaweb-toolkit' ), $n + 1 );
 											if ( $edit ) {
 												// 2.0.1: opens the form with this notification selected and the block sidebar open (notification-link.js).
 												printf( '<a class="eweb-notification-link" href="%s">%s</a>', esc_url( self::notification_url( $edit, $row['form_id'], $n ) ), esc_html( $label ) );

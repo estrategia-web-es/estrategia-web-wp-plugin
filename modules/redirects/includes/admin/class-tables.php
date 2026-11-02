@@ -30,12 +30,12 @@ final class Rules_Table extends \WP_List_Table {
 	public function get_columns(): array {
 		return array(
 			'cb'       => '<input type="checkbox" />',
-			'source'   => __( 'Source', 'estrategia-web' ),
-			'target'   => __( 'Destination', 'estrategia-web' ),
-			'type'     => __( 'Type', 'estrategia-web' ),
-			'hits'     => __( 'Hits', 'estrategia-web' ),
-			'last_hit' => __( 'Last hit', 'estrategia-web' ),
-			'active'   => __( 'Active', 'estrategia-web' ),
+			'source'   => __( 'Source', 'estrategiaweb-toolkit' ),
+			'target'   => __( 'Destination', 'estrategiaweb-toolkit' ),
+			'type'     => __( 'Type', 'estrategiaweb-toolkit' ),
+			'hits'     => __( 'Hits', 'estrategiaweb-toolkit' ),
+			'last_hit' => __( 'Last hit', 'estrategiaweb-toolkit' ),
+			'active'   => __( 'Active', 'estrategiaweb-toolkit' ),
 		);
 	}
 
@@ -51,9 +51,9 @@ final class Rules_Table extends \WP_List_Table {
 
 	protected function get_bulk_actions(): array {
 		return array(
-			'activate'   => __( 'Activate', 'estrategia-web' ),
-			'deactivate' => __( 'Deactivate', 'estrategia-web' ),
-			'delete'     => __( 'Delete', 'estrategia-web' ),
+			'activate'   => __( 'Activate', 'estrategiaweb-toolkit' ),
+			'deactivate' => __( 'Deactivate', 'estrategiaweb-toolkit' ),
+			'delete'     => __( 'Delete', 'estrategiaweb-toolkit' ),
 		);
 	}
 
@@ -75,7 +75,7 @@ final class Rules_Table extends \WP_List_Table {
 	}
 
 	public function no_items(): void {
-		esc_html_e( 'No redirects yet.', 'estrategia-web' );
+		esc_html_e( 'No redirects yet.', 'estrategiaweb-toolkit' );
 	}
 
 	protected function column_cb( $item ): string {
@@ -86,8 +86,8 @@ final class Rules_Table extends \WP_List_Table {
 		$edit    = Page::url( array( 'view' => 'edit', 'id' => (int) $item['id'] ) );
 		$delete  = wp_nonce_url( Page::url( array( 'do' => 'delete', 'id' => (int) $item['id'] ) ), Page::NONCE );
 		$actions = array(
-			'edit'   => '<a href="' . esc_url( $edit ) . '">' . esc_html__( 'Edit', 'estrategia-web' ) . '</a>',
-			'delete' => '<a class="submitdelete" href="' . esc_url( $delete ) . '" onclick="return confirm(this.dataset.confirm)" data-confirm="' . esc_attr__( 'Delete this redirect?', 'estrategia-web' ) . '">' . esc_html__( 'Delete', 'estrategia-web' ) . '</a>',
+			'edit'   => '<a href="' . esc_url( $edit ) . '">' . esc_html__( 'Edit', 'estrategiaweb-toolkit' ) . '</a>',
+			'delete' => '<a class="submitdelete" href="' . esc_url( $delete ) . '" onclick="return confirm(this.dataset.confirm)" data-confirm="' . esc_attr__( 'Delete this redirect?', 'estrategiaweb-toolkit' ) . '">' . esc_html__( 'Delete', 'estrategiaweb-toolkit' ) . '</a>',
 		);
 		$note    = '' !== (string) $item['note'] ? '<br><span class="description">' . esc_html( (string) $item['note'] ) . '</span>' : '';
 		return '<strong><a class="row-title" href="' . esc_url( $edit ) . '"><code>' . esc_html( (string) $item['source'] ) . '</code></a></strong>' . $note . $this->row_actions( $actions );
@@ -98,7 +98,7 @@ final class Rules_Table extends \WP_List_Table {
 	}
 
 	protected function column_type( array $item ): string {
-		return 410 === (int) $item['type'] ? esc_html__( '410 Gone', 'estrategia-web' ) : esc_html( (string) (int) $item['type'] );
+		return 410 === (int) $item['type'] ? esc_html__( '410 Gone', 'estrategiaweb-toolkit' ) : esc_html( (string) (int) $item['type'] );
 	}
 
 	protected function column_hits( array $item ): string {
@@ -110,7 +110,7 @@ final class Rules_Table extends \WP_List_Table {
 	}
 
 	protected function column_active( array $item ): string {
-		return $item['active'] ? esc_html__( 'Yes', 'estrategia-web' ) : '<strong>' . esc_html__( 'No', 'estrategia-web' ) . '</strong>';
+		return $item['active'] ? esc_html__( 'Yes', 'estrategiaweb-toolkit' ) : '<strong>' . esc_html__( 'No', 'estrategiaweb-toolkit' ) . '</strong>';
 	}
 }
 
@@ -130,10 +130,10 @@ final class Log_Table extends \WP_List_Table {
 	public function get_columns(): array {
 		return array(
 			'cb'         => '<input type="checkbox" />',
-			'path'       => __( 'Path', 'estrategia-web' ),
-			'hits'       => __( 'Hits', 'estrategia-web' ),
-			'first_seen' => __( 'First seen', 'estrategia-web' ),
-			'last_seen'  => __( 'Last seen', 'estrategia-web' ),
+			'path'       => __( 'Path', 'estrategiaweb-toolkit' ),
+			'hits'       => __( 'Hits', 'estrategiaweb-toolkit' ),
+			'first_seen' => __( 'First seen', 'estrategiaweb-toolkit' ),
+			'last_seen'  => __( 'Last seen', 'estrategiaweb-toolkit' ),
 		);
 	}
 
@@ -146,7 +146,7 @@ final class Log_Table extends \WP_List_Table {
 	}
 
 	protected function get_bulk_actions(): array {
-		return array( 'log_delete' => __( 'Delete', 'estrategia-web' ) );
+		return array( 'log_delete' => __( 'Delete', 'estrategiaweb-toolkit' ) );
 	}
 
 	public function prepare_items(): void {
@@ -167,7 +167,7 @@ final class Log_Table extends \WP_List_Table {
 	}
 
 	public function no_items(): void {
-		esc_html_e( 'No 404 errors recorded.', 'estrategia-web' );
+		esc_html_e( 'No 404 errors recorded.', 'estrategiaweb-toolkit' );
 	}
 
 	protected function column_cb( $item ): string {
@@ -177,7 +177,7 @@ final class Log_Table extends \WP_List_Table {
 	protected function column_path( array $item ): string {
 		$create  = Page::url( array( 'view' => 'edit', 'source' => (string) $item['path'] ) );
 		$actions = array(
-			'create' => '<a href="' . esc_url( $create ) . '">' . esc_html__( 'Create redirect', 'estrategia-web' ) . '</a>',
+			'create' => '<a href="' . esc_url( $create ) . '">' . esc_html__( 'Create redirect', 'estrategiaweb-toolkit' ) . '</a>',
 		);
 		return '<code>' . esc_html( (string) $item['path'] ) . '</code>' . $this->row_actions( $actions, true );
 	}
