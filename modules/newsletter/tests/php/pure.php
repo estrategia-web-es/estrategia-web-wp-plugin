@@ -15,6 +15,13 @@
  */
 
 define( 'ABSPATH', __DIR__ . '/' );
+
+// WordPress's own wp_strip_all_tags() (wp-includes/formatting.php), as in faq-schema's pure test: Plugin Check
+// rejects plain strip_tags() (an error, 2.7.0), so Rules::excerpt() calls this one.
+function wp_strip_all_tags( $text ) {
+	return trim( strip_tags( preg_replace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $text ) ) );
+}
+
 require dirname( __DIR__, 2 ) . '/includes/class-rules.php';
 
 use EstrategiaWeb\Newsletter\Rules;

@@ -49,7 +49,7 @@ final class Rules {
 	 * A comma, colon or semicolon right before the «…» goes.
 	 */
 	public static function excerpt( string $text, int $words = self::WORDS ): string {
-		$text  = html_entity_decode( strip_tags( $text ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		$text  = html_entity_decode( wp_strip_all_tags( $text ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 		$text  = trim( (string) preg_replace( '/[\s\x{00A0}]+/u', ' ', $text ) );
 		$parts = '' === $text ? array() : explode( ' ', $text );
 		if ( count( $parts ) <= $words ) {

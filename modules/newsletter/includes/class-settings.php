@@ -1,4 +1,9 @@
 <?php
+// Before the header on purpose: Plugin Check only looks for the ABSPATH guard near the top (see module.php).
+namespace EstrategiaWeb\Newsletter;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * The newsletter's settings: option estrategia_web_newsletter, edited in
  * «Estrategia Web › Settings › Newsletter» (a section of the Settings page's
@@ -45,12 +50,8 @@
  *   saves them, and the screen previews them in a sandboxed iframe.
  */
 
-namespace EstrategiaWeb\Newsletter;
-
 use EstrategiaWeb\Admin\Admin_UI;
 use EstrategiaWeb\Admin\Settings_Page;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Settings {
 

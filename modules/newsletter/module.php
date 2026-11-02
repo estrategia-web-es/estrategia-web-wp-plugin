@@ -1,4 +1,10 @@
 <?php
+// Before the header on purpose: Plugin Check only looks for the ABSPATH guard near the top of the file, and
+// this header is long (missing_direct_file_access_protection, an error, 02-11-2026).
+namespace EstrategiaWeb\Newsletter;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Module Name: Newsletter
  * Description: Choose the week's posts, preview the newsletter and copy its code or create the draft in Mailchimp. It never sends.
@@ -54,10 +60,6 @@
  * estrategia_web_newsletter, not in REST, never printed back; uninstall.php
  * deletes it always.
  */
-
-namespace EstrategiaWeb\Newsletter;
-
-defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/includes/class-rules.php';
 require_once __DIR__ . '/includes/class-settings.php';
