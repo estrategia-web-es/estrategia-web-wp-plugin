@@ -1,7 +1,8 @@
 <?php
 /**
  * The «Estrategia Web → Redirects» screen. Four tabbed views: rules (list
- * with search and bulk actions), add/edit, 404 log (with «Create redirect»
+ * with search, views by type since 2.8.0 — class-tables.php — and bulk
+ * actions), add/edit, 404 log (with «Create redirect»
  * on each path) and CSV import/export.
  *
  * Everything that writes is processed in load-<page> (before anything is
@@ -219,7 +220,11 @@ final class Page {
 	private static function render_list(): void {
 		$table = new Rules_Table();
 		$table->prepare_items();
+		$table->views(); // 2.8.0: by type and «Inactive» (class-tables.php).
 		echo '<form method="get"><input type="hidden" name="page" value="' . esc_attr( self::SLUG ) . '" />';
+		if ( '' !== Rules_Table::current_view() ) { // Searching keeps the view.
+			echo '<input type="hidden" name="' . esc_attr( Rules_Table::VIEW_VAR ) . '" value="' . esc_attr( Rules_Table::current_view() ) . '" />';
+		}
 		$table->search_box( __( 'Search redirects', 'estrategia-web' ), 'ew-redirects' );
 		echo '</form><form method="post" action="' . esc_url( self::url() ) . '">';
 		$table->display(); // Carries its bulk-redirects nonce (see handle()).

@@ -9,6 +9,39 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.8.0 — 02-11-2026
+
+**What each site must do:** nothing. The lists of records get the tools the
+banners list got in 2.5.0 (Juan, 02-11-2026: «ninguno de los campos tiene
+filtro para ordenarlos… es tedioso encontrar uno»).
+
+- **Content types**: each type's entries list (`edit.php?post_type=…`) has
+  one dropdown per taxonomy of the type (`category` excepted: WordPress
+  already prints its own). Through `Admin_List::taxonomy_filter()`, from
+  `modules/content-types/includes/admin/class-list-tools.php`. No new
+  sorting: no field of a type is a column today (header of that file).
+- **`Admin_List::taxonomy_filter()`**: several dropdowns on one list add up
+  (it used to SET `tax_query`, so only the last one filtered a taxonomy
+  without query var), and a taxonomy shared by several types (`gment_cuisine`)
+  shows no counts, which would be of every type.
+- **Form submissions**: views «All | Failed | Some failed | Pending | All
+  sent» with their count, within the chosen form (a view appears only when it
+  has submissions); sorting by date and by form (an untitled form by its id);
+  the form dropdown keeps the view and the order. `Submissions::query()` takes
+  status, orderby and order (optional, same defaults); new
+  `Submissions::count_by_status()`. The CSV export is unchanged (by form).
+- **Redirects**: views «All | 301 | 302 | 410 Gone | Inactive» with their
+  count (the filter by type; within the search, which keeps the view; query
+  string `ew_view`, since `view` is the screen's tab). Sorting by last hit
+  puts the rules that never fired last in both directions. The 404 log sorts
+  by first seen too. `Store::query()` takes the view (optional); new
+  `Store::view_counts()`.
+- Not touched, on purpose: the content types' own list (`Types_Table`, a
+  handful of rows per site) and «Forms → Forms» (one row per form, read
+  only): nothing there is hard to find.
+- Tests (level 2): `content-types/admin-list`, `forms/submissions-list`,
+  `redirects/admin-list`.
+
 ## 2.7.0 — 02-11-2026
 
 **What each site must do:** nothing (the module is off). To use it

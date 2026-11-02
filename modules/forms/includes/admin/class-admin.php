@@ -2,7 +2,8 @@
 /**
  * Admin screens: «Forms → Forms» (1.7.0, first: the list of the site's
  * forms, includes/admin/class-forms-list.php), «Forms → Submissions» (list,
- * filter by form, view one, export CSV, delete with confirmation) and
+ * filter by form, views by notification state and sorting since 2.8.0 —
+ * class-submissions-table.php —, view one, export CSV, delete with confirmation) and
  * «Forms → Settings».
  *
  * Notifications are NOT configured here but in the form block (the editor
@@ -111,6 +112,7 @@ final class Admin {
 					?>
 				</p></div>
 			<?php endif; ?>
+			<?php $table->views(); // 2.8.0: by notification state (class-submissions-table.php). ?>
 			<form method="get">
 				<input type="hidden" name="page" value="<?php echo esc_attr( self::PAGE ); ?>">
 				<?php $table->display(); ?>

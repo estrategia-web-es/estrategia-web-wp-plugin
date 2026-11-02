@@ -69,10 +69,22 @@ final class Submissions {
 		return $row ? self::decode( $row ) : null;
 	}
 
+	/** The notification states a submission can be in (the «status» column), in the order the list's views show them. */
+	public const STATUSES = array( 'failed', 'partial', 'pending', 'sent' );
+
+	/** What the list sorts by (2.8.0): column => SQL. «form» is the title shown, or the id when the form had no title. */
+	public const ORDER_BY = array(
+		'date' => 'created_at',
+		'form' => "COALESCE(NULLIF(form_title, ''), form_id)",
+	);
+
 	/**
+	 * @param string $status  '' or one of STATUSES (2.8.0, the list's views).
+	 * @param string $orderby A key of ORDER_BY; anything else is the date.
+	 * @param string $order   'asc' or 'desc' (the default: newest first).
 	 * @return array{rows: array<int, array>, total: int}
 	 */
-	public static function query( string $form_id = '', int $per_page = 20, int $page = 1 ): array {
+	public static function query( string $form_id = '', int $per_page = 20, int $page = 1, string $status = '', string $orderby = 'date', string $order = 'desc' ): array {
 		global $wpdb;
 		$table  = Migrations::submissions_table();
 		$where  = '1=1';
@@ -81,17 +93,42 @@ final class Submissions {
 			$where   .= ' AND form_id = %s';
 			$params[] = $form_id;
 		}
+		if ( in_array( $status, self::STATUSES, true ) ) {
+			$where   .= ' AND status = %s';
+			$params[] = $status;
+		}
 		$count_sql = "SELECT COUNT(*) FROM $table WHERE $where";
 		$total     = (int) ( $params ? $wpdb->get_var( $wpdb->prepare( $count_sql, $params ) ) : $wpdb->get_var( $count_sql ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
-		$limit  = $per_page > 0 ? $wpdb->prepare( ' LIMIT %d OFFSET %d', $per_page, max( 0, ( $page - 1 ) * $per_page ) ) : '';
-		$sql    = "SELECT * FROM $table WHERE $where ORDER BY created_at DESC, id DESC" . $limit;
+		// Both come from the two lists above, never from the request: safe to write into the SQL.
+		$by    = self::ORDER_BY[ $orderby ] ?? self::ORDER_BY['date'];
+		$dir   = 'asc' === strtolower( $order ) ? 'ASC' : 'DESC';
+		$limit = $per_page > 0 ? $wpdb->prepare( ' LIMIT %d OFFSET %d', $per_page, max( 0, ( $page - 1 ) * $per_page ) ) : '';
+		$sql   = "SELECT * FROM $table WHERE $where ORDER BY $by $dir, id $dir" . $limit;
 		$rows   = $params ? $wpdb->get_results( $wpdb->prepare( $sql, $params ), ARRAY_A ) : $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		return array(
 			'rows'  => array_map( array( self::class, 'decode' ), (array) $rows ),
 			'total' => $total,
 		);
+	}
+
+	/**
+	 * How many submissions there are in each notification state (2.8.0, the list's views), of one form or all.
+	 *
+	 * @return array<string, int> status => count, only the states that have any.
+	 */
+	public static function count_by_status( string $form_id = '' ): array {
+		global $wpdb;
+		$table = Migrations::submissions_table();
+		$rows  = '' !== $form_id
+			? $wpdb->get_results( $wpdb->prepare( "SELECT status, COUNT(*) AS n FROM $table WHERE form_id = %s GROUP BY status", $form_id ), ARRAY_A ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			: $wpdb->get_results( "SELECT status, COUNT(*) AS n FROM $table GROUP BY status", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$out   = array();
+		foreach ( (array) $rows as $row ) {
+			$out[ (string) $row['status'] ] = (int) $row['n'];
+		}
+		return $out;
 	}
 
 	/** @return array<string, string> form_id => most recent title. */

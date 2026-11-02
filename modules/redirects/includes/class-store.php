@@ -218,11 +218,26 @@ KEY last_seen (last_seen)
 	}
 
 	/**
+	 * The screen's views (2.8.0): view => its WHERE. A view is a type, or the rules switched off.
+	 * Written here, never from the request: Rules_Table passes only a key of this list.
+	 */
+	public const VIEWS = array(
+		'301'      => 'type = 301',
+		'302'      => 'type = 302',
+		'410'      => 'type = 410',
+		'inactive' => 'active = 0',
+	);
+
+	/**
 	 * List for the screen and the CLI.
 	 *
+	 * Sorting by last hit (2.8.0): the rules that never fired (last_hit NULL) go LAST in both
+	 * directions — first, in ascending order, they would hide the oldest real hit under a page of «—».
+	 *
+	 * @param string $view '' or a key of VIEWS (2.8.0).
 	 * @return array{0: array<int, array<string, mixed>>, 1: int} [ rows, total ]
 	 */
-	public static function query( string $search = '', int $per_page = 0, int $page = 1, string $orderby = 'source', string $order = 'asc' ): array {
+	public static function query( string $search = '', int $per_page = 0, int $page = 1, string $orderby = 'source', string $order = 'asc', string $view = '' ): array {
 		global $wpdb;
 		$where = '1=1';
 		$args  = array();
@@ -231,9 +246,13 @@ KEY last_seen (last_seen)
 			$where = '(source LIKE %s OR target LIKE %s OR note LIKE %s)';
 			$args  = array( $like, $like, $like );
 		}
+		if ( isset( self::VIEWS[ $view ] ) ) {
+			$where .= ' AND ' . self::VIEWS[ $view ];
+		}
 		$orderby = in_array( $orderby, array( 'source', 'target', 'type', 'hits', 'last_hit', 'active', 'id' ), true ) ? $orderby : 'source';
 		$order   = 'desc' === strtolower( $order ) ? 'DESC' : 'ASC';
-		$sql     = 'SELECT * FROM ' . self::table() . " WHERE $where ORDER BY $orderby $order, id ASC";
+		$never   = 'last_hit' === $orderby ? '(last_hit IS NULL), ' : '';
+		$sql     = 'SELECT * FROM ' . self::table() . " WHERE $where ORDER BY {$never}$orderby $order, id ASC";
 		$count   = 'SELECT COUNT(*) FROM ' . self::table() . " WHERE $where";
 		if ( $per_page > 0 ) {
 			$sql .= $wpdb->prepare( ' LIMIT %d OFFSET %d', $per_page, max( 0, ( $page - 1 ) * $per_page ) );
@@ -241,6 +260,28 @@ KEY last_seen (last_seen)
 		$rows  = $args ? $wpdb->get_results( $wpdb->prepare( $sql, $args ), ARRAY_A ) : $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB
 		$total = (int) ( $args ? $wpdb->get_var( $wpdb->prepare( $count, $args ) ) : $wpdb->get_var( $count ) ); // phpcs:ignore WordPress.DB
 		return array( (array) $rows, $total );
+	}
+
+	/**
+	 * How many rules each view has (2.8.0), within the search if there is one.
+	 *
+	 * @return array<string, int> '' (all) and each key of VIEWS => count.
+	 */
+	public static function view_counts( string $search = '' ): array {
+		global $wpdb;
+		$sums = array( 'COUNT(*) AS c_all' );
+		foreach ( self::VIEWS as $key => $condition ) {
+			$sums[] = "SUM(CASE WHEN $condition THEN 1 ELSE 0 END) AS c_$key";
+		}
+		$sql = 'SELECT ' . implode( ', ', $sums ) . ' FROM ' . self::table();
+		$row = '' !== $search
+			? $wpdb->get_row( $wpdb->prepare( $sql . ' WHERE (source LIKE %s OR target LIKE %s OR note LIKE %s)', array_fill( 0, 3, '%' . $wpdb->esc_like( $search ) . '%' ) ), ARRAY_A ) // phpcs:ignore WordPress.DB
+			: $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB
+		$out = array( '' => (int) ( $row['c_all'] ?? 0 ) );
+		foreach ( array_keys( self::VIEWS ) as $key ) {
+			$out[ $key ] = (int) ( $row[ 'c_' . $key ] ?? 0 );
+		}
+		return $out;
 	}
 
 	// ------------------------------------------------------------------

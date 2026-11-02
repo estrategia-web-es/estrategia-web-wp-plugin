@@ -137,7 +137,9 @@ defined( 'ABSPATH' ) || exit;
  * WP_List_Table, includes/admin/class-types-table.php) and one EDIT screen
  * per type, ?page=estrategia-web-content-types&type=<name>, with the
  * settings in tabs and the fields as collapsed rows. The URLs and why:
- * includes/admin/class-page.php.
+ * includes/admin/class-page.php. And each type's ENTRIES list (2.8.0): a
+ * dropdown per taxonomy, includes/admin/class-list-tools.php (level 2
+ * admin-list.test.mjs).
  *
  * =========================================================================
  * HOW TO MAINTAIN
@@ -261,4 +263,6 @@ add_action( 'after_switch_theme', array( Loader::class, 'forget' ) );
 if ( is_admin() ) {
 	require_once __DIR__ . '/includes/admin/class-page.php'; // It loads class-types-table.php (WP_List_Table) only on its own screen.
 	Page::boot();
+	require_once __DIR__ . '/includes/admin/class-list-tools.php'; // 2.8.0: each type's entries list, a dropdown per taxonomy.
+	List_Tools::boot();
 }

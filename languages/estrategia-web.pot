@@ -75,7 +75,7 @@ msgstr ""
 #: includes/admin/class-settings-page.php:212
 #: includes/admin/class-settings-page.php:230
 #: modules/content-types/includes/admin/class-page.php:269
-#: modules/forms/includes/admin/class-admin.php:56
+#: modules/forms/includes/admin/class-admin.php:57
 msgid "Settings"
 msgstr ""
 
@@ -519,7 +519,7 @@ msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
 #: modules/consent/includes/admin/class-cookies-page.php:146
-#: modules/forms/includes/admin/class-submissions-table.php:115
+#: modules/forms/includes/admin/class-submissions-table.php:74
 msgid "Pending"
 msgstr ""
 
@@ -699,11 +699,11 @@ msgstr ""
 
 #: modules/consent/includes/admin/class-cookies-page.php:316
 #: modules/content-types/includes/admin/class-types-table.php:121
-#: modules/forms/includes/admin/class-submissions-table.php:39
-#: modules/forms/includes/admin/class-submissions-table.php:86
-#: modules/redirects/includes/admin/class-tables.php:56
-#: modules/redirects/includes/admin/class-tables.php:90
-#: modules/redirects/includes/admin/class-tables.php:149
+#: modules/forms/includes/admin/class-submissions-table.php:117
+#: modules/forms/includes/admin/class-submissions-table.php:170
+#: modules/redirects/includes/admin/class-tables.php:117
+#: modules/redirects/includes/admin/class-tables.php:151
+#: modules/redirects/includes/admin/class-tables.php:211
 msgid "Delete"
 msgstr ""
 
@@ -1171,7 +1171,7 @@ msgid ""
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:190
-#: modules/redirects/includes/admin/class-page.php:177
+#: modules/redirects/includes/admin/class-page.php:178
 msgid "Add new"
 msgstr ""
 
@@ -1230,9 +1230,9 @@ msgid "Edit “%s”"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:246
-#: modules/forms/includes/admin/class-admin.php:128
-#: modules/forms/includes/admin/class-admin.php:133
-#: modules/forms/includes/admin/class-admin.php:176
+#: modules/forms/includes/admin/class-admin.php:130
+#: modules/forms/includes/admin/class-admin.php:135
+#: modules/forms/includes/admin/class-admin.php:178
 msgid "Back to the list"
 msgstr ""
 
@@ -1509,8 +1509,8 @@ msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:324
 #: modules/content-types/includes/admin/class-page.php:340
-#: modules/redirects/includes/admin/class-page.php:269
-#: modules/redirects/includes/admin/class-tables.php:35
+#: modules/redirects/includes/admin/class-page.php:274
+#: modules/redirects/includes/admin/class-tables.php:96
 msgid "Type"
 msgstr ""
 
@@ -1686,7 +1686,7 @@ msgid "Save anyway"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:372
-#: modules/forms/includes/admin/class-admin.php:193
+#: modules/forms/includes/admin/class-admin.php:195
 msgid "Cancel"
 msgstr ""
 
@@ -1715,7 +1715,7 @@ msgid "Web address"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:380
-#: modules/newsletter/includes/class-settings.php:228
+#: modules/newsletter/includes/class-settings.php:229
 #: modules/site/includes/class-company.php:133
 #: modules/social/includes/class-icons.php:82
 msgid "Email"
@@ -1731,8 +1731,8 @@ msgid "Image"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:383
-#: modules/forms/includes/admin/class-admin.php:156
-#: modules/forms/includes/admin/class-submissions-table.php:30
+#: modules/forms/includes/admin/class-admin.php:158
+#: modules/forms/includes/admin/class-submissions-table.php:81
 msgid "Date"
 msgstr ""
 
@@ -1829,17 +1829,17 @@ msgstr ""
 
 #: modules/content-types/includes/admin/class-types-table.php:114
 #: modules/forms/includes/admin/class-forms-list.php:241
-#: modules/redirects/includes/admin/class-tables.php:89
+#: modules/redirects/includes/admin/class-tables.php:150
 msgid "Edit"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-types-table.php:115
-#: modules/redirects/includes/admin/class-tables.php:54
+#: modules/redirects/includes/admin/class-tables.php:115
 msgid "Activate"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-types-table.php:115
-#: modules/redirects/includes/admin/class-tables.php:55
+#: modules/redirects/includes/admin/class-tables.php:116
 msgid "Deactivate"
 msgstr ""
 
@@ -1872,12 +1872,13 @@ msgid "Not registered: it has errors"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-types-table.php:159
-#: modules/redirects/includes/admin/class-page.php:286
-#: modules/redirects/includes/admin/class-tables.php:38
+#: modules/redirects/includes/admin/class-page.php:291
+#: modules/redirects/includes/admin/class-tables.php:99
 msgid "Active"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-types-table.php:159
+#: modules/redirects/includes/admin/class-tables.php:54
 msgid "Inactive"
 msgstr ""
 
@@ -1886,16 +1887,16 @@ msgid "Content field"
 msgstr ""
 
 #: modules/content-types/includes/class-bindings.php:123
-#: modules/forms/includes/admin/class-admin.php:137
+#: modules/forms/includes/admin/class-admin.php:139
 #: modules/forms/includes/class-notifier.php:159
-#: modules/redirects/includes/admin/class-tables.php:113
+#: modules/redirects/includes/admin/class-tables.php:174
 msgid "Yes"
 msgstr ""
 
 #: modules/content-types/includes/class-bindings.php:124
-#: modules/forms/includes/admin/class-admin.php:137
+#: modules/forms/includes/admin/class-admin.php:139
 #: modules/forms/includes/class-notifier.php:159
-#: modules/redirects/includes/admin/class-tables.php:113
+#: modules/redirects/includes/admin/class-tables.php:174
 msgid "No"
 msgstr ""
 
@@ -3046,140 +3047,140 @@ msgctxt "block description"
 msgid "Several lines of text."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:47
-#: modules/forms/includes/admin/class-admin.php:55
-#: modules/forms/includes/admin/class-admin.php:105
+#: modules/forms/includes/admin/class-admin.php:48
+#: modules/forms/includes/admin/class-admin.php:56
+#: modules/forms/includes/admin/class-admin.php:106
 msgid "Form submissions"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:48
-#: modules/forms/includes/admin/class-admin.php:60
+#: modules/forms/includes/admin/class-admin.php:49
+#: modules/forms/includes/admin/class-admin.php:61
 #: modules/forms/includes/admin/class-forms-list.php:283
 #: modules/forms/includes/class-form-post-type.php:84
 msgid "Forms"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:55
+#: modules/forms/includes/admin/class-admin.php:56
 msgid "Submissions"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:56
-#: modules/forms/includes/admin/class-admin.php:271
+#: modules/forms/includes/admin/class-admin.php:57
+#: modules/forms/includes/admin/class-admin.php:273
 msgid "Form settings"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:77
-#: modules/forms/includes/admin/class-admin.php:264
+#: modules/forms/includes/admin/class-admin.php:78
+#: modules/forms/includes/admin/class-admin.php:266
 #: modules/forms/includes/admin/class-forms-list.php:273
 msgid "You are not allowed to see this page."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:105
+#: modules/forms/includes/admin/class-admin.php:106
 msgid ""
 "Every message sent through the site's forms, with the emails each one sent."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:105
+#: modules/forms/includes/admin/class-admin.php:106
 msgid "Export CSV"
 msgstr ""
 
 #. translators: %d: number of deleted submissions.
-#: modules/forms/includes/admin/class-admin.php:110
+#: modules/forms/includes/admin/class-admin.php:111
 #, php-format
 msgid "%d submission deleted."
 msgid_plural "%d submissions deleted."
 msgstr[0] ""
 msgstr[1] ""
 
-#: modules/forms/includes/admin/class-admin.php:127
+#: modules/forms/includes/admin/class-admin.php:129
 msgid "Submission not found"
 msgstr ""
 
 #. translators: %d: submission number.
-#: modules/forms/includes/admin/class-admin.php:132
+#: modules/forms/includes/admin/class-admin.php:134
 #, php-format
 msgid "Submission #%d"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:135
-#: modules/forms/includes/admin/class-submissions-table.php:32
+#: modules/forms/includes/admin/class-admin.php:137
+#: modules/forms/includes/admin/class-submissions-table.php:83
 msgid "Data"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:142
+#: modules/forms/includes/admin/class-admin.php:144
 #: modules/forms/includes/admin/class-forms-list.php:301
-#: modules/forms/includes/admin/class-submissions-table.php:34
+#: modules/forms/includes/admin/class-submissions-table.php:85
 msgid "Notifications"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:143
+#: modules/forms/includes/admin/class-admin.php:145
 msgid "Notification"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:143
+#: modules/forms/includes/admin/class-admin.php:145
 msgid "Recipients"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:143
+#: modules/forms/includes/admin/class-admin.php:145
 msgid "Result"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:145
-#: modules/forms/includes/admin/class-submissions-table.php:114
+#: modules/forms/includes/admin/class-admin.php:147
+#: modules/forms/includes/admin/class-submissions-table.php:73
 msgid "Failed"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:145
+#: modules/forms/includes/admin/class-admin.php:147
 msgid "Sent"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:149
+#: modules/forms/includes/admin/class-admin.php:151
 msgid "This form has no notifications."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:153
+#: modules/forms/includes/admin/class-admin.php:155
 msgid "Details"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:155
+#: modules/forms/includes/admin/class-admin.php:157
 #: modules/forms/includes/admin/class-forms-list.php:299
-#: modules/forms/includes/admin/class-submissions-table.php:31
+#: modules/forms/includes/admin/class-submissions-table.php:82
 #: modules/forms/includes/class-form-post-type.php:85
 msgid "Form"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:157
+#: modules/forms/includes/admin/class-admin.php:159
 msgid "Page"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:158
-#: modules/forms/includes/admin/class-submissions-table.php:33
+#: modules/forms/includes/admin/class-admin.php:160
+#: modules/forms/includes/admin/class-submissions-table.php:84
 #: modules/language-switcher/blocks/language-switcher/render.php:87
 msgid "Language"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:159
+#: modules/forms/includes/admin/class-admin.php:161
 msgid "IP (truncated)"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:160
+#: modules/forms/includes/admin/class-admin.php:162
 msgid "User agent"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:167
+#: modules/forms/includes/admin/class-admin.php:169
 msgid "Delete this submission"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:174
+#: modules/forms/includes/admin/class-admin.php:176
 msgid "Delete submissions"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:176
+#: modules/forms/includes/admin/class-admin.php:178
 msgid "No submissions selected."
 msgstr ""
 
 #. translators: %d: number of submissions.
-#: modules/forms/includes/admin/class-admin.php:182
+#: modules/forms/includes/admin/class-admin.php:184
 #, php-format
 msgid ""
 "You are about to permanently delete %d submission. This cannot be undone."
@@ -3188,79 +3189,79 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: modules/forms/includes/admin/class-admin.php:192
+#: modules/forms/includes/admin/class-admin.php:194
 msgid "Yes, delete"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:198
-#: modules/forms/includes/admin/class-admin.php:209
+#: modules/forms/includes/admin/class-admin.php:200
+#: modules/forms/includes/admin/class-admin.php:211
 msgid "You are not allowed to do this."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:271
+#: modules/forms/includes/admin/class-admin.php:273
 msgid ""
 "Fields, notifications and messages of each form are set in the form block, "
 "in the editor. Here only what is common to all forms."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:274
+#: modules/forms/includes/admin/class-admin.php:276
 msgid "Submission log"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:277
+#: modules/forms/includes/admin/class-admin.php:279
 msgid "Keep submissions for (days)"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:279
+#: modules/forms/includes/admin/class-admin.php:281
 msgid "0 keeps them forever. Older submissions are deleted once a day."
 msgstr ""
 
 #. translators: 1: date of the last purge, 2: deleted submissions.
-#: modules/forms/includes/admin/class-admin.php:283
+#: modules/forms/includes/admin/class-admin.php:285
 #, php-format
 msgid "Last purge: %1$s, %2$d deleted."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:290
+#: modules/forms/includes/admin/class-admin.php:292
 msgid "Anti-spam"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:293
+#: modules/forms/includes/admin/class-admin.php:295
 msgid "Minimum filling time (seconds)"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:297
+#: modules/forms/includes/admin/class-admin.php:299
 msgid "Submissions allowed per IP"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:299
+#: modules/forms/includes/admin/class-admin.php:301
 msgid "every (minutes)"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:301
+#: modules/forms/includes/admin/class-admin.php:303
 msgid "0 submissions disables the limit."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:305
+#: modules/forms/includes/admin/class-admin.php:307
 msgid "Default texts"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:306
+#: modules/forms/includes/admin/class-admin.php:308
 msgid ""
 "Leave empty to use the built-in text, already translated. If you fill them "
 "in and the site uses WPML, translate them in WPML → String Translation "
 "(domain estrategia-web-forms)."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:309
+#: modules/forms/includes/admin/class-admin.php:311
 msgid "Success message"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:313
+#: modules/forms/includes/admin/class-admin.php:315
 msgid "Error message"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:317
+#: modules/forms/includes/admin/class-admin.php:319
 msgid "Email footer"
 msgstr ""
 
@@ -3346,32 +3347,38 @@ msgstr[1] ""
 msgid "Notification %d"
 msgstr ""
 
-#: modules/forms/includes/admin/class-submissions-table.php:56
-msgid "No submissions yet."
-msgstr ""
-
-#: modules/forms/includes/admin/class-submissions-table.php:64
-msgid "Filter by form"
-msgstr ""
-
-#: modules/forms/includes/admin/class-submissions-table.php:65
-msgid "All forms"
-msgstr ""
-
-#: modules/forms/includes/admin/class-submissions-table.php:70
-msgid "Filter"
-msgstr ""
-
-#: modules/forms/includes/admin/class-submissions-table.php:85
-msgid "View"
-msgstr ""
-
-#: modules/forms/includes/admin/class-submissions-table.php:112
+#: modules/forms/includes/admin/class-submissions-table.php:71
 msgid "All sent"
 msgstr ""
 
-#: modules/forms/includes/admin/class-submissions-table.php:113
+#: modules/forms/includes/admin/class-submissions-table.php:72
 msgid "Some failed"
+msgstr ""
+
+#: modules/forms/includes/admin/class-submissions-table.php:106
+#: modules/redirects/includes/admin/class-tables.php:50
+msgctxt "list view"
+msgid "All"
+msgstr ""
+
+#: modules/forms/includes/admin/class-submissions-table.php:134
+msgid "No submissions yet."
+msgstr ""
+
+#: modules/forms/includes/admin/class-submissions-table.php:142
+msgid "Filter by form"
+msgstr ""
+
+#: modules/forms/includes/admin/class-submissions-table.php:143
+msgid "All forms"
+msgstr ""
+
+#: modules/forms/includes/admin/class-submissions-table.php:154
+msgid "Filter"
+msgstr ""
+
+#: modules/forms/includes/admin/class-submissions-table.php:169
+msgid "View"
 msgstr ""
 
 #: modules/forms/includes/class-blocks.php:82
@@ -3950,7 +3957,7 @@ msgstr ""
 
 #: modules/newsletter/includes/class-screen.php:47
 #: modules/newsletter/includes/class-screen.php:100
-#: modules/newsletter/includes/class-settings.php:174
+#: modules/newsletter/includes/class-settings.php:175
 msgid "Newsletter"
 msgstr ""
 
@@ -4074,75 +4081,75 @@ msgstr ""
 msgid "Create the draft in Mailchimp"
 msgstr ""
 
-#: modules/newsletter/includes/class-settings.php:124
+#: modules/newsletter/includes/class-settings.php:125
 msgid "Read more"
 msgstr ""
 
-#: modules/newsletter/includes/class-settings.php:145
+#: modules/newsletter/includes/class-settings.php:146
 msgid ""
 "The Mailchimp key must end in its datacenter (for example -us21). It was not "
 "saved."
 msgstr ""
 
-#: modules/newsletter/includes/class-settings.php:161
+#: modules/newsletter/includes/class-settings.php:162
 msgid ""
 "The email template must contain {{blocks}}, where the news go. It was not "
 "saved."
 msgstr ""
 
-#: modules/newsletter/includes/class-settings.php:188
+#: modules/newsletter/includes/class-settings.php:189
 msgid "Mailchimp"
 msgstr ""
 
-#: modules/newsletter/includes/class-settings.php:190
+#: modules/newsletter/includes/class-settings.php:191
 msgid ""
 "The «Newsletter» screen (under Posts) creates the campaign as a DRAFT in "
 "Mailchimp, never sends it. Audience, segment and sender are copied from the "
 "last campaign sent."
 msgstr ""
 
-#: modules/newsletter/includes/class-settings.php:193
+#: modules/newsletter/includes/class-settings.php:194
 msgid "API key"
 msgstr ""
 
-#: modules/newsletter/includes/class-settings.php:198
+#: modules/newsletter/includes/class-settings.php:199
 msgid ""
 "Mailchimp → Account → Extras → API keys. Without it, the screen only copies "
 "the code."
 msgstr ""
 
-#: modules/newsletter/includes/class-settings.php:198
+#: modules/newsletter/includes/class-settings.php:199
 msgid "Saved. Leave it empty to keep it."
 msgstr ""
 
-#: modules/newsletter/includes/class-settings.php:202
+#: modules/newsletter/includes/class-settings.php:203
 msgid "Forget the key"
 msgstr ""
 
-#: modules/newsletter/includes/class-settings.php:207
+#: modules/newsletter/includes/class-settings.php:208
 msgid "Audience ID"
 msgstr ""
 
-#: modules/newsletter/includes/class-settings.php:210
+#: modules/newsletter/includes/class-settings.php:211
 msgid ""
 "Optional. Empty: the audience of the last campaign sent from the account."
 msgstr ""
 
-#: modules/newsletter/includes/class-settings.php:214
+#: modules/newsletter/includes/class-settings.php:215
 msgid "Featured category"
 msgstr ""
 
-#: modules/newsletter/includes/class-settings.php:217
+#: modules/newsletter/includes/class-settings.php:218
 msgid ""
 "Slug of the category whose posts are proposed first (the front page one). "
 "Empty: only the latest posts."
 msgstr ""
 
-#: modules/newsletter/includes/class-settings.php:223
+#: modules/newsletter/includes/class-settings.php:224
 msgid "Templates"
 msgstr ""
 
-#: modules/newsletter/includes/class-settings.php:225
+#: modules/newsletter/includes/class-settings.php:226
 msgid ""
 "Empty fields use a plain design. Email: the whole HTML, with {{blocks}} "
 "where the news go. Block: one piece of news, with {{link}}, {{image}}, "
@@ -4150,7 +4157,7 @@ msgid ""
 "language)."
 msgstr ""
 
-#: modules/newsletter/includes/class-settings.php:232
+#: modules/newsletter/includes/class-settings.php:233
 msgid "Block"
 msgstr ""
 
@@ -4166,63 +4173,63 @@ msgctxt "module name"
 msgid "Newsletter"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:43
-#: modules/redirects/includes/admin/class-page.php:176
-#: modules/redirects/includes/admin/class-page.php:182
+#: modules/redirects/includes/admin/class-page.php:44
+#: modules/redirects/includes/admin/class-page.php:177
+#: modules/redirects/includes/admin/class-page.php:183
 msgid "Redirects"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:154
+#: modules/redirects/includes/admin/class-page.php:155
 msgid "Redirect saved."
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:155
+#: modules/redirects/includes/admin/class-page.php:156
 msgid ""
 "Redirect saved, but that source is a page that exists on the website: the "
 "redirect only works on addresses that give a 404. It will start working when "
 "the page is deleted or unpublished."
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:156
+#: modules/redirects/includes/admin/class-page.php:157
 msgid "Deleted."
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:157
+#: modules/redirects/includes/admin/class-page.php:158
 msgid "Updated."
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:158
+#: modules/redirects/includes/admin/class-page.php:159
 msgid "Choose a CSV file."
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:159
+#: modules/redirects/includes/admin/class-page.php:160
 msgid "Settings saved."
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:160
+#: modules/redirects/includes/admin/class-page.php:161
 msgid "The 404 log is empty."
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:178
+#: modules/redirects/includes/admin/class-page.php:179
 msgid "404 log"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:179
+#: modules/redirects/includes/admin/class-page.php:180
 msgid "Import / export"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:182
+#: modules/redirects/includes/admin/class-page.php:183
 msgid ""
 "Old addresses that send visitors to the new ones (301, 302), or say a page "
 "is gone for good (410)."
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:186
+#: modules/redirects/includes/admin/class-page.php:187
 msgid "There are two redirect systems on this website."
 msgstr ""
 
 #. translators: %s: names of other active redirect plugins, e.g. "Rank Math".
-#: modules/redirects/includes/admin/class-page.php:188
+#: modules/redirects/includes/admin/class-page.php:189
 #, php-format
 msgid ""
 "Also active: %s. Both act on the same addresses and the other one usually "
@@ -4230,181 +4237,182 @@ msgid ""
 "Estrategia Web → Modules."
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:197
+#: modules/redirects/includes/admin/class-page.php:198
 msgid "Edit redirect"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:201
+#: modules/redirects/includes/admin/class-page.php:202
 msgid "Redirects sections"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:223
+#: modules/redirects/includes/admin/class-page.php:228
 msgid "Search redirects"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:264
-#: modules/redirects/includes/admin/class-tables.php:33
+#: modules/redirects/includes/admin/class-page.php:269
+#: modules/redirects/includes/admin/class-tables.php:94
 msgid "Source"
 msgstr ""
 
 #. translators: "%3F" is the URL-encoded "?", not a placeholder: keep it as is.
-#: modules/redirects/includes/admin/class-page.php:266
+#: modules/redirects/includes/admin/class-page.php:271
 msgid ""
 "The old path, without the domain. Upper case, a final slash and any extra ?"
 "parameters are ignored when matching; ?p=123 and ?page_id=123 are the same, "
 "and so are %3F and ?."
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:271
+#: modules/redirects/includes/admin/class-page.php:276
 msgid "301 — moved permanently"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:272
+#: modules/redirects/includes/admin/class-page.php:277
 msgid "302 — moved temporarily"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:273
+#: modules/redirects/includes/admin/class-page.php:278
 msgid "410 — gone, no destination"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:277
-#: modules/redirects/includes/admin/class-tables.php:34
+#: modules/redirects/includes/admin/class-page.php:282
+#: modules/redirects/includes/admin/class-tables.php:95
 msgid "Destination"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:279
+#: modules/redirects/includes/admin/class-page.php:284
 msgid ""
 "A path on this website (/new-page/) or a full address (https://…). Empty for "
 "410."
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:282
+#: modules/redirects/includes/admin/class-page.php:287
 msgid "Note"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:287
+#: modules/redirects/includes/admin/class-page.php:292
 msgid "This redirect is working"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:290
+#: modules/redirects/includes/admin/class-page.php:295
 msgid "Add redirect"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:290
+#: modules/redirects/includes/admin/class-page.php:295
 msgid "Save redirect"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:301
+#: modules/redirects/includes/admin/class-page.php:306
 msgid "Record the addresses that give a 404 error"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:302
+#: modules/redirects/includes/admin/class-page.php:307
 msgid "Forget addresses not seen for"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:302
+#: modules/redirects/includes/admin/class-page.php:307
 msgid "days"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:303
+#: modules/redirects/includes/admin/class-page.php:308
 msgid ""
 "Only the path is recorded (and ?p= of old WordPress addresses), with a "
 "counter and dates: no IP address, browser or other personal data."
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:304
+#: modules/redirects/includes/admin/class-page.php:309
 msgid "Save settings"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:309
+#: modules/redirects/includes/admin/class-page.php:314
 msgid "Empty the 404 log"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:315
+#: modules/redirects/includes/admin/class-page.php:320
 msgid "Search paths"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:328
+#: modules/redirects/includes/admin/class-page.php:333
 msgid "Test only, nothing was saved."
 msgstr ""
 
 #. translators: 1: new rules, 2: updated rules, 3: unchanged rules, 4: rows with errors.
-#: modules/redirects/includes/admin/class-page.php:331
+#: modules/redirects/includes/admin/class-page.php:336
 #, php-format
 msgid "%1$d new, %2$d updated, %3$d unchanged, %4$d with errors."
 msgstr ""
 
 #. translators: 1: line number in the CSV, 2: source path, 3: error message.
-#: modules/redirects/includes/admin/class-page.php:337
+#: modules/redirects/includes/admin/class-page.php:342
 #, php-format
 msgid "Line %1$d (%2$s): %3$s"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:344
+#: modules/redirects/includes/admin/class-page.php:349
 msgid "Import"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:345
+#: modules/redirects/includes/admin/class-page.php:350
 msgid ""
 "A CSV with the columns origen, destino, tipo and motivo (or source, target, "
 "type, note). A source that already has a redirect is updated; nothing is "
 "deleted."
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:350
+#: modules/redirects/includes/admin/class-page.php:355
 msgid "Test only: show what would happen without saving"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:351
+#: modules/redirects/includes/admin/class-page.php:356
 msgid "Import CSV"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:353
+#: modules/redirects/includes/admin/class-page.php:358
 msgid "Export"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-page.php:354
+#: modules/redirects/includes/admin/class-page.php:359
 msgid "Download CSV"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-tables.php:36
-#: modules/redirects/includes/admin/class-tables.php:134
-msgid "Hits"
-msgstr ""
-
-#: modules/redirects/includes/admin/class-tables.php:37
-msgid "Last hit"
-msgstr ""
-
-#: modules/redirects/includes/admin/class-tables.php:78
-msgid "No redirects yet."
-msgstr ""
-
-#: modules/redirects/includes/admin/class-tables.php:90
-msgid "Delete this redirect?"
-msgstr ""
-
-#: modules/redirects/includes/admin/class-tables.php:101
+#: modules/redirects/includes/admin/class-tables.php:53
+#: modules/redirects/includes/admin/class-tables.php:162
 msgid "410 Gone"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-tables.php:133
+#: modules/redirects/includes/admin/class-tables.php:97
+#: modules/redirects/includes/admin/class-tables.php:195
+msgid "Hits"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-tables.php:98
+msgid "Last hit"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-tables.php:139
+msgid "No redirects yet."
+msgstr ""
+
+#: modules/redirects/includes/admin/class-tables.php:151
+msgid "Delete this redirect?"
+msgstr ""
+
+#: modules/redirects/includes/admin/class-tables.php:194
 msgid "Path"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-tables.php:135
+#: modules/redirects/includes/admin/class-tables.php:196
 msgid "First seen"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-tables.php:136
+#: modules/redirects/includes/admin/class-tables.php:197
 msgid "Last seen"
 msgstr ""
 
-#: modules/redirects/includes/admin/class-tables.php:170
+#: modules/redirects/includes/admin/class-tables.php:232
 msgid "No 404 errors recorded."
 msgstr ""
 
-#: modules/redirects/includes/admin/class-tables.php:180
+#: modules/redirects/includes/admin/class-tables.php:242
 msgid "Create redirect"
 msgstr ""
 

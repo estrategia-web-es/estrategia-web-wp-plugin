@@ -4,7 +4,7 @@ Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.7.0
+Stable tag: 2.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,6 +80,11 @@ Its settings, yes. Your data (form submissions, redirects, company details) is k
 The cookie list includes an extract of the Open Cookie Database (https://github.com/jkwakman/Open-Cookie-Database), © Jan Kwakman and contributors, Apache License 2.0. Details in modules/consent/data/NOTICE.
 
 == Changelog ==
+
+= 2.8.0 =
+* Content types: each type's list of entries has a dropdown per taxonomy, and several dropdowns add up.
+* Form submissions: views by notification state with their count, and sorting by date and by form.
+* Redirects: views by type (301, 302, 410) and inactive with their count; sorting by last hit puts the rules that never fired last; the 404 log sorts by first seen.
 
 = 2.7.0 =
 * New Newsletter module (off by default): choose the week's posts, preview the email and copy its code, or create the campaign as a draft in Mailchimp. It never sends.

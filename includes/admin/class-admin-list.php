@@ -18,26 +18,49 @@
  *                                     not one meta (2.6.0): a computed state,
  *                                     totals in the module's own table.
  *   taxonomy_filter( type, taxonomy ) the dropdown «All zones / Lateral…».
+ *                                     Several on one list ADD UP (2.8.0):
+ *                                     «Italian» and «Palma» is both.
+ * Who uses it, and the hand-built lists: the docblock of the class, below.
  * How to maintain:
- * - Who: whoever gives a module a list of records. Banners is the first
- *   (Post_Type::boot()); content types, forms and redirects come next.
- * - Criterion: only what WordPress's list table can show. A summary or a
- *   chart is not a list: it goes on the module's own screen.
+ * - Who: whoever gives a module a list of records, in the same commit as
+ *   its level 2 test (modules/banners/tests/admin-list.test.mjs is the model).
+ * - Criterion: only what WordPress's list table can show, and only what
+ *   helps someone FIND a record. A summary or a chart is not a list: it goes
+ *   on the module's own screen. Why no «dropdown per select field»: below.
  * - Edge case, by name: a view whose condition is «no end date». The meta
  *   is 0 or missing, so the meta_query needs NOT EXISTS as well as = 0, or
  *   the old banners without the field disappear from «Showing».
+ * - Edge case, by name (2.8.0): gment_cuisine, ONE taxonomy shared by
+ *   restaurants and wines. A term's count is of every type, so «Italian (5)»
+ *   on the wines list would count restaurants: the dropdown shows counts
+ *   only when the taxonomy belongs to that type alone.
  * - The trap: sorting by a meta with orderby=meta_value_num and meta_key
  *   hides every post that does not have that meta. Hence the named clause
  *   with EXISTS / NOT EXISTS in sortable().
- * - The list tables built by hand (forms' submissions, redirects) are
- *   WP_List_Table subclasses: there the same three things are its own
- *   methods (get_views, get_sortable_columns, extra_tablenav), not this.
+ * - The other trap (2.8.0): each taxonomy_filter() used to SET tax_query,
+ *   so with two dropdowns only the last one filtered. It appends now.
+ * - This header's trap: Plugin Check missed the ABSPATH line at byte 3409
+ *   (found at 3098). More text goes in the class docblock.
  */
 
 namespace EstrategiaWeb\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Who uses it (2.8.0): banners (Post_Type::list_tools()) and the content
+ * types' entries (modules/content-types/includes/admin/class-list-tools.php,
+ * one dropdown per taxonomy of each type).
+ *
+ * The list tables built by hand (forms' submissions, redirects) are
+ * WP_List_Table subclasses: there the same three things are its own methods
+ * (get_views, get_sortable_columns, extra_tablenav), not this. Since 2.8.0
+ * both have them: Submissions_Table and Rules_Table / Log_Table.
+ *
+ * There is no generic «dropdown per select field»: a field that only says
+ * how something LOOKS (a client's «image fit») would be noise next to one
+ * that classifies (a restaurant's price range), and nothing tells them apart.
+ */
 final class Admin_List {
 
 	/** Is $query the main query of the list screen of $type? */
@@ -186,7 +209,7 @@ final class Admin_List {
 						'selected'        => isset( $_GET[ $taxonomy ] ) ? sanitize_title( wp_unslash( $_GET[ $taxonomy ] ) ) : '', // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- a read-only filter.
 						'hide_empty'      => false,
 						'hierarchical'    => true,
-						'show_count'      => true,
+						'show_count'      => 1 === count( (array) $tax->object_type ), // A shared taxonomy's counts are of every type (header).
 					)
 				);
 			}
@@ -199,16 +222,14 @@ final class Admin_List {
 				if ( '' === $term || '0' === $term || ! self::is_list( $query, $type ) ) {
 					return;
 				}
-				$query->set(
-					'tax_query',
-					array(
-						array(
-							'taxonomy' => $taxonomy,
-							'field'    => 'slug',
-							'terms'    => $term,
-						),
-					)
+				// Appended, not set: another dropdown of the same list may have added its own (the trap in the header).
+				$tax_query   = (array) ( $query->get( 'tax_query' ) ?: array() ); // get() gives '' when unset, and (array) '' is [''].
+				$tax_query[] = array(
+					'taxonomy' => $taxonomy,
+					'field'    => 'slug',
+					'terms'    => $term,
 				);
+				$query->set( 'tax_query', $tax_query );
 			}
 		);
 	}
