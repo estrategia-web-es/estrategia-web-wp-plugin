@@ -72,20 +72,20 @@ msgstr ""
 msgid "Off"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:211
-#: includes/admin/class-settings-page.php:229
+#: includes/admin/class-settings-page.php:212
+#: includes/admin/class-settings-page.php:230
 #: modules/content-types/includes/admin/class-page.php:269
 #: modules/forms/includes/admin/class-admin.php:56
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:229
+#: includes/admin/class-settings-page.php:230
 msgid ""
 "How the site behaves, by topic: the cookie notice, the statistics and what "
 "is accepted when uploading images."
 msgstr ""
 
-#: includes/admin/class-settings-page.php:234
+#: includes/admin/class-settings-page.php:235
 msgid "Settings sections"
 msgstr ""
 
@@ -290,6 +290,7 @@ msgstr ""
 #: modules/banners/module.php modules/carousel/module.php
 #: modules/comments-off/module.php modules/content-types/module.php
 #: modules/featured-images/module.php modules/map/module.php
+#: modules/newsletter/module.php
 msgctxt "module category"
 msgid "Content"
 msgstr ""
@@ -1630,17 +1631,20 @@ msgid "Text when no (empty: «No»)"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:359
+#: modules/newsletter/includes/class-screen.php:72
 #: modules/social/includes/class-admin.php:68
 msgid "Move up"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:360
+#: modules/newsletter/includes/class-screen.php:73
 #: modules/social/includes/class-admin.php:69
 msgid "Move down"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:361
 #: modules/content-types/includes/class-fields-panel.php:192
+#: modules/newsletter/includes/class-screen.php:74
 #: modules/social/includes/class-admin.php:70
 msgid "Remove"
 msgstr ""
@@ -1711,6 +1715,7 @@ msgid "Web address"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:380
+#: modules/newsletter/includes/class-settings.php:228
 #: modules/site/includes/class-company.php:133
 #: modules/social/includes/class-icons.php:82
 msgid "Email"
@@ -2092,6 +2097,7 @@ msgid "Search %s"
 msgstr ""
 
 #: modules/content-types/includes/class-registrar.php:304
+#: modules/newsletter/includes/class-screen.php:78
 msgid "Nothing found."
 msgstr ""
 
@@ -3886,6 +3892,278 @@ msgctxt "module description"
 msgid ""
 "Matomo tracking code, cookieless or hybrid (no cookies until the visitor "
 "accepts analytics in the cookie notice)."
+msgstr ""
+
+#. translators: %d: the maximum.
+#: modules/newsletter/includes/class-builder.php:166
+#, php-format
+msgid "A newsletter carries at most %d posts."
+msgstr ""
+
+#. translators: %d: post ID.
+#: modules/newsletter/includes/class-builder.php:178
+#, php-format
+msgid "Post %d is not a published post that can go in the newsletter."
+msgstr ""
+
+#. translators: %s: post title.
+#: modules/newsletter/includes/class-builder.php:183
+#, php-format
+msgid "«%s» has no featured image: its block goes without photo."
+msgstr ""
+
+#. translators: %s: post title.
+#: modules/newsletter/includes/class-builder.php:186
+#, php-format
+msgid ""
+"«%s»: its photo only exists in WebP, which Outlook does not show. Upload it "
+"again as JPEG."
+msgstr ""
+
+#: modules/newsletter/includes/class-builder.php:193
+msgid "The email template has no {{blocks}}."
+msgstr ""
+
+#. translators: 1: HTTP status, 2: Mailchimp's message.
+#: modules/newsletter/includes/class-mailchimp.php:78
+#, php-format
+msgid "Mailchimp answered %1$d: %2$s"
+msgstr ""
+
+#: modules/newsletter/includes/class-mailchimp.php:90
+msgid "There is no valid Mailchimp key in the settings."
+msgstr ""
+
+#: modules/newsletter/includes/class-mailchimp.php:108
+msgid "Mailchimp has no campaign sent to copy the audience and sender from."
+msgstr ""
+
+#: modules/newsletter/includes/class-mailchimp.php:117
+msgid "Mailchimp did not return the new campaign."
+msgstr ""
+
+#: modules/newsletter/includes/class-mailchimp.php:128
+msgid ""
+"Mailchimp made the campaign with a drag-and-drop template, which would send "
+"the template and not these news. It has been deleted."
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:47
+#: modules/newsletter/includes/class-screen.php:100
+#: modules/newsletter/includes/class-settings.php:174
+msgid "Newsletter"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:70
+msgid "Add"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:71
+msgid "Added"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:75
+msgid "On the front page"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:76
+msgid "Latest posts"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:77
+msgid "Search results"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:79
+msgid ""
+"Add the posts of this week, in the order they will go. The first one gives "
+"the subject."
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:80
+msgid "Subject:"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:81
+msgid "Code copied. Paste it into Mailchimp (code block or «Paste in code»)."
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:82
+msgid ""
+"The browser did not let the code be copied: select it below and copy it by "
+"hand."
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:83
+msgid "Creating the draft in Mailchimp…"
+msgstr ""
+
+#. translators: 1: subject, 2: number of recipients.
+#: modules/newsletter/includes/class-screen.php:85
+#, php-format
+msgid "Draft created: «%1$s», for %2$s recipients. Nothing has been sent."
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:86
+msgid "Open it in Mailchimp"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:87
+msgid ""
+"Before sending: send yourself the test from Mailchimp, OPEN it and read the "
+"headlines."
+msgstr ""
+
+#. translators: 1: subject of the campaign copied, 2: its date.
+#: modules/newsletter/includes/class-screen.php:89
+#, php-format
+msgid "Audience and sender copied from «%1$s» (%2$s)."
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:90
+msgid "It could not be done:"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:100
+msgid ""
+"Choose the posts, put them in order and check the email. Then copy its code "
+"or create the draft in Mailchimp: nothing is sent from here."
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:104
+msgid "Without a Mailchimp key only the code can be copied."
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:106
+msgid "Add it in the settings"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:111
+msgid "Posts"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:114
+msgid "Search posts"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:115
+msgid "Search"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:119
+msgid "In the newsletter"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:123
+msgid "Preview"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:125
+msgid "Preview of the email"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:126
+msgid "HTML code"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:129
+msgid "Copy the code"
+msgstr ""
+
+#: modules/newsletter/includes/class-screen.php:130
+msgid "Create the draft in Mailchimp"
+msgstr ""
+
+#: modules/newsletter/includes/class-settings.php:124
+msgid "Read more"
+msgstr ""
+
+#: modules/newsletter/includes/class-settings.php:145
+msgid ""
+"The Mailchimp key must end in its datacenter (for example -us21). It was not "
+"saved."
+msgstr ""
+
+#: modules/newsletter/includes/class-settings.php:161
+msgid ""
+"The email template must contain {{blocks}}, where the news go. It was not "
+"saved."
+msgstr ""
+
+#: modules/newsletter/includes/class-settings.php:188
+msgid "Mailchimp"
+msgstr ""
+
+#: modules/newsletter/includes/class-settings.php:190
+msgid ""
+"The «Newsletter» screen (under Posts) creates the campaign as a DRAFT in "
+"Mailchimp, never sends it. Audience, segment and sender are copied from the "
+"last campaign sent."
+msgstr ""
+
+#: modules/newsletter/includes/class-settings.php:193
+msgid "API key"
+msgstr ""
+
+#: modules/newsletter/includes/class-settings.php:198
+msgid ""
+"Mailchimp → Account → Extras → API keys. Without it, the screen only copies "
+"the code."
+msgstr ""
+
+#: modules/newsletter/includes/class-settings.php:198
+msgid "Saved. Leave it empty to keep it."
+msgstr ""
+
+#: modules/newsletter/includes/class-settings.php:202
+msgid "Forget the key"
+msgstr ""
+
+#: modules/newsletter/includes/class-settings.php:207
+msgid "Audience ID"
+msgstr ""
+
+#: modules/newsletter/includes/class-settings.php:210
+msgid ""
+"Optional. Empty: the audience of the last campaign sent from the account."
+msgstr ""
+
+#: modules/newsletter/includes/class-settings.php:214
+msgid "Featured category"
+msgstr ""
+
+#: modules/newsletter/includes/class-settings.php:217
+msgid ""
+"Slug of the category whose posts are proposed first (the front page one). "
+"Empty: only the latest posts."
+msgstr ""
+
+#: modules/newsletter/includes/class-settings.php:223
+msgid "Templates"
+msgstr ""
+
+#: modules/newsletter/includes/class-settings.php:225
+msgid ""
+"Empty fields use a plain design. Email: the whole HTML, with {{blocks}} "
+"where the news go. Block: one piece of news, with {{link}}, {{image}}, "
+"{{title}}, {{excerpt}}, {{label}} and {{more}} («Read more» in the site "
+"language)."
+msgstr ""
+
+#: modules/newsletter/includes/class-settings.php:232
+msgid "Block"
+msgstr ""
+
+#: modules/newsletter/module.php
+msgctxt "module description"
+msgid ""
+"Choose the week's posts, preview the newsletter and copy its code or create "
+"the draft in Mailchimp. It never sends."
+msgstr ""
+
+#: modules/newsletter/module.php
+msgctxt "module name"
+msgid "Newsletter"
 msgstr ""
 
 #: modules/redirects/includes/admin/class-page.php:43

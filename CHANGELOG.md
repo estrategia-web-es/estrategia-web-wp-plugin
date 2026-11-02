@@ -9,6 +9,44 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.7.0 — 02-11-2026
+
+**What each site must do:** nothing (the module is off). To use it
+(Gastronòmicament): switch on **Newsletter** in Modules, and in **Estrategia
+Web › Settings › Newsletter** paste the Mailchimp API key, `inici` as the
+featured category, and the two templates of
+`modules/newsletter/tests/fixtures/gastronomicament-email.html` and
+`-block.html` (its 2016 design, cut from the real butlletí of 04-09-2026).
+
+- **New `newsletter` module** (Default: off, category Content): «Posts →
+  Newsletter» proposes the featured category's posts and the latest (or a
+  search), you choose and order them (up/down), see the email, and either
+  «Copy the code» or «Create the draft in Mailchimp». **It never sends**: the
+  test is sent and OPENED from Mailchimp (the 04-09-2026 rule).
+- The draft is a NEW regular campaign WITHOUT template, copying audience,
+  segment, sender and flags (automatic tweet included) from the last campaign
+  sent; subject = the first post's title; the content goes with PUT
+  /content and is checked not to be drag-and-drop (the 04-09-2026 trap). If
+  a step fails, the new campaign is deleted.
+- Each block: link, photo (never WebP if a JPEG/PNG is on disk, and the
+  screen warns when there is only WebP), title, lead cut at 16 words with
+  «…», and its label («Actualitat – Llegeix-ne més»).
+- The email is built from two templates in the settings (`{{blocks}}` in the
+  email; `{{link}}`, `{{image}}`, `{{title}}`, `{{excerpt}}`, `{{label}}`,
+  `{{more}}` in a block), with plain defaults. Why templates and not the last
+  campaign with its blocks replaced: header of
+  `modules/newsletter/includes/class-settings.php`.
+- New public names: option `estrategia_web_newsletter` (not in REST: it holds
+  the key), routes `estrategia-web/v1/newsletter/posts`, `/preview`,
+  `/draft`, filters `estrategia_web_newsletter_post_types` and
+  `estrategia_web_newsletter_label`.
+- Settings page: a fourth tab, **Newsletter** (order 40).
+- Tests: `newsletter/pure` (level 1, including Gastronòmicament's real
+  04-09-2026 butlletí rebuilt byte for byte from its templates) and
+  `newsletter/newsletter` (level 2, Mailchimp faked with pre_http_request).
+  **Not tested against the real Mailchimp**: the fake answers what atlas's
+  `bin/mailchimp.js` gets from it; the first real draft is the proof.
+
 ## 2.6.0 — 02-11-2026
 
 **What each site must do:** nothing. On the first load after updating, every

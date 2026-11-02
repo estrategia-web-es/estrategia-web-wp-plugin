@@ -7,7 +7,8 @@ defined( 'ABSPATH' ) || exit;
  * «Estrategia Web › Settings» (1.7.0): ONE page with WordPress tabs
  * (?page=estrategia-web-settings&tab=…) for the modules' settings that are
  * set once and forgotten — today «Cookies» (consent), «Analytics»
- * (google-tags and matomo) and «Media» (site's SVG and uploads). It knows
+ * (google-tags and matomo), «Media» (site's SVG and uploads) and, since
+ * 2.7.0, «Newsletter» (newsletter: Mailchimp key and templates). It knows
  * NO module: each module adds its tab and its section through the registry
  * below. With no section at all, the page is not even registered.
  *
@@ -28,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  * - add_tab( id, label, order ): idempotent. Two modules sharing a tab
  *   (google-tags and matomo on «analytics») both call it; the FIRST call's
  *   label and order win, so both must say the same thing. Today's orders:
- *   cookies 10, analytics 20, media 30.
+ *   cookies 10, analytics 20, media 30, newsletter 40 (2.7.0).
  * - add_section( tab, args ): what the tab shows, sorted by priority (then
  *   id). A TAB IS SHOWN ONLY IF IT HAS A SECTION, which is how «each tab only
  *   if its module is on» comes out by itself: a module that is off does not

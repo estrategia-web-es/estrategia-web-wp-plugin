@@ -69,9 +69,9 @@ before(async () => {
 after(() => cleaned || testApi("/setup", { method: "POST", body: { options: Object.fromEntries(CLEANUP.map((n) => [n, null])) } }));
 const text = async (k) => (await screens[k]).text;
 
-test("everything on: three tabs; Analytics and Media each ONE form for two modules", async () => {
+test("everything on: four tabs; Analytics and Media each ONE form for two modules", async () => {
   const [analytics, media] = await Promise.all(["analytics", "media"].map(text));
-  assert.deepEqual(tabsOf(analytics), ["cookies", "analytics", "media"], "everything on");
+  assert.deepEqual(tabsOf(analytics), ["cookies", "analytics", "media", "newsletter"], "everything on (newsletter since 2.7.0)");
   assert.ok(analytics.includes('name="estrategia_web_google_tags[ga4]"') && analytics.includes('name="estrategia_web_site[matomo_url]"'), "Google tags and Matomo share the tab");
   assert.equal((analytics.match(/<form [^>]*action="options\.php"/g) || []).length, 1, "ONE form and one Save for the tab");
   assert.ok(media.includes('name="estrategia_web_site[allow_svg]"') && media.includes('name="estrategia_web_uploads[max_mb]"'), "SVG and uploads share Media");
@@ -120,9 +120,9 @@ test("saving Company details does not wipe SVG or Matomo, and vice versa from Se
 
 test("each tab iff its module: consent off, no Cookies, and an unknown tab opens the first one left (Analytics); google-tags off, Analytics with only Matomo; both analytics modules off, no Analytics; uploads off, Media with only SVG", async () => {
   const [page, mediaOnly] = await Promise.all(["noConsent", "noAnalyticsNoUploads"].map((k) => screens[k]));
-  assert.deepEqual(tabsOf(page.text), ["analytics", "media"], "consent off: no Cookies");
+  assert.deepEqual(tabsOf(page.text), ["analytics", "media", "newsletter"], "consent off: no Cookies");
   assert.match(page.text, /nav-tab-active" data-tab="analytics"/, "an unknown tab (or none) opens the first one");
   assert.ok(!page.text.includes("estrategia_web_google_tags[") && page.text.includes("estrategia_web_site[matomo_url]"), "google-tags off: only Matomo");
-  assert.deepEqual(tabsOf(mediaOnly.text), ["cookies", "media"], "both analytics modules off: no Analytics");
+  assert.deepEqual(tabsOf(mediaOnly.text), ["cookies", "media", "newsletter"], "both analytics modules off: no Analytics");
   assert.ok(mediaOnly.text.includes("estrategia_web_site[allow_svg]") && !mediaOnly.text.includes("estrategia_web_uploads["), "uploads off: Media has only SVG (site is core)");
 });

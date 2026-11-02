@@ -4,7 +4,7 @@ Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.6.0
+Stable tag: 2.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,6 +23,7 @@ Most small business sites need the same dozen things besides their design. Estra
 * **Blocks**: carousel, two-click map, WhatsApp button, social links and a language switcher for WPML.
 * **Analytics behind consent**: Google Analytics 4, Google Ads and Google Tag Manager with Consent Mode v2, and Matomo without cookies. Nothing loads until you fill in an ID.
 * **Media**: WebP image sizes, phone photo uploads scaled down to 2560 px, sanitised SVG uploads and correctly sized featured images.
+* **Newsletter**: choose the week's posts, preview the email and copy its HTML, or create the campaign as a draft in Mailchimp (never sent from WordPress).
 * **Small things**: external links in a new tab with an accessible label, and turning comments off everywhere.
 
 Translations: Spanish and Catalan included. WPML is supported throughout.
@@ -33,7 +34,12 @@ Everything is in the plugin as it runs, unminified sources included. The minifie
 
 == External services ==
 
-The plugin does not contact any service on its own. The following ones are only used when you switch the module on AND fill in its settings, and only from the visitor's browser.
+The plugin does not contact any service on its own. The following ones are only used when you switch the module on AND fill in its settings, and only from the visitor's browser, except Mailchimp, which the server calls when an editor asks for it.
+
+= Mailchimp (Newsletter module) =
+
+Off by default. Only when you save a Mailchimp API key and an editor clicks "Create the draft in Mailchimp", the server calls the Mailchimp Marketing API (<datacenter>.api.mailchimp.com) to read the last campaign sent (its audience, segment and sender) and to create a new draft campaign with the posts chosen (their titles, excerpts, links and image URLs). Nothing about visitors is sent, and no campaign is ever sent from WordPress.
+Terms: https://mailchimp.com/legal/terms/ · Privacy: https://www.intuit.com/privacy/statement/
 
 = Google Maps (Map block, Locations) =
 
@@ -74,6 +80,9 @@ Its settings, yes. Your data (form submissions, redirects, company details) is k
 The cookie list includes an extract of the Open Cookie Database (https://github.com/jkwakman/Open-Cookie-Database), © Jan Kwakman and contributors, Apache License 2.0. Details in modules/consent/data/NOTICE.
 
 == Changelog ==
+
+= 2.7.0 =
+* New Newsletter module (off by default): choose the week's posts, preview the email and copy its code, or create the campaign as a draft in Mailchimp. It never sends.
 
 = 2.6.0 =
 * Banners: the state (showing, scheduled, expired, off) is stored and kept current when a banner is saved, when its dates arrive and once a day.

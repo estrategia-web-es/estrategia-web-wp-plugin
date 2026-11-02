@@ -31,6 +31,8 @@ const SCREENS = {
   submissions: { url: "estrategia-web-forms" },
   contentTypes: { url: "estrategia-web-content-types" },
   redirects: { url: "estrategia-web-redirects", tabs: true },
+  newsletterSettings: { url: "estrategia-web-settings&tab=newsletter", form: true, tabs: true },
+  newsletter: { url: "estrategia-web-newsletter" }, // Under Posts (edit.php), but admin.php?page= serves it too.
 };
 const html = {};
 
