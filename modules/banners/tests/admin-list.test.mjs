@@ -12,7 +12,7 @@
 // delete banners, so before() and after() delete this test's own (title prefix «prueba-listado»).
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { testApi, wp, adminSession } from "../../../tests/lib.mjs";
+import { BASE, testApi, wp, adminSession } from "../../../tests/lib.mjs";
 
 const day = 86400;
 const now = Math.floor(Date.now() / 1000);
@@ -76,6 +76,47 @@ test("the zone dropdown is there and filters", async () => {
   assert.match(text, /<select[^>]*name=['"]eweb_banner_zone['"]/); // wp_dropdown_categories writes single quotes.
   assert.match(text, /Todas las zonas/); // The label, not WordPress's «All Categories» (the test site is in es_ES).
   assert.deepEqual(rows(text).map(name).sort(), ["expired", "old"]);
+});
+
+test("sorting by state: the first click puts showing, scheduled, expired, off; the other way round on the second", async () => {
+  const s = await adminSession();
+  const desc = rows((await s.get("/wp-admin/edit.php?post_type=eweb_banner&orderby=ewb_state&order=desc")).text).map(name);
+  const rank = { active: 3, old: 3, scheduled: 2, expired: 1, draft: 0 };
+  assert.deepEqual(desc.map((k) => rank[k]), [3, 3, 2, 1, 0], desc.join(","));
+  const asc = rows((await s.get("/wp-admin/edit.php?post_type=eweb_banner&orderby=ewb_state&order=asc")).text).map(name);
+  assert.deepEqual(asc.map((k) => rank[k]), [0, 1, 2, 3, 3], asc.join(","));
+});
+
+test("sorting by views and by clicks: the totals of the stats table, banners without any included", async () => {
+  // As a visitor would: the zone's view.js posts the ids it showed, and the id clicked.
+  const hit = (body) => fetch(BASE + "/wp-json/estrategia-web/v1/banners/hits", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  for (let i = 0; i < 3; i++) await hit({ views: [ids.active] });
+  await hit({ views: [ids.old, ids.expired] });
+  await hit({ views: [ids.old] });
+  await hit({ views: [], click: ids.expired });
+  await hit({ views: [], click: ids.expired });
+  await hit({ views: [], click: ids.old });
+  const s = await adminSession();
+  const byViews = rows((await s.get("/wp-admin/edit.php?post_type=eweb_banner&orderby=ewb_views&order=desc")).text).map(name);
+  assert.equal(byViews.length, 5, byViews.join(","));
+  assert.deepEqual(byViews.slice(0, 3), ["active", "old", "expired"], byViews.join(","));
+  const byClicks = rows((await s.get("/wp-admin/edit.php?post_type=eweb_banner&orderby=ewb_clicks&order=desc")).text).map(name);
+  assert.deepEqual(byClicks.slice(0, 2), ["expired", "old"], byClicks.join(","));
+});
+
+test("the state is STORED on create, and changing the dates through REST re-stores it (2.6.0)", async () => {
+  const meta = async (id) => (await wp(`/eweb-banners/${id}?context=edit`)).json.meta.estrategia_web_banner_state;
+  assert.deepEqual(
+    { active: await meta(ids.active), scheduled: await meta(ids.scheduled), expired: await meta(ids.expired), old: await meta(ids.old), draft: await meta(ids.draft) },
+    { active: "active", scheduled: "scheduled", expired: "expired", old: "active", draft: "off" }
+  );
+  // The trap of class-state.php: save_post runs before REST writes the meta; without rest_after_insert
+  // this stayed «expired».
+  const extra = (await wp("/eweb-banners", { method: "POST", body: { title: "prueba-listado extra", status: "publish", meta: { estrategia_web_banner_end: now - day } } })).json.id;
+  assert.equal(await meta(extra), "expired");
+  await wp(`/eweb-banners/${extra}`, { method: "POST", body: { meta: { estrategia_web_banner_end: now + day } } });
+  assert.equal(await meta(extra), "active");
+  await wp(`/eweb-banners/${extra}?force=true`, { method: "DELETE" });
 });
 
 test("sorting by dates keeps the banner without dates and orders by start", async () => {

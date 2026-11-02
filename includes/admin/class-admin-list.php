@@ -14,6 +14,9 @@
  *                                     meta_query, computed when shown.
  *   sortable( type, column => meta )  a column sorts by a numeric meta;
  *                                     rows without it are kept (last).
+ *   sortable_sql( type, column, fn )  a column sorts by something that is
+ *                                     not one meta (2.6.0): a computed state,
+ *                                     totals in the module's own table.
  *   taxonomy_filter( type, taxonomy ) the dropdown «All zones / Lateral…».
  * How to maintain:
  * - Who: whoever gives a module a list of records. Banners is the first
@@ -133,6 +136,35 @@ final class Admin_List {
 				$query->set( 'meta_query', $meta_query );
 				$query->set( 'orderby', array( 'ew_sort_value' => 'asc' === strtolower( (string) $query->get( 'order' ) ) ? 'ASC' : 'DESC' ) );
 			}
+		);
+	}
+
+	/**
+	 * A column that sorts by something computed or stored outside the post (2.6.0): a state worked out
+	 * from several metas, totals in a module's own table. $clauses receives WordPress's SQL clauses of
+	 * the list query and the direction, and returns them with its JOIN and ORDER BY.
+	 * Aliases in the JOIN must be the module's own (ewb_…): the views' meta_query joins postmeta too.
+	 *
+	 * @param callable(array<string, string>, string): array<string, string> $clauses
+	 */
+	public static function sortable_sql( string $type, string $column, callable $clauses ): void {
+		add_filter(
+			'manage_edit-' . $type . '_sortable_columns',
+			static function ( array $sortable ) use ( $column ): array {
+				$sortable[ $column ] = array( $column, true );
+				return $sortable;
+			}
+		);
+		add_filter(
+			'posts_clauses',
+			static function ( array $sql, \WP_Query $query ) use ( $type, $column, $clauses ): array {
+				if ( $column !== $query->get( 'orderby' ) || ! self::is_list( $query, $type ) ) {
+					return $sql;
+				}
+				return $clauses( $sql, 'asc' === strtolower( (string) $query->get( 'order' ) ) ? 'ASC' : 'DESC' );
+			},
+			10,
+			2
 		);
 	}
 

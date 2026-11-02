@@ -15,7 +15,9 @@
  *   estrategia_web_banner_adrotate AdRotate id it came from (the migration's key)
  *
  * Draft = switched off; published = it shows inside its dates. The state
- * (active, scheduled, expired, off) is computed, never stored: Rules::state().
+ * (active, scheduled, expired, off) is STORED since 2.6.0 (meta
+ * estrategia_web_banner_state, kept current by includes/class-state.php);
+ * the rule that computes it is still Rules::state().
  *
  * The screen is the classic one on purpose: the type has no «editor», so
  * WordPress does not open the block editor, and the fields are a plain
@@ -56,63 +58,49 @@ final class Post_Type {
 	}
 
 	/**
-	 * The list: views by state with their count, the zone dropdown and sorting by dates (2.5.0, Juan,
-	 * 02-11-2026). WordPress's own list table through \EstrategiaWeb\Admin\Admin_List; «Off» is
-	 * WordPress's «Draft» view, so it is not repeated. The conditions are Rules::state()'s, in SQL.
+	 * The list (2.5.0, Juan, 02-11-2026; 2.6.0): views by state with their count, the zone dropdown, and
+	 * sorting by dates, state, views and clicks. WordPress's own list table through
+	 * \EstrategiaWeb\Admin\Admin_List. Views and the state column read the STORED state (class-state.php);
+	 * «Off» is WordPress's «Draft» view, so it is not repeated.
 	 */
 	private static function list_tools(): void {
-		$start = self::FIELDS['start'];
-		$end   = self::FIELDS['end'];
-		// «No limit» is 0 or a missing meta (banners from before the field): both count as open.
-		$no_end   = array(
-			'relation' => 'OR',
-			array( 'key' => $end, 'compare' => 'NOT EXISTS' ),
-			array( 'key' => $end, 'value' => 0, 'type' => 'NUMERIC' ),
-		);
-		$open_end = static fn () => array(
-			'relation' => 'OR',
-			$no_end,
-			array( 'key' => $end, 'value' => time(), 'compare' => '>=', 'type' => 'NUMERIC' ),
-		);
-		\EstrategiaWeb\Admin\Admin_List::views(
+		$views = array();
+		foreach ( array( Rules::ACTIVE => __( 'Showing', 'estrategia-web' ), Rules::SCHEDULED => __( 'Scheduled', 'estrategia-web' ), Rules::EXPIRED => __( 'Expired', 'estrategia-web' ) ) as $state => $label ) {
+			$views[ $state ] = array(
+				'label' => $label,
+				'args'  => static fn () => array(
+					'post_status' => 'publish',
+					'meta_query'  => array( array( 'key' => State::META, 'value' => $state ) ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- admin list, a few dozen banners.
+				),
+			);
+		}
+		\EstrategiaWeb\Admin\Admin_List::views( self::TYPE, 'ewb_state', $views );
+		\EstrategiaWeb\Admin\Admin_List::taxonomy_filter( self::TYPE, self::ZONE );
+		\EstrategiaWeb\Admin\Admin_List::sortable( self::TYPE, array( 'ewb_dates' => self::FIELDS['start'] ) );
+
+		// The state sorts in its own order, not alphabetically: showing → scheduled → expired → off on the
+		// first click (WordPress sorts descending first). FIELD() gives 4 to the first of State::ORDER reversed.
+		global $wpdb;
+		\EstrategiaWeb\Admin\Admin_List::sortable_sql(
 			self::TYPE,
 			'ewb_state',
-			array(
-				Rules::ACTIVE    => array(
-					'label' => __( 'Showing', 'estrategia-web' ),
-					'args'  => static fn () => array(
-						'post_status' => 'publish',
-						'meta_query'  => array(
-							array(
-								'relation' => 'OR',
-								array( 'key' => $start, 'compare' => 'NOT EXISTS' ),
-								array( 'key' => $start, 'value' => time(), 'compare' => '<=', 'type' => 'NUMERIC' ),
-							),
-							$open_end(),
-						),
-					),
-				),
-				Rules::SCHEDULED => array(
-					'label' => __( 'Scheduled', 'estrategia-web' ),
-					'args'  => static fn () => array(
-						'post_status' => 'publish',
-						'meta_query'  => array( array( 'key' => $start, 'value' => time(), 'compare' => '>', 'type' => 'NUMERIC' ) ),
-					),
-				),
-				Rules::EXPIRED   => array(
-					'label' => __( 'Expired', 'estrategia-web' ),
-					'args'  => static fn () => array(
-						'post_status' => 'publish',
-						'meta_query'  => array(
-							array( 'key' => $end, 'value' => 0, 'compare' => '>', 'type' => 'NUMERIC' ),
-							array( 'key' => $end, 'value' => time(), 'compare' => '<', 'type' => 'NUMERIC' ),
-						),
-					),
-				),
-			)
+			static function ( array $sql, string $order ) use ( $wpdb ): array {
+				$sql['join']   .= $wpdb->prepare( " LEFT JOIN {$wpdb->postmeta} ewb_st ON ewb_st.post_id = {$wpdb->posts}.ID AND ewb_st.meta_key = %s", State::META );
+				$sql['orderby'] = "FIELD(ewb_st.meta_value, '" . implode( "','", array_map( 'esc_sql', array_reverse( State::ORDER ) ) ) . "') {$order}, {$wpdb->posts}.post_date DESC";
+				return $sql;
+			}
 		);
-		\EstrategiaWeb\Admin\Admin_List::taxonomy_filter( self::TYPE, self::ZONE );
-		\EstrategiaWeb\Admin\Admin_List::sortable( self::TYPE, array( 'ewb_dates' => $start ) );
+		foreach ( array( 'ewb_views' => 'views', 'ewb_clicks' => 'clicks' ) as $column => $field ) {
+			\EstrategiaWeb\Admin\Admin_List::sortable_sql(
+				self::TYPE,
+				$column,
+				static function ( array $sql, string $order ) use ( $wpdb, $field ): array {
+					$sql['join']   .= ' LEFT JOIN (SELECT banner_id, SUM(' . $field . ') AS total FROM ' . Store::table() . " GROUP BY banner_id) ewb_t ON ewb_t.banner_id = {$wpdb->posts}.ID";
+					$sql['orderby'] = 'COALESCE(ewb_t.total, 0) ' . $order . ", {$wpdb->posts}.post_date DESC";
+					return $sql;
+				}
+			);
+		}
 		add_action(
 			'admin_head-edit.php',
 			static function (): void {
@@ -217,7 +205,7 @@ final class Post_Type {
 			'start'  => $start,
 			'end'    => $end,
 			'weight' => max( 1, (int) ( $get( 'weight' ) ?: 5 ) ),
-			'state'  => Rules::state( $post->post_status, $start, $end, time() ),
+			'state'  => State::of( $post ), // Stored (2.6.0, class-state.php), not computed here.
 		);
 	}
 

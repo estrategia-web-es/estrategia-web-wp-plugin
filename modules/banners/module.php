@@ -54,11 +54,13 @@ require_once __DIR__ . '/includes/class-rules.php';
 require_once __DIR__ . '/includes/class-store.php';
 require_once __DIR__ . '/includes/class-post-type.php';
 require_once __DIR__ . '/includes/class-rest.php';
+require_once __DIR__ . '/includes/class-state.php';
 
 // Idempotent on every load: enabling the module does not go through activation.
 add_action( 'plugins_loaded', array( Store::class, 'maybe_install' ) );
 Post_Type::boot();
 Rest::boot();
+State::boot();
 add_action( 'init', static fn() => register_block_type( __DIR__ . '/blocks/banner-zone' ) );
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {

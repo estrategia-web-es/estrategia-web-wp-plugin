@@ -9,6 +9,28 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.6.0 — 02-11-2026
+
+**What each site must do:** nothing. On the first load after updating, every
+banner gets its stored state (one pass, option
+estrategia_web_banners_state_version) and the daily net is scheduled.
+
+- **The banner's state is stored** (David: «se calcula… esto no me gusta»):
+  meta estrategia_web_banner_state, written by the new
+  `modules/banners/includes/class-state.php` when a banner is saved (screen,
+  quick edit, REST), by a WP-Cron event at its start and at its end, and once
+  a day for all. The rule is still Rules::state(). The list's views and
+  sorting, and the zone block on the server, read it. The browser still
+  shows and hides by the dates (view.js), because pages are cached.
+- Banners list: sort by state (showing → scheduled → expired → off), views
+  and clicks (totals of the stats table).
+- `Admin_List::sortable_sql()`: a column that sorts by something that is not
+  one meta (a module's own table, a fixed order).
+- The trap, written in class-state.php: save_post runs before REST writes the
+  request's meta, so the state is also refreshed on rest_after_insert.
+- Tests: admin-list.test.mjs adds the stored state (and its change through
+  REST), and the three new sortings.
+
 ## 2.5.0 — 02-11-2026
 
 **What each site must do:** nothing. The banners list looks different.

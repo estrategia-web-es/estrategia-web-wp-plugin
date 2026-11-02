@@ -13,6 +13,11 @@ defined( 'ABSPATH' ) || exit;
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
+// The state's WP-Cron events (includes/class-state.php) go always: without the plugin nobody handles them.
+wp_unschedule_hook( 'estrategia_web_banner_state' );
+wp_unschedule_hook( 'estrategia_web_banners_states' );
+delete_option( 'estrategia_web_banners_state_version' );
+
 if ( ! defined( 'ESTRATEGIA_WEB_BANNERS_REMOVE_DATA' ) || true !== ESTRATEGIA_WEB_BANNERS_REMOVE_DATA ) {
 	return;
 }

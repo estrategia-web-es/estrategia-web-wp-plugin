@@ -70,7 +70,7 @@ msgid "Not loaded: turn on %s."
 msgstr "Nicht geladen: Schalten Sie %s ein."
 
 #: includes/admin/class-modules-page.php:173
-#: modules/banners/includes/class-post-type.php:330
+#: modules/banners/includes/class-post-type.php:318
 msgid "Off"
 msgstr "Aus"
 
@@ -135,88 +135,88 @@ msgstr "Zone (ihr Slug)"
 msgid "How many at a time (0: all, one under another)"
 msgstr "Wie viele gleichzeitig (0: alle, untereinander)"
 
-#: modules/banners/includes/class-post-type.php:82
-#: modules/banners/includes/class-post-type.php:327
-msgid "Showing"
-msgstr "Wird angezeigt"
-
-#: modules/banners/includes/class-post-type.php:96
-#: modules/banners/includes/class-post-type.php:328
-msgid "Scheduled"
-msgstr "Geplant"
-
-#: modules/banners/includes/class-post-type.php:103
-#: modules/banners/includes/class-post-type.php:329
+#: modules/banners/includes/class-post-type.php:68
+#: modules/banners/includes/class-post-type.php:317
 msgid "Expired"
 msgstr "Abgelaufen"
 
-#: modules/banners/includes/class-post-type.php:135
+#: modules/banners/includes/class-post-type.php:68
+#: modules/banners/includes/class-post-type.php:316
+msgid "Scheduled"
+msgstr "Geplant"
+
+#: modules/banners/includes/class-post-type.php:68
+#: modules/banners/includes/class-post-type.php:315
+msgid "Showing"
+msgstr "Wird angezeigt"
+
+#: modules/banners/includes/class-post-type.php:123
 msgid "Banners"
 msgstr "Banner"
 
-#: modules/banners/includes/class-post-type.php:136
-#: modules/banners/includes/class-post-type.php:225
+#: modules/banners/includes/class-post-type.php:124
+#: modules/banners/includes/class-post-type.php:213
 msgid "Banner"
 msgstr "Banner"
 
-#: modules/banners/includes/class-post-type.php:137
-#: modules/banners/includes/class-post-type.php:138
+#: modules/banners/includes/class-post-type.php:125
+#: modules/banners/includes/class-post-type.php:126
 msgid "Add banner"
 msgstr "Banner hinzufügen"
 
-#: modules/banners/includes/class-post-type.php:139
+#: modules/banners/includes/class-post-type.php:127
 msgid "Edit banner"
 msgstr "Banner bearbeiten"
 
-#: modules/banners/includes/class-post-type.php:140
+#: modules/banners/includes/class-post-type.php:128
 msgid "New banner"
 msgstr "Neues Banner"
 
-#: modules/banners/includes/class-post-type.php:141
+#: modules/banners/includes/class-post-type.php:129
 msgid "Search banners"
 msgstr "Banner durchsuchen"
 
-#: modules/banners/includes/class-post-type.php:142
+#: modules/banners/includes/class-post-type.php:130
 msgid "No banners found."
 msgstr "Keine Banner gefunden."
 
-#: modules/banners/includes/class-post-type.php:143
+#: modules/banners/includes/class-post-type.php:131
 msgid "No banners found in Trash."
 msgstr "Keine Banner im Papierkorb gefunden."
 
-#: modules/banners/includes/class-post-type.php:144
+#: modules/banners/includes/class-post-type.php:132
 msgid "Banner image"
 msgstr "Banner-Bild"
 
-#: modules/banners/includes/class-post-type.php:145
+#: modules/banners/includes/class-post-type.php:133
 msgid "Set banner image"
 msgstr "Banner-Bild festlegen"
 
-#: modules/banners/includes/class-post-type.php:170
+#: modules/banners/includes/class-post-type.php:158
 msgid "Banner zones"
 msgstr "Banner-Zonen"
 
-#: modules/banners/includes/class-post-type.php:171
+#: modules/banners/includes/class-post-type.php:159
 msgid "Banner zone"
 msgstr "Banner-Zone"
 
-#: modules/banners/includes/class-post-type.php:172
+#: modules/banners/includes/class-post-type.php:160
 msgid "Zones"
 msgstr "Zonen"
 
-#: modules/banners/includes/class-post-type.php:173
+#: modules/banners/includes/class-post-type.php:161
 msgid "Add zone"
 msgstr "Zone hinzufügen"
 
-#: modules/banners/includes/class-post-type.php:174
+#: modules/banners/includes/class-post-type.php:162
 msgid "All zones"
 msgstr "Alle Zonen"
 
-#: modules/banners/includes/class-post-type.php:226
+#: modules/banners/includes/class-post-type.php:214
 msgid "Statistics"
 msgstr "Statistik"
 
-#: modules/banners/includes/class-post-type.php:247
+#: modules/banners/includes/class-post-type.php:235
 msgid ""
 "With a banner image (box on the right) it is an image banner with its link; "
 "without one, the code below is shown."
@@ -224,29 +224,29 @@ msgstr ""
 "Mit einem Banner-Bild (Feld rechts) ist es ein Bild-Banner mit seinem Link; "
 "ohne Bild wird der Code unten angezeigt."
 
-#: modules/banners/includes/class-post-type.php:248
+#: modules/banners/includes/class-post-type.php:236
 #: modules/social/includes/class-admin.php:94
 #: modules/social/includes/class-admin.php:143
 msgid "Link"
 msgstr "Link"
 
-#: modules/banners/includes/class-post-type.php:250
+#: modules/banners/includes/class-post-type.php:238
 msgid "Code (adserver, iframe)"
 msgstr "Code (Adserver, iframe)"
 
-#: modules/banners/includes/class-post-type.php:253
+#: modules/banners/includes/class-post-type.php:241
 msgid "Starts"
 msgstr "Beginn"
 
-#: modules/banners/includes/class-post-type.php:254
+#: modules/banners/includes/class-post-type.php:242
 msgid "Ends"
 msgstr "Ende"
 
-#: modules/banners/includes/class-post-type.php:255
+#: modules/banners/includes/class-post-type.php:243
 msgid "Weight (1-10)"
 msgstr "Gewichtung (1–10)"
 
-#: modules/banners/includes/class-post-type.php:257
+#: modules/banners/includes/class-post-type.php:245
 msgid ""
 "Empty dates: no limit. The weight only matters when a zone shows fewer "
 "banners than it has."
@@ -255,30 +255,30 @@ msgstr ""
 "eine Zone weniger Banner anzeigt, als sie enthält."
 
 #. translators: 1: views, 2: clicks.
-#: modules/banners/includes/class-post-type.php:265
+#: modules/banners/includes/class-post-type.php:253
 #, php-format
 msgid "Total: %1$s views, %2$s clicks"
 msgstr "Gesamt: %1$s Aufrufe, %2$s Klicks"
 
-#: modules/banners/includes/class-post-type.php:267
+#: modules/banners/includes/class-post-type.php:255
 msgid "No statistics yet."
 msgstr "Noch keine Statistik."
 
-#: modules/banners/includes/class-post-type.php:270
-#: modules/banners/includes/class-post-type.php:305
+#: modules/banners/includes/class-post-type.php:258
+#: modules/banners/includes/class-post-type.php:293
 msgid "Clicks"
 msgstr "Klicks"
 
-#: modules/banners/includes/class-post-type.php:270
+#: modules/banners/includes/class-post-type.php:258
 msgid "Day"
 msgstr "Tag"
 
-#: modules/banners/includes/class-post-type.php:270
-#: modules/banners/includes/class-post-type.php:304
+#: modules/banners/includes/class-post-type.php:258
+#: modules/banners/includes/class-post-type.php:292
 msgid "Views"
 msgstr "Aufrufe"
 
-#: modules/banners/includes/class-post-type.php:274
+#: modules/banners/includes/class-post-type.php:262
 msgid ""
 "Last 60 days with activity. A view is counted when the banner is on screen; "
 "code banners (adservers) count their clicks on their own side."
@@ -287,11 +287,11 @@ msgstr ""
 "auf dem Bildschirm sichtbar ist; Code-Banner (Adserver) zählen ihre Klicks "
 "selbst."
 
-#: modules/banners/includes/class-post-type.php:302
+#: modules/banners/includes/class-post-type.php:290
 msgid "Dates"
 msgstr "Zeitraum"
 
-#: modules/banners/includes/class-post-type.php:303
+#: modules/banners/includes/class-post-type.php:291
 msgid "State"
 msgstr "Status"
 
