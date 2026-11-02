@@ -167,7 +167,7 @@ function extract() {
 }
 
 function poFiles() {
-  return fs.readdirSync(LANG).filter((f) => new RegExp(`^${DOMAIN}-[a-z]{2,3}(_[A-Z]{2})?\\.po$`).test(f));
+  return fs.readdirSync(LANG).filter((f) => new RegExp(`^${DOMAIN}-[a-z]{2,3}(_[A-Z]{2})?(_[a-z]+)?\\.po$`).test(f));
 }
 
 // Minimal .po reader: just enough for what msgmerge writes.
@@ -237,12 +237,16 @@ const PLURALS = {
   es_ES: "nplurals=2; plural=(n != 1);",
   en_GB: "nplurals=2; plural=(n != 1);",
   de_DE: "nplurals=2; plural=(n != 1);",
+  // WordPress's formal German («Sie»): a site chooses it in Settings → General. Same texts as de_DE
+  // except those addressing the reader (the cookie notice, form messages, the acknowledgement email).
+  de_DE_formal: "nplurals=2; plural=(n != 1);",
 };
 
 // A new .po with the header and no strings: extract() then merges every string into it, empty.
 function start(locale) {
-  if (!/^[a-z]{2,3}(_[A-Z]{2})?$/.test(locale || "")) {
-    console.error("Usage: node tools/i18n.mjs new <locale>   (e.g. ca, de_DE)");
+  // A WordPress locale: ca, de_DE, and the variants WordPress has, such as de_DE_formal.
+  if (!/^[a-z]{2,3}(_[A-Z]{2})?(_[a-z]+)?$/.test(locale || "")) {
+    console.error("Usage: node tools/i18n.mjs new <locale>   (e.g. ca, de_DE, de_DE_formal)");
     process.exit(1);
   }
   if (!PLURALS[locale]) {

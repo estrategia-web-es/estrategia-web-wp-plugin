@@ -59,7 +59,8 @@ const placeholders = (s) => [...s.matchAll(/%(?:\d+\$)?[sd]|\{\{[a-z_]+\}\}/g)].
 const links = (s) => (s.replace(/\{\{[a-z_]+\}\}/g, "").match(/\{[^{}]+\}/g) || []).length;
 
 const pot = parsePo(fs.readFileSync(path.join(LANG, `${DOMAIN}.pot`), "utf8"));
-const pos = fs.readdirSync(LANG).filter((f) => new RegExp(`^${DOMAIN}-[a-z]{2,3}(_[A-Z]{2})?\\.po$`).test(f));
+// The variants WordPress has (de_DE_formal) too: a pattern without them leaves that .po unchecked.
+const pos = fs.readdirSync(LANG).filter((f) => new RegExp(`^${DOMAIN}-[a-z]{2,3}(_[A-Z]{2})?(_[a-z]+)?\\.po$`).test(f));
 
 test("there is at least the Spanish and the Catalan translation", () => {
   assert.ok(pos.includes(`${DOMAIN}-es_ES.po`) && pos.includes(`${DOMAIN}-ca.po`), pos.join(", "));
