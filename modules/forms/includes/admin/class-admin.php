@@ -77,9 +77,9 @@ final class Admin {
 			wp_die( esc_html__( 'You are not allowed to see this page.', 'estrategiaweb-toolkit' ), 403 );
 		}
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read only; whatever writes goes through admin-post with a nonce.
-		$action = sanitize_key( $_GET['action'] ?? '' );
+		$action = sanitize_key( wp_unslash( $_GET['action'] ?? '' ) );
 		if ( '' === $action || '-1' === $action ) {
-			$action = sanitize_key( $_GET['action2'] ?? '' );
+			$action = sanitize_key( wp_unslash( $_GET['action2'] ?? '' ) );
 		}
 		if ( 'view' === $action && isset( $_GET['id'] ) ) {
 			self::render_view( (int) $_GET['id'] );

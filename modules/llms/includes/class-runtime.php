@@ -57,7 +57,7 @@ final class Runtime {
 	}
 
 	public static function maybe_serve(): void {
-		$uri  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only compared with fixed paths.
+		$uri  = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 		$path = (string) wp_parse_url( $uri, PHP_URL_PATH );
 		$home = (string) wp_parse_url( (string) get_option( 'home' ), PHP_URL_PATH );
 		$code = Text::language_of( $path, $home, Languages::directory_codes() );
@@ -94,7 +94,8 @@ final class Runtime {
 		header( 'Content-Type: text/plain; charset=utf-8' );
 		header( 'X-Robots-Tag: noindex' );
 		header( 'X-Content-Type-Options: nosniff' );
-		if ( 'HEAD' !== ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- compared with a fixed string.
+		$method = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_key( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : 'get';
+		if ( 'head' !== $method ) {
 			echo $body; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- text/plain with nosniff (header of this class).
 		}
 		exit;

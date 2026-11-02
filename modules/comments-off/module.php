@@ -109,10 +109,14 @@ add_action(
 );
 // The Activity widget only renders recent comments if the query returns any.
 add_filter( 'dashboard_recent_comments_query_args', static fn( $args ) => array_merge( (array) $args, array( 'comment__in' => array( 0 ) ) ) );
+// On the Dashboard only, attached to core's «dashboard» stylesheet (2.4.1: no
+// hand-printed <style>, as the WordPress.org review asked).
 add_action(
-	'admin_head-index.php',
-	static function (): void {
-		echo '<style>#dashboard_right_now .comment-count,#dashboard_right_now .comment-mod-count{display:none}</style>';
+	'admin_enqueue_scripts',
+	static function ( string $hook ): void {
+		if ( 'index.php' === $hook ) {
+			wp_add_inline_style( 'dashboard', '#dashboard_right_now .comment-count,#dashboard_right_now .comment-mod-count{display:none}' );
+		}
 	}
 );
 add_action(

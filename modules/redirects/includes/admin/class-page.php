@@ -62,7 +62,7 @@ final class Page {
 			return;
 		}
 		// phpcs:disable WordPress.Security.NonceVerification -- verified below, before each action.
-		$do    = isset( $_REQUEST['do'] ) ? sanitize_key( $_REQUEST['do'] ) : '';
+		$do    = isset( $_REQUEST['do'] ) ? sanitize_key( wp_unslash( $_REQUEST['do'] ) ) : '';
 		$nonce = self::NONCE;
 		if ( '' === $do ) {
 			// WP_List_Table bulk action. Its form already carries the table's
@@ -70,7 +70,7 @@ final class Page {
 			// in the same form would be overwritten.
 			foreach ( array( 'action', 'action2' ) as $field ) {
 				if ( ! empty( $_POST[ $field ] ) && '-1' !== $_POST[ $field ] ) {
-					$do    = sanitize_key( $_POST[ $field ] );
+					$do    = sanitize_key( wp_unslash( $_POST[ $field ] ) );
 					$nonce = 'log_delete' === $do ? 'bulk-not_found' : 'bulk-redirects';
 				}
 			}
@@ -149,7 +149,7 @@ final class Page {
 	}
 
 	private static function notice(): void {
-		$msg = isset( $_GET['ew_msg'] ) ? sanitize_key( $_GET['ew_msg'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+		$msg = isset( $_GET['ew_msg'] ) ? sanitize_key( wp_unslash( $_GET['ew_msg'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 		$map = array(
 			'saved'        => array( 'success', __( 'Redirect saved.', 'estrategiaweb-toolkit' ) ),
 			'saved_exists' => array( 'warning', __( 'Redirect saved, but that source is a page that exists on the website: the redirect only works on addresses that give a 404. It will start working when the page is deleted or unpublished.', 'estrategiaweb-toolkit' ) ),
@@ -168,7 +168,7 @@ final class Page {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
-		$view = isset( $_GET['view'] ) ? sanitize_key( $_GET['view'] ) : 'list'; // phpcs:ignore WordPress.Security.NonceVerification
+		$view = isset( $_GET['view'] ) ? sanitize_key( wp_unslash( $_GET['view'] ) ) : 'list'; // phpcs:ignore WordPress.Security.NonceVerification
 		if ( self::$failed ) {
 			$view = 'edit';
 		}

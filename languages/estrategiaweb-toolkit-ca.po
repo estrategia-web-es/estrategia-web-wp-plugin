@@ -8,23 +8,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: includes/admin/class-menu.php:80 includes/admin/class-menu.php:88
+#: includes/admin/class-menu.php:82 includes/admin/class-menu.php:90
 #: modules/site/includes/admin/class-admin.php:152
 #: modules/site/includes/class-bindings.php:51
 #: modules/site/includes/class-settings.php:168
 msgid "Company details"
 msgstr "Dades de l'empresa"
 
-#: includes/admin/class-menu.php:81
+#: includes/admin/class-menu.php:83
 msgid "Estrategia Web"
 msgstr "Estrategia Web"
 
 #: includes/admin/class-modules-page.php:76
-#: includes/admin/class-modules-page.php:97
+#: includes/admin/class-modules-page.php:110
 msgid "Modules"
 msgstr "Mòduls"
 
-#: includes/admin/class-modules-page.php:97
+#: includes/admin/class-modules-page.php:110
 msgid ""
 "Each module adds one feature to the site. A module that is off loads "
 "nothing, and turning it off does not delete anything it saved: turning it on "
@@ -34,34 +34,34 @@ msgstr ""
 "desactivar-lo no esborra res del que va desar: quan el tornes a activar, "
 "torna tal com estava."
 
-#: includes/admin/class-modules-page.php:117
-#: includes/admin/class-modules-page.php:171
+#: includes/admin/class-modules-page.php:130
+#: includes/admin/class-modules-page.php:184
 msgid "On"
 msgstr "Activat"
 
-#: includes/admin/class-modules-page.php:118
+#: includes/admin/class-modules-page.php:131
 msgid "Module"
 msgstr "Mòdul"
 
-#: includes/admin/class-modules-page.php:119
+#: includes/admin/class-modules-page.php:132
 #: modules/consent/includes/admin/class-cookies-page.php:253
 #: modules/content-types/includes/admin/class-types-table.php:61
 msgid "Status"
 msgstr "Estat"
 
 #. translators: %s: names of other modules, comma separated.
-#: includes/admin/class-modules-page.php:155
+#: includes/admin/class-modules-page.php:168
 #, php-format
 msgid "Needs: %s."
 msgstr "Necessita: %s."
 
 #. translators: %s: names of the modules that are missing.
-#: includes/admin/class-modules-page.php:165
+#: includes/admin/class-modules-page.php:178
 #, php-format
 msgid "Not loaded: turn on %s."
 msgstr "No es carrega: activa %s."
 
-#: includes/admin/class-modules-page.php:173
+#: includes/admin/class-modules-page.php:186
 #: modules/banners/includes/class-post-type.php:256
 msgid "Off"
 msgstr "Desactivat"
@@ -85,7 +85,354 @@ msgstr ""
 msgid "Settings sections"
 msgstr "Seccions dels paràmetres"
 
-#: includes/class-modules.php
+#: includes/admin/module-strings.php:12
+msgctxt "module name"
+msgid "Banners"
+msgstr "Bàners"
+
+#: includes/admin/module-strings.php:13
+msgctxt "module name"
+msgid "Carousel"
+msgstr "Carrusel"
+
+#: includes/admin/module-strings.php:14
+msgctxt "module name"
+msgid "No comments"
+msgstr "Sense comentaris"
+
+#: includes/admin/module-strings.php:15
+msgctxt "module name"
+msgid "Cookie notice"
+msgstr "Avís de galetes"
+
+#: includes/admin/module-strings.php:16
+msgctxt "module name"
+msgid "Content types"
+msgstr "Tipus de contingut"
+
+#: includes/admin/module-strings.php:17
+msgctxt "module name"
+msgid "External links in a new tab"
+msgstr "Enllaços externs en una pestanya nova"
+
+#: includes/admin/module-strings.php:18
+msgctxt "module name"
+msgid "FAQ structured data"
+msgstr "Dades estructurades de preguntes freqüents"
+
+#: includes/admin/module-strings.php:19
+msgctxt "module name"
+msgid "Featured image tuning"
+msgstr "Ajusts de la imatge destacada"
+
+#: includes/admin/module-strings.php:20
+msgctxt "module name"
+msgid "Forms"
+msgstr "Formularis"
+
+#: includes/admin/module-strings.php:21
+msgctxt "module name"
+msgid "Google tags"
+msgstr "Etiquetes de Google"
+
+#: includes/admin/module-strings.php:22
+msgctxt "module name"
+msgid "Language switcher"
+msgstr "Selector d'idioma"
+
+#: includes/admin/module-strings.php:23
+msgctxt "module name"
+msgid "llms.txt"
+msgstr "llms.txt"
+
+#: includes/admin/module-strings.php:24
+msgctxt "module name"
+msgid "Local business data"
+msgstr "Dades de negoci local"
+
+#: includes/admin/module-strings.php:25
+msgctxt "module name"
+msgid "Map"
+msgstr "Mapa"
+
+#: includes/admin/module-strings.php:26
+msgctxt "module name"
+msgid "Matomo"
+msgstr "Matomo"
+
+#: includes/admin/module-strings.php:27
+msgctxt "module name"
+msgid "Redirects"
+msgstr "Redireccions"
+
+#: includes/admin/module-strings.php:28
+msgctxt "module name"
+msgid "Company data"
+msgstr "Dades de l'empresa"
+
+#: includes/admin/module-strings.php:29
+msgctxt "module name"
+msgid "Social networks"
+msgstr "Xarxes socials"
+
+#: includes/admin/module-strings.php:30
+msgctxt "module name"
+msgid "Image uploads"
+msgstr "Pujades d'imatges"
+
+#: includes/admin/module-strings.php:31
+msgctxt "module name"
+msgid "WebP images"
+msgstr "Imatges en WebP"
+
+#: includes/admin/module-strings.php:32
+msgctxt "module name"
+msgid "WhatsApp button"
+msgstr "Botó de WhatsApp"
+
+#: includes/admin/module-strings.php:35
+msgctxt "module description"
+msgid ""
+"Image or code banners by zone and dates, with daily views and clicks, and "
+"AdRotate migration."
+msgstr ""
+"Bàners d'imatge o de codi per zones i dates, amb vistes i clics diaris, i "
+"migració des d'AdRotate."
+
+#: includes/admin/module-strings.php:36
+msgctxt "module description"
+msgid ""
+"Carousel block: a horizontal scrolling row of any blocks (or the posts of a "
+"Query) with arrows, optional dots, infinite loop and autoplay only if asked "
+"for."
+msgstr ""
+"Bloc de carrusel: una fila amb desplaçament horitzontal de qualsevol bloc (o "
+"les entrades d'una consulta), amb fletxes, punts opcionals, bucle infinit i "
+"reproducció automàtica només si es demana."
+
+#: includes/admin/module-strings.php:37
+msgctxt "module description"
+msgid ""
+"Turns comments off everywhere: closed on every post, no Comments menu, "
+"dashboard widget or toolbar item, no comment blocks on the site and no "
+"comment feeds."
+msgstr ""
+"Desactiva els comentaris a tot el web: tancats a totes les entrades, sense "
+"el menú Comentaris, el giny del tauler ni l'element de la barra d'eines, "
+"sense blocs de comentaris al web i sense canals de comentaris."
+
+#: includes/admin/module-strings.php:38
+msgctxt "module description"
+msgid ""
+"Own cookie consent notice (Accept / Reject / Settings with declarable "
+"categories), the «Cookie settings» link block and the consent API for PHP "
+"and JavaScript, plus a cookie list fed by a detector and a cookie table "
+"block for the cookie policy."
+msgstr ""
+"Avís de galetes propi (Accepta / Rebutja / Configura, amb categories "
+"declarables), el bloc de l'enllaç «Configura les galetes» i l'API del "
+"consentiment per a PHP i JavaScript, a més d'una llista de galetes que "
+"alimenta un detector i un bloc amb la taula de galetes per a la política de "
+"galetes."
+
+#: includes/admin/module-strings.php:39
+msgctxt "module description"
+msgid ""
+"Build your own content types, taxonomies and fields from the panel (or start "
+"from a template: clients, testimonials, locations, projects, portfolio), "
+"with the editor panel, Block Bindings and WPML generated."
+msgstr ""
+"Crea els teus propis tipus de contingut, taxonomies i camps des del tauler "
+"(o comença des d'una plantilla: clients, opinions, seus, projectes, "
+"portafolis), amb el tauler de l'editor, els Block Bindings i WPML generats."
+
+#: includes/admin/module-strings.php:40
+msgctxt "module description"
+msgid ""
+"Links to another domain open in a new tab, with rel=\"noopener\" and a "
+"hidden «(opens in a new tab)» for screen readers."
+msgstr ""
+"Els enllaços a un altre domini s'obren en una pestanya nova, amb "
+"rel=\"noopener\" i un «(s'obre en una pestanya nova)» ocult per als lectors "
+"de pantalla."
+
+#: includes/admin/module-strings.php:41
+msgctxt "module description"
+msgid ""
+"Publishes the page's FAQ accordions as schema.org FAQPage, inside Rank "
+"Math's or Yoast's graph when they are there."
+msgstr ""
+"Publica els acordions de preguntes freqüents de la pàgina com a FAQPage de "
+"schema.org, dins del graf de Rank Math o de Yoast si hi són."
+
+#: includes/admin/module-strings.php:42
+msgctxt "module description"
+msgid ""
+"Featured images with a fixed width in px download a file of that size, and a "
+"logo whose alt text only repeats the title shown next to it is marked as "
+"decorative."
+msgstr ""
+"Les imatges destacades d'amplada fixa en px baixen un fitxer d'aquesta mida, "
+"i un logotip amb un text alternatiu que només repeteix el títol que es veu "
+"al costat es marca com a decoratiu."
+
+#: includes/admin/module-strings.php:43
+msgctxt "module description"
+msgid ""
+"Block-based forms with several email notifications made from templates, a "
+"log of everything sent and WPML support."
+msgstr ""
+"Formularis fets amb blocs, amb diversos avisos per correu fets amb "
+"plantilles, registre de tot el que s'envia i compatibles amb WPML."
+
+#: includes/admin/module-strings.php:44
+msgctxt "module description"
+msgid ""
+"Google Analytics 4, Google Ads (with an optional conversion for form "
+"submissions) and Google Tag Manager behind the cookie notice, with Consent "
+"Mode v2. An empty field loads nothing."
+msgstr ""
+"Google Analytics 4, Google Ads (amb una conversió opcional per enviament de "
+"formulari) i Google Tag Manager darrere l'avís de galetes, amb Consent Mode "
+"v2. Un camp buit no carrega res."
+
+#: includes/admin/module-strings.php:45
+msgctxt "module description"
+msgid ""
+"The «ES ▾» of the header: switches language to the same page, keyboard-"
+"accessible and with hreflang. Needs WPML; without it, nothing is shown."
+msgstr ""
+"L'«ES ▾» de la capçalera: canvia d'idioma a la mateixa pàgina, es pot fer "
+"servir amb el teclat i porta hreflang. Necessita WPML; sense WPML, no es "
+"mostra res."
+
+#: includes/admin/module-strings.php:46
+msgctxt "module description"
+msgid ""
+"Serves /llms.txt, the text AI assistants read to describe the site, written "
+"in «Estrategia Web › Settings › llms.txt», one per language with WPML."
+msgstr ""
+"Serveix /llms.txt, el text que llegeixen els assistents d'IA per descriure "
+"el web, escrit a «Estrategia Web › Paràmetres › llms.txt», un per idioma amb "
+"WPML."
+
+#: includes/admin/module-strings.php:47
+msgctxt "module description"
+msgid ""
+"Tells search engines about the company and its locations with schema.org "
+"(Organization and LocalBusiness: address, hours, coordinates), inside Rank "
+"Math's or Yoast's graph when they are there."
+msgstr ""
+"Explica als cercadors l'empresa i les seves seus amb schema.org "
+"(Organization i LocalBusiness: adreça, horari, coordenades), dins del graf "
+"de Rank Math o Yoast si hi són."
+
+#: includes/admin/module-strings.php:48
+msgctxt "module description"
+msgid ""
+"Two-click map block: a static image with the address; the Google Maps embed "
+"only loads after the visitor asks for it (or accepted the maps cookies)."
+msgstr ""
+"Bloc de mapa en dos clics: una imatge estàtica amb l'adreça; el mapa de "
+"Google Maps només es carrega quan el visitant el demana (o si ha acceptat "
+"les galetes de mapes)."
+
+#: includes/admin/module-strings.php:49
+msgctxt "module description"
+msgid ""
+"Matomo tracking code, cookieless or hybrid (no cookies until the visitor "
+"accepts analytics in the cookie notice)."
+msgstr ""
+"Codi de seguiment de Matomo, sense galetes o híbrid (sense galetes fins que "
+"el visitant accepta l'analítica a l'avís de galetes)."
+
+#: includes/admin/module-strings.php:50
+msgctxt "module description"
+msgid ""
+"Editable 301, 302 and 410 redirects with hit counters, CSV import and "
+"export, and an optional 404 log."
+msgstr ""
+"Redireccions 301, 302 i 410 editables, amb comptador de visites, importació "
+"i exportació CSV i un registre de 404 opcional."
+
+#: includes/admin/module-strings.php:51
+msgctxt "module description"
+msgid ""
+"Company details with Block Bindings and the [estrategia_web_company] "
+"shortcode, the details of one location as a Block Bindings source, and "
+"sanitised SVG uploads."
+msgstr ""
+"Dades de l'empresa amb Block Bindings i el codi curt "
+"[estrategia_web_company], les dades d'una seu com a font de Block Bindings i "
+"pujada de SVG sanejats."
+
+#: includes/admin/module-strings.php:52
+msgctxt "module description"
+msgid ""
+"Free, ordered list of social network links (name, link, icon from an "
+"included collection or your own SVG) and a block that shows them."
+msgstr ""
+"Llista lliure i ordenada d'enllaços a xarxes socials (nom, enllaç i icona "
+"d'una col·lecció inclosa o un SVG propi) i un bloc que els mostra."
+
+#: includes/admin/module-strings.php:53
+msgctxt "module description"
+msgid ""
+"Phone photos can be uploaded (up to 20 MB by default); WordPress scales them "
+"down to 2560 px and only the scaled copy is kept on disk."
+msgstr ""
+"Permet pujar fotos del mòbil (fins a 20 MB per defecte); WordPress les "
+"redueix a 2560 px i al disc només es conserva la còpia reduïda."
+
+#: includes/admin/module-strings.php:54
+msgctxt "module description"
+msgid ""
+"Image sizes generated from JPEG and PNG uploads are saved as WebP (quality "
+"75)."
+msgstr ""
+"Les mides que es generen en pujar un JPEG o un PNG es desen en WebP "
+"(qualitat 75)."
+
+#: includes/admin/module-strings.php:55
+msgctxt "module description"
+msgid ""
+"Floating button that opens a WhatsApp chat with a predefined message. The "
+"number and the message are site options, not per page."
+msgstr ""
+"Botó flotant que obre un xat de WhatsApp amb un missatge predefinit. El "
+"número i el missatge són opcions del lloc, no de cada pàgina."
+
+#: includes/admin/module-strings.php:58
+msgctxt "module category"
+msgid "Content"
+msgstr "Contingut"
+
+#: includes/admin/module-strings.php:59
+msgctxt "module category"
+msgid "Privacy & analytics"
+msgstr "Privadesa i analítica"
+
+#: includes/admin/module-strings.php:60
+msgctxt "module category"
+msgid "SEO"
+msgstr "SEO"
+
+#: includes/admin/module-strings.php:61
+msgctxt "module category"
+msgid "Contact"
+msgstr "Contacte"
+
+#: includes/admin/module-strings.php:62
+msgctxt "module category"
+msgid "Languages"
+msgstr "Idiomes"
+
+#: includes/admin/module-strings.php:63
+msgctxt "module category"
+msgid "Media & performance"
+msgstr "Multimèdia i rendiment"
+
+#: includes/admin/module-strings.php:64
 msgctxt "module category"
 msgid "Other"
 msgstr "Altres"
@@ -293,27 +640,6 @@ msgstr "Programat"
 msgid "Expired"
 msgstr "Caducat"
 
-#: modules/banners/module.php
-msgctxt "module name"
-msgid "Banners"
-msgstr "Bàners"
-
-#: modules/banners/module.php modules/carousel/module.php
-#: modules/comments-off/module.php modules/content-types/module.php
-#: modules/featured-images/module.php modules/map/module.php
-msgctxt "module category"
-msgid "Content"
-msgstr "Contingut"
-
-#: modules/banners/module.php
-msgctxt "module description"
-msgid ""
-"Image or code banners by zone and dates, with daily views and clicks, and "
-"AdRotate migration."
-msgstr ""
-"Bàners d'imatge o de codi per zones i dates, amb vistes i clics diaris, i "
-"migració des d'AdRotate."
-
 #: modules/carousel/blocks/carousel/block.json
 msgctxt "block title"
 msgid "Carousel"
@@ -433,38 +759,6 @@ msgstr "Tria la diapositiva"
 #, php-format
 msgid "Go to slide %d"
 msgstr "Vés a la diapositiva %d"
-
-#: modules/carousel/module.php
-msgctxt "module name"
-msgid "Carousel"
-msgstr "Carrusel"
-
-#: modules/carousel/module.php
-msgctxt "module description"
-msgid ""
-"Carousel block: a horizontal scrolling row of any blocks (or the posts of a "
-"Query) with arrows, optional dots, infinite loop and autoplay only if asked "
-"for."
-msgstr ""
-"Bloc de carrusel: una fila amb desplaçament horitzontal de qualsevol bloc (o "
-"les entrades d'una consulta), amb fletxes, punts opcionals, bucle infinit i "
-"reproducció automàtica només si es demana."
-
-#: modules/comments-off/module.php
-msgctxt "module name"
-msgid "No comments"
-msgstr "Sense comentaris"
-
-#: modules/comments-off/module.php
-msgctxt "module description"
-msgid ""
-"Turns comments off everywhere: closed on every post, no Comments menu, "
-"dashboard widget or toolbar item, no comment blocks on the site and no "
-"comment feeds."
-msgstr ""
-"Desactiva els comentaris a tot el web: tancats a totes les entrades, sense "
-"el menú Comentaris, el giny del tauler ni l'element de la barra d'eines, "
-"sense blocs de comentaris al web i sense canals de comentaris."
 
 #: modules/comments-off/module.php:147
 msgid "Comments are closed."
@@ -1166,31 +1460,6 @@ msgid ""
 msgstr ""
 "Taula de galetes: encara no hi ha galetes confirmades. Confirma-les a "
 "Estrategia Web → Galetes i sortiran aquí."
-
-#: modules/consent/module.php
-msgctxt "module name"
-msgid "Cookie notice"
-msgstr "Avís de galetes"
-
-#: modules/consent/module.php
-msgctxt "module description"
-msgid ""
-"Own cookie consent notice (Accept / Reject / Settings with declarable "
-"categories), the «Cookie settings» link block and the consent API for PHP "
-"and JavaScript, plus a cookie list fed by a detector and a cookie table "
-"block for the cookie policy."
-msgstr ""
-"Avís de galetes propi (Accepta / Rebutja / Configura, amb categories "
-"declarables), el bloc de l'enllaç «Configura les galetes» i l'API del "
-"consentiment per a PHP i JavaScript, a més d'una llista de galetes que "
-"alimenta un detector i un bloc amb la taula de galetes per a la política de "
-"galetes."
-
-#: modules/consent/module.php modules/google-tags/module.php
-#: modules/matomo/module.php
-msgctxt "module category"
-msgid "Privacy & analytics"
-msgstr "Privadesa i analítica"
 
 #: modules/content-types/assets/fields-panel.js:95
 msgid "Incomplete: this range will not be saved."
@@ -2855,74 +3124,6 @@ msgstr "Definicions de tipus de contingut"
 msgid "Content type definition"
 msgstr "Definició de tipus de contingut"
 
-#: modules/content-types/module.php
-msgctxt "module description"
-msgid ""
-"Build your own content types, taxonomies and fields from the panel (or start "
-"from a template: clients, testimonials, locations, projects, portfolio), "
-"with the editor panel, Block Bindings and WPML generated."
-msgstr ""
-"Crea els teus propis tipus de contingut, taxonomies i camps des del tauler "
-"(o comença des d'una plantilla: clients, opinions, seus, projectes, "
-"portafolis), amb el tauler de l'editor, els Block Bindings i WPML generats."
-
-#: modules/content-types/module.php
-msgctxt "module name"
-msgid "Content types"
-msgstr "Tipus de contingut"
-
-#: modules/external-links/module.php
-msgctxt "module name"
-msgid "External links in a new tab"
-msgstr "Enllaços externs en una pestanya nova"
-
-#: modules/external-links/module.php
-msgctxt "module description"
-msgid ""
-"Links to another domain open in a new tab, with rel=\"noopener\" and a "
-"hidden «(opens in a new tab)» for screen readers."
-msgstr ""
-"Els enllaços a un altre domini s'obren en una pestanya nova, amb "
-"rel=\"noopener\" i un «(s'obre en una pestanya nova)» ocult per als lectors "
-"de pantalla."
-
-#: modules/external-links/module.php modules/faq-schema/module.php
-#: modules/llms/module.php modules/local-business/module.php
-#: modules/redirects/module.php
-msgctxt "module category"
-msgid "SEO"
-msgstr "SEO"
-
-#: modules/faq-schema/module.php
-msgctxt "module name"
-msgid "FAQ structured data"
-msgstr "Dades estructurades de preguntes freqüents"
-
-#: modules/faq-schema/module.php
-msgctxt "module description"
-msgid ""
-"Publishes the page's FAQ accordions as schema.org FAQPage, inside Rank "
-"Math's or Yoast's graph when they are there."
-msgstr ""
-"Publica els acordions de preguntes freqüents de la pàgina com a FAQPage de "
-"schema.org, dins del graf de Rank Math o de Yoast si hi són."
-
-#: modules/featured-images/module.php
-msgctxt "module name"
-msgid "Featured image tuning"
-msgstr "Ajusts de la imatge destacada"
-
-#: modules/featured-images/module.php
-msgctxt "module description"
-msgid ""
-"Featured images with a fixed width in px download a file of that size, and a "
-"logo whose alt text only repeats the title shown next to it is marked as "
-"decorative."
-msgstr ""
-"Les imatges destacades d'amplada fixa en px baixen un fitxer d'aquesta mida, "
-"i un logotip amb un text alternatiu que només repeteix el títol que es veu "
-"al costat es marca com a decoratiu."
-
 #: modules/forms/assets/editor.js:58 modules/forms/assets/editor.js:416
 msgid "Message"
 msgstr "Missatge"
@@ -3775,26 +3976,6 @@ msgstr "Escriu un número de telèfon vàlid."
 msgid "Please choose one of the options."
 msgstr "Tria una de les opcions."
 
-#: modules/forms/module.php
-msgctxt "module description"
-msgid ""
-"Block-based forms with several email notifications made from templates, a "
-"log of everything sent and WPML support."
-msgstr ""
-"Formularis fets amb blocs, amb diversos avisos per correu fets amb "
-"plantilles, registre de tot el que s'envia i compatibles amb WPML."
-
-#: modules/forms/module.php modules/social/module.php
-#: modules/whatsapp/module.php
-msgctxt "module category"
-msgid "Contact"
-msgstr "Contacte"
-
-#: modules/forms/module.php
-msgctxt "module name"
-msgid "Forms"
-msgstr "Formularis"
-
 #: modules/google-tags/includes/admin/class-google-tags-page.php:67
 msgid "Google tags"
 msgstr "Etiquetes de Google"
@@ -3881,22 +4062,6 @@ msgstr ""
 msgid "«%s» does not look like a valid ID and was not saved."
 msgstr "«%s» no sembla un ID vàlid i no s'ha desat."
 
-#: modules/google-tags/module.php
-msgctxt "module description"
-msgid ""
-"Google Analytics 4, Google Ads (with an optional conversion for form "
-"submissions) and Google Tag Manager behind the cookie notice, with Consent "
-"Mode v2. An empty field loads nothing."
-msgstr ""
-"Google Analytics 4, Google Ads (amb una conversió opcional per enviament de "
-"formulari) i Google Tag Manager darrere l'avís de galetes, amb Consent Mode "
-"v2. Un camp buit no carrega res."
-
-#: modules/google-tags/module.php
-msgctxt "module name"
-msgid "Google tags"
-msgstr "Etiquetes de Google"
-
 #: modules/language-switcher/blocks/language-switcher/block.json
 msgctxt "block description"
 msgid ""
@@ -3938,26 +4103,6 @@ msgstr "Mostra l'idioma actual com a (code: «CA», name: «Català»)"
 #: modules/language-switcher/blocks/language-switcher/render.php:117
 msgid "Language:"
 msgstr "Idioma:"
-
-#: modules/language-switcher/module.php
-msgctxt "module name"
-msgid "Language switcher"
-msgstr "Selector d'idioma"
-
-#: modules/language-switcher/module.php
-msgctxt "module category"
-msgid "Languages"
-msgstr "Idiomes"
-
-#: modules/language-switcher/module.php
-msgctxt "module description"
-msgid ""
-"The «ES ▾» of the header: switches language to the same page, keyboard-"
-"accessible and with hreflang. Needs WPML; without it, nothing is shown."
-msgstr ""
-"L'«ES ▾» de la capçalera: canvia d'idioma a la mateixa pàgina, es pot fer "
-"servir amb el teclat i porta hreflang. Necessita WPML; sense WPML, no es "
-"mostra res."
 
 #: modules/llms/includes/admin/class-tab.php:50
 #: modules/llms/includes/admin/class-tab.php:73
@@ -4031,21 +4176,6 @@ msgstr "El text de llms.txt de cada idioma, per codi d'idioma."
 msgid "Other languages"
 msgstr "Altres idiomes"
 
-#: modules/llms/module.php
-msgctxt "module description"
-msgid ""
-"Serves /llms.txt, the text AI assistants read to describe the site, written "
-"in «Estrategia Web › Settings › llms.txt», one per language with WPML."
-msgstr ""
-"Serveix /llms.txt, el text que llegeixen els assistents d'IA per descriure "
-"el web, escrit a «Estrategia Web › Paràmetres › llms.txt», un per idioma amb "
-"WPML."
-
-#: modules/llms/module.php
-msgctxt "module name"
-msgid "llms.txt"
-msgstr "llms.txt"
-
 #: modules/local-business/includes/class-settings.php:44
 #: modules/local-business/includes/class-settings.php:77
 msgid "Type of business"
@@ -4081,22 +4211,6 @@ msgstr ""
 "El nom de schema.org, tal com el llegeix Google (p. ex. DryCleaningOrLaundry "
 "per a una bugaderia, Restaurant, Store). LocalBusiness si no n'hi encaixa "
 "cap."
-
-#: modules/local-business/module.php
-msgctxt "module name"
-msgid "Local business data"
-msgstr "Dades de negoci local"
-
-#: modules/local-business/module.php
-msgctxt "module description"
-msgid ""
-"Tells search engines about the company and its locations with schema.org "
-"(Organization and LocalBusiness: address, hours, coordinates), inside Rank "
-"Math's or Yoast's graph when they are there."
-msgstr ""
-"Explica als cercadors l'empresa i les seves seus amb schema.org "
-"(Organization i LocalBusiness: adreça, horari, coordenades), dins del graf "
-"de Rank Math o Yoast si hi són."
 
 #: modules/map/blocks/map/block.json
 msgctxt "block title"
@@ -4257,21 +4371,6 @@ msgstr ""
 msgid "Open in Google Maps: %1$s %2$s"
 msgstr "Obre a Google Maps: %1$s %2$s"
 
-#: modules/map/module.php
-msgctxt "module name"
-msgid "Map"
-msgstr "Mapa"
-
-#: modules/map/module.php
-msgctxt "module description"
-msgid ""
-"Two-click map block: a static image with the address; the Google Maps embed "
-"only loads after the visitor asks for it (or accepted the maps cookies)."
-msgstr ""
-"Bloc de mapa en dos clics: una imatge estàtica amb l'adreça; el mapa de "
-"Google Maps només es carrega quan el visitant el demana (o si ha acceptat "
-"les galetes de mapes)."
-
 #: modules/matomo/includes/class-admin-fields.php:52
 msgid "Statistics (Matomo)"
 msgstr "Estadístiques (Matomo)"
@@ -4307,20 +4406,6 @@ msgid ""
 msgstr ""
 "Híbrid: sense galetes fins que el visitant accepta «Analítica» a l'avís de "
 "galetes."
-
-#: modules/matomo/module.php
-msgctxt "module name"
-msgid "Matomo"
-msgstr "Matomo"
-
-#: modules/matomo/module.php
-msgctxt "module description"
-msgid ""
-"Matomo tracking code, cookieless or hybrid (no cookies until the visitor "
-"accepts analytics in the cookie notice)."
-msgstr ""
-"Codi de seguiment de Matomo, sense galetes o híbrid (sense galetes fins que "
-"el visitant accepta l'analítica a l'avís de galetes)."
 
 #: modules/redirects/includes/admin/class-page.php:43
 #: modules/redirects/includes/admin/class-page.php:176
@@ -4628,20 +4713,6 @@ msgstr "Ja hi ha una redirecció per a aquest origen."
 msgid "This rule would create a redirect loop with other rules."
 msgstr "Aquesta redirecció faria un bucle amb altres."
 
-#: modules/redirects/module.php
-msgctxt "module description"
-msgid ""
-"Editable 301, 302 and 410 redirects with hit counters, CSV import and "
-"export, and an optional 404 log."
-msgstr ""
-"Redireccions 301, 302 i 410 editables, amb comptador de visites, importació "
-"i exportació CSV i un registre de 404 opcional."
-
-#: modules/redirects/module.php
-msgctxt "module name"
-msgid "Redirects"
-msgstr "Redireccions"
-
 #. translators: %s: name of the SEO plugin, e.g. "Rank Math".
 #: modules/redirects/module.php:100
 #, php-format
@@ -4853,22 +4924,6 @@ msgid ""
 msgstr ""
 "Aquest fitxer SVG no s'ha pogut llegir o no és segur, així que no s'ha pujat."
 
-#: modules/site/module.php
-msgctxt "module name"
-msgid "Company data"
-msgstr "Dades de l'empresa"
-
-#: modules/site/module.php
-msgctxt "module description"
-msgid ""
-"Company details with Block Bindings and the [estrategia_web_company] "
-"shortcode, the details of one location as a Block Bindings source, and "
-"sanitised SVG uploads."
-msgstr ""
-"Dades de l'empresa amb Block Bindings i el codi curt "
-"[estrategia_web_company], les dades d'una seu com a font de Block Bindings i "
-"pujada de SVG sanejats."
-
 #: modules/social/blocks/social-links/block.json
 msgctxt "block title"
 msgid "Social networks"
@@ -4998,20 +5053,6 @@ msgstr "Web"
 msgid "Social network links, in order."
 msgstr "Enllaços a les xarxes socials, en ordre."
 
-#: modules/social/module.php
-msgctxt "module description"
-msgid ""
-"Free, ordered list of social network links (name, link, icon from an "
-"included collection or your own SVG) and a block that shows them."
-msgstr ""
-"Llista lliure i ordenada d'enllaços a xarxes socials (nom, enllaç i icona "
-"d'una col·lecció inclosa o un SVG propi) i un bloc que els mostra."
-
-#: modules/social/module.php
-msgctxt "module name"
-msgid "Social networks"
-msgstr "Xarxes socials"
-
 #: modules/uploads/includes/class-uploads.php:224
 msgid "Image uploads"
 msgstr "Pujades d'imatges"
@@ -5055,39 +5096,6 @@ msgid ""
 msgstr ""
 "Suprimeix l'original després de reduir-lo (només es conserva la còpia "
 "reduïda)."
-
-#: modules/uploads/module.php
-msgctxt "module name"
-msgid "Image uploads"
-msgstr "Pujades d'imatges"
-
-#: modules/uploads/module.php modules/webp/module.php
-msgctxt "module category"
-msgid "Media & performance"
-msgstr "Multimèdia i rendiment"
-
-#: modules/uploads/module.php
-msgctxt "module description"
-msgid ""
-"Phone photos can be uploaded (up to 20 MB by default); WordPress scales them "
-"down to 2560 px and only the scaled copy is kept on disk."
-msgstr ""
-"Permet pujar fotos del mòbil (fins a 20 MB per defecte); WordPress les "
-"redueix a 2560 px i al disc només es conserva la còpia reduïda."
-
-#: modules/webp/module.php
-msgctxt "module description"
-msgid ""
-"Image sizes generated from JPEG and PNG uploads are saved as WebP (quality "
-"75)."
-msgstr ""
-"Les mides que es generen en pujar un JPEG o un PNG es desen en WebP "
-"(qualitat 75)."
-
-#: modules/webp/module.php
-msgctxt "module name"
-msgid "WebP images"
-msgstr "Imatges en WebP"
 
 #: modules/whatsapp/blocks/whatsapp/block.json
 msgctxt "block description"
@@ -5140,20 +5148,6 @@ msgstr ""
 #: modules/whatsapp/blocks/whatsapp/render.php:62
 msgid "Chat on WhatsApp"
 msgstr "Escriu-nos per WhatsApp"
-
-#: modules/whatsapp/module.php
-msgctxt "module description"
-msgid ""
-"Floating button that opens a WhatsApp chat with a predefined message. The "
-"number and the message are site options, not per page."
-msgstr ""
-"Botó flotant que obre un xat de WhatsApp amb un missatge predefinit. El "
-"número i el missatge són opcions del lloc, no de cada pàgina."
-
-#: modules/whatsapp/module.php
-msgctxt "module name"
-msgid "WhatsApp button"
-msgstr "Botó de WhatsApp"
 
 #: modules/whatsapp/module.php:52
 msgid "WhatsApp phone number in international format, digits only."

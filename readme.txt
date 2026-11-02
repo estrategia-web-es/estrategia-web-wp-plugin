@@ -4,7 +4,7 @@ Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.4.0
+Stable tag: 2.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,7 +44,7 @@ Terms: https://policies.google.com/terms and https://maps.google.com/help/terms_
 = Google Analytics 4, Google Ads and Google Tag Manager (Google tags module) =
 
 Off by default. When you enter a measurement ID, the browser loads Google's script from googletagmanager.com. In the default mode it loads only after the visitor accepts the statistics or marketing category; in the "advanced" mode, which you must choose, it loads with consent denied and Google receives cookieless pings. Google receives the visitor's IP address, the pages visited and, if you set a conversion label, that a form was sent (never its content).
-Terms: https://policies.google.com/terms and https://marketingplatform.google.com/about/analytics/terms/ · Privacy: https://policies.google.com/privacy
+Terms: https://policies.google.com/terms and https://marketingplatform.google.com/about/analytics/terms/us/· Privacy: https://policies.google.com/privacy
 
 = Matomo (Matomo module) =
 
@@ -75,6 +75,11 @@ Its settings, yes. Your data (form submissions, redirects, company details) is k
 The cookie list includes an extract of the Open Cookie Database (https://github.com/jkwakman/Open-Cookie-Database), © Jan Kwakman and contributors, Apache License 2.0. Details in modules/consent/data/NOTICE.
 
 == Changelog ==
+
+= 2.4.1 =
+* Renamed to EstrategiaWeb Toolkit (text domain estrategiaweb-toolkit). Settings, content and blocks are unchanged.
+* The admin menu moves below Settings.
+* Code review fixes: styles and structured data printed through WordPress functions, sanitised request input, translatable module names.
 
 = 2.4.0 =
 * New module: llms.txt, written in Settings and served at /llms.txt with the right charset; one per language with WPML. Off by default.

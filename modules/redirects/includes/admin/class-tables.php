@@ -61,8 +61,8 @@ final class Rules_Table extends \WP_List_Table {
 		$per_page = 50;
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read only: search, order and page.
 		$search  = isset( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : '';
-		$orderby = isset( $_REQUEST['orderby'] ) ? sanitize_key( $_REQUEST['orderby'] ) : 'source';
-		$order   = isset( $_REQUEST['order'] ) ? sanitize_key( $_REQUEST['order'] ) : 'asc';
+		$orderby = isset( $_REQUEST['orderby'] ) ? sanitize_key( wp_unslash( $_REQUEST['orderby'] ) ) : 'source';
+		$order   = isset( $_REQUEST['order'] ) ? sanitize_key( wp_unslash( $_REQUEST['order'] ) ) : 'asc';
 		// phpcs:enable
 		list( $this->items, $total ) = Store::query( $search, $per_page, $this->get_pagenum(), $orderby, $order );
 		$this->_column_headers       = array( $this->get_columns(), array(), $this->get_sortable_columns(), 'source' );
@@ -153,8 +153,8 @@ final class Log_Table extends \WP_List_Table {
 		$per_page = 50;
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read only.
 		$search  = isset( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : '';
-		$orderby = isset( $_REQUEST['orderby'] ) ? sanitize_key( $_REQUEST['orderby'] ) : 'hits';
-		$order   = isset( $_REQUEST['order'] ) ? sanitize_key( $_REQUEST['order'] ) : 'desc';
+		$orderby = isset( $_REQUEST['orderby'] ) ? sanitize_key( wp_unslash( $_REQUEST['orderby'] ) ) : 'hits';
+		$order   = isset( $_REQUEST['order'] ) ? sanitize_key( wp_unslash( $_REQUEST['order'] ) ) : 'desc';
 		// phpcs:enable
 		list( $this->items, $total ) = Store::log_query( $search, $per_page, $this->get_pagenum(), $orderby, $order );
 		$this->_column_headers       = array( $this->get_columns(), array(), $this->get_sortable_columns(), 'path' );

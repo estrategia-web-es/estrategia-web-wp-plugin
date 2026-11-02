@@ -61,7 +61,14 @@ final class Output {
 			return;
 		}
 		$graph = array( '@context' => 'https://schema.org', '@graph' => array( $node ) );
-		// JSON_HEX_TAG: a «</script>» in an answer cannot close the tag.
-		echo '<script type="application/ld+json" class="estrategia-web-faq-schema">' . wp_json_encode( $graph, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG ) . "</script>\n"; // phpcs:ignore WordPress.Security.EscapeOutput -- JSON, tags hex-escaped.
+		// JSON_HEX_TAG: a «</script>» in an answer cannot close the tag. Printed
+		// by WordPress's own function (2.4.1, the WordPress.org review asked for it).
+		wp_print_inline_script_tag(
+			wp_json_encode( $graph, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG ),
+			array(
+				'type'  => 'application/ld+json',
+				'class' => 'estrategia-web-faq-schema',
+			)
+		);
 	}
 }

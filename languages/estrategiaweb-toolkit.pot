@@ -17,57 +17,57 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: includes/admin/class-menu.php:80 includes/admin/class-menu.php:88
+#: includes/admin/class-menu.php:82 includes/admin/class-menu.php:90
 #: modules/site/includes/admin/class-admin.php:152
 #: modules/site/includes/class-bindings.php:51
 #: modules/site/includes/class-settings.php:168
 msgid "Company details"
 msgstr ""
 
-#: includes/admin/class-menu.php:81
+#: includes/admin/class-menu.php:83
 msgid "Estrategia Web"
 msgstr ""
 
 #: includes/admin/class-modules-page.php:76
-#: includes/admin/class-modules-page.php:97
+#: includes/admin/class-modules-page.php:110
 msgid "Modules"
 msgstr ""
 
-#: includes/admin/class-modules-page.php:97
+#: includes/admin/class-modules-page.php:110
 msgid ""
 "Each module adds one feature to the site. A module that is off loads "
 "nothing, and turning it off does not delete anything it saved: turning it on "
 "again brings it back as it was."
 msgstr ""
 
-#: includes/admin/class-modules-page.php:117
-#: includes/admin/class-modules-page.php:171
+#: includes/admin/class-modules-page.php:130
+#: includes/admin/class-modules-page.php:184
 msgid "On"
 msgstr ""
 
-#: includes/admin/class-modules-page.php:118
+#: includes/admin/class-modules-page.php:131
 msgid "Module"
 msgstr ""
 
-#: includes/admin/class-modules-page.php:119
+#: includes/admin/class-modules-page.php:132
 #: modules/consent/includes/admin/class-cookies-page.php:253
 #: modules/content-types/includes/admin/class-types-table.php:61
 msgid "Status"
 msgstr ""
 
 #. translators: %s: names of other modules, comma separated.
-#: includes/admin/class-modules-page.php:155
+#: includes/admin/class-modules-page.php:168
 #, php-format
 msgid "Needs: %s."
 msgstr ""
 
 #. translators: %s: names of the modules that are missing.
-#: includes/admin/class-modules-page.php:165
+#: includes/admin/class-modules-page.php:178
 #, php-format
 msgid "Not loaded: turn on %s."
 msgstr ""
 
-#: includes/admin/class-modules-page.php:173
+#: includes/admin/class-modules-page.php:186
 #: modules/banners/includes/class-post-type.php:256
 msgid "Off"
 msgstr ""
@@ -89,7 +89,298 @@ msgstr ""
 msgid "Settings sections"
 msgstr ""
 
-#: includes/class-modules.php
+#: includes/admin/module-strings.php:12
+msgctxt "module name"
+msgid "Banners"
+msgstr ""
+
+#: includes/admin/module-strings.php:13
+msgctxt "module name"
+msgid "Carousel"
+msgstr ""
+
+#: includes/admin/module-strings.php:14
+msgctxt "module name"
+msgid "No comments"
+msgstr ""
+
+#: includes/admin/module-strings.php:15
+msgctxt "module name"
+msgid "Cookie notice"
+msgstr ""
+
+#: includes/admin/module-strings.php:16
+msgctxt "module name"
+msgid "Content types"
+msgstr ""
+
+#: includes/admin/module-strings.php:17
+msgctxt "module name"
+msgid "External links in a new tab"
+msgstr ""
+
+#: includes/admin/module-strings.php:18
+msgctxt "module name"
+msgid "FAQ structured data"
+msgstr ""
+
+#: includes/admin/module-strings.php:19
+msgctxt "module name"
+msgid "Featured image tuning"
+msgstr ""
+
+#: includes/admin/module-strings.php:20
+msgctxt "module name"
+msgid "Forms"
+msgstr ""
+
+#: includes/admin/module-strings.php:21
+msgctxt "module name"
+msgid "Google tags"
+msgstr ""
+
+#: includes/admin/module-strings.php:22
+msgctxt "module name"
+msgid "Language switcher"
+msgstr ""
+
+#: includes/admin/module-strings.php:23
+msgctxt "module name"
+msgid "llms.txt"
+msgstr ""
+
+#: includes/admin/module-strings.php:24
+msgctxt "module name"
+msgid "Local business data"
+msgstr ""
+
+#: includes/admin/module-strings.php:25
+msgctxt "module name"
+msgid "Map"
+msgstr ""
+
+#: includes/admin/module-strings.php:26
+msgctxt "module name"
+msgid "Matomo"
+msgstr ""
+
+#: includes/admin/module-strings.php:27
+msgctxt "module name"
+msgid "Redirects"
+msgstr ""
+
+#: includes/admin/module-strings.php:28
+msgctxt "module name"
+msgid "Company data"
+msgstr ""
+
+#: includes/admin/module-strings.php:29
+msgctxt "module name"
+msgid "Social networks"
+msgstr ""
+
+#: includes/admin/module-strings.php:30
+msgctxt "module name"
+msgid "Image uploads"
+msgstr ""
+
+#: includes/admin/module-strings.php:31
+msgctxt "module name"
+msgid "WebP images"
+msgstr ""
+
+#: includes/admin/module-strings.php:32
+msgctxt "module name"
+msgid "WhatsApp button"
+msgstr ""
+
+#: includes/admin/module-strings.php:35
+msgctxt "module description"
+msgid ""
+"Image or code banners by zone and dates, with daily views and clicks, and "
+"AdRotate migration."
+msgstr ""
+
+#: includes/admin/module-strings.php:36
+msgctxt "module description"
+msgid ""
+"Carousel block: a horizontal scrolling row of any blocks (or the posts of a "
+"Query) with arrows, optional dots, infinite loop and autoplay only if asked "
+"for."
+msgstr ""
+
+#: includes/admin/module-strings.php:37
+msgctxt "module description"
+msgid ""
+"Turns comments off everywhere: closed on every post, no Comments menu, "
+"dashboard widget or toolbar item, no comment blocks on the site and no "
+"comment feeds."
+msgstr ""
+
+#: includes/admin/module-strings.php:38
+msgctxt "module description"
+msgid ""
+"Own cookie consent notice (Accept / Reject / Settings with declarable "
+"categories), the «Cookie settings» link block and the consent API for PHP "
+"and JavaScript, plus a cookie list fed by a detector and a cookie table "
+"block for the cookie policy."
+msgstr ""
+
+#: includes/admin/module-strings.php:39
+msgctxt "module description"
+msgid ""
+"Build your own content types, taxonomies and fields from the panel (or start "
+"from a template: clients, testimonials, locations, projects, portfolio), "
+"with the editor panel, Block Bindings and WPML generated."
+msgstr ""
+
+#: includes/admin/module-strings.php:40
+msgctxt "module description"
+msgid ""
+"Links to another domain open in a new tab, with rel=\"noopener\" and a "
+"hidden «(opens in a new tab)» for screen readers."
+msgstr ""
+
+#: includes/admin/module-strings.php:41
+msgctxt "module description"
+msgid ""
+"Publishes the page's FAQ accordions as schema.org FAQPage, inside Rank "
+"Math's or Yoast's graph when they are there."
+msgstr ""
+
+#: includes/admin/module-strings.php:42
+msgctxt "module description"
+msgid ""
+"Featured images with a fixed width in px download a file of that size, and a "
+"logo whose alt text only repeats the title shown next to it is marked as "
+"decorative."
+msgstr ""
+
+#: includes/admin/module-strings.php:43
+msgctxt "module description"
+msgid ""
+"Block-based forms with several email notifications made from templates, a "
+"log of everything sent and WPML support."
+msgstr ""
+
+#: includes/admin/module-strings.php:44
+msgctxt "module description"
+msgid ""
+"Google Analytics 4, Google Ads (with an optional conversion for form "
+"submissions) and Google Tag Manager behind the cookie notice, with Consent "
+"Mode v2. An empty field loads nothing."
+msgstr ""
+
+#: includes/admin/module-strings.php:45
+msgctxt "module description"
+msgid ""
+"The «ES ▾» of the header: switches language to the same page, keyboard-"
+"accessible and with hreflang. Needs WPML; without it, nothing is shown."
+msgstr ""
+
+#: includes/admin/module-strings.php:46
+msgctxt "module description"
+msgid ""
+"Serves /llms.txt, the text AI assistants read to describe the site, written "
+"in «Estrategia Web › Settings › llms.txt», one per language with WPML."
+msgstr ""
+
+#: includes/admin/module-strings.php:47
+msgctxt "module description"
+msgid ""
+"Tells search engines about the company and its locations with schema.org "
+"(Organization and LocalBusiness: address, hours, coordinates), inside Rank "
+"Math's or Yoast's graph when they are there."
+msgstr ""
+
+#: includes/admin/module-strings.php:48
+msgctxt "module description"
+msgid ""
+"Two-click map block: a static image with the address; the Google Maps embed "
+"only loads after the visitor asks for it (or accepted the maps cookies)."
+msgstr ""
+
+#: includes/admin/module-strings.php:49
+msgctxt "module description"
+msgid ""
+"Matomo tracking code, cookieless or hybrid (no cookies until the visitor "
+"accepts analytics in the cookie notice)."
+msgstr ""
+
+#: includes/admin/module-strings.php:50
+msgctxt "module description"
+msgid ""
+"Editable 301, 302 and 410 redirects with hit counters, CSV import and "
+"export, and an optional 404 log."
+msgstr ""
+
+#: includes/admin/module-strings.php:51
+msgctxt "module description"
+msgid ""
+"Company details with Block Bindings and the [estrategia_web_company] "
+"shortcode, the details of one location as a Block Bindings source, and "
+"sanitised SVG uploads."
+msgstr ""
+
+#: includes/admin/module-strings.php:52
+msgctxt "module description"
+msgid ""
+"Free, ordered list of social network links (name, link, icon from an "
+"included collection or your own SVG) and a block that shows them."
+msgstr ""
+
+#: includes/admin/module-strings.php:53
+msgctxt "module description"
+msgid ""
+"Phone photos can be uploaded (up to 20 MB by default); WordPress scales them "
+"down to 2560 px and only the scaled copy is kept on disk."
+msgstr ""
+
+#: includes/admin/module-strings.php:54
+msgctxt "module description"
+msgid ""
+"Image sizes generated from JPEG and PNG uploads are saved as WebP (quality "
+"75)."
+msgstr ""
+
+#: includes/admin/module-strings.php:55
+msgctxt "module description"
+msgid ""
+"Floating button that opens a WhatsApp chat with a predefined message. The "
+"number and the message are site options, not per page."
+msgstr ""
+
+#: includes/admin/module-strings.php:58
+msgctxt "module category"
+msgid "Content"
+msgstr ""
+
+#: includes/admin/module-strings.php:59
+msgctxt "module category"
+msgid "Privacy & analytics"
+msgstr ""
+
+#: includes/admin/module-strings.php:60
+msgctxt "module category"
+msgid "SEO"
+msgstr ""
+
+#: includes/admin/module-strings.php:61
+msgctxt "module category"
+msgid "Contact"
+msgstr ""
+
+#: includes/admin/module-strings.php:62
+msgctxt "module category"
+msgid "Languages"
+msgstr ""
+
+#: includes/admin/module-strings.php:63
+msgctxt "module category"
+msgid "Media & performance"
+msgstr ""
+
+#: includes/admin/module-strings.php:64
 msgctxt "module category"
 msgid "Other"
 msgstr ""
@@ -275,25 +566,6 @@ msgstr ""
 msgid "Expired"
 msgstr ""
 
-#: modules/banners/module.php
-msgctxt "module name"
-msgid "Banners"
-msgstr ""
-
-#: modules/banners/module.php modules/carousel/module.php
-#: modules/comments-off/module.php modules/content-types/module.php
-#: modules/featured-images/module.php modules/map/module.php
-msgctxt "module category"
-msgid "Content"
-msgstr ""
-
-#: modules/banners/module.php
-msgctxt "module description"
-msgid ""
-"Image or code banners by zone and dates, with daily views and clicks, and "
-"AdRotate migration."
-msgstr ""
-
 #: modules/carousel/blocks/carousel/block.json
 msgctxt "block title"
 msgid "Carousel"
@@ -406,32 +678,6 @@ msgstr ""
 #: modules/carousel/blocks/carousel/render.php:267
 #, php-format
 msgid "Go to slide %d"
-msgstr ""
-
-#: modules/carousel/module.php
-msgctxt "module name"
-msgid "Carousel"
-msgstr ""
-
-#: modules/carousel/module.php
-msgctxt "module description"
-msgid ""
-"Carousel block: a horizontal scrolling row of any blocks (or the posts of a "
-"Query) with arrows, optional dots, infinite loop and autoplay only if asked "
-"for."
-msgstr ""
-
-#: modules/comments-off/module.php
-msgctxt "module name"
-msgid "No comments"
-msgstr ""
-
-#: modules/comments-off/module.php
-msgctxt "module description"
-msgid ""
-"Turns comments off everywhere: closed on every post, no Comments menu, "
-"dashboard widget or toolbar item, no comment blocks on the site and no "
-"comment feeds."
 msgstr ""
 
 #: modules/comments-off/module.php:147
@@ -1052,26 +1298,6 @@ msgstr[1] ""
 msgid ""
 "Cookie table: there are no confirmed cookies yet. Confirm them in Estrategia "
 "Web → Cookies and they will appear here."
-msgstr ""
-
-#: modules/consent/module.php
-msgctxt "module name"
-msgid "Cookie notice"
-msgstr ""
-
-#: modules/consent/module.php
-msgctxt "module description"
-msgid ""
-"Own cookie consent notice (Accept / Reject / Settings with declarable "
-"categories), the «Cookie settings» link block and the consent API for PHP "
-"and JavaScript, plus a cookie list fed by a detector and a cookie table "
-"block for the cookie policy."
-msgstr ""
-
-#: modules/consent/module.php modules/google-tags/module.php
-#: modules/matomo/module.php
-msgctxt "module category"
-msgid "Privacy & analytics"
 msgstr ""
 
 #: modules/content-types/assets/fields-panel.js:95
@@ -2628,63 +2854,6 @@ msgstr ""
 msgid "Content type definition"
 msgstr ""
 
-#: modules/content-types/module.php
-msgctxt "module description"
-msgid ""
-"Build your own content types, taxonomies and fields from the panel (or start "
-"from a template: clients, testimonials, locations, projects, portfolio), "
-"with the editor panel, Block Bindings and WPML generated."
-msgstr ""
-
-#: modules/content-types/module.php
-msgctxt "module name"
-msgid "Content types"
-msgstr ""
-
-#: modules/external-links/module.php
-msgctxt "module name"
-msgid "External links in a new tab"
-msgstr ""
-
-#: modules/external-links/module.php
-msgctxt "module description"
-msgid ""
-"Links to another domain open in a new tab, with rel=\"noopener\" and a "
-"hidden «(opens in a new tab)» for screen readers."
-msgstr ""
-
-#: modules/external-links/module.php modules/faq-schema/module.php
-#: modules/llms/module.php modules/local-business/module.php
-#: modules/redirects/module.php
-msgctxt "module category"
-msgid "SEO"
-msgstr ""
-
-#: modules/faq-schema/module.php
-msgctxt "module name"
-msgid "FAQ structured data"
-msgstr ""
-
-#: modules/faq-schema/module.php
-msgctxt "module description"
-msgid ""
-"Publishes the page's FAQ accordions as schema.org FAQPage, inside Rank "
-"Math's or Yoast's graph when they are there."
-msgstr ""
-
-#: modules/featured-images/module.php
-msgctxt "module name"
-msgid "Featured image tuning"
-msgstr ""
-
-#: modules/featured-images/module.php
-msgctxt "module description"
-msgid ""
-"Featured images with a fixed width in px download a file of that size, and a "
-"logo whose alt text only repeats the title shown next to it is marked as "
-"decorative."
-msgstr ""
-
 #: modules/forms/assets/editor.js:58 modules/forms/assets/editor.js:416
 msgid "Message"
 msgstr ""
@@ -3475,24 +3644,6 @@ msgstr ""
 msgid "Please choose one of the options."
 msgstr ""
 
-#: modules/forms/module.php
-msgctxt "module description"
-msgid ""
-"Block-based forms with several email notifications made from templates, a "
-"log of everything sent and WPML support."
-msgstr ""
-
-#: modules/forms/module.php modules/social/module.php
-#: modules/whatsapp/module.php
-msgctxt "module category"
-msgid "Contact"
-msgstr ""
-
-#: modules/forms/module.php
-msgctxt "module name"
-msgid "Forms"
-msgstr ""
-
 #: modules/google-tags/includes/admin/class-google-tags-page.php:67
 msgid "Google tags"
 msgstr ""
@@ -3566,19 +3717,6 @@ msgstr ""
 msgid "«%s» does not look like a valid ID and was not saved."
 msgstr ""
 
-#: modules/google-tags/module.php
-msgctxt "module description"
-msgid ""
-"Google Analytics 4, Google Ads (with an optional conversion for form "
-"submissions) and Google Tag Manager behind the cookie notice, with Consent "
-"Mode v2. An empty field loads nothing."
-msgstr ""
-
-#: modules/google-tags/module.php
-msgctxt "module name"
-msgid "Google tags"
-msgstr ""
-
 #: modules/language-switcher/blocks/language-switcher/block.json
 msgctxt "block description"
 msgid ""
@@ -3617,23 +3755,6 @@ msgstr ""
 
 #: modules/language-switcher/blocks/language-switcher/render.php:117
 msgid "Language:"
-msgstr ""
-
-#: modules/language-switcher/module.php
-msgctxt "module name"
-msgid "Language switcher"
-msgstr ""
-
-#: modules/language-switcher/module.php
-msgctxt "module category"
-msgid "Languages"
-msgstr ""
-
-#: modules/language-switcher/module.php
-msgctxt "module description"
-msgid ""
-"The «ES ▾» of the header: switches language to the same page, keyboard-"
-"accessible and with hreflang. Needs WPML; without it, nothing is shown."
 msgstr ""
 
 #: modules/llms/includes/admin/class-tab.php:50
@@ -3696,18 +3817,6 @@ msgstr ""
 msgid "Other languages"
 msgstr ""
 
-#: modules/llms/module.php
-msgctxt "module description"
-msgid ""
-"Serves /llms.txt, the text AI assistants read to describe the site, written "
-"in «Estrategia Web › Settings › llms.txt», one per language with WPML."
-msgstr ""
-
-#: modules/llms/module.php
-msgctxt "module name"
-msgid "llms.txt"
-msgstr ""
-
 #: modules/local-business/includes/class-settings.php:44
 #: modules/local-business/includes/class-settings.php:77
 msgid "Type of business"
@@ -3737,19 +3846,6 @@ msgstr ""
 msgid ""
 "The schema.org name, as Google reads it (e.g. DryCleaningOrLaundry for a "
 "laundry, Restaurant, Store). LocalBusiness if none fits."
-msgstr ""
-
-#: modules/local-business/module.php
-msgctxt "module name"
-msgid "Local business data"
-msgstr ""
-
-#: modules/local-business/module.php
-msgctxt "module description"
-msgid ""
-"Tells search engines about the company and its locations with schema.org "
-"(Organization and LocalBusiness: address, hours, coordinates), inside Rank "
-"Math's or Yoast's graph when they are there."
 msgstr ""
 
 #: modules/map/blocks/map/block.json
@@ -3899,18 +3995,6 @@ msgstr ""
 msgid "Open in Google Maps: %1$s %2$s"
 msgstr ""
 
-#: modules/map/module.php
-msgctxt "module name"
-msgid "Map"
-msgstr ""
-
-#: modules/map/module.php
-msgctxt "module description"
-msgid ""
-"Two-click map block: a static image with the address; the Google Maps embed "
-"only loads after the visitor asks for it (or accepted the maps cookies)."
-msgstr ""
-
 #: modules/matomo/includes/class-admin-fields.php:52
 msgid "Statistics (Matomo)"
 msgstr ""
@@ -3941,18 +4025,6 @@ msgstr ""
 msgid ""
 "Hybrid: without cookies until the visitor accepts «Analytics» in the cookie "
 "notice."
-msgstr ""
-
-#: modules/matomo/module.php
-msgctxt "module name"
-msgid "Matomo"
-msgstr ""
-
-#: modules/matomo/module.php
-msgctxt "module description"
-msgid ""
-"Matomo tracking code, cookieless or hybrid (no cookies until the visitor "
-"accepts analytics in the cookie notice)."
 msgstr ""
 
 #: modules/redirects/includes/admin/class-page.php:43
@@ -4237,18 +4309,6 @@ msgstr ""
 msgid "This rule would create a redirect loop with other rules."
 msgstr ""
 
-#: modules/redirects/module.php
-msgctxt "module description"
-msgid ""
-"Editable 301, 302 and 410 redirects with hit counters, CSV import and "
-"export, and an optional 404 log."
-msgstr ""
-
-#: modules/redirects/module.php
-msgctxt "module name"
-msgid "Redirects"
-msgstr ""
-
 #. translators: %s: name of the SEO plugin, e.g. "Rank Math".
 #: modules/redirects/module.php:100
 #, php-format
@@ -4451,19 +4511,6 @@ msgid ""
 "This SVG file could not be read or is not safe, so it has not been uploaded."
 msgstr ""
 
-#: modules/site/module.php
-msgctxt "module name"
-msgid "Company data"
-msgstr ""
-
-#: modules/site/module.php
-msgctxt "module description"
-msgid ""
-"Company details with Block Bindings and the [estrategia_web_company] "
-"shortcode, the details of one location as a Block Bindings source, and "
-"sanitised SVG uploads."
-msgstr ""
-
 #: modules/social/blocks/social-links/block.json
 msgctxt "block title"
 msgid "Social networks"
@@ -4585,18 +4632,6 @@ msgstr ""
 msgid "Social network links, in order."
 msgstr ""
 
-#: modules/social/module.php
-msgctxt "module description"
-msgid ""
-"Free, ordered list of social network links (name, link, icon from an "
-"included collection or your own SVG) and a block that shows them."
-msgstr ""
-
-#: modules/social/module.php
-msgctxt "module name"
-msgid "Social networks"
-msgstr ""
-
 #: modules/uploads/includes/class-uploads.php:224
 msgid "Image uploads"
 msgstr ""
@@ -4631,35 +4666,6 @@ msgstr ""
 #: modules/uploads/includes/class-uploads.php:245
 msgid ""
 "Delete the original after scaling it down (only the scaled copy is kept)."
-msgstr ""
-
-#: modules/uploads/module.php
-msgctxt "module name"
-msgid "Image uploads"
-msgstr ""
-
-#: modules/uploads/module.php modules/webp/module.php
-msgctxt "module category"
-msgid "Media & performance"
-msgstr ""
-
-#: modules/uploads/module.php
-msgctxt "module description"
-msgid ""
-"Phone photos can be uploaded (up to 20 MB by default); WordPress scales them "
-"down to 2560 px and only the scaled copy is kept on disk."
-msgstr ""
-
-#: modules/webp/module.php
-msgctxt "module description"
-msgid ""
-"Image sizes generated from JPEG and PNG uploads are saved as WebP (quality "
-"75)."
-msgstr ""
-
-#: modules/webp/module.php
-msgctxt "module name"
-msgid "WebP images"
 msgstr ""
 
 #: modules/whatsapp/blocks/whatsapp/block.json
@@ -4708,18 +4714,6 @@ msgstr ""
 
 #: modules/whatsapp/blocks/whatsapp/render.php:62
 msgid "Chat on WhatsApp"
-msgstr ""
-
-#: modules/whatsapp/module.php
-msgctxt "module description"
-msgid ""
-"Floating button that opens a WhatsApp chat with a predefined message. The "
-"number and the message are site options, not per page."
-msgstr ""
-
-#: modules/whatsapp/module.php
-msgctxt "module name"
-msgid "WhatsApp button"
 msgstr ""
 
 #: modules/whatsapp/module.php:52
