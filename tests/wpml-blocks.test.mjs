@@ -52,6 +52,8 @@ const EXCLUDED = {
   "estrategia-web/map.phone": "a phone number, the same in every language",
   "estrategia-web/map.imageUrl": "the same picture in every language (its alt text, imageAlt, is translated)",
   "estrategia-web/map.staticMapUrl": "the same picture in every language, served by the site",
+  "estrategia-web/map.latitude": "a coordinate (2.9.0), the same place in every language",
+  "estrategia-web/map.longitude": "a coordinate (2.9.0), the same place in every language",
   "estrategia-web/carousel.imageSizes": "a technical value (the sizes attribute of the images)",
   "estrategia-web/carousel.mobileRatio": "a technical value (an aspect ratio)",
   "estrategia-web/carousel.mobileImageSizes": "a technical value (the sizes attribute on mobile)",
