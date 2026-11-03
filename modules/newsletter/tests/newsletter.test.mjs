@@ -10,10 +10,12 @@
 // settings field's value.
 //
 // How to maintain: a new route or Mailchimp call gets its case here, and its
-// answer in the fake. The trap: the seed's posts are the newest of the site
-// on purpose (they must be in «latest»); another test that seeds newer posts
-// in the same WordPress at the same time is not possible (one file per
-// WordPress at a time, tests/run.mjs).
+// answer in the fake. The trap: the seed's posts are dated 1, 2 and 3 minutes
+// ago so that they are in «latest», but a test file that ran in the same
+// WordPress less than a minute before can leave NEWER posts (seen red on
+// 03-11-2026, when the llms tests changed how files are dealt to the
+// WordPresses: «latest» began with two posts of another file). So «latest» is
+// checked for the seed's own posts and their order, not for being first.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, adminSession, credentials, testApi, wp } from "../../../tests/lib.mjs";
@@ -61,8 +63,9 @@ test("proposed: the featured category's posts, and the latest; a search finds; d
   const { status, json } = await nl("posts");
   assert.equal(status, 200);
   assert.deepEqual(json.featured.map((p) => p.id).slice(0, 2), [seed.a, seed.c], "featured, newest first, without B");
-  assert.deepEqual(json.latest.map((p) => p.id).slice(0, 3), [seed.a, seed.b, seed.c]);
-  assert.equal(json.latest[0].label, "Actualitat", "the label is not the featured category");
+  const ours = json.latest.filter((p) => [seed.a, seed.b, seed.c].includes(p.id)); // Not the other files' posts (header, «The trap»).
+  assert.deepEqual(ours.map((p) => p.id), [seed.a, seed.b, seed.c]);
+  assert.equal(ours[0].label, "Actualitat", "the label is not the featured category");
   assert.ok(!json.latest.some((p) => p.id === seed.draft));
   const found = await nl("posts?search=" + encodeURIComponent("vins & tapes"));
   assert.deepEqual(found.json.results.map((p) => p.id), [seed.b]);
