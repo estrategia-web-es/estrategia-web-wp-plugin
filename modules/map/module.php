@@ -31,7 +31,7 @@ namespace EstrategiaWeb\Map;
 
 defined( 'ABSPATH' ) || exit;
 
-const BINDABLE = array( 'placeName', 'address', 'phone', 'hours', 'embedUrl', 'mapsUrl', 'imageUrl', 'imageAlt', 'staticMapUrl' );
+const BINDABLE = array( 'placeName', 'address', 'phone', 'hours', 'embedUrl', 'mapsUrl', 'imageUrl', 'imageAlt', 'staticMapUrl', 'latitude', 'longitude' );
 
 add_action( 'init', static fn() => register_block_type( __DIR__ . '/blocks/map' ) );
 

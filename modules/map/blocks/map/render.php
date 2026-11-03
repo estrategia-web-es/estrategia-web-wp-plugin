@@ -77,6 +77,10 @@
  *   theme's pattern knows, and it is the one that sets it.
  *   Edge case: a standalone map (contact page without a card) keeps the
  *   default: without details it would not say where it is.
+ * - COORDINATES (2.9.0, latitude/longitude attributes, bindable): with no
+ *   embedUrl, the map is built from them with Google's keyless
+ *   «?output=embed» URL. Same two clicks. Why, the measured URL forms and
+ *   the edge cases: coords.php.
  * - Inside a Query (0.2.0): its text attributes accept Block Bindings
  *   (modules/map/module.php), so the address and the embed URL can come
  *   from each entry's fields (core/post-meta); and with no image chosen it
@@ -174,15 +178,23 @@ if ( ! function_exists( 'estrategia_web_map_static_url' ) ) {
 // break — blank lines in the box and «, ,» in the static map's alt.
 // The conversion lives in text.php so a level-1 test can call it (tests/text.test.mjs).
 require_once __DIR__ . '/text.php';
+require_once __DIR__ . '/coords.php';
 $estrategia_web_text      = static fn( string $key ): string => estrategia_web_map_text( (string) $attributes[ $key ] );
 $estrategia_web_place     = $estrategia_web_text( 'placeName' );
 $estrategia_web_phone     = $estrategia_web_text( 'phone' );
 $estrategia_web_hours     = $estrategia_web_text( 'hours' );
 $estrategia_web_address   = $estrategia_web_text( 'address' );
-$estrategia_web_embed     = estrategia_web_map_embed_url( (string) $attributes['embedUrl'] );
+// A pasted embed wins; otherwise the coordinates, if any (2.9.0, coords.php).
+$estrategia_web_lat       = (string) ( $attributes['latitude'] ?? '' );
+$estrategia_web_lng       = (string) ( $attributes['longitude'] ?? '' );
+$estrategia_web_embed     = estrategia_web_map_embed_url( (string) $attributes['embedUrl'] )
+	?: esc_url_raw( estrategia_web_map_coords_embed( $estrategia_web_lat, $estrategia_web_lng, substr( determine_locale(), 0, 2 ) ) );
 $estrategia_web_maps_url  = trim( (string) $attributes['mapsUrl'] );
 if ( '' === $estrategia_web_maps_url && '' !== $estrategia_web_address ) {
 	$estrategia_web_maps_url = 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode( $estrategia_web_address );
+}
+if ( '' === $estrategia_web_maps_url && '' !== estrategia_web_map_coords( $estrategia_web_lat, $estrategia_web_lng ) ) {
+	$estrategia_web_maps_url = 'https://www.google.com/maps/search/?api=1&query=' . estrategia_web_map_coords( $estrategia_web_lat, $estrategia_web_lng );
 }
 
 if ( '' === $estrategia_web_embed && '' === $estrategia_web_maps_url ) {

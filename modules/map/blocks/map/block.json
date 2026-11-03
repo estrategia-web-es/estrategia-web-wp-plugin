@@ -19,6 +19,8 @@
 		"useFeaturedImage": { "type": "boolean", "default": false },
 		"embedUrl": { "type": "string", "default": "" },
 		"mapsUrl": { "type": "string", "default": "" },
+		"latitude": { "type": "string", "default": "" },
+		"longitude": { "type": "string", "default": "" },
 		"imageId": { "type": "number", "default": 0 },
 		"imageUrl": { "type": "string", "default": "" },
 		"imageAlt": { "type": "string", "default": "" },

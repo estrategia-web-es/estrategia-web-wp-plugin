@@ -9,6 +9,20 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.9.0 — 03-11-2026
+
+**What each site must do:** nothing. Existing maps do not change: a pasted
+`embedUrl` still wins.
+
+- **Map**: `latitude` and `longitude` attributes, in `BINDABLE`. With no
+  `embedUrl`, `blocks/map/coords.php` builds Google's keyless
+  `https://www.google.com/maps?q=LAT,LNG&hl=<lang>&z=17&output=embed`, same
+  two clicks; «Open in Google Maps» falls back to the coordinates when there
+  is no address. Measured in a browser: `/maps/embed?q=…` (the only form the
+  embed validation took) shows the world map. «0,0» and non-numbers give no
+  map. Why: Gastronòmicament has 736 restaurants with coordinates and no
+  embed. Test: `modules/map/tests/coords.test.mjs` (level 1).
+
 ## 2.8.0 — 02-11-2026
 
 **What each site must do:** nothing. The lists of records get the tools the
