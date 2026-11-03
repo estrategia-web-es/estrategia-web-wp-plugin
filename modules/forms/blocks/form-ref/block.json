@@ -8,7 +8,7 @@
 	"icon": "feedback",
 	"description": "Shows one of the site's forms. The form itself is edited in Forms → Forms.",
 	"keywords": [ "contact", "form", "email", "quote" ],
-	"textdomain": "estrategia-web",
+	"textdomain": "estrategiaweb-toolkit",
 	"attributes": {
 		"ref": { "type": "integer", "default": 0 }
 	},

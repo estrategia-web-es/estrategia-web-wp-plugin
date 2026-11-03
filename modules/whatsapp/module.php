@@ -49,7 +49,7 @@ add_action(
 			'estrategia_web_whatsapp_phone',
 			array(
 				'type'              => 'string',
-				'description'       => __( 'WhatsApp phone number in international format, digits only.', 'estrategia-web' ),
+				'description'       => __( 'WhatsApp phone number in international format, digits only.', 'estrategiaweb-toolkit' ),
 				'sanitize_callback' => static fn( $value ) => preg_replace( '/\D+/', '', (string) $value ),
 				'show_in_rest'      => true,
 				'default'           => '',
@@ -60,7 +60,7 @@ add_action(
 			'estrategia_web_whatsapp_message',
 			array(
 				'type'              => 'string',
-				'description'       => __( 'Predefined WhatsApp message.', 'estrategia-web' ),
+				'description'       => __( 'Predefined WhatsApp message.', 'estrategiaweb-toolkit' ),
 				'sanitize_callback' => 'sanitize_text_field',
 				'show_in_rest'      => true,
 				'default'           => '',

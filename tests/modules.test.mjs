@@ -79,7 +79,7 @@ test("1.7.0: only «site» is core, and every other module has a known Category"
     Content: ["banners", "carousel", "comments-off", "content-types", "featured-images", "map", "newsletter"],
     Contact: ["forms", "social", "whatsapp"],
     "Privacy & analytics": ["consent", "google-tags", "matomo"],
-    SEO: ["external-links", "faq-schema", "local-business", "redirects"],
+    SEO: ["external-links", "faq-schema", "llms", "local-business", "redirects"],
     Languages: ["language-switcher"],
     "Media & performance": ["uploads", "webp"],
   };

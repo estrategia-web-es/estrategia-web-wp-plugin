@@ -7,7 +7,7 @@
 	"category": "widgets",
 	"icon": "yes-alt",
 	"description": "A checkbox. As a privacy consent it is always required and links to the privacy policy.",
-	"textdomain": "estrategia-web",
+	"textdomain": "estrategiaweb-toolkit",
 	"ancestor": [ "estrategia-web-forms/form" ],
 	"usesContext": [ "estrategia-web-forms/formId" ],
 	"attributes": {

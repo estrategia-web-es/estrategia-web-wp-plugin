@@ -218,7 +218,7 @@ final class Location_Fields {
 		if ( $post->post_type !== self::type() ) {
 			return $html;
 		}
-		$show = static fn( string $text ): string => '' === $text ? '<em>' . esc_html__( 'Nothing yet.', 'estrategia-web' ) . '</em>' : nl2br( esc_html( $text ) );
+		$show = static fn( string $text ): string => '' === $text ? '<em>' . esc_html__( 'Nothing yet.', 'estrategiaweb-toolkit' ) . '</em>' : nl2br( esc_html( $text ) );
 		switch ( $group ) {
 			case 'address':
 				$value = $show( self::address_text( $post ) );
@@ -228,12 +228,12 @@ final class Location_Fields {
 				break;
 			case 'map':
 				$url   = self::maps_url( $post );
-				$value = '' === $url ? $show( '' ) : '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener">' . esc_html__( 'Open in Google Maps', 'estrategia-web' ) . '</a>';
+				$value = '' === $url ? $show( '' ) : '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener">' . esc_html__( 'Open in Google Maps', 'estrategiaweb-toolkit' ) . '</a>';
 				break;
 			default:
 				return $html;
 		}
-		return $html . '<div class="estrategia-web-ct-preview"><strong>' . esc_html__( 'Shown on the site (as of the last save):', 'estrategia-web' ) . '</strong><div>' . $value . '</div></div>';
+		return $html . '<div class="estrategia-web-ct-preview"><strong>' . esc_html__( 'Shown on the site (as of the last save):', 'estrategiaweb-toolkit' ) . '</strong><div>' . $value . '</div></div>';
 	}
 
 	private static function original( \WP_Post $post ): \WP_Post {

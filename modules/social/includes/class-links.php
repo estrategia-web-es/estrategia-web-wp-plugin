@@ -75,7 +75,7 @@ final class Links {
 			self::OPTION,
 			array(
 				'type'              => 'array',
-				'description'       => __( 'Social network links, in order.', 'estrategia-web' ),
+				'description'       => __( 'Social network links, in order.', 'estrategiaweb-toolkit' ),
 				'sanitize_callback' => array( self::class, 'sanitize' ),
 				'show_in_rest'      => array(
 					'schema' => array(

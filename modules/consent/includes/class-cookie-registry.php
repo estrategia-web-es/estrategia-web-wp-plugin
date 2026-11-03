@@ -136,54 +136,54 @@ final class Cookie_Registry {
 	 * @return array<string, array{provider: string, category: string, purpose: string, duration: string}>
 	 */
 	public static function base(): array {
-		$site = __( 'This website', 'estrategia-web' );
+		$site = __( 'This website', 'estrategiaweb-toolkit' );
 		return array(
 			Consent::COOKIE            => array(
 				'provider' => $site,
 				'category' => 'necessary',
-				'purpose'  => __( 'Remembers your choice in the cookie notice.', 'estrategia-web' ),
+				'purpose'  => __( 'Remembers your choice in the cookie notice.', 'estrategiaweb-toolkit' ),
 				'duration' => '1 year',
 			),
 			Consent::LEGACY_COOKIE     => array(
 				'provider' => $site,
 				'category' => 'necessary',
-				'purpose'  => __( 'Previous name of the cookie that remembers your choice in the cookie notice; it is replaced on the next visit.', 'estrategia-web' ),
+				'purpose'  => __( 'Previous name of the cookie that remembers your choice in the cookie notice; it is replaced on the next visit.', 'estrategiaweb-toolkit' ),
 				'duration' => '1 year',
 			),
 			'wp-wpml_current_language' => array(
 				'provider' => 'WPML',
 				'category' => 'necessary',
-				'purpose'  => __( 'Remembers the language in which you are browsing the site.', 'estrategia-web' ),
+				'purpose'  => __( 'Remembers the language in which you are browsing the site.', 'estrategiaweb-toolkit' ),
 				'duration' => '1 day',
 			),
 			'_icl_current_language'    => array(
 				'provider' => 'WPML',
 				'category' => 'necessary',
-				'purpose'  => __( 'Remembers the language in which you are browsing the site.', 'estrategia-web' ),
+				'purpose'  => __( 'Remembers the language in which you are browsing the site.', 'estrategiaweb-toolkit' ),
 				'duration' => '1 day',
 			),
 			'pll_language'             => array(
 				'provider' => 'Polylang',
 				'category' => 'necessary',
-				'purpose'  => __( 'Remembers the language in which you are browsing the site.', 'estrategia-web' ),
+				'purpose'  => __( 'Remembers the language in which you are browsing the site.', 'estrategiaweb-toolkit' ),
 				'duration' => '1 year',
 			),
 			'wordpress_test_cookie'    => array(
 				'provider' => 'WordPress',
 				'category' => 'necessary',
-				'purpose'  => __( 'Checks that the browser accepts cookies. Only on the login page.', 'estrategia-web' ),
+				'purpose'  => __( 'Checks that the browser accepts cookies. Only on the login page.', 'estrategiaweb-toolkit' ),
 				'duration' => 'session',
 			),
 			'wordpress_logged_in_*'    => array(
 				'provider' => 'WordPress',
 				'category' => 'necessary',
-				'purpose'  => __( 'Keeps the session of the site’s users (editors and administrators).', 'estrategia-web' ),
+				'purpose'  => __( 'Keeps the session of the site’s users (editors and administrators).', 'estrategiaweb-toolkit' ),
 				'duration' => 'session',
 			),
 			'wp-settings-*'            => array(
 				'provider' => 'WordPress',
 				'category' => 'necessary',
-				'purpose'  => __( 'Remembers the dashboard settings of the site’s users (editors and administrators).', 'estrategia-web' ),
+				'purpose'  => __( 'Remembers the dashboard settings of the site’s users (editors and administrators).', 'estrategiaweb-toolkit' ),
 				'duration' => '1 year',
 			),
 			// Matomo: the external database also has the Piwik PRO ones with a
@@ -192,31 +192,31 @@ final class Cookie_Registry {
 			'_pk_id.*'                 => array(
 				'provider' => 'Matomo',
 				'category' => 'statistics',
-				'purpose'  => __( 'Statistics: recognises a returning visitor (an anonymous identifier). Only after accepting analytics.', 'estrategia-web' ),
+				'purpose'  => __( 'Statistics: recognises a returning visitor (an anonymous identifier). Only after accepting analytics.', 'estrategiaweb-toolkit' ),
 				'duration' => '13 months',
 			),
 			'_pk_ses.*'                => array(
 				'provider' => 'Matomo',
 				'category' => 'statistics',
-				'purpose'  => __( 'Statistics: groups the pages viewed in the same visit.', 'estrategia-web' ),
+				'purpose'  => __( 'Statistics: groups the pages viewed in the same visit.', 'estrategiaweb-toolkit' ),
 				'duration' => '30 minutes',
 			),
 			'_pk_ref.*'                => array(
 				'provider' => 'Matomo',
 				'category' => 'statistics',
-				'purpose'  => __( 'Statistics: remembers the website the visitor came from.', 'estrategia-web' ),
+				'purpose'  => __( 'Statistics: remembers the website the visitor came from.', 'estrategiaweb-toolkit' ),
 				'duration' => '6 months',
 			),
 			'mtm_cookie_consent'       => array(
 				'provider' => 'Matomo',
 				'category' => 'statistics',
-				'purpose'  => __( 'Statistics: remembers that analytics cookies were accepted.', 'estrategia-web' ),
+				'purpose'  => __( 'Statistics: remembers that analytics cookies were accepted.', 'estrategiaweb-toolkit' ),
 				'duration' => '30 years',
 			),
 			'comment_author_*'         => array(
 				'provider' => 'WordPress',
 				'category' => 'preferences',
-				'purpose'  => __( 'Remembers your name and email for the next comment, only if you ask for it.', 'estrategia-web' ),
+				'purpose'  => __( 'Remembers your name and email for the next comment, only if you ask for it.', 'estrategiaweb-toolkit' ),
 				'duration' => '1 year',
 			),
 		);
@@ -357,12 +357,12 @@ final class Cookie_Registry {
 	public static function save( string $key, array $data ) {
 		$key = trim( $key );
 		if ( ! self::name_ok( $key ) ) {
-			return new \WP_Error( 'estrategia_web_cookie_name', __( 'Invalid cookie name. Use the exact name, or a prefix ending in * for a family of cookies (e.g. _ga_*).', 'estrategia-web' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'estrategia_web_cookie_name', __( 'Invalid cookie name. Use the exact name, or a prefix ending in * for a family of cookies (e.g. _ga_*).', 'estrategiaweb-toolkit' ), array( 'status' => 400 ) );
 		}
 		$entries = self::all();
 		$is_new  = ! isset( $entries[ $key ] );
 		if ( $is_new && count( $entries ) >= self::MAX_ENTRIES ) {
-			return new \WP_Error( 'estrategia_web_cookie_full', __( 'The cookie list is full. Delete the cookies you do not need.', 'estrategia-web' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'estrategia_web_cookie_full', __( 'The cookie list is full. Delete the cookies you do not need.', 'estrategiaweb-toolkit' ), array( 'status' => 400 ) );
 		}
 		$entry = $entries[ $key ] ?? array_merge( self::ENTRY_DEFAULTS, array( 'source' => 'manual' ) );
 		if ( $is_new ) {

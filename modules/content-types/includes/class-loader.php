@@ -85,7 +85,7 @@ final class Loader {
 			}
 			$source = self::DB_SOURCE . $name;
 			if ( null === $row['definition'] ) {
-				$errors[ $source ] = array( __( 'The stored definition is not valid JSON.', 'estrategia-web' ) );
+				$errors[ $source ] = array( __( 'The stored definition is not valid JSON.', 'estrategiaweb-toolkit' ) );
 				continue;
 			}
 			$taken[ $name ] = true;
@@ -104,12 +104,12 @@ final class Loader {
 				$def = json_decode( preg_replace( '/^\xEF\xBB\xBF/', '', (string) $json ), true );
 				if ( null === $def && JSON_ERROR_NONE !== json_last_error() ) {
 					/* translators: %s: the JSON parser's message */
-					$errors[ $file ] = array( sprintf( __( 'Not valid JSON: %s.', 'estrategia-web' ), json_last_error_msg() ) );
+					$errors[ $file ] = array( sprintf( __( 'Not valid JSON: %s.', 'estrategiaweb-toolkit' ), json_last_error_msg() ) );
 					continue;
 				}
 				if ( is_array( $def ) && isset( $def['name'] ) && is_string( $def['name'] ) && isset( $taken[ $def['name'] ] ) ) {
 					/* translators: %s: post type name */
-					$errors[ $file ] = array( sprintf( __( 'The type “%s” is defined in the database (Estrategia Web → Content types), which wins: this file is ignored.', 'estrategia-web' ), $def['name'] ) );
+					$errors[ $file ] = array( sprintf( __( 'The type “%s” is defined in the database (Estrategia Web → Content types), which wins: this file is ignored.', 'estrategiaweb-toolkit' ), $def['name'] ) );
 					continue;
 				}
 				$found = Schema::validate( $def, Templates::for_definition( $def ) );

@@ -55,7 +55,7 @@ if ( ! $estrategia_web_items ) {
 		printf(
 			'<p %s>%s</p>',
 			get_block_wrapper_attributes(), // phpcs:ignore WordPress.Security.EscapeOutput
-			esc_html__( 'Social networks: add them in Estrategia Web › Social networks.', 'estrategia-web' )
+			esc_html__( 'Social networks: add them in Estrategia Web › Social networks.', 'estrategiaweb-toolkit' )
 		);
 	}
 	return;
@@ -69,9 +69,9 @@ $estrategia_web_owner   = Links::owner();
 	<?php foreach ( $estrategia_web_items as $estrategia_web_item ) : ?>
 		<?php
 		/* translators: 1: network name («Instagram»), 2: company name. */
-		$estrategia_web_label = sprintf( __( '%1$s of %2$s', 'estrategia-web' ), $estrategia_web_item['name'], $estrategia_web_owner );
+		$estrategia_web_label = sprintf( __( '%1$s of %2$s', 'estrategiaweb-toolkit' ), $estrategia_web_item['name'], $estrategia_web_owner );
 		if ( $estrategia_web_item['new_tab'] ) {
-			$estrategia_web_label .= ' ' . __( '(opens in a new tab)', 'estrategia-web' );
+			$estrategia_web_label .= ' ' . __( '(opens in a new tab)', 'estrategiaweb-toolkit' );
 		}
 		?>
 		<li class="estrategia-web-social-links__item is-network-<?php echo esc_attr( $estrategia_web_item['icon'] ); ?>">

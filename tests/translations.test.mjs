@@ -1,4 +1,4 @@
-// NIVEL: 1 — no browser or emulator. Every languages/estrategia-web-<locale>.po is complete (no empty or fuzzy string), keeps the placeholders of the English, has every string of the .pot and is compiled into its .l10n.php.
+// NIVEL: 1 — no browser or emulator. Every languages/estrategiaweb-toolkit-<locale>.po is complete (no empty or fuzzy string), keeps the placeholders of the English, has every string of the .pot and is compiled into its .l10n.php.
 //
 // Why: a fuzzy or empty string is NOT compiled (tools/i18n.mjs), so the site
 // shows it in English with no warning; a placeholder lost in a translation
@@ -22,7 +22,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const LANG = path.resolve(import.meta.dirname, "..", "languages");
-const DOMAIN = "estrategia-web";
+const DOMAIN = "estrategiaweb-toolkit";
 
 function parsePo(text) {
   const entries = [];
@@ -59,7 +59,8 @@ const placeholders = (s) => [...s.matchAll(/%(?:\d+\$)?[sd]|\{\{[a-z_]+\}\}/g)].
 const links = (s) => (s.replace(/\{\{[a-z_]+\}\}/g, "").match(/\{[^{}]+\}/g) || []).length;
 
 const pot = parsePo(fs.readFileSync(path.join(LANG, `${DOMAIN}.pot`), "utf8"));
-const pos = fs.readdirSync(LANG).filter((f) => new RegExp(`^${DOMAIN}-[a-z]{2,3}(_[A-Z]{2})?\\.po$`).test(f));
+// The variants WordPress has (de_DE_formal) too: a pattern without them leaves that .po unchecked.
+const pos = fs.readdirSync(LANG).filter((f) => new RegExp(`^${DOMAIN}-[a-z]{2,3}(_[A-Z]{2})?(_[a-z]+)?\\.po$`).test(f));
 
 test("there is at least the Spanish and the Catalan translation", () => {
   assert.ok(pos.includes(`${DOMAIN}-es_ES.po`) && pos.includes(`${DOMAIN}-ca.po`), pos.join(", "));

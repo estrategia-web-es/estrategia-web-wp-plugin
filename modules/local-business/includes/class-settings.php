@@ -41,8 +41,8 @@ final class Settings {
 			Data::OPTION,
 			array(
 				'type'              => 'string',
-				'label'             => __( 'Type of business', 'estrategia-web' ),
-				'description'       => __( 'The schema.org type search engines are told the company is.', 'estrategia-web' ),
+				'label'             => __( 'Type of business', 'estrategiaweb-toolkit' ),
+				'description'       => __( 'The schema.org type search engines are told the company is.', 'estrategiaweb-toolkit' ),
 				'default'           => Types::DEFAULT,
 				'sanitize_callback' => array( self::class, 'sanitize' ),
 				'show_in_rest'      => array(
@@ -62,7 +62,7 @@ final class Settings {
 			return $valid;
 		}
 		if ( null !== $value && function_exists( 'add_settings_error' ) ) {
-			add_settings_error( 'estrategia_web_site', 'estrategia_web_local_business_type', __( 'That type of business is not in the list. The previous one has been kept.', 'estrategia-web' ) );
+			add_settings_error( 'estrategia_web_site', 'estrategia_web_local_business_type', __( 'That type of business is not in the list. The previous one has been kept.', 'estrategiaweb-toolkit' ) );
 		}
 		return Data::business_type();
 	}
@@ -70,18 +70,18 @@ final class Settings {
 	public static function render(): void {
 		$current = Data::business_type();
 		?>
-		<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Search engines (schema.org)', 'estrategia-web' ), 'ew-box-local-business' ); ?>
-		<p><?php esc_html_e( 'What Google is told about the company and its locations (structured data). The locations\' addresses, hours and coordinates are filled in on each location.', 'estrategia-web' ); ?></p>
+		<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Search engines (schema.org)', 'estrategiaweb-toolkit' ), 'ew-box-local-business' ); ?>
+		<p><?php esc_html_e( 'What Google is told about the company and its locations (structured data). The locations\' addresses, hours and coordinates are filled in on each location.', 'estrategiaweb-toolkit' ); ?></p>
 		<table class="form-table" role="presentation">
 			<tr>
-				<th scope="row"><label for="estrategia-web-local-business-type"><?php esc_html_e( 'Type of business', 'estrategia-web' ); ?></label></th>
+				<th scope="row"><label for="estrategia-web-local-business-type"><?php esc_html_e( 'Type of business', 'estrategiaweb-toolkit' ); ?></label></th>
 				<td>
 					<select id="estrategia-web-local-business-type" name="<?php echo esc_attr( Data::OPTION ); ?>" aria-describedby="estrategia-web-local-business-type-help">
 						<?php foreach ( Types::ALL as $type ) : ?>
 							<option value="<?php echo esc_attr( $type ); ?>" <?php selected( $current, $type ); ?>><?php echo esc_html( $type ); ?></option>
 						<?php endforeach; ?>
 					</select>
-					<p class="description" id="estrategia-web-local-business-type-help"><?php esc_html_e( 'The schema.org name, as Google reads it (e.g. DryCleaningOrLaundry for a laundry, Restaurant, Store). LocalBusiness if none fits.', 'estrategia-web' ); ?></p>
+					<p class="description" id="estrategia-web-local-business-type-help"><?php esc_html_e( 'The schema.org name, as Google reads it (e.g. DryCleaningOrLaundry for a laundry, Restaurant, Store). LocalBusiness if none fits.', 'estrategiaweb-toolkit' ); ?></p>
 				</td>
 			</tr>
 		</table>

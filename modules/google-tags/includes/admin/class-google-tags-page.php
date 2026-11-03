@@ -37,7 +37,7 @@ final class Google_Tags_Page {
 
 	/** On Settings_Page::HOOK: the Analytics tab and this section. */
 	public static function register(): void {
-		Settings_Page::add_tab( 'analytics', __( 'Analytics', 'estrategia-web' ), 20 );
+		Settings_Page::add_tab( 'analytics', __( 'Analytics', 'estrategiaweb-toolkit' ), 20 );
 		Settings_Page::add_section(
 			'analytics',
 			array(
@@ -64,26 +64,26 @@ final class Google_Tags_Page {
 			);
 		};
 		?>
-		<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Google tags', 'estrategia-web' ), 'ew-box-google-tags' ); ?>
-		<p><?php esc_html_e( 'An empty field loads nothing. Whatever is filled in waits for the cookie notice: Analytics needs «Analytics», Ads needs «Advertising», and Tag Manager asks for both. Logged-in editors and administrators are not measured.', 'estrategia-web' ); ?></p>
+		<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Google tags', 'estrategiaweb-toolkit' ), 'ew-box-google-tags' ); ?>
+		<p><?php esc_html_e( 'An empty field loads nothing. Whatever is filled in waits for the cookie notice: Analytics needs «Analytics», Ads needs «Advertising», and Tag Manager asks for both. Logged-in editors and administrators are not measured.', 'estrategiaweb-toolkit' ); ?></p>
 		<table class="form-table" role="presentation">
 			<?php
-			$row( 'ga4', __( 'Google Analytics 4', 'estrategia-web' ), 'G-XXXXXXXXXX', __( 'Measurement ID of the GA4 web stream.', 'estrategia-web' ) );
-			$row( 'ads', __( 'Google Ads', 'estrategia-web' ), 'AW-123456789', __( 'Conversion ID of the Google Ads account.', 'estrategia-web' ) );
-			$row( 'ads_form_label', __( 'Conversion: form sent', 'estrategia-web' ), 'AW-123456789/AbCdEfGhIj', __( 'Optional. Conversion ID and label («send_to» of the conversion). Counted each time a form of the site is sent correctly, if the visitor accepted «Advertising».', 'estrategia-web' ) );
-			$row( 'gtm', __( 'Google Tag Manager', 'estrategia-web' ), 'GTM-XXXXXXX', __( 'Container ID. The tags inside the container follow Consent Mode.', 'estrategia-web' ) );
+			$row( 'ga4', __( 'Google Analytics 4', 'estrategiaweb-toolkit' ), 'G-XXXXXXXXXX', __( 'Measurement ID of the GA4 web stream.', 'estrategiaweb-toolkit' ) );
+			$row( 'ads', __( 'Google Ads', 'estrategiaweb-toolkit' ), 'AW-123456789', __( 'Conversion ID of the Google Ads account.', 'estrategiaweb-toolkit' ) );
+			$row( 'ads_form_label', __( 'Conversion: form sent', 'estrategiaweb-toolkit' ), 'AW-123456789/AbCdEfGhIj', __( 'Optional. Conversion ID and label («send_to» of the conversion). Counted each time a form of the site is sent correctly, if the visitor accepted «Advertising».', 'estrategiaweb-toolkit' ) );
+			$row( 'gtm', __( 'Google Tag Manager', 'estrategiaweb-toolkit' ), 'GTM-XXXXXXX', __( 'Container ID. The tags inside the container follow Consent Mode.', 'estrategiaweb-toolkit' ) );
 			?>
 			<tr>
-				<th scope="row"><?php esc_html_e( 'Loading', 'estrategia-web' ); ?></th>
+				<th scope="row"><?php esc_html_e( 'Loading', 'estrategiaweb-toolkit' ); ?></th>
 				<td>
 					<fieldset>
 						<label style="display:block;margin:.4em 0">
 							<input type="radio" name="<?php echo esc_attr( $name( 'mode' ) ); ?>" value="basic" <?php checked( 'basic', $s['mode'] ); ?>>
-							<?php esc_html_e( 'Basic (recommended): nothing is requested from Google until the visitor accepts.', 'estrategia-web' ); ?>
+							<?php esc_html_e( 'Basic (recommended): nothing is requested from Google until the visitor accepts.', 'estrategiaweb-toolkit' ); ?>
 						</label>
 						<label style="display:block;margin:.4em 0">
 							<input type="radio" name="<?php echo esc_attr( $name( 'mode' ) ); ?>" value="advanced" <?php checked( 'advanced', $s['mode'] ); ?>>
-							<?php esc_html_e( 'Advanced: Google loads from the start with consent denied and sends cookieless pings. Better measurement, but data reaches Google before the visitor decides: decide it with the client.', 'estrategia-web' ); ?>
+							<?php esc_html_e( 'Advanced: Google loads from the start with consent denied and sends cookieless pings. Better measurement, but data reaches Google before the visitor decides: decide it with the client.', 'estrategiaweb-toolkit' ); ?>
 						</label>
 					</fieldset>
 				</td>

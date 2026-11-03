@@ -98,7 +98,7 @@ final class External_Links {
 		if ( '' === $html || '' === $home ) {
 			return $html;
 		}
-		return self::rewrite( $html, $home, __( '(opens in a new tab)', 'estrategia-web' ) );
+		return self::rewrite( $html, $home, __( '(opens in a new tab)', 'estrategiaweb-toolkit' ) );
 	}
 
 	/**

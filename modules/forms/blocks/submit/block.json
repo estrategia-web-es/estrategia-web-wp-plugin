@@ -7,7 +7,7 @@
 	"category": "widgets",
 	"icon": "button",
 	"description": "The button that sends the form. Styled by the theme like any other button.",
-	"textdomain": "estrategia-web",
+	"textdomain": "estrategiaweb-toolkit",
 	"ancestor": [ "estrategia-web-forms/form" ],
 	"attributes": {
 		"text": { "type": "string", "default": "" }

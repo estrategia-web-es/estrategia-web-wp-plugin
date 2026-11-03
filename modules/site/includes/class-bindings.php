@@ -48,7 +48,7 @@ final class Bindings {
 		register_block_bindings_source(
 			self::SOURCE,
 			array(
-				'label'              => __( 'Company details', 'estrategia-web' ),
+				'label'              => __( 'Company details', 'estrategiaweb-toolkit' ),
 				'get_value_callback' => array( self::class, 'get_value' ),
 			)
 		);

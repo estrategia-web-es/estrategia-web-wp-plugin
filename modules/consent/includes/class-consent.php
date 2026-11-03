@@ -266,20 +266,20 @@ final class Consent {
 	public static function known_categories(): array {
 		return array(
 			'statistics'  => array(
-				'label'       => __( 'Analytics', 'estrategia-web' ),
-				'description' => __( 'Help us understand how the site is used.', 'estrategia-web' ),
+				'label'       => __( 'Analytics', 'estrategiaweb-toolkit' ),
+				'description' => __( 'Help us understand how the site is used.', 'estrategiaweb-toolkit' ),
 			),
 			'maps'        => array(
-				'label'       => __( 'Maps and third-party content', 'estrategia-web' ),
-				'description' => __( 'Load embedded maps and other content served by third parties, which may set their own cookies.', 'estrategia-web' ),
+				'label'       => __( 'Maps and third-party content', 'estrategiaweb-toolkit' ),
+				'description' => __( 'Load embedded maps and other content served by third parties, which may set their own cookies.', 'estrategiaweb-toolkit' ),
 			),
 			'marketing'   => array(
-				'label'       => __( 'Advertising', 'estrategia-web' ),
-				'description' => __( 'Measure campaigns and show relevant advertising.', 'estrategia-web' ),
+				'label'       => __( 'Advertising', 'estrategiaweb-toolkit' ),
+				'description' => __( 'Measure campaigns and show relevant advertising.', 'estrategiaweb-toolkit' ),
 			),
 			'preferences' => array(
-				'label'       => __( 'Preferences', 'estrategia-web' ),
-				'description' => __( 'Remember choices that change how the site behaves or looks, such as the region or recently viewed items.', 'estrategia-web' ),
+				'label'       => __( 'Preferences', 'estrategiaweb-toolkit' ),
+				'description' => __( 'Remember choices that change how the site behaves or looks, such as the region or recently viewed items.', 'estrategiaweb-toolkit' ),
 			),
 		);
 	}
@@ -375,7 +375,7 @@ final class Consent {
 			// linking to the author on the public site unless the user enables it.
 			'show' => false,
 			/* translators: %s: name of the company that built the site (a brand, not translated). */
-			'text' => sprintf( __( 'Powered by %s', 'estrategia-web' ), 'Estrategia Web' ),
+			'text' => sprintf( __( 'Powered by %s', 'estrategiaweb-toolkit' ), 'Estrategia Web' ),
 			'url'  => 'https://estrategiaweb.es/',
 		);
 		/**
@@ -408,7 +408,7 @@ final class Consent {
 			Cookie_Registry::SETTINGS,
 			array(
 				'type'              => 'object',
-				'description'       => __( 'Cookie notice: detector on or off, and categories added by the administrator.', 'estrategia-web' ),
+				'description'       => __( 'Cookie notice: detector on or off, and categories added by the administrator.', 'estrategiaweb-toolkit' ),
 				'sanitize_callback' => array( Cookie_Registry::class, 'sanitize_settings' ),
 				'default'           => array(
 					'detector' => true,
@@ -435,7 +435,7 @@ final class Consent {
 
 	/** Label of the autoRegister control (block.json does not translate the «label» key). */
 	private static function label_text(): string {
-		return __( 'Link text (empty: “Cookie settings”)', 'estrategia-web' );
+		return __( 'Link text (empty: “Cookie settings”)', 'estrategiaweb-toolkit' );
 	}
 
 	/**
@@ -511,7 +511,7 @@ final class Consent {
 		$powered = self::powered_by();
 		$text    = apply_filters(
 			'estrategia_web_consent_text',
-			__( 'We use our own and third-party cookies for the purposes listed below. You can accept them, reject them or choose which ones to allow. Necessary cookies are always active.', 'estrategia-web' )
+			__( 'We use our own and third-party cookies for the purposes listed below. You can accept them, reject them or choose which ones to allow. Necessary cookies are always active.', 'estrategiaweb-toolkit' )
 		);
 
 		ob_start();
@@ -530,20 +530,20 @@ final class Consent {
 			data-wp-bind--hidden="!state.isOpen"
 			data-wp-on--keydown="actions.onKeydown"
 		>
-			<h2 id="estrategia-web-consent-title" class="estrategia-web-consent__title" tabindex="-1"><?php esc_html_e( 'Cookies', 'estrategia-web' ); ?></h2>
+			<h2 id="estrategia-web-consent-title" class="estrategia-web-consent__title" tabindex="-1"><?php esc_html_e( 'Cookies', 'estrategiaweb-toolkit' ); ?></h2>
 			<p id="estrategia-web-consent-text" class="estrategia-web-consent__text">
 				<?php echo esc_html( $text ); ?>
 				<?php if ( $policy ) : ?>
-					<a href="<?php echo esc_url( $policy ); ?>"><?php esc_html_e( 'Privacy and cookie policy', 'estrategia-web' ); ?></a>
+					<a href="<?php echo esc_url( $policy ); ?>"><?php esc_html_e( 'Privacy and cookie policy', 'estrategiaweb-toolkit' ); ?></a>
 				<?php endif; ?>
 			</p>
 
 			<form class="estrategia-web-consent__settings" id="estrategia-web-consent-settings" hidden data-wp-bind--hidden="!state.showSettings" data-wp-on--submit="actions.saveSettings">
 				<fieldset>
-					<legend><?php esc_html_e( 'Cookie categories', 'estrategia-web' ); ?></legend>
+					<legend><?php esc_html_e( 'Cookie categories', 'estrategiaweb-toolkit' ); ?></legend>
 					<label class="estrategia-web-consent__category">
 						<input type="checkbox" checked disabled>
-						<span><strong><?php esc_html_e( 'Necessary', 'estrategia-web' ); ?></strong> — <?php esc_html_e( 'Required for the site to work, including remembering this choice. Always active.', 'estrategia-web' ); ?></span>
+						<span><strong><?php esc_html_e( 'Necessary', 'estrategiaweb-toolkit' ); ?></strong> — <?php esc_html_e( 'Required for the site to work, including remembering this choice. Always active.', 'estrategiaweb-toolkit' ); ?></span>
 					</label>
 					<?php foreach ( self::display_order( $categories ) as $slug ) : ?>
 					<label class="estrategia-web-consent__category">
@@ -559,18 +559,18 @@ final class Consent {
 					</label>
 					<?php endforeach; ?>
 				</fieldset>
-				<button type="submit" class="wp-element-button estrategia-web-consent__button"><?php esc_html_e( 'Save choices', 'estrategia-web' ); ?></button>
+				<button type="submit" class="wp-element-button estrategia-web-consent__button"><?php esc_html_e( 'Save choices', 'estrategiaweb-toolkit' ); ?></button>
 			</form>
 
 			<div class="estrategia-web-consent__actions">
-				<button type="button" class="wp-element-button estrategia-web-consent__button" data-estrategia-web-consent-action="accept" data-wp-on--click="actions.acceptAll"><?php esc_html_e( 'Accept all', 'estrategia-web' ); ?></button>
-				<button type="button" class="wp-element-button estrategia-web-consent__button" data-estrategia-web-consent-action="reject" data-wp-on--click="actions.rejectAll"><?php esc_html_e( 'Reject all', 'estrategia-web' ); ?></button>
-				<button type="button" class="wp-element-button estrategia-web-consent__button" data-estrategia-web-consent-action="configure" aria-controls="estrategia-web-consent-settings" data-wp-bind--aria-expanded="state.showSettings" data-wp-on--click="actions.toggleSettings"><?php esc_html_e( 'Configure', 'estrategia-web' ); ?></button>
+				<button type="button" class="wp-element-button estrategia-web-consent__button" data-estrategia-web-consent-action="accept" data-wp-on--click="actions.acceptAll"><?php esc_html_e( 'Accept all', 'estrategiaweb-toolkit' ); ?></button>
+				<button type="button" class="wp-element-button estrategia-web-consent__button" data-estrategia-web-consent-action="reject" data-wp-on--click="actions.rejectAll"><?php esc_html_e( 'Reject all', 'estrategiaweb-toolkit' ); ?></button>
+				<button type="button" class="wp-element-button estrategia-web-consent__button" data-estrategia-web-consent-action="configure" aria-controls="estrategia-web-consent-settings" data-wp-bind--aria-expanded="state.showSettings" data-wp-on--click="actions.toggleSettings"><?php esc_html_e( 'Configure', 'estrategiaweb-toolkit' ); ?></button>
 			</div>
 			<?php if ( $powered['show'] ) : ?>
 			<p class="estrategia-web-consent__powered">
 				<?php if ( '' !== $powered['url'] ) : ?>
-				<a href="<?php echo esc_url( $powered['url'] ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $powered['text'] ); ?><span class="estrategia-web-consent__sr"> <?php esc_html_e( '(opens in a new tab)', 'estrategia-web' ); ?></span></a>
+				<a href="<?php echo esc_url( $powered['url'] ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $powered['text'] ); ?><span class="estrategia-web-consent__sr"> <?php esc_html_e( '(opens in a new tab)', 'estrategiaweb-toolkit' ); ?></span></a>
 				<?php else : ?>
 				<?php echo esc_html( $powered['text'] ); ?>
 				<?php endif; ?>
@@ -597,13 +597,13 @@ final class Consent {
 				return sprintf(
 					'<p %s>%s</p>',
 					get_block_wrapper_attributes(),
-					esc_html__( 'Cookie settings: this site declares no optional cookie categories, so there is no notice to reopen and this link is not shown.', 'estrategia-web' )
+					esc_html__( 'Cookie settings: this site declares no optional cookie categories, so there is no notice to reopen and this link is not shown.', 'estrategiaweb-toolkit' )
 				);
 			}
 			return '';
 		}
 		$label = trim( (string) ( $attributes['label'] ?? '' ) );
-		$label = '' !== $label ? $label : __( 'Cookie settings', 'estrategia-web' );
+		$label = '' !== $label ? $label : __( 'Cookie settings', 'estrategiaweb-toolkit' );
 		return sprintf(
 			'<p %s><button type="button" class="estrategia-web-consent-link__button" aria-controls="estrategia-web-consent" data-wp-interactive="estrategia-web/consent" data-wp-on--click="actions.open">%s</button></p>',
 			get_block_wrapper_attributes( array( 'class' => 'estrategia-web-consent-link' ) ),

@@ -59,12 +59,14 @@ before(async () => {
   r = Object.fromEntries(await Promise.all(Object.entries(reads).map(async ([k, p]) => [k, await p])));
 });
 
-test("one «Estrategia Web» item right after the Dashboard, opening on Company details, with Modules last", () => {
+test("one «Estrategia Web» item right after Settings (81, since 2.10.0), opening on Company details, with Modules last", () => {
   const page = r.index.text;
   const ids = [...page.matchAll(/<li[^>]*\bid="((?:menu|toplevel_page)-?[^"]*)"/g)].map((m) => m[1]).filter((id) => !id.startsWith("menu-dashboard-"));
-  assert.equal(ids[0], "menu-dashboard");
-  assert.equal(ids[1], "toplevel_page_estrategia-web-site", "position 3: right after the Dashboard. Seen: " + ids.slice(0, 4).join(", "));
-  assert.ok(!ids.includes("toplevel_page_estrategia-web"), "the old «Estrategia Web» item at 81 is gone");
+  const settings = ids.indexOf("menu-settings");
+  assert.ok(settings > 0, "no Settings item. Seen: " + ids.join(", "));
+  assert.equal(ids[settings + 1], "toplevel_page_estrategia-web-site", "position 81: right after Settings. Seen: " + ids.slice(settings - 1, settings + 3).join(", "));
+  assert.notEqual(ids[1], "toplevel_page_estrategia-web-site", "no longer at 3, right after the Dashboard");
+  assert.ok(!ids.includes("toplevel_page_estrategia-web"), "the old «Estrategia Web» item (Modules as its own top-level page) is gone");
   assert.match(page, /id="toplevel_page_estrategia-web-site"[\s\S]*?<a href=['"]admin\.php\?page=estrategia-web-site['"][^>]*>[\s\S]*?Estrategia Web/, "the top-level item is «Estrategia Web» and opens Company details");
   assert.deepEqual(submenu(page, "toplevel_page_estrategia-web-site"), EXPECTED_ORDER);
 });

@@ -65,7 +65,7 @@ final class Bindings {
 		register_block_bindings_source(
 			self::SOURCE,
 			array(
-				'label'              => __( 'Content field', 'estrategia-web' ),
+				'label'              => __( 'Content field', 'estrategiaweb-toolkit' ),
 				'get_value_callback' => array( self::class, 'get_value' ),
 				'uses_context'       => array( 'postId', 'postType' ),
 			)
@@ -120,8 +120,8 @@ final class Bindings {
 	public static function env(): array {
 		return array(
 			'locale' => Plugin::locale(),
-			'yes'    => __( 'Yes', 'estrategia-web' ),
-			'no'     => __( 'No', 'estrategia-web' ),
+			'yes'    => __( 'Yes', 'estrategiaweb-toolkit' ),
+			'no'     => __( 'No', 'estrategiaweb-toolkit' ),
 			// A date has no time: read and written in UTC so the day never shifts with the site's timezone.
 			'date'   => static fn( string $ymd, string $format ): string => (string) wp_date( '' !== $format ? $format : (string) get_option( 'date_format' ), (int) strtotime( $ymd . ' 00:00:00 UTC' ), new \DateTimeZone( 'UTC' ) ),
 			'number' => static fn( float $n, int $decimals ): string => number_format_i18n( $n, $decimals ),

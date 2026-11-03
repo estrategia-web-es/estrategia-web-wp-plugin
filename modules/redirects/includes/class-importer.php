@@ -132,23 +132,23 @@ final class Importer {
 	public static function message( string $code ): string {
 		switch ( $code ) {
 			case 'empty_source':
-				return __( 'The source is empty.', 'estrategia-web' );
+				return __( 'The source is empty.', 'estrategiaweb-toolkit' );
 			case 'foreign_source':
-				return __( 'The source is an address of another website. Write the path only (/old-page/).', 'estrategia-web' );
+				return __( 'The source is an address of another website. Write the path only (/old-page/).', 'estrategiaweb-toolkit' );
 			case 'home_source':
-				return __( 'The home page itself cannot be redirected.', 'estrategia-web' );
+				return __( 'The home page itself cannot be redirected.', 'estrategiaweb-toolkit' );
 			case 'bad_type':
-				return __( 'The type must be 301, 302 or 410.', 'estrategia-web' );
+				return __( 'The type must be 301, 302 or 410.', 'estrategiaweb-toolkit' );
 			case 'empty_target':
-				return __( 'A 301 or 302 redirect needs a destination.', 'estrategia-web' );
+				return __( 'A 301 or 302 redirect needs a destination.', 'estrategiaweb-toolkit' );
 			case 'bad_target':
-				return __( 'The destination must be a path starting with / or a full http(s) address, without spaces.', 'estrategia-web' );
+				return __( 'The destination must be a path starting with / or a full http(s) address, without spaces.', 'estrategiaweb-toolkit' );
 			case 'same_target':
-				return __( 'The destination is the same as the source.', 'estrategia-web' );
+				return __( 'The destination is the same as the source.', 'estrategiaweb-toolkit' );
 			case 'duplicate':
-				return __( 'There is already a rule for this source.', 'estrategia-web' );
+				return __( 'There is already a rule for this source.', 'estrategiaweb-toolkit' );
 			case 'loop':
-				return __( 'This rule would create a redirect loop with other rules.', 'estrategia-web' );
+				return __( 'This rule would create a redirect loop with other rules.', 'estrategiaweb-toolkit' );
 		}
 		return $code;
 	}

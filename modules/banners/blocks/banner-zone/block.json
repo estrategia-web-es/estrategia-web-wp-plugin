@@ -9,7 +9,7 @@
 	"icon": "megaphone",
 	"description": "Shows the banners of a zone that are inside their dates, and counts their views and clicks.",
 	"keywords": [ "banner", "ad", "advertising" ],
-	"textdomain": "estrategia-web",
+	"textdomain": "estrategiaweb-toolkit",
 	"attributes": {
 		"zone": { "type": "string", "default": "" },
 		"count": { "type": "integer", "default": 0 }

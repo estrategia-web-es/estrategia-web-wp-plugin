@@ -75,7 +75,7 @@ final class Mailchimp {
 		if ( $code >= 400 ) {
 			$detail = is_array( $json ) ? (string) ( $json['detail'] ?? $json['title'] ?? '' ) : '';
 			/* translators: 1: HTTP status, 2: Mailchimp's message. */
-			return new \WP_Error( 'estrategia_web_mailchimp', sprintf( __( 'Mailchimp answered %1$d: %2$s', 'estrategia-web' ), $code, $detail ) );
+			return new \WP_Error( 'estrategia_web_mailchimp', sprintf( __( 'Mailchimp answered %1$d: %2$s', 'estrategiaweb-toolkit' ), $code, $detail ) );
 		}
 		return is_array( $json ) ? $json : array();
 	}
@@ -87,7 +87,7 @@ final class Mailchimp {
 	 */
 	public function create_draft( string $subject, string $html, string $list_id = '' ) {
 		if ( ! $this->ready() ) {
-			return new \WP_Error( 'estrategia_web_mailchimp', __( 'There is no valid Mailchimp key in the settings.', 'estrategia-web' ) );
+			return new \WP_Error( 'estrategia_web_mailchimp', __( 'There is no valid Mailchimp key in the settings.', 'estrategiaweb-toolkit' ) );
 		}
 		$query = array(
 			'status'     => 'sent',
@@ -105,7 +105,7 @@ final class Mailchimp {
 		}
 		$model = $found['campaigns'][0] ?? null;
 		if ( ! is_array( $model ) || empty( $model['recipients']['list_id'] ) ) {
-			return new \WP_Error( 'estrategia_web_mailchimp', __( 'Mailchimp has no campaign sent to copy the audience and sender from.', 'estrategia-web' ) );
+			return new \WP_Error( 'estrategia_web_mailchimp', __( 'Mailchimp has no campaign sent to copy the audience and sender from.', 'estrategiaweb-toolkit' ) );
 		}
 
 		$created = $this->request( 'POST', 'campaigns', Rules::campaign_body( $model, $subject ) );
@@ -114,7 +114,7 @@ final class Mailchimp {
 		}
 		$id = (string) ( $created['id'] ?? '' );
 		if ( '' === $id ) {
-			return new \WP_Error( 'estrategia_web_mailchimp', __( 'Mailchimp did not return the new campaign.', 'estrategia-web' ) );
+			return new \WP_Error( 'estrategia_web_mailchimp', __( 'Mailchimp did not return the new campaign.', 'estrategiaweb-toolkit' ) );
 		}
 
 		$put = $this->request( 'PUT', 'campaigns/' . rawurlencode( $id ) . '/content', array( 'html' => $html ) );
@@ -125,7 +125,7 @@ final class Mailchimp {
 		$check = $this->request( 'GET', 'campaigns/' . rawurlencode( $id ) . '?fields=id,web_id,status,settings.drag_and_drop,settings.subject_line,recipients.recipient_count' );
 		if ( is_wp_error( $check ) || ! empty( $check['settings']['drag_and_drop'] ) ) {
 			$this->request( 'DELETE', 'campaigns/' . rawurlencode( $id ) );
-			return is_wp_error( $check ) ? $check : new \WP_Error( 'estrategia_web_mailchimp', __( 'Mailchimp made the campaign with a drag-and-drop template, which would send the template and not these news. It has been deleted.', 'estrategia-web' ) );
+			return is_wp_error( $check ) ? $check : new \WP_Error( 'estrategia_web_mailchimp', __( 'Mailchimp made the campaign with a drag-and-drop template, which would send the template and not these news. It has been deleted.', 'estrategiaweb-toolkit' ) );
 		}
 		$web_id = (string) ( $check['web_id'] ?? $created['web_id'] ?? '' );
 		return array(

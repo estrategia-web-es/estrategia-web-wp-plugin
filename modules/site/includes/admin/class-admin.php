@@ -51,7 +51,7 @@ final class Admin {
 
 	/** Settings › Media: the SVG switch (the uploads module adds its own section to the same tab). */
 	public static function settings_sections(): void {
-		Settings_Page::add_tab( 'media', __( 'Media', 'estrategia-web' ), 30 );
+		Settings_Page::add_tab( 'media', __( 'Media', 'estrategiaweb-toolkit' ), 30 );
 		Settings_Page::add_section(
 			'media',
 			array(
@@ -67,15 +67,15 @@ final class Admin {
 	public static function media_section(): void {
 		$data = Settings::all();
 		?>
-		<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'SVG images', 'estrategia-web' ), 'ew-box-svg' ); ?>
+		<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'SVG images', 'estrategiaweb-toolkit' ), 'ew-box-svg' ); ?>
 		<table class="form-table" role="presentation">
 			<tr>
-				<th scope="row"><?php esc_html_e( 'SVG uploads', 'estrategia-web' ); ?></th>
+				<th scope="row"><?php esc_html_e( 'SVG uploads', 'estrategiaweb-toolkit' ); ?></th>
 				<td>
 					<input type="hidden" name="<?php echo esc_attr( Settings::OPTION . '[allow_svg]' ); ?>" value="0">
 					<label>
 						<input type="checkbox" id="estrategia-web-site-allow_svg" name="<?php echo esc_attr( Settings::OPTION . '[allow_svg]' ); ?>" value="1" <?php checked( (bool) $data['allow_svg'] ); ?>>
-						<?php esc_html_e( 'Allow SVG uploads (administrators only; files are sanitized)', 'estrategia-web' ); ?>
+						<?php esc_html_e( 'Allow SVG uploads (administrators only; files are sanitized)', 'estrategiaweb-toolkit' ); ?>
 					</label>
 				</td>
 			</tr>
@@ -95,7 +95,7 @@ final class Admin {
 	private static function hours_row( array $data, string $label ): void {
 		$type = Type_Names::name( 'location' );
 		if ( post_type_exists( $type ) && (int) ( wp_count_posts( $type )->publish ?? 0 ) > 0 ) {
-			printf( '<tr><th scope="row">%s</th><td><p class="description">%s</p></td></tr>', esc_html( $label ), esc_html__( 'This site has locations: the opening hours go in each location.', 'estrategia-web' ) );
+			printf( '<tr><th scope="row">%s</th><td><p class="description">%s</p></td></tr>', esc_html( $label ), esc_html__( 'This site has locations: the opening hours go in each location.', 'estrategiaweb-toolkit' ) );
 			return;
 		}
 		$hours = Settings::hours_class();
@@ -111,10 +111,10 @@ final class Admin {
 				esc_attr( $hours::to_line( (string) $data['hours'], $day ) )
 			);
 		}
-		echo '<p class="description">' . esc_html__( 'One line per day, e.g. 08:00-14:00, 16:00-20:00. Empty: closed.', 'estrategia-web' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'One line per day, e.g. 08:00-14:00, 16:00-20:00. Empty: closed.', 'estrategiaweb-toolkit' ) . '</p>';
 		$shown = Company::value( 'schedule' );
 		if ( '' !== $shown ) {
-			echo '<p><strong>' . esc_html__( 'Shown on the site (as of the last save):', 'estrategia-web' ) . '</strong><br>' . nl2br( esc_html( $shown ) ) . '</p>';
+			echo '<p><strong>' . esc_html__( 'Shown on the site (as of the last save):', 'estrategiaweb-toolkit' ) . '</strong><br>' . nl2br( esc_html( $shown ) ) . '</p>';
 		}
 		echo '</fieldset></td></tr>';
 	}
@@ -149,18 +149,18 @@ final class Admin {
 		};
 		?>
 		<div class="wrap ew-screen estrategia-web-company">
-			<?php \EstrategiaWeb\Admin\Admin_UI::header( __( 'Company details', 'estrategia-web' ), __( 'These details appear wherever a block is linked to them (Block Bindings, source «Company details»). Change them here and they change across the whole site.', 'estrategia-web' ) ); ?>
+			<?php \EstrategiaWeb\Admin\Admin_UI::header( __( 'Company details', 'estrategiaweb-toolkit' ), __( 'These details appear wherever a block is linked to them (Block Bindings, source «Company details»). Change them here and they change across the whole site.', 'estrategiaweb-toolkit' ) ); ?>
 			<?php settings_errors( Settings::OPTION ); ?>
 			<form method="post" action="options.php">
 				<?php settings_fields( 'estrategia_web_site' ); ?>
 
-				<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Company', 'estrategia-web' ), 'ew-box-company' ); ?>
+				<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Company', 'estrategiaweb-toolkit' ), 'ew-box-company' ); ?>
 				<table class="form-table" role="presentation">
 					<?php
 					$text( 'company_name' );
 					$text( 'legal_name' );
 					$text( 'tax_id' );
-					$text( 'registry', 'text', __( 'As it appears in the legal notice, without «Registered in». Example: Registro Mercantil de Mallorca, tomo 1234, folio 56, hoja PM-7890, inscripción 1.ª', 'estrategia-web' ) );
+					$text( 'registry', 'text', __( 'As it appears in the legal notice, without «Registered in». Example: Registro Mercantil de Mallorca, tomo 1234, folio 56, hoja PM-7890, inscripción 1.ª', 'estrategiaweb-toolkit' ) );
 					$area( 'address' );
 					self::hours_row( $data, $labels['schedule'] );
 					$text( 'map_url', 'url' );
@@ -168,14 +168,14 @@ final class Admin {
 				</table>
 				<?php \EstrategiaWeb\Admin\Admin_UI::box_close(); ?>
 
-				<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Contact', 'estrategia-web' ), 'ew-box-contact' ); ?>
+				<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Contact', 'estrategiaweb-toolkit' ), 'ew-box-contact' ); ?>
 				<table class="form-table" role="presentation">
 					<?php
 					$text( 'email', 'email' );
 					$text( 'phone', 'tel' );
 					$text( 'phone_secondary', 'tel' );
-					$text( 'whatsapp', 'tel', __( 'International format, digits only, without +. Example: 34600000000.', 'estrategia-web' ) );
-					$text( 'whatsapp_message', 'text', __( 'Text that appears already written when the chat opens.', 'estrategia-web' ) );
+					$text( 'whatsapp', 'tel', __( 'International format, digits only, without +. Example: 34600000000.', 'estrategiaweb-toolkit' ) );
+					$text( 'whatsapp_message', 'text', __( 'Text that appears already written when the chat opens.', 'estrategiaweb-toolkit' ) );
 					?>
 				</table>
 				<?php \EstrategiaWeb\Admin\Admin_UI::box_close(); ?>

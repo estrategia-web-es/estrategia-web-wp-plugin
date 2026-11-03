@@ -97,39 +97,14 @@ The tests check that it works, not that it looks right. Nobody has yet
 looked with human eyes at the «Company details» screen, a block's
 «Attributes» panel with the source, or an SVG in the media library.
 
-## llms.txt module
-**Date:** 29-10-2026 · **Due:** —
+## llms.txt on estrategiaweb.es
+**Date:** 31-10-2026 · **Due:** —
 
-David, 29-10-2026: what applies to every site goes in the plugin or the
-parent theme, and `/llms.txt` is the example. Today estrategiaweb.es serves
-it as a loose file in public_html (from `content/semilla/llms.txt` of the
-estrategiaweb-es repo), with `Content-Type: text/plain` and no charset, so a
-browser can show the accents wrong. Why it exists: the SEO plan
-(`estrategiaweb-es/docs/plan-seo.md`), copied from Virtux Digital, whose
-`llms.txt` gives the AI the paragraph it should repeat.
-
-- A module `llms` that answers `/llms.txt` with `text/plain; charset=utf-8`.
-- The text is editable in the panel; the first draft is built from Company
-  details (`site`) and the pages with their Rank Math description.
-- Per language with WPML (open: one file with sections or one per language).
-- When it is published on estrategiaweb.es, the loose file is deleted there
-  (a static file wins over WordPress in nginx, so it would hide the module).
-
-David, 31-10-2026: it goes in this plugin, not in an SEO plugin. **Checked
-the same day, to be decided before coding:** Rank Math 1.0.280 (installed on
-estrategiaweb.es) DOES ship an `llms` module (`includes/modules/llms/`),
-switched off there. It serves `/llms.txt` with `text/plain; charset=utf-8`,
-lists posts and taxonomies with their description (limit 100 per type) and
-has an «extra content» field editable in the panel. What it does NOT do: the
-company paragraph from Company details, and anything per WPML language. So
-the open question is whether our module replaces it or only feeds its
-`rank_math/llms_txt/extra_content` filter; if both are on, they fight for
-the same URL.
-
-**Decided by David, 31-10-2026: like `redirects`.** Our own module, that can
-be switched on and off in Estrategia Web → Modules so it does not compete
-with Rank Math, and that WARNS in its own screen when Rank Math's `llms`
-module is also on (both serve `/llms.txt`). The pattern to copy is
-`modules/redirects/includes/class-conflicts.php` (`Conflicts::detect()`) and
-the notice in `modules/redirects/includes/admin/class-page.php`. To be built
-in another session.
+The `llms` module is done (2.10.0; what it does and why, in
+modules/llms/module.php). Left, on the site and with David's OK because it
+is production: update the plugin, switch the module on, paste
+`content/semilla/llms.txt` of the estrategiaweb-es repo into the tab, and
+delete the loose `public_html/llms.txt` (the server serves it before
+WordPress; the tab warns while it is there). Rank Math's «LLMS Txt» is off
+there, so no other warning is expected. It leaves this file when /llms.txt
+answers with `charset=utf-8` there.

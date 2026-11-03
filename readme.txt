@@ -1,10 +1,10 @@
-=== Estrategia Web ===
+=== EstrategiaWeb Toolkit ===
 Contributors: estrategiaweb
 Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.9.0
+Stable tag: 2.10.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Site essentials as modules you switch on and off: cookie consent, block forms, c
 
 == Description ==
 
-Most small business sites need the same dozen things besides their design. Estrategia Web puts them in one plugin, each as a module you can switch on or off in **Estrategia Web → Modules**. A module that is off loads no code at all.
+Most small business sites need the same dozen things besides their design. EstrategiaWeb Toolkit puts them in one plugin, each as a module you can switch on or off in **Estrategia Web → Modules**. A module that is off loads no code at all.
 
 * **Cookie consent**: your own notice (Accept / Reject / Settings) with categories, a "Cookie settings" link block, a cookie table block for the cookie policy and a consent API for PHP and JavaScript.
 * **Forms**: block-based forms with several email notifications from templates, a log of every submission, CSV export and spam protection without third-party services (honeypot, minimum time, rate limit).
@@ -20,13 +20,14 @@ Most small business sites need the same dozen things besides their design. Estra
 * **Company details**: write your company name, address or phone once and use them anywhere with Block Bindings or a shortcode.
 * **Local business schema**: schema.org Organization and LocalBusiness data, merged into Rank Math's or Yoast's graph when they are active.
 * **Redirects**: 301, 302 and 410 redirects with hit counters, CSV import and export and an optional 404 log. It steps aside when your SEO plugin manages redirects.
+* **llms.txt**: the text AI assistants read to describe your site, written in the panel (with a draft from your company details and pages) and served at /llms.txt, one per language with WPML.
 * **Blocks**: carousel, two-click map, WhatsApp button, social links and a language switcher for WPML.
 * **Analytics behind consent**: Google Analytics 4, Google Ads and Google Tag Manager with Consent Mode v2, and Matomo without cookies. Nothing loads until you fill in an ID.
 * **Media**: WebP image sizes, phone photo uploads scaled down to 2560 px, sanitised SVG uploads and correctly sized featured images.
 * **Newsletter**: choose the week's posts, preview the email and copy its HTML, or create the campaign as a draft in Mailchimp (never sent from WordPress).
 * **Small things**: external links in a new tab with an accessible label, and turning comments off everywhere.
 
-Translations: Spanish and Catalan included. WPML is supported throughout.
+Translations: Spanish, Catalan and German (informal and formal) included. WPML is supported throughout.
 
 = Source code =
 
@@ -49,7 +50,7 @@ Terms: https://policies.google.com/terms and https://maps.google.com/help/terms_
 = Google Analytics 4, Google Ads and Google Tag Manager (Google tags module) =
 
 Off by default. When you enter a measurement ID, the browser loads Google's script from googletagmanager.com. In the default mode it loads only after the visitor accepts the statistics or marketing category; in the "advanced" mode, which you must choose, it loads with consent denied and Google receives cookieless pings. Google receives the visitor's IP address, the pages visited and, if you set a conversion label, that a form was sent (never its content).
-Terms: https://policies.google.com/terms and https://marketingplatform.google.com/about/analytics/terms/ · Privacy: https://policies.google.com/privacy
+Terms: https://policies.google.com/terms and https://marketingplatform.google.com/about/analytics/terms/us/· Privacy: https://policies.google.com/privacy
 
 = Matomo (Matomo module) =
 
@@ -80,6 +81,13 @@ Its settings, yes. Your data (form submissions, redirects, company details) is k
 The cookie list includes an extract of the Open Cookie Database (https://github.com/jkwakman/Open-Cookie-Database), © Jan Kwakman and contributors, Apache License 2.0. Details in modules/consent/data/NOTICE.
 
 == Changelog ==
+
+= 2.10.0 =
+* Renamed to EstrategiaWeb Toolkit (text domain estrategiaweb-toolkit). Settings, content and blocks are unchanged.
+* New module: llms.txt, written in Settings and served at /llms.txt with the right charset; one per language with WPML. Off by default.
+* German translation reviewed by a native speaker, and a formal German (de_DE_formal) for sites whose visitors expect «Sie».
+* The admin menu moves below Settings.
+* Code review fixes: styles and structured data printed through WordPress functions, sanitised request input, translatable module names.
 
 = 2.9.0 =
 * Map block: new latitude and longitude attributes (bindable). With no embed URL, the map is built from them, still in two clicks, so locations stored as coordinates get a map without pasting one embed each.

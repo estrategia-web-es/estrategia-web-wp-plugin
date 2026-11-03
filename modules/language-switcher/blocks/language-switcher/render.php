@@ -84,7 +84,7 @@ if ( 'inline' === ( $attributes['layout'] ?? 'dropdown' ) ) {
 	$estrategia_web_wrap = get_block_wrapper_attributes(
 		array(
 			'class'      => 'estrategia-web-language estrategia-web-language--inline',
-			'aria-label' => __( 'Language', 'estrategia-web' ),
+			'aria-label' => __( 'Language', 'estrategiaweb-toolkit' ),
 		)
 	);
 	echo '<nav ' . $estrategia_web_wrap . '><ul class="estrategia-web-language__inline">'; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped by core.
@@ -114,7 +114,7 @@ $estrategia_web_wrapper = get_block_wrapper_attributes(
 ?>
 <div <?php echo $estrategia_web_wrapper; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped by core. ?>>
 	<button type="button" class="estrategia-web-language__toggle" aria-expanded="false" aria-controls="<?php echo esc_attr( $estrategia_web_list_id ); ?>" data-wp-on--click="actions.toggle" data-wp-bind--aria-expanded="context.open">
-		<span class="screen-reader-text"><?php esc_html_e( 'Language:', 'estrategia-web' ); ?> </span><span lang="<?php echo esc_attr( (string) $estrategia_web_current['code'] ); ?>"><?php echo esc_html( $estrategia_web_label ); ?></span>
+		<span class="screen-reader-text"><?php esc_html_e( 'Language:', 'estrategiaweb-toolkit' ); ?> </span><span lang="<?php echo esc_attr( (string) $estrategia_web_current['code'] ); ?>"><?php echo esc_html( $estrategia_web_label ); ?></span>
 	</button>
 	<ul id="<?php echo esc_attr( $estrategia_web_list_id ); ?>" class="estrategia-web-language__list" hidden data-wp-bind--hidden="!context.open">
 		<?php foreach ( $estrategia_web_others as $estrategia_web_language ) : ?>

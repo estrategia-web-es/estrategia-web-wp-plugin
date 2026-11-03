@@ -106,7 +106,7 @@ final class Location_Migration {
 		}
 		printf(
 			'<div class="notice notice-warning"><p>%s</p><p><code>wp estrategia-web migrate-location-data --dry-run</code></p></div>',
-			esc_html__( 'Estrategia Web 2.0.0: some locations still keep their data twice (address and hours as text, the map as two links). Until the data migration runs they look as before. Read its dry run, check its DIFFERENCES, then run it without --dry-run.', 'estrategia-web' )
+			esc_html__( 'Estrategia Web 2.0.0: some locations still keep their data twice (address and hours as text, the map as two links). Until the data migration runs they look as before. Read its dry run, check its DIFFERENCES, then run it without --dry-run.', 'estrategiaweb-toolkit' )
 		);
 	}
 

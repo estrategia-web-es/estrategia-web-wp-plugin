@@ -41,7 +41,7 @@ final class Page {
 
 	public static function menu(): void {
 		$parent = class_exists( Menu::class ) ? Menu::PARENT : 'tools.php';
-		$hook   = add_submenu_page( $parent, __( 'Redirects', 'estrategia-web' ), __( 'Redirects', 'estrategia-web' ), 'manage_options', self::SLUG, array( self::class, 'render' ) );
+		$hook   = add_submenu_page( $parent, __( 'Redirects', 'estrategiaweb-toolkit' ), __( 'Redirects', 'estrategiaweb-toolkit' ), 'manage_options', self::SLUG, array( self::class, 'render' ) );
 		if ( $hook ) {
 			add_action( 'load-' . $hook, array( self::class, 'handle' ) );
 		}
@@ -152,13 +152,13 @@ final class Page {
 	private static function notice(): void {
 		$msg = isset( $_GET['ew_msg'] ) ? sanitize_key( $_GET['ew_msg'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 		$map = array(
-			'saved'        => array( 'success', __( 'Redirect saved.', 'estrategia-web' ) ),
-			'saved_exists' => array( 'warning', __( 'Redirect saved, but that source is a page that exists on the website: the redirect only works on addresses that give a 404. It will start working when the page is deleted or unpublished.', 'estrategia-web' ) ),
-			'deleted'      => array( 'success', __( 'Deleted.', 'estrategia-web' ) ),
-			'updated'      => array( 'success', __( 'Updated.', 'estrategia-web' ) ),
-			'no_file'      => array( 'error', __( 'Choose a CSV file.', 'estrategia-web' ) ),
-			'settings'     => array( 'success', __( 'Settings saved.', 'estrategia-web' ) ),
-			'log_cleared'  => array( 'success', __( 'The 404 log is empty.', 'estrategia-web' ) ),
+			'saved'        => array( 'success', __( 'Redirect saved.', 'estrategiaweb-toolkit' ) ),
+			'saved_exists' => array( 'warning', __( 'Redirect saved, but that source is a page that exists on the website: the redirect only works on addresses that give a 404. It will start working when the page is deleted or unpublished.', 'estrategiaweb-toolkit' ) ),
+			'deleted'      => array( 'success', __( 'Deleted.', 'estrategiaweb-toolkit' ) ),
+			'updated'      => array( 'success', __( 'Updated.', 'estrategiaweb-toolkit' ) ),
+			'no_file'      => array( 'error', __( 'Choose a CSV file.', 'estrategiaweb-toolkit' ) ),
+			'settings'     => array( 'success', __( 'Settings saved.', 'estrategiaweb-toolkit' ) ),
+			'log_cleared'  => array( 'success', __( 'The 404 log is empty.', 'estrategiaweb-toolkit' ) ),
 		);
 		if ( isset( $map[ $msg ] ) ) {
 			printf( '<div class="notice notice-%1$s is-dismissible"><p>%2$s</p></div>', esc_attr( $map[ $msg ][0] ), esc_html( $map[ $msg ][1] ) );
@@ -174,19 +174,19 @@ final class Page {
 			$view = 'edit';
 		}
 		$tabs = array(
-			'list'   => __( 'Redirects', 'estrategia-web' ),
-			'edit'   => __( 'Add new', 'estrategia-web' ),
-			'log'    => __( '404 log', 'estrategia-web' ),
-			'import' => __( 'Import / export', 'estrategia-web' ),
+			'list'   => __( 'Redirects', 'estrategiaweb-toolkit' ),
+			'edit'   => __( 'Add new', 'estrategiaweb-toolkit' ),
+			'log'    => __( '404 log', 'estrategiaweb-toolkit' ),
+			'import' => __( 'Import / export', 'estrategiaweb-toolkit' ),
 		);
 		echo '<div class="wrap ew-screen estrategia-web-redirects">';
-		\EstrategiaWeb\Admin\Admin_UI::header( __( 'Redirects', 'estrategia-web' ), __( 'Old addresses that send visitors to the new ones (301, 302), or say a page is gone for good (410).', 'estrategia-web' ) );
+		\EstrategiaWeb\Admin\Admin_UI::header( __( 'Redirects', 'estrategiaweb-toolkit' ), __( 'Old addresses that send visitors to the new ones (301, 302), or say a page is gone for good (410).', 'estrategiaweb-toolkit' ) );
 
 		$conflicts = Conflicts::detect();
 		if ( $conflicts ) {
-			echo '<div class="notice notice-warning ew-redirects-conflict"><p><strong>' . esc_html__( 'There are two redirect systems on this website.', 'estrategia-web' ) . '</strong> ';
+			echo '<div class="notice notice-warning ew-redirects-conflict"><p><strong>' . esc_html__( 'There are two redirect systems on this website.', 'estrategiaweb-toolkit' ) . '</strong> ';
 			/* translators: %s: names of other active redirect plugins, e.g. "Rank Math". */
-			echo esc_html( sprintf( __( 'Also active: %s. Both act on the same addresses and the other one usually goes first. Keep the rules in only one of them, or turn this module off in Estrategia Web → Modules.', 'estrategia-web' ), implode( ', ', $conflicts ) ) );
+			echo esc_html( sprintf( __( 'Also active: %s. Both act on the same addresses and the other one usually goes first. Keep the rules in only one of them, or turn this module off in Estrategia Web → Modules.', 'estrategiaweb-toolkit' ), implode( ', ', $conflicts ) ) );
 			echo '</p></div>';
 		}
 		self::notice();
@@ -195,11 +195,11 @@ final class Page {
 		$editing = 'edit' === $view && ( isset( $_GET['id'] ) || ( self::$failed && ! empty( self::$failed[0]['id'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		foreach ( $tabs as $key => $label ) {
 			if ( 'edit' === $key && $editing ) {
-				$label = __( 'Edit redirect', 'estrategia-web' );
+				$label = __( 'Edit redirect', 'estrategiaweb-toolkit' );
 			}
 			$links[ $key ] = array( $label, self::url( 'list' === $key ? array() : array( 'view' => $key ) ) );
 		}
-		\EstrategiaWeb\Admin\Admin_UI::tabs( $links, $view, __( 'Redirects sections', 'estrategia-web' ) );
+		\EstrategiaWeb\Admin\Admin_UI::tabs( $links, $view, __( 'Redirects sections', 'estrategiaweb-toolkit' ) );
 
 		switch ( $view ) {
 			case 'edit':
@@ -225,7 +225,7 @@ final class Page {
 		if ( '' !== Rules_Table::current_view() ) { // Searching keeps the view.
 			echo '<input type="hidden" name="' . esc_attr( Rules_Table::VIEW_VAR ) . '" value="' . esc_attr( Rules_Table::current_view() ) . '" />';
 		}
-		$table->search_box( __( 'Search redirects', 'estrategia-web' ), 'ew-redirects' );
+		$table->search_box( __( 'Search redirects', 'estrategiaweb-toolkit' ), 'ew-redirects' );
 		echo '</form><form method="post" action="' . esc_url( self::url() ) . '">';
 		$table->display(); // Carries its bulk-redirects nonce (see handle()).
 		echo '</form>';
@@ -266,33 +266,33 @@ final class Page {
 			<input type="hidden" name="id" value="<?php echo (int) $rule['id']; ?>" />
 			<table class="form-table" role="presentation">
 				<tr>
-					<th scope="row"><label for="ew-source"><?php esc_html_e( 'Source', 'estrategia-web' ); ?></label></th>
+					<th scope="row"><label for="ew-source"><?php esc_html_e( 'Source', 'estrategiaweb-toolkit' ); ?></label></th>
 					<td><input name="source" id="ew-source" type="text" class="large-text code" required value="<?php echo esc_attr( $rule['source'] ); ?>" placeholder="/old-page/" />
-					<p class="description"><?php /* translators: "%3F" is the URL-encoded "?", not a placeholder: keep it as is. */ esc_html_e( 'The old path, without the domain. Upper case, a final slash and any extra ?parameters are ignored when matching; ?p=123 and ?page_id=123 are the same, and so are %3F and ?.', 'estrategia-web' ); ?></p></td>
+					<p class="description"><?php /* translators: "%3F" is the URL-encoded "?", not a placeholder: keep it as is. */ esc_html_e( 'The old path, without the domain. Upper case, a final slash and any extra ?parameters are ignored when matching; ?p=123 and ?page_id=123 are the same, and so are %3F and ?.', 'estrategiaweb-toolkit' ); ?></p></td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="ew-type"><?php esc_html_e( 'Type', 'estrategia-web' ); ?></label></th>
+					<th scope="row"><label for="ew-type"><?php esc_html_e( 'Type', 'estrategiaweb-toolkit' ); ?></label></th>
 					<td><select name="type" id="ew-type">
-						<option value="301" <?php selected( 301, (int) $rule['type'] ); ?>><?php esc_html_e( '301 — moved permanently', 'estrategia-web' ); ?></option>
-						<option value="302" <?php selected( 302, (int) $rule['type'] ); ?>><?php esc_html_e( '302 — moved temporarily', 'estrategia-web' ); ?></option>
-						<option value="410" <?php selected( 410, (int) $rule['type'] ); ?>><?php esc_html_e( '410 — gone, no destination', 'estrategia-web' ); ?></option>
+						<option value="301" <?php selected( 301, (int) $rule['type'] ); ?>><?php esc_html_e( '301 — moved permanently', 'estrategiaweb-toolkit' ); ?></option>
+						<option value="302" <?php selected( 302, (int) $rule['type'] ); ?>><?php esc_html_e( '302 — moved temporarily', 'estrategiaweb-toolkit' ); ?></option>
+						<option value="410" <?php selected( 410, (int) $rule['type'] ); ?>><?php esc_html_e( '410 — gone, no destination', 'estrategiaweb-toolkit' ); ?></option>
 					</select></td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="ew-target"><?php esc_html_e( 'Destination', 'estrategia-web' ); ?></label></th>
+					<th scope="row"><label for="ew-target"><?php esc_html_e( 'Destination', 'estrategiaweb-toolkit' ); ?></label></th>
 					<td><input name="target" id="ew-target" type="text" class="large-text code" value="<?php echo esc_attr( $rule['target'] ); ?>" placeholder="/new-page/" />
-					<p class="description"><?php esc_html_e( 'A path on this website (/new-page/) or a full address (https://…). Empty for 410.', 'estrategia-web' ); ?></p></td>
+					<p class="description"><?php esc_html_e( 'A path on this website (/new-page/) or a full address (https://…). Empty for 410.', 'estrategiaweb-toolkit' ); ?></p></td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="ew-note"><?php esc_html_e( 'Note', 'estrategia-web' ); ?></label></th>
+					<th scope="row"><label for="ew-note"><?php esc_html_e( 'Note', 'estrategiaweb-toolkit' ); ?></label></th>
 					<td><input name="note" id="ew-note" type="text" class="large-text" value="<?php echo esc_attr( $rule['note'] ); ?>" /></td>
 				</tr>
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Active', 'estrategia-web' ); ?></th>
-					<td><label><input name="active" type="checkbox" value="1" <?php checked( $rule['active'] ); ?> /> <?php esc_html_e( 'This redirect is working', 'estrategia-web' ); ?></label></td>
+					<th scope="row"><?php esc_html_e( 'Active', 'estrategiaweb-toolkit' ); ?></th>
+					<td><label><input name="active" type="checkbox" value="1" <?php checked( $rule['active'] ); ?> /> <?php esc_html_e( 'This redirect is working', 'estrategiaweb-toolkit' ); ?></label></td>
 				</tr>
 			</table>
-			<?php submit_button( $rule['id'] ? __( 'Save redirect', 'estrategia-web' ) : __( 'Add redirect', 'estrategia-web' ) ); ?>
+			<?php submit_button( $rule['id'] ? __( 'Save redirect', 'estrategiaweb-toolkit' ) : __( 'Add redirect', 'estrategiaweb-toolkit' ) ); ?>
 		</form>
 		<?php
 	}
@@ -303,21 +303,21 @@ final class Page {
 		<form method="post" action="<?php echo esc_url( self::url( array( 'view' => 'log' ) ) ); ?>" class="ew-redirects-log-settings">
 			<?php wp_nonce_field( self::NONCE ); ?>
 			<input type="hidden" name="do" value="log_settings" />
-			<p><label><input type="checkbox" name="log_404" value="1" <?php checked( $settings['log_404'] ); ?> /> <?php esc_html_e( 'Record the addresses that give a 404 error', 'estrategia-web' ); ?></label></p>
-			<p><label><?php esc_html_e( 'Forget addresses not seen for', 'estrategia-web' ); ?> <input type="number" name="log_days" min="1" max="3650" class="small-text" value="<?php echo (int) $settings['log_days']; ?>" /> <?php esc_html_e( 'days', 'estrategia-web' ); ?></label></p>
-			<p class="description"><?php esc_html_e( 'Only the path is recorded (and ?p= of old WordPress addresses), with a counter and dates: no IP address, browser or other personal data.', 'estrategia-web' ); ?></p>
-			<?php submit_button( __( 'Save settings', 'estrategia-web' ), 'secondary', 'submit', false ); ?>
+			<p><label><input type="checkbox" name="log_404" value="1" <?php checked( $settings['log_404'] ); ?> /> <?php esc_html_e( 'Record the addresses that give a 404 error', 'estrategiaweb-toolkit' ); ?></label></p>
+			<p><label><?php esc_html_e( 'Forget addresses not seen for', 'estrategiaweb-toolkit' ); ?> <input type="number" name="log_days" min="1" max="3650" class="small-text" value="<?php echo (int) $settings['log_days']; ?>" /> <?php esc_html_e( 'days', 'estrategiaweb-toolkit' ); ?></label></p>
+			<p class="description"><?php esc_html_e( 'Only the path is recorded (and ?p= of old WordPress addresses), with a counter and dates: no IP address, browser or other personal data.', 'estrategiaweb-toolkit' ); ?></p>
+			<?php submit_button( __( 'Save settings', 'estrategiaweb-toolkit' ), 'secondary', 'submit', false ); ?>
 		</form>
 		<form method="post" action="<?php echo esc_url( self::url( array( 'view' => 'log' ) ) ); ?>" style="margin-top:1em">
 			<?php wp_nonce_field( self::NONCE ); ?>
 			<input type="hidden" name="do" value="log_clear" />
-			<?php submit_button( __( 'Empty the 404 log', 'estrategia-web' ), 'delete', 'submit', false ); ?>
+			<?php submit_button( __( 'Empty the 404 log', 'estrategiaweb-toolkit' ), 'delete', 'submit', false ); ?>
 		</form>
 		<?php
 		$table = new Log_Table();
 		$table->prepare_items();
 		echo '<form method="get"><input type="hidden" name="page" value="' . esc_attr( self::SLUG ) . '" /><input type="hidden" name="view" value="log" />';
-		$table->search_box( __( 'Search paths', 'estrategia-web' ), 'ew-404' );
+		$table->search_box( __( 'Search paths', 'estrategiaweb-toolkit' ), 'ew-404' );
 		echo '</form><form method="post" action="' . esc_url( self::url( array( 'view' => 'log' ) ) ) . '">';
 		$table->display(); // Carries its bulk-not_found nonce (see handle()).
 		echo '</form>';
@@ -330,33 +330,33 @@ final class Page {
 			$class = $report['errors'] ? 'warning' : 'success';
 			echo '<div class="notice notice-' . esc_attr( $class ) . ' ew-redirects-report"><p>';
 			if ( ! empty( $report['dry_run'] ) ) {
-				echo '<strong>' . esc_html__( 'Test only, nothing was saved.', 'estrategia-web' ) . '</strong> ';
+				echo '<strong>' . esc_html__( 'Test only, nothing was saved.', 'estrategiaweb-toolkit' ) . '</strong> ';
 			}
 			/* translators: 1: new rules, 2: updated rules, 3: unchanged rules, 4: rows with errors. */
-			echo esc_html( sprintf( __( '%1$d new, %2$d updated, %3$d unchanged, %4$d with errors.', 'estrategia-web' ), $report['created'], $report['updated'], $report['unchanged'], count( $report['errors'] ) ) );
+			echo esc_html( sprintf( __( '%1$d new, %2$d updated, %3$d unchanged, %4$d with errors.', 'estrategiaweb-toolkit' ), $report['created'], $report['updated'], $report['unchanged'], count( $report['errors'] ) ) );
 			echo '</p>';
 			if ( $report['errors'] ) {
 				echo '<ul>';
 				foreach ( $report['errors'] as $e ) {
 					/* translators: 1: line number in the CSV, 2: source path, 3: error message. */
-					echo '<li>' . esc_html( sprintf( __( 'Line %1$d (%2$s): %3$s', 'estrategia-web' ), $e['line'], $e['source'], $e['message'] ) ) . '</li>';
+					echo '<li>' . esc_html( sprintf( __( 'Line %1$d (%2$s): %3$s', 'estrategiaweb-toolkit' ), $e['line'], $e['source'], $e['message'] ) ) . '</li>';
 				}
 				echo '</ul>';
 			}
 			echo '</div>';
 		}
 		?>
-		<h2><?php esc_html_e( 'Import', 'estrategia-web' ); ?></h2>
-		<p><?php esc_html_e( 'A CSV with the columns origen, destino, tipo and motivo (or source, target, type, note). A source that already has a redirect is updated; nothing is deleted.', 'estrategia-web' ); ?></p>
+		<h2><?php esc_html_e( 'Import', 'estrategiaweb-toolkit' ); ?></h2>
+		<p><?php esc_html_e( 'A CSV with the columns origen, destino, tipo and motivo (or source, target, type, note). A source that already has a redirect is updated; nothing is deleted.', 'estrategiaweb-toolkit' ); ?></p>
 		<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( self::url( array( 'view' => 'import' ) ) ); ?>" class="ew-redirects-import">
 			<?php wp_nonce_field( self::NONCE ); ?>
 			<input type="hidden" name="do" value="import" />
 			<p><input type="file" name="csv" accept=".csv,text/csv" required /></p>
-			<p><label><input type="checkbox" name="dry_run" value="1" /> <?php esc_html_e( 'Test only: show what would happen without saving', 'estrategia-web' ); ?></label></p>
-			<?php submit_button( __( 'Import CSV', 'estrategia-web' ), 'primary', 'submit', false ); ?>
+			<p><label><input type="checkbox" name="dry_run" value="1" /> <?php esc_html_e( 'Test only: show what would happen without saving', 'estrategiaweb-toolkit' ); ?></label></p>
+			<?php submit_button( __( 'Import CSV', 'estrategiaweb-toolkit' ), 'primary', 'submit', false ); ?>
 		</form>
-		<h2><?php esc_html_e( 'Export', 'estrategia-web' ); ?></h2>
-		<p><a class="button ew-redirects-export" href="<?php echo esc_url( wp_nonce_url( self::url( array( 'do' => 'export' ) ), self::NONCE ) ); ?>"><?php esc_html_e( 'Download CSV', 'estrategia-web' ); ?></a></p>
+		<h2><?php esc_html_e( 'Export', 'estrategiaweb-toolkit' ); ?></h2>
+		<p><a class="button ew-redirects-export" href="<?php echo esc_url( wp_nonce_url( self::url( array( 'do' => 'export' ) ), self::NONCE ) ); ?>"><?php esc_html_e( 'Download CSV', 'estrategiaweb-toolkit' ); ?></a></p>
 		<?php
 	}
 }

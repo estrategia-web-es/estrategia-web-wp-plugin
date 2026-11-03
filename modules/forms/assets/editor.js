@@ -53,30 +53,30 @@
 	/* ------------------------------------------------------------------ */
 
 	const TEMPLATE = [
-		[ 'estrategia-web-forms/text', { label: __( 'Name', 'estrategia-web' ), name: 'name', required: true, width: 'half' } ],
-		[ 'estrategia-web-forms/email', { label: __( 'Email', 'estrategia-web' ), name: 'email', required: true, width: 'half' } ],
-		[ 'estrategia-web-forms/textarea', { label: __( 'Message', 'estrategia-web' ), name: 'message', required: true } ],
+		[ 'estrategia-web-forms/text', { label: __( 'Name', 'estrategiaweb-toolkit' ), name: 'name', required: true, width: 'half' } ],
+		[ 'estrategia-web-forms/email', { label: __( 'Email', 'estrategiaweb-toolkit' ), name: 'email', required: true, width: 'half' } ],
+		[ 'estrategia-web-forms/textarea', { label: __( 'Message', 'estrategiaweb-toolkit' ), name: 'message', required: true } ],
 		[ 'estrategia-web-forms/checkbox', { name: 'privacy', consent: true } ],
 		[ 'estrategia-web-forms/submit', {} ],
 		[
 			'estrategia-web-forms/notification',
 			{
-				label: __( 'Notice to the site', 'estrategia-web' ),
+				label: __( 'Notice to the site', 'estrategiaweb-toolkit' ),
 				replyTo: '{{email}}',
 				/* translators: {{name}} is a marker: do not translate it. */
-				subject: __( 'New message from {{name}}', 'estrategia-web' ),
+				subject: __( 'New message from {{name}}', 'estrategiaweb-toolkit' ),
 				/* translators: what goes between {{ }} are markers: do not translate them. */
-				body: __( 'New message sent from {{page_url}} on {{submission_date}}:\n\n{{all_fields}}', 'estrategia-web' ),
+				body: __( 'New message sent from {{page_url}} on {{submission_date}}:\n\n{{all_fields}}', 'estrategiaweb-toolkit' ),
 			},
 		],
 		[
 			'estrategia-web-forms/notification',
 			{
-				label: __( 'Acknowledgement to the sender', 'estrategia-web' ),
+				label: __( 'Acknowledgement to the sender', 'estrategiaweb-toolkit' ),
 				to: '{{email}}',
-				subject: __( 'We have received your message', 'estrategia-web' ),
+				subject: __( 'We have received your message', 'estrategiaweb-toolkit' ),
 				/* translators: what goes between {{ }} are markers: do not translate them. */
-				body: __( 'Hello {{name}},\n\nThank you for writing to us. We have received your message and will reply soon.\n\n{{all_fields}}\n\n{{site_name}}', 'estrategia-web' ),
+				body: __( 'Hello {{name}},\n\nThank you for writing to us. We have received your message and will reply soon.\n\n{{all_fields}}\n\n{{site_name}}', 'estrategiaweb-toolkit' ),
 			},
 		],
 	];
@@ -97,16 +97,16 @@
 					{ key: 'inspector' },
 					h(
 						PanelBody,
-						{ title: __( 'Form', 'estrategia-web' ) },
+						{ title: __( 'Form', 'estrategiaweb-toolkit' ) },
 						h( TextControl, {
-							label: __( 'Name in the submissions log', 'estrategia-web' ),
+							label: __( 'Name in the submissions log', 'estrategiaweb-toolkit' ),
 							value: attributes.title,
 							onChange: ( title ) => setAttributes( { title } ),
 							__nextHasNoMarginBottom: true,
 						} ),
 						h( TextControl, {
-							label: __( 'Form identifier', 'estrategia-web' ),
-							help: __( 'Groups the submissions of this form in the log, in every language. Change it only if two copies of the form must be counted apart.', 'estrategia-web' ),
+							label: __( 'Form identifier', 'estrategiaweb-toolkit' ),
+							help: __( 'Groups the submissions of this form in the log, in every language. Change it only if two copies of the form must be counted apart.', 'estrategiaweb-toolkit' ),
 							value: attributes.formId,
 							onChange: ( formId ) => setAttributes( { formId: slug( formId ).replace( /_/g, '-' ) } ),
 							__nextHasNoMarginBottom: true,
@@ -114,17 +114,17 @@
 					),
 					h(
 						PanelBody,
-						{ title: __( 'Messages', 'estrategia-web' ), initialOpen: false },
+						{ title: __( 'Messages', 'estrategiaweb-toolkit' ), initialOpen: false },
 						h( TextareaControl, {
-							label: __( 'Success message', 'estrategia-web' ),
-							help: __( 'Empty: the default message from Forms → Settings.', 'estrategia-web' ),
+							label: __( 'Success message', 'estrategiaweb-toolkit' ),
+							help: __( 'Empty: the default message from Forms → Settings.', 'estrategiaweb-toolkit' ),
 							value: attributes.successMessage,
 							onChange: ( successMessage ) => setAttributes( { successMessage } ),
 							__nextHasNoMarginBottom: true,
 						} ),
 						h( TextareaControl, {
-							label: __( 'Error message', 'estrategia-web' ),
-							help: __( 'Empty: the default message from Forms → Settings.', 'estrategia-web' ),
+							label: __( 'Error message', 'estrategiaweb-toolkit' ),
+							help: __( 'Empty: the default message from Forms → Settings.', 'estrategiaweb-toolkit' ),
 							value: attributes.errorMessage,
 							onChange: ( errorMessage ) => setAttributes( { errorMessage } ),
 							__nextHasNoMarginBottom: true,
@@ -147,10 +147,10 @@
 		const controls = [
 			h( TextControl, {
 				key: 'label',
-				label: __( 'Label', 'estrategia-web' ),
+				label: __( 'Label', 'estrategiaweb-toolkit' ),
 				help:
 					type === 'checkbox' && attributes.consent
-						? __( 'The text between braces becomes the link to the privacy policy. Empty: the default text.', 'estrategia-web' )
+						? __( 'The text between braces becomes the link to the privacy policy. Empty: the default text.', 'estrategiaweb-toolkit' )
 						: undefined,
 				value: attributes.label,
 				onChange: ( label ) => setAttributes( { label } ),
@@ -158,8 +158,8 @@
 			} ),
 			h( TextControl, {
 				key: 'name',
-				label: __( 'Name (key)', 'estrategia-web' ),
-				help: __( 'Used in the email markers, e.g. {{name}}, and in the log. Lowercase letters, numbers, - and _.', 'estrategia-web' ),
+				label: __( 'Name (key)', 'estrategiaweb-toolkit' ),
+				help: __( 'Used in the email markers, e.g. {{name}}, and in the log. Lowercase letters, numbers, - and _.', 'estrategiaweb-toolkit' ),
 				value: attributes.name,
 				onChange: ( name ) => setAttributes( { name: slug( name ) } ),
 				__nextHasNoMarginBottom: true,
@@ -169,7 +169,7 @@
 			controls.push(
 				h( ToggleControl, {
 					key: 'required',
-					label: __( 'Required', 'estrategia-web' ),
+					label: __( 'Required', 'estrategiaweb-toolkit' ),
 					checked: !! attributes.required,
 					onChange: ( required ) => setAttributes( { required } ),
 					__nextHasNoMarginBottom: true,
@@ -180,7 +180,7 @@
 			controls.push(
 				h( TextControl, {
 					key: 'placeholder',
-					label: type === 'select' ? __( 'First option (empty value)', 'estrategia-web' ) : __( 'Placeholder', 'estrategia-web' ),
+					label: type === 'select' ? __( 'First option (empty value)', 'estrategiaweb-toolkit' ) : __( 'Placeholder', 'estrategiaweb-toolkit' ),
 					value: attributes.placeholder,
 					onChange: ( placeholder ) => setAttributes( { placeholder } ),
 					__nextHasNoMarginBottom: true,
@@ -188,8 +188,8 @@
 				// 0.2.2: autocomplete (WCAG 1.3.5). Rules in Blocks::autocomplete().
 				h( TextControl, {
 					key: 'autocomplete',
-					label: __( 'Autocomplete', 'estrategia-web' ),
-					help: __( 'What the browser may fill in: name, organization, email, tel, street-address… Empty: email and phone fields still get email and tel.', 'estrategia-web' ),
+					label: __( 'Autocomplete', 'estrategiaweb-toolkit' ),
+					help: __( 'What the browser may fill in: name, organization, email, tel, street-address… Empty: email and phone fields still get email and tel.', 'estrategiaweb-toolkit' ),
 					value: attributes.autocomplete,
 					onChange: ( autocomplete ) => setAttributes( { autocomplete } ),
 					__nextHasNoMarginBottom: true,
@@ -200,18 +200,18 @@
 			controls.push(
 				h( TextareaControl, {
 					key: 'options',
-					label: __( 'Options', 'estrategia-web' ),
-					help: __( 'One per line.', 'estrategia-web' ),
+					label: __( 'Options', 'estrategiaweb-toolkit' ),
+					help: __( 'One per line.', 'estrategiaweb-toolkit' ),
 					value: attributes.options,
 					onChange: ( options ) => setAttributes( { options, defaultOption: followOption( attributes.options, options, attributes.defaultOption ) } ),
 					__nextHasNoMarginBottom: true,
 				} ),
 				h( SelectControl, {
 					key: 'defaultOption',
-					label: __( 'Preselected option', 'estrategia-web' ),
-					help: __( 'In a synced pattern, set it per page in the pattern block instead. A link can also choose it with ?af_ followed by the field name.', 'estrategia-web' ),
+					label: __( 'Preselected option', 'estrategiaweb-toolkit' ),
+					help: __( 'In a synced pattern, set it per page in the pattern block instead. A link can also choose it with ?af_ followed by the field name.', 'estrategiaweb-toolkit' ),
 					value: String( attributes.defaultOption || 0 ),
-					options: [ { value: '0', label: __( 'None', 'estrategia-web' ) } ].concat(
+					options: [ { value: '0', label: __( 'None', 'estrategiaweb-toolkit' ) } ].concat(
 						optionList( attributes.options ).map( ( o, i ) => ( { value: String( i + 1 ), label: o } ) )
 					),
 					onChange: ( v ) => setAttributes( { defaultOption: parseInt( v, 10 ) || 0 } ),
@@ -223,8 +223,8 @@
 			controls.push(
 				h( ToggleControl, {
 					key: 'consent',
-					label: __( 'Privacy consent', 'estrategia-web' ),
-					help: __( 'Always required, and links to the privacy policy.', 'estrategia-web' ),
+					label: __( 'Privacy consent', 'estrategiaweb-toolkit' ),
+					help: __( 'Always required, and links to the privacy policy.', 'estrategiaweb-toolkit' ),
 					checked: !! attributes.consent,
 					onChange: ( consent ) => setAttributes( { consent } ),
 					__nextHasNoMarginBottom: true,
@@ -234,8 +234,8 @@
 				controls.push(
 					h( TextControl, {
 						key: 'privacyUrl',
-						label: __( 'Privacy policy URL', 'estrategia-web' ),
-						help: __( 'Empty: the privacy policy page set in Settings → Privacy (translated, with WPML).', 'estrategia-web' ),
+						label: __( 'Privacy policy URL', 'estrategiaweb-toolkit' ),
+						help: __( 'Empty: the privacy policy page set in Settings → Privacy (translated, with WPML).', 'estrategiaweb-toolkit' ),
 						value: attributes.privacyUrl,
 						onChange: ( privacyUrl ) => setAttributes( { privacyUrl } ),
 						__nextHasNoMarginBottom: true,
@@ -246,17 +246,17 @@
 		controls.push(
 			h( SelectControl, {
 				key: 'width',
-				label: __( 'Width', 'estrategia-web' ),
+				label: __( 'Width', 'estrategiaweb-toolkit' ),
 				value: attributes.width,
 				options: [
-					{ value: 'full', label: __( 'Full', 'estrategia-web' ) },
-					{ value: 'half', label: __( 'Half', 'estrategia-web' ) },
+					{ value: 'full', label: __( 'Full', 'estrategiaweb-toolkit' ) },
+					{ value: 'half', label: __( 'Half', 'estrategiaweb-toolkit' ) },
 				],
 				onChange: ( width ) => setAttributes( { width } ),
 				__nextHasNoMarginBottom: true,
 			} )
 		);
-		return h( InspectorControls, { key: 'inspector' }, h( PanelBody, { title: __( 'Field', 'estrategia-web' ) }, controls ) );
+		return h( InspectorControls, { key: 'inspector' }, h( PanelBody, { title: __( 'Field', 'estrategiaweb-toolkit' ) }, controls ) );
 	}
 
 	/** The options as PHP sees them (Blocks::options): no empty or repeated ones. */
@@ -285,7 +285,7 @@
 				return h(
 					'select',
 					{ tabIndex: -1, value: String( attributes.defaultOption || 0 ), onChange: () => {} },
-					[ attributes.placeholder || __( 'Choose an option', 'estrategia-web' ) ].concat( options ).map( ( o, i ) => h( 'option', { key: i, value: String( i ) }, o ) )
+					[ attributes.placeholder || __( 'Choose an option', 'estrategiaweb-toolkit' ) ].concat( options ).map( ( o, i ) => h( 'option', { key: i, value: String( i ) }, o ) )
 				);
 			case 'checkbox':
 				return null;
@@ -307,8 +307,8 @@
 			const required = attributes.required || ( type === 'checkbox' && attributes.consent );
 			const defaultLabel =
 				type === 'checkbox' && attributes.consent
-					? __( 'I have read and accept the {privacy policy}.', 'estrategia-web' )
-					: __( 'Label', 'estrategia-web' );
+					? __( 'I have read and accept the {privacy policy}.', 'estrategiaweb-toolkit' )
+					: __( 'Label', 'estrategiaweb-toolkit' );
 
 			const label = h(
 				'div',
@@ -317,7 +317,7 @@
 					value: attributes.label,
 					placeholder: defaultLabel,
 					onChange: ( value ) => setAttributes( { label: value } ),
-					'aria-label': __( 'Label', 'estrategia-web' ),
+					'aria-label': __( 'Label', 'estrategiaweb-toolkit' ),
 				} ),
 				required ? h( 'span', { className: 'estrategia-web-forms__required', 'aria-hidden': true }, ' *' ) : null
 			);
@@ -354,9 +354,9 @@
 					{ className: 'wp-block-button__link wp-element-button' },
 					h( PlainText, {
 						value: attributes.text,
-						placeholder: __( 'Send', 'estrategia-web' ),
+						placeholder: __( 'Send', 'estrategiaweb-toolkit' ),
 						onChange: ( text ) => setAttributes( { text } ),
-						'aria-label': __( 'Button text', 'estrategia-web' ),
+						'aria-label': __( 'Button text', 'estrategiaweb-toolkit' ),
 					} )
 				)
 			);
@@ -406,15 +406,15 @@
 					{ key: 'inspector' },
 					h(
 						PanelBody,
-						{ title: __( 'Email notification', 'estrategia-web' ) },
-						text( 'label', __( 'Name of this notification', 'estrategia-web' ) ),
-						text( 'to', __( 'To', 'estrategia-web' ), __( 'Addresses separated by commas, or a marker such as {{email}}. Empty: the site administrator email.', 'estrategia-web' ) ),
-						text( 'replyTo', __( 'Reply to', 'estrategia-web' ), __( 'An address or a marker such as {{email}}. Optional.', 'estrategia-web' ) ),
-						text( 'subject', __( 'Subject', 'estrategia-web' ) ),
+						{ title: __( 'Email notification', 'estrategiaweb-toolkit' ) },
+						text( 'label', __( 'Name of this notification', 'estrategiaweb-toolkit' ) ),
+						text( 'to', __( 'To', 'estrategiaweb-toolkit' ), __( 'Addresses separated by commas, or a marker such as {{email}}. Empty: the site administrator email.', 'estrategiaweb-toolkit' ) ),
+						text( 'replyTo', __( 'Reply to', 'estrategiaweb-toolkit' ), __( 'An address or a marker such as {{email}}. Optional.', 'estrategiaweb-toolkit' ) ),
+						text( 'subject', __( 'Subject', 'estrategiaweb-toolkit' ) ),
 						h( TextareaControl, {
 							key: 'body',
-							label: __( 'Message', 'estrategia-web' ),
-							help: __( 'Available markers:', 'estrategia-web' ) + ' ' + markers,
+							label: __( 'Message', 'estrategiaweb-toolkit' ),
+							help: __( 'Available markers:', 'estrategiaweb-toolkit' ) + ' ' + markers,
 							rows: 10,
 							value: attributes.body,
 							onChange: ( body ) => setAttributes( { body } ),
@@ -425,10 +425,10 @@
 				h(
 					'div',
 					{ key: 'card', ...blockProps },
-					h( 'strong', null, '✉ ' + ( attributes.label || __( 'Email notification', 'estrategia-web' ) ) ),
-					h( 'span', null, __( 'To', 'estrategia-web' ) + ': ' + ( attributes.to || __( 'site administrator', 'estrategia-web' ) ) ),
-					h( 'span', null, __( 'Subject', 'estrategia-web' ) + ': ' + ( attributes.subject || '—' ) ),
-					h( 'em', null, __( 'Not shown to visitors. Edit it in the side panel.', 'estrategia-web' ) )
+					h( 'strong', null, '✉ ' + ( attributes.label || __( 'Email notification', 'estrategiaweb-toolkit' ) ) ),
+					h( 'span', null, __( 'To', 'estrategiaweb-toolkit' ) + ': ' + ( attributes.to || __( 'site administrator', 'estrategiaweb-toolkit' ) ) ),
+					h( 'span', null, __( 'Subject', 'estrategiaweb-toolkit' ) + ': ' + ( attributes.subject || '—' ) ),
+					h( 'em', null, __( 'Not shown to visitors. Edit it in the side panel.', 'estrategiaweb-toolkit' ) )
 				),
 			];
 		},
@@ -463,24 +463,24 @@
 			);
 			const blockProps = useBlockProps();
 			const titleOf = ( f ) => ( f.title && f.title.rendered ) || '#' + f.id;
-			const options = [ { value: '0', label: __( 'Choose a form', 'estrategia-web' ) } ].concat(
+			const options = [ { value: '0', label: __( 'Choose a form', 'estrategiaweb-toolkit' ) } ].concat(
 				( forms || [] ).map( ( f ) => ( {
 					value: String( f.id ),
-					label: titleOf( f ) + ( f.status !== 'publish' ? ' (' + __( 'not published', 'estrategia-web' ) + ')' : '' ),
+					label: titleOf( f ) + ( f.status !== 'publish' ? ' (' + __( 'not published', 'estrategiaweb-toolkit' ) + ')' : '' ),
 				} ) )
 			);
 			const picker = h( SelectControl, {
 				key: 'picker',
-				label: __( 'Form', 'estrategia-web' ),
+				label: __( 'Form', 'estrategiaweb-toolkit' ),
 				value: String( attributes.ref || 0 ),
 				options,
 				onChange: ( v ) => setAttributes( { ref: parseInt( v, 10 ) || 0 } ),
 				__nextHasNoMarginBottom: true,
 			} );
 			const editLink = attributes.ref
-				? h( ExternalLink, { key: 'edit', href: addQueryArgs( 'post.php', { post: attributes.ref, action: 'edit' } ) }, __( 'Edit this form', 'estrategia-web' ) )
+				? h( ExternalLink, { key: 'edit', href: addQueryArgs( 'post.php', { post: attributes.ref, action: 'edit' } ) }, __( 'Edit this form', 'estrategiaweb-toolkit' ) )
 				: null;
-			const newLink = h( ExternalLink, { key: 'new', href: addQueryArgs( 'post-new.php', { post_type: 'eweb_form' } ) }, __( 'Add form', 'estrategia-web' ) );
+			const newLink = h( ExternalLink, { key: 'new', href: addQueryArgs( 'post-new.php', { post_type: 'eweb_form' } ) }, __( 'Add form', 'estrategiaweb-toolkit' ) );
 
 			if ( ! attributes.ref ) {
 				return h(
@@ -490,8 +490,8 @@
 						Placeholder,
 						{
 							icon: 'feedback',
-							label: __( 'Form', 'estrategia-web' ),
-							instructions: __( 'Choose which of the site\'s forms to show here. Forms are created and edited in Forms → Forms.', 'estrategia-web' ),
+							label: __( 'Form', 'estrategiaweb-toolkit' ),
+							instructions: __( 'Choose which of the site\'s forms to show here. Forms are created and edited in Forms → Forms.', 'estrategiaweb-toolkit' ),
 						},
 						forms === null ? h( Spinner ) : picker,
 						h( 'p', { style: { width: '100%' } }, newLink )
@@ -504,7 +504,7 @@
 				h(
 					InspectorControls,
 					{ key: 'inspector' },
-					h( PanelBody, { title: __( 'Form', 'estrategia-web' ) }, picker, h( 'p', { key: 'links' }, editLink, ' · ', newLink ) )
+					h( PanelBody, { title: __( 'Form', 'estrategiaweb-toolkit' ) }, picker, h( 'p', { key: 'links' }, editLink, ' · ', newLink ) )
 				),
 				h( Disabled, { key: 'preview' }, h( ServerSideRender, { block: 'estrategia-web-forms/form-ref', attributes: { ref: attributes.ref } } ) )
 			);

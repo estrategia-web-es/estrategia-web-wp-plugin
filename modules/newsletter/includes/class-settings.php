@@ -122,7 +122,7 @@ final class Settings {
 	/** «Read more» in the site's language. */
 	public static function more(): string {
 		$switched = function_exists( 'switch_to_locale' ) && switch_to_locale( get_locale() );
-		$text     = __( 'Read more', 'estrategia-web' );
+		$text     = __( 'Read more', 'estrategiaweb-toolkit' );
 		if ( $switched ) {
 			restore_previous_locale();
 		}
@@ -143,7 +143,7 @@ final class Settings {
 		if ( isset( $value['api_key'] ) && '' !== trim( (string) $value['api_key'] ) ) {
 			$key = trim( sanitize_text_field( (string) $value['api_key'] ) );
 			if ( null === Rules::datacenter( $key ) ) {
-				add_settings_error( self::OPTION, 'api_key', __( 'The Mailchimp key must end in its datacenter (for example -us21). It was not saved.', 'estrategia-web' ) );
+				add_settings_error( self::OPTION, 'api_key', __( 'The Mailchimp key must end in its datacenter (for example -us21). It was not saved.', 'estrategiaweb-toolkit' ) );
 			} else {
 				$out['api_key'] = $key;
 			}
@@ -159,7 +159,7 @@ final class Settings {
 		if ( array_key_exists( 'email', $value ) ) {
 			$email = trim( (string) $value['email'] );
 			if ( '' !== $email && ! str_contains( $email, Rules::BLOCKS ) ) {
-				add_settings_error( self::OPTION, 'email', __( 'The email template must contain {{blocks}}, where the news go. It was not saved.', 'estrategia-web' ) );
+				add_settings_error( self::OPTION, 'email', __( 'The email template must contain {{blocks}}, where the news go. It was not saved.', 'estrategiaweb-toolkit' ) );
 			} else {
 				$out['email'] = $email;
 			}
@@ -172,7 +172,7 @@ final class Settings {
 
 	/** On Settings_Page::HOOK: the Newsletter tab. */
 	public static function register_section(): void {
-		Settings_Page::add_tab( 'newsletter', __( 'Newsletter', 'estrategia-web' ), 40 );
+		Settings_Page::add_tab( 'newsletter', __( 'Newsletter', 'estrategiaweb-toolkit' ), 40 );
 		Settings_Page::add_section(
 			'newsletter',
 			array(
@@ -186,51 +186,51 @@ final class Settings {
 	public static function render_section(): void {
 		$s    = self::get();
 		$name = static fn( string $key ): string => self::OPTION . '[' . $key . ']';
-		Admin_UI::box_open( __( 'Mailchimp', 'estrategia-web' ), 'ew-box-newsletter-mailchimp' );
+		Admin_UI::box_open( __( 'Mailchimp', 'estrategiaweb-toolkit' ), 'ew-box-newsletter-mailchimp' );
 		?>
-		<p><?php esc_html_e( 'The «Newsletter» screen (under Posts) creates the campaign as a DRAFT in Mailchimp, never sends it. Audience, segment and sender are copied from the last campaign sent.', 'estrategia-web' ); ?></p>
+		<p><?php esc_html_e( 'The «Newsletter» screen (under Posts) creates the campaign as a DRAFT in Mailchimp, never sends it. Audience, segment and sender are copied from the last campaign sent.', 'estrategiaweb-toolkit' ); ?></p>
 		<table class="form-table" role="presentation">
 			<tr>
-				<th scope="row"><label for="ew-newsletter-key"><?php esc_html_e( 'API key', 'estrategia-web' ); ?></label></th>
+				<th scope="row"><label for="ew-newsletter-key"><?php esc_html_e( 'API key', 'estrategiaweb-toolkit' ); ?></label></th>
 				<td>
 					<input type="password" class="regular-text code" id="ew-newsletter-key" name="<?php echo esc_attr( $name( 'api_key' ) ); ?>" value="" autocomplete="off" placeholder="<?php echo esc_attr( '' !== $s['api_key'] ? '…' . substr( $s['api_key'], -8 ) : 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-us21' ); ?>">
 					<p class="description">
 						<?php
-						echo esc_html( '' !== $s['api_key'] ? __( 'Saved. Leave it empty to keep it.', 'estrategia-web' ) : __( 'Mailchimp → Account → Extras → API keys. Without it, the screen only copies the code.', 'estrategia-web' ) );
+						echo esc_html( '' !== $s['api_key'] ? __( 'Saved. Leave it empty to keep it.', 'estrategiaweb-toolkit' ) : __( 'Mailchimp → Account → Extras → API keys. Without it, the screen only copies the code.', 'estrategiaweb-toolkit' ) );
 						?>
 					</p>
 					<?php if ( '' !== $s['api_key'] ) : ?>
-						<label><input type="checkbox" name="<?php echo esc_attr( $name( 'forget_key' ) ); ?>" value="1"> <?php esc_html_e( 'Forget the key', 'estrategia-web' ); ?></label>
+						<label><input type="checkbox" name="<?php echo esc_attr( $name( 'forget_key' ) ); ?>" value="1"> <?php esc_html_e( 'Forget the key', 'estrategiaweb-toolkit' ); ?></label>
 					<?php endif; ?>
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><label for="ew-newsletter-list"><?php esc_html_e( 'Audience ID', 'estrategia-web' ); ?></label></th>
+				<th scope="row"><label for="ew-newsletter-list"><?php esc_html_e( 'Audience ID', 'estrategiaweb-toolkit' ); ?></label></th>
 				<td>
 					<input type="text" class="regular-text code" id="ew-newsletter-list" name="<?php echo esc_attr( $name( 'list_id' ) ); ?>" value="<?php echo esc_attr( $s['list_id'] ); ?>">
-					<p class="description"><?php esc_html_e( 'Optional. Empty: the audience of the last campaign sent from the account.', 'estrategia-web' ); ?></p>
+					<p class="description"><?php esc_html_e( 'Optional. Empty: the audience of the last campaign sent from the account.', 'estrategiaweb-toolkit' ); ?></p>
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><label for="ew-newsletter-featured"><?php esc_html_e( 'Featured category', 'estrategia-web' ); ?></label></th>
+				<th scope="row"><label for="ew-newsletter-featured"><?php esc_html_e( 'Featured category', 'estrategiaweb-toolkit' ); ?></label></th>
 				<td>
 					<input type="text" class="regular-text code" id="ew-newsletter-featured" name="<?php echo esc_attr( $name( 'featured' ) ); ?>" value="<?php echo esc_attr( $s['featured'] ); ?>">
-					<p class="description"><?php esc_html_e( 'Slug of the category whose posts are proposed first (the front page one). Empty: only the latest posts.', 'estrategia-web' ); ?></p>
+					<p class="description"><?php esc_html_e( 'Slug of the category whose posts are proposed first (the front page one). Empty: only the latest posts.', 'estrategiaweb-toolkit' ); ?></p>
 				</td>
 			</tr>
 		</table>
 		<?php
 		Admin_UI::box_close();
-		Admin_UI::box_open( __( 'Templates', 'estrategia-web' ), 'ew-box-newsletter-templates' );
+		Admin_UI::box_open( __( 'Templates', 'estrategiaweb-toolkit' ), 'ew-box-newsletter-templates' );
 		?>
-		<p><?php esc_html_e( 'Empty fields use a plain design. Email: the whole HTML, with {{blocks}} where the news go. Block: one piece of news, with {{link}}, {{image}}, {{title}}, {{excerpt}}, {{label}} and {{more}} («Read more» in the site language).', 'estrategia-web' ); ?></p>
+		<p><?php esc_html_e( 'Empty fields use a plain design. Email: the whole HTML, with {{blocks}} where the news go. Block: one piece of news, with {{link}}, {{image}}, {{title}}, {{excerpt}}, {{label}} and {{more}} («Read more» in the site language).', 'estrategiaweb-toolkit' ); ?></p>
 		<table class="form-table" role="presentation">
 			<tr>
-				<th scope="row"><label for="ew-newsletter-email"><?php esc_html_e( 'Email', 'estrategia-web' ); ?></label></th>
+				<th scope="row"><label for="ew-newsletter-email"><?php esc_html_e( 'Email', 'estrategiaweb-toolkit' ); ?></label></th>
 				<td><textarea class="large-text code" rows="8" id="ew-newsletter-email" name="<?php echo esc_attr( $name( 'email' ) ); ?>"><?php echo esc_textarea( $s['email'] ); ?></textarea></td>
 			</tr>
 			<tr>
-				<th scope="row"><label for="ew-newsletter-block"><?php esc_html_e( 'Block', 'estrategia-web' ); ?></label></th>
+				<th scope="row"><label for="ew-newsletter-block"><?php esc_html_e( 'Block', 'estrategiaweb-toolkit' ); ?></label></th>
 				<td><textarea class="large-text code" rows="6" id="ew-newsletter-block" name="<?php echo esc_attr( $name( 'block' ) ); ?>"><?php echo esc_textarea( $s['block'] ); ?></textarea></td>
 			</tr>
 		</table>

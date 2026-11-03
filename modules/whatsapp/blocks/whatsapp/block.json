@@ -9,7 +9,7 @@
 	"icon": "format-chat",
 	"description": "Floating button that opens a WhatsApp chat with a predefined message. Meant for the footer template part.",
 	"keywords": [ "whatsapp", "chat", "contact" ],
-	"textdomain": "estrategia-web",
+	"textdomain": "estrategiaweb-toolkit",
 	"attributes": {
 		"phone": { "type": "string", "default": "" },
 		"message": { "type": "string", "default": "" },

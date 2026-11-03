@@ -9,7 +9,7 @@
 	"icon": "location-alt",
 	"description": "Static image with the address. The Google Maps embed only loads after the visitor asks for it.",
 	"keywords": [ "map", "google maps", "location", "address" ],
-	"textdomain": "estrategia-web",
+	"textdomain": "estrategiaweb-toolkit",
 	"attributes": {
 		"placeName": { "type": "string", "default": "" },
 		"address": { "type": "string", "default": "" },

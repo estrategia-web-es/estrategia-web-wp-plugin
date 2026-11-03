@@ -163,7 +163,7 @@ final class Builder {
 		$ids = array_values( array_unique( array_filter( array_map( 'intval', $ids ) ) ) );
 		if ( count( $ids ) > self::MAX ) {
 			/* translators: %d: the maximum. */
-			return new \WP_Error( 'estrategia_web_newsletter', sprintf( __( 'A newsletter carries at most %d posts.', 'estrategia-web' ), self::MAX ), array( 'status' => 400 ) );
+			return new \WP_Error( 'estrategia_web_newsletter', sprintf( __( 'A newsletter carries at most %d posts.', 'estrategiaweb-toolkit' ), self::MAX ), array( 'status' => 400 ) );
 		}
 		$types    = self::post_types();
 		$more     = Settings::more();
@@ -175,22 +175,22 @@ final class Builder {
 			$post = get_post( $id );
 			if ( ! $post || 'publish' !== $post->post_status || ! in_array( $post->post_type, $types, true ) ) {
 				/* translators: %d: post ID. */
-				return new \WP_Error( 'estrategia_web_newsletter', sprintf( __( 'Post %d is not a published post that can go in the newsletter.', 'estrategia-web' ), $id ), array( 'status' => 400 ) );
+				return new \WP_Error( 'estrategia_web_newsletter', sprintf( __( 'Post %d is not a published post that can go in the newsletter.', 'estrategiaweb-toolkit' ), $id ), array( 'status' => 400 ) );
 			}
 			$item = self::item( $post, $more );
 			if ( '' === $item['image'] ) {
 				/* translators: %s: post title. */
-				$warnings[] = sprintf( __( '«%s» has no featured image: its block goes without photo.', 'estrategia-web' ), $item['title'] );
+				$warnings[] = sprintf( __( '«%s» has no featured image: its block goes without photo.', 'estrategiaweb-toolkit' ), $item['title'] );
 			} elseif ( $item['webp_only'] ) {
 				/* translators: %s: post title. */
-				$warnings[] = sprintf( __( '«%s»: its photo only exists in WebP, which Outlook does not show. Upload it again as JPEG.', 'estrategia-web' ), $item['title'] );
+				$warnings[] = sprintf( __( '«%s»: its photo only exists in WebP, which Outlook does not show. Upload it again as JPEG.', 'estrategiaweb-toolkit' ), $item['title'] );
 			}
 			$items[] = $item;
 			$blocks .= Rules::block( $template, $item );
 		}
 		$html = Rules::email( Settings::email_template(), $blocks );
 		if ( null === $html ) {
-			return new \WP_Error( 'estrategia_web_newsletter', __( 'The email template has no {{blocks}}.', 'estrategia-web' ), array( 'status' => 500 ) );
+			return new \WP_Error( 'estrategia_web_newsletter', __( 'The email template has no {{blocks}}.', 'estrategiaweb-toolkit' ), array( 'status' => 500 ) );
 		}
 		return array(
 			'html'     => $html,

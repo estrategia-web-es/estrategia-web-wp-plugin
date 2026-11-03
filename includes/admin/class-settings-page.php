@@ -8,7 +8,8 @@ defined( 'ABSPATH' ) || exit;
  * (?page=estrategia-web-settings&tab=…) for the modules' settings that are
  * set once and forgotten — today «Cookies» (consent), «Analytics»
  * (google-tags and matomo), «Media» (site's SVG and uploads) and, since
- * 2.7.0, «Newsletter» (newsletter: Mailchimp key and templates). It knows
+ * 2.7.0, «Newsletter» (newsletter: Mailchimp key and templates) and, since
+ * 2.10.0, «llms.txt» (llms). It knows
  * NO module: each module adds its tab and its section through the registry
  * below. With no section at all, the page is not even registered.
  *
@@ -29,7 +30,8 @@ defined( 'ABSPATH' ) || exit;
  * - add_tab( id, label, order ): idempotent. Two modules sharing a tab
  *   (google-tags and matomo on «analytics») both call it; the FIRST call's
  *   label and order win, so both must say the same thing. Today's orders:
- *   cookies 10, analytics 20, media 30, newsletter 40 (2.7.0).
+ *   cookies 10, analytics 20, media 30, newsletter 40 (2.7.0), llms 50
+ *   (2.10.0; it was 40 on its own branch, the same as newsletter's).
  * - add_section( tab, args ): what the tab shows, sorted by priority (then
  *   id). A TAB IS SHOWN ONLY IF IT HAS A SECTION, which is how «each tab only
  *   if its module is on» comes out by itself: a module that is off does not
@@ -209,7 +211,7 @@ final class Settings_Page {
 		if ( ! self::tabs() ) {
 			return; // No module with settings: no page.
 		}
-		add_submenu_page( Menu::PARENT, __( 'Settings', 'estrategia-web' ), __( 'Settings', 'estrategia-web' ), 'manage_options', self::SLUG, array( self::class, 'render' ) );
+		add_submenu_page( Menu::PARENT, __( 'Settings', 'estrategiaweb-toolkit' ), __( 'Settings', 'estrategiaweb-toolkit' ), 'manage_options', self::SLUG, array( self::class, 'render' ) );
 	}
 
 	public static function render(): void {
@@ -227,12 +229,12 @@ final class Settings_Page {
 		?>
 		<div class="wrap ew-screen estrategia-web-settings" data-tab="<?php echo esc_attr( $current ); ?>">
 			<?php
-			Admin_UI::header( __( 'Settings', 'estrategia-web' ), __( 'How the site behaves, by topic: the cookie notice, the statistics and what is accepted when uploading images.', 'estrategia-web' ) );
+			Admin_UI::header( __( 'Settings', 'estrategiaweb-toolkit' ), __( 'How the site behaves, by topic: the cookie notice, the statistics and what is accepted when uploading images.', 'estrategiaweb-toolkit' ) );
 			$links = array();
 			foreach ( $tabs as $id => $tab ) {
 				$links[ $id ] = array( $tab['label'], self::url( $id ) );
 			}
-			Admin_UI::tabs( $links, $current, __( 'Settings sections', 'estrategia-web' ) );
+			Admin_UI::tabs( $links, $current, __( 'Settings sections', 'estrategiaweb-toolkit' ) );
 			settings_errors();
 			?>
 			<?php if ( $in_form ) : ?>

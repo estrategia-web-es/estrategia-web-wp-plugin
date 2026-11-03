@@ -9,7 +9,7 @@
 	"icon": "share",
 	"description": "The site's social network links, from Estrategia Web › Social networks. Icons take the text colour.",
 	"keywords": [ "social", "instagram", "facebook", "redes" ],
-	"textdomain": "estrategia-web",
+	"textdomain": "estrategiaweb-toolkit",
 	"attributes": {
 		"display": { "type": "string", "enum": [ "icons", "icons-names" ], "default": "icons" },
 		"size": { "type": "string", "enum": [ "small", "medium", "large" ], "default": "medium" }

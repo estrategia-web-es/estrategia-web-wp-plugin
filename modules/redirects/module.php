@@ -97,7 +97,7 @@ add_action(
 				'estrategia_web_module_status',
 				static function ( $status, $slug ) use ( $owner ) {
 					/* translators: %s: name of the SEO plugin, e.g. "Rank Math". */
-					return 'redirects' === $slug ? sprintf( __( 'Redirects are managed by %s.', 'estrategia-web' ), $owner ) : $status;
+					return 'redirects' === $slug ? sprintf( __( 'Redirects are managed by %s.', 'estrategiaweb-toolkit' ), $owner ) : $status;
 				},
 				10,
 				2

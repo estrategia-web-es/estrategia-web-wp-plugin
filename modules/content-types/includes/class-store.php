@@ -75,8 +75,8 @@ final class Store {
 			self::POST_TYPE,
 			array(
 				'labels'       => array(
-					'name'          => __( 'Content type definitions', 'estrategia-web' ),
-					'singular_name' => __( 'Content type definition', 'estrategia-web' ),
+					'name'          => __( 'Content type definitions', 'estrategiaweb-toolkit' ),
+					'singular_name' => __( 'Content type definition', 'estrategiaweb-toolkit' ),
 				),
 				'public'       => false,
 				'show_ui'      => false, // Edited in «Estrategia Web → Content types», not as posts.

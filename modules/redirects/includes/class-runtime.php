@@ -49,7 +49,12 @@ final class Runtime {
 		if ( ! is_404() ) {
 			return;
 		}
-		$uri  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '/'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- normalised in Rules::split and never printed.
+		// esc_url_raw(), not sanitize_text_field(): it keeps the «%xx» the rules
+		// match on (the %3F of old URLs, class-rules.php) and strips what cannot
+		// be in a URL (2.10.0, the WordPress.org review asked for a sanitised
+		// REQUEST_URI because it reaches the 404 log).
+		$uri  = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '/';
+		$uri  = '' !== $uri ? $uri : '/';
 		$rule = Store::match( $uri );
 		if ( ! $rule ) {
 			if ( Settings::get()['log_404'] ) {

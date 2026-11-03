@@ -34,6 +34,16 @@
 .ew-actions { margin: 0 0 2em; max-width: 70em; }
 .ew-box + .ew-actions { margin-top: -0.5em; }
 
+/* The Modules screen (includes/admin/class-modules-page.php): the on/off switches. Was a <style> in the page until 2.10.0. */
+.estrategia-web-modules td, .estrategia-web-modules th { vertical-align: middle; }
+.estrategia-web-modules .column-switch { width: 4.5em; }
+.estrategia-web-modules input[role="switch"] { appearance: none; width: 2.5em; height: 1.4em; border-radius: 1em; background: #8c8f94; position: relative; cursor: pointer; margin: 0; border: 0; }
+.estrategia-web-modules input[role="switch"]::before { content: ""; position: absolute; top: .2em; left: .2em; width: 1em; height: 1em; border-radius: 50%; background: #fff; transition: transform .15s; margin: 0; }
+.estrategia-web-modules input[role="switch"]:checked { background: #2271b1; }
+.estrategia-web-modules input[role="switch"]:checked::before { transform: translateX(1.1em); }
+.estrategia-web-modules input[role="switch"]:focus-visible { outline: 2px solid #2271b1; outline-offset: 2px; }
+.estrategia-web-modules .is-blocked { color: #b32d2e; }
+
 @media (max-width: 782px) {
 	.ew-box-body { padding: 0.25em 0.75em 0.75em; }
 	.ew-tabs.nav-tab-wrapper, .ewct-tabs.nav-tab-wrapper { padding: 0.5em 0.5em 0; }

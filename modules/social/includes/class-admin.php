@@ -44,7 +44,7 @@ final class Admin {
 	}
 
 	public static function menu(): void {
-		add_submenu_page( Menu::PARENT, __( 'Social networks', 'estrategia-web' ), __( 'Social networks', 'estrategia-web' ), 'manage_options', self::PAGE, array( self::class, 'render' ) );
+		add_submenu_page( Menu::PARENT, __( 'Social networks', 'estrategiaweb-toolkit' ), __( 'Social networks', 'estrategiaweb-toolkit' ), 'manage_options', self::PAGE, array( self::class, 'render' ) );
 	}
 
 	public static function enqueue( string $hook ): void {
@@ -65,13 +65,13 @@ final class Admin {
 	 */
 	private static function inline_translations(): void {
 		$strings = array(
-			'up'      => __( 'Move up', 'estrategia-web' ),
-			'down'    => __( 'Move down', 'estrategia-web' ),
-			'remove'  => __( 'Remove', 'estrategia-web' ),
-			'svg'     => __( 'Own SVG…', 'estrategia-web' ),
-			'svgOff'  => __( 'Remove own SVG', 'estrategia-web' ),
-			'pick'    => __( 'Choose an SVG icon', 'estrategia-web' ),
-			'use'     => __( 'Use this icon', 'estrategia-web' ),
+			'up'      => __( 'Move up', 'estrategiaweb-toolkit' ),
+			'down'    => __( 'Move down', 'estrategiaweb-toolkit' ),
+			'remove'  => __( 'Remove', 'estrategiaweb-toolkit' ),
+			'svg'     => __( 'Own SVG…', 'estrategiaweb-toolkit' ),
+			'svgOff'  => __( 'Remove own SVG', 'estrategiaweb-toolkit' ),
+			'pick'    => __( 'Choose an SVG icon', 'estrategiaweb-toolkit' ),
+			'use'     => __( 'Use this icon', 'estrategiaweb-toolkit' ),
 		);
 		wp_add_inline_script( 'estrategia-web-social-admin', 'window.estrategiaWebSocialText = ' . wp_json_encode( $strings ) . ';', 'before' );
 	}
@@ -82,17 +82,17 @@ final class Admin {
 		}
 		$items = Links::items();
 		echo '<div class="wrap ew-screen estrategia-web-social">';
-		Admin_UI::header( __( 'Social networks', 'estrategia-web' ), __( 'The links shown by the “Social networks” block, in this order. The icon is guessed from the link; choose one only if it gets it wrong, or use your own SVG from the media library.', 'estrategia-web' ) );
+		Admin_UI::header( __( 'Social networks', 'estrategiaweb-toolkit' ), __( 'The links shown by the “Social networks” block, in this order. The icon is guessed from the link; choose one only if it gets it wrong, or use your own SVG from the media library.', 'estrategiaweb-toolkit' ) );
 		echo '<form method="post" action="options.php">';
-		Admin_UI::box_open( __( 'Networks', 'estrategia-web' ), 'ew-box-social' );
+		Admin_UI::box_open( __( 'Networks', 'estrategiaweb-toolkit' ), 'ew-box-social' );
 		settings_fields( Links::GROUP );
 		// So that an empty list gets through (see the header of Links).
 		printf( '<input type="hidden" name="%s[]" value="">', esc_attr( Links::OPTION ) );
 		echo '<table class="widefat striped estrategia-web-social__table"><thead><tr>';
-		echo '<th scope="col">' . esc_html__( 'Icon', 'estrategia-web' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Name', 'estrategia-web' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Link', 'estrategia-web' ) . '</th>';
-		echo '<th scope="col"><span class="screen-reader-text">' . esc_html__( 'Order', 'estrategia-web' ) . '</span></th>';
+		echo '<th scope="col">' . esc_html__( 'Icon', 'estrategiaweb-toolkit' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Name', 'estrategiaweb-toolkit' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Link', 'estrategiaweb-toolkit' ) . '</th>';
+		echo '<th scope="col"><span class="screen-reader-text">' . esc_html__( 'Order', 'estrategiaweb-toolkit' ) . '</span></th>';
 		echo '</tr></thead><tbody class="estrategia-web-social__rows">';
 		$index = 0;
 		foreach ( $items as $item ) {
@@ -100,8 +100,8 @@ final class Admin {
 		}
 		self::row( $index, array( 'name' => '', 'url' => '', 'icon' => '', 'icon_id' => 0 ) ); // The empty one, for adding.
 		echo '</tbody></table>';
-		echo '<p><button type="button" class="button estrategia-web-social__add" hidden>' . esc_html__( 'Add network', 'estrategia-web' ) . '</button></p>';
-		echo '<p class="description">' . esc_html__( 'To remove a network without JavaScript, empty its link.', 'estrategia-web' ) . ' <a href="' . esc_url( Settings_Page::url( 'media' ) ) . '">' . esc_html__( 'Your own SVG can only be uploaded if “Allow SVG uploads” is on in Settings › Media.', 'estrategia-web' ) . '</a></p>';
+		echo '<p><button type="button" class="button estrategia-web-social__add" hidden>' . esc_html__( 'Add network', 'estrategiaweb-toolkit' ) . '</button></p>';
+		echo '<p class="description">' . esc_html__( 'To remove a network without JavaScript, empty its link.', 'estrategiaweb-toolkit' ) . ' <a href="' . esc_url( Settings_Page::url( 'media' ) ) . '">' . esc_html__( 'Your own SVG can only be uploaded if “Allow SVG uploads” is on in Settings › Media.', 'estrategiaweb-toolkit' ) . '</a></p>';
 		Admin_UI::box_close();
 		Admin_UI::save();
 		echo '</form></div>';
@@ -109,7 +109,7 @@ final class Admin {
 
 	private static function row( int $index, array $item ): void {
 		$name    = static fn( string $field ): string => Links::OPTION . '[' . $index . '][' . $field . ']';
-		$options = '<option value="">' . esc_html__( 'Automatic (from the link)', 'estrategia-web' ) . '</option>';
+		$options = '<option value="">' . esc_html__( 'Automatic (from the link)', 'estrategiaweb-toolkit' ) . '</option>';
 		foreach ( Icons::labels() as $slug => $label ) {
 			$options .= sprintf( '<option value="%s"%s>%s</option>', esc_attr( $slug ), selected( $item['icon'], $slug, false ), esc_html( $label ) );
 		}
@@ -123,7 +123,7 @@ final class Admin {
 			'<td><span class="estrategia-web-social__preview" aria-hidden="true">%1$s</span> <label class="screen-reader-text" for="%2$s-icon">%3$s</label><select id="%2$s-icon" data-field="icon" name="%4$s">%5$s</select><input type="hidden" data-field="icon_id" name="%6$s" value="%7$d"></td>',
 			$preview, // phpcs:ignore WordPress.Security.EscapeOutput -- SVG from Icons (collection or sanitized).
 			esc_attr( $id ),
-			esc_html__( 'Icon', 'estrategia-web' ),
+			esc_html__( 'Icon', 'estrategiaweb-toolkit' ),
 			esc_attr( $name( 'icon' ) ),
 			$options, // phpcs:ignore WordPress.Security.EscapeOutput -- escaped above.
 			esc_attr( $name( 'icon_id' ) ),
@@ -132,15 +132,15 @@ final class Admin {
 		printf(
 			'<td><label class="screen-reader-text" for="%1$s-name">%2$s</label><input type="text" class="regular-text" id="%1$s-name" data-field="name" name="%3$s" value="%4$s" placeholder="%5$s"></td>',
 			esc_attr( $id ),
-			esc_html__( 'Name', 'estrategia-web' ),
+			esc_html__( 'Name', 'estrategiaweb-toolkit' ),
 			esc_attr( $name( 'name' ) ),
 			esc_attr( $item['name'] ),
-			esc_attr__( 'Empty: the icon name', 'estrategia-web' )
+			esc_attr__( 'Empty: the icon name', 'estrategiaweb-toolkit' )
 		);
 		printf(
 			'<td><label class="screen-reader-text" for="%1$s-url">%2$s</label><input type="text" inputmode="url" class="large-text" id="%1$s-url" data-field="url" name="%3$s" value="%4$s" placeholder="https://"></td>',
 			esc_attr( $id ),
-			esc_html__( 'Link', 'estrategia-web' ),
+			esc_html__( 'Link', 'estrategiaweb-toolkit' ),
 			esc_attr( $name( 'url' ) ),
 			esc_attr( $item['url'] )
 		);

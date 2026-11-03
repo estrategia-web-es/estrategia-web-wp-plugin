@@ -165,8 +165,8 @@ final class Settings {
 			self::OPTION,
 			array(
 				'type'              => 'object',
-				'label'             => __( 'Company details', 'estrategia-web' ),
-				'description'       => __( 'Company details and site options of the Estrategia Web Site plugin.', 'estrategia-web' ),
+				'label'             => __( 'Company details', 'estrategiaweb-toolkit' ),
+				'description'       => __( 'Company details and site options of the Estrategia Web Site plugin.', 'estrategiaweb-toolkit' ),
 				'default'           => self::DEFAULTS,
 				'sanitize_callback' => array( self::class, 'sanitize' ),
 				'show_in_rest'      => array( 'schema' => self::schema() ),
@@ -317,7 +317,7 @@ final class Settings {
 			} elseif ( is_email( $email ) && $email === trim( (string) $input['email'] ) ) {
 				$out['email'] = $email;
 			} else {
-				self::error( 'email', __( 'The email address is not valid. The previous one has been kept.', 'estrategia-web' ) );
+				self::error( 'email', __( 'The email address is not valid. The previous one has been kept.', 'estrategiaweb-toolkit' ) );
 			}
 		}
 
@@ -330,7 +330,7 @@ final class Settings {
 				if ( strlen( $digits ) >= 8 && strlen( $digits ) <= 15 ) {
 					$out['whatsapp'] = $digits;
 				} else {
-					self::error( 'whatsapp', __( 'The WhatsApp number is not valid (international format, digits only). The previous one has been kept.', 'estrategia-web' ) );
+					self::error( 'whatsapp', __( 'The WhatsApp number is not valid (international format, digits only). The previous one has been kept.', 'estrategiaweb-toolkit' ) );
 				}
 			}
 		}
@@ -404,7 +404,7 @@ final class Settings {
 		// filter_var and not wp_http_validate_url(): that one resolves the domain's DNS.
 		if ( '' === $url || ! filter_var( $url, FILTER_VALIDATE_URL ) || ! preg_match( '#^https?://[^/]+\.[^/]+#i', $url ) ) {
 			/* translators: %s: the field name. */
-			self::error( $field, sprintf( __( 'The address in «%s» is not a valid web address. The previous one has been kept.', 'estrategia-web' ), $field ) );
+			self::error( $field, sprintf( __( 'The address in «%s» is not a valid web address. The previous one has been kept.', 'estrategiaweb-toolkit' ), $field ) );
 			return null;
 		}
 		return $url;

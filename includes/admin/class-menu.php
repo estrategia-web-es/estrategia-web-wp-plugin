@@ -1,8 +1,10 @@
 <?php
 /**
  * THE «Estrategia Web» ADMIN MENU (1.7.0): one top-level item, at position
- * 3 (right after the Dashboard, where «Company details» was), that opens on
- * Company details. Its submenu, in this order:
+ * 81 (right after Settings, since 2.10.0), that opens on Company details.
+ * From 1.7.0 to 2.9.0 it was at 3, right after the Dashboard; the
+ * WordPress.org review (02-11-2026) asked plugins not to sit among core's
+ * items, and David chose 81. Its submenu, in this order:
  *
  *   1. Company details   page=estrategia-web-site          (site, core)
  *   2. Content types     page=estrategia-web-content-types (content-types)
@@ -46,8 +48,8 @@ final class Menu {
 	/** Slug of the top-level item (= Company details). */
 	public const PARENT = 'estrategia-web-site';
 
-	/** Position in the admin menu: after the Dashboard (2). */
-	public const POSITION = 3;
+	/** Position in the admin menu: after Settings (80), as WordPress.org asks (header). */
+	public const POSITION = 81;
 
 	/** Submenu order. Modules_Page::SLUG is not here: it always goes last. */
 	public const ORDER = array(
@@ -77,15 +79,15 @@ final class Menu {
 
 	public static function register(): void {
 		add_menu_page(
-			__( 'Company details', 'estrategia-web' ),
-			__( 'Estrategia Web', 'estrategia-web' ),
+			__( 'Company details', 'estrategiaweb-toolkit' ),
+			__( 'Estrategia Web', 'estrategiaweb-toolkit' ),
 			'manage_options',
 			self::PARENT,
 			self::home(),
 			'dashicons-screenoptions',
 			self::POSITION
 		);
-		add_submenu_page( self::PARENT, __( 'Company details', 'estrategia-web' ), __( 'Company details', 'estrategia-web' ), 'manage_options', self::PARENT, self::home() );
+		add_submenu_page( self::PARENT, __( 'Company details', 'estrategiaweb-toolkit' ), __( 'Company details', 'estrategiaweb-toolkit' ), 'manage_options', self::PARENT, self::home() );
 	}
 
 	/**

@@ -65,7 +65,7 @@ final class Post_Type {
 	 */
 	private static function list_tools(): void {
 		$views = array();
-		foreach ( array( Rules::ACTIVE => __( 'Showing', 'estrategia-web' ), Rules::SCHEDULED => __( 'Scheduled', 'estrategia-web' ), Rules::EXPIRED => __( 'Expired', 'estrategia-web' ) ) as $state => $label ) {
+		foreach ( array( Rules::ACTIVE => __( 'Showing', 'estrategiaweb-toolkit' ), Rules::SCHEDULED => __( 'Scheduled', 'estrategiaweb-toolkit' ), Rules::EXPIRED => __( 'Expired', 'estrategiaweb-toolkit' ) ) as $state => $label ) {
 			$views[ $state ] = array(
 				'label' => $label,
 				'args'  => static fn () => array(
@@ -120,17 +120,17 @@ final class Post_Type {
 			self::TYPE,
 			array(
 				'labels'              => array(
-					'name'               => __( 'Banners', 'estrategia-web' ),
-					'singular_name'      => __( 'Banner', 'estrategia-web' ),
-					'add_new'            => __( 'Add banner', 'estrategia-web' ),
-					'add_new_item'       => __( 'Add banner', 'estrategia-web' ),
-					'edit_item'          => __( 'Edit banner', 'estrategia-web' ),
-					'new_item'           => __( 'New banner', 'estrategia-web' ),
-					'search_items'       => __( 'Search banners', 'estrategia-web' ),
-					'not_found'          => __( 'No banners found.', 'estrategia-web' ),
-					'not_found_in_trash' => __( 'No banners found in Trash.', 'estrategia-web' ),
-					'featured_image'     => __( 'Banner image', 'estrategia-web' ),
-					'set_featured_image' => __( 'Set banner image', 'estrategia-web' ),
+					'name'               => __( 'Banners', 'estrategiaweb-toolkit' ),
+					'singular_name'      => __( 'Banner', 'estrategiaweb-toolkit' ),
+					'add_new'            => __( 'Add banner', 'estrategiaweb-toolkit' ),
+					'add_new_item'       => __( 'Add banner', 'estrategiaweb-toolkit' ),
+					'edit_item'          => __( 'Edit banner', 'estrategiaweb-toolkit' ),
+					'new_item'           => __( 'New banner', 'estrategiaweb-toolkit' ),
+					'search_items'       => __( 'Search banners', 'estrategiaweb-toolkit' ),
+					'not_found'          => __( 'No banners found.', 'estrategiaweb-toolkit' ),
+					'not_found_in_trash' => __( 'No banners found in Trash.', 'estrategiaweb-toolkit' ),
+					'featured_image'     => __( 'Banner image', 'estrategiaweb-toolkit' ),
+					'set_featured_image' => __( 'Set banner image', 'estrategiaweb-toolkit' ),
 				),
 				'public'              => false,
 				'publicly_queryable'  => false,
@@ -155,11 +155,11 @@ final class Post_Type {
 			self::TYPE,
 			array(
 				'labels'            => array(
-					'name'          => __( 'Banner zones', 'estrategia-web' ),
-					'singular_name' => __( 'Banner zone', 'estrategia-web' ),
-					'menu_name'     => __( 'Zones', 'estrategia-web' ),
-					'add_new_item'  => __( 'Add zone', 'estrategia-web' ),
-					'all_items'     => __( 'All zones', 'estrategia-web' ), // The list's zone dropdown (Admin_List::taxonomy_filter).
+					'name'          => __( 'Banner zones', 'estrategiaweb-toolkit' ),
+					'singular_name' => __( 'Banner zone', 'estrategiaweb-toolkit' ),
+					'menu_name'     => __( 'Zones', 'estrategiaweb-toolkit' ),
+					'add_new_item'  => __( 'Add zone', 'estrategiaweb-toolkit' ),
+					'all_items'     => __( 'All zones', 'estrategiaweb-toolkit' ), // The list's zone dropdown (Admin_List::taxonomy_filter).
 				),
 				'public'            => false,
 				'show_ui'           => true,
@@ -210,8 +210,8 @@ final class Post_Type {
 	}
 
 	public static function meta_boxes(): void {
-		add_meta_box( 'estrategia-web-banner', __( 'Banner', 'estrategia-web' ), array( self::class, 'box' ), self::TYPE, 'normal', 'high' );
-		add_meta_box( 'estrategia-web-banner-stats', __( 'Statistics', 'estrategia-web' ), array( self::class, 'stats_box' ), self::TYPE, 'normal', 'default' );
+		add_meta_box( 'estrategia-web-banner', __( 'Banner', 'estrategiaweb-toolkit' ), array( self::class, 'box' ), self::TYPE, 'normal', 'high' );
+		add_meta_box( 'estrategia-web-banner-stats', __( 'Statistics', 'estrategiaweb-toolkit' ), array( self::class, 'stats_box' ), self::TYPE, 'normal', 'default' );
 	}
 
 	/** Unix time → value of a datetime-local input, in the site's time zone. */
@@ -232,17 +232,17 @@ final class Post_Type {
 		$d = self::data( $post );
 		wp_nonce_field( 'estrategia_web_banner', 'estrategia_web_banner_nonce' );
 		?>
-		<p><?php esc_html_e( 'With a banner image (box on the right) it is an image banner with its link; without one, the code below is shown.', 'estrategia-web' ); ?></p>
-		<p><label for="ewb-link"><strong><?php esc_html_e( 'Link', 'estrategia-web' ); ?></strong></label><br>
+		<p><?php esc_html_e( 'With a banner image (box on the right) it is an image banner with its link; without one, the code below is shown.', 'estrategiaweb-toolkit' ); ?></p>
+		<p><label for="ewb-link"><strong><?php esc_html_e( 'Link', 'estrategiaweb-toolkit' ); ?></strong></label><br>
 			<input type="url" id="ewb-link" name="ewb[link]" value="<?php echo esc_attr( $d['link'] ); ?>" class="widefat" placeholder="https://"></p>
-		<p><label for="ewb-code"><strong><?php esc_html_e( 'Code (adserver, iframe)', 'estrategia-web' ); ?></strong></label><br>
+		<p><label for="ewb-code"><strong><?php esc_html_e( 'Code (adserver, iframe)', 'estrategiaweb-toolkit' ); ?></strong></label><br>
 			<textarea id="ewb-code" name="ewb[code]" rows="6" class="widefat code" <?php disabled( ! current_user_can( 'unfiltered_html' ) ); ?>><?php echo esc_textarea( $d['code'] ); ?></textarea></p>
 		<p style="display:flex;gap:24px;flex-wrap:wrap">
-			<label><strong><?php esc_html_e( 'Starts', 'estrategia-web' ); ?></strong><br><input type="datetime-local" name="ewb[start]" value="<?php echo esc_attr( self::local( $d['start'] ) ); ?>"></label>
-			<label><strong><?php esc_html_e( 'Ends', 'estrategia-web' ); ?></strong><br><input type="datetime-local" name="ewb[end]" value="<?php echo esc_attr( self::local( $d['end'] ) ); ?>"></label>
-			<label><strong><?php esc_html_e( 'Weight (1-10)', 'estrategia-web' ); ?></strong><br><input type="number" min="1" max="10" name="ewb[weight]" value="<?php echo esc_attr( (string) $d['weight'] ); ?>" style="width:6em"></label>
+			<label><strong><?php esc_html_e( 'Starts', 'estrategiaweb-toolkit' ); ?></strong><br><input type="datetime-local" name="ewb[start]" value="<?php echo esc_attr( self::local( $d['start'] ) ); ?>"></label>
+			<label><strong><?php esc_html_e( 'Ends', 'estrategiaweb-toolkit' ); ?></strong><br><input type="datetime-local" name="ewb[end]" value="<?php echo esc_attr( self::local( $d['end'] ) ); ?>"></label>
+			<label><strong><?php esc_html_e( 'Weight (1-10)', 'estrategiaweb-toolkit' ); ?></strong><br><input type="number" min="1" max="10" name="ewb[weight]" value="<?php echo esc_attr( (string) $d['weight'] ); ?>" style="width:6em"></label>
 		</p>
-		<p class="description"><?php esc_html_e( 'Empty dates: no limit. The weight only matters when a zone shows fewer banners than it has.', 'estrategia-web' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Empty dates: no limit. The weight only matters when a zone shows fewer banners than it has.', 'estrategiaweb-toolkit' ); ?></p>
 		<?php
 	}
 
@@ -250,16 +250,16 @@ final class Post_Type {
 		$days   = Store::days( $post->ID, 60 );
 		$totals = Store::totals( array( $post->ID ) )[ $post->ID ] ?? array( 'views' => 0, 'clicks' => 0 );
 		/* translators: 1: views, 2: clicks. */
-		echo '<p><strong>' . esc_html( sprintf( __( 'Total: %1$s views, %2$s clicks', 'estrategia-web' ), number_format_i18n( $totals['views'] ), number_format_i18n( $totals['clicks'] ) ) ) . '</strong></p>';
+		echo '<p><strong>' . esc_html( sprintf( __( 'Total: %1$s views, %2$s clicks', 'estrategiaweb-toolkit' ), number_format_i18n( $totals['views'] ), number_format_i18n( $totals['clicks'] ) ) ) . '</strong></p>';
 		if ( ! $days ) {
-			echo '<p>' . esc_html__( 'No statistics yet.', 'estrategia-web' ) . '</p>';
+			echo '<p>' . esc_html__( 'No statistics yet.', 'estrategiaweb-toolkit' ) . '</p>';
 			return;
 		}
-		echo '<table class="widefat striped" style="max-width:420px"><thead><tr><th>' . esc_html__( 'Day', 'estrategia-web' ) . '</th><th>' . esc_html__( 'Views', 'estrategia-web' ) . '</th><th>' . esc_html__( 'Clicks', 'estrategia-web' ) . '</th></tr></thead><tbody>';
+		echo '<table class="widefat striped" style="max-width:420px"><thead><tr><th>' . esc_html__( 'Day', 'estrategiaweb-toolkit' ) . '</th><th>' . esc_html__( 'Views', 'estrategiaweb-toolkit' ) . '</th><th>' . esc_html__( 'Clicks', 'estrategiaweb-toolkit' ) . '</th></tr></thead><tbody>';
 		foreach ( $days as $row ) {
 			printf( '<tr><td>%s</td><td>%s</td><td>%s</td></tr>', esc_html( mysql2date( get_option( 'date_format' ), $row['day'] ) ), esc_html( number_format_i18n( $row['views'] ) ), esc_html( number_format_i18n( $row['clicks'] ) ) );
 		}
-		echo '</tbody></table><p class="description">' . esc_html__( 'Last 60 days with activity. A view is counted when the banner is on screen; code banners (adservers) count their clicks on their own side.', 'estrategia-web' ) . '</p>';
+		echo '</tbody></table><p class="description">' . esc_html__( 'Last 60 days with activity. A view is counted when the banner is on screen; code banners (adservers) count their clicks on their own side.', 'estrategiaweb-toolkit' ) . '</p>';
 	}
 
 	public static function save( int $post_id, \WP_Post $post ): void {
@@ -287,10 +287,10 @@ final class Post_Type {
 		$out = array();
 		foreach ( $columns as $key => $label ) {
 			if ( 'date' === $key ) {
-				$out['ewb_dates']  = __( 'Dates', 'estrategia-web' );
-				$out['ewb_state']  = __( 'State', 'estrategia-web' );
-				$out['ewb_views']  = __( 'Views', 'estrategia-web' );
-				$out['ewb_clicks'] = __( 'Clicks', 'estrategia-web' );
+				$out['ewb_dates']  = __( 'Dates', 'estrategiaweb-toolkit' );
+				$out['ewb_state']  = __( 'State', 'estrategiaweb-toolkit' );
+				$out['ewb_views']  = __( 'Views', 'estrategiaweb-toolkit' );
+				$out['ewb_clicks'] = __( 'Clicks', 'estrategiaweb-toolkit' );
 				continue;
 			}
 			$out[ $key ] = $label;
@@ -312,10 +312,10 @@ final class Post_Type {
 				break;
 			case 'ewb_state':
 				$labels = array(
-					Rules::ACTIVE    => __( 'Showing', 'estrategia-web' ),
-					Rules::SCHEDULED => __( 'Scheduled', 'estrategia-web' ),
-					Rules::EXPIRED   => __( 'Expired', 'estrategia-web' ),
-					Rules::OFF       => __( 'Off', 'estrategia-web' ),
+					Rules::ACTIVE    => __( 'Showing', 'estrategiaweb-toolkit' ),
+					Rules::SCHEDULED => __( 'Scheduled', 'estrategiaweb-toolkit' ),
+					Rules::EXPIRED   => __( 'Expired', 'estrategiaweb-toolkit' ),
+					Rules::OFF       => __( 'Off', 'estrategiaweb-toolkit' ),
 				);
 				printf( '<span class="ewb-state ewb-state--%s">%s</span>', esc_attr( $d['state'] ), esc_html( $labels[ $d['state'] ] ) );
 				break;

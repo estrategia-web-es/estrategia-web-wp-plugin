@@ -50,8 +50,8 @@ final class Cookie_Table {
 		$known  = Consent::known_categories();
 		$labels = array(
 			'necessary' => array(
-				'label'       => __( 'Necessary', 'estrategia-web' ),
-				'description' => __( 'Required for the site to work, including remembering this choice. Always active.', 'estrategia-web' ),
+				'label'       => __( 'Necessary', 'estrategiaweb-toolkit' ),
+				'description' => __( 'Required for the site to work, including remembering this choice. Always active.', 'estrategiaweb-toolkit' ),
 			),
 		);
 		foreach ( Cookie_Registry::CATEGORIES as $slug ) {
@@ -107,28 +107,28 @@ final class Cookie_Table {
 		list( $n, $unit ) = $parts;
 		switch ( $unit ) {
 			case 'session':
-				return __( 'Session', 'estrategia-web' );
+				return __( 'Session', 'estrategiaweb-toolkit' );
 			case 'second':
 				/* translators: %d: number of seconds. */
-				return sprintf( _n( '%d second', '%d seconds', $n, 'estrategia-web' ), $n );
+				return sprintf( _n( '%d second', '%d seconds', $n, 'estrategiaweb-toolkit' ), $n );
 			case 'minute':
 				/* translators: %d: number of minutes. */
-				return sprintf( _n( '%d minute', '%d minutes', $n, 'estrategia-web' ), $n );
+				return sprintf( _n( '%d minute', '%d minutes', $n, 'estrategiaweb-toolkit' ), $n );
 			case 'hour':
 				/* translators: %d: number of hours. */
-				return sprintf( _n( '%d hour', '%d hours', $n, 'estrategia-web' ), $n );
+				return sprintf( _n( '%d hour', '%d hours', $n, 'estrategiaweb-toolkit' ), $n );
 			case 'day':
 				/* translators: %d: number of days. */
-				return sprintf( _n( '%d day', '%d days', $n, 'estrategia-web' ), $n );
+				return sprintf( _n( '%d day', '%d days', $n, 'estrategiaweb-toolkit' ), $n );
 			case 'week':
 				/* translators: %d: number of weeks. */
-				return sprintf( _n( '%d week', '%d weeks', $n, 'estrategia-web' ), $n );
+				return sprintf( _n( '%d week', '%d weeks', $n, 'estrategiaweb-toolkit' ), $n );
 			case 'month':
 				/* translators: %d: number of months. */
-				return sprintf( _n( '%d month', '%d months', $n, 'estrategia-web' ), $n );
+				return sprintf( _n( '%d month', '%d months', $n, 'estrategiaweb-toolkit' ), $n );
 			default:
 				/* translators: %d: number of years. */
-				return sprintf( _n( '%d year', '%d years', $n, 'estrategia-web' ), $n );
+				return sprintf( _n( '%d year', '%d years', $n, 'estrategiaweb-toolkit' ), $n );
 		}
 	}
 
@@ -150,7 +150,7 @@ final class Cookie_Table {
 				return sprintf(
 					'<p %s>%s</p>',
 					get_block_wrapper_attributes(),
-					esc_html__( 'Cookie table: there are no confirmed cookies yet. Confirm them in Estrategia Web → Cookies and they will appear here.', 'estrategia-web' )
+					esc_html__( 'Cookie table: there are no confirmed cookies yet. Confirm them in Estrategia Web → Cookies and they will appear here.', 'estrategiaweb-toolkit' )
 				);
 			}
 			return '';
@@ -167,10 +167,10 @@ final class Cookie_Table {
 				$html .= '<p class="estrategia-web-cookie-table__description">' . esc_html( $label['description'] ) . '</p>';
 			}
 			$html .= '<figure class="wp-block-table estrategia-web-cookie-table__figure"><table class="estrategia-web-cookie-table__table"><thead><tr>';
-			$html .= '<th scope="col">' . esc_html__( 'Cookie', 'estrategia-web' ) . '</th>';
-			$html .= '<th scope="col">' . esc_html__( 'Provider', 'estrategia-web' ) . '</th>';
-			$html .= '<th scope="col">' . esc_html__( 'Purpose', 'estrategia-web' ) . '</th>';
-			$html .= '<th scope="col">' . esc_html__( 'Duration', 'estrategia-web' ) . '</th>';
+			$html .= '<th scope="col">' . esc_html__( 'Cookie', 'estrategiaweb-toolkit' ) . '</th>';
+			$html .= '<th scope="col">' . esc_html__( 'Provider', 'estrategiaweb-toolkit' ) . '</th>';
+			$html .= '<th scope="col">' . esc_html__( 'Purpose', 'estrategiaweb-toolkit' ) . '</th>';
+			$html .= '<th scope="col">' . esc_html__( 'Duration', 'estrategiaweb-toolkit' ) . '</th>';
 			$html .= '</tr></thead><tbody>';
 			foreach ( $entries as $key => $entry ) {
 				$html .= sprintf(

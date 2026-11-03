@@ -127,18 +127,18 @@ final class Rest {
 	/** @return \WP_REST_Response|\WP_Error */
 	public static function show( \WP_REST_Request $request ) {
 		$item = self::item( (string) $request['name'] );
-		return null === $item['definition'] && 'none' === $item['source'] ? self::error( 'estrategia_web_ct_not_found', __( 'There is no content type with that name.', 'estrategia-web' ), 404 ) : rest_ensure_response( $item );
+		return null === $item['definition'] && 'none' === $item['source'] ? self::error( 'estrategia_web_ct_not_found', __( 'There is no content type with that name.', 'estrategiaweb-toolkit' ), 404 ) : rest_ensure_response( $item );
 	}
 
 	/** @return \WP_REST_Response|\WP_Error */
 	public static function create( \WP_REST_Request $request ) {
 		$def = $request['definition'];
 		if ( ! is_array( $def ) ) {
-			return self::error( 'estrategia_web_ct_invalid', __( 'Send the definition as a JSON object in “definition”.', 'estrategia-web' ), 400 );
+			return self::error( 'estrategia_web_ct_invalid', __( 'Send the definition as a JSON object in “definition”.', 'estrategiaweb-toolkit' ), 400 );
 		}
 		if ( Store::get( (string) ( $def['name'] ?? '' ) ) ) {
 			/* translators: %s: post type name */
-			return self::error( 'estrategia_web_ct_exists', sprintf( __( 'The type “%s” already exists: edit it instead (or import it over it).', 'estrategia-web' ), (string) $def['name'] ), 409 );
+			return self::error( 'estrategia_web_ct_exists', sprintf( __( 'The type “%s” already exists: edit it instead (or import it over it).', 'estrategiaweb-toolkit' ), (string) $def['name'] ), 409 );
 		}
 		return self::write( $def, null, $request );
 	}
@@ -154,7 +154,7 @@ final class Rest {
 			return rest_ensure_response( self::item( $name ) );
 		}
 		if ( ! is_array( $def ) ) {
-			return self::error( 'estrategia_web_ct_invalid', __( 'Send the definition as a JSON object in “definition”.', 'estrategia-web' ), 400 );
+			return self::error( 'estrategia_web_ct_invalid', __( 'Send the definition as a JSON object in “definition”.', 'estrategiaweb-toolkit' ), 400 );
 		}
 		return self::write( $def, $row, $request, $name );
 	}
@@ -164,12 +164,12 @@ final class Rest {
 		$name = (string) $request['name'];
 		$row  = Store::get( $name );
 		if ( ! $row ) {
-			return self::error( 'estrategia_web_ct_not_found', __( 'There is no content type with that name in the database (a type from a file is deleted in its file).', 'estrategia-web' ), 404 );
+			return self::error( 'estrategia_web_ct_not_found', __( 'There is no content type with that name in the database (a type from a file is deleted in its file).', 'estrategiaweb-toolkit' ), 404 );
 		}
 		$entries = Store::entries( $name );
 		if ( $entries > 0 ) {
 			/* translators: %d: number of entries */
-			return self::error( 'estrategia_web_ct_has_entries', sprintf( _n( 'It has %d entry, so it cannot be deleted: switch it off instead (its entries stay and come back when you switch it on), or empty it first, trash included.', 'It has %d entries, so it cannot be deleted: switch it off instead (its entries stay and come back when you switch it on), or empty it first, trash included.', $entries, 'estrategia-web' ), $entries ), 409, array( 'entries' => $entries ) );
+			return self::error( 'estrategia_web_ct_has_entries', sprintf( _n( 'It has %d entry, so it cannot be deleted: switch it off instead (its entries stay and come back when you switch it on), or empty it first, trash included.', 'It has %d entries, so it cannot be deleted: switch it off instead (its entries stay and come back when you switch it on), or empty it first, trash included.', $entries, 'estrategiaweb-toolkit' ), $entries ), 409, array( 'entries' => $entries ) );
 		}
 		Store::delete( $row['id'] );
 		return rest_ensure_response( array( 'deleted' => true, 'name' => $name ) );
@@ -179,11 +179,11 @@ final class Rest {
 	public static function add_template( \WP_REST_Request $request ) {
 		$template = Templates::get( (string) $request['key'] );
 		if ( ! $template ) {
-			return self::error( 'estrategia_web_ct_not_found', __( 'There is no template with that name.', 'estrategia-web' ), 404 );
+			return self::error( 'estrategia_web_ct_not_found', __( 'There is no template with that name.', 'estrategiaweb-toolkit' ), 404 );
 		}
 		if ( Store::get( $template['name'] ) ) {
 			/* translators: %s: post type name */
-			return self::error( 'estrategia_web_ct_exists', sprintf( __( 'The type “%s” already exists: edit it instead (or import it over it).', 'estrategia-web' ), $template['name'] ), 409 );
+			return self::error( 'estrategia_web_ct_exists', sprintf( __( 'The type “%s” already exists: edit it instead (or import it over it).', 'estrategiaweb-toolkit' ), $template['name'] ), 409 );
 		}
 		$request->set_param( 'confirm', true );
 		return self::write( Templates::materialize( $template ), null, $request );
@@ -200,7 +200,7 @@ final class Rest {
 		unset( $def['$schema'] );
 		if ( $row && is_string( $def['name'] ?? null ) && $def['name'] !== $row['name'] && Store::get( $def['name'] ) ) {
 			/* translators: %s: post type name */
-			return self::error( 'estrategia_web_ct_exists', sprintf( __( 'The type “%s” already exists: edit it instead (or import it over it).', 'estrategia-web' ), $def['name'] ), 409 );
+			return self::error( 'estrategia_web_ct_exists', sprintf( __( 'The type “%s” already exists: edit it instead (or import it over it).', 'estrategiaweb-toolkit' ), $def['name'] ), 409 );
 		}
 		$errors = Schema::validate( $def, Templates::for_definition( $def ) );
 		if ( ! $errors ) {
@@ -214,10 +214,10 @@ final class Rest {
 		}
 		if ( ! $errors && ! in_array( $def['name'], Registrar::registered(), true ) && post_type_exists( $def['name'] ) && ! Loader::type( $def['name'] ) ) {
 			/* translators: %s: post type name */
-			$errors[] = sprintf( __( 'The name “%s” is already a post type of WordPress or of other code: choose another.', 'estrategia-web' ), $def['name'] );
+			$errors[] = sprintf( __( 'The name “%s” is already a post type of WordPress or of other code: choose another.', 'estrategiaweb-toolkit' ), $def['name'] );
 		}
 		if ( $errors ) {
-			return self::error( 'estrategia_web_ct_invalid', __( 'The definition has errors: nothing was saved.', 'estrategia-web' ), 400, array( 'errors' => array_values( $errors ) ) );
+			return self::error( 'estrategia_web_ct_invalid', __( 'The definition has errors: nothing was saved.', 'estrategiaweb-toolkit' ), 400, array( 'errors' => array_values( $errors ) ) );
 		}
 
 		$old     = $row && $row['definition'] && ! Schema::validate( $row['definition'], Templates::for_definition( $row['definition'] ) ) ? Schema::normalize( $row['definition'] ) : null;
@@ -231,13 +231,13 @@ final class Rest {
 		}
 		$check = Changes::check( $old, $new, $counts );
 		if ( $check['errors'] ) {
-			return self::error( 'estrategia_web_ct_invalid', __( 'The definition has errors: nothing was saved.', 'estrategia-web' ), 400, array( 'errors' => $check['errors'] ) );
+			return self::error( 'estrategia_web_ct_invalid', __( 'The definition has errors: nothing was saved.', 'estrategiaweb-toolkit' ), 400, array( 'errors' => $check['errors'] ) );
 		}
 		if ( $check['slugs'] && ! self::redirects_on() ) {
-			$check['warnings'][] = __( 'The Redirects module is off, so no redirects are created: the old addresses will give «not found» (404). Switch it on in Estrategia Web → Modules before saving to keep them working.', 'estrategia-web' );
+			$check['warnings'][] = __( 'The Redirects module is off, so no redirects are created: the old addresses will give «not found» (404). Switch it on in Estrategia Web → Modules before saving to keep them working.', 'estrategiaweb-toolkit' );
 		}
 		if ( $check['warnings'] && ! rest_sanitize_boolean( $request['confirm'] ) ) {
-			return self::error( 'estrategia_web_ct_confirm', __( 'Saving this changes things that are already published. Read the list and confirm.', 'estrategia-web' ), 409, array( 'warnings' => $check['warnings'] ) );
+			return self::error( 'estrategia_web_ct_confirm', __( 'Saving this changes things that are already published. Read the list and confirm.', 'estrategiaweb-toolkit' ), 409, array( 'warnings' => $check['warnings'] ) );
 		}
 
 		$redirects = $check['slugs'] && self::redirects_on() ?self::redirects( $check['slugs'], $old ) : array( 'created' => 0, 'skipped' => array() );
@@ -292,7 +292,7 @@ final class Rest {
 					\EstrategiaWeb\Redirects\Store::delete( array( $existing[ $key ]['id'] ) );
 				}
 				/* translators: %s: type or taxonomy name */
-				[ $id, $code ] = \EstrategiaWeb\Redirects\Importer::save_one( array( 'source' => $source, 'target' => $target, 'type' => 301, 'note' => sprintf( __( 'URL of “%s” changed in Content types', 'estrategia-web' ), $name ) ) );
+				[ $id, $code ] = \EstrategiaWeb\Redirects\Importer::save_one( array( 'source' => $source, 'target' => $target, 'type' => 301, 'note' => sprintf( __( 'URL of “%s” changed in Content types', 'estrategiaweb-toolkit' ), $name ) ) );
 				if ( $id ) {
 					++$created;
 				} else {

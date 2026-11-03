@@ -202,7 +202,7 @@ if ( '' === $estrategia_web_embed && '' === $estrategia_web_maps_url ) {
 		printf(
 			'<p %s>%s</p>',
 			get_block_wrapper_attributes(), // phpcs:ignore WordPress.Security.EscapeOutput
-			esc_html__( 'Map: add the address and the Google Maps embed URL in the block settings.', 'estrategia-web' )
+			esc_html__( 'Map: add the address and the Google Maps embed URL in the block settings.', 'estrategiaweb-toolkit' )
 		);
 	}
 	return;
@@ -227,8 +227,8 @@ if ( '' !== $estrategia_web_static ) {
 		esc_attr(
 			'' !== $estrategia_web_address
 				/* translators: %s: postal address. */
-				? sprintf( __( 'Street map around %s', 'estrategia-web' ), str_replace( "\n", ', ', $estrategia_web_address ) )
-				: __( 'Street map of the area', 'estrategia-web' )
+				? sprintf( __( 'Street map around %s', 'estrategiaweb-toolkit' ), str_replace( "\n", ', ', $estrategia_web_address ) )
+				: __( 'Street map of the area', 'estrategiaweb-toolkit' )
 		)
 	);
 } elseif ( $attributes['imageId'] ) {
@@ -286,8 +286,8 @@ if ( $estrategia_web_frame_later && '' === $estrategia_web_embed ) {
 
 $estrategia_web_title = '' !== $estrategia_web_address
 	/* translators: %s: postal address. */
-	? sprintf( __( 'Map: %s', 'estrategia-web' ), $estrategia_web_address )
-	: __( 'Map', 'estrategia-web' );
+	? sprintf( __( 'Map: %s', 'estrategiaweb-toolkit' ), $estrategia_web_address )
+	: __( 'Map', 'estrategiaweb-toolkit' );
 ?>
 <figure
 	<?php echo get_block_wrapper_attributes( array( 'class' => 'estrategia-web-map' . ( '' !== $estrategia_web_static ? ' has-static-map' : '' ) . ( $estrategia_web_details ? '' : ' is-without-details' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
@@ -336,8 +336,8 @@ $estrategia_web_title = '' !== $estrategia_web_address
 		<?php endif; ?>
 		<?php if ( '' !== $estrategia_web_embed ) : ?>
 		<div class="estrategia-web-map__actions" data-wp-bind--hidden="context.loaded">
-			<button type="button" class="wp-element-button estrategia-web-map__load" data-wp-on--click="actions.load"><?php esc_html_e( 'Show map', 'estrategia-web' ); ?></button>
-			<p class="estrategia-web-map__notice"><?php esc_html_e( 'The map is served by Google. Loading it sends your IP address to Google, which may set its own cookies.', 'estrategia-web' ); ?></p>
+			<button type="button" class="wp-element-button estrategia-web-map__load" data-wp-on--click="actions.load"><?php esc_html_e( 'Show map', 'estrategiaweb-toolkit' ); ?></button>
+			<p class="estrategia-web-map__notice"><?php esc_html_e( 'The map is served by Google. Loading it sends your IP address to Google, which may set its own cookies.', 'estrategiaweb-toolkit' ); ?></p>
 		</div>
 		<?php endif; ?>
 		<?php if ( '' !== $estrategia_web_maps_url ) : ?>
@@ -355,13 +355,13 @@ $estrategia_web_title = '' !== $estrategia_web_address
 		$estrategia_web_link_for = preg_replace( '/\s+/', ' ', '' !== $estrategia_web_place ? $estrategia_web_place : $estrategia_web_address );
 		$estrategia_web_link_aria = '' === $estrategia_web_link_for ? '' : sprintf(
 			/* translators: 1: place name (or its address), 2: «(opens in a new tab)». The text before the colon must be the visible text of the link. */
-			__( 'Open in Google Maps: %1$s %2$s', 'estrategia-web' ),
+			__( 'Open in Google Maps: %1$s %2$s', 'estrategiaweb-toolkit' ),
 			$estrategia_web_link_for,
-			__( '(opens in a new tab)', 'estrategia-web' )
+			__( '(opens in a new tab)', 'estrategiaweb-toolkit' )
 		);
 		?>
 		<a class="estrategia-web-map__link" href="<?php echo esc_url( $estrategia_web_maps_url ); ?>" target="_blank" rel="noopener noreferrer"<?php echo '' !== $estrategia_web_link_aria ? ' aria-label="' . esc_attr( $estrategia_web_link_aria ) . '"' : ''; ?>>
-			<?php esc_html_e( 'Open in Google Maps', 'estrategia-web' ); ?><span class="screen-reader-text"> <?php esc_html_e( '(opens in a new tab)', 'estrategia-web' ); ?></span>
+			<?php esc_html_e( 'Open in Google Maps', 'estrategiaweb-toolkit' ); ?><span class="screen-reader-text"> <?php esc_html_e( '(opens in a new tab)', 'estrategiaweb-toolkit' ); ?></span>
 		</a>
 		<?php endif; ?>
 	</figcaption>

@@ -137,9 +137,9 @@ final class Registrar {
 		}
 		$text = 'draft' === $what
 			/* translators: %s: list of field names */
-			? __( 'Not published: it has been saved as a draft. Fill in these fields to publish it: %s.', 'estrategia-web' )
+			? __( 'Not published: it has been saved as a draft. Fill in these fields to publish it: %s.', 'estrategiaweb-toolkit' )
 			/* translators: %s: list of field names */
-			: __( 'These fields cannot be empty in a published item, so they keep their previous value: %s.', 'estrategia-web' );
+			: __( 'These fields cannot be empty in a published item, so they keep their previous value: %s.', 'estrategiaweb-toolkit' );
 		printf( '<div class="notice notice-error" id="estrategia-web-ct-required"><p>%s</p></div>', esc_html( sprintf( $text, implode( ', ', $labels ) ) ) );
 	}
 
@@ -159,7 +159,7 @@ final class Registrar {
 		foreach ( $types as $name => $def ) {
 			if ( post_type_exists( $name ) ) {
 				/* translators: %s: post type name */
-				Loader::add_error( $files[ $name ], sprintf( __( 'The type “%s” is already registered by other code: this file is ignored.', 'estrategia-web' ), $name ) );
+				Loader::add_error( $files[ $name ], sprintf( __( 'The type “%s” is already registered by other code: this file is ignored.', 'estrategiaweb-toolkit' ), $name ) );
 				continue;
 			}
 			$singular = Schema::text( $def['labels']['singular'], $locale );
@@ -191,7 +191,7 @@ final class Registrar {
 				}
 				if ( taxonomy_exists( $tax['name'] ) ) {
 					/* translators: %s: taxonomy name */
-					Loader::add_error( $files[ $name ], sprintf( __( 'The taxonomy “%s” is already registered by other code: it is not registered again.', 'estrategia-web' ), $tax['name'] ) );
+					Loader::add_error( $files[ $name ], sprintf( __( 'The taxonomy “%s” is already registered by other code: it is not registered again.', 'estrategiaweb-toolkit' ), $tax['name'] ) );
 					continue;
 				}
 				$t_singular = Schema::text( $tax['labels']['singular'], $locale );
@@ -206,9 +206,9 @@ final class Registrar {
 							'menu_name'     => $t_plural,
 							'all_items'     => $t_plural,
 							/* translators: %s: singular name of a taxonomy, e.g. Cuisine */
-							'add_new_item'  => sprintf( __( 'Add %s', 'estrategia-web' ), $t_singular ),
+							'add_new_item'  => sprintf( __( 'Add %s', 'estrategiaweb-toolkit' ), $t_singular ),
 							/* translators: %s: singular name of a taxonomy */
-							'edit_item'     => sprintf( __( 'Edit %s', 'estrategia-web' ), $t_singular ),
+							'edit_item'     => sprintf( __( 'Edit %s', 'estrategiaweb-toolkit' ), $t_singular ),
 						),
 						'hierarchical'      => $tax['hierarchical'],
 						'public'            => $tax['public'],
@@ -279,7 +279,7 @@ final class Registrar {
 				foreach ( 'relation' === $field['type'] ? $field['post_type'] : array() as $target ) {
 					if ( ! post_type_exists( $target ) ) {
 						/* translators: 1: field name, 2: post type name */
-						Loader::add_error( $files[ $name ], sprintf( __( 'The relation “%1$s” points to the type “%2$s”, which is not registered: it can only store 0.', 'estrategia-web' ), $field['name'], $target ) );
+						Loader::add_error( $files[ $name ], sprintf( __( 'The relation “%1$s” points to the type “%2$s”, which is not registered: it can only store 0.', 'estrategiaweb-toolkit' ), $field['name'], $target ) );
 					}
 				}
 			}
@@ -294,15 +294,15 @@ final class Registrar {
 			'menu_name'          => $plural,
 			'all_items'          => $plural,
 			/* translators: %s: singular name of a content type, e.g. Restaurant */
-			'add_new_item'       => sprintf( __( 'Add %s', 'estrategia-web' ), $singular ),
+			'add_new_item'       => sprintf( __( 'Add %s', 'estrategiaweb-toolkit' ), $singular ),
 			/* translators: %s: singular name of a content type */
-			'edit_item'          => sprintf( __( 'Edit %s', 'estrategia-web' ), $singular ),
+			'edit_item'          => sprintf( __( 'Edit %s', 'estrategiaweb-toolkit' ), $singular ),
 			/* translators: %s: singular name of a content type */
-			'view_item'          => sprintf( __( 'View %s', 'estrategia-web' ), $singular ),
+			'view_item'          => sprintf( __( 'View %s', 'estrategiaweb-toolkit' ), $singular ),
 			/* translators: %s: plural name of a content type, e.g. Restaurants */
-			'search_items'       => sprintf( __( 'Search %s', 'estrategia-web' ), $plural ),
-			'not_found'          => __( 'Nothing found.', 'estrategia-web' ),
-			'not_found_in_trash' => __( 'Nothing found in the trash.', 'estrategia-web' ),
+			'search_items'       => sprintf( __( 'Search %s', 'estrategiaweb-toolkit' ), $plural ),
+			'not_found'          => __( 'Nothing found.', 'estrategiaweb-toolkit' ),
+			'not_found_in_trash' => __( 'Nothing found in the trash.', 'estrategiaweb-toolkit' ),
 		);
 	}
 
@@ -381,7 +381,7 @@ final class Registrar {
 		return new \WP_Error(
 			'estrategia_web_required_fields',
 			/* translators: %s: list of field names */
-			sprintf( __( 'Fill in these fields before publishing: %s.', 'estrategia-web' ), implode( ', ', $missing ) ),
+			sprintf( __( 'Fill in these fields before publishing: %s.', 'estrategiaweb-toolkit' ), implode( ', ', $missing ) ),
 			array( 'status' => 400, 'fields' => array_keys( $missing ) )
 		);
 	}

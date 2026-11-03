@@ -86,10 +86,10 @@ final class Blocks {
 			return;
 		}
 
-		$translations = get_translations_for_domain( 'estrategia-web' );
+		$translations = get_translations_for_domain( 'estrategiaweb-toolkit' );
 		$locale_data  = array(
 			'' => array(
-				'domain' => 'estrategia-web',
+				'domain' => Plugin::DOMAIN,
 				'lang'   => determine_locale(),
 			),
 		);
@@ -100,7 +100,7 @@ final class Blocks {
 			$key                 = $entry->context ? $entry->context . "\u{0004}" . $entry->singular : $entry->singular;
 			$locale_data[ $key ] = $entry->translations;
 		}
-		$script = sprintf( 'wp.i18n.setLocaleData( %s, "estrategia-web" );', wp_json_encode( $locale_data ) );
+		$script = sprintf( 'wp.i18n.setLocaleData( %s, %s );', wp_json_encode( $locale_data ), wp_json_encode( Plugin::DOMAIN ) );
 		foreach ( $handles as $handle ) {
 			// Once per script: forms has a single editor.js for nine blocks.
 			wp_add_inline_script( $handle, $script, 'before' );

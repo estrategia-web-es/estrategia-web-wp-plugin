@@ -45,20 +45,20 @@ final class Admin {
 
 	public static function menu(): void {
 		add_menu_page(
-			__( 'Form submissions', 'estrategia-web' ),
-			__( 'Forms', 'estrategia-web' ),
+			__( 'Form submissions', 'estrategiaweb-toolkit' ),
+			__( 'Forms', 'estrategiaweb-toolkit' ),
 			self::capability(),
 			self::PAGE,
 			array( self::class, 'render_submissions' ),
 			'dashicons-email-alt',
 			26
 		);
-		add_submenu_page( self::PAGE, __( 'Form submissions', 'estrategia-web' ), __( 'Submissions', 'estrategia-web' ), self::capability(), self::PAGE, array( self::class, 'render_submissions' ) );
-		add_submenu_page( self::PAGE, __( 'Form settings', 'estrategia-web' ), __( 'Settings', 'estrategia-web' ), 'manage_options', self::SETTINGS_PAGE, array( self::class, 'render_settings' ) );
+		add_submenu_page( self::PAGE, __( 'Form submissions', 'estrategiaweb-toolkit' ), __( 'Submissions', 'estrategiaweb-toolkit' ), self::capability(), self::PAGE, array( self::class, 'render_submissions' ) );
+		add_submenu_page( self::PAGE, __( 'Form settings', 'estrategiaweb-toolkit' ), __( 'Settings', 'estrategiaweb-toolkit' ), 'manage_options', self::SETTINGS_PAGE, array( self::class, 'render_settings' ) );
 		// 1.7.0: «Forms» FIRST (position 0). WordPress makes the top-level item open its
 		// first submenu item, so «Forms» in the sidebar now opens this list; Submissions
 		// keeps its slug, and every link to it (bookmarks, the CSV, «view» links) still works.
-		add_submenu_page( self::PAGE, __( 'Forms', 'estrategia-web' ), __( 'Forms', 'estrategia-web' ), self::capability(), Forms_List::PAGE, array( Forms_List::class, 'render' ), 0 );
+		add_submenu_page( self::PAGE, __( 'Forms', 'estrategiaweb-toolkit' ), __( 'Forms', 'estrategiaweb-toolkit' ), self::capability(), Forms_List::PAGE, array( Forms_List::class, 'render' ), 0 );
 	}
 
 	public static function register_settings(): void {
@@ -75,12 +75,12 @@ final class Admin {
 
 	public static function render_submissions(): void {
 		if ( ! current_user_can( self::capability() ) ) {
-			wp_die( esc_html__( 'You are not allowed to see this page.', 'estrategia-web' ), 403 );
+			wp_die( esc_html__( 'You are not allowed to see this page.', 'estrategiaweb-toolkit' ), 403 );
 		}
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read only; whatever writes goes through admin-post with a nonce.
-		$action = sanitize_key( $_GET['action'] ?? '' );
+		$action = sanitize_key( wp_unslash( $_GET['action'] ?? '' ) );
 		if ( '' === $action || '-1' === $action ) {
-			$action = sanitize_key( $_GET['action2'] ?? '' );
+			$action = sanitize_key( wp_unslash( $_GET['action2'] ?? '' ) );
 		}
 		if ( 'view' === $action && isset( $_GET['id'] ) ) {
 			self::render_view( (int) $_GET['id'] );
@@ -103,12 +103,12 @@ final class Admin {
 		$export = wp_nonce_url( add_query_arg( array( 'action' => 'estrategia_web_forms_export', 'form_id' => $form_id ), admin_url( 'admin-post.php' ) ), 'estrategia_web_forms_export' );
 		?>
 		<div class="wrap ew-screen">
-			<?php \EstrategiaWeb\Admin\Admin_UI::header( __( 'Form submissions', 'estrategia-web' ), __( 'Every message sent through the site\'s forms, with the emails each one sent.', 'estrategia-web' ), '<a class="page-title-action" href="' . esc_url( $export ) . '">' . esc_html__( 'Export CSV', 'estrategia-web' ) . '</a>' ); ?>
+			<?php \EstrategiaWeb\Admin\Admin_UI::header( __( 'Form submissions', 'estrategiaweb-toolkit' ), __( 'Every message sent through the site\'s forms, with the emails each one sent.', 'estrategiaweb-toolkit' ), '<a class="page-title-action" href="' . esc_url( $export ) . '">' . esc_html__( 'Export CSV', 'estrategiaweb-toolkit' ) . '</a>' ); ?>
 			<?php if ( null !== $deleted ) : ?>
 				<div class="notice notice-success is-dismissible"><p>
 					<?php
 					/* translators: %d: number of deleted submissions. */
-					echo esc_html( sprintf( _n( '%d submission deleted.', '%d submissions deleted.', $deleted, 'estrategia-web' ), $deleted ) );
+					echo esc_html( sprintf( _n( '%d submission deleted.', '%d submissions deleted.', $deleted, 'estrategiaweb-toolkit' ), $deleted ) );
 					?>
 				</p></div>
 			<?php endif; ?>
@@ -126,62 +126,62 @@ final class Admin {
 		$back = admin_url( 'admin.php?page=' . self::PAGE );
 		echo '<div class="wrap">';
 		if ( ! $row ) {
-			echo '<h1>' . esc_html__( 'Submission not found', 'estrategia-web' ) . '</h1>';
-			echo '<p><a href="' . esc_url( $back ) . '">' . esc_html__( 'Back to the list', 'estrategia-web' ) . '</a></p></div>';
+			echo '<h1>' . esc_html__( 'Submission not found', 'estrategiaweb-toolkit' ) . '</h1>';
+			echo '<p><a href="' . esc_url( $back ) . '">' . esc_html__( 'Back to the list', 'estrategiaweb-toolkit' ) . '</a></p></div>';
 			return;
 		}
 		/* translators: %d: submission number. */
-		echo '<h1>' . esc_html( sprintf( __( 'Submission #%d', 'estrategia-web' ), $row['id'] ) ) . '</h1>';
-		echo '<p><a href="' . esc_url( $back ) . '">&larr; ' . esc_html__( 'Back to the list', 'estrategia-web' ) . '</a></p>';
+		echo '<h1>' . esc_html( sprintf( __( 'Submission #%d', 'estrategiaweb-toolkit' ), $row['id'] ) ) . '</h1>';
+		echo '<p><a href="' . esc_url( $back ) . '">&larr; ' . esc_html__( 'Back to the list', 'estrategiaweb-toolkit' ) . '</a></p>';
 
-		echo '<h2>' . esc_html__( 'Data', 'estrategia-web' ) . '</h2><table class="widefat striped estrategia-web-forms-data"><tbody>';
+		echo '<h2>' . esc_html__( 'Data', 'estrategiaweb-toolkit' ) . '</h2><table class="widefat striped estrategia-web-forms-data"><tbody>';
 		foreach ( $row['data'] as $field ) {
-			$value = 'checkbox' === ( $field['type'] ?? '' ) ? ( '1' === $field['value'] ? __( 'Yes', 'estrategia-web' ) : __( 'No', 'estrategia-web' ) ) : (string) $field['value'];
+			$value = 'checkbox' === ( $field['type'] ?? '' ) ? ( '1' === $field['value'] ? __( 'Yes', 'estrategiaweb-toolkit' ) : __( 'No', 'estrategiaweb-toolkit' ) ) : (string) $field['value'];
 			printf( '<tr><th scope="row" style="width:25%%">%s</th><td>%s</td></tr>', esc_html( $field['label'] ?: $field['name'] ), nl2br( esc_html( $value ) ) );
 		}
 		echo '</tbody></table>';
 
-		echo '<h2>' . esc_html__( 'Notifications', 'estrategia-web' ) . '</h2><table class="widefat striped estrategia-web-forms-notifications"><thead><tr>';
-		echo '<th>' . esc_html__( 'Notification', 'estrategia-web' ) . '</th><th>' . esc_html__( 'Recipients', 'estrategia-web' ) . '</th><th>' . esc_html__( 'Result', 'estrategia-web' ) . '</th></tr></thead><tbody>';
+		echo '<h2>' . esc_html__( 'Notifications', 'estrategiaweb-toolkit' ) . '</h2><table class="widefat striped estrategia-web-forms-notifications"><thead><tr>';
+		echo '<th>' . esc_html__( 'Notification', 'estrategiaweb-toolkit' ) . '</th><th>' . esc_html__( 'Recipients', 'estrategiaweb-toolkit' ) . '</th><th>' . esc_html__( 'Result', 'estrategiaweb-toolkit' ) . '</th></tr></thead><tbody>';
 		foreach ( $row['notifications'] as $n ) {
-			$result = 'sent' === $n['status'] ? __( 'Sent', 'estrategia-web' ) : __( 'Failed', 'estrategia-web' ) . ': ' . $n['error'];
+			$result = 'sent' === $n['status'] ? __( 'Sent', 'estrategiaweb-toolkit' ) : __( 'Failed', 'estrategiaweb-toolkit' ) . ': ' . $n['error'];
 			printf( '<tr><td>%s</td><td>%s</td><td>%s</td></tr>', esc_html( $n['label'] ), esc_html( $n['to'] ), esc_html( $result ) );
 		}
 		if ( ! $row['notifications'] ) {
-			echo '<tr><td colspan="3">' . esc_html__( 'This form has no notifications.', 'estrategia-web' ) . '</td></tr>';
+			echo '<tr><td colspan="3">' . esc_html__( 'This form has no notifications.', 'estrategiaweb-toolkit' ) . '</td></tr>';
 		}
 		echo '</tbody></table>';
 
-		echo '<h2>' . esc_html__( 'Details', 'estrategia-web' ) . '</h2><table class="widefat striped"><tbody>';
+		echo '<h2>' . esc_html__( 'Details', 'estrategiaweb-toolkit' ) . '</h2><table class="widefat striped"><tbody>';
 		$details = array(
-			__( 'Form', 'estrategia-web' )       => $row['form_title'] . ' (' . $row['form_id'] . ')',
-			__( 'Date', 'estrategia-web' )       => get_date_from_gmt( $row['created_at'], get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ),
-			__( 'Page', 'estrategia-web' )       => $row['page_url'],
-			__( 'Language', 'estrategia-web' )   => $row['lang'],
-			__( 'IP (truncated)', 'estrategia-web' ) => $row['ip'],
-			__( 'User agent', 'estrategia-web' ) => $row['user_agent'],
+			__( 'Form', 'estrategiaweb-toolkit' )       => $row['form_title'] . ' (' . $row['form_id'] . ')',
+			__( 'Date', 'estrategiaweb-toolkit' )       => get_date_from_gmt( $row['created_at'], get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ),
+			__( 'Page', 'estrategiaweb-toolkit' )       => $row['page_url'],
+			__( 'Language', 'estrategiaweb-toolkit' )   => $row['lang'],
+			__( 'IP (truncated)', 'estrategiaweb-toolkit' ) => $row['ip'],
+			__( 'User agent', 'estrategiaweb-toolkit' ) => $row['user_agent'],
 		);
 		foreach ( $details as $label => $value ) {
 			printf( '<tr><th scope="row" style="width:25%%">%s</th><td>%s</td></tr>', esc_html( $label ), esc_html( (string) $value ) );
 		}
 		echo '</tbody></table>';
 		$delete = add_query_arg( array( 'page' => self::PAGE, 'action' => 'delete', 'id' => $row['id'] ), admin_url( 'admin.php' ) );
-		echo '<p><a class="button button-link-delete" href="' . esc_url( $delete ) . '">' . esc_html__( 'Delete this submission', 'estrategia-web' ) . '</a></p>';
+		echo '<p><a class="button button-link-delete" href="' . esc_url( $delete ) . '">' . esc_html__( 'Delete this submission', 'estrategiaweb-toolkit' ) . '</a></p>';
 		echo '</div>';
 	}
 
 	/** @param int[] $ids */
 	private static function render_confirm_delete( array $ids ): void {
 		$back = admin_url( 'admin.php?page=' . self::PAGE );
-		echo '<div class="wrap"><h1>' . esc_html__( 'Delete submissions', 'estrategia-web' ) . '</h1>';
+		echo '<div class="wrap"><h1>' . esc_html__( 'Delete submissions', 'estrategiaweb-toolkit' ) . '</h1>';
 		if ( ! $ids ) {
-			echo '<p>' . esc_html__( 'No submissions selected.', 'estrategia-web' ) . '</p><p><a href="' . esc_url( $back ) . '">' . esc_html__( 'Back to the list', 'estrategia-web' ) . '</a></p></div>';
+			echo '<p>' . esc_html__( 'No submissions selected.', 'estrategiaweb-toolkit' ) . '</p><p><a href="' . esc_url( $back ) . '">' . esc_html__( 'Back to the list', 'estrategiaweb-toolkit' ) . '</a></p></div>';
 			return;
 		}
 		echo '<p>' . esc_html(
 			sprintf(
 				/* translators: %d: number of submissions. */
-				_n( 'You are about to permanently delete %d submission. This cannot be undone.', 'You are about to permanently delete %d submissions. This cannot be undone.', count( $ids ), 'estrategia-web' ),
+				_n( 'You are about to permanently delete %d submission. This cannot be undone.', 'You are about to permanently delete %d submissions. This cannot be undone.', count( $ids ), 'estrategiaweb-toolkit' ),
 				count( $ids )
 			)
 		) . '</p>';
@@ -191,13 +191,13 @@ final class Admin {
 		foreach ( $ids as $id ) {
 			echo '<input type="hidden" name="ids[]" value="' . esc_attr( (string) $id ) . '">';
 		}
-		echo '<p><button type="submit" class="button button-primary">' . esc_html__( 'Yes, delete', 'estrategia-web' ) . '</button> ';
-		echo '<a class="button" href="' . esc_url( $back ) . '">' . esc_html__( 'Cancel', 'estrategia-web' ) . '</a></p></form></div>';
+		echo '<p><button type="submit" class="button button-primary">' . esc_html__( 'Yes, delete', 'estrategiaweb-toolkit' ) . '</button> ';
+		echo '<a class="button" href="' . esc_url( $back ) . '">' . esc_html__( 'Cancel', 'estrategiaweb-toolkit' ) . '</a></p></form></div>';
 	}
 
 	public static function delete(): void {
 		if ( ! current_user_can( self::capability() ) ) {
-			wp_die( esc_html__( 'You are not allowed to do this.', 'estrategia-web' ), 403 );
+			wp_die( esc_html__( 'You are not allowed to do this.', 'estrategiaweb-toolkit' ), 403 );
 		}
 		check_admin_referer( 'estrategia_web_forms_delete' );
 		$ids     = isset( $_POST['ids'] ) ? array_map( 'intval', (array) wp_unslash( $_POST['ids'] ) ) : array();
@@ -208,7 +208,7 @@ final class Admin {
 
 	public static function export_csv(): void {
 		if ( ! current_user_can( self::capability() ) ) {
-			wp_die( esc_html__( 'You are not allowed to do this.', 'estrategia-web' ), 403 );
+			wp_die( esc_html__( 'You are not allowed to do this.', 'estrategiaweb-toolkit' ), 403 );
 		}
 		check_admin_referer( 'estrategia_web_forms_export' );
 		$form_id = Definitions::clean_id( sanitize_text_field( wp_unslash( $_GET['form_id'] ?? '' ) ) );
@@ -263,60 +263,60 @@ final class Admin {
 
 	public static function render_settings(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to see this page.', 'estrategia-web' ), 403 );
+			wp_die( esc_html__( 'You are not allowed to see this page.', 'estrategiaweb-toolkit' ), 403 );
 		}
 		$s     = Settings::all();
 		$name  = Settings::OPTION;
 		$purge = get_option( 'estrategia_web_forms_last_purge' );
 		?>
 		<div class="wrap ew-screen">
-			<?php \EstrategiaWeb\Admin\Admin_UI::header( __( 'Form settings', 'estrategia-web' ), __( 'Fields, notifications and messages of each form are set in the form block, in the editor. Here only what is common to all forms.', 'estrategia-web' ) ); ?>
+			<?php \EstrategiaWeb\Admin\Admin_UI::header( __( 'Form settings', 'estrategiaweb-toolkit' ), __( 'Fields, notifications and messages of each form are set in the form block, in the editor. Here only what is common to all forms.', 'estrategiaweb-toolkit' ) ); ?>
 			<form method="post" action="options.php">
 				<?php settings_fields( 'estrategia_web_forms' ); ?>
-				<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Submission log', 'estrategia-web' ), 'ew-box-forms-log' ); ?>
+				<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Submission log', 'estrategiaweb-toolkit' ), 'ew-box-forms-log' ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
-						<th scope="row"><label for="af-retention"><?php esc_html_e( 'Keep submissions for (days)', 'estrategia-web' ); ?></label></th>
+						<th scope="row"><label for="af-retention"><?php esc_html_e( 'Keep submissions for (days)', 'estrategiaweb-toolkit' ); ?></label></th>
 						<td><input id="af-retention" type="number" min="0" name="<?php echo esc_attr( $name ); ?>[retention_days]" value="<?php echo esc_attr( (string) $s['retention_days'] ); ?>" class="small-text">
-							<p class="description"><?php esc_html_e( '0 keeps them forever. Older submissions are deleted once a day.', 'estrategia-web' ); ?>
+							<p class="description"><?php esc_html_e( '0 keeps them forever. Older submissions are deleted once a day.', 'estrategiaweb-toolkit' ); ?>
 							<?php
 							if ( is_array( $purge ) ) {
 								/* translators: 1: date of the last purge, 2: deleted submissions. */
-								echo esc_html( sprintf( __( 'Last purge: %1$s, %2$d deleted.', 'estrategia-web' ), get_date_from_gmt( gmdate( 'Y-m-d H:i:s', strtotime( $purge['at'] ) ), get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ), (int) $purge['deleted'] ) );
+								echo esc_html( sprintf( __( 'Last purge: %1$s, %2$d deleted.', 'estrategiaweb-toolkit' ), get_date_from_gmt( gmdate( 'Y-m-d H:i:s', strtotime( $purge['at'] ) ), get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ), (int) $purge['deleted'] ) );
 							}
 							?>
 							</p></td>
 					</tr>
 				</table>
 				<?php \EstrategiaWeb\Admin\Admin_UI::box_close(); ?>
-				<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Anti-spam', 'estrategia-web' ), 'ew-box-forms-spam' ); ?>
+				<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Anti-spam', 'estrategiaweb-toolkit' ), 'ew-box-forms-spam' ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
-						<th scope="row"><label for="af-min"><?php esc_html_e( 'Minimum filling time (seconds)', 'estrategia-web' ); ?></label></th>
+						<th scope="row"><label for="af-min"><?php esc_html_e( 'Minimum filling time (seconds)', 'estrategiaweb-toolkit' ); ?></label></th>
 						<td><input id="af-min" type="number" min="0" name="<?php echo esc_attr( $name ); ?>[min_seconds]" value="<?php echo esc_attr( (string) $s['min_seconds'] ); ?>" class="small-text"></td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="af-limit"><?php esc_html_e( 'Submissions allowed per IP', 'estrategia-web' ); ?></label></th>
+						<th scope="row"><label for="af-limit"><?php esc_html_e( 'Submissions allowed per IP', 'estrategiaweb-toolkit' ); ?></label></th>
 						<td><input id="af-limit" type="number" min="0" name="<?php echo esc_attr( $name ); ?>[rate_limit]" value="<?php echo esc_attr( (string) $s['rate_limit'] ); ?>" class="small-text">
-							<label for="af-window"><?php esc_html_e( 'every (minutes)', 'estrategia-web' ); ?></label>
+							<label for="af-window"><?php esc_html_e( 'every (minutes)', 'estrategiaweb-toolkit' ); ?></label>
 							<input id="af-window" type="number" min="1" name="<?php echo esc_attr( $name ); ?>[rate_window]" value="<?php echo esc_attr( (string) $s['rate_window'] ); ?>" class="small-text">
-							<p class="description"><?php esc_html_e( '0 submissions disables the limit.', 'estrategia-web' ); ?></p></td>
+							<p class="description"><?php esc_html_e( '0 submissions disables the limit.', 'estrategiaweb-toolkit' ); ?></p></td>
 					</tr>
 				</table>
 				<?php \EstrategiaWeb\Admin\Admin_UI::box_close(); ?>
-				<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Default texts', 'estrategia-web' ), 'ew-box-forms-texts' ); ?>
-				<p><?php esc_html_e( 'Leave empty to use the built-in text, already translated. If you fill them in and the site uses WPML, translate them in WPML → String Translation (domain estrategia-web-forms).', 'estrategia-web' ); ?></p>
+				<?php \EstrategiaWeb\Admin\Admin_UI::box_open( __( 'Default texts', 'estrategiaweb-toolkit' ), 'ew-box-forms-texts' ); ?>
+				<p><?php esc_html_e( 'Leave empty to use the built-in text, already translated. If you fill them in and the site uses WPML, translate them in WPML → String Translation (domain estrategia-web-forms).', 'estrategiaweb-toolkit' ); ?></p>
 				<table class="form-table" role="presentation">
 					<tr>
-						<th scope="row"><label for="af-success"><?php esc_html_e( 'Success message', 'estrategia-web' ); ?></label></th>
+						<th scope="row"><label for="af-success"><?php esc_html_e( 'Success message', 'estrategiaweb-toolkit' ); ?></label></th>
 						<td><textarea id="af-success" name="<?php echo esc_attr( $name ); ?>[success_message]" rows="2" class="large-text"><?php echo esc_textarea( (string) $s['success_message'] ); ?></textarea></td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="af-error"><?php esc_html_e( 'Error message', 'estrategia-web' ); ?></label></th>
+						<th scope="row"><label for="af-error"><?php esc_html_e( 'Error message', 'estrategiaweb-toolkit' ); ?></label></th>
 						<td><textarea id="af-error" name="<?php echo esc_attr( $name ); ?>[error_message]" rows="2" class="large-text"><?php echo esc_textarea( (string) $s['error_message'] ); ?></textarea></td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="af-footer"><?php esc_html_e( 'Email footer', 'estrategia-web' ); ?></label></th>
+						<th scope="row"><label for="af-footer"><?php esc_html_e( 'Email footer', 'estrategiaweb-toolkit' ); ?></label></th>
 						<td><textarea id="af-footer" name="<?php echo esc_attr( $name ); ?>[email_footer]" rows="3" class="large-text"><?php echo esc_textarea( (string) $s['email_footer'] ); ?></textarea></td>
 					</tr>
 				</table>

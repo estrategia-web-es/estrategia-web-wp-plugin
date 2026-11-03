@@ -7,7 +7,7 @@
 	"category": "widgets",
 	"icon": "list-view",
 	"description": "Choose one option from a list.",
-	"textdomain": "estrategia-web",
+	"textdomain": "estrategiaweb-toolkit",
 	"ancestor": [ "estrategia-web-forms/form" ],
 	"usesContext": [ "estrategia-web-forms/formId", "pattern/overrides" ],
 	"attributes": {

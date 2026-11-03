@@ -8,7 +8,7 @@
 	"icon": "feedback",
 	"description": "The form itself, edited in Forms → Forms. Its fields go inside; its email notifications too. Pages show it with the «Form» block.",
 	"keywords": [ "contact", "form", "email" ],
-	"textdomain": "estrategia-web",
+	"textdomain": "estrategiaweb-toolkit",
 	"attributes": {
 		"formId": { "type": "string", "default": "" },
 		"title": { "type": "string", "default": "" },

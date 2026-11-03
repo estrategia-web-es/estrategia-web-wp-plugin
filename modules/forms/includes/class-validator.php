@@ -51,32 +51,32 @@ final class Validator {
 			if ( '' === $value ) {
 				if ( ! empty( $field['required'] ) ) {
 					$errors[ $name ] = 'checkbox' === $field['type']
-						? __( 'You must check this box to continue.', 'estrategia-web' )
-						: __( 'This field is required.', 'estrategia-web' );
+						? __( 'You must check this box to continue.', 'estrategiaweb-toolkit' )
+						: __( 'This field is required.', 'estrategiaweb-toolkit' );
 				}
 				continue;
 			}
 
 			$max = self::MAX_LENGTH[ $field['type'] ] ?? 500;
 			if ( mb_strlen( $value ) > $max ) {
-				$errors[ $name ] = __( 'This text is too long.', 'estrategia-web' );
+				$errors[ $name ] = __( 'This text is too long.', 'estrategiaweb-toolkit' );
 				continue;
 			}
 
 			switch ( $field['type'] ) {
 				case 'email':
 					if ( ! is_email( $value ) ) {
-						$errors[ $name ] = __( 'Please enter a valid email address.', 'estrategia-web' );
+						$errors[ $name ] = __( 'Please enter a valid email address.', 'estrategiaweb-toolkit' );
 					}
 					break;
 				case 'tel':
 					if ( ! preg_match( '/^\+?[0-9 ().\-]{6,30}$/', $value ) || preg_match_all( '/\d/', $value ) < 6 ) {
-						$errors[ $name ] = __( 'Please enter a valid phone number.', 'estrategia-web' );
+						$errors[ $name ] = __( 'Please enter a valid phone number.', 'estrategiaweb-toolkit' );
 					}
 					break;
 				case 'select':
 					if ( ! in_array( $value, (array) $field['options'], true ) ) {
-						$errors[ $name ] = __( 'Please choose one of the options.', 'estrategia-web' );
+						$errors[ $name ] = __( 'Please choose one of the options.', 'estrategiaweb-toolkit' );
 					}
 					break;
 			}

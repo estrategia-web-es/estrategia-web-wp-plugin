@@ -89,8 +89,15 @@ final class Output {
 		if ( ! $graph ) {
 			return;
 		}
-		// JSON_HEX_TAG: a «</script>» in a name cannot close the tag.
-		echo '<script type="application/ld+json" class="estrategia-web-local-business">' . wp_json_encode( $graph, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG ) . "</script>\n"; // phpcs:ignore WordPress.Security.EscapeOutput -- JSON, tags hex-escaped.
+		// JSON_HEX_TAG: a «</script>» in a name cannot close the tag. Printed by
+		// WordPress's own function (2.10.0, the WordPress.org review asked for it).
+		wp_print_inline_script_tag(
+			wp_json_encode( $graph, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG ),
+			array(
+				'type'  => 'application/ld+json',
+				'class' => 'estrategia-web-local-business',
+			)
+		);
 	}
 
 	/** For the tests: forget what this request decided. */

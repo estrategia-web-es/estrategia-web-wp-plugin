@@ -31,45 +31,45 @@
 					null,
 					h(
 						PanelBody,
-						{ title: __( 'Map settings', 'estrategia-web' ) },
+						{ title: __( 'Map settings', 'estrategiaweb-toolkit' ) },
 						h( wp.components.ToggleControl, {
-							label: __( 'Show the place details', 'estrategia-web' ),
-							help: __( 'Turn it off when the address is already next to the map.', 'estrategia-web' ),
+							label: __( 'Show the place details', 'estrategiaweb-toolkit' ),
+							help: __( 'Turn it off when the address is already next to the map.', 'estrategiaweb-toolkit' ),
 							checked: attributes.showDetails,
 							onChange: ( value ) => setAttributes( { showDetails: value } ),
 						} ),
-						text( __( 'Place name', 'estrategia-web' ), 'placeName' ),
+						text( __( 'Place name', 'estrategiaweb-toolkit' ), 'placeName' ),
 						h( TextareaControl, {
-							label: __( 'Address', 'estrategia-web' ),
+							label: __( 'Address', 'estrategiaweb-toolkit' ),
 							value: attributes.address,
 							onChange: ( value ) => setAttributes( { address: value } ),
 						} ),
-						text( __( 'Phone', 'estrategia-web' ), 'phone' ),
+						text( __( 'Phone', 'estrategiaweb-toolkit' ), 'phone' ),
 						h( TextareaControl, {
-							label: __( 'Opening hours', 'estrategia-web' ),
+							label: __( 'Opening hours', 'estrategiaweb-toolkit' ),
 							value: attributes.hours,
 							onChange: ( value ) => setAttributes( { hours: value } ),
 						} ),
 						h( TextareaControl, {
-							label: __( 'Google Maps embed URL', 'estrategia-web' ),
-							help: __( 'Google Maps › Share › Embed a map. You can paste the whole iframe code.', 'estrategia-web' ),
+							label: __( 'Google Maps embed URL', 'estrategiaweb-toolkit' ),
+							help: __( 'Google Maps › Share › Embed a map. You can paste the whole iframe code.', 'estrategiaweb-toolkit' ),
 							value: attributes.embedUrl,
 							onChange: ( value ) => setAttributes( { embedUrl: value } ),
 						} ),
 						text(
-							__( 'Google Maps link', 'estrategia-web' ),
+							__( 'Google Maps link', 'estrategiaweb-toolkit' ),
 							'mapsUrl',
-							__( 'Optional. Empty: a search for the address.', 'estrategia-web' )
+							__( 'Optional. Empty: a search for the address.', 'estrategiaweb-toolkit' )
 						)
 					),
 					h(
 						PanelBody,
-						{ title: __( 'Static map', 'estrategia-web' ), initialOpen: false },
-						h( 'p', null, __( 'An OpenStreetMap image made with tools/static-map.mjs, shown under the place details until the visitor loads Google Maps. It must be served by this site.', 'estrategia-web' ) ),
+						{ title: __( 'Static map', 'estrategiaweb-toolkit' ), initialOpen: false },
+						h( 'p', null, __( 'An OpenStreetMap image made with tools/static-map.mjs, shown under the place details until the visitor loads Google Maps. It must be served by this site.', 'estrategiaweb-toolkit' ) ),
 						text(
-							__( 'Static map image', 'estrategia-web' ),
+							__( 'Static map image', 'estrategiaweb-toolkit' ),
 							'staticMapUrl',
-							__( 'A theme path (assets/maps/place.webp) or a URL of this site.', 'estrategia-web' )
+							__( 'A theme path (assets/maps/place.webp) or a URL of this site.', 'estrategiaweb-toolkit' )
 						),
 						h(
 							MediaUploadCheck,
@@ -82,7 +82,7 @@
 									h(
 										Button,
 										{ variant: 'secondary', onClick: open },
-										attributes.staticMapId ? __( 'Replace image', 'estrategia-web' ) : __( 'Choose from the media library', 'estrategia-web' )
+										attributes.staticMapId ? __( 'Replace image', 'estrategiaweb-toolkit' ) : __( 'Choose from the media library', 'estrategiaweb-toolkit' )
 									),
 							} )
 						),
@@ -90,17 +90,17 @@
 							? h(
 									Button,
 									{ variant: 'link', isDestructive: true, onClick: () => setAttributes( { staticMapId: 0 } ) },
-									__( 'Remove image', 'estrategia-web' )
+									__( 'Remove image', 'estrategiaweb-toolkit' )
 							  )
 							: null
 					),
 					h(
 						PanelBody,
-						{ title: __( 'Static image', 'estrategia-web' ), initialOpen: false },
-						h( 'p', null, __( 'Optional. Without an image the map shows a box with the place details.', 'estrategia-web' ) ),
+						{ title: __( 'Static image', 'estrategiaweb-toolkit' ), initialOpen: false },
+						h( 'p', null, __( 'Optional. Without an image the map shows a box with the place details.', 'estrategiaweb-toolkit' ) ),
 						h( wp.components.ToggleControl, {
-							label: __( 'Use the featured image of the post', 'estrategia-web' ),
-							help: __( 'Inside a Query Loop.', 'estrategia-web' ),
+							label: __( 'Use the featured image of the post', 'estrategiaweb-toolkit' ),
+							help: __( 'Inside a Query Loop.', 'estrategiaweb-toolkit' ),
 							checked: attributes.useFeaturedImage,
 							onChange: ( value ) => setAttributes( { useFeaturedImage: value } ),
 						} ),
@@ -120,7 +120,7 @@
 									h(
 										Button,
 										{ variant: 'secondary', onClick: open },
-										attributes.imageId ? __( 'Replace image', 'estrategia-web' ) : __( 'Choose image', 'estrategia-web' )
+										attributes.imageId ? __( 'Replace image', 'estrategiaweb-toolkit' ) : __( 'Choose image', 'estrategiaweb-toolkit' )
 									),
 							} )
 						),
@@ -132,10 +132,10 @@
 										isDestructive: true,
 										onClick: () => setAttributes( { imageId: 0, imageUrl: '' } ),
 									},
-									__( 'Remove image', 'estrategia-web' )
+									__( 'Remove image', 'estrategiaweb-toolkit' )
 							  )
 							: null,
-						text( __( 'Image alternative text', 'estrategia-web' ), 'imageAlt' )
+						text( __( 'Image alternative text', 'estrategiaweb-toolkit' ), 'imageAlt' )
 					)
 				),
 				h( 'div', blockProps, h( ServerSideRender, { block: 'estrategia-web/map', attributes } ) )

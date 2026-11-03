@@ -102,8 +102,8 @@ final class Settings {
 			return Language::translate_string( $name, $value, $lang );
 		}
 		return match ( $key ) {
-			'success_message' => __( 'Thank you. Your message has been sent.', 'estrategia-web' ),
-			'error_message'   => __( 'The message could not be sent. Please check the form and try again.', 'estrategia-web' ),
+			'success_message' => __( 'Thank you. Your message has been sent.', 'estrategiaweb-toolkit' ),
+			'error_message'   => __( 'The message could not be sent. Please check the form and try again.', 'estrategiaweb-toolkit' ),
 			default           => '',
 		};
 	}

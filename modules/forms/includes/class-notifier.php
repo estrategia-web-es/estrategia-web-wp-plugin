@@ -58,11 +58,11 @@ final class Notifier {
 				'label'  => $label,
 				'to'     => '',
 				'status' => 'failed',
-				'error'  => __( 'No valid recipient.', 'estrategia-web' ),
+				'error'  => __( 'No valid recipient.', 'estrategiaweb-toolkit' ),
 			);
 		}
 
-		$subject_template = '' !== trim( (string) $n['subject'] ) ? (string) $n['subject'] : '{{' . Markers::SITE_NAME . '}}: ' . ( $definition['title'] ?: __( 'New message', 'estrategia-web' ) );
+		$subject_template = '' !== trim( (string) $n['subject'] ) ? (string) $n['subject'] : '{{' . Markers::SITE_NAME . '}}: ' . ( $definition['title'] ?: __( 'New message', 'estrategiaweb-toolkit' ) );
 		$subject          = Markers::single_line( Markers::replace( $subject_template, $markers['text'] ) );
 
 		$body = '' !== trim( (string) $n['body'] ) ? (string) $n['body'] : '{{' . Markers::ALL_FIELDS . '}}';
@@ -108,7 +108,7 @@ final class Notifier {
 			'label'  => $label,
 			'to'     => $to_display,
 			'status' => $sent ? 'sent' : 'failed',
-			'error'  => $sent ? '' : ( '' !== $error ? $error : __( 'wp_mail() returned false.', 'estrategia-web' ) ),
+			'error'  => $sent ? '' : ( '' !== $error ? $error : __( 'wp_mail() returned false.', 'estrategiaweb-toolkit' ) ),
 		);
 	}
 
@@ -156,7 +156,7 @@ final class Notifier {
 
 	private static function display_value( array $field, string $value ): string {
 		if ( 'checkbox' === $field['type'] ) {
-			return '1' === $value ? __( 'Yes', 'estrategia-web' ) : __( 'No', 'estrategia-web' );
+			return '1' === $value ? __( 'Yes', 'estrategiaweb-toolkit' ) : __( 'No', 'estrategiaweb-toolkit' );
 		}
 		return $value;
 	}

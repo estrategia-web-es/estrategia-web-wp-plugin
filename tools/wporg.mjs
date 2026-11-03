@@ -1,6 +1,6 @@
 // NIVEL: BANCO DE TRABAJO — not a test. The WordPress.org package and its Plugin Check.
 //
-//   node tools/wporg.mjs zip      dist/estrategia-web-<version>.zip from HEAD (what gets uploaded)
+//   node tools/wporg.mjs zip      dist/estrategiaweb-toolkit-<version>.zip from HEAD (what gets uploaded)
 //   node tools/wporg.mjs check    the zip, then Plugin Check on it in Playground; exit 1 with errors
 //
 // WHAT GOES IN is decided by .gitattributes (export-ignore), not here: this
@@ -41,7 +41,10 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = path.join(ROOT, "dist");
-const SLUG = "estrategia-web";
+// The WordPress.org slug (2.10.0; header of estrategia-web.php, «THE NAME»): the zip's folder and the text domain.
+const SLUG = "estrategiaweb-toolkit";
+// The main file keeps its name (header of estrategia-web.php, «THE NAME»): it is NOT «<slug>.php».
+const MAIN = "estrategia-web.php";
 const MAX_MB = 10; // WordPress.org's upload limit.
 
 const git = (...args) => {
@@ -52,7 +55,7 @@ const git = (...args) => {
 const show = (file) => git("show", `HEAD:${file}`);
 
 function versions() {
-  const main = show(`${SLUG}.php`);
+  const main = show(MAIN);
   const readme = show("readme.txt");
   const v = {
     header: (main.match(/^\s*\*\s*Version:\s*(\S+)/m) || [])[1],
@@ -86,7 +89,7 @@ function zip() {
   const entries = (t.stdout || "").split("\n").filter((e) => e && !e.endsWith("/"));
   // An empty list would pass every check below: that is a failure, not a clean zip.
   if (t.status !== 0 || !entries.length) throw new Error(`could not list the zip: ${t.stderr}`);
-  const dev = entries.filter((e) => /^estrategia-web\/(tests|tools|docs)\/|^estrategia-web\/modules\/[^/]+\/(tests\/|README\.md$)|^estrategia-web\/(README|CHANGELOG|TODO)\.md$/.test(e));
+  const dev = entries.filter((e) => new RegExp(`^${SLUG}/(tests|tools|docs)/|^${SLUG}/modules/[^/]+/(tests/|README\\.md$)|^${SLUG}/(README|CHANGELOG|TODO)\\.md$`).test(e));
   if (dev.length) throw new Error(`development files in the zip (missing export-ignore in .gitattributes?):\n  ${dev.slice(0, 10).join("\n  ")}`);
   const mb = fs.statSync(file).size / 1024 / 1024;
   if (mb > MAX_MB) throw new Error(`${mb.toFixed(1)} MB: over WordPress.org's ${MAX_MB} MB`);
@@ -130,7 +133,7 @@ function check() {
     preferredVersions: { php: "8.3", wp },
     steps: [
       { step: "installPlugin", pluginData: { resource: "wordpress.org/plugins", slug: "plugin-check" } },
-      { step: "runPHP", code: `<?php require_once '/wordpress/wp-load.php'; require_once ABSPATH . 'wp-admin/includes/plugin.php'; activate_plugin('${SLUG}/${SLUG}.php');` },
+      { step: "runPHP", code: `<?php require_once '/wordpress/wp-load.php'; require_once ABSPATH . 'wp-admin/includes/plugin.php'; activate_plugin('${SLUG}/${MAIN}');` },
       { step: "runPHP", code: PATCH },
       { step: "runPHP", code: "<?php require '/out/runner.php';" },
     ],

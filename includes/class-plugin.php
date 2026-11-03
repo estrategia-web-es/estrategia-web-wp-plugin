@@ -31,8 +31,8 @@ defined( 'ABSPATH' ) || exit;
 
 final class Plugin {
 
-	/** Text domain of the plugin (and of the parent theme: see load_textdomain()). */
-	public const DOMAIN = 'estrategia-web';
+	/** Text domain of the plugin = its WordPress.org slug (2.10.0; up to 2.9.0 «estrategia-web», shared with the theme: see load_textdomain()). */
+	public const DOMAIN = 'estrategiaweb-toolkit';
 
 	/** @var array<string,string> Locale of the plugin file loaded under each locale key of the translation controller. */
 	private static array $loaded = array();
@@ -58,8 +58,13 @@ final class Plugin {
 	 * ship INSIDE the plugin (languages/): it is not on wordpress.org and
 	 * nobody else is going to serve them.
 	 *
+	 * Since 2.10.0 the plugin's domain is «estrategiaweb-toolkit» (its
+	 * WordPress.org slug) and no longer the theme's, so THE TRAP below cannot
+	 * happen any more; points 1-3 stay because they are also what makes
+	 * THE SECOND TRAP's points 4-6 work.
+	 *
 	 * THE TRAP (measured on 14-10-2026, the theme's tests/page-loads.test.mjs
-	 * in red: «404 untranslated»): the theme uses the SAME domain, and since
+	 * in red: «404 untranslated»): the theme used the SAME domain, and since
 	 * WordPress 6.7 load_plugin_textdomain() and load_theme_textdomain() load
 	 * nothing: they only register ONE folder per domain for the «just in time»
 	 * loading. The plugin's (init) overwrote the theme's (after_setup_theme)
