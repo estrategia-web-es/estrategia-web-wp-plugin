@@ -1,6 +1,7 @@
 // NIVEL: 2 — Playground WordPress. NOT LEVEL 1 BECAUSE: what is tested is WordPress's own list screen
 // (edit.php?post_type=eweb_banner) with the views, the zone dropdown and the sorting that
 // \EstrategiaWeb\Admin\Admin_List declares (2.5.0); the state rule itself is level 1 (pure.test.mjs).
+// TIEMPO: 120 s — measured 67.7 s alone and 91.5 s / 92.2 s in the full run with 4 WordPress at once (03-11-2026): every view, dropdown and sort is a full wp-admin list page; making it faster means fewer of those cases, not a quicker request.
 //
 // Five banners cover the four states and the edge case by name: an OLD banner without the date
 // fields (migrated before they existed) must count as «Showing» and must not vanish when the list
