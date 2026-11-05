@@ -1079,7 +1079,7 @@ tool, and **that tool is the one to use**:
 
 | Site | How it is deployed | Installed (05-11-2026) |
 |---|---|---|
-| estrategiaweb.es (and `web2026.`) | `estrategiaweb-es/tools/desplegar.mjs`, log in `docs/despliegues.md` | 2.3.0 |
+| estrategiaweb.es (`web2026.` still on 2.3.0) | `estrategiaweb-es/tools/desplegar.mjs`, log in `docs/despliegues.md` | 2.10.0 |
 | lavanderiamallorca.com (and `lavanderiamallorca.es`, `lavanderiasmallorca.com`) | `lavanderia-mallorca/despliegue/desplegar.mjs`, log in `despliegue/registro.md` | 2.3.0 |
 | gastronomicament.cat | by hand, steps in `gastronomicament-cat/CLAUDE.md` | 2.9.0 |
 

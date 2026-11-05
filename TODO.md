@@ -96,15 +96,3 @@ in the example. A level 2 test in types.test.mjs closes it.
 The tests check that it works, not that it looks right. Nobody has yet
 looked with human eyes at the «Company details» screen, a block's
 «Attributes» panel with the source, or an SVG in the media library.
-
-## llms.txt on estrategiaweb.es
-**Date:** 31-10-2026 · **Due:** —
-
-The `llms` module is done (2.10.0; what it does and why, in
-modules/llms/module.php). Left, on the site and with David's OK because it
-is production: update the plugin, switch the module on, paste
-`content/semilla/llms.txt` of the estrategiaweb-es repo into the tab, and
-delete the loose `public_html/llms.txt` (the server serves it before
-WordPress; the tab warns while it is there). Rank Math's «LLMS Txt» is off
-there, so no other warning is expected. It leaves this file when /llms.txt
-answers with `charset=utf-8` there.
