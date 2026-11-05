@@ -1068,6 +1068,47 @@ test WordPress's reset uses.
   the published URLs).
 - Adding (a key, a type, a field) is minor.
 
+## Where it is installed and how it gets there
+
+Remote: `estrategia-web-es/estrategia-web-wp-plugin` on GitHub (public). The
+plugin reaches each site as a package built with `git archive` from `main`,
+never from the working folder (another session may be editing it), and with
+`tests`, `tools`, `modules/*/tests/*`, `.gitignore`, `.gitattributes`,
+`PENDIENTES.md` and `TODO.md` left out. Each site deploys it with its own
+tool, and **that tool is the one to use**:
+
+| Site | How it is deployed | Installed (05-11-2026) |
+|---|---|---|
+| estrategiaweb.es (and `web2026.`) | `estrategiaweb-es/tools/desplegar.mjs`, log in `docs/despliegues.md` | 2.3.0 |
+| lavanderiamallorca.com (and `lavanderiamallorca.es`, `lavanderiasmallorca.com`) | `lavanderia-mallorca/despliegue/desplegar.mjs`, log in `despliegue/registro.md` | 2.3.0 |
+| gastronomicament.cat | by hand, steps in `gastronomicament-cat/CLAUDE.md` | 2.9.0 |
+
+- **`main` runs ahead of every site** (2.10.0 today). Before taking a site
+  from its version to a newer one, read the [CHANGELOG](CHANGELOG.md) for
+  every version in between: some ask for a one-off step right after
+  deploying (2.0.1: `wp estrategia-web migrate-form-markers`). Each site
+  switches on its own modules (`wp option get estrategia_web_modules`), so
+  a jump can enable nothing new on one site and change a lot on another.
+- Both `desplegar.mjs` refuse to publish without `--ok "<David's literal
+  OK>"` (a hook enforces it); `--seco` is a dry run.
+- To check what a site really has (over SSH, in its `public_html`):
+  `wp plugin get estrategia-web --fields=version`.
+- **WordPress.org is a separate channel**: `node tools/wporg.mjs zip` builds
+  `dist/estrategiaweb-toolkit-<version>.zip` (the name it has there,
+  «EstrategiaWeb Toolkit»). That zip is not what the sites above install.
+- **GitHub push protection** blocks pushes that look like secrets. The fake
+  Mailchimp key in `modules/newsletter/tests/newsletter.test.mjs`
+  (`0123456789abcdef…-us21`) tripped it on 05-11-2026 and was marked as
+  «used in tests». A new fake key in a test should not look like a real one,
+  or it will block the push again.
+
+How it is maintained: whoever deploys the plugin to a site updates the
+«Installed» column, in a commit of this repo. A new site using the plugin
+gets a row the day it is first deployed. The trap: each deployer keeps its
+own list of exclusions (Lavandería's does not leave out `TODO.md`); if one
+changes, the others (and gastronomicament-cat's `CLAUDE.md`) change with
+it.
+
 ## How to maintain
 
 - **Who and when:** whoever touches the plugin, on every version: the number
