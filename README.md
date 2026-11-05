@@ -1093,9 +1093,22 @@ tool, and **that tool is the one to use**:
   OK>"` (a hook enforces it); `--seco` is a dry run.
 - To check what a site really has (over SSH, in its `public_html`):
   `wp plugin get estrategia-web --fields=version`.
-- **WordPress.org is a separate channel**: `node tools/wporg.mjs zip` builds
-  `dist/estrategiaweb-toolkit-<version>.zip` (the name it has there,
-  «EstrategiaWeb Toolkit»). That zip is not what the sites above install.
+- **Where this is going: WordPress.org, for native deployment** (David,
+  05-11-2026). The plugin is being published there as «EstrategiaWeb
+  Toolkit» (slug `estrategiaweb-toolkit`) so that sites update it from their
+  own dashboard, like any other plugin, instead of each site's deployer
+  pushing a package. On 05-11-2026 it is **not published yet** (the
+  WordPress.org API answers «Plugin not found»; 2.10.0 is the version
+  adapted to its review). Until it is, the table above is how it gets
+  there. `node tools/wporg.mjs zip` builds
+  `dist/estrategiaweb-toolkit-<version>.zip`, the package uploaded there.
+- **Moving a site to the WordPress.org version is one manual step per
+  site**: its folder there is `estrategiaweb-toolkit/`, not `estrategia-web/`,
+  so a site only gets the updates once it is reinstalled from WordPress.org
+  (deactivate, delete the old folder, install «EstrategiaWeb Toolkit»,
+  activate; options, content and modules are kept: [CHANGELOG](CHANGELOG.md),
+  2.10.0). After that, the site's row in the table says «WordPress.org»
+  and its deployer stops packing the plugin.
 - **GitHub push protection** blocks pushes that look like secrets. The fake
   Mailchimp key in `modules/newsletter/tests/newsletter.test.mjs`
   (`0123456789abcdef…-us21`) tripped it on 05-11-2026 and was marked as
