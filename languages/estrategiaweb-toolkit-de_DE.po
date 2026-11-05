@@ -5490,3 +5490,19 @@ msgstr "WhatsApp-Telefonnummer im internationalen Format, nur Ziffern."
 #: modules/whatsapp/module.php:63
 msgid "Predefined WhatsApp message."
 msgstr "Vordefinierte WhatsApp-Nachricht."
+
+#: modules/banners/includes/class-board.php:44
+msgid "By state"
+msgstr "Nach Status"
+
+#: modules/banners/includes/class-board.php:48 modules/banners/includes/class-board.php:108
+msgid "All banners"
+msgstr "Alle Banner"
+
+#: modules/banners/includes/class-board.php:162
+msgid "(no title)"
+msgstr "(ohne Titel)"
+
+#: modules/banners/includes/class-board.php:164
+msgid "Code"
+msgstr "Code"

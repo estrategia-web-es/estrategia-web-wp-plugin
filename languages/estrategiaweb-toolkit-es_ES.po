@@ -5461,3 +5461,19 @@ msgstr "Mensaje predefinido de WhatsApp."
 #~ "Bloque selector de idioma para WPML: el idioma actual y enlaces a la "
 #~ "misma página en los demás, en desplegable o en línea. Sin WPML no pinta "
 #~ "nada."
+
+#: modules/banners/includes/class-board.php:44
+msgid "By state"
+msgstr "Por estado"
+
+#: modules/banners/includes/class-board.php:48 modules/banners/includes/class-board.php:108
+msgid "All banners"
+msgstr "Todos los banners"
+
+#: modules/banners/includes/class-board.php:162
+msgid "(no title)"
+msgstr "(sin título)"
+
+#: modules/banners/includes/class-board.php:164
+msgid "Code"
+msgstr "Código"
