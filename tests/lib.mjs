@@ -5,7 +5,7 @@
 // (application passwords created by tests/wp/estrategia-web-site-test.php),
 // and with the test routes only for what is not under test (resetting,
 // seeding a page, looking at the raw database row).
-import { createRequire } from "node:module";
+import { load } from "./deps.mjs";
 import zlib from "node:zlib";
 import fs from "node:fs";
 
@@ -25,8 +25,8 @@ export const PREFIX = fs
   .match(/const PREFIX = '([^']*)'/)[1];
 export const type = (key) => PREFIX + key;
 
-// Playwright without its own node_modules: portal-hs's (CLAUDE.md, 3.9).
-export const playwright = () => createRequire("E:/Repositories/portal-hs/package.json")("playwright");
+// Playwright without node_modules in the repo: tests/deps.mjs.
+export const playwright = () => load("playwright");
 
 export async function testApi(path, { method = "GET", body } = {}) {
   const res = await fetch(BASE + "/wp-json/estrategia-web-site-test/v1" + path, {
@@ -215,14 +215,14 @@ export const html = async (url) => {
 
 /**
  * The page at `url` as a visitor gets it (no cookies, no JavaScript), parsed
- * with jsdom (portal-hs's, like Playwright) to use querySelector on the HTML
+ * with jsdom (tests/deps.mjs, like Playwright) to use querySelector on the HTML
  * THE SERVER SENDS. jsdom runs no scripts and lays nothing out: no positions,
  * no computed styles, no innerText; whatever needs those is level 3. The
  * empty VirtualConsole silences its complaints about CSS it does not know.
  * Returns { status, text, document }.
  */
 export async function page(url) {
-  const { JSDOM, VirtualConsole } = createRequire("E:/Repositories/portal-hs/package.json")("jsdom");
+  const { JSDOM, VirtualConsole } = load("jsdom");
   const res = await fetch(url.startsWith("http") ? url : BASE + url);
   const text = await res.text();
   return { status: res.status, text, document: new JSDOM(text, { url: res.url, virtualConsole: new VirtualConsole() }).window.document };

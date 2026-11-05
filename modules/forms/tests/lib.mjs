@@ -4,12 +4,12 @@
 // starts (port 9404, the same for all modules since 1.1.0; before that, 9402)
 // and to the test routes in
 // modules/forms/tests/wp/estrategia-web-forms-test.php.
-import { createRequire } from "node:module";
+import { load } from "../../../tests/deps.mjs";
 
 export const BASE = process.env.AF_BASE || process.env.AS_BASE || "http://127.0.0.1:9404";
 
-// Playwright without its own node_modules: the one in portal-hs (CLAUDE.md, 3.9).
-export const playwright = () => createRequire("E:/Repositories/portal-hs/package.json")("playwright");
+// Playwright without node_modules in the repo: tests/deps.mjs.
+export const playwright = () => load("playwright");
 
 export async function testApi(path, { method = "GET", body } = {}) {
   const res = await fetch(BASE + "/wp-json/estrategia-web-forms-test/v1" + path, {
