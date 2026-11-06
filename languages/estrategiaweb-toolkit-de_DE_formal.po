@@ -565,7 +565,7 @@ msgstr "Bereich hinzufügen"
 
 #: modules/banners/includes/class-post-type.php:162
 msgid "All zones"
-msgstr "Alle Zonen"
+msgstr "Alle Bereiche"
 
 #: modules/banners/includes/class-post-type.php:214
 msgid "Statistics"
@@ -767,7 +767,7 @@ msgstr "Folie auswählen"
 #: modules/carousel/blocks/carousel/render.php:267
 #, php-format
 msgid "Go to slide %d"
-msgstr "Gehen Sie zu Folie %d"
+msgstr "Zu Folie %d wechseln"
 
 #: modules/comments-off/module.php:151
 msgid "Comments are closed."
@@ -1612,7 +1612,7 @@ msgid ""
 "fields, taxonomies and addresses. They are saved in this site’s database."
 msgstr ""
 "Ihre eigenen Inhaltstypen – Restaurants, Kurse, Teammitglieder … – mit ihren "
-"Feldern, Taxonomien und Adressen. Sie werden in der Datenbank dieser Website "
+"Feldern, Taxonomien und Adressen. Diese werden in der Datenbank dieser Website "
 "gespeichert."
 
 #: modules/content-types/includes/admin/class-page.php:215
@@ -1690,7 +1690,7 @@ msgid ""
 "The template this type comes from has new fields (%1$d): %2$s. They are not "
 "added by themselves: add them here and save."
 msgstr ""
-"Das Template, aus dem dieser Typ stammt, hat neue Felder (%1$d): %2$s. Sie "
+"Das Template, aus dem dieser Typ stammt, hat neue Felder (%1$d): %2$s. Diese "
 "werden nicht automatisch hinzugefügt: Fügen Sie sie hier hinzu und speichern "
 "Sie."
 
@@ -2370,7 +2370,7 @@ msgid ""
 "longer attached to this type. Adding it back with the same name brings them "
 "back."
 msgstr ""
-"Die Taxonomie „%1$s“ wird entfernt: Ihre %2$d Begriffe bleiben in der "
+"Die Taxonomie „%1$s“ wird entfernt: Die %2$d Begriffe der Taxonomie bleiben in der "
 "Datenbank, aber nicht mehr mit diesem Typ verknüpft. Wenn Sie sie mit "
 "demselben Namen wieder hinzufügen, sind sie wieder da."
 
@@ -2381,7 +2381,7 @@ msgid ""
 "The taxonomy “%1$s” cannot be renamed to “%2$s”: it has terms, which would "
 "stay under the old name."
 msgstr ""
-"Die Taxonomie „%1$s“ kann nicht in „%2$s“ umbenannt werden: Sie hat "
+"Die Taxonomie „%1$s“ kann nicht in „%2$s“ umbenannt werden: Diese hat "
 "Begriffe, die unter dem alten Namen bleiben würden."
 
 #. translators: %s: field name
@@ -2542,7 +2542,7 @@ msgid ""
 "The taxonomy “%s” is already registered by other code: it is not registered "
 "again."
 msgstr ""
-"Die Taxonomie „%s“ wird bereits von anderem Code registriert: Sie wird nicht "
+"Die Taxonomie „%s“ wird bereits von anderem Code registriert: Diese wird nicht "
 "erneut registriert."
 
 #. translators: %s: singular name of a taxonomy, e.g. Cuisine
@@ -2569,7 +2569,7 @@ msgid ""
 "can only store 0."
 msgstr ""
 "Die Verknüpfung „%1$s“ verweist auf den Typ „%2$s“, der nicht registriert "
-"ist: Sie kann nur 0 speichern."
+"ist: Diese kann nur 0 speichern."
 
 #. translators: %s: singular name of a content type
 #: modules/content-types/includes/class-registrar.php:301
@@ -3220,9 +3220,9 @@ msgid ""
 "\n"
 "{{site_name}}"
 msgstr ""
-"Hallo {{name}},\n"
+"Guten Tag {{name}},\n"
 "\n"
-"danke für Ihre Nachricht. Wir haben sie erhalten und melden uns bald bei "
+"vielen Dank für Ihre Nachricht. Wir haben sie erhalten und melden uns in Kürze bei "
 "Ihnen.\n"
 "\n"
 "{{all_fields}}\n"
@@ -4018,7 +4018,7 @@ msgstr ""
 
 #: modules/forms/includes/class-settings.php:105
 msgid "Thank you. Your message has been sent."
-msgstr "Danke. Ihre Nachricht wurde gesendet."
+msgstr "Vielen Dank. Ihre Nachricht wurde gesendet."
 
 #: modules/forms/includes/class-settings.php:106
 msgid "The message could not be sent. Please check the form and try again."
@@ -4503,7 +4503,7 @@ msgstr "Beitrag %d ist kein veröffentlichter Beitrag, der in den Newsletter kan
 #: modules/newsletter/includes/class-builder.php:183
 #, php-format
 msgid "«%s» has no featured image: its block goes without photo."
-msgstr "„%s“ hat kein Beitragsbild: sein Block erscheint ohne Foto."
+msgstr "„%s“ hat kein Beitragsbild: Sein Block erscheint ohne Foto."
 
 #. translators: %s: post title.
 #: modules/newsletter/includes/class-builder.php:186
@@ -4539,7 +4539,7 @@ msgstr "Mailchimp hat die neue Kampagne nicht zurückgegeben."
 msgid ""
 "Mailchimp made the campaign with a drag-and-drop template, which would send "
 "the template and not these news. It has been deleted."
-msgstr "Mailchimp hat die Kampagne mit einer Drag-and-Drop-Vorlage angelegt, die die Vorlage statt dieser Beiträge versenden würde. Sie wurde gelöscht."
+msgstr "Mailchimp hat die Kampagne mit einer Drag-and-Drop-Vorlage angelegt, die die Vorlage statt dieser Beiträge versenden würde. Die Kampagne wurde gelöscht."
 
 #: modules/newsletter/includes/class-screen.php:47
 #: modules/newsletter/includes/class-screen.php:100
@@ -4681,7 +4681,7 @@ msgstr "Der Mailchimp-Schlüssel muss mit seinem Rechenzentrum enden (zum Beispi
 msgid ""
 "The email template must contain {{blocks}}, where the news go. It was not "
 "saved."
-msgstr "Die E-Mail-Vorlage muss {{blocks}} enthalten, wo die Beiträge stehen. Sie wurde nicht gespeichert."
+msgstr "Die E-Mail-Vorlage muss {{blocks}} enthalten, wo die Beiträge stehen. Die Vorlage wurde nicht gespeichert."
 
 #: modules/newsletter/includes/class-settings.php:189
 msgid "Mailchimp"
@@ -4765,7 +4765,7 @@ msgid ""
 msgstr ""
 "Weiterleitung gespeichert, aber diese Quelle ist eine Seite, die auf der "
 "Website existiert: Weiterleitungen greifen nur bei Adressen, die einen 404-"
-"Fehler liefern. Sie funktioniert, sobald die Seite gelöscht oder nicht mehr "
+"Fehler liefern. Die Weiterleitung funktioniert, sobald die Seite gelöscht oder nicht mehr "
 "veröffentlicht ist."
 
 #: modules/redirects/includes/admin/class-page.php:157
@@ -5480,7 +5480,7 @@ msgstr "Position"
 
 #: modules/whatsapp/blocks/whatsapp/labels.php:13
 msgid "Accessible name (empty: “Chat on WhatsApp”)"
-msgstr "Zugänglicher Name (leer: „Schreiben Sie uns auf WhatsApp“)"
+msgstr "Zugänglicher Name (leer: „Schreiben Sie uns per WhatsApp“)"
 
 #: modules/whatsapp/blocks/whatsapp/render.php:51
 msgid ""
@@ -5492,7 +5492,7 @@ msgstr ""
 
 #: modules/whatsapp/blocks/whatsapp/render.php:62
 msgid "Chat on WhatsApp"
-msgstr "Schreiben Sie uns auf WhatsApp"
+msgstr "Schreiben Sie uns per WhatsApp"
 
 #: modules/whatsapp/module.php:52
 msgid "WhatsApp phone number in international format, digits only."
