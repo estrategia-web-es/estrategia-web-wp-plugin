@@ -858,6 +858,13 @@ record one in Chrome and maintain them: the header of tests/browser.mjs.
 `node tests/browser.mjs --list` lists them; `node tests/browser.mjs 9 --check`
 runs one and its check against the WordPress of `node tests/run.mjs --serve`.
 
+**Expensive tests have a budget that only goes down** (David, 06-11-2026):
+[tests/test-budget.json](tests/test-budget.json) holds how many level 2 files
+and how many browser tests there are, and a level 1 test turns red if the count
+differs. A new one enters as level 1, or another one leaves; a browser is used
+only if it is strictly necessary. Only David raises the number: the header of
+[tests/test-budget.test.mjs](tests/test-budget.test.mjs) says how.
+
 **The whole battery takes 5 minutes or less, measured** (David, 28-10-2026; it
 was 55). Each level 2 file must say on its first line why it is «NOT LEVEL 1
 BECAUSE:», each level 3 file why it is «NOT LEVEL 2 BECAUSE:», and each file
