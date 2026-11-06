@@ -565,7 +565,7 @@ msgstr "Bereich hinzufügen"
 
 #: modules/banners/includes/class-post-type.php:162
 msgid "All zones"
-msgstr "Alle Zonen"
+msgstr "Alle Bereiche"
 
 #: modules/banners/includes/class-post-type.php:214
 msgid "Statistics"
@@ -4493,7 +4493,7 @@ msgstr "Beitrag %d ist kein veröffentlichter Beitrag, der in den Newsletter kan
 #: modules/newsletter/includes/class-builder.php:183
 #, php-format
 msgid "«%s» has no featured image: its block goes without photo."
-msgstr "„%s“ hat kein Beitragsbild: sein Block erscheint ohne Foto."
+msgstr "„%s“ hat kein Beitragsbild: Sein Block erscheint ohne Foto."
 
 #. translators: %s: post title.
 #: modules/newsletter/includes/class-builder.php:186
@@ -5469,7 +5469,7 @@ msgstr "Position"
 
 #: modules/whatsapp/blocks/whatsapp/labels.php:13
 msgid "Accessible name (empty: “Chat on WhatsApp”)"
-msgstr "Zugänglicher Name (leer: „Schreib uns auf WhatsApp“)"
+msgstr "Zugänglicher Name (leer: „Schreib uns per WhatsApp“)"
 
 #: modules/whatsapp/blocks/whatsapp/render.php:51
 msgid ""
@@ -5481,7 +5481,7 @@ msgstr ""
 
 #: modules/whatsapp/blocks/whatsapp/render.php:62
 msgid "Chat on WhatsApp"
-msgstr "Schreib uns auf WhatsApp"
+msgstr "Schreib uns per WhatsApp"
 
 #: modules/whatsapp/module.php:52
 msgid "WhatsApp phone number in international format, digits only."
