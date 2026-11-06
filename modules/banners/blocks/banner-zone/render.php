@@ -21,6 +21,16 @@
  * fits it) with the link in a new tab and rel="sponsored noopener". Code
  * banners: the code as it is (it was saved by someone with unfiltered_html).
  *
+ * Escaping: every value this file generates is escaped. The one intentionally
+ * raw part is the code of a code banner. Printing an ad network's markup is the
+ * purpose of a code banner, and escaping it would break every one of them, so
+ * it is controlled when it is SAVED: only a user with the unfiltered_html
+ * capability can write that field (Post_Type: the meta box, its save and the
+ * meta's auth_callback), and anyone else cannot change it at all. It is the
+ * model of WordPress's own Custom HTML block: whoever can save this code can
+ * already publish the same HTML and JavaScript in a post, so it grants nothing
+ * new.
+ *
  * How to maintain:
  * - The trap: a code banner that is hidden by view.js still RUNS its scripts
  *   (an adserver asks for an ad it will not show). Code banners belong in
@@ -71,8 +81,8 @@ foreach ( $estrategia_web_banners as $estrategia_web_id => $estrategia_web_d ) {
 	if ( 'image' === $estrategia_web_d['kind'] ) {
 		$estrategia_web_img  = wp_get_attachment_image( $estrategia_web_d['image'], 'full', false, array( 'loading' => 'lazy', 'alt' => get_the_title( $estrategia_web_id ) ) );
 		$estrategia_web_body = '' !== $estrategia_web_d['link']
-			? sprintf( '<a href="%s" target="_blank" rel="sponsored noopener">%s</a>', esc_url( $estrategia_web_d['link'] ), $estrategia_web_img )
-			: $estrategia_web_img;
+			? sprintf( '<a href="%s" target="_blank" rel="sponsored noopener">%s</a>', esc_url( $estrategia_web_d['link'] ), wp_kses( $estrategia_web_img, \EstrategiaWeb\Kses::allowed() ) )
+			: wp_kses( $estrategia_web_img, \EstrategiaWeb\Kses::allowed() );
 	} else {
 		$estrategia_web_body = $estrategia_web_d['code'];
 	}
@@ -84,14 +94,14 @@ foreach ( $estrategia_web_banners as $estrategia_web_id => $estrategia_web_d ) {
 		$estrategia_web_d['start'],
 		$estrategia_web_d['end'],
 		isset( $estrategia_web_shown[ $estrategia_web_id ] ) ? '' : ' hidden',
-		$estrategia_web_body // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- image markup from WordPress, or code saved with unfiltered_html.
+		$estrategia_web_body
 	);
 }
 
 printf(
 	'<div %s data-count="%d" data-endpoint="%s">%s</div>',
-	get_block_wrapper_attributes( array( 'class' => 'estrategia-web-banner-zone estrategia-web-banner-zone--' . $estrategia_web_zone ) ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	$estrategia_web_count, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- int.
+	wp_kses_data( get_block_wrapper_attributes( array( 'class' => 'estrategia-web-banner-zone estrategia-web-banner-zone--' . $estrategia_web_zone ) ) ),
+	(int) $estrategia_web_count,
 	esc_url( rest_url( 'estrategia-web/v1/banners/hits' ) ),
-	$estrategia_web_items // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built above.
+	$estrategia_web_items // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- see «Escaping» in the header: every generated value is escaped above; the code of a code banner is the one raw part.
 );

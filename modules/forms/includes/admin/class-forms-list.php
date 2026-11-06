@@ -315,7 +315,7 @@ final class Forms_List {
 							<code class="estrategia-web-forms-list__id"><?php echo esc_html( '' !== $row['form_id'] ? $row['form_id'] : '—' ); ?></code>
 						</td>
 						<td class="estrategia-web-forms-list__where">
-							<?php echo self::place( $row['post_id'], $row['post_title'], $row['post_type'], $row['post_status'] ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in place(). ?>
+							<?php echo wp_kses_post( self::place( $row['post_id'], $row['post_title'], $row['post_type'], $row['post_status'] ) ); ?>
 							<?php if ( Form_Post_Type::TYPE === $row['post_type'] ) : ?>
 								<?php $users = self::form_users( $row['ids'] ?? array( $row['post_id'] ) ); ?>
 								<div class="estrategia-web-forms-list__users">
@@ -323,13 +323,13 @@ final class Forms_List {
 										<?php esc_html_e( 'Used in:', 'estrategiaweb-toolkit' ); ?>
 										<ul style="margin:.3em 0 0 1.2em;list-style:disc">
 											<?php foreach ( $users as $user ) : ?>
-												<li data-post-id="<?php echo (int) $user->ID; ?>"><?php echo self::place( (int) $user->ID, (string) $user->post_title, (string) $user->post_type, (string) $user->post_status ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+												<li data-post-id="<?php echo (int) $user->ID; ?>"><?php echo wp_kses_post( self::place( (int) $user->ID, (string) $user->post_title, (string) $user->post_type, (string) $user->post_status ) ); ?>
 													<?php if ( 'wp_block' === $user->post_type ) : ?>
 														<?php $pages = self::pattern_users( (int) $user->ID ); ?>
 														<?php if ( $pages ) : ?>
 															<ul style="margin:.2em 0 0 1.2em;list-style:circle">
 																<?php foreach ( $pages as $page ) : ?>
-																	<li data-post-id="<?php echo (int) $page->ID; ?>"><?php echo self::place( (int) $page->ID, (string) $page->post_title, (string) $page->post_type, (string) $page->post_status ); // phpcs:ignore WordPress.Security.EscapeOutput ?></li>
+																	<li data-post-id="<?php echo (int) $page->ID; ?>"><?php echo wp_kses_post( self::place( (int) $page->ID, (string) $page->post_title, (string) $page->post_type, (string) $page->post_status ) ); ?></li>
 																<?php endforeach; ?>
 															</ul>
 														<?php endif; ?>
@@ -351,7 +351,7 @@ final class Forms_List {
 										<?php esc_html_e( 'Used in:', 'estrategiaweb-toolkit' ); ?>
 										<ul style="margin:.3em 0 0 1.2em;list-style:disc">
 											<?php foreach ( $users as $user ) : ?>
-												<li data-post-id="<?php echo (int) $user->ID; ?>"><?php echo self::place( (int) $user->ID, (string) $user->post_title, (string) $user->post_type, (string) $user->post_status ); // phpcs:ignore WordPress.Security.EscapeOutput ?></li>
+												<li data-post-id="<?php echo (int) $user->ID; ?>"><?php echo wp_kses_post( self::place( (int) $user->ID, (string) $user->post_title, (string) $user->post_type, (string) $user->post_status ) ); ?></li>
 											<?php endforeach; ?>
 										</ul>
 									<?php else : ?>

@@ -13,4 +13,4 @@
 
 defined( 'ABSPATH' ) || exit;
 
-echo \EstrategiaWeb\Site\Consent::render_link( (array) $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput -- built with escaping in render_link().
+echo wp_kses( \EstrategiaWeb\Site\Consent::render_link( (array) $attributes ), \EstrategiaWeb\Kses::allowed() );

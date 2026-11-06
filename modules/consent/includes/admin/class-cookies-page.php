@@ -132,9 +132,9 @@ final class Cookies_Page {
 		exit;
 	}
 
-	private static function category_select( string $name, string $current, string $form = '' ): string {
+	private static function category_select( string $name, string $current, string $form = '', string $id = '' ): string {
 		$labels = Cookie_Table::category_labels();
-		$html   = sprintf( '<select name="%s"%s>', esc_attr( $name ), $form ? ' form="' . esc_attr( $form ) . '"' : '' );
+		$html   = sprintf( '<select name="%s"%s%s>', esc_attr( $name ), $id ? ' id="' . esc_attr( $id ) . '"' : '', $form ? ' form="' . esc_attr( $form ) . '"' : '' );
 		foreach ( Cookie_Registry::CATEGORIES as $slug ) {
 			$html .= sprintf( '<option value="%s"%s>%s</option>', esc_attr( $slug ), selected( $slug, $current, false ), esc_html( $labels[ $slug ]['label'] ?? $slug ) );
 		}
@@ -231,7 +231,7 @@ final class Cookies_Page {
 						/* translators: 1: category name, 2: list of cookie names. */
 						esc_html__( 'The notice does not ask about «%1$s», but these confirmed cookies belong to it: %2$s. Either the notice should ask about it (above), or the cookies should not be set.', 'estrategiaweb-toolkit' ),
 						esc_html( $labels[ $category ]['label'] ?? $category ),
-						'<code>' . implode( '</code>, <code>', array_map( 'esc_html', $keys ) ) . '</code>' // phpcs:ignore WordPress.Security.EscapeOutput
+						wp_kses_post( '<code>' . implode( '</code>, <code>', array_map( 'esc_html', $keys ) ) . '</code>' )
 					);
 					?>
 				</p></div>
@@ -282,7 +282,7 @@ final class Cookies_Page {
 									<?php endforeach; ?>
 								</select>
 							</td>
-							<td><?php echo self::category_select( 'category', $entry['category'], $form ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside. ?></td>
+							<td><?php echo wp_kses( self::category_select( 'category', $entry['category'], $form ), \EstrategiaWeb\Kses::allowed() ); ?></td>
 							<td><input type="text" class="regular-text" style="width:10em" name="provider" form="<?php echo esc_attr( $form ); ?>" value="<?php echo esc_attr( $entry['provider'] ); ?>"></td>
 							<td><textarea rows="2" style="width:100%;min-width:14em" name="purpose" form="<?php echo esc_attr( $form ); ?>"><?php echo esc_textarea( $entry['purpose'] ); ?></textarea></td>
 							<td><input type="text" style="width:7em" name="duration" form="<?php echo esc_attr( $form ); ?>" value="<?php echo esc_attr( $entry['duration'] ); ?>"></td>
@@ -328,7 +328,7 @@ final class Cookies_Page {
 				<?php self::hidden( 'add' ); ?>
 				<table class="form-table" role="presentation">
 					<tr><th scope="row"><label for="estrategia-web-cookie-name"><?php esc_html_e( 'Name', 'estrategiaweb-toolkit' ); ?></label></th><td><input type="text" class="regular-text" id="estrategia-web-cookie-name" name="name" required maxlength="129"></td></tr><?php // No «pattern»: browsers compile it in «v» mode and an unescaped «|» inside [] silently invalidates it. The server validates (Cookie_Registry::name_ok). ?>
-					<tr><th scope="row"><label for="estrategia-web-cookie-category"><?php esc_html_e( 'Category', 'estrategiaweb-toolkit' ); ?></label></th><td><?php echo str_replace( '<select ', '<select id="estrategia-web-cookie-category" ', self::category_select( 'category', 'maps' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?></td></tr>
+					<tr><th scope="row"><label for="estrategia-web-cookie-category"><?php esc_html_e( 'Category', 'estrategiaweb-toolkit' ); ?></label></th><td><?php echo wp_kses( self::category_select( 'category', 'maps', '', 'estrategia-web-cookie-category' ), \EstrategiaWeb\Kses::allowed() ); ?></td></tr>
 					<tr><th scope="row"><label for="estrategia-web-cookie-provider"><?php esc_html_e( 'Provider', 'estrategiaweb-toolkit' ); ?></label></th><td><input type="text" class="regular-text" id="estrategia-web-cookie-provider" name="provider"></td></tr>
 					<tr><th scope="row"><label for="estrategia-web-cookie-purpose"><?php esc_html_e( 'Purpose', 'estrategiaweb-toolkit' ); ?></label></th><td><textarea class="large-text" rows="2" id="estrategia-web-cookie-purpose" name="purpose"></textarea></td></tr>
 					<tr><th scope="row"><label for="estrategia-web-cookie-duration"><?php esc_html_e( 'Duration', 'estrategiaweb-toolkit' ); ?></label></th><td><input type="text" id="estrategia-web-cookie-duration" name="duration"><p class="description"><?php esc_html_e( 'Like «2 years», «30 minutes» or «session» to have it translated automatically; anything else is shown as written.', 'estrategiaweb-toolkit' ); ?></p></td></tr>
@@ -342,7 +342,7 @@ final class Cookies_Page {
 				printf(
 					/* translators: 1: link to the Open Cookie Database, 2: licence name, 3: date. */
 					esc_html__( 'Proposals use data from the %1$s, licensed under %2$s (extract of %3$s).', 'estrategiaweb-toolkit' ),
-					'<a href="' . esc_url( (string) ( $ocd['source'] ?? '' ) ) . '">Open Cookie Database</a>', // phpcs:ignore WordPress.Security.EscapeOutput
+					wp_kses_post( '<a href="' . esc_url( (string) ( $ocd['source'] ?? '' ) ) . '">Open Cookie Database</a>' ),
 					'Apache 2.0',
 					esc_html( (string) ( $ocd['generated'] ?? '' ) )
 				);

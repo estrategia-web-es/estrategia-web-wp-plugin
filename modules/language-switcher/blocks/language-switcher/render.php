@@ -87,7 +87,7 @@ if ( 'inline' === ( $attributes['layout'] ?? 'dropdown' ) ) {
 			'aria-label' => __( 'Language', 'estrategiaweb-toolkit' ),
 		)
 	);
-	echo '<nav ' . $estrategia_web_wrap . '><ul class="estrategia-web-language__inline">'; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped by core.
+	echo '<nav ' . wp_kses_data( $estrategia_web_wrap ) . '><ul class="estrategia-web-language__inline">';
 	foreach ( $estrategia_web_languages as $estrategia_web_language ) {
 		$estrategia_web_code = (string) $estrategia_web_language['code'];
 		$estrategia_web_full = $estrategia_web_name( $estrategia_web_language );
@@ -112,7 +112,7 @@ $estrategia_web_wrapper = get_block_wrapper_attributes(
 	)
 );
 ?>
-<div <?php echo $estrategia_web_wrapper; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped by core. ?>>
+<div <?php echo wp_kses_data( $estrategia_web_wrapper ); ?>>
 	<button type="button" class="estrategia-web-language__toggle" aria-expanded="false" aria-controls="<?php echo esc_attr( $estrategia_web_list_id ); ?>" data-wp-on--click="actions.toggle" data-wp-bind--aria-expanded="context.open">
 		<span class="screen-reader-text"><?php esc_html_e( 'Language:', 'estrategiaweb-toolkit' ); ?> </span><span lang="<?php echo esc_attr( (string) $estrategia_web_current['code'] ); ?>"><?php echo esc_html( $estrategia_web_label ); ?></span>
 	</button>

@@ -4,7 +4,7 @@ Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.10.0
+Stable tag: 2.10.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,6 +64,10 @@ Terms: https://www.whatsapp.com/legal/terms-of-service · Privacy: https://www.w
 
 == Frequently Asked Questions ==
 
+= Why is the code of a code banner not filtered? =
+
+A code banner holds an ad network's own HTML and JavaScript, and filtering it would break the ad. It is controlled when it is saved instead: only a user with the unfiltered_html capability can write that field, the same rule as WordPress's Custom HTML block. Nobody else can change it. Everything else the plugin prints is escaped.
+
 = Does it need a particular theme? =
 
 No. The Estrategia Web theme uses its blocks, but the plugin does not depend on it.
@@ -81,6 +85,10 @@ Its settings, yes. Your data (form submissions, redirects, company details) is k
 The cookie list includes an extract of the Open Cookie Database (https://github.com/jkwakman/Open-Cookie-Database), © Jan Kwakman and contributors, Apache License 2.0. Details in modules/consent/data/NOTICE.
 
 == Changelog ==
+
+= 2.10.1 =
+* Everything the plugin prints is escaped at the point of output, including block markup, form controls, icons and admin screens.
+* The plugin's Author URI now points to its GitHub organisation.
 
 = 2.10.0 =
 * Renamed to EstrategiaWeb Toolkit (text domain estrategiaweb-toolkit). Settings, content and blocks are unchanged.

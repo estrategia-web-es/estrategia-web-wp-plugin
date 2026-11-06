@@ -132,7 +132,7 @@ test("the saved list rules, in its order: icon guessed, email to mailto: without
   assert.match(page.names, /is-display-icons-names is-size-large/);
 
   const own = items.find((i) => i[1].includes("https://mi-red.test/"))[1];
-  assert.match(own, /<path d="M0 0h10v10z" fill="#e1306c"\/>/, "with its colour");
+  assert.match(own, /<path d="M0 0h10v10z" fill="#e1306c"\s*\/>/, "with its colour");
   assert.doesNotMatch(own, /script|onclick|width="300"/i);
   assert.match(own, /<svg[^>]*class="estrategia-web-social-links__icon"/);
 });

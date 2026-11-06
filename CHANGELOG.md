@@ -9,6 +9,27 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.10.1 — 06-11-2026 (WordPress.org: the second review, escaping)
+
+**What each site must do:** nothing.
+
+The review of 05-11-2026 asked to escape what is printed at the point of
+output. Of the 55 `phpcs:ignore` on escaping, 5 stay, each with its reason:
+the inner blocks of the form and the carousel, `/llms.txt` (text/plain), the
+redirects CSV, and the code of a code banner, which is raw on purpose and
+controlled when it is saved (`unfiltered_html`; header of
+`modules/banners/blocks/banner-zone/render.php`).
+
+- New `includes/class-kses.php`: what `wp_kses()` may keep. Its header says how
+  it is maintained, and `tests/kses.test.mjs` fails if a directive of the
+  cookie notice is missing from it.
+- In the output of icons `viewBox` comes out as `viewbox` and `/>` as ` />`,
+  which is what `wp_kses()` writes. Browsers read both the same in HTML.
+- `Author URI` is now the GitHub organisation: the review's checker could not
+  open estrategiaweb.es.
+- `tests/run.mjs`: a golden WordPress emptied by the temp cleanup is rebuilt
+  instead of failing every boot.
+
 ## 2.10.0 — 03-11-2026 (WordPress.org: the name, the first review, llms.txt and German)
 
 **What each site must do:** the plugin is now **EstrategiaWeb Toolkit**,

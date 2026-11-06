@@ -121,11 +121,11 @@ final class Admin {
 		echo '<tr class="estrategia-web-social__row">';
 		printf(
 			'<td><span class="estrategia-web-social__preview" aria-hidden="true">%1$s</span> <label class="screen-reader-text" for="%2$s-icon">%3$s</label><select id="%2$s-icon" data-field="icon" name="%4$s">%5$s</select><input type="hidden" data-field="icon_id" name="%6$s" value="%7$d"></td>',
-			$preview, // phpcs:ignore WordPress.Security.EscapeOutput -- SVG from Icons (collection or sanitized).
+			wp_kses( $preview, \EstrategiaWeb\Kses::svg() ),
 			esc_attr( $id ),
 			esc_html__( 'Icon', 'estrategiaweb-toolkit' ),
 			esc_attr( $name( 'icon' ) ),
-			$options, // phpcs:ignore WordPress.Security.EscapeOutput -- escaped above.
+			wp_kses( $options, \EstrategiaWeb\Kses::allowed() ),
 			esc_attr( $name( 'icon_id' ) ),
 			(int) $item['icon_id']
 		);

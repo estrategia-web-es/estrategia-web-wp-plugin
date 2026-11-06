@@ -430,6 +430,11 @@ async function ensureGolden() {
     kill(child);
   }
   fs.rmSync(path.join(building, "tmp"), { recursive: true, force: true });
+  // The trap (06-11-2026): Windows's temp cleanup emptied a 9-day-old golden, every file gone and
+  // every folder left. The rename below then fails on that shell, the catch took it for another
+  // run's golden and threw the new one away, and each boot died on «Error connecting to the SQLite
+  // database». A golden without wp-config.php is not one: out with it first.
+  if (!fs.existsSync(path.join(GOLDEN, "wp-config.php"))) fs.rmSync(path.dirname(GOLDEN), { recursive: true, force: true });
   try {
     fs.renameSync(building, path.dirname(GOLDEN));
   } catch {
@@ -528,6 +533,7 @@ async function startPlayground(wp) {
   try {
     await fs.promises.rm(building, { recursive: true, force: true });
     await fs.promises.cp(path.join(tempOf(wp), "wordpress"), path.join(building, "wordpress"), { recursive: true });
+    await fs.promises.rm(target, { recursive: true, force: true }); // An emptied one: see the trap in ensureGolden().
     fs.renameSync(building, target);
     for (const old of fs.readdirSync(GOLDEN_ROOT)) {
       if (/^wpml-[0-9a-f]+$/.test(old) && old !== path.basename(target)) await fs.promises.rm(path.join(GOLDEN_ROOT, old), { recursive: true, force: true });

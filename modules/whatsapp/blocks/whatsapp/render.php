@@ -47,7 +47,7 @@ if ( '' === $estrategia_web_phone ) {
 	if ( wp_is_serving_rest_request() ) {
 		printf(
 			'<p %s>%s</p>',
-			get_block_wrapper_attributes(), // phpcs:ignore WordPress.Security.EscapeOutput
+			wp_kses_data( get_block_wrapper_attributes() ),
 			esc_html__( 'WhatsApp button: set the phone number in the block settings or in the estrategia_web_whatsapp_phone site option.', 'estrategiaweb-toolkit' )
 		);
 	}
@@ -62,7 +62,7 @@ $estrategia_web_position = in_array( $attributes['position'], array( 'bottom-rig
 $estrategia_web_label    = '' !== trim( (string) $attributes['label'] ) ? $attributes['label'] : __( 'Chat on WhatsApp', 'estrategiaweb-toolkit' );
 ?>
 <a
-	<?php echo get_block_wrapper_attributes( array( 'class' => 'estrategia-web-whatsapp is-position-' . $estrategia_web_position ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+	<?php echo wp_kses_data( get_block_wrapper_attributes( array( 'class' => 'estrategia-web-whatsapp is-position-' . $estrategia_web_position ) ) ); ?>
 	href="<?php echo esc_url( $estrategia_web_href ); ?>"
 	target="_blank"
 	rel="noopener noreferrer"

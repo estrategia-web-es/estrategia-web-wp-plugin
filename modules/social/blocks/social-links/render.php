@@ -54,7 +54,7 @@ if ( ! $estrategia_web_items ) {
 	if ( wp_is_serving_rest_request() ) {
 		printf(
 			'<p %s>%s</p>',
-			get_block_wrapper_attributes(), // phpcs:ignore WordPress.Security.EscapeOutput
+			wp_kses_data( get_block_wrapper_attributes() ),
 			esc_html__( 'Social networks: add them in Estrategia Web › Social networks.', 'estrategiaweb-toolkit' )
 		);
 	}
@@ -65,7 +65,7 @@ $estrategia_web_display = in_array( $attributes['display'] ?? '', array( 'icons'
 $estrategia_web_size    = in_array( $attributes['size'] ?? '', array( 'small', 'medium', 'large' ), true ) ? $attributes['size'] : 'medium';
 $estrategia_web_owner   = Links::owner();
 ?>
-<ul <?php echo get_block_wrapper_attributes( array( 'class' => 'estrategia-web-social-links is-display-' . $estrategia_web_display . ' is-size-' . $estrategia_web_size ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>>
+<ul <?php echo wp_kses_data( get_block_wrapper_attributes( array( 'class' => 'estrategia-web-social-links is-display-' . $estrategia_web_display . ' is-size-' . $estrategia_web_size ) ) ); ?>>
 	<?php foreach ( $estrategia_web_items as $estrategia_web_item ) : ?>
 		<?php
 		/* translators: 1: network name («Instagram»), 2: company name. */
@@ -76,7 +76,7 @@ $estrategia_web_owner   = Links::owner();
 		?>
 		<li class="estrategia-web-social-links__item is-network-<?php echo esc_attr( $estrategia_web_item['icon'] ); ?>">
 			<a class="estrategia-web-social-links__link" href="<?php echo esc_url( $estrategia_web_item['url'], Links::PROTOCOLS ); ?>"<?php echo $estrategia_web_item['new_tab'] ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>>
-				<?php echo $estrategia_web_item['svg']; // phpcs:ignore WordPress.Security.EscapeOutput -- SVG from the collection or sanitized by Svg_Sanitizer (Icons). ?>
+				<?php echo wp_kses( $estrategia_web_item['svg'], \EstrategiaWeb\Kses::svg() ); ?>
 				<?php if ( 'icons-names' === $estrategia_web_display ) : ?>
 					<span class="estrategia-web-social-links__name" aria-hidden="true"><?php echo esc_html( $estrategia_web_item['name'] ); ?></span>
 				<?php endif; ?>

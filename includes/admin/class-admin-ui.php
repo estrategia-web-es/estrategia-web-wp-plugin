@@ -59,14 +59,14 @@ final class Admin_UI {
 	}
 
 	/**
-	 * The screen's header: title, page-title buttons (already escaped HTML) and the line that says what it is for.
+	 * The screen's header: title, page-title buttons and the line that says what it is for.
 	 *
-	 * @param string $actions HTML of «page-title-action» links or buttons, escaped by the caller.
+	 * @param string $actions HTML of «page-title-action» links or buttons.
 	 */
 	public static function header( string $title, string $lead, string $actions = '' ): void {
 		echo '<h1 class="wp-heading-inline">' . esc_html( $title ) . '</h1>';
 		if ( '' !== $actions ) {
-			echo ' ' . $actions; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the caller (see @param).
+			echo ' ' . wp_kses( $actions, \EstrategiaWeb\Kses::allowed() );
 		}
 		echo '<hr class="wp-header-end">';
 		if ( '' !== $lead ) {
