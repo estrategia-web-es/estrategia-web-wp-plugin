@@ -1,0 +1,6 @@
+{
+  "how": "The header of tests/test-budget.test.mjs. server = level 2 files; browser = level 3 files + browser scenarios. It must equal the real count: lower it when a test leaves. Raising needs David's OK.",
+  "server": 58,
+  "browser": 42,
+  "raises": []
+}
