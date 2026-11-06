@@ -185,7 +185,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { createRequire } from 'node:module';
+import { load } from './deps.mjs';
 
 export const ROOT = path.resolve( import.meta.dirname, '..' );
 export const OUT_DIR = path.resolve( ROOT, process.env.EW_BROWSER_OUT || 'tests/.cache/browser' );
@@ -196,8 +196,8 @@ const NAVIGATE_TIMEOUT = 60000;
 const TABS = Number( process.env.EW_BROWSER_TABS || 3 );
 // The requests that keep a page NOT ready while in flight (images do not: lazy ones never finish if not seen).
 const BLOCKING_TYPES = [ 'document', 'script', 'stylesheet', 'fetch', 'xhr', 'font' ];
-// Playwright without node_modules of its own: portal-hs's (CLAUDE.md 3.9), as tests/lib.mjs.
-const playwright = () => createRequire( 'E:/Repositories/portal-hs/package.json' )( 'playwright' );
+// Playwright without node_modules in the repo: tests/deps.mjs, as tests/lib.mjs.
+const playwright = () => load( 'playwright' );
 
 // ------------------------------------------------------------- scenarios
 

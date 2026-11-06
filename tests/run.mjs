@@ -186,10 +186,13 @@
 // If you launch it by hand from Git Bash: put MSYS_NO_PATHCONV=1 in front.
 import { spawn, spawnSync } from "node:child_process";
 import { listScenarios, checksOf, checkFiles, OUT_DIR as BROWSER_OUT } from "./browser.mjs";
+import { ensurePhp, ensureTestDeps } from "./deps.mjs";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+
+ensurePhp();
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 // EW_PORT=9412 node tests/run.mjs … (or AS_PORT, the same) to move the family
@@ -354,7 +357,7 @@ function ensureCli() {
   if (fs.existsSync(CLI_BIN)) return;
   console.log(`· installing @wp-playground/cli@${CLI_VERSION} into ${path.relative(ROOT, CLI_DIR)} (once)`);
   fs.mkdirSync(CLI_DIR, { recursive: true });
-  const r = spawnSync("npm", ["install", "--prefix", CLI_DIR, "--no-save", "--no-audit", "--no-fund", `@wp-playground/cli@${CLI_VERSION}`], { shell: true, stdio: "inherit" });
+  const r = spawnSync("npm", ["install", "--prefix", ".", "--no-save", "--no-audit", "--no-fund", `@wp-playground/cli@${CLI_VERSION}`], { cwd: CLI_DIR, shell: true, stdio: "inherit" });
   if (r.status !== 0 || !fs.existsSync(CLI_BIN)) throw new Error(`could not install @wp-playground/cli@${CLI_VERSION}`);
 }
 
@@ -567,6 +570,7 @@ process.on("SIGINT", () => {
 });
 
 if (process.argv.includes("--serve")) {
+  ensureTestDeps();
   ensureCli();
   await ensureWordPressZip();
   await ensureGolden();
@@ -708,6 +712,7 @@ try {
     await new Promise((r) => setTimeout(r, 1000));
     console.log(`· machine: ${os.cpus().length} logical CPUs, ${busySince(s)} % busy before starting, ${(os.freemem() / 2 ** 30).toFixed(1)} of ${(os.totalmem() / 2 ** 30).toFixed(1)} GB free; ${SHARDS_WHY}`);
     topProcesses().then((top) => top && console.log(`· top CPU users at the start: ${top}`));
+    ensureTestDeps();
     ensureCli();
     await ensureWordPressZip();
     await ensureGolden();

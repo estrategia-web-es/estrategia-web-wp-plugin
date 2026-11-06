@@ -780,6 +780,46 @@ notice / consent · `powered by` the signature at the foot of the notice ·
 
 ---
 
+## Working on this repo
+
+### On a new machine (Windows)
+
+    winget install OpenJS.NodeJS.22
+    winget install PHP.PHP.NTS.8.3
+
+Node 22, not `OpenJS.NodeJS.LTS`: that one is Node 26, where Playwright hangs
+installing Chromium ([tests/deps.mjs](tests/deps.mjs)). Then a NEW terminal,
+so that it sees the PATH, and:
+
+    git clone https://github.com/estrategia-web-es/estrategia-web-wp-plugin.git armazon-wp-sitio
+    cd armazon-wp-sitio
+    node tests/run.mjs --nivel 1
+
+Nothing else is installed by hand: the runner brings Playwright, jsdom,
+Chromium, the Playground CLI and WordPress on the first run of levels 2 and 3
+(a few hundred MB, once, in tests/.cache and the shared caches) and turns on
+the PHP extensions a fresh PHP has off ([tests/deps.mjs](tests/deps.mjs)).
+
+The WPML tests («// WPML: REAL» in their header) need a paid copy of WPML that
+is not in git, so without it they are red. That says nothing about your
+change: run your module (`node tests/run.mjs banners/`), not the whole suite.
+
+### How a change gets in
+
+`main` is protected on GitHub: it takes a pull request with one approval, no
+force push and no deleting it. David, as admin, can skip that.
+
+1. A branch from an up-to-date `main` and the change, with its test.
+2. `node tests/run.mjs <module>/` in green. If the module's tests cannot run on your machine, the pull request says so.
+3. The pull request says what changes and how it was tested.
+4. David reviews, runs the whole suite on his machine and merges.
+5. **Production is touched after the merge, never before**, with a copy first.
+   A file changed by hand on a site makes it a version no repo has.
+
+Maintaining this: whoever changes the rule of `main` on GitHub changes this
+section in the same commit. Edge case: a typo in a README goes through a pull
+request too; David's direct pushes are the only way around it.
+
 ## Tests (row 7)
 
     node tests/run.mjs             1 → 2 → 3, stops at the first red
