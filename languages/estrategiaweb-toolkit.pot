@@ -5015,3 +5015,19 @@ msgstr ""
 #: modules/whatsapp/module.php:63
 msgid "Predefined WhatsApp message."
 msgstr ""
+
+#: modules/banners/includes/class-board.php:48 modules/banners/includes/class-board.php:108
+msgid "All banners"
+msgstr ""
+
+#: modules/banners/includes/class-board.php:164
+msgid "Code"
+msgstr ""
+
+#: modules/banners/includes/class-board.php:44
+msgid "By state"
+msgstr ""
+
+#: modules/banners/includes/class-board.php:162
+msgid "(no title)"
+msgstr ""
