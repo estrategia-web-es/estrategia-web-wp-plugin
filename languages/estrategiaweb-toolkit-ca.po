@@ -62,7 +62,7 @@ msgid "Not loaded: turn on %s."
 msgstr "No es carrega: activa %s."
 
 #: includes/admin/class-modules-page.php:176
-#: modules/banners/includes/class-post-type.php:318
+#: modules/banners/includes/class-post-type.php:333
 msgid "Off"
 msgstr "Desactivat"
 
@@ -356,7 +356,9 @@ msgctxt "module description"
 msgid ""
 "Choose the week's posts, preview the newsletter and copy its code or create "
 "the draft in Mailchimp. It never sends."
-msgstr "Tria les entrades de la setmana, previsualitza el butlletí i copia'n el codi o crea l'esborrany a Mailchimp. No envia mai."
+msgstr ""
+"Tria les entrades de la setmana, previsualitza el butlletí i copia'n el codi "
+"o crea l'esborrany a Mailchimp. No envia mai."
 
 #: includes/admin/module-strings.php:52
 msgctxt "module description"
@@ -487,98 +489,98 @@ msgstr "Zona (el seu slug)"
 msgid "How many at a time (0: all, one under another)"
 msgstr "Quants alhora (0: tots, un davall l'altre)"
 
-#: modules/banners/includes/class-post-type.php:68
-#: modules/banners/includes/class-post-type.php:317
+#: modules/banners/includes/class-post-type.php:69
+#: modules/banners/includes/class-post-type.php:332
 msgid "Expired"
 msgstr "Caducat"
 
-#: modules/banners/includes/class-post-type.php:68
-#: modules/banners/includes/class-post-type.php:316
+#: modules/banners/includes/class-post-type.php:69
+#: modules/banners/includes/class-post-type.php:331
 msgid "Scheduled"
 msgstr "Programat"
 
-#: modules/banners/includes/class-post-type.php:68
-#: modules/banners/includes/class-post-type.php:315
+#: modules/banners/includes/class-post-type.php:69
+#: modules/banners/includes/class-post-type.php:330
 msgid "Showing"
 msgstr "Es mostra"
 
-#: modules/banners/includes/class-post-type.php:123
+#: modules/banners/includes/class-post-type.php:127
 msgid "Banners"
 msgstr "Bàners"
 
-#: modules/banners/includes/class-post-type.php:124
-#: modules/banners/includes/class-post-type.php:213
+#: modules/banners/includes/class-post-type.php:128
+#: modules/banners/includes/class-post-type.php:217
 msgid "Banner"
 msgstr "Bàner"
 
 #
-#: modules/banners/includes/class-post-type.php:125
-#: modules/banners/includes/class-post-type.php:126
+#: modules/banners/includes/class-post-type.php:129
+#: modules/banners/includes/class-post-type.php:130
 msgid "Add banner"
 msgstr "Afegeix un bàner"
 
 #
-#: modules/banners/includes/class-post-type.php:127
+#: modules/banners/includes/class-post-type.php:131
 msgid "Edit banner"
 msgstr "Edita el bàner"
 
-#: modules/banners/includes/class-post-type.php:128
+#: modules/banners/includes/class-post-type.php:132
 msgid "New banner"
 msgstr "Bàner nou"
 
 #
-#: modules/banners/includes/class-post-type.php:129
+#: modules/banners/includes/class-post-type.php:133
 msgid "Search banners"
 msgstr "Cerca bàners"
 
 #
-#: modules/banners/includes/class-post-type.php:130
+#: modules/banners/includes/class-post-type.php:134
 msgid "No banners found."
 msgstr "No s'ha trobat cap bàner."
 
 #
-#: modules/banners/includes/class-post-type.php:131
+#: modules/banners/includes/class-post-type.php:135
 msgid "No banners found in Trash."
 msgstr "No s'ha trobat cap bàner a la paperera."
 
 #
-#: modules/banners/includes/class-post-type.php:132
+#: modules/banners/includes/class-post-type.php:136
 msgid "Banner image"
 msgstr "Imatge del bàner"
 
 #
-#: modules/banners/includes/class-post-type.php:133
+#: modules/banners/includes/class-post-type.php:137
 msgid "Set banner image"
 msgstr "Posa la imatge del bàner"
 
-#: modules/banners/includes/class-post-type.php:158
+#: modules/banners/includes/class-post-type.php:162
 msgid "Banner zones"
 msgstr "Zones de bàners"
 
-#: modules/banners/includes/class-post-type.php:159
+#: modules/banners/includes/class-post-type.php:163
 msgid "Banner zone"
 msgstr "Zona de bàners"
 
-#: modules/banners/includes/class-post-type.php:160
+#: modules/banners/includes/class-post-type.php:164
 msgid "Zones"
 msgstr "Zones"
 
 #
-#: modules/banners/includes/class-post-type.php:161
+#: modules/banners/includes/class-post-type.php:165
 msgid "Add zone"
 msgstr "Afegeix una zona"
 
 #
-#: modules/banners/includes/class-post-type.php:162
+#: modules/banners/includes/class-post-type.php:166
 msgid "All zones"
 msgstr "Totes les zones"
 
 #
-#: modules/banners/includes/class-post-type.php:214
+#: modules/banners/includes/class-post-type.php:218
 msgid "Statistics"
 msgstr "Estadístiques"
 
-#: modules/banners/includes/class-post-type.php:235
+#: modules/banners/includes/class-post-type.php:239
 msgid ""
 "With a banner image (box on the right) it is an image banner with its link; "
 "without one, the code below is shown."
@@ -586,29 +588,41 @@ msgstr ""
 "Amb imatge del bàner (quadre de la dreta) és un bàner d'imatge amb el seu "
 "enllaç; sense imatge, es mostra el codi de davall."
 
-#: modules/banners/includes/class-post-type.php:236
+#: modules/banners/includes/class-post-type.php:240
 #: modules/social/includes/class-admin.php:94
 #: modules/social/includes/class-admin.php:143
 msgid "Link"
 msgstr "Enllaç"
 
-#: modules/banners/includes/class-post-type.php:238
+#: modules/banners/includes/class-post-type.php:242
 msgid "Code (adserver, iframe)"
 msgstr "Codi (adserver, iframe)"
 
-#: modules/banners/includes/class-post-type.php:241
+#: modules/banners/includes/class-post-type.php:248
+msgid ""
+"When it is shown, this code is filtered and these parts are removed or "
+"changed:"
+msgstr "En mostrar-se, aquest codi es filtra i aquestes parts s'eliminen o canvien:"
+
+#: modules/banners/includes/class-post-type.php:252
+msgid ""
+"Inline JavaScript with & or < breaks this way: move it to a .js file and "
+"load it with <script src>."
+msgstr "El JavaScript en línia amb & o < es trenca així: passa'l a un fitxer .js i carrega'l amb <script src>."
+
+#: modules/banners/includes/class-post-type.php:256
 msgid "Starts"
 msgstr "Comença"
 
-#: modules/banners/includes/class-post-type.php:242
+#: modules/banners/includes/class-post-type.php:257
 msgid "Ends"
 msgstr "Acaba"
 
-#: modules/banners/includes/class-post-type.php:243
+#: modules/banners/includes/class-post-type.php:258
 msgid "Weight (1-10)"
 msgstr "Pes (1-10)"
 
-#: modules/banners/includes/class-post-type.php:245
+#: modules/banners/includes/class-post-type.php:260
 msgid ""
 "Empty dates: no limit. The weight only matters when a zone shows fewer "
 "banners than it has."
@@ -617,32 +631,32 @@ msgstr ""
 "bàners dels que té."
 
 #. translators: 1: views, 2: clicks.
-#: modules/banners/includes/class-post-type.php:253
+#: modules/banners/includes/class-post-type.php:268
 #, php-format
 msgid "Total: %1$s views, %2$s clicks"
 msgstr "Total: %1$s vistes, %2$s clics"
 
 #
-#: modules/banners/includes/class-post-type.php:255
+#: modules/banners/includes/class-post-type.php:270
 msgid "No statistics yet."
 msgstr "Encara no hi ha estadístiques."
 
-#: modules/banners/includes/class-post-type.php:258
-#: modules/banners/includes/class-post-type.php:293
+#: modules/banners/includes/class-post-type.php:273
+#: modules/banners/includes/class-post-type.php:308
 msgid "Clicks"
 msgstr "Clics"
 
-#: modules/banners/includes/class-post-type.php:258
+#: modules/banners/includes/class-post-type.php:273
 msgid "Day"
 msgstr "Dia"
 
 #
-#: modules/banners/includes/class-post-type.php:258
-#: modules/banners/includes/class-post-type.php:292
+#: modules/banners/includes/class-post-type.php:273
+#: modules/banners/includes/class-post-type.php:307
 msgid "Views"
 msgstr "Vistes"
 
-#: modules/banners/includes/class-post-type.php:262
+#: modules/banners/includes/class-post-type.php:277
 msgid ""
 "Last 60 days with activity. A view is counted when the banner is on screen; "
 "code banners (adservers) count their clicks on their own side."
@@ -651,12 +665,12 @@ msgstr ""
 "pantalla; els bàners de codi (adservers) compten els clics pel seu compte."
 
 #
-#: modules/banners/includes/class-post-type.php:290
+#: modules/banners/includes/class-post-type.php:305
 msgid "Dates"
 msgstr "Dates"
 
 #
-#: modules/banners/includes/class-post-type.php:291
+#: modules/banners/includes/class-post-type.php:306
 msgid "State"
 msgstr "Estat"
 
@@ -4463,7 +4477,9 @@ msgstr "«%s» no té imatge destacada: el seu bloc anirà sense foto."
 msgid ""
 "«%s»: its photo only exists in WebP, which Outlook does not show. Upload it "
 "again as JPEG."
-msgstr "«%s»: la foto només existeix en WebP, que Outlook no mostra. Torna-la a pujar en JPEG."
+msgstr ""
+"«%s»: la foto només existeix en WebP, que Outlook no mostra. Torna-la a "
+"pujar en JPEG."
 
 #: modules/newsletter/includes/class-builder.php:193
 msgid "The email template has no {{blocks}}."
@@ -4481,7 +4497,8 @@ msgstr "No hi ha cap clau de Mailchimp vàlida als paràmetres."
 
 #: modules/newsletter/includes/class-mailchimp.php:108
 msgid "Mailchimp has no campaign sent to copy the audience and sender from."
-msgstr "Mailchimp no té cap campanya enviada d'on copiar l'audiència i el remitent."
+msgstr ""
+"Mailchimp no té cap campanya enviada d'on copiar l'audiència i el remitent."
 
 #: modules/newsletter/includes/class-mailchimp.php:117
 msgid "Mailchimp did not return the new campaign."
@@ -4491,7 +4508,9 @@ msgstr "Mailchimp no ha retornat la campanya nova."
 msgid ""
 "Mailchimp made the campaign with a drag-and-drop template, which would send "
 "the template and not these news. It has been deleted."
-msgstr "Mailchimp ha fet la campanya amb una plantilla d'arrossegar i deixar anar, que enviaria la plantilla i no aquestes notícies. S'ha esborrat."
+msgstr ""
+"Mailchimp ha fet la campanya amb una plantilla d'arrossegar i deixar anar, "
+"que enviaria la plantilla i no aquestes notícies. S'ha esborrat."
 
 #: modules/newsletter/includes/class-screen.php:47
 #: modules/newsletter/includes/class-screen.php:100
@@ -4523,7 +4542,9 @@ msgstr "Resultats de la cerca"
 msgid ""
 "Add the posts of this week, in the order they will go. The first one gives "
 "the subject."
-msgstr "Afegeix les entrades d'aquesta setmana, en l'ordre en què aniran. La primera dona l'assumpte."
+msgstr ""
+"Afegeix les entrades d'aquesta setmana, en l'ordre en què aniran. La primera "
+"dona l'assumpte."
 
 #: modules/newsletter/includes/class-screen.php:80
 msgid "Subject:"
@@ -4537,7 +4558,8 @@ msgstr "Codi copiat. Enganxa'l a Mailchimp (bloc de codi o «Paste in code»)."
 msgid ""
 "The browser did not let the code be copied: select it below and copy it by "
 "hand."
-msgstr "El navegador no ha deixat copiar el codi: selecciona'l a sota i copia'l a mà."
+msgstr ""
+"El navegador no ha deixat copiar el codi: selecciona'l a sota i copia'l a mà."
 
 #: modules/newsletter/includes/class-screen.php:83
 msgid "Creating the draft in Mailchimp…"
@@ -4557,7 +4579,9 @@ msgstr "Obre'l a Mailchimp"
 msgid ""
 "Before sending: send yourself the test from Mailchimp, OPEN it and read the "
 "headlines."
-msgstr "Abans d'enviar-lo: envia't la prova des de Mailchimp, OBRE-LA i llegeix els titulars."
+msgstr ""
+"Abans d'enviar-lo: envia't la prova des de Mailchimp, OBRE-LA i llegeix els "
+"titulars."
 
 #. translators: 1: subject of the campaign copied, 2: its date.
 #: modules/newsletter/includes/class-screen.php:89
@@ -4573,7 +4597,9 @@ msgstr "No s'ha pogut fer:"
 msgid ""
 "Choose the posts, put them in order and check the email. Then copy its code "
 "or create the draft in Mailchimp: nothing is sent from here."
-msgstr "Tria les entrades, posa-les en ordre i revisa el correu. Després copia'n el codi o crea l'esborrany a Mailchimp: des d'aquí no s'envia res."
+msgstr ""
+"Tria les entrades, posa-les en ordre i revisa el correu. Després copia'n el "
+"codi o crea l'esborrany a Mailchimp: des d'aquí no s'envia res."
 
 #: modules/newsletter/includes/class-screen.php:104
 msgid "Without a Mailchimp key only the code can be copied."
@@ -4627,13 +4653,17 @@ msgstr "Llegeix-ne més"
 msgid ""
 "The Mailchimp key must end in its datacenter (for example -us21). It was not "
 "saved."
-msgstr "La clau de Mailchimp ha d'acabar amb el seu centre de dades (per exemple -us21). No s'ha desat."
+msgstr ""
+"La clau de Mailchimp ha d'acabar amb el seu centre de dades (per exemple -"
+"us21). No s'ha desat."
 
 #: modules/newsletter/includes/class-settings.php:162
 msgid ""
 "The email template must contain {{blocks}}, where the news go. It was not "
 "saved."
-msgstr "La plantilla del correu ha de contenir {{blocks}}, on van les notícies. No s'ha desat."
+msgstr ""
+"La plantilla del correu ha de contenir {{blocks}}, on van les notícies. No "
+"s'ha desat."
 
 #: modules/newsletter/includes/class-settings.php:189
 msgid "Mailchimp"
@@ -4644,7 +4674,10 @@ msgid ""
 "The «Newsletter» screen (under Posts) creates the campaign as a DRAFT in "
 "Mailchimp, never sends it. Audience, segment and sender are copied from the "
 "last campaign sent."
-msgstr "La pantalla «Butlletí» (a Entrades) crea la campanya com a ESBORRANY a Mailchimp i no l'envia mai. L'audiència, el segment i el remitent es copien de la darrera campanya enviada."
+msgstr ""
+"La pantalla «Butlletí» (a Entrades) crea la campanya com a ESBORRANY a "
+"Mailchimp i no l'envia mai. L'audiència, el segment i el remitent es copien "
+"de la darrera campanya enviada."
 
 #: modules/newsletter/includes/class-settings.php:194
 msgid "API key"
@@ -4654,7 +4687,9 @@ msgstr "Clau de l'API"
 msgid ""
 "Mailchimp → Account → Extras → API keys. Without it, the screen only copies "
 "the code."
-msgstr "Mailchimp → Account → Extras → API keys. Sense clau, la pantalla només copia el codi."
+msgstr ""
+"Mailchimp → Account → Extras → API keys. Sense clau, la pantalla només copia "
+"el codi."
 
 #: modules/newsletter/includes/class-settings.php:199
 msgid "Saved. Leave it empty to keep it."
@@ -4671,7 +4706,8 @@ msgstr "ID de l'audiència"
 #: modules/newsletter/includes/class-settings.php:211
 msgid ""
 "Optional. Empty: the audience of the last campaign sent from the account."
-msgstr "Opcional. Buit: l'audiència de la darrera campanya enviada des del compte."
+msgstr ""
+"Opcional. Buit: l'audiència de la darrera campanya enviada des del compte."
 
 #: modules/newsletter/includes/class-settings.php:215
 msgid "Featured category"
@@ -4681,7 +4717,9 @@ msgstr "Categoria destacada"
 msgid ""
 "Slug of the category whose posts are proposed first (the front page one). "
 "Empty: only the latest posts."
-msgstr "Slug de la categoria les entrades de la qual es proposen primer (la de portada). Buit: només les darreres entrades."
+msgstr ""
+"Slug de la categoria les entrades de la qual es proposen primer (la de "
+"portada). Buit: només les darreres entrades."
 
 #: modules/newsletter/includes/class-settings.php:224
 msgid "Templates"
@@ -4693,7 +4731,11 @@ msgid ""
 "where the news go. Block: one piece of news, with {{link}}, {{image}}, "
 "{{title}}, {{excerpt}}, {{label}} and {{more}} («Read more» in the site "
 "language)."
-msgstr "Els camps buits fan servir un disseny senzill. Correu: l'HTML sencer, amb {{blocks}} on van les notícies. Bloc: una notícia, amb {{link}}, {{image}}, {{title}}, {{excerpt}}, {{label}} i {{more}} («Llegeix-ne més» en la llengua del lloc)."
+msgstr ""
+"Els camps buits fan servir un disseny senzill. Correu: l'HTML sencer, amb "
+"{{blocks}} on van les notícies. Bloc: una notícia, amb {{link}}, {{image}}, "
+"{{title}}, {{excerpt}}, {{label}} i {{more}} («Llegeix-ne més» en la llengua "
+"del lloc)."
 
 #: modules/newsletter/includes/class-settings.php:233
 msgid "Block"

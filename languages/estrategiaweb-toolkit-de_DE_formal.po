@@ -62,7 +62,7 @@ msgid "Not loaded: turn on %s."
 msgstr "Nicht geladen: Schalten Sie %s ein."
 
 #: includes/admin/class-modules-page.php:176
-#: modules/banners/includes/class-post-type.php:318
+#: modules/banners/includes/class-post-type.php:333
 msgid "Off"
 msgstr "Aus"
 
@@ -357,7 +357,10 @@ msgctxt "module description"
 msgid ""
 "Choose the week's posts, preview the newsletter and copy its code or create "
 "the draft in Mailchimp. It never sends."
-msgstr "Wählen Sie die Beiträge der Woche, sehen Sie sich den Newsletter in der Vorschau an und kopieren Sie den Code oder legen Sie den Entwurf in Mailchimp an. Versendet nie."
+msgstr ""
+"Wählen Sie die Beiträge der Woche, sehen Sie sich den Newsletter in der "
+"Vorschau an und kopieren Sie den Code oder legen Sie den Entwurf in "
+"Mailchimp an. Versendet nie."
 
 #: includes/admin/module-strings.php:52
 msgctxt "module description"
@@ -490,88 +493,88 @@ msgstr "Bereich (Titelform)"
 msgid "How many at a time (0: all, one under another)"
 msgstr "Wie viele gleichzeitig (0: alle, untereinander)"
 
-#: modules/banners/includes/class-post-type.php:68
-#: modules/banners/includes/class-post-type.php:317
+#: modules/banners/includes/class-post-type.php:69
+#: modules/banners/includes/class-post-type.php:332
 msgid "Expired"
 msgstr "Abgelaufen"
 
-#: modules/banners/includes/class-post-type.php:68
-#: modules/banners/includes/class-post-type.php:316
+#: modules/banners/includes/class-post-type.php:69
+#: modules/banners/includes/class-post-type.php:331
 msgid "Scheduled"
 msgstr "Geplant"
 
-#: modules/banners/includes/class-post-type.php:68
-#: modules/banners/includes/class-post-type.php:315
+#: modules/banners/includes/class-post-type.php:69
+#: modules/banners/includes/class-post-type.php:330
 msgid "Showing"
 msgstr "Wird angezeigt"
 
-#: modules/banners/includes/class-post-type.php:123
+#: modules/banners/includes/class-post-type.php:127
 msgid "Banners"
 msgstr "Banner"
 
-#: modules/banners/includes/class-post-type.php:124
-#: modules/banners/includes/class-post-type.php:213
+#: modules/banners/includes/class-post-type.php:128
+#: modules/banners/includes/class-post-type.php:217
 msgid "Banner"
 msgstr "Banner"
 
-#: modules/banners/includes/class-post-type.php:125
-#: modules/banners/includes/class-post-type.php:126
+#: modules/banners/includes/class-post-type.php:129
+#: modules/banners/includes/class-post-type.php:130
 msgid "Add banner"
 msgstr "Banner hinzufügen"
 
-#: modules/banners/includes/class-post-type.php:127
+#: modules/banners/includes/class-post-type.php:131
 msgid "Edit banner"
 msgstr "Banner bearbeiten"
 
-#: modules/banners/includes/class-post-type.php:128
+#: modules/banners/includes/class-post-type.php:132
 msgid "New banner"
 msgstr "Neues Banner"
 
-#: modules/banners/includes/class-post-type.php:129
+#: modules/banners/includes/class-post-type.php:133
 msgid "Search banners"
 msgstr "Banner durchsuchen"
 
-#: modules/banners/includes/class-post-type.php:130
+#: modules/banners/includes/class-post-type.php:134
 msgid "No banners found."
 msgstr "Keine Banner gefunden."
 
-#: modules/banners/includes/class-post-type.php:131
+#: modules/banners/includes/class-post-type.php:135
 msgid "No banners found in Trash."
 msgstr "Keine Banner im Papierkorb gefunden."
 
-#: modules/banners/includes/class-post-type.php:132
+#: modules/banners/includes/class-post-type.php:136
 msgid "Banner image"
 msgstr "Banner-Bild"
 
-#: modules/banners/includes/class-post-type.php:133
+#: modules/banners/includes/class-post-type.php:137
 msgid "Set banner image"
 msgstr "Banner-Bild festlegen"
 
-#: modules/banners/includes/class-post-type.php:158
+#: modules/banners/includes/class-post-type.php:162
 msgid "Banner zones"
 msgstr "Banner-Bereiche"
 
-#: modules/banners/includes/class-post-type.php:159
+#: modules/banners/includes/class-post-type.php:163
 msgid "Banner zone"
 msgstr "Banner-Bereich"
 
-#: modules/banners/includes/class-post-type.php:160
+#: modules/banners/includes/class-post-type.php:164
 msgid "Zones"
 msgstr "Bereiche"
 
-#: modules/banners/includes/class-post-type.php:161
+#: modules/banners/includes/class-post-type.php:165
 msgid "Add zone"
 msgstr "Bereich hinzufügen"
 
-#: modules/banners/includes/class-post-type.php:162
+#: modules/banners/includes/class-post-type.php:166
 msgid "All zones"
 msgstr "Alle Bereiche"
 
-#: modules/banners/includes/class-post-type.php:214
+#: modules/banners/includes/class-post-type.php:218
 msgid "Statistics"
 msgstr "Statistiken"
 
-#: modules/banners/includes/class-post-type.php:235
+#: modules/banners/includes/class-post-type.php:239
 msgid ""
 "With a banner image (box on the right) it is an image banner with its link; "
 "without one, the code below is shown."
@@ -579,29 +582,41 @@ msgstr ""
 "Mit einem Banner-Bild (Box rechts) ist es ein Bild-Banner mit seinem Link; "
 "ohne Bild wird der Code unten angezeigt."
 
-#: modules/banners/includes/class-post-type.php:236
+#: modules/banners/includes/class-post-type.php:240
 #: modules/social/includes/class-admin.php:94
 #: modules/social/includes/class-admin.php:143
 msgid "Link"
 msgstr "Link"
 
-#: modules/banners/includes/class-post-type.php:238
+#: modules/banners/includes/class-post-type.php:242
 msgid "Code (adserver, iframe)"
 msgstr "Code (Adserver, iframe)"
 
-#: modules/banners/includes/class-post-type.php:241
+#: modules/banners/includes/class-post-type.php:248
+msgid ""
+"When it is shown, this code is filtered and these parts are removed or "
+"changed:"
+msgstr "Bei der Ausgabe wird dieser Code gefiltert; diese Teile werden entfernt oder verändert:"
+
+#: modules/banners/includes/class-post-type.php:252
+msgid ""
+"Inline JavaScript with & or < breaks this way: move it to a .js file and "
+"load it with <script src>."
+msgstr "Inline-JavaScript mit & oder < geht dabei kaputt: Verschieben Sie es in eine .js-Datei und laden Sie es mit <script src>."
+
+#: modules/banners/includes/class-post-type.php:256
 msgid "Starts"
 msgstr "Beginn"
 
-#: modules/banners/includes/class-post-type.php:242
+#: modules/banners/includes/class-post-type.php:257
 msgid "Ends"
 msgstr "Ende"
 
-#: modules/banners/includes/class-post-type.php:243
+#: modules/banners/includes/class-post-type.php:258
 msgid "Weight (1-10)"
 msgstr "Gewichtung (1-10)"
 
-#: modules/banners/includes/class-post-type.php:245
+#: modules/banners/includes/class-post-type.php:260
 msgid ""
 "Empty dates: no limit. The weight only matters when a zone shows fewer "
 "banners than it has."
@@ -610,30 +625,30 @@ msgstr ""
 "Bereich weniger Banner anzeigt, als er enthält."
 
 #. translators: 1: views, 2: clicks.
-#: modules/banners/includes/class-post-type.php:253
+#: modules/banners/includes/class-post-type.php:268
 #, php-format
 msgid "Total: %1$s views, %2$s clicks"
 msgstr "Gesamt: %1$s Ansichten, %2$s Klicks"
 
-#: modules/banners/includes/class-post-type.php:255
+#: modules/banners/includes/class-post-type.php:270
 msgid "No statistics yet."
 msgstr "Noch keine Statistiken."
 
-#: modules/banners/includes/class-post-type.php:258
-#: modules/banners/includes/class-post-type.php:293
+#: modules/banners/includes/class-post-type.php:273
+#: modules/banners/includes/class-post-type.php:308
 msgid "Clicks"
 msgstr "Klicks"
 
-#: modules/banners/includes/class-post-type.php:258
+#: modules/banners/includes/class-post-type.php:273
 msgid "Day"
 msgstr "Tag"
 
-#: modules/banners/includes/class-post-type.php:258
-#: modules/banners/includes/class-post-type.php:292
+#: modules/banners/includes/class-post-type.php:273
+#: modules/banners/includes/class-post-type.php:307
 msgid "Views"
 msgstr "Ansichten"
 
-#: modules/banners/includes/class-post-type.php:262
+#: modules/banners/includes/class-post-type.php:277
 msgid ""
 "Last 60 days with activity. A view is counted when the banner is on screen; "
 "code banners (adservers) count their clicks on their own side."
@@ -642,11 +657,11 @@ msgstr ""
 "Banner im sichtbaren Bereich ist; Code-Banner (Adserver) zählen ihre Klicks "
 "selbst."
 
-#: modules/banners/includes/class-post-type.php:290
+#: modules/banners/includes/class-post-type.php:305
 msgid "Dates"
 msgstr "Zeitraum"
 
-#: modules/banners/includes/class-post-type.php:291
+#: modules/banners/includes/class-post-type.php:306
 msgid "State"
 msgstr "Zustand"
 
@@ -1612,8 +1627,8 @@ msgid ""
 "fields, taxonomies and addresses. They are saved in this site’s database."
 msgstr ""
 "Ihre eigenen Inhaltstypen – Restaurants, Kurse, Teammitglieder … – mit ihren "
-"Feldern, Taxonomien und Adressen. Diese werden in der Datenbank dieser Website "
-"gespeichert."
+"Feldern, Taxonomien und Adressen. Diese werden in der Datenbank dieser "
+"Website gespeichert."
 
 #: modules/content-types/includes/admin/class-page.php:215
 msgid "Files with errors (not registered)"
@@ -2370,8 +2385,8 @@ msgid ""
 "longer attached to this type. Adding it back with the same name brings them "
 "back."
 msgstr ""
-"Die Taxonomie „%1$s“ wird entfernt: Die %2$d Begriffe der Taxonomie bleiben in der "
-"Datenbank, aber nicht mehr mit diesem Typ verknüpft. Wenn Sie sie mit "
+"Die Taxonomie „%1$s“ wird entfernt: Die %2$d Begriffe der Taxonomie bleiben "
+"in der Datenbank, aber nicht mehr mit diesem Typ verknüpft. Wenn Sie sie mit "
 "demselben Namen wieder hinzufügen, sind sie wieder da."
 
 #. translators: 1: old taxonomy name, 2: new taxonomy name
@@ -2542,8 +2557,8 @@ msgid ""
 "The taxonomy “%s” is already registered by other code: it is not registered "
 "again."
 msgstr ""
-"Die Taxonomie „%s“ wird bereits von anderem Code registriert: Diese wird nicht "
-"erneut registriert."
+"Die Taxonomie „%s“ wird bereits von anderem Code registriert: Diese wird "
+"nicht erneut registriert."
 
 #. translators: %s: singular name of a taxonomy, e.g. Cuisine
 #. translators: %s: singular name of a content type, e.g. Restaurant
@@ -3222,8 +3237,8 @@ msgid ""
 msgstr ""
 "Guten Tag {{name}},\n"
 "\n"
-"vielen Dank für Ihre Nachricht. Wir haben sie erhalten und melden uns in Kürze bei "
-"Ihnen.\n"
+"vielen Dank für Ihre Nachricht. Wir haben sie erhalten und melden uns in "
+"Kürze bei Ihnen.\n"
 "\n"
 "{{all_fields}}\n"
 "\n"
@@ -4497,7 +4512,8 @@ msgstr "Ein Newsletter enthält höchstens %d Beiträge."
 #: modules/newsletter/includes/class-builder.php:178
 #, php-format
 msgid "Post %d is not a published post that can go in the newsletter."
-msgstr "Beitrag %d ist kein veröffentlichter Beitrag, der in den Newsletter kann."
+msgstr ""
+"Beitrag %d ist kein veröffentlichter Beitrag, der in den Newsletter kann."
 
 #. translators: %s: post title.
 #: modules/newsletter/includes/class-builder.php:183
@@ -4511,7 +4527,9 @@ msgstr "„%s“ hat kein Beitragsbild: Sein Block erscheint ohne Foto."
 msgid ""
 "«%s»: its photo only exists in WebP, which Outlook does not show. Upload it "
 "again as JPEG."
-msgstr "„%s“: Das Foto gibt es nur als WebP, das Outlook nicht anzeigt. Laden Sie es erneut als JPEG hoch."
+msgstr ""
+"„%s“: Das Foto gibt es nur als WebP, das Outlook nicht anzeigt. Laden Sie es "
+"erneut als JPEG hoch."
 
 #: modules/newsletter/includes/class-builder.php:193
 msgid "The email template has no {{blocks}}."
@@ -4529,7 +4547,9 @@ msgstr "In den Einstellungen ist kein gültiger Mailchimp-Schlüssel hinterlegt.
 
 #: modules/newsletter/includes/class-mailchimp.php:108
 msgid "Mailchimp has no campaign sent to copy the audience and sender from."
-msgstr "Mailchimp hat keine versendete Kampagne, von der Zielgruppe und Absender übernommen werden können."
+msgstr ""
+"Mailchimp hat keine versendete Kampagne, von der Zielgruppe und Absender "
+"übernommen werden können."
 
 #: modules/newsletter/includes/class-mailchimp.php:117
 msgid "Mailchimp did not return the new campaign."
@@ -4539,7 +4559,9 @@ msgstr "Mailchimp hat die neue Kampagne nicht zurückgegeben."
 msgid ""
 "Mailchimp made the campaign with a drag-and-drop template, which would send "
 "the template and not these news. It has been deleted."
-msgstr "Mailchimp hat die Kampagne mit einer Drag-and-Drop-Vorlage angelegt, die die Vorlage statt dieser Beiträge versenden würde. Die Kampagne wurde gelöscht."
+msgstr ""
+"Mailchimp hat die Kampagne mit einer Drag-and-Drop-Vorlage angelegt, die die "
+"Vorlage statt dieser Beiträge versenden würde. Die Kampagne wurde gelöscht."
 
 #: modules/newsletter/includes/class-screen.php:47
 #: modules/newsletter/includes/class-screen.php:100
@@ -4571,7 +4593,9 @@ msgstr "Suchergebnisse"
 msgid ""
 "Add the posts of this week, in the order they will go. The first one gives "
 "the subject."
-msgstr "Fügen Sie die Beiträge dieser Woche in der Reihenfolge hinzu, in der sie erscheinen. Der erste ergibt den Betreff."
+msgstr ""
+"Fügen Sie die Beiträge dieser Woche in der Reihenfolge hinzu, in der sie "
+"erscheinen. Der erste ergibt den Betreff."
 
 #: modules/newsletter/includes/class-screen.php:80
 msgid "Subject:"
@@ -4579,13 +4603,17 @@ msgstr "Betreff:"
 
 #: modules/newsletter/includes/class-screen.php:81
 msgid "Code copied. Paste it into Mailchimp (code block or «Paste in code»)."
-msgstr "Code kopiert. Fügen Sie ihn in Mailchimp ein (Code-Block oder „Paste in code“)."
+msgstr ""
+"Code kopiert. Fügen Sie ihn in Mailchimp ein (Code-Block oder „Paste in "
+"code“)."
 
 #: modules/newsletter/includes/class-screen.php:82
 msgid ""
 "The browser did not let the code be copied: select it below and copy it by "
 "hand."
-msgstr "Der Browser hat das Kopieren nicht erlaubt: Markieren Sie den Code unten und kopieren Sie ihn von Hand."
+msgstr ""
+"Der Browser hat das Kopieren nicht erlaubt: Markieren Sie den Code unten und "
+"kopieren Sie ihn von Hand."
 
 #: modules/newsletter/includes/class-screen.php:83
 msgid "Creating the draft in Mailchimp…"
@@ -4595,7 +4623,8 @@ msgstr "Entwurf wird in Mailchimp angelegt …"
 #: modules/newsletter/includes/class-screen.php:85
 #, php-format
 msgid "Draft created: «%1$s», for %2$s recipients. Nothing has been sent."
-msgstr "Entwurf angelegt: „%1$s“, für %2$s Empfänger. Es wurde nichts versendet."
+msgstr ""
+"Entwurf angelegt: „%1$s“, für %2$s Empfänger. Es wurde nichts versendet."
 
 #: modules/newsletter/includes/class-screen.php:86
 msgid "Open it in Mailchimp"
@@ -4605,7 +4634,9 @@ msgstr "In Mailchimp öffnen"
 msgid ""
 "Before sending: send yourself the test from Mailchimp, OPEN it and read the "
 "headlines."
-msgstr "Vor dem Versand: Senden Sie sich den Test aus Mailchimp, ÖFFNEN Sie ihn und lesen Sie die Überschriften."
+msgstr ""
+"Vor dem Versand: Senden Sie sich den Test aus Mailchimp, ÖFFNEN Sie ihn und "
+"lesen Sie die Überschriften."
 
 #. translators: 1: subject of the campaign copied, 2: its date.
 #: modules/newsletter/includes/class-screen.php:89
@@ -4621,7 +4652,10 @@ msgstr "Das hat nicht geklappt:"
 msgid ""
 "Choose the posts, put them in order and check the email. Then copy its code "
 "or create the draft in Mailchimp: nothing is sent from here."
-msgstr "Wählen Sie die Beiträge, bringen Sie sie in die Reihenfolge und prüfen Sie die E-Mail. Kopieren Sie dann den Code oder legen Sie den Entwurf in Mailchimp an: Von hier aus wird nichts versendet."
+msgstr ""
+"Wählen Sie die Beiträge, bringen Sie sie in die Reihenfolge und prüfen Sie "
+"die E-Mail. Kopieren Sie dann den Code oder legen Sie den Entwurf in "
+"Mailchimp an: Von hier aus wird nichts versendet."
 
 #: modules/newsletter/includes/class-screen.php:104
 msgid "Without a Mailchimp key only the code can be copied."
@@ -4675,13 +4709,17 @@ msgstr "Weiterlesen"
 msgid ""
 "The Mailchimp key must end in its datacenter (for example -us21). It was not "
 "saved."
-msgstr "Der Mailchimp-Schlüssel muss mit seinem Rechenzentrum enden (zum Beispiel -us21). Er wurde nicht gespeichert."
+msgstr ""
+"Der Mailchimp-Schlüssel muss mit seinem Rechenzentrum enden (zum Beispiel -"
+"us21). Er wurde nicht gespeichert."
 
 #: modules/newsletter/includes/class-settings.php:162
 msgid ""
 "The email template must contain {{blocks}}, where the news go. It was not "
 "saved."
-msgstr "Die E-Mail-Vorlage muss {{blocks}} enthalten, wo die Beiträge stehen. Die Vorlage wurde nicht gespeichert."
+msgstr ""
+"Die E-Mail-Vorlage muss {{blocks}} enthalten, wo die Beiträge stehen. Die "
+"Vorlage wurde nicht gespeichert."
 
 #: modules/newsletter/includes/class-settings.php:189
 msgid "Mailchimp"
@@ -4692,7 +4730,10 @@ msgid ""
 "The «Newsletter» screen (under Posts) creates the campaign as a DRAFT in "
 "Mailchimp, never sends it. Audience, segment and sender are copied from the "
 "last campaign sent."
-msgstr "Der Bildschirm „Newsletter“ (unter Beiträge) legt die Kampagne als ENTWURF in Mailchimp an und versendet sie nie. Zielgruppe, Segment und Absender werden von der zuletzt versendeten Kampagne übernommen."
+msgstr ""
+"Der Bildschirm „Newsletter“ (unter Beiträge) legt die Kampagne als ENTWURF "
+"in Mailchimp an und versendet sie nie. Zielgruppe, Segment und Absender "
+"werden von der zuletzt versendeten Kampagne übernommen."
 
 #: modules/newsletter/includes/class-settings.php:194
 msgid "API key"
@@ -4702,7 +4743,9 @@ msgstr "API-Schlüssel"
 msgid ""
 "Mailchimp → Account → Extras → API keys. Without it, the screen only copies "
 "the code."
-msgstr "Mailchimp → Account → Extras → API keys. Ohne Schlüssel kopiert der Bildschirm nur den Code."
+msgstr ""
+"Mailchimp → Account → Extras → API keys. Ohne Schlüssel kopiert der "
+"Bildschirm nur den Code."
 
 #: modules/newsletter/includes/class-settings.php:199
 msgid "Saved. Leave it empty to keep it."
@@ -4719,7 +4762,8 @@ msgstr "Zielgruppen-ID"
 #: modules/newsletter/includes/class-settings.php:211
 msgid ""
 "Optional. Empty: the audience of the last campaign sent from the account."
-msgstr "Optional. Leer: die Zielgruppe der zuletzt versendeten Kampagne des Kontos."
+msgstr ""
+"Optional. Leer: die Zielgruppe der zuletzt versendeten Kampagne des Kontos."
 
 #: modules/newsletter/includes/class-settings.php:215
 msgid "Featured category"
@@ -4729,7 +4773,9 @@ msgstr "Hervorgehobene Kategorie"
 msgid ""
 "Slug of the category whose posts are proposed first (the front page one). "
 "Empty: only the latest posts."
-msgstr "Slug der Kategorie, deren Beiträge zuerst vorgeschlagen werden (die der Startseite). Leer: nur die neuesten Beiträge."
+msgstr ""
+"Slug der Kategorie, deren Beiträge zuerst vorgeschlagen werden (die der "
+"Startseite). Leer: nur die neuesten Beiträge."
 
 #: modules/newsletter/includes/class-settings.php:224
 msgid "Templates"
@@ -4741,7 +4787,11 @@ msgid ""
 "where the news go. Block: one piece of news, with {{link}}, {{image}}, "
 "{{title}}, {{excerpt}}, {{label}} and {{more}} («Read more» in the site "
 "language)."
-msgstr "Leere Felder verwenden ein einfaches Design. E-Mail: das ganze HTML, mit {{blocks}} dort, wo die Beiträge stehen. Block: ein Beitrag, mit {{link}}, {{image}}, {{title}}, {{excerpt}}, {{label}} und {{more}} („Weiterlesen“ in der Sprache der Website)."
+msgstr ""
+"Leere Felder verwenden ein einfaches Design. E-Mail: das ganze HTML, mit "
+"{{blocks}} dort, wo die Beiträge stehen. Block: ein Beitrag, mit {{link}}, "
+"{{image}}, {{title}}, {{excerpt}}, {{label}} und {{more}} („Weiterlesen“ in "
+"der Sprache der Website)."
 
 #: modules/newsletter/includes/class-settings.php:233
 msgid "Block"
@@ -4765,8 +4815,8 @@ msgid ""
 msgstr ""
 "Weiterleitung gespeichert, aber diese Quelle ist eine Seite, die auf der "
 "Website existiert: Weiterleitungen greifen nur bei Adressen, die einen 404-"
-"Fehler liefern. Die Weiterleitung funktioniert, sobald die Seite gelöscht oder nicht mehr "
-"veröffentlicht ist."
+"Fehler liefern. Die Weiterleitung funktioniert, sobald die Seite gelöscht "
+"oder nicht mehr veröffentlicht ist."
 
 #: modules/redirects/includes/admin/class-page.php:157
 msgid "Deleted."

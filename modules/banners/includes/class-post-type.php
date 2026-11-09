@@ -8,7 +8,8 @@
  * image banner and the code is ignored; that is the whole rule.
  *
  *   estrategia_web_banner_link     URL the image links to (sponsored, new tab)
- *   estrategia_web_banner_code     raw HTML; only users with unfiltered_html
+ *   estrategia_web_banner_code     HTML; only users with unfiltered_html write it,
+ *                                  and it is filtered when shown (Kses::banner())
  *   estrategia_web_banner_start    unix time, 0 = from now
  *   estrategia_web_banner_end      unix time, 0 = no end
  *   estrategia_web_banner_weight   1-10, how often it comes up when a zone shows fewer than it has
@@ -102,15 +103,18 @@ final class Post_Type {
 			);
 		}
 		add_action(
-			'admin_head-edit.php',
-			static function (): void {
-				if ( self::TYPE !== ( $GLOBALS['typenow'] ?? '' ) ) {
+			'admin_enqueue_scripts',
+			static function ( string $hook ): void {
+				if ( 'edit.php' !== $hook || self::TYPE !== ( $GLOBALS['typenow'] ?? '' ) ) {
 					return;
 				}
 				// The state as a pill: green showing, blue scheduled, grey expired or off. WordPress's admin colours.
-				echo '<style>.ewb-state{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;line-height:20px;background:#f0f0f1;color:#50575e}'
+				wp_add_inline_style(
+					'wp-admin',
+					'.ewb-state{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;line-height:20px;background:#f0f0f1;color:#50575e}'
 					. '.ewb-state--active{background:#edfaef;color:#00650f}.ewb-state--scheduled{background:#f0f6fc;color:#0a4b78}'
-					. '.column-ewb_state,.column-ewb_views,.column-ewb_clicks{width:9%}.column-ewb_dates{width:16%}</style>';
+					. '.column-ewb_state,.column-ewb_views,.column-ewb_clicks{width:9%}.column-ewb_dates{width:16%}'
+				);
 			}
 		);
 	}
@@ -237,6 +241,17 @@ final class Post_Type {
 			<input type="url" id="ewb-link" name="ewb[link]" value="<?php echo esc_attr( $d['link'] ); ?>" class="widefat" placeholder="https://"></p>
 		<p><label for="ewb-code"><strong><?php esc_html_e( 'Code (adserver, iframe)', 'estrategiaweb-toolkit' ); ?></strong></label><br>
 			<textarea id="ewb-code" name="ewb[code]" rows="6" class="widefat code" <?php disabled( ! current_user_can( 'unfiltered_html' ) ); ?>><?php echo esc_textarea( $d['code'] ); ?></textarea></p>
+		<?php
+		// What the filter of the banner zone (Kses::banner()) would remove or change: said here, not lost in silence.
+		$lost = '' !== trim( $d['code'] ) ? \EstrategiaWeb\Kses::losses( $d['code'], \EstrategiaWeb\Kses::banner() ) : array();
+		if ( $lost ) {
+			echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'When it is shown, this code is filtered and these parts are removed or changed:', 'estrategiaweb-toolkit' ) . '</p><ul>';
+			foreach ( array_slice( $lost, 0, 10 ) as $line ) {
+				echo '<li><code>' . esc_html( $line ) . '</code></li>';
+			}
+			echo '</ul><p>' . esc_html__( 'Inline JavaScript with & or < breaks this way: move it to a .js file and load it with <script src>.', 'estrategiaweb-toolkit' ) . '</p></div>';
+		}
+		?>
 		<p style="display:flex;gap:24px;flex-wrap:wrap">
 			<label><strong><?php esc_html_e( 'Starts', 'estrategiaweb-toolkit' ); ?></strong><br><input type="datetime-local" name="ewb[start]" value="<?php echo esc_attr( self::local( $d['start'] ) ); ?>"></label>
 			<label><strong><?php esc_html_e( 'Ends', 'estrategiaweb-toolkit' ); ?></strong><br><input type="datetime-local" name="ewb[end]" value="<?php echo esc_attr( self::local( $d['end'] ) ); ?>"></label>

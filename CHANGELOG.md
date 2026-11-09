@@ -9,6 +9,26 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.10.2 — 09-11-2026 (WordPress.org: the third review, code banners filtered)
+
+**What each site must do:** nothing. The six code banners of Gastronòmicament
+(09-11-2026) come out the same: none has inline JavaScript with `&` or `<`.
+
+The review of 08-11-2026 did not accept the code of a code banner printed raw,
+and asked for the banner list's `<style>` to go through the enqueue functions.
+
+- The code of a code banner goes through `wp_kses()` with `Kses::banner()`
+  (scripts, `<ins>`, iframes, linked images), and so does the whole zone at
+  the `printf`: `render.php` no longer has an escaping `phpcs:ignore`. Saving
+  it still needs `unfiltered_html`.
+- **The trap, and what was done about it:** `wp_kses()` normalizes entities
+  inside `<script>` too, so inline JavaScript with `&&` comes out as
+  `&amp;&amp;` and stops running. `Kses::losses()` compares what goes in with
+  what comes out, and the banner's edit screen lists what would be lost.
+- The state pills of the banner list: `wp_add_inline_style( 'wp-admin', … )`
+  on `admin_enqueue_scripts`, instead of an echoed `<style>`.
+- New `modules/banners/tests/code.test.mjs` (level 2).
+
 ## 2.10.1 — 06-11-2026 (WordPress.org: the second review, escaping)
 
 **What each site must do:** nothing.
