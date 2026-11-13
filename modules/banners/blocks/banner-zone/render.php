@@ -25,11 +25,13 @@
  * Escaping: everything printed here is escaped or filtered, the code of a
  * code banner too. Until 2.10.1 that code went out raw, controlled only when
  * saved (unfiltered_html); the WordPress.org review of 08-11-2026 did not
- * accept it, and since 2.10.2 it is filtered here AS WELL. Saving it still
- * needs unfiltered_html (Post_Type: the meta box, its save and the meta's
+ * accept it, and since 2.10.2 it is filtered here AS WELL; since 2.10.3
+ * (review of 12-11-2026) it is also filtered when saved, with the same list
+ * (Post_Type::save() and the meta's sanitize_callback). Saving it still
+ * needs unfiltered_html (the meta box, its save and the meta's
  * auth_callback). The trap of filtering it (inline JavaScript with «&&» or
- * «<» breaks) is in the header of includes/class-kses.php; the meta box lists
- * what the filter would lose, so it does not fail in silence.
+ * «<» breaks) is in the header of includes/class-kses.php; after a save the
+ * meta box lists what the filter removed, so it does not fail in silence.
  *
  * How to maintain:
  * - The trap: a code banner that is hidden by view.js still RUNS its scripts

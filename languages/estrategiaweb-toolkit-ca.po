@@ -62,7 +62,7 @@ msgid "Not loaded: turn on %s."
 msgstr "No es carrega: activa %s."
 
 #: includes/admin/class-modules-page.php:176
-#: modules/banners/includes/class-post-type.php:333
+#: modules/banners/includes/class-post-type.php:357
 msgid "Off"
 msgstr "Desactivat"
 
@@ -490,17 +490,17 @@ msgid "How many at a time (0: all, one under another)"
 msgstr "Quants alhora (0: tots, un davall l'altre)"
 
 #: modules/banners/includes/class-post-type.php:69
-#: modules/banners/includes/class-post-type.php:332
+#: modules/banners/includes/class-post-type.php:356
 msgid "Expired"
 msgstr "Caducat"
 
 #: modules/banners/includes/class-post-type.php:69
-#: modules/banners/includes/class-post-type.php:331
+#: modules/banners/includes/class-post-type.php:355
 msgid "Scheduled"
 msgstr "Programat"
 
 #: modules/banners/includes/class-post-type.php:69
-#: modules/banners/includes/class-post-type.php:330
+#: modules/banners/includes/class-post-type.php:354
 msgid "Showing"
 msgstr "Es mostra"
 
@@ -509,7 +509,7 @@ msgid "Banners"
 msgstr "Bàners"
 
 #: modules/banners/includes/class-post-type.php:128
-#: modules/banners/includes/class-post-type.php:217
+#: modules/banners/includes/class-post-type.php:219
 msgid "Banner"
 msgstr "Bàner"
 
@@ -576,11 +576,11 @@ msgid "All zones"
 msgstr "Totes les zones"
 
 #
-#: modules/banners/includes/class-post-type.php:218
+#: modules/banners/includes/class-post-type.php:220
 msgid "Statistics"
 msgstr "Estadístiques"
 
-#: modules/banners/includes/class-post-type.php:239
+#: modules/banners/includes/class-post-type.php:241
 msgid ""
 "With a banner image (box on the right) it is an image banner with its link; "
 "without one, the code below is shown."
@@ -588,41 +588,41 @@ msgstr ""
 "Amb imatge del bàner (quadre de la dreta) és un bàner d'imatge amb el seu "
 "enllaç; sense imatge, es mostra el codi de davall."
 
-#: modules/banners/includes/class-post-type.php:240
+#: modules/banners/includes/class-post-type.php:242
 #: modules/social/includes/class-admin.php:94
 #: modules/social/includes/class-admin.php:143
 msgid "Link"
 msgstr "Enllaç"
 
-#: modules/banners/includes/class-post-type.php:242
+#: modules/banners/includes/class-post-type.php:244
 msgid "Code (adserver, iframe)"
 msgstr "Codi (adserver, iframe)"
 
-#: modules/banners/includes/class-post-type.php:248
-msgid ""
-"When it is shown, this code is filtered and these parts are removed or "
-"changed:"
-msgstr "En mostrar-se, aquest codi es filtra i aquestes parts s'eliminen o canvien:"
+#: modules/banners/includes/class-post-type.php:255
+msgid "This code is filtered and these parts were removed or changed:"
+msgstr "Aquest codi es filtra i aquestes parts s'han eliminat o canviat:"
 
-#: modules/banners/includes/class-post-type.php:252
+#: modules/banners/includes/class-post-type.php:259
 msgid ""
 "Inline JavaScript with & or < breaks this way: move it to a .js file and "
 "load it with <script src>."
-msgstr "El JavaScript en línia amb & o < es trenca així: passa'l a un fitxer .js i carrega'l amb <script src>."
+msgstr ""
+"El JavaScript en línia amb & o < es trenca així: passa'l a un fitxer .js i "
+"carrega'l amb <script src>."
 
-#: modules/banners/includes/class-post-type.php:256
+#: modules/banners/includes/class-post-type.php:263
 msgid "Starts"
 msgstr "Comença"
 
-#: modules/banners/includes/class-post-type.php:257
+#: modules/banners/includes/class-post-type.php:264
 msgid "Ends"
 msgstr "Acaba"
 
-#: modules/banners/includes/class-post-type.php:258
+#: modules/banners/includes/class-post-type.php:265
 msgid "Weight (1-10)"
 msgstr "Pes (1-10)"
 
-#: modules/banners/includes/class-post-type.php:260
+#: modules/banners/includes/class-post-type.php:267
 msgid ""
 "Empty dates: no limit. The weight only matters when a zone shows fewer "
 "banners than it has."
@@ -631,32 +631,32 @@ msgstr ""
 "bàners dels que té."
 
 #. translators: 1: views, 2: clicks.
-#: modules/banners/includes/class-post-type.php:268
+#: modules/banners/includes/class-post-type.php:275
 #, php-format
 msgid "Total: %1$s views, %2$s clicks"
 msgstr "Total: %1$s vistes, %2$s clics"
 
 #
-#: modules/banners/includes/class-post-type.php:270
+#: modules/banners/includes/class-post-type.php:277
 msgid "No statistics yet."
 msgstr "Encara no hi ha estadístiques."
 
-#: modules/banners/includes/class-post-type.php:273
-#: modules/banners/includes/class-post-type.php:308
+#: modules/banners/includes/class-post-type.php:280
+#: modules/banners/includes/class-post-type.php:332
 msgid "Clicks"
 msgstr "Clics"
 
-#: modules/banners/includes/class-post-type.php:273
+#: modules/banners/includes/class-post-type.php:280
 msgid "Day"
 msgstr "Dia"
 
 #
-#: modules/banners/includes/class-post-type.php:273
-#: modules/banners/includes/class-post-type.php:307
+#: modules/banners/includes/class-post-type.php:280
+#: modules/banners/includes/class-post-type.php:331
 msgid "Views"
 msgstr "Vistes"
 
-#: modules/banners/includes/class-post-type.php:277
+#: modules/banners/includes/class-post-type.php:284
 msgid ""
 "Last 60 days with activity. A view is counted when the banner is on screen; "
 "code banners (adservers) count their clicks on their own side."
@@ -665,12 +665,12 @@ msgstr ""
 "pantalla; els bàners de codi (adservers) compten els clics pel seu compte."
 
 #
-#: modules/banners/includes/class-post-type.php:305
+#: modules/banners/includes/class-post-type.php:329
 msgid "Dates"
 msgstr "Dates"
 
 #
-#: modules/banners/includes/class-post-type.php:306
+#: modules/banners/includes/class-post-type.php:330
 msgid "State"
 msgstr "Estat"
 
@@ -2457,8 +2457,8 @@ msgstr "Copia el dilluns a tots els dies"
 msgid "Monday’s hours copied to every day."
 msgstr "Horari del dilluns copiat a tots els dies."
 
-#: modules/content-types/includes/class-fields-panel.php:348
-#: modules/content-types/includes/class-fields-panel.php:354
+#: modules/content-types/includes/class-fields-panel.php:349
+#: modules/content-types/includes/class-fields-panel.php:355
 msgid "— None —"
 msgstr "— Cap —"
 

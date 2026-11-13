@@ -98,7 +98,7 @@ return array(
 		'With a banner image (box on the right) it is an image banner with its link; without one, the code below is shown.' => 'Amb imatge del bàner (quadre de la dreta) és un bàner d\'imatge amb el seu enllaç; sense imatge, es mostra el codi de davall.',
 		'Link' => 'Enllaç',
 		'Code (adserver, iframe)' => 'Codi (adserver, iframe)',
-		'When it is shown, this code is filtered and these parts are removed or changed:' => 'En mostrar-se, aquest codi es filtra i aquestes parts s\'eliminen o canvien:',
+		'This code is filtered and these parts were removed or changed:' => 'Aquest codi es filtra i aquestes parts s\'han eliminat o canviat:',
 		'Inline JavaScript with & or < breaks this way: move it to a .js file and load it with <script src>.' => 'El JavaScript en línia amb & o < es trenca així: passa\'l a un fitxer .js i carrega\'l amb <script src>.',
 		'Starts' => 'Comença',
 		'Ends' => 'Acaba',

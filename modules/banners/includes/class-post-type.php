@@ -182,10 +182,12 @@ final class Post_Type {
 			self::TYPE,
 			self::FIELDS['code'],
 			array(
-				'type'          => 'string',
-				'single'        => true,
-				'show_in_rest'  => true,
-				'auth_callback' => static fn() => current_user_can( 'unfiltered_html' ),
+				'type'              => 'string',
+				'single'            => true,
+				'show_in_rest'      => true,
+				'auth_callback'     => static fn() => current_user_can( 'unfiltered_html' ),
+				// Also through REST and the AdRotate migration (wp-cli), not only the meta box.
+				'sanitize_callback' => static fn( $value ) => wp_kses( (string) $value, \EstrategiaWeb\Kses::banner() ),
 			)
 		);
 	}
@@ -242,10 +244,15 @@ final class Post_Type {
 		<p><label for="ewb-code"><strong><?php esc_html_e( 'Code (adserver, iframe)', 'estrategiaweb-toolkit' ); ?></strong></label><br>
 			<textarea id="ewb-code" name="ewb[code]" rows="6" class="widefat code" <?php disabled( ! current_user_can( 'unfiltered_html' ) ); ?>><?php echo esc_textarea( $d['code'] ); ?></textarea></p>
 		<?php
-		// What the filter of the banner zone (Kses::banner()) would remove or change: said here, not lost in silence.
-		$lost = '' !== trim( $d['code'] ) ? \EstrategiaWeb\Kses::losses( $d['code'], \EstrategiaWeb\Kses::banner() ) : array();
+		// What the filter (Kses::banner()) removed on the last save (save()), shown once; or, for code stored
+		// before 2.10.3 unfiltered, what it removes when shown. Said here, not lost in silence.
+		$saved = get_transient( self::lost_key( $post->ID ) );
+		if ( is_array( $saved ) ) {
+			delete_transient( self::lost_key( $post->ID ) );
+		}
+		$lost = is_array( $saved ) ? $saved : ( '' !== trim( $d['code'] ) ? \EstrategiaWeb\Kses::losses( $d['code'], \EstrategiaWeb\Kses::banner() ) : array() );
 		if ( $lost ) {
-			echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'When it is shown, this code is filtered and these parts are removed or changed:', 'estrategiaweb-toolkit' ) . '</p><ul>';
+			echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'This code is filtered and these parts were removed or changed:', 'estrategiaweb-toolkit' ) . '</p><ul>';
 			foreach ( array_slice( $lost, 0, 10 ) as $line ) {
 				echo '<li><code>' . esc_html( $line ) . '</code></li>';
 			}
@@ -284,14 +291,31 @@ final class Post_Type {
 		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ! current_user_can( 'edit_post', $post_id ) ) {
 			return;
 		}
-		$in = isset( $_POST['ewb'] ) && is_array( $_POST['ewb'] ) ? wp_unslash( $_POST['ewb'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- each key sanitized below.
-		update_post_meta( $post_id, self::FIELDS['link'], esc_url_raw( (string) ( $in['link'] ?? '' ) ) );
-		update_post_meta( $post_id, self::FIELDS['start'], self::unix( sanitize_text_field( (string) ( $in['start'] ?? '' ) ) ) );
-		update_post_meta( $post_id, self::FIELDS['end'], self::unix( sanitize_text_field( (string) ( $in['end'] ?? '' ) ) ) );
-		update_post_meta( $post_id, self::FIELDS['weight'], min( 10, max( 1, (int) ( $in['weight'] ?? 5 ) ) ) );
-		if ( current_user_can( 'unfiltered_html' ) && isset( $in['code'] ) ) {
-			update_post_meta( $post_id, self::FIELDS['code'], (string) $in['code'] );
+		// Each field is read and sanitized on its own line (WordPress.org review of 12-11-2026: no array taken whole).
+		$link   = isset( $_POST['ewb']['link'] ) && is_string( $_POST['ewb']['link'] ) ? esc_url_raw( wp_unslash( $_POST['ewb']['link'] ) ) : '';
+		$start  = isset( $_POST['ewb']['start'] ) && is_string( $_POST['ewb']['start'] ) ? sanitize_text_field( wp_unslash( $_POST['ewb']['start'] ) ) : '';
+		$end    = isset( $_POST['ewb']['end'] ) && is_string( $_POST['ewb']['end'] ) ? sanitize_text_field( wp_unslash( $_POST['ewb']['end'] ) ) : '';
+		$weight = isset( $_POST['ewb']['weight'] ) ? absint( $_POST['ewb']['weight'] ) : 5;
+		update_post_meta( $post_id, self::FIELDS['link'], $link );
+		update_post_meta( $post_id, self::FIELDS['start'], self::unix( $start ) );
+		update_post_meta( $post_id, self::FIELDS['end'], self::unix( $end ) );
+		update_post_meta( $post_id, self::FIELDS['weight'], min( 10, max( 1, $weight ) ) );
+		if ( ! current_user_can( 'unfiltered_html' ) || ! isset( $_POST['ewb']['code'] ) || ! is_string( $_POST['ewb']['code'] ) ) {
+			return;
 		}
+		// Stored already filtered, with the same list the banner zone uses when it shows it. What the filter
+		// took out is kept for the next screen (box()), so the user learns it was removed instead of losing it in silence.
+		$code = wp_kses( wp_unslash( $_POST['ewb']['code'] ), \EstrategiaWeb\Kses::banner() );
+		$lost = \EstrategiaWeb\Kses::losses( wp_unslash( $_POST['ewb']['code'] ), \EstrategiaWeb\Kses::banner() ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only compared with its filtered version to list what was removed; never stored nor printed (box() escapes each line).
+		update_post_meta( $post_id, self::FIELDS['code'], $code );
+		if ( $lost ) {
+			set_transient( self::lost_key( $post_id ), array_slice( $lost, 0, 10 ), 5 * MINUTE_IN_SECONDS );
+		}
+	}
+
+	/** Transient with what the filter removed on the last save, for that user and banner. */
+	private static function lost_key( int $post_id ): string {
+		return 'ewb_lost_' . $post_id . '_' . get_current_user_id();
 	}
 
 	/**

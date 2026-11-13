@@ -9,6 +9,21 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.10.3 — 13-11-2026 (WordPress.org: the fourth review, input sanitized on save)
+
+**What each site must do:** nothing. Code banners already stored keep their
+code as it was until they are saved again; then it is stored filtered, the
+same way it was already shown since 2.10.2.
+
+- The review asked to sanitize on input, not only on output. The code of a
+  code banner is stored through `wp_kses()` with `Kses::banner()` (meta box,
+  REST and the AdRotate migration, through the meta's `sanitize_callback`).
+  What the filter removed is listed once on the next screen, from a transient;
+  through REST the response carries the filtered code.
+- The banner meta box, the content-type fields of the classic screen and the
+  redirect of the old menu pages read `$_POST`/`$_GET` one key at a time and
+  sanitize each one there, instead of taking the whole array.
+
 ## 2.10.2 — 09-11-2026 (WordPress.org: the third review, code banners filtered)
 
 **What each site must do:** nothing. The six code banners of Gastronòmicament

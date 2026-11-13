@@ -98,7 +98,7 @@ return array(
 		'With a banner image (box on the right) it is an image banner with its link; without one, the code below is shown.' => 'Mit einem Banner-Bild (Box rechts) ist es ein Bild-Banner mit seinem Link; ohne Bild wird der Code unten angezeigt.',
 		'Link' => 'Link',
 		'Code (adserver, iframe)' => 'Code (Adserver, iframe)',
-		'When it is shown, this code is filtered and these parts are removed or changed:' => 'Bei der Ausgabe wird dieser Code gefiltert; diese Teile werden entfernt oder verändert:',
+		'This code is filtered and these parts were removed or changed:' => 'Dieser Code wird gefiltert; diese Teile wurden entfernt oder verändert:',
 		'Inline JavaScript with & or < breaks this way: move it to a .js file and load it with <script src>.' => 'Inline-JavaScript mit & oder < geht dabei kaputt: Verschiebe es in eine .js-Datei und lade es mit <script src>.',
 		'Starts' => 'Beginn',
 		'Ends' => 'Ende',
