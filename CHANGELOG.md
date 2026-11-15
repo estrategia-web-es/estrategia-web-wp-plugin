@@ -9,6 +9,23 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.10.4 — 15-11-2026 (WordPress.org: the fifth review, no phpcs:ignore on input)
+
+**What each site must do:** nothing.
+
+- The review of 15-11-2026 did not accept handling a request value before a
+  sanitizing function, not even with a `phpcs:ignore` and a reason. The four
+  that were left are gone: none remains for `ValidatedSanitizedInput`.
+- A code banner's save no longer lists what the filter removed (that needed
+  the raw value). The screen carries a fixed note instead: the code is
+  filtered when saved and when shown, and inline JavaScript with `&` or `<`
+  breaks. The list stays for code stored unfiltered before 2.10.3.
+- The content-type fields of the classic screen are read by
+  `Registrar::posted()`, with the WordPress sanitizer of each type (an embed
+  through `wp_kses()` keeping the iframe's `src`), for the save and for the
+  required-fields check.
+- The redirects CSV import sanitizes the upload's temporary path.
+
 ## 2.10.3 — 13-11-2026 (WordPress.org: the fourth review, input sanitized on save)
 
 **What each site must do:** nothing. Code banners already stored keep their

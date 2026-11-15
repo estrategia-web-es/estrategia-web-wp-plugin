@@ -243,16 +243,14 @@ final class Post_Type {
 			<input type="url" id="ewb-link" name="ewb[link]" value="<?php echo esc_attr( $d['link'] ); ?>" class="widefat" placeholder="https://"></p>
 		<p><label for="ewb-code"><strong><?php esc_html_e( 'Code (adserver, iframe)', 'estrategiaweb-toolkit' ); ?></strong></label><br>
 			<textarea id="ewb-code" name="ewb[code]" rows="6" class="widefat code" <?php disabled( ! current_user_can( 'unfiltered_html' ) ); ?>><?php echo esc_textarea( $d['code'] ); ?></textarea></p>
+		<p class="description"><?php echo esc_html( __( 'This code is filtered when it is saved and when it is shown.', 'estrategiaweb-toolkit' ) . ' ' . __( 'Inline JavaScript with & or < breaks this way: move it to a .js file and load it with <script src>.', 'estrategiaweb-toolkit' ) ); ?></p>
 		<?php
-		// What the filter (Kses::banner()) removed on the last save (save()), shown once; or, for code stored
-		// before 2.10.3 unfiltered, what it removes when shown. Said here, not lost in silence.
-		$saved = get_transient( self::lost_key( $post->ID ) );
-		if ( is_array( $saved ) ) {
-			delete_transient( self::lost_key( $post->ID ) );
-		}
-		$lost = is_array( $saved ) ? $saved : ( '' !== trim( $d['code'] ) ? \EstrategiaWeb\Kses::losses( $d['code'], \EstrategiaWeb\Kses::banner() ) : array() );
+		// Code stored before 2.10.3 went in unfiltered: what the filter (Kses::banner()) removes when it is shown,
+		// said here until it is saved again. A save cannot list its own losses: that needs the raw request value,
+		// and the WordPress.org review of 15-11-2026 did not accept reading it (not even to compare). Hence the note above.
+		$lost = '' !== trim( $d['code'] ) ? \EstrategiaWeb\Kses::losses( $d['code'], \EstrategiaWeb\Kses::banner() ) : array();
 		if ( $lost ) {
-			echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'This code is filtered and these parts were removed or changed:', 'estrategiaweb-toolkit' ) . '</p><ul>';
+			echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'When it is shown, this code is filtered and these parts are removed or changed:', 'estrategiaweb-toolkit' ) . '</p><ul>';
 			foreach ( array_slice( $lost, 0, 10 ) as $line ) {
 				echo '<li><code>' . esc_html( $line ) . '</code></li>';
 			}
@@ -303,19 +301,8 @@ final class Post_Type {
 		if ( ! current_user_can( 'unfiltered_html' ) || ! isset( $_POST['ewb']['code'] ) || ! is_string( $_POST['ewb']['code'] ) ) {
 			return;
 		}
-		// Stored already filtered, with the same list the banner zone uses when it shows it. What the filter
-		// took out is kept for the next screen (box()), so the user learns it was removed instead of losing it in silence.
-		$code = wp_kses( wp_unslash( $_POST['ewb']['code'] ), \EstrategiaWeb\Kses::banner() );
-		$lost = \EstrategiaWeb\Kses::losses( wp_unslash( $_POST['ewb']['code'] ), \EstrategiaWeb\Kses::banner() ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only compared with its filtered version to list what was removed; never stored nor printed (box() escapes each line).
-		update_post_meta( $post_id, self::FIELDS['code'], $code );
-		if ( $lost ) {
-			set_transient( self::lost_key( $post_id ), array_slice( $lost, 0, 10 ), 5 * MINUTE_IN_SECONDS );
-		}
-	}
-
-	/** Transient with what the filter removed on the last save, for that user and banner. */
-	private static function lost_key( int $post_id ): string {
-		return 'ewb_lost_' . $post_id . '_' . get_current_user_id();
+		// Stored already filtered, with the same list the banner zone uses when it shows it (box() says so).
+		update_post_meta( $post_id, self::FIELDS['code'], wp_kses( wp_unslash( $_POST['ewb']['code'] ), \EstrategiaWeb\Kses::banner() ) );
 	}
 
 	/**

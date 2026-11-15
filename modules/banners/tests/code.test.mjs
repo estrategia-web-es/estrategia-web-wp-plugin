@@ -7,7 +7,9 @@
 // inline ones), rebuilt with example URLs; the AdSense one stands for the scripts. The fifth is the trap
 // of the header of class-kses.php: inline JavaScript with «&&», which the filter breaks, so the edit
 // screen must say so. Since 2.10.3 (WordPress.org review of 12-11-2026) the code is ALSO filtered when it
-// is saved (meta box, REST, wp-cli), so the warning is the one of the save, shown once on the next screen.
+// is saved (meta box, REST, wp-cli); since 2.10.4 (review of 15-11-2026) the screen says so in a fixed note,
+// and the list of losses is only for code stored unfiltered before 2.10.3 (not reachable from here: every
+// write goes through the meta's sanitize_callback).
 // Seen red (09-11-2026): with «script» out of Kses::BANNER the AdSense banner lost its two scripts and
 // its screen listed them; with the warning taken out of the meta box, the «&&» case passed in silence.
 //
@@ -109,15 +111,16 @@ test("the edit screen warns only about the code the filter changes", async () =>
     assert.equal(status, 200, key);
     assert.equal(warning(text), "", `${key}: it warns about a code that comes out whole`);
   }
-  // Saved through the meta box: stored filtered, and the next screen (only that one) lists what was removed.
+  // Saved through the meta box: stored filtered. A save cannot list its own losses (that needs the raw request
+  // value, which WordPress.org did not accept on 15-11-2026), so the screen carries a fixed note instead.
   const edit = `/wp-admin/post.php?post=${ids.broken}&action=edit`;
   const sent = await s.submit((await s.get(edit)).text, "post.php", { "ewb[code]": BROKEN });
   assert.equal(sent.status, 302, "the meta box save did not redirect");
-  const { text } = await s.get(edit);
-  assert.match(warning(text), /<code>script: if \(window\.a &amp;&amp; window\.b\)/, "the «&&» case is not listed after saving");
-  assert.equal(warning((await s.get(edit)).text), "", "the warning of a save must show once, not on every visit");
   const { json } = await wp(`/eweb-banners/${ids.broken}?context=edit`);
   assert.ok(!json.meta.estrategia_web_banner_code.includes("&& "), "the meta box stored the code unfiltered:\n" + json.meta.estrategia_web_banner_code);
+  const { text } = await s.get(edit);
+  // The test site is in es_ES (tests/wp/estrategia-web-site-test.php).
+  assert.match(text, /se filtra al guardarlo y al mostrarlo\. El JavaScript en línea con &amp; o &lt; se rompe/, "the note about the filter is missing");
 });
 
 test("the list's state pills get their CSS through wp_add_inline_style", async () => {

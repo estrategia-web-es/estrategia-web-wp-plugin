@@ -324,22 +324,20 @@ final class Fields_Panel {
 			return;
 		}
 		$config = self::config( $post->post_type, $post_id );
-		// One field at a time, each sanitized here by the sanitizer of its type (WordPress.org review of 12-11-2026: no array taken whole).
-		// The trap: Registrar::sanitizer() takes the field as defined (type, meta_type, options…), not config()'s copy for the screen.
+		// One field at a time, read sanitized by Registrar::posted() and validated by Registrar::sanitizer().
+		// The trap: both take the field as defined (type, meta_type, options…), not config()'s copy for the screen.
 		$defs = array_column( Loader::type( $post->post_type )['fields'] ?? array(), null, 'name' );
 		foreach ( $config ? $config['fields'] : array() as $field ) {
-			if ( $field['disabled'] || ! isset( $_POST['estrategia_web_ct'][ $field['key'] ] ) || isset( Registrar::kept()[ $field['key'] ] ) ) {
+			$key   = $field['key'];
+			$value = isset( $defs[ $key ] ) && ! $field['disabled'] && ! isset( Registrar::kept()[ $key ] ) ? Registrar::posted( $defs[ $key ], $post_id ) : null;
+			if ( null === $value ) {
 				continue; // Locked (WPML), not sent, or a required one emptied on a published post (Registrar::check_required_classic()): left alone.
 			}
-			$value = wp_unslash( $_POST['estrategia_web_ct'][ $field['key'] ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized just below by Registrar::sanitizer() of its type, before any use.
-			if ( 'hours' === $field['kind'] && is_array( $value ) ) {
+			if ( is_array( $value ) ) {
 				// One line per day (render_meta_box) → day → ranges; the sanitizer makes it the stored JSON.
 				$value = array_map( static fn( $line ) => Hours::from_line( (string) $line ), array_intersect_key( $value, array_flip( Hours::DAYS ) ) );
 			}
-			if ( ! isset( $defs[ $field['key'] ] ) ) {
-				continue;
-			}
-			$value = Registrar::sanitizer( $defs[ $field['key'] ] )( is_scalar( $value ) || 'hours' === $field['kind'] ? $value : '' );
+			$value = Registrar::sanitizer( $defs[ $key ] )( $value );
 			update_post_meta( $post_id, $field['key'], $value );
 		}
 	}

@@ -68,7 +68,7 @@ msgid "Not loaded: turn on %s."
 msgstr ""
 
 #: includes/admin/class-modules-page.php:176
-#: modules/banners/includes/class-post-type.php:357
+#: modules/banners/includes/class-post-type.php:344
 msgid "Off"
 msgstr ""
 
@@ -433,17 +433,17 @@ msgid "How many at a time (0: all, one under another)"
 msgstr ""
 
 #: modules/banners/includes/class-post-type.php:69
-#: modules/banners/includes/class-post-type.php:356
+#: modules/banners/includes/class-post-type.php:343
 msgid "Expired"
 msgstr ""
 
 #: modules/banners/includes/class-post-type.php:69
-#: modules/banners/includes/class-post-type.php:355
+#: modules/banners/includes/class-post-type.php:342
 msgid "Scheduled"
 msgstr ""
 
 #: modules/banners/includes/class-post-type.php:69
-#: modules/banners/includes/class-post-type.php:354
+#: modules/banners/includes/class-post-type.php:341
 msgid "Showing"
 msgstr ""
 
@@ -529,69 +529,76 @@ msgstr ""
 msgid "Code (adserver, iframe)"
 msgstr ""
 
-#: modules/banners/includes/class-post-type.php:255
-msgid "This code is filtered and these parts were removed or changed:"
-msgstr ""
-
-#: modules/banners/includes/class-post-type.php:259
+#: modules/banners/includes/class-post-type.php:246
+#: modules/banners/includes/class-post-type.php:257
 msgid ""
 "Inline JavaScript with & or < breaks this way: move it to a .js file and "
 "load it with <script src>."
 msgstr ""
 
-#: modules/banners/includes/class-post-type.php:263
+#: modules/banners/includes/class-post-type.php:246
+msgid "This code is filtered when it is saved and when it is shown."
+msgstr ""
+
+#: modules/banners/includes/class-post-type.php:253
+msgid ""
+"When it is shown, this code is filtered and these parts are removed or "
+"changed:"
+msgstr ""
+
+#: modules/banners/includes/class-post-type.php:261
 msgid "Starts"
 msgstr ""
 
-#: modules/banners/includes/class-post-type.php:264
+#: modules/banners/includes/class-post-type.php:262
 msgid "Ends"
 msgstr ""
 
-#: modules/banners/includes/class-post-type.php:265
+#: modules/banners/includes/class-post-type.php:263
 msgid "Weight (1-10)"
 msgstr ""
 
-#: modules/banners/includes/class-post-type.php:267
+#: modules/banners/includes/class-post-type.php:265
 msgid ""
 "Empty dates: no limit. The weight only matters when a zone shows fewer "
 "banners than it has."
 msgstr ""
 
 #. translators: 1: views, 2: clicks.
-#: modules/banners/includes/class-post-type.php:275
+#: modules/banners/includes/class-post-type.php:273
 #, php-format
 msgid "Total: %1$s views, %2$s clicks"
 msgstr ""
 
-#: modules/banners/includes/class-post-type.php:277
+#: modules/banners/includes/class-post-type.php:275
 msgid "No statistics yet."
 msgstr ""
 
-#: modules/banners/includes/class-post-type.php:280
-#: modules/banners/includes/class-post-type.php:332
+#: modules/banners/includes/class-post-type.php:278
+#: modules/banners/includes/class-post-type.php:319
 msgid "Clicks"
 msgstr ""
 
-#: modules/banners/includes/class-post-type.php:280
+#: modules/banners/includes/class-post-type.php:278
 msgid "Day"
 msgstr ""
 
-#: modules/banners/includes/class-post-type.php:280
-#: modules/banners/includes/class-post-type.php:331
+#: modules/banners/includes/class-post-type.php:278
+#: modules/banners/includes/class-post-type.php:318
 msgid "Views"
 msgstr ""
 
-#: modules/banners/includes/class-post-type.php:284
+#: modules/banners/includes/class-post-type.php:282
 msgid ""
 "Last 60 days with activity. A view is counted when the banner is on screen; "
 "code banners (adservers) count their clicks on their own side."
 msgstr ""
 
-#: modules/banners/includes/class-post-type.php:329
+#: modules/banners/includes/class-post-type.php:316
 msgid "Dates"
 msgstr ""
 
-#: modules/banners/includes/class-post-type.php:330
+#: modules/banners/includes/class-post-type.php:317
 msgid "State"
 msgstr ""
 
@@ -2233,8 +2240,8 @@ msgstr ""
 msgid "Monday’s hours copied to every day."
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:349
-#: modules/content-types/includes/class-fields-panel.php:355
+#: modules/content-types/includes/class-fields-panel.php:352
+#: modules/content-types/includes/class-fields-panel.php:358
 msgid "— None —"
 msgstr ""
 
@@ -2279,7 +2286,7 @@ msgid ""
 msgstr ""
 
 #. translators: %s: list of field names
-#: modules/content-types/includes/class-registrar.php:140
+#: modules/content-types/includes/class-registrar.php:146
 #, php-format
 msgid ""
 "Not published: it has been saved as a draft. Fill in these fields to publish "
@@ -2287,7 +2294,7 @@ msgid ""
 msgstr ""
 
 #. translators: %s: list of field names
-#: modules/content-types/includes/class-registrar.php:142
+#: modules/content-types/includes/class-registrar.php:148
 #, php-format
 msgid ""
 "These fields cannot be empty in a published item, so they keep their "
@@ -2295,14 +2302,14 @@ msgid ""
 msgstr ""
 
 #. translators: %s: post type name
-#: modules/content-types/includes/class-registrar.php:162
+#: modules/content-types/includes/class-registrar.php:168
 #, php-format
 msgid ""
 "The type “%s” is already registered by other code: this file is ignored."
 msgstr ""
 
 #. translators: %s: taxonomy name
-#: modules/content-types/includes/class-registrar.php:194
+#: modules/content-types/includes/class-registrar.php:200
 #, php-format
 msgid ""
 "The taxonomy “%s” is already registered by other code: it is not registered "
@@ -2311,22 +2318,22 @@ msgstr ""
 
 #. translators: %s: singular name of a taxonomy, e.g. Cuisine
 #. translators: %s: singular name of a content type, e.g. Restaurant
-#: modules/content-types/includes/class-registrar.php:209
-#: modules/content-types/includes/class-registrar.php:297
+#: modules/content-types/includes/class-registrar.php:215
+#: modules/content-types/includes/class-registrar.php:303
 #, php-format
 msgid "Add %s"
 msgstr ""
 
 #. translators: %s: singular name of a taxonomy
 #. translators: %s: singular name of a content type
-#: modules/content-types/includes/class-registrar.php:211
-#: modules/content-types/includes/class-registrar.php:299
+#: modules/content-types/includes/class-registrar.php:217
+#: modules/content-types/includes/class-registrar.php:305
 #, php-format
 msgid "Edit %s"
 msgstr ""
 
 #. translators: 1: field name, 2: post type name
-#: modules/content-types/includes/class-registrar.php:282
+#: modules/content-types/includes/class-registrar.php:288
 #, php-format
 msgid ""
 "The relation “%1$s” points to the type “%2$s”, which is not registered: it "
@@ -2334,28 +2341,28 @@ msgid ""
 msgstr ""
 
 #. translators: %s: singular name of a content type
-#: modules/content-types/includes/class-registrar.php:301
+#: modules/content-types/includes/class-registrar.php:307
 #, php-format
 msgid "View %s"
 msgstr ""
 
 #. translators: %s: plural name of a content type, e.g. Restaurants
-#: modules/content-types/includes/class-registrar.php:303
+#: modules/content-types/includes/class-registrar.php:309
 #, php-format
 msgid "Search %s"
 msgstr ""
 
-#: modules/content-types/includes/class-registrar.php:304
+#: modules/content-types/includes/class-registrar.php:310
 #: modules/newsletter/includes/class-screen.php:78
 msgid "Nothing found."
 msgstr ""
 
-#: modules/content-types/includes/class-registrar.php:305
+#: modules/content-types/includes/class-registrar.php:311
 msgid "Nothing found in the trash."
 msgstr ""
 
 #. translators: %s: list of field names
-#: modules/content-types/includes/class-registrar.php:384
+#: modules/content-types/includes/class-registrar.php:422
 #, php-format
 msgid "Fill in these fields before publishing: %s."
 msgstr ""

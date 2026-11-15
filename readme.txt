@@ -4,7 +4,7 @@ Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.10.3
+Stable tag: 2.10.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,8 +86,12 @@ The cookie list includes an extract of the Open Cookie Database (https://github.
 
 == Changelog ==
 
+= 2.10.4 =
+* Every request value is sanitized as soon as it is read, with no exceptions.
+* The code banner screen notes that the code is filtered when it is saved and when it is shown.
+
 = 2.10.3 =
-* The code of a code banner is also filtered when it is saved, and the next screen lists anything the filter removed.
+* The code of a code banner is also filtered when it is saved.
 * Form input is read and sanitized one field at a time.
 
 = 2.10.2 =

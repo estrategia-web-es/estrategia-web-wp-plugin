@@ -109,7 +109,7 @@ final class Page {
 				self::back( array( 'ew_msg' => 'updated' ) );
 				break;
 			case 'import':
-				$file = $_FILES['csv']['tmp_name'] ?? ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+				$file = isset( $_FILES['csv']['tmp_name'] ) ? sanitize_text_field( $_FILES['csv']['tmp_name'] ) : ''; // is_uploaded_file() below is the real check.
 				if ( ! $file || ! is_uploaded_file( $file ) ) {
 					self::back( array( 'view' => 'import', 'ew_msg' => 'no_file' ) );
 				}
