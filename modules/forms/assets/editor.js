@@ -240,21 +240,28 @@
 					onChange: ( multiple ) => setAttributes( { multiple } ),
 					__nextHasNoMarginBottom: true,
 				} ),
-				h( TextControl, {
-					key: 'help',
-					label: __( 'Help text', 'estrategiaweb-toolkit' ),
-					help: __( 'Under the field. Empty: the accepted types and the maximum size.', 'estrategiaweb-toolkit' ),
-					value: attributes.help,
-					onChange: ( help ) => setAttributes( { help } ),
-					__nextHasNoMarginBottom: true,
-				} )
 			);
 		}
+		// 2.11.0: every field. Instructions go here; the placeholder is only for an example.
+		controls.push(
+			h( TextControl, {
+				key: 'help',
+				label: __( 'Help text', 'estrategiaweb-toolkit' ),
+				help:
+					type === 'file'
+						? __( 'Under the field. Empty: the accepted types and the maximum size.', 'estrategiaweb-toolkit' )
+						: __( 'Under the field, in small print: instructions, where to find the data. Leave the placeholder for an example.', 'estrategiaweb-toolkit' ),
+				value: attributes.help,
+				onChange: ( help ) => setAttributes( { help } ),
+				__nextHasNoMarginBottom: true,
+			} )
+		);
 		if ( type !== 'checkbox' && type !== 'file' ) {
 			controls.push(
 				h( TextControl, {
 					key: 'placeholder',
 					label: type === 'select' ? __( 'First option (empty value)', 'estrategiaweb-toolkit' ) : __( 'Placeholder', 'estrategiaweb-toolkit' ),
+					help: type === 'select' ? undefined : __( 'An example of what goes here. It disappears when typing: instructions go in «Help text».', 'estrategiaweb-toolkit' ),
 					value: attributes.placeholder,
 					onChange: ( placeholder ) => setAttributes( { placeholder } ),
 					__nextHasNoMarginBottom: true,

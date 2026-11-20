@@ -42,7 +42,7 @@ const html = async (url) => (await fetch(url)).text();
 const DOSSIER = `<!-- wp:estrategia-web-forms/form {"formId":"ayuda","title":"Ayuda","dossier":true} -->
 <!-- wp:estrategia-web-forms/text {"label":"Empresa","name":"empresa","required":true,"requiredToSave":true} /-->
 <!-- wp:estrategia-web-forms/email {"label":"Correo","name":"email","required":true,"requiredToSave":true} /-->
-<!-- wp:estrategia-web-forms/text {"label":"IAE","name":"iae","required":true} /-->
+<!-- wp:estrategia-web-forms/text {"label":"IAE","name":"iae","required":true,"placeholder":"501.3","help":"Si no lo sabes, sube el modelo 036."} /-->
 <!-- wp:estrategia-web-forms/file {"label":"Escrituras","name":"escrituras","required":true,"accept":"pdf","maxMb":1} /-->
 <!-- wp:estrategia-web-forms/notification {"label":"Equipo","to":"${TEAM}","subject":"Expediente {{empresa}}","when":"always"} /-->
 <!-- wp:estrategia-web-forms/notification {"label":"Enlace","to":"{{email}}","subject":"Tu solicitud","body":"Tu enlace: {{dossier_url}}"} /-->
@@ -240,6 +240,11 @@ test("dossier (2.11.0): the link opens it filled in and privately; the owner dow
   assert.match(res.headers.get("x-robots-tag") || "", /noindex/);
   assert.match(opened, /value="Stanila Reformas"/);
   assert.match(opened, /Still missing: IAE/);
+  // The help line (2.11.0): under the field, read with it, and the placeholder kept for the example.
+  assert.match(opened, /<input[^>]*name="fields\[iae\]"[^>]*aria-describedby="af-ayuda-iae-help af-ayuda-iae-error"[^>]*placeholder="501\.3"/);
+  assert.match(opened, /<p id="af-ayuda-iae-help" class="estrategia-web-forms__help">Si no lo sabes, sube el modelo 036\.<\/p>/);
+  assert.match(opened, /<p id="af-ayuda-escrituras-help" class="estrategia-web-forms__help">PDF\. Up to 1 MB per file\.<\/p>/, "a File field without help says what it accepts");
+  assert.doesNotMatch(opened, /name="fields\[empresa\]"[^>]*-help/, "no help, no aria-describedby pointing to a line that does not exist");
   const link = unescape(opened.match(/href="([^"]*\/file\?[^"]*)"/)?.[1] ?? "");
   const [own, wrong] = await Promise.all([fetch(link), fetch(link.replace(dossier.token, "x".repeat(43)))]);
   assert.equal(own.status, 200);

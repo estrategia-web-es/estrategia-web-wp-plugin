@@ -4,7 +4,7 @@ Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.11.0
+Stable tag: 2.12.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -81,6 +81,10 @@ Its settings, yes. Your data (form submissions, redirects, company details) is k
 The cookie list includes an extract of the Open Cookie Database (https://github.com/jkwakman/Open-Cookie-Database), © Jan Kwakman and contributors, Apache License 2.0. Details in modules/consent/data/NOTICE.
 
 == Changelog ==
+
+= 2.12.0 =
+* Forms: every field can have a help text, shown in small print under it and read with it by screen readers. The placeholder stays for an example.
+* Forms: the «Send me the link» box of a dossier form is styled like the form above it.
 
 = 2.11.0 =
 * Forms: a File field (PDF, JPG, PNG, checked by their content). Files are stored outside the web root and only the site team can download them.

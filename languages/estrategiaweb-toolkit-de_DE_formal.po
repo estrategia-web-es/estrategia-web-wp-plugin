@@ -2093,7 +2093,7 @@ msgstr "Nach unten"
 
 #: modules/content-types/includes/admin/class-page.php:361
 #: modules/content-types/includes/class-fields-panel.php:192
-#: modules/forms/includes/class-blocks.php:371
+#: modules/forms/includes/class-blocks.php:376
 #: modules/newsletter/includes/class-screen.php:74
 #: modules/social/includes/class-admin.php:70
 msgid "Remove"
@@ -3182,7 +3182,7 @@ msgstr "Inhaltstyp-Definitionen"
 msgid "Content type definition"
 msgstr "Inhaltstyp-Definition"
 
-#: modules/forms/assets/editor.js:58 modules/forms/assets/editor.js:507
+#: modules/forms/assets/editor.js:58 modules/forms/assets/editor.js:514
 msgid "Message"
 msgstr "Nachricht"
 
@@ -3346,27 +3346,39 @@ msgstr ""
 msgid "Several files"
 msgstr "Mehrere Dateien"
 
-#: modules/forms/assets/editor.js:245
+#: modules/forms/assets/editor.js:249
 msgid "Help text"
 msgstr "Hilfetext"
 
-#: modules/forms/assets/editor.js:246
+#: modules/forms/assets/editor.js:252
 msgid "Under the field. Empty: the accepted types and the maximum size."
 msgstr "Unter dem Feld. Leer: die erlaubten Dateitypen und die maximale Größe."
 
-#: modules/forms/assets/editor.js:257
+#: modules/forms/assets/editor.js:253
+msgid ""
+"Under the field, in small print: instructions, where to find the data. Leave "
+"the placeholder for an example."
+msgstr "Unter dem Feld, in kleiner Schrift: Hinweise oder wo man die Angabe findet. Der Platzhalter ist für ein Beispiel."
+
+#: modules/forms/assets/editor.js:263
 msgid "First option (empty value)"
 msgstr "Erste Option (leerer Wert)"
 
-#: modules/forms/assets/editor.js:257
+#: modules/forms/assets/editor.js:263
 msgid "Placeholder"
 msgstr "Platzhalter"
 
-#: modules/forms/assets/editor.js:265
+#: modules/forms/assets/editor.js:264
+msgid ""
+"An example of what goes here. It disappears when typing: instructions go in "
+"«Help text»."
+msgstr "Ein Beispiel für den Inhalt. Es verschwindet beim Tippen: Hinweise gehören in «Hilfetext»."
+
+#: modules/forms/assets/editor.js:272
 msgid "Autocomplete"
 msgstr "Autovervollständigung"
 
-#: modules/forms/assets/editor.js:266
+#: modules/forms/assets/editor.js:273
 msgid ""
 "What the browser may fill in: name, organization, email, tel, street-"
 "address… Empty: email and phone fields still get email and tel."
@@ -3374,19 +3386,19 @@ msgstr ""
 "Was der Browser ausfüllen darf: name, organization, email, tel, street-"
 "address … Leer: E-Mail- und Telefonfelder erhalten trotzdem email und tel."
 
-#: modules/forms/assets/editor.js:277
+#: modules/forms/assets/editor.js:284
 msgid "Options"
 msgstr "Optionen"
 
-#: modules/forms/assets/editor.js:278
+#: modules/forms/assets/editor.js:285
 msgid "One per line."
 msgstr "Eine pro Zeile."
 
-#: modules/forms/assets/editor.js:285
+#: modules/forms/assets/editor.js:292
 msgid "Preselected option"
 msgstr "Vorausgewählte Option"
 
-#: modules/forms/assets/editor.js:286
+#: modules/forms/assets/editor.js:293
 msgid ""
 "In a synced pattern, set it per page in the pattern block instead. A link "
 "can also choose it with ?af_ followed by the field name."
@@ -3395,23 +3407,23 @@ msgstr ""
 "Vorlagen-Block fest. Ein Link kann sie auch mit ?af_ und dem Feldnamen "
 "auswählen."
 
-#: modules/forms/assets/editor.js:288
+#: modules/forms/assets/editor.js:295
 msgid "None"
 msgstr "Keine"
 
-#: modules/forms/assets/editor.js:300
+#: modules/forms/assets/editor.js:307
 msgid "Privacy consent"
 msgstr "Datenschutz-Einwilligung"
 
-#: modules/forms/assets/editor.js:301
+#: modules/forms/assets/editor.js:308
 msgid "Always required, and links to the privacy policy."
 msgstr "Immer erforderlich, mit Link zur Datenschutzerklärung."
 
-#: modules/forms/assets/editor.js:311
+#: modules/forms/assets/editor.js:318
 msgid "Privacy policy URL"
 msgstr "URL der Datenschutzerklärung"
 
-#: modules/forms/assets/editor.js:312
+#: modules/forms/assets/editor.js:319
 msgid ""
 "Empty: the privacy policy page set in Settings → Privacy (translated, with "
 "WPML)."
@@ -3419,35 +3431,35 @@ msgstr ""
 "Leer: die unter Einstellungen → Datenschutz festgelegte Seite der "
 "Datenschutzerklärung (übersetzt, mit WPML)."
 
-#: modules/forms/assets/editor.js:323
+#: modules/forms/assets/editor.js:330
 msgid "Width"
 msgstr "Breite"
 
-#: modules/forms/assets/editor.js:326
+#: modules/forms/assets/editor.js:333
 msgid "Full"
 msgstr "Voll"
 
-#: modules/forms/assets/editor.js:327
+#: modules/forms/assets/editor.js:334
 msgid "Half"
 msgstr "Halb"
 
-#: modules/forms/assets/editor.js:333
+#: modules/forms/assets/editor.js:340
 msgid "Field"
 msgstr "Feld"
 
-#: modules/forms/assets/editor.js:436
+#: modules/forms/assets/editor.js:443
 msgid "Button text"
 msgstr "Button-Text"
 
-#: modules/forms/assets/editor.js:486 modules/forms/assets/editor.js:519
+#: modules/forms/assets/editor.js:493 modules/forms/assets/editor.js:526
 msgid "Email notification"
 msgstr "E-Mail-Benachrichtigung"
 
-#: modules/forms/assets/editor.js:487
+#: modules/forms/assets/editor.js:494
 msgid "Name of this notification"
 msgstr "Name dieser Benachrichtigung"
 
-#: modules/forms/assets/editor.js:488
+#: modules/forms/assets/editor.js:495
 msgid ""
 "Addresses separated by commas, or a marker such as {{email}}. Empty: the "
 "site administrator email."
@@ -3455,70 +3467,70 @@ msgstr ""
 "Adressen durch Kommas getrennt oder ein Platzhalter wie {{email}}. Leer: die "
 "E-Mail-Adresse des Website-Administrators."
 
-#: modules/forms/assets/editor.js:488 modules/forms/assets/editor.js:520
+#: modules/forms/assets/editor.js:495 modules/forms/assets/editor.js:527
 msgid "To"
 msgstr "An"
 
-#: modules/forms/assets/editor.js:489
+#: modules/forms/assets/editor.js:496
 msgid "An address or a marker such as {{email}}. Optional."
 msgstr "Eine Adresse oder ein Platzhalter wie {{email}}. Optional."
 
-#: modules/forms/assets/editor.js:489
+#: modules/forms/assets/editor.js:496
 msgid "Reply to"
 msgstr "Antwort an"
 
-#: modules/forms/assets/editor.js:490 modules/forms/assets/editor.js:521
+#: modules/forms/assets/editor.js:497 modules/forms/assets/editor.js:528
 msgid "Subject"
 msgstr "Betreff"
 
-#: modules/forms/assets/editor.js:494
+#: modules/forms/assets/editor.js:501
 msgid "Send it"
 msgstr "Senden"
 
-#: modules/forms/assets/editor.js:495
+#: modules/forms/assets/editor.js:502
 msgid "In a dossier form, also when the sender comes back and saves changes."
 msgstr ""
 "In einem Vorgangsformular auch, wenn der Absender zurückkehrt und Änderungen "
 "speichert."
 
-#: modules/forms/assets/editor.js:498
+#: modules/forms/assets/editor.js:505
 msgid "When it is sent"
 msgstr "Bei der Einsendung"
 
-#: modules/forms/assets/editor.js:499
+#: modules/forms/assets/editor.js:506
 msgid "When a dossier is changed"
 msgstr "Wenn ein Vorgang geändert wird"
 
-#: modules/forms/assets/editor.js:500
+#: modules/forms/assets/editor.js:507
 msgid "Both"
 msgstr "Beides"
 
-#: modules/forms/assets/editor.js:508
+#: modules/forms/assets/editor.js:515
 msgid "Available markers:"
 msgstr "Verfügbare Platzhalter:"
 
-#: modules/forms/assets/editor.js:520
+#: modules/forms/assets/editor.js:527
 msgid "site administrator"
 msgstr "Website-Administrator"
 
-#: modules/forms/assets/editor.js:522
+#: modules/forms/assets/editor.js:529
 msgid "Not shown to visitors. Edit it in the side panel."
 msgstr ""
 "Wird Besuchern nicht angezeigt. Bearbeiten Sie sie in der Seitenleiste."
 
-#: modules/forms/assets/editor.js:557
+#: modules/forms/assets/editor.js:564
 msgid "Choose a form"
 msgstr "Wählen Sie ein Formular"
 
-#: modules/forms/assets/editor.js:560
+#: modules/forms/assets/editor.js:567
 msgid "not published"
 msgstr "nicht veröffentlicht"
 
-#: modules/forms/assets/editor.js:572
+#: modules/forms/assets/editor.js:579
 msgid "Edit this form"
 msgstr "Dieses Formular bearbeiten"
 
-#: modules/forms/assets/editor.js:585
+#: modules/forms/assets/editor.js:592
 msgid ""
 "Choose which of the site's forms to show here. Forms are created and edited "
 "in Forms → Forms."
@@ -3953,7 +3965,7 @@ msgid "You are not allowed to do this."
 msgstr "Sie dürfen das nicht tun."
 
 #: modules/forms/includes/admin/class-admin.php:315
-#: modules/forms/includes/class-files.php:362
+#: modules/forms/includes/class-files.php:411
 msgid "The file is no longer available."
 msgstr "Die Datei ist nicht mehr verfügbar."
 
@@ -4251,34 +4263,34 @@ msgstr "Die E-Mail-Adresse, die Sie verwendet haben"
 msgid "Send me the link"
 msgstr "Link zusenden"
 
-#: modules/forms/includes/class-blocks.php:325
+#: modules/forms/includes/class-blocks.php:329
 msgid "Choose an option"
 msgstr "Wählen Sie eine Option"
 
 #. translators: 1: accepted types, e.g. «PDF, JPG, PNG»; 2: maximum size in MB.
-#: modules/forms/includes/class-blocks.php:387
+#: modules/forms/includes/class-blocks.php:399
 #, php-format
 msgid "%1$s. Up to %2$d MB per file."
 msgstr "%1$s. Bis zu %2$d MB pro Datei."
 
-#: modules/forms/includes/class-blocks.php:396
+#: modules/forms/includes/class-blocks.php:407
 msgid "Send"
 msgstr "Senden"
 
 #. translators: the text between braces becomes the link to the privacy policy.
 #. translators: the text between braces becomes the link to the privacy policy; {text|url} links to that url.
-#: modules/forms/includes/class-blocks.php:445
-#: modules/forms/includes/class-blocks.php:471
+#: modules/forms/includes/class-blocks.php:456
+#: modules/forms/includes/class-blocks.php:482
 msgid "I have read and accept the {privacy policy}."
 msgstr "Ich habe die {Datenschutzerklärung} gelesen und akzeptiere sie."
 
-#: modules/forms/includes/class-dossier.php:321
+#: modules/forms/includes/class-dossier.php:331
 #: modules/forms/includes/class-rest.php:102
 msgid "This form is no longer available. Please reload the page."
 msgstr ""
 "Dieses Formular ist nicht mehr verfügbar. Bitte laden Sie die Seite neu."
 
-#: modules/forms/includes/class-dossier.php:326
+#: modules/forms/includes/class-dossier.php:336
 msgid ""
 "If there is a request with that email, we have just sent it a new link. "
 "Check your inbox (and the spam folder)."
@@ -4287,14 +4299,14 @@ msgstr ""
 "neuen Link dorthin gesendet. Sehen Sie in Ihrem Posteingang nach (und im "
 "Spam-Ordner)."
 
-#: modules/forms/includes/class-dossier.php:332
+#: modules/forms/includes/class-dossier.php:342
 #: modules/forms/includes/class-rest.php:146
 msgid "The form has expired. Please reload the page and try again."
 msgstr ""
 "Das Formular ist abgelaufen. Bitte laden Sie die Seite neu und versuchen Sie "
 "es erneut."
 
-#: modules/forms/includes/class-dossier.php:335
+#: modules/forms/includes/class-dossier.php:345
 #: modules/forms/includes/class-rest.php:154
 msgid "Too many messages from your connection. Please try again later."
 msgstr ""
@@ -4302,27 +4314,27 @@ msgstr ""
 "erneut."
 
 #. translators: %s: form title.
-#: modules/forms/includes/class-dossier.php:365
+#: modules/forms/includes/class-dossier.php:375
 #, php-format
 msgid "We need something else for «%s»"
 msgstr "Wir brauchen noch etwas für «%s»"
 
 #. translators: %s: form title.
-#: modules/forms/includes/class-dossier.php:369
+#: modules/forms/includes/class-dossier.php:379
 #, php-format
 msgid "Your link to «%s»"
 msgstr "Ihr Link zu «%s»"
 
-#: modules/forms/includes/class-dossier.php:370
+#: modules/forms/includes/class-dossier.php:380
 msgid "Here is the link to see and complete your request:"
 msgstr "Hier ist der Link, um Ihre Anfrage anzusehen und zu vervollständigen:"
 
-#: modules/forms/includes/class-dossier.php:373
+#: modules/forms/includes/class-dossier.php:383
 msgid "Still missing:"
 msgstr "Es fehlt noch:"
 
 #. translators: %d: number of days.
-#: modules/forms/includes/class-dossier.php:377
+#: modules/forms/includes/class-dossier.php:387
 #, php-format
 msgid ""
 "The link works for %d day. Do not forward it: whoever has it can see your "
@@ -4344,18 +4356,18 @@ msgid "You can attach up to %d files here."
 msgstr "Hier können Sie bis zu %d Dateien anhängen."
 
 #. translators: %s: maximum size, e.g. «10 MB».
-#: modules/forms/includes/class-files.php:251
+#: modules/forms/includes/class-files.php:252
 #, php-format
 msgid "The file is too big. The maximum is %s."
 msgstr "Die Datei ist zu groß. Das Maximum ist %s."
 
-#: modules/forms/includes/class-files.php:254
+#: modules/forms/includes/class-files.php:253
 msgid "The file could not be received. Please try again."
 msgstr ""
 "Die Datei konnte nicht empfangen werden. Bitte versuchen Sie es erneut."
 
 #. translators: %s: accepted types, e.g. «PDF, JPG».
-#: modules/forms/includes/class-files.php:258
+#: modules/forms/includes/class-files.php:255
 #, php-format
 msgid "This type of file is not accepted. Accepted: %s."
 msgstr "Dieser Dateityp wird nicht akzeptiert. Erlaubt: %s."
@@ -4408,13 +4420,13 @@ msgstr ""
 "Das Formular wurde zu schnell gesendet. Bitte warten Sie ein paar Sekunden "
 "und versuchen Sie es erneut."
 
-#: modules/forms/includes/class-rest.php:193
+#: modules/forms/includes/class-rest.php:190
 msgid "The files could not be saved. Please try again later."
 msgstr ""
 "Die Dateien konnten nicht gespeichert werden. Bitte versuchen Sie es später "
 "erneut."
 
-#: modules/forms/includes/class-rest.php:268
+#: modules/forms/includes/class-rest.php:262
 msgid ""
 "Saved. You can come back whenever you want with the link we have sent to "
 "your email."
