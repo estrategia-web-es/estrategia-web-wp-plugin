@@ -58,6 +58,15 @@ final class Definitions {
 	/** When a notification goes out (2.11.0). Only dossier forms have «updated»: a plain form is only ever created. */
 	public const WHEN = array( 'created', 'updated', 'always' );
 
+	/**
+	 * The notifications that go out for an event: «created» or, only in a
+	 * dossier, «updated». «always» goes with both; a notification without
+	 * «when» (a format-1 snapshot) is «created». PURE (level 1).
+	 */
+	public static function for_event( array $notifications, string $event ): array {
+		return array_values( array_filter( $notifications, static fn( $n ) => in_array( $n['when'] ?? 'created', array( $event, 'always' ), true ) ) );
+	}
+
 	/** @var array<string, bool> Hashes already stored in this request. */
 	private static array $stored = array();
 

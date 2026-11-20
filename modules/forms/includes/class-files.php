@@ -246,18 +246,67 @@ final class Files {
 	}
 
 	private static function check( array $upload, array $types, int $max ): string {
-		if ( UPLOAD_ERR_INI_SIZE === $upload['error'] || UPLOAD_ERR_FORM_SIZE === $upload['error'] || $upload['size'] > $max ) {
+		$problem = self::problem( $upload['error'], $upload['size'], self::is_upload( $upload['tmp'] ), self::head( $upload['tmp'] ), $types, $max );
+		return match ( $problem ) {
 			/* translators: %s: maximum size, e.g. «10 MB». */
-			return sprintf( __( 'The file is too big. The maximum is %s.', 'estrategiaweb-toolkit' ), size_format( $max ) );
-		}
-		if ( UPLOAD_ERR_OK !== $upload['error'] || ! self::is_upload( $upload['tmp'] ) ) {
-			return __( 'The file could not be received. Please try again.', 'estrategiaweb-toolkit' );
-		}
-		if ( ! in_array( self::sniff( self::head( $upload['tmp'] ) ), $types, true ) ) {
+			'too_big'      => sprintf( __( 'The file is too big. The maximum is %s.', 'estrategiaweb-toolkit' ), size_format( $max ) ),
+			'not_received' => __( 'The file could not be received. Please try again.', 'estrategiaweb-toolkit' ),
 			/* translators: %s: accepted types, e.g. «PDF, JPG». */
-			return sprintf( __( 'This type of file is not accepted. Accepted: %s.', 'estrategiaweb-toolkit' ), strtoupper( implode( ', ', $types ) ) );
+			'type'         => sprintf( __( 'This type of file is not accepted. Accepted: %s.', 'estrategiaweb-toolkit' ), strtoupper( implode( ', ', $types ) ) ),
+			default        => '',
+		};
+	}
+
+	/**
+	 * What is wrong with one upload, in this order: too big (also PHP's own
+	 * limit), not received, not an accepted type. PURE (level 1).
+	 *
+	 * @return string '' | 'too_big' | 'not_received' | 'type'
+	 */
+	public static function problem( int $error, int $size, bool $is_upload, string $head, array $types, int $max ): string {
+		if ( UPLOAD_ERR_INI_SIZE === $error || UPLOAD_ERR_FORM_SIZE === $error || $size > $max ) {
+			return 'too_big';
 		}
-		return '';
+		if ( UPLOAD_ERR_OK !== $error || ! $is_upload ) {
+			return 'not_received';
+		}
+		return in_array( self::sniff( $head ), $types, true ) ? '' : 'type';
+	}
+
+	/**
+	 * The files each field keeps after a save, and the ones that go away.
+	 * PURE (level 1). Removed boxes go first; then, in a one-file field, a
+	 * new file replaces what was there; in a several-files field it is added.
+	 *
+	 * @param array<string, array<int, array>> $before  field => files the dossier had.
+	 * @param string[]                         $removed ids ticked «Remove».
+	 * @param array<string, array<int, array>> $new     field => files just stored.
+	 * @param array<string, bool>              $multiple field => several files allowed.
+	 * @return array{files: array<string, array<int, array>>, dropped: array<int, array>}
+	 */
+	public static function merge( array $before, array $removed, array $new, array $multiple ): array {
+		$files   = array();
+		$dropped = array();
+		foreach ( $before as $field => $list ) {
+			foreach ( $list as $file ) {
+				if ( in_array( (string) $file['id'], $removed, true ) ) {
+					$dropped[] = $file;
+				} else {
+					$files[ $field ][] = $file;
+				}
+			}
+		}
+		foreach ( $new as $field => $list ) {
+			if ( $list && empty( $multiple[ $field ] ) ) {
+				$dropped          = array_merge( $dropped, $files[ $field ] ?? array() );
+				$files[ $field ] = array();
+			}
+			$files[ $field ] = array_merge( $files[ $field ] ?? array(), $list );
+		}
+		return array(
+			'files'   => $files,
+			'dropped' => $dropped,
+		);
 	}
 
 	/**

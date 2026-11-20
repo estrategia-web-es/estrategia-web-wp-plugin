@@ -170,20 +170,17 @@ final class Rest {
 		// 5. Server-side validation, field by field, according to the definition; files apart.
 		$input    = isset( $params['fields'] ) && is_array( $params['fields'] ) ? $params['fields'] : array();
 		$result   = Validator::validate( $definition, $input );
-		$existing = array();
-		$dropped  = array();
+		$before   = array();
+		$multiple = array();
 		$remove   = $row ? array_map( 'strval', (array) ( $params['af_remove'] ?? array() ) ) : array();
 		foreach ( $row ? (array) $row['data'] : array() as $item ) {
-			foreach ( (array) ( $item['files'] ?? array() ) as $file ) {
-				if ( in_array( (string) $file['id'], $remove, true ) ) {
-					$dropped[] = $file;
-				} else {
-					$existing[ (string) $item['name'] ][] = $file;
-				}
-			}
+			$before[ (string) $item['name'] ] = (array) ( $item['files'] ?? array() );
+		}
+		foreach ( (array) $definition['fields'] as $field ) {
+			$multiple[ (string) $field['name'] ] = ! empty( $field['multiple'] );
 		}
 		$uploads = Files::normalize( (array) ( $request->get_file_params()['files'] ?? array() ) );
-		$checked = Files::validate( $definition, $uploads, $existing );
+		$checked = Files::validate( $definition, $uploads, Files::merge( $before, $remove, array(), $multiple )['files'] );
 		$errors  = $result['errors'] + $checked['errors'];
 		if ( $errors ) {
 			return self::respond( $is_js, $page_url, $form_id, 422, 'invalid', $failure, $errors, $result['values'] );
@@ -194,8 +191,10 @@ final class Rest {
 		}
 
 		// 6. Log first: if the notifications fail, the submission is not lost.
-		$values = $result['values'];
-		$data   = array();
+		$merged  = Files::merge( $before, $remove, $stored, $multiple );
+		$dropped = $merged['dropped'];
+		$values  = $result['values'];
+		$data    = array();
 		foreach ( (array) $definition['fields'] as $field ) {
 			$item = array(
 				'name'  => $field['name'],
@@ -204,12 +203,7 @@ final class Rest {
 				'value' => $values[ $field['name'] ] ?? '',
 			);
 			if ( 'file' === $field['type'] ) {
-				$new = $stored[ $field['name'] ] ?? array();
-				if ( $new && empty( $field['multiple'] ) ) {
-					$dropped = array_merge( $dropped, $existing[ $field['name'] ] ?? array() ); // One file: the new one replaces it.
-					$existing[ $field['name'] ] = array();
-				}
-				$item['files']            = array_merge( $existing[ $field['name'] ] ?? array(), $new );
+				$item['files']            = $merged['files'][ $field['name'] ] ?? array();
 				$item['value']            = implode( ', ', array_column( $item['files'], 'name' ) );
 				$values[ $field['name'] ] = $item['value'];
 			}
@@ -270,12 +264,7 @@ final class Rest {
 		}
 
 		// 7. Notifications: the ones for this event («created» or, in a dossier, «updated»).
-		$definition['notifications'] = array_values(
-			array_filter(
-				(array) $definition['notifications'],
-				static fn( $n ) => in_array( $n['when'] ?? 'created', array( $event, 'always' ), true )
-			)
-		);
+		$definition['notifications'] = Definitions::for_event( (array) $definition['notifications'], $event );
 		$notifications = Notifier::send_all( $definition, $values, array( 'page_url' => $page_url, 'lang' => $lang, 'extra' => $extra ) );
 		$failed        = count( array_filter( $notifications, static fn( $n ) => 'sent' !== $n['status'] ) );
 		$status        = 0 === $failed ? 'sent' : ( $failed === count( $notifications ) ? 'failed' : 'partial' );

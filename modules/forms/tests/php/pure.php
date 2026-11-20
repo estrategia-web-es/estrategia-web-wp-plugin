@@ -114,6 +114,38 @@ $data_after = array(
 	array( 'name' => 'iae', 'value' => '501.3' ),
 	array( 'name' => 'escrituras', 'value' => 'e.pdf', 'files' => array( array( 'id' => 'f1' ) ) ),
 );
+// What happens to each upload, and to the files a dossier already had (2.11.0, moved down from level 2).
+$pdf_head = "%PDF-1.4\n";
+$files_cases['problem'] = array(
+	'ok'          => Files::problem( UPLOAD_ERR_OK, 100, true, $pdf_head, array( 'pdf' ), 1000 ),
+	'too_big'     => Files::problem( UPLOAD_ERR_OK, 1001, true, $pdf_head, array( 'pdf' ), 1000 ),
+	'php_limit'   => Files::problem( UPLOAD_ERR_INI_SIZE, 0, false, '', array( 'pdf' ), 1000 ),
+	'not_upload'  => Files::problem( UPLOAD_ERR_OK, 100, false, $pdf_head, array( 'pdf' ), 1000 ),
+	'partial'     => Files::problem( UPLOAD_ERR_PARTIAL, 100, true, $pdf_head, array( 'pdf' ), 1000 ),
+	'html_as_pdf' => Files::problem( UPLOAD_ERR_OK, 100, true, '<!doctype html>', array( 'pdf' ), 1000 ),
+	'png_not_ok'  => Files::problem( UPLOAD_ERR_OK, 100, true, "\x89PNG\r\n\x1A\n", array( 'pdf' ), 1000 ),
+);
+$f = static fn( $id ) => array( 'id' => $id, 'path' => '2026/11/' . str_repeat( $id, 32 ) );
+$files_cases['merge'] = array(
+	'replace_one' => Files::merge( array( 'e' => array( $f( 'a' ) ) ), array(), array( 'e' => array( $f( 'b' ) ) ), array( 'e' => false ) ),
+	'add_several' => Files::merge( array( 'o' => array( $f( 'a' ) ) ), array(), array( 'o' => array( $f( 'b' ) ) ), array( 'o' => true ) ),
+	'remove'      => Files::merge( array( 'o' => array( $f( 'a' ), $f( 'c' ) ) ), array( 'c' ), array(), array( 'o' => true ) ),
+	'untouched'   => Files::merge( array( 'e' => array( $f( 'a' ) ) ), array(), array(), array( 'e' => false ) ),
+	'first_time'  => Files::merge( array(), array(), array( 'e' => array( $f( 'a' ) ) ), array( 'e' => false ) ),
+);
+
+require __DIR__ . '/../../includes/class-definitions.php';
+$notes = array(
+	array( 'label' => 'team', 'when' => 'always' ),
+	array( 'label' => 'ack', 'when' => 'created' ),
+	array( 'label' => 'changes', 'when' => 'updated' ),
+	array( 'label' => 'old snapshot' ),
+);
+$labels_of = static fn( $list ) => array_column( $list, 'label' );
+
+$now  = 1790000000;
+$open = array( 'form_id' => 'ayuda', 'access_hash' => str_repeat( 'a', 64 ), 'access_expires' => gmdate( 'Y-m-d H:i:s', $now + 60 ) );
+
 $a_token       = Dossier::new_token();
 $dossier_cases = array(
 	'owner_marked'   => Dossier::owner_field( $dossier_def ),
@@ -127,6 +159,16 @@ $dossier_cases = array(
 	'token_unique'   => $a_token !== Dossier::new_token(),
 	'token_bad'      => array( Dossier::is_token( '' ), Dossier::is_token( str_repeat( 'a', 42 ) ), Dossier::is_token( str_repeat( 'a', 42 ) . '/' ) ),
 	'hash_is_sha256' => Dossier::hash( 'x' ) === hash( 'sha256', 'x' ),
+	'on_created'     => $labels_of( \EstrategiaWeb\Forms\Definitions::for_event( $notes, 'created' ) ),
+	'on_updated'     => $labels_of( \EstrategiaWeb\Forms\Definitions::for_event( $notes, 'updated' ) ),
+	'open'           => array(
+		'valid'        => Dossier::is_open( $open, $now, 'ayuda' ),
+		'any_form'     => Dossier::is_open( $open, $now ),
+		'other_form'   => Dossier::is_open( $open, $now, 'contacto' ),
+		'expired'      => Dossier::is_open( $open, $now + 61, 'ayuda' ),
+		'revoked'      => Dossier::is_open( array( 'access_hash' => '', 'access_expires' => null ) + $open, $now, 'ayuda' ),
+		'no_expiry'    => Dossier::is_open( array( 'access_expires' => '' ) + $open, $now, 'ayuda' ),
+	),
 );
 
 $esc    = static fn( $v ) => htmlspecialchars( $v, ENT_QUOTES );
