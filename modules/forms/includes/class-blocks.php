@@ -164,7 +164,8 @@ final class Blocks {
 		?>
 		<details class="estrategia-web-forms__link"<?php echo $open ? ' open' : ''; ?>>
 			<summary><?php esc_html_e( 'Already started? We will send you your link', 'estrategiaweb-toolkit' ); ?></summary>
-			<form class="estrategia-web-forms__link-form" method="post" action="<?php echo esc_url( rest_url( Rest::NS . '/dossier-link' ) ); ?>">
+			<?php // The same classes as the main form: the plugin's and the theme's styles hang from them (seen unstyled on a phone, 20-11-2026). ?>
+			<form class="estrategia-web-forms estrategia-web-forms__link-form" method="post" action="<?php echo esc_url( rest_url( Rest::NS . '/dossier-link' ) ); ?>">
 				<input type="hidden" name="_af_def" value="<?php echo esc_attr( $hash ); ?>">
 				<input type="hidden" name="_af_token" value="<?php echo esc_attr( Token::create( $hash, time(), wp_salt( 'nonce' ) ) ); ?>">
 				<input type="hidden" name="_af_page" value="<?php echo esc_url( self::current_url() ); ?>">
@@ -173,9 +174,13 @@ final class Blocks {
 						<input type="text" name="af_website" value="" tabindex="-1" autocomplete="off">
 					</label>
 				</div>
-				<label for="<?php echo esc_attr( $id ); ?>" class="estrategia-web-forms__label"><?php esc_html_e( 'The email you used', 'estrategiaweb-toolkit' ); ?></label>
-				<input id="<?php echo esc_attr( $id ); ?>" type="email" name="af_dossier_email" required autocomplete="email">
-				<div class="wp-block-button"><button type="submit" class="wp-block-button__link wp-element-button"><?php esc_html_e( 'Send me the link', 'estrategiaweb-toolkit' ); ?></button></div>
+				<div class="estrategia-web-forms__fields">
+					<div class="estrategia-web-forms__field estrategia-web-forms__field--email estrategia-web-forms__field--full">
+						<label for="<?php echo esc_attr( $id ); ?>" class="estrategia-web-forms__label"><?php esc_html_e( 'The email you used', 'estrategiaweb-toolkit' ); ?></label>
+						<input id="<?php echo esc_attr( $id ); ?>" type="email" name="af_dossier_email" required autocomplete="email">
+					</div>
+					<div class="estrategia-web-forms__field estrategia-web-forms__field--submit wp-block-button"><button type="submit" class="wp-block-button__link wp-element-button"><?php esc_html_e( 'Send me the link', 'estrategiaweb-toolkit' ); ?></button></div>
+				</div>
 			</form>
 		</details>
 		<?php
@@ -285,11 +290,15 @@ final class Blocks {
 			$browser_required = $browser_required && empty( $stored['files'] );
 		}
 
+		// 2.11.0: the help line under the field (instructions, where to find the data). The placeholder
+		// is for an EXAMPLE only: it disappears on typing and many screen readers do not read it.
+		$help = self::field_help( $type, $attributes );
+
 		$input_atts = array(
 			'id'               => $id,
 			'name'             => 'file' === $type ? 'files[' . $name . '][]' : 'fields[' . $name . ']',
 			'required'         => $browser_required,
-			'aria-describedby' => ( 'file' === $type ? $id . '-help ' : '' ) . $id . '-error',
+			'aria-describedby' => ( '' !== $help ? $id . '-help ' : '' ) . $id . '-error',
 			'aria-invalid'     => '' !== $error ? 'true' : false,
 		);
 		$autocomplete = 'checkbox' === $type || 'file' === $type ? '' : self::autocomplete( $type, $attributes );
@@ -340,6 +349,9 @@ final class Blocks {
 				echo '<input' . self::atts( $input_atts + $extra ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 		}
+		if ( '' !== $help ) {
+			printf( '<p id="%1$s-help" class="estrategia-web-forms__help">%2$s</p>', esc_attr( $id ), esc_html( $help ) );
+		}
 		printf( '<p id="%1$s-error" class="estrategia-web-forms__error" data-af-error="%2$s">%3$s</p>', esc_attr( $id ), esc_attr( $name ), esc_html( $error ) );
 		echo '</div>';
 		return (string) ob_get_clean();
@@ -355,9 +367,7 @@ final class Blocks {
 	 */
 	private static function file_input( array $attributes, array $input_atts, array $files ): string {
 		$types = Files::accepted( (string) ( $attributes['accept'] ?? '' ) );
-		$max   = max( 1, (int) ( $attributes['maxMb'] ?? Files::DEFAULT_MAX_MB ) );
 		$token = Dossier::token_in_url();
-		$id    = (string) $input_atts['id'];
 		$out   = '';
 		if ( $files ) {
 			$out .= '<ul class="estrategia-web-forms__files">';
@@ -380,14 +390,20 @@ final class Blocks {
 		if ( ! empty( $attributes['multiple'] ) ) {
 			$input_atts['multiple'] = true;
 		}
-		$out .= '<input' . self::atts( $input_atts ) . '>';
+		return $out . '<input' . self::atts( $input_atts ) . '>';
+	}
+
+	/**
+	 * The help line of a field: its «Help» attribute; a File field without
+	 * one says what it accepts. '' = no line (and no aria-describedby to it).
+	 */
+	public static function field_help( string $type, array $attributes ): string {
 		$help = trim( (string) ( $attributes['help'] ?? '' ) );
-		if ( '' === $help ) {
+		if ( '' === $help && 'file' === $type ) {
 			/* translators: 1: accepted types, e.g. «PDF, JPG, PNG»; 2: maximum size in MB. */
-			$help = sprintf( __( '%1$s. Up to %2$d MB per file.', 'estrategiaweb-toolkit' ), strtoupper( implode( ', ', $types ) ), $max );
+			$help = sprintf( __( '%1$s. Up to %2$d MB per file.', 'estrategiaweb-toolkit' ), strtoupper( implode( ', ', Files::accepted( (string) ( $attributes['accept'] ?? '' ) ) ) ), max( 1, (int) ( $attributes['maxMb'] ?? Files::DEFAULT_MAX_MB ) ) );
 		}
-		$out .= '<p id="' . esc_attr( $id ) . '-help" class="estrategia-web-forms__help">' . esc_html( $help ) . '</p>';
-		return $out;
+		return $help;
 	}
 
 	public static function render_submit( array $attributes ): string {

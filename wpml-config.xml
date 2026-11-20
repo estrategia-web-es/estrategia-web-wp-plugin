@@ -76,27 +76,33 @@
 		</gutenberg-block>
 		<gutenberg-block type="estrategia-web-forms/text" translate="1" label="Form: text field">
 			<key name="label" label="Field label" />
+			<key name="help" label="Field help" />
 			<key name="placeholder" label="Field placeholder" />
 		</gutenberg-block>
 		<gutenberg-block type="estrategia-web-forms/email" translate="1" label="Form: email field">
 			<key name="label" label="Field label" />
+			<key name="help" label="Field help" />
 			<key name="placeholder" label="Field placeholder" />
 		</gutenberg-block>
 		<gutenberg-block type="estrategia-web-forms/tel" translate="1" label="Form: phone field">
 			<key name="label" label="Field label" />
+			<key name="help" label="Field help" />
 			<key name="placeholder" label="Field placeholder" />
 		</gutenberg-block>
 		<gutenberg-block type="estrategia-web-forms/textarea" translate="1" label="Form: long text field">
 			<key name="label" label="Field label" />
+			<key name="help" label="Field help" />
 			<key name="placeholder" label="Field placeholder" />
 		</gutenberg-block>
 		<gutenberg-block type="estrategia-web-forms/select" translate="1" label="Form: dropdown">
 			<key name="label" label="Field label" />
+			<key name="help" label="Field help" />
 			<key name="placeholder" label="First option (placeholder)" />
 			<key name="options" label="Options, one per line (keep the order)" />
 		</gutenberg-block>
 		<gutenberg-block type="estrategia-web-forms/checkbox" translate="1" label="Form: checkbox">
 			<key name="label" label="Checkbox text" />
+			<key name="help" label="Field help" />
 			<key name="privacyUrl" label="Privacy policy URL" type="link" />
 		</gutenberg-block>
 		<gutenberg-block type="estrategia-web-forms/file" translate="1" label="Form: file field">

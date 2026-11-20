@@ -39,7 +39,8 @@ no WPML) is in
    field», «Phone field», «Message field», «Dropdown field», «Checkbox»
    (also the GDPR consent), «File field» (2.11.0), «Send button» and «Email notification». Each
    field has a label, name (key), required, placeholder
-   text and width (full / half). They can be put inside groups and columns: the
+   text (an EXAMPLE: it disappears on typing), help text (2.12.0:
+   instructions, in small print under the field) and width (full / half). They can be put inside groups and columns: the
    form is laid out like any other block.
 2. **Notifications**: each «Email notification» block is an email sent with
    every submission — to the team, an acknowledgement to the sender, a copy

@@ -204,17 +204,14 @@
 }
 
 .estrategia-web-forms__link {
-	margin-top: var(--wp--style--block-gap, 1rem);
+	margin-top: calc(2 * var(--wp--style--block-gap, 1rem));
+}
+
+.estrategia-web-forms__link > summary {
+	cursor: pointer;
+	font-weight: 600;
 }
 
 .estrategia-web-forms__link-form {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: end;
-	gap: 0.5em 1em;
-	margin-top: 0.75em;
-}
-
-.estrategia-web-forms__link-form .estrategia-web-forms__label {
-	flex-basis: 100%;
+	margin-top: var(--wp--style--block-gap, 1rem);
 }

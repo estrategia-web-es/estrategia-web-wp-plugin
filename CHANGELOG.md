@@ -9,6 +9,21 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.12.0 — 20-11-2026 (forms: help text on every field)
+
+**What each site must do:** nothing. A field without help renders as before.
+
+- **«Help text»** on every field (it was only on the File field): a line
+  in small print under the field, linked with `aria-describedby`, and
+  translated with WPML (`help` in wpml-config.xml). The placeholder's own
+  help in the editor now says it is for an example: instructions put there
+  disappear on typing and many screen readers do not read them (David,
+  20-11-2026, on the grant form's IAE field). `Blocks::field_help()`.
+- **«Send me the link»** (dossier forms) carries the form's classes and
+  field structure: on a phone it showed a bare input, because the plugin's
+  and the theme's styles hang from `.estrategia-web-forms` and
+  `.estrategia-web-forms__field`, and that box had neither.
+
 ## 2.11.0 — 20-11-2026 (forms: File field and dossier mode)
 
 **What each site must do:** nothing. Both are switched on form by form;

@@ -15,6 +15,7 @@
 		"name": { "type": "string", "default": "" },
 		"required": { "type": "boolean", "default": false },
 		"requiredToSave": { "type": "boolean", "default": false },
+		"help": { "type": "string", "default": "" },
 		"placeholder": { "type": "string", "default": "" },
 		"width": { "type": "string", "enum": [ "full", "half" ], "default": "full" },
 		"consent": { "type": "boolean", "default": false },
