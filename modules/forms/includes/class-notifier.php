@@ -142,15 +142,63 @@ final class Notifier {
 			Markers::SITE_NAME => wp_specialchars_decode( (string) get_option( 'blogname' ), ENT_QUOTES ),
 		);
 
-		$text = array_merge( $text, $fixed, array( Markers::ALL_FIELDS => rtrim( $all_text ) ) );
+		// 2.11.0: the dossier's link and what is missing. Always known (empty in a plain form), so
+		// that a template copied from a dossier form does not show «{{dossier_url}}» verbatim.
+		$extra = array_merge(
+			array(
+				Markers::DOSSIER_URL => '',
+				Markers::MISSING     => '',
+			),
+			array_intersect_key( (array) ( $meta['extra'] ?? array() ), array_flip( array( Markers::DOSSIER_URL, Markers::MISSING ) ) )
+		);
+		$fixed = array_merge( $fixed, $extra );
+		$text  = array_merge( $text, $fixed, array( Markers::ALL_FIELDS => rtrim( $all_text ) ) );
 		foreach ( $fixed as $key => $value ) {
 			$html[ $key ] = esc_html( $value );
+		}
+		if ( '' !== $extra[ Markers::DOSSIER_URL ] ) {
+			$html[ Markers::DOSSIER_URL ] = '<a href="' . esc_url( $extra[ Markers::DOSSIER_URL ] ) . '">' . esc_html( $extra[ Markers::DOSSIER_URL ] ) . '</a>';
 		}
 		$html[ Markers::ALL_FIELDS ] = $all_html;
 
 		return array(
 			'text' => $text,
 			'html' => $html,
+		);
+	}
+
+	/**
+	 * One email that is not a form notification (2.11.0: the dossier link,
+	 * «we need something else»), dressed with the same template.
+	 *
+	 * @return array{to: string, status: string, error: string}
+	 */
+	public static function send_plain( string $to, string $subject, string $text, string $html, string $lang ): array {
+		if ( ! is_email( $to ) ) {
+			return array(
+				'to'     => $to,
+				'status' => 'failed',
+				'error'  => __( 'No valid recipient.', 'estrategiaweb-toolkit' ),
+			);
+		}
+		$subject  = Markers::single_line( $subject );
+		$text    .= self::text_footer( $lang );
+		$error    = '';
+		$on_fail  = static function ( \WP_Error $e ) use ( &$error ): void {
+			$error = $e->get_error_message();
+		};
+		$alt_body = static function ( $phpmailer ) use ( $text ): void {
+			$phpmailer->AltBody = $text; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		};
+		add_action( 'wp_mail_failed', $on_fail );
+		add_action( 'phpmailer_init', $alt_body );
+		$sent = wp_mail( $to, $subject, self::wrap_html( $html, $subject, $lang ), array( 'Content-Type: text/html; charset=UTF-8', 'From: ' . self::from() ) );
+		remove_action( 'wp_mail_failed', $on_fail );
+		remove_action( 'phpmailer_init', $alt_body );
+		return array(
+			'to'     => $to,
+			'status' => $sent ? 'sent' : 'failed',
+			'error'  => $sent ? '' : ( '' !== $error ? $error : __( 'wp_mail() returned false.', 'estrategiaweb-toolkit' ) ),
 		);
 	}
 

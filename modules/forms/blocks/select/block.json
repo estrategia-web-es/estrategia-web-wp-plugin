@@ -9,11 +9,12 @@
 	"description": "Choose one option from a list.",
 	"textdomain": "estrategiaweb-toolkit",
 	"ancestor": [ "estrategia-web-forms/form" ],
-	"usesContext": [ "estrategia-web-forms/formId", "pattern/overrides" ],
+	"usesContext": [ "estrategia-web-forms/formId", "estrategia-web-forms/dossier", "pattern/overrides" ],
 	"attributes": {
 		"label": { "type": "string", "default": "" },
 		"name": { "type": "string", "default": "" },
 		"required": { "type": "boolean", "default": false },
+		"requiredToSave": { "type": "boolean", "default": false },
 		"placeholder": { "type": "string", "default": "" },
 		"autocomplete": { "type": "string", "default": "" },
 		"width": { "type": "string", "enum": [ "full", "half" ], "default": "full" },

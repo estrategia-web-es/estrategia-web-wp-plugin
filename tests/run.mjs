@@ -352,6 +352,8 @@ const BOOT_LIMIT = 300;
 // Per shard, outside the repo: Playground's temp folder (the whole WordPress lives there) and the PHP error log.
 const tempOf = (wp) => path.join(os.tmpdir(), "estrategia-web-tests", String(wp.port));
 const phpLogOf = (wp) => path.join(tempOf(wp), "logs", "php-errors.log");
+/** The forms' private files folder of a shard (mounted at /estrategia-web-forms-private: see launch). */
+const privateDirOf = (wp) => path.join(tempOf(wp), "forms-private");
 
 function ensureCli() {
   if (fs.existsSync(CLI_BIN)) return;
@@ -490,6 +492,7 @@ async function startPlayground(wp) {
   await fs.promises.rm(tempOf(wp), { recursive: true, force: true });
   await fs.promises.cp(snapshot ?? GOLDEN, path.join(tempOf(wp), "wordpress"), { recursive: true });
   fs.mkdirSync(path.dirname(phpLogOf(wp)), { recursive: true });
+  fs.mkdirSync(privateDirOf(wp), { recursive: true });
   // EW_TRACE=1: every request's ms and URL to logs/trace.log (tests/wp/estrategia-web-test-env.php).
   if (process.env.EW_TRACE === "1") fs.writeFileSync(path.join(path.dirname(phpLogOf(wp)), "trace.on"), "");
   const launched = launch(
@@ -504,6 +507,10 @@ async function startPlayground(wp) {
       "--mount-dir-before-install", ROOT, "/wordpress/wp-content/plugins/estrategia-web",
       // PHP's error log (tests/wp/estrategia-web-test-env.php points error_log here): read after a red file.
       "--mount-dir-before-install", path.dirname(phpLogOf(wp)), "/wordpress/wp-content/estrategia-web-test-logs",
+      // 2.11.0, the forms' File field: its default folder is the one ABOVE WordPress (/ here), and
+      // outside the mounts each of the two workers has its OWN memory disk — a file written by one
+      // request did not exist for the next (seen red, 20-11-2026). Mounted, both share it.
+      "--mount-dir-before-install", privateDirOf(wp), "/estrategia-web-forms-private",
       ...wp.mounts(),
       "--blueprint=" + (snapshot ? BLUEPRINT_SNAPSHOT : BLUEPRINT), "--login"],
     path.join(tempOf(wp), "tmp"),

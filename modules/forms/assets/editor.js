@@ -35,7 +35,7 @@
 
 	// The fixed markers (class-markers.php). The old Spanish names were
 	// renamed in saved forms by «migrate-form-markers» (2.0.1).
-	const FIXED_MARKERS = [ 'all_fields', 'submission_date', 'page_url', 'site_name' ];
+	const FIXED_MARKERS = [ 'all_fields', 'submission_date', 'page_url', 'site_name', 'dossier_url', 'missing_fields' ];
 
 	const randomId = ( prefix ) => prefix + '-' + Math.random().toString( 36 ).slice( 2, 8 );
 
@@ -112,6 +112,30 @@
 							__nextHasNoMarginBottom: true,
 						} )
 					),
+					// 2.11.0: dossier mode. Rules in includes/class-dossier.php.
+					h(
+						PanelBody,
+						{ title: __( 'Dossier', 'estrategiaweb-toolkit' ), initialOpen: !! attributes.dossier },
+						h( ToggleControl, {
+							label: __( 'Dossier mode', 'estrategiaweb-toolkit' ),
+							help: __( 'The sender gets a private link to come back, see what they sent and complete it. «Required» fields can be left for later; only the ones marked «Required to save» are needed to save. Put {{dossier_url}} in the acknowledgement.', 'estrategiaweb-toolkit' ),
+							checked: !! attributes.dossier,
+							onChange: ( dossier ) => setAttributes( { dossier } ),
+							__nextHasNoMarginBottom: true,
+						} ),
+						attributes.dossier
+							? h( TextControl, {
+									type: 'number',
+									min: 1,
+									max: 365,
+									label: __( 'Link valid for (days)', 'estrategiaweb-toolkit' ),
+									help: __( 'Counted from the last time the link is sent or used.', 'estrategiaweb-toolkit' ),
+									value: String( attributes.dossierDays || 90 ),
+									onChange: ( v ) => setAttributes( { dossierDays: Math.min( 365, Math.max( 1, parseInt( v, 10 ) || 90 ) ) } ),
+									__nextHasNoMarginBottom: true,
+							  } )
+							: null
+					),
 					h(
 						PanelBody,
 						{ title: __( 'Messages', 'estrategiaweb-toolkit' ), initialOpen: false },
@@ -143,7 +167,7 @@
 	/* Fields                                                              */
 	/* ------------------------------------------------------------------ */
 
-	function fieldInspector( type, attributes, setAttributes ) {
+	function fieldInspector( type, attributes, setAttributes, inDossier ) {
 		const controls = [
 			h( TextControl, {
 				key: 'label',
@@ -175,8 +199,58 @@
 					__nextHasNoMarginBottom: true,
 				} )
 			);
+			// 2.11.0: in a dossier form «Required» is «needed to be complete»; this one is «needed to save».
+			if ( inDossier ) {
+				controls.push(
+					h( ToggleControl, {
+						key: 'requiredToSave',
+						label: __( 'Required to save', 'estrategiaweb-toolkit' ),
+						help: __( 'Without it the dossier cannot even be saved half-way. Keep it for the contact details; the first email field marked like this receives the link.', 'estrategiaweb-toolkit' ),
+						checked: !! attributes.requiredToSave,
+						onChange: ( requiredToSave ) => setAttributes( { requiredToSave } ),
+						__nextHasNoMarginBottom: true,
+					} )
+				);
+			}
 		}
-		if ( type !== 'checkbox' ) {
+		if ( type === 'file' ) {
+			controls.push(
+				h( TextControl, {
+					key: 'accept',
+					label: __( 'Accepted types', 'estrategiaweb-toolkit' ),
+					help: __( 'Any of pdf, jpg, png, separated by commas. Checked by the content of the file, not by its name.', 'estrategiaweb-toolkit' ),
+					value: attributes.accept,
+					onChange: ( accept ) => setAttributes( { accept } ),
+					__nextHasNoMarginBottom: true,
+				} ),
+				h( TextControl, {
+					key: 'maxMb',
+					type: 'number',
+					min: 1,
+					label: __( 'Maximum size per file (MB)', 'estrategiaweb-toolkit' ),
+					help: __( 'It cannot be more than the server accepts: see Forms → Settings.', 'estrategiaweb-toolkit' ),
+					value: String( attributes.maxMb || 10 ),
+					onChange: ( v ) => setAttributes( { maxMb: Math.max( 1, parseInt( v, 10 ) || 10 ) } ),
+					__nextHasNoMarginBottom: true,
+				} ),
+				h( ToggleControl, {
+					key: 'multiple',
+					label: __( 'Several files', 'estrategiaweb-toolkit' ),
+					checked: !! attributes.multiple,
+					onChange: ( multiple ) => setAttributes( { multiple } ),
+					__nextHasNoMarginBottom: true,
+				} ),
+				h( TextControl, {
+					key: 'help',
+					label: __( 'Help text', 'estrategiaweb-toolkit' ),
+					help: __( 'Under the field. Empty: the accepted types and the maximum size.', 'estrategiaweb-toolkit' ),
+					value: attributes.help,
+					onChange: ( help ) => setAttributes( { help } ),
+					__nextHasNoMarginBottom: true,
+				} )
+			);
+		}
+		if ( type !== 'checkbox' && type !== 'file' ) {
 			controls.push(
 				h( TextControl, {
 					key: 'placeholder',
@@ -289,13 +363,15 @@
 				);
 			case 'checkbox':
 				return null;
+			case 'file':
+				return h( 'input', { type: 'file', disabled: true, tabIndex: -1 } );
 			default:
 				return h( 'input', { type, placeholder: attributes.placeholder, readOnly: true, tabIndex: -1 } );
 		}
 	}
 
 	function fieldEdit( type ) {
-		return function Edit( { attributes, setAttributes } ) {
+		return function Edit( { attributes, setAttributes, context } ) {
 			useEffect( () => {
 				if ( ! attributes.name ) {
 					setAttributes( { name: slug( attributes.label ) || randomId( type ).replace( /-/g, '_' ) } );
@@ -328,11 +404,12 @@
 					? [ h( 'div', { className: 'estrategia-web-forms-editor__check', key: 'check' }, h( 'input', { type: 'checkbox', readOnly: true, tabIndex: -1 } ), label ), key ]
 					: [ label, h( 'div', { key: 'control' }, fieldPreview( type, attributes ) ), key ];
 
-			return [ fieldInspector( type, attributes, setAttributes ), h( 'div', { key: 'field', ...blockProps }, body ) ];
+			const inDossier = !! ( context && context[ 'estrategia-web-forms/dossier' ] );
+			return [ fieldInspector( type, attributes, setAttributes, inDossier ), h( 'div', { key: 'field', ...blockProps }, body ) ];
 		};
 	}
 
-	[ 'text', 'email', 'tel', 'textarea', 'select', 'checkbox' ].forEach( ( type ) => {
+	[ 'text', 'email', 'tel', 'textarea', 'select', 'checkbox', 'file' ].forEach( ( type ) => {
 		registerBlockType( 'estrategia-web-forms/' + type, {
 			edit: fieldEdit( type ),
 			save: () => null,
@@ -411,6 +488,20 @@
 						text( 'to', __( 'To', 'estrategiaweb-toolkit' ), __( 'Addresses separated by commas, or a marker such as {{email}}. Empty: the site administrator email.', 'estrategiaweb-toolkit' ) ),
 						text( 'replyTo', __( 'Reply to', 'estrategiaweb-toolkit' ), __( 'An address or a marker such as {{email}}. Optional.', 'estrategiaweb-toolkit' ) ),
 						text( 'subject', __( 'Subject', 'estrategiaweb-toolkit' ) ),
+						// 2.11.0: only a dossier form is ever «updated».
+						h( SelectControl, {
+							key: 'when',
+							label: __( 'Send it', 'estrategiaweb-toolkit' ),
+							help: __( 'In a dossier form, also when the sender comes back and saves changes.', 'estrategiaweb-toolkit' ),
+							value: attributes.when || 'created',
+							options: [
+								{ value: 'created', label: __( 'When it is sent', 'estrategiaweb-toolkit' ) },
+								{ value: 'updated', label: __( 'When a dossier is changed', 'estrategiaweb-toolkit' ) },
+								{ value: 'always', label: __( 'Both', 'estrategiaweb-toolkit' ) },
+							],
+							onChange: ( when ) => setAttributes( { when } ),
+							__nextHasNoMarginBottom: true,
+						} ),
 						h( TextareaControl, {
 							key: 'body',
 							label: __( 'Message', 'estrategiaweb-toolkit' ),

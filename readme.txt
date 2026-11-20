@@ -4,7 +4,7 @@ Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.10.0
+Stable tag: 2.11.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -81,6 +81,11 @@ Its settings, yes. Your data (form submissions, redirects, company details) is k
 The cookie list includes an extract of the Open Cookie Database (https://github.com/jkwakman/Open-Cookie-Database), © Jan Kwakman and contributors, Apache License 2.0. Details in modules/consent/data/NOTICE.
 
 == Changelog ==
+
+= 2.11.0 =
+* Forms: a File field (PDF, JPG, PNG, checked by their content). Files are stored outside the web root and only the site team can download them.
+* Forms: dossier mode, per form. The sender can save half-way, gets a private link by email to come back and complete it, and can ask for a new link. The team sees what is missing, can ask the client for more and can revoke the link.
+* Forms: the retention counts a dossier from its last change, and deleting a submission deletes its files.
 
 = 2.10.0 =
 * Renamed to EstrategiaWeb Toolkit (text domain estrategiaweb-toolkit). Settings, content and blocks are unchanged.

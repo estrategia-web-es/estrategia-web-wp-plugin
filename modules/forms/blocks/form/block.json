@@ -13,10 +13,13 @@
 		"formId": { "type": "string", "default": "" },
 		"title": { "type": "string", "default": "" },
 		"successMessage": { "type": "string", "default": "" },
-		"errorMessage": { "type": "string", "default": "" }
+		"errorMessage": { "type": "string", "default": "" },
+		"dossier": { "type": "boolean", "default": false },
+		"dossierDays": { "type": "integer", "default": 90 }
 	},
 	"providesContext": {
-		"estrategia-web-forms/formId": "formId"
+		"estrategia-web-forms/formId": "formId",
+		"estrategia-web-forms/dossier": "dossier"
 	},
 	"supports": {
 		"html": false,

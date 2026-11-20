@@ -171,3 +171,50 @@
 	height: 1px;
 	overflow: hidden;
 }
+
+/* 2.11.0, File field and dossier mode. Only what the layout needs: the
+   list of files already sent, the help line, the notice above a dossier and
+   the «send me my link» box under it (which lives OUTSIDE the form element,
+   so it does not get the form's variables: hence the fallbacks). */
+.estrategia-web-forms__help {
+	margin: 0.25em 0 0;
+	font-size: 0.875em;
+}
+
+.estrategia-web-forms__files {
+	margin: 0 0 0.5em;
+	padding-left: 1.25em;
+}
+
+.estrategia-web-forms__remove {
+	margin-left: 0.5em;
+	white-space: nowrap;
+}
+
+.estrategia-web-forms__notice {
+	margin: 0 0 var(--estrategia-web-forms-gap, 1rem);
+	padding: 0.75em 1em;
+	border-left: 4px solid var(--estrategia-web-forms-success, #1d7a3e);
+	background: var(--estrategia-web-forms-success-background, rgba(29, 122, 62, 0.1));
+}
+
+.estrategia-web-forms__notice--error {
+	border-left-color: var(--estrategia-web-forms-error, #b32d2e);
+	background: rgba(179, 45, 46, 0.08);
+}
+
+.estrategia-web-forms__link {
+	margin-top: var(--wp--style--block-gap, 1rem);
+}
+
+.estrategia-web-forms__link-form {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: end;
+	gap: 0.5em 1em;
+	margin-top: 0.75em;
+}
+
+.estrategia-web-forms__link-form .estrategia-web-forms__label {
+	flex-basis: 100%;
+}

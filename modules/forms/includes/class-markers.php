@@ -54,6 +54,9 @@ final class Markers {
 	public const DATE       = 'submission_date';
 	public const PAGE_URL   = 'page_url';
 	public const SITE_NAME  = 'site_name';
+	/** 2.11.0, dossier forms only: the private link to come back and complete it, and what is still missing. Empty elsewhere. */
+	public const DOSSIER_URL = 'dossier_url';
+	public const MISSING     = 'missing_fields';
 
 	/**
 	 * @param string                $template Template with markers.

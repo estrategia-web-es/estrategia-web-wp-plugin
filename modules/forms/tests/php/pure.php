@@ -61,6 +61,74 @@ $snapshot = array(
 		array( 'label' => 'B', 'to' => 'a@b.c', 'reply_to' => '', 'subject' => 'x', 'body' => '{{all_fields}}' ),
 	),
 );
+// 2.11.0: what a file IS (by its first bytes), the names shown, $_FILES as PHP builds it, and the
+// dossier's rules (who receives the link, what a save needs, what is missing, what changed).
+require __DIR__ . '/../../includes/class-files.php';
+require __DIR__ . '/../../includes/class-dossier.php';
+use EstrategiaWeb\Forms\Dossier;
+use EstrategiaWeb\Forms\Files;
+
+$files_cases = array(
+	'sniff_pdf'       => Files::sniff( "%PDF-1.7\n%\xE2\xE3" ),
+	'sniff_jpg'       => Files::sniff( "\xFF\xD8\xFF\xE0\x00\x10JFIF" ),
+	'sniff_png'       => Files::sniff( "\x89PNG\r\n\x1A\n\x00\x00" ),
+	'sniff_html'      => Files::sniff( '<!doctype html><script>' ),
+	'sniff_pdf_late'  => Files::sniff( ' %PDF-1.7' ),
+	'accepted'        => Files::accepted( ' .PDF; jpeg,gif ,png,pdf' ),
+	'accepted_none'   => Files::accepted( 'exe' ),
+	'accept_attr'     => Files::accept_attribute( array( 'pdf', 'jpg' ) ),
+	'name_path'       => Files::display_name( 'C:\\fakepath\\..\\escrituras "2026".exe', 'pdf' ),
+	'name_empty'      => Files::display_name( '.pdf', 'pdf' ),
+	'name_keeps_utf8' => Files::display_name( 'Modelo 036 — Stanila.PDF', 'pdf' ),
+	'normalize'       => Files::normalize(
+		array(
+			'name'     => array( 'docs' => array( 'a.pdf', '' ), 'foto' => array( 'b.jpg' ) ),
+			'tmp_name' => array( 'docs' => array( '/tmp/a', '' ), 'foto' => array( '/tmp/b' ) ),
+			'size'     => array( 'docs' => array( 10, 0 ), 'foto' => array( 20 ) ),
+			'error'    => array( 'docs' => array( 0, UPLOAD_ERR_NO_FILE ), 'foto' => array( UPLOAD_ERR_INI_SIZE ) ),
+		)
+	),
+);
+
+$dossier_def = array(
+	'dossier' => true,
+	'fields'  => array(
+		array( 'type' => 'text', 'name' => 'empresa', 'label' => 'Empresa', 'required' => true, 'required_to_save' => true, 'consent' => false ),
+		array( 'type' => 'email', 'name' => 'email_copia', 'label' => 'Copia', 'required' => false, 'required_to_save' => false, 'consent' => false ),
+		array( 'type' => 'email', 'name' => 'email', 'label' => 'Email', 'required' => true, 'required_to_save' => true, 'consent' => false ),
+		array( 'type' => 'text', 'name' => 'iae', 'label' => 'IAE', 'required' => true, 'required_to_save' => false, 'consent' => false ),
+		array( 'type' => 'file', 'name' => 'escrituras', 'label' => 'Escrituras', 'required' => true, 'required_to_save' => false, 'consent' => false ),
+		array( 'type' => 'file', 'name' => 'otros', 'label' => '', 'required' => false, 'required_to_save' => false, 'consent' => false ),
+		array( 'type' => 'checkbox', 'name' => 'privacidad', 'label' => 'Privacidad', 'required' => true, 'required_to_save' => false, 'consent' => true ),
+	),
+);
+$no_marked = $dossier_def;
+$no_marked['fields'][2]['required_to_save'] = false;
+$data_before = array(
+	array( 'name' => 'empresa', 'value' => 'Stanila' ),
+	array( 'name' => 'iae', 'value' => '' ),
+	array( 'name' => 'escrituras', 'value' => '', 'files' => array() ),
+);
+$data_after = array(
+	array( 'name' => 'empresa', 'value' => 'Stanila' ),
+	array( 'name' => 'iae', 'value' => '501.3' ),
+	array( 'name' => 'escrituras', 'value' => 'e.pdf', 'files' => array( array( 'id' => 'f1' ) ) ),
+);
+$a_token       = Dossier::new_token();
+$dossier_cases = array(
+	'owner_marked'   => Dossier::owner_field( $dossier_def ),
+	'owner_first'    => Dossier::owner_field( $no_marked ),
+	'needed'         => Dossier::needed_to_save( $dossier_def ),
+	'missing_before' => Dossier::missing( $dossier_def, $data_before ),
+	'missing_after'  => Dossier::missing( $dossier_def, $data_after ),
+	'labels'         => Dossier::labels( $dossier_def, array( 'iae', 'escrituras', 'otros' ) ),
+	'changed'        => Dossier::changed( $data_before, $data_after ),
+	'token_shape'    => Dossier::is_token( $a_token ),
+	'token_unique'   => $a_token !== Dossier::new_token(),
+	'token_bad'      => array( Dossier::is_token( '' ), Dossier::is_token( str_repeat( 'a', 42 ) ), Dossier::is_token( str_repeat( 'a', 42 ) . '/' ) ),
+	'hash_is_sha256' => Dossier::hash( 'x' ) === hash( 'sha256', 'x' ),
+);
+
 $esc    = static fn( $v ) => htmlspecialchars( $v, ENT_QUOTES );
 $secret = 'test-secret';
 $now    = 1790000000;
@@ -104,6 +172,9 @@ echo json_encode(
 		'pre_first_wins'    => Preselect::pick( $options, array( null, '1', 3 ), $slug ),
 		'pre_falls_through' => Preselect::pick( $options, array( 'Tintorería', 3 ), $slug ),
 		'pre_none'          => Preselect::pick( $options, array( null, '', 0 ), $slug ),
+		// 2.11.0: the File field and the dossier's pure parts.
+		'files'             => $files_cases,
+		'dossier'           => $dossier_cases,
 	),
 	JSON_UNESCAPED_UNICODE
 );

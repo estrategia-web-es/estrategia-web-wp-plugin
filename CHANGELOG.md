@@ -9,6 +9,48 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.11.0 — 20-11-2026 (forms: File field and dossier mode)
+
+**What each site must do:** nothing. Both are switched on form by form;
+a form that does not use them behaves exactly as in 2.10.0. The database
+migration (forms 0002: seven columns in the submissions table, all with
+the default «not a dossier») runs by itself on load. A site that will use
+the File field checks **Forms → Settings → Files**: it must say the folder
+is outside the web; if it is in red, it defines
+`ESTRATEGIA_WEB_FORMS_PRIVATE_DIR` in wp-config.php.
+
+Born for estrategiaweb.es's grant application form (BDNS 897994, line 3.1,
+open from 01-12-2026): a client has to hand over a dozen data and three
+documents, and nobody has them all at once.
+
+- **File field** (`estrategia-web-forms/file`): types (pdf, jpg, png)
+  checked by the first bytes, size per file, one or several. Stored with a
+  random name OUTSIDE the web root (`dirname(ABSPATH)/estrategia-web-forms-private`
+  by default): on SiteGround and any nginx host a «deny» .htaccess protects
+  nothing. Downloads only through the plugin (the team: capability + nonce;
+  the owner of a dossier: its link). The emails say the file names, never
+  attach them. [modules/forms/includes/class-files.php](modules/forms/includes/class-files.php).
+- **Dossier mode** (form block → «Dossier»): «Required» means «needed to be
+  complete» and only «Required to save» fields (plus the consent and the
+  owner's email) are needed to save. Each save says what is missing. The
+  sender gets a private link (`{{dossier_url}}`, 32 random bytes, only its
+  sha256 stored) valid for 90 days from its last use, opens the form filled
+  in with their files, and can ask for a new link by email («Send me the
+  link», which only ever writes to the stored address). The page with the
+  link is not cached, not indexed and sends no referrer.
+  [modules/forms/includes/class-dossier.php](modules/forms/includes/class-dossier.php).
+- **The team**, in the submission: the dossier's state and what is missing,
+  its history, «Ask the client» (a note and a new link by email) and
+  «Revoke link»; a «Dossier» column in the list.
+- **Notifications** get «Send it: when it is sent / when a dossier is
+  changed / both», and the markers `{{dossier_url}}` and `{{missing_fields}}`.
+- **Retention**: a dossier counts from its last change; deleting or purging
+  a submission deletes its files.
+- Tests: `modules/forms/tests/dossier.test.mjs` (level 2, seen red with
+  three mutants) and the pure parts in pure.test.mjs. `tests/run.mjs` mounts
+  `/estrategia-web-forms-private` per shard: without it each Playground
+  worker had its own copy of that folder.
+
 ## 2.10.0 — 03-11-2026 (WordPress.org: the name, the first review, llms.txt and German)
 
 **What each site must do:** the plugin is now **EstrategiaWeb Toolkit**,

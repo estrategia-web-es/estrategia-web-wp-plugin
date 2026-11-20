@@ -36,6 +36,10 @@ final class Admin {
 		add_action( 'admin_init', array( self::class, 'register_settings' ) );
 		add_action( 'admin_post_estrategia_web_forms_export', array( self::class, 'export_csv' ) );
 		add_action( 'admin_post_estrategia_web_forms_delete', array( self::class, 'delete' ) );
+		// 2.11.0: a file of a submission, and the dossier's «Ask the client» and «Revoke link».
+		add_action( 'admin_post_estrategia_web_forms_file', array( self::class, 'download_file' ) );
+		add_action( 'admin_post_estrategia_web_forms_ask', array( self::class, 'ask_client' ) );
+		add_action( 'admin_post_estrategia_web_forms_revoke', array( self::class, 'revoke_link' ) );
 		add_action( 'enqueue_block_editor_assets', array( Forms_List::class, 'enqueue_notification_link' ) ); // 2.0.1.
 	}
 
@@ -134,12 +138,20 @@ final class Admin {
 		echo '<h1>' . esc_html( sprintf( __( 'Submission #%d', 'estrategiaweb-toolkit' ), $row['id'] ) ) . '</h1>';
 		echo '<p><a href="' . esc_url( $back ) . '">&larr; ' . esc_html__( 'Back to the list', 'estrategiaweb-toolkit' ) . '</a></p>';
 
+		self::dossier_notices();
 		echo '<h2>' . esc_html__( 'Data', 'estrategiaweb-toolkit' ) . '</h2><table class="widefat striped estrategia-web-forms-data"><tbody>';
 		foreach ( $row['data'] as $field ) {
+			if ( 'file' === ( $field['type'] ?? '' ) ) {
+				printf( '<tr><th scope="row" style="width:25%%">%s</th><td>%s</td></tr>', esc_html( $field['label'] ?: $field['name'] ), self::file_links( (int) $row['id'], (array) ( $field['files'] ?? array() ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built escaped.
+				continue;
+			}
 			$value = 'checkbox' === ( $field['type'] ?? '' ) ? ( '1' === $field['value'] ? __( 'Yes', 'estrategiaweb-toolkit' ) : __( 'No', 'estrategiaweb-toolkit' ) ) : (string) $field['value'];
 			printf( '<tr><th scope="row" style="width:25%%">%s</th><td>%s</td></tr>', esc_html( $field['label'] ?: $field['name'] ), nl2br( esc_html( $value ) ) );
 		}
 		echo '</tbody></table>';
+		if ( Submissions::is_dossier( $row ) ) {
+			self::render_dossier( $row );
+		}
 
 		echo '<h2>' . esc_html__( 'Notifications', 'estrategiaweb-toolkit' ) . '</h2><table class="widefat striped estrategia-web-forms-notifications"><thead><tr>';
 		echo '<th>' . esc_html__( 'Notification', 'estrategiaweb-toolkit' ) . '</th><th>' . esc_html__( 'Recipients', 'estrategiaweb-toolkit' ) . '</th><th>' . esc_html__( 'Result', 'estrategiaweb-toolkit' ) . '</th></tr></thead><tbody>';
@@ -168,6 +180,199 @@ final class Admin {
 		$delete = add_query_arg( array( 'page' => self::PAGE, 'action' => 'delete', 'id' => $row['id'] ), admin_url( 'admin.php' ) );
 		echo '<p><a class="button button-link-delete" href="' . esc_url( $delete ) . '">' . esc_html__( 'Delete this submission', 'estrategiaweb-toolkit' ) . '</a></p>';
 		echo '</div>';
+	}
+
+	/**
+	 * Where the File fields store what is sent (2.11.0), and the warning when
+	 * it is not safe: under the web root a .htaccess may protect nothing
+	 * (nginx), see includes/class-files.php.
+	 */
+	private static function files_status(): string {
+		$dir   = Files::dir();
+		$limit = Files::max_server_bytes();
+		/* translators: %s: maximum upload size the server allows, e.g. «64 MB». */
+		$server = $limit ? ' ' . sprintf( __( 'This server accepts uploads of up to %s.', 'estrategiaweb-toolkit' ), size_format( $limit ) ) : '';
+		if ( '' === $dir ) {
+			return '<p class="description" style="color:#b32d2e"><strong>' . esc_html__( 'No folder can be written for the files: File fields will fail. Define ESTRATEGIA_WEB_FORMS_PRIVATE_DIR in wp-config.php with a writable folder outside the web.', 'estrategiaweb-toolkit' ) . '</strong></p>';
+		}
+		$out = '<code>' . esc_html( $dir ) . '</code>';
+		if ( Files::is_public() ) {
+			$out .= '<p class="description" style="color:#b32d2e"><strong>' . esc_html__( 'This folder is inside the web. If the server is nginx, the files could be downloaded by anyone who guesses their name. Define ESTRATEGIA_WEB_FORMS_PRIVATE_DIR in wp-config.php with a folder outside the web.', 'estrategiaweb-toolkit' ) . '</strong></p>';
+		} else {
+			$out .= '<p class="description">' . esc_html__( 'Outside the web: only the team, and the owner of a dossier with their link, can download them. They are deleted with their submission.', 'estrategiaweb-toolkit' ) . esc_html( $server ) . '</p>';
+		}
+		return $out;
+	}
+
+	/** The files of a field, each a download through admin-post (capability + nonce). «—» if none. */
+	private static function file_links( int $id, array $files ): string {
+		if ( ! $files ) {
+			return '—';
+		}
+		$out = '<ul style="margin:0">';
+		foreach ( $files as $file ) {
+			$url  = wp_nonce_url(
+				add_query_arg(
+					array(
+						'action' => 'estrategia_web_forms_file',
+						'id'     => $id,
+						'file'   => (string) $file['id'],
+					),
+					admin_url( 'admin-post.php' )
+				),
+				'estrategia_web_forms_file_' . $id
+			);
+			$out .= '<li><a href="' . esc_url( $url ) . '">' . esc_html( (string) $file['name'] ) . '</a> (' . esc_html( size_format( (int) $file['size'] ) ) . ')</li>';
+		}
+		return $out . '</ul>';
+	}
+
+	/** The result of «Ask the client» / «Revoke link», after their redirect. */
+	private static function dossier_notices(): void {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- only shows a message.
+		$done = sanitize_key( wp_unslash( $_GET['dossier'] ?? '' ) );
+		// phpcs:enable
+		$messages = array(
+			'asked'      => array( 'success', __( 'Sent: the client has received your note with a new link. The previous link no longer works.', 'estrategiaweb-toolkit' ) ),
+			'ask_failed' => array( 'error', __( 'The email to the client could not be sent. Nothing has changed for them.', 'estrategiaweb-toolkit' ) ),
+			'revoked'    => array( 'success', __( 'The link has been revoked. The client can no longer open the dossier until a new link is sent.', 'estrategiaweb-toolkit' ) ),
+		);
+		if ( isset( $messages[ $done ] ) ) {
+			printf( '<div class="notice notice-%1$s"><p>%2$s</p></div>', esc_attr( $messages[ $done ][0] ), esc_html( $messages[ $done ][1] ) );
+		}
+	}
+
+	/**
+	 * The dossier box (2.11.0): complete or what is missing, the link, the
+	 * history, and the two actions — «Ask the client» (a note and a new
+	 * link by email) and «Revoke link». Both are POSTs with their nonce.
+	 */
+	private static function render_dossier( array $row ): void {
+		$definition = Definitions::load( (string) $row['definition_hash'] ) ?? array( 'fields' => array() );
+		$missing    = Dossier::labels( $definition, (array) $row['missing'] );
+		$format     = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+		echo '<h2>' . esc_html__( 'Dossier', 'estrategiaweb-toolkit' ) . '</h2><table class="widefat striped estrategia-web-forms-dossier"><tbody>';
+		$rows = array(
+			__( 'State', 'estrategiaweb-toolkit' )    => $row['complete'] ? __( 'Complete', 'estrategiaweb-toolkit' ) : __( 'Incomplete', 'estrategiaweb-toolkit' ) . ( $missing ? ': ' . implode( ', ', $missing ) : '' ),
+			__( 'Owner', 'estrategiaweb-toolkit' )    => (string) $row['owner_email'],
+			__( 'Link', 'estrategiaweb-toolkit' )     => '' === (string) $row['access_hash'] || '' === (string) $row['access_expires']
+				? __( 'None (revoked). «Ask the client» sends a new one.', 'estrategiaweb-toolkit' )
+				/* translators: %s: date and time. */
+				: sprintf( __( 'Valid until %s', 'estrategiaweb-toolkit' ), get_date_from_gmt( (string) $row['access_expires'], $format ) ),
+			__( 'Last change', 'estrategiaweb-toolkit' ) => '' !== (string) $row['updated_at'] ? get_date_from_gmt( (string) $row['updated_at'], $format ) : '—',
+		);
+		foreach ( $rows as $label => $value ) {
+			printf( '<tr><th scope="row" style="width:25%%">%s</th><td>%s</td></tr>', esc_html( $label ), esc_html( (string) $value ) );
+		}
+		echo '</tbody></table>';
+
+		$what = array(
+			'created'   => __( 'Sent', 'estrategiaweb-toolkit' ),
+			'updated'   => __( 'Changed', 'estrategiaweb-toolkit' ),
+			'requested' => __( 'Asked the client', 'estrategiaweb-toolkit' ),
+			'link_sent' => __( 'New link sent', 'estrategiaweb-toolkit' ),
+			'revoked'   => __( 'Link revoked', 'estrategiaweb-toolkit' ),
+		);
+		echo '<h3>' . esc_html__( 'History', 'estrategiaweb-toolkit' ) . '</h3><ul class="estrategia-web-forms-history">';
+		foreach ( array_reverse( (array) $row['history'] ) as $entry ) {
+			$who    = 'client' === ( $entry['by'] ?? '' ) ? __( 'client', 'estrategiaweb-toolkit' ) : substr( (string) ( $entry['by'] ?? '' ), 5 );
+			$detail = '';
+			if ( ! empty( $entry['fields'] ) ) {
+				$detail = ': ' . implode( ', ', Dossier::labels( $definition, (array) $entry['fields'] ) ?: (array) $entry['fields'] );
+			} elseif ( ! empty( $entry['note'] ) ) {
+				$detail = ': «' . $entry['note'] . '»';
+			}
+			printf( '<li>%1$s — %2$s (%3$s)%4$s</li>', esc_html( get_date_from_gmt( gmdate( 'Y-m-d H:i:s', strtotime( (string) $entry['at'] ) ), $format ) ), esc_html( $what[ $entry['what'] ?? '' ] ?? (string) ( $entry['what'] ?? '' ) ), esc_html( $who ), esc_html( $detail ) );
+		}
+		echo '</ul>';
+
+		$post = esc_url( admin_url( 'admin-post.php' ) );
+		echo '<h3>' . esc_html__( 'Ask the client', 'estrategiaweb-toolkit' ) . '</h3>';
+		echo '<form method="post" action="' . $post . '">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
+		echo '<input type="hidden" name="action" value="estrategia_web_forms_ask"><input type="hidden" name="id" value="' . esc_attr( (string) $row['id'] ) . '">';
+		wp_nonce_field( 'estrategia_web_forms_ask_' . $row['id'] );
+		echo '<p><label for="af-note">' . esc_html__( 'What you need from them. It goes in the email, with a new link and the list of what is missing.', 'estrategiaweb-toolkit' ) . '</label><br>';
+		echo '<textarea id="af-note" name="note" rows="4" class="large-text" required></textarea></p>';
+		echo '<p><button type="submit" class="button button-primary">' . esc_html__( 'Send to the client', 'estrategiaweb-toolkit' ) . '</button></p></form>';
+
+		if ( '' !== (string) $row['access_hash'] ) {
+			echo '<form method="post" action="' . $post . '">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
+			echo '<input type="hidden" name="action" value="estrategia_web_forms_revoke"><input type="hidden" name="id" value="' . esc_attr( (string) $row['id'] ) . '">';
+			wp_nonce_field( 'estrategia_web_forms_revoke_' . $row['id'] );
+			echo '<p><button type="submit" class="button">' . esc_html__( 'Revoke link', 'estrategiaweb-toolkit' ) . '</button></p></form>';
+		}
+	}
+
+	public static function download_file(): void {
+		$id = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- checked right below.
+		if ( ! current_user_can( self::capability() ) ) {
+			wp_die( esc_html__( 'You are not allowed to do this.', 'estrategiaweb-toolkit' ), 403 );
+		}
+		check_admin_referer( 'estrategia_web_forms_file_' . $id );
+		$row  = Submissions::get( $id );
+		$file = $row ? Files::find( $row, sanitize_key( wp_unslash( $_GET['file'] ?? '' ) ) ) : null;
+		if ( ! $file ) {
+			wp_die( esc_html__( 'The file is no longer available.', 'estrategiaweb-toolkit' ), 404 );
+		}
+		Files::download( $file );
+	}
+
+	public static function ask_client(): void {
+		$id = isset( $_POST['id'] ) ? (int) $_POST['id'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- checked right below.
+		if ( ! current_user_can( self::capability() ) ) {
+			wp_die( esc_html__( 'You are not allowed to do this.', 'estrategiaweb-toolkit' ), 403 );
+		}
+		check_admin_referer( 'estrategia_web_forms_ask_' . $id );
+		$row  = Submissions::get( $id );
+		$note = trim( sanitize_textarea_field( wp_unslash( $_POST['note'] ?? '' ) ) );
+		if ( ! $row || ! Submissions::is_dossier( $row ) || '' === $note ) {
+			wp_die( esc_html__( 'Nothing to send.', 'estrategiaweb-toolkit' ), 400 );
+		}
+		$definition = Definitions::load( (string) $row['definition_hash'] ) ?? array( 'fields' => array() );
+		// The mail goes first with a token not yet stored: if it fails, the client's current link keeps working.
+		$token = Dossier::new_token();
+		$sent  = Dossier::mail_link( $row, $definition, $token, $note );
+		$done  = 'ask_failed';
+		if ( 'sent' === $sent['status'] ) {
+			Submissions::update_dossier(
+				$id,
+				array(
+					'access_hash'    => Dossier::hash( $token ),
+					'access_expires' => Dossier::expires( Dossier::days( $definition ) ),
+					'updated_at'     => current_time( 'mysql', true ),
+					'history'        => Dossier::history_add( (array) $row['history'], Dossier::actor(), 'requested', array( 'note' => $note ) ),
+				)
+			);
+			$done = 'asked';
+		}
+		wp_safe_redirect( self::view_url( $id, $done ) );
+		exit;
+	}
+
+	public static function revoke_link(): void {
+		$id = isset( $_POST['id'] ) ? (int) $_POST['id'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- checked right below.
+		if ( ! current_user_can( self::capability() ) ) {
+			wp_die( esc_html__( 'You are not allowed to do this.', 'estrategiaweb-toolkit' ), 403 );
+		}
+		check_admin_referer( 'estrategia_web_forms_revoke_' . $id );
+		$row = Submissions::get( $id );
+		if ( $row ) {
+			Dossier::revoke( $row, Dossier::actor() );
+		}
+		wp_safe_redirect( self::view_url( $id, 'revoked' ) );
+		exit;
+	}
+
+	private static function view_url( int $id, string $done ): string {
+		return add_query_arg(
+			array(
+				'page'    => self::PAGE,
+				'action'  => 'view',
+				'id'      => $id,
+				'dossier' => $done,
+			),
+			admin_url( 'admin.php' )
+		);
 	}
 
 	/** @param int[] $ids */
@@ -286,6 +491,10 @@ final class Admin {
 							}
 							?>
 							</p></td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Files', 'estrategiaweb-toolkit' ); ?></th>
+						<td><?php echo self::files_status(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built escaped. ?></td>
 					</tr>
 				</table>
 				<?php \EstrategiaWeb\Admin\Admin_UI::box_close(); ?>

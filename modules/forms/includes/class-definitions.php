@@ -36,7 +36,14 @@ defined( 'ABSPATH' ) || exit;
 
 final class Definitions {
 
-	public const FORMAT = 1;
+	/**
+	 * 2 (2.11.0): adds dossier and dossier_days to the form, required_to_save
+	 * to every field, types / max_bytes / multiple to file fields and «when»
+	 * to notifications. All are read with their default (?? …) wherever they
+	 * are used, so a format-1 snapshot of a cached page still works: it is a
+	 * plain form, as it was.
+	 */
+	public const FORMAT = 2;
 
 	public const FIELD_BLOCKS = array(
 		'estrategia-web-forms/text'     => 'text',
@@ -45,7 +52,11 @@ final class Definitions {
 		'estrategia-web-forms/textarea' => 'textarea',
 		'estrategia-web-forms/select'   => 'select',
 		'estrategia-web-forms/checkbox' => 'checkbox',
+		'estrategia-web-forms/file'     => 'file', // 2.11.0.
 	);
+
+	/** When a notification goes out (2.11.0). Only dossier forms have «updated»: a plain form is only ever created. */
+	public const WHEN = array( 'created', 'updated', 'always' );
 
 	/** @var array<string, bool> Hashes already stored in this request. */
 	private static array $stored = array();
@@ -69,6 +80,8 @@ final class Definitions {
 			'lang'            => Language::current(),
 			'success_message' => sanitize_textarea_field( (string) ( $attributes['successMessage'] ?? '' ) ),
 			'error_message'   => sanitize_textarea_field( (string) ( $attributes['errorMessage'] ?? '' ) ),
+			'dossier'         => ! empty( $attributes['dossier'] ),
+			'dossier_days'    => min( Dossier::MAX_DAYS, max( 1, (int) ( $attributes['dossierDays'] ?? Dossier::DEFAULT_DAYS ) ) ),
 			'fields'          => array_values( $fields ),
 			'notifications'   => $notifications,
 		);
@@ -144,6 +157,7 @@ final class Definitions {
 					'reply_to' => sanitize_text_field( (string) ( $atts['replyTo'] ?? '' ) ),
 					'subject'  => sanitize_text_field( (string) ( $atts['subject'] ?? '' ) ),
 					'body'     => sanitize_textarea_field( (string) ( $atts['body'] ?? '' ) ),
+					'when'     => in_array( $atts['when'] ?? '', self::WHEN, true ) ? (string) $atts['when'] : 'created',
 				);
 			}
 			if ( ! empty( $block['innerBlocks'] ) ) {
@@ -154,13 +168,20 @@ final class Definitions {
 
 	private static function field_from_block( string $type, array $atts ): array {
 		$consent = 'checkbox' === $type && ! empty( $atts['consent'] );
-		return array(
-			'type'     => $type,
-			'name'     => self::clean_id( (string) ( $atts['name'] ?? '' ) ),
-			'label'    => wp_strip_all_tags( Blocks::field_label( $type, $atts ) ),
-			'required' => $consent || ! empty( $atts['required'] ),
-			'options'  => 'select' === $type ? Blocks::options( (string) ( $atts['options'] ?? '' ) ) : array(),
-			'consent'  => $consent,
+		$field   = array(
+			'type'             => $type,
+			'name'             => self::clean_id( (string) ( $atts['name'] ?? '' ) ),
+			'label'            => wp_strip_all_tags( Blocks::field_label( $type, $atts ) ),
+			'required'         => $consent || ! empty( $atts['required'] ),
+			'options'          => 'select' === $type ? Blocks::options( (string) ( $atts['options'] ?? '' ) ) : array(),
+			'consent'          => $consent,
+			'required_to_save' => ! empty( $atts['requiredToSave'] ), // Only means something in a dossier form.
 		);
+		if ( 'file' === $type ) {
+			$field['types']     = Files::accepted( (string) ( $atts['accept'] ?? '' ) );
+			$field['max_bytes'] = max( 1, (int) ( $atts['maxMb'] ?? Files::DEFAULT_MAX_MB ) ) * MB_IN_BYTES;
+			$field['multiple']  = ! empty( $atts['multiple'] );
+		}
+		return $field;
 	}
 }

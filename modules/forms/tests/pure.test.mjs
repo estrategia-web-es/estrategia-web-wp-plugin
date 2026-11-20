@@ -102,6 +102,55 @@ test("base style: the plugin does not remove the dropdown's native arrow (the cu
   assert.doesNotMatch(css, /appearance\s*:\s*none/, "with appearance:none in the plugin, a theme that paints its background with the «background» shorthand leaves the select as a plain box");
 });
 
+// 2.11.0: the File field's pure parts (includes/class-files.php).
+test("files: the type comes from the first bytes, never from the name", () => {
+  const f = out.files;
+  assert.deepEqual([f.sniff_pdf, f.sniff_jpg, f.sniff_png], ["pdf", "jpg", "png"]);
+  assert.equal(f.sniff_html, "", "an HTML page called factura.pdf is not a PDF");
+  assert.equal(f.sniff_pdf_late, "", "the signature has to be at the very start");
+});
+
+test("files: accepted types, the accept attribute and the names shown", () => {
+  const f = out.files;
+  assert.deepEqual(f.accepted, ["pdf", "jpg", "png"], "case, dots, jpeg=jpg, unknown and repeated ones dropped");
+  assert.deepEqual(f.accepted_none, ["pdf", "jpg", "png"], "nothing valid: all the known types, not none");
+  assert.equal(f.accept_attr, ".pdf,application/pdf,.jpg,.jpeg,image/jpeg");
+  assert.equal(f.name_path, "escrituras 2026.pdf", "no path, no quotes, and the extension of what it really is");
+  assert.equal(f.name_empty, "file.pdf");
+  assert.equal(f.name_keeps_utf8, "Modelo 036 — Stanila.pdf");
+});
+
+test("files: $_FILES as PHP builds it for files[field][], without the empty slots", () => {
+  assert.deepEqual(out.files.normalize, {
+    docs: [{ name: "a.pdf", tmp: "/tmp/a", size: 10, error: 0 }],
+    foto: [{ name: "b.jpg", tmp: "/tmp/b", size: 20, error: 1 }],
+  });
+});
+
+// 2.11.0: the dossier's pure parts (includes/class-dossier.php).
+test("dossier: who receives the link and what a save cannot go without", () => {
+  const d = out.dossier;
+  assert.equal(d.owner_marked, "email", "the first email field marked «Required to save», not simply the first");
+  assert.equal(d.owner_first, "email_copia", "none marked: the first email field");
+  assert.deepEqual(d.needed, ["empresa", "email", "privacidad"], "marked ones, the owner's email and the consent; not IAE nor the files");
+});
+
+test("dossier: what is missing, what changed and the labels", () => {
+  const d = out.dossier;
+  assert.deepEqual(d.missing_before, ["email", "iae", "escrituras", "privacidad"], "required and empty; a file field without files");
+  assert.deepEqual(d.missing_after, ["email", "privacidad"]);
+  assert.deepEqual(d.changed, ["iae", "escrituras"], "a new file is a change even with the same text");
+  assert.deepEqual(d.labels, ["IAE", "Escrituras", "otros"], "a field without a label shows its name");
+});
+
+test("dossier: the token is 32 random bytes in base64url and only its sha256 is stored", () => {
+  const d = out.dossier;
+  assert.equal(d.token_shape, true);
+  assert.equal(d.token_unique, true);
+  assert.deepEqual(d.token_bad, [false, false, false]);
+  assert.equal(d.hash_is_sha256, true);
+});
+
 test("preselection: the first valid source wins; an invalid one yields to the next", () => {
   assert.equal(out.pre_first_wins, "Lavandería para hoteles");
   assert.equal(out.pre_falls_through, "Lavandería para barcos y yates", "a bad URL does not erase the page's value");

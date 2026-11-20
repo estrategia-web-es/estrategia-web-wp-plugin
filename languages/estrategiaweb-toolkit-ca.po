@@ -69,7 +69,7 @@ msgstr "Desactivat"
 #: includes/admin/class-settings-page.php:214
 #: includes/admin/class-settings-page.php:232
 #: modules/content-types/includes/admin/class-page.php:269
-#: modules/forms/includes/admin/class-admin.php:57
+#: modules/forms/includes/admin/class-admin.php:61
 msgid "Settings"
 msgstr "Paràmetres"
 
@@ -356,7 +356,9 @@ msgctxt "module description"
 msgid ""
 "Choose the week's posts, preview the newsletter and copy its code or create "
 "the draft in Mailchimp. It never sends."
-msgstr "Tria les entrades de la setmana, previsualitza el butlletí i copia'n el codi o crea l'esborrany a Mailchimp. No envia mai."
+msgstr ""
+"Tria les entrades de la setmana, previsualitza el butlletí i copia'n el codi "
+"o crea l'esborrany a Mailchimp. No envia mai."
 
 #: includes/admin/module-strings.php:52
 msgctxt "module description"
@@ -587,6 +589,7 @@ msgstr ""
 "enllaç; sense imatge, es mostra el codi de davall."
 
 #: modules/banners/includes/class-post-type.php:236
+#: modules/forms/includes/admin/class-admin.php:258
 #: modules/social/includes/class-admin.php:94
 #: modules/social/includes/class-admin.php:143
 msgid "Link"
@@ -657,6 +660,7 @@ msgstr "Dates"
 
 #
 #: modules/banners/includes/class-post-type.php:291
+#: modules/forms/includes/admin/class-admin.php:256
 msgid "State"
 msgstr "Estat"
 
@@ -1068,8 +1072,8 @@ msgstr "Desa"
 
 #: modules/consent/includes/admin/class-cookies-page.php:316
 #: modules/content-types/includes/admin/class-types-table.php:121
-#: modules/forms/includes/admin/class-submissions-table.php:117
-#: modules/forms/includes/admin/class-submissions-table.php:170
+#: modules/forms/includes/admin/class-submissions-table.php:130
+#: modules/forms/includes/admin/class-submissions-table.php:183
 #: modules/redirects/includes/admin/class-tables.php:117
 #: modules/redirects/includes/admin/class-tables.php:151
 #: modules/redirects/includes/admin/class-tables.php:211
@@ -1640,9 +1644,9 @@ msgid "Edit “%s”"
 msgstr "Edita «%s»"
 
 #: modules/content-types/includes/admin/class-page.php:246
-#: modules/forms/includes/admin/class-admin.php:130
-#: modules/forms/includes/admin/class-admin.php:135
-#: modules/forms/includes/admin/class-admin.php:178
+#: modules/forms/includes/admin/class-admin.php:134
+#: modules/forms/includes/admin/class-admin.php:139
+#: modules/forms/includes/admin/class-admin.php:383
 msgid "Back to the list"
 msgstr "Torna a la llista"
 
@@ -2082,6 +2086,7 @@ msgstr "Mou avall"
 
 #: modules/content-types/includes/admin/class-page.php:361
 #: modules/content-types/includes/class-fields-panel.php:192
+#: modules/forms/includes/class-blocks.php:371
 #: modules/newsletter/includes/class-screen.php:74
 #: modules/social/includes/class-admin.php:70
 msgid "Remove"
@@ -2126,7 +2131,7 @@ msgid "Save anyway"
 msgstr "Desa igualment"
 
 #: modules/content-types/includes/admin/class-page.php:372
-#: modules/forms/includes/admin/class-admin.php:195
+#: modules/forms/includes/admin/class-admin.php:400
 msgid "Cancel"
 msgstr "Cancel·la"
 
@@ -2172,7 +2177,7 @@ msgid "Image"
 msgstr "Imatge"
 
 #: modules/content-types/includes/admin/class-page.php:383
-#: modules/forms/includes/admin/class-admin.php:158
+#: modules/forms/includes/admin/class-admin.php:170
 #: modules/forms/includes/admin/class-submissions-table.php:81
 msgid "Date"
 msgstr "Data"
@@ -2330,15 +2335,15 @@ msgid "Content field"
 msgstr "Camp de contingut"
 
 #: modules/content-types/includes/class-bindings.php:123
-#: modules/forms/includes/admin/class-admin.php:139
-#: modules/forms/includes/class-notifier.php:159
+#: modules/forms/includes/admin/class-admin.php:148
+#: modules/forms/includes/class-notifier.php:207
 #: modules/redirects/includes/admin/class-tables.php:174
 msgid "Yes"
 msgstr "Sí"
 
 #: modules/content-types/includes/class-bindings.php:124
-#: modules/forms/includes/admin/class-admin.php:139
-#: modules/forms/includes/class-notifier.php:159
+#: modules/forms/includes/admin/class-admin.php:148
+#: modules/forms/includes/class-notifier.php:207
 #: modules/redirects/includes/admin/class-tables.php:174
 msgid "No"
 msgstr "No"
@@ -3150,7 +3155,7 @@ msgstr "Definicions de tipus de contingut"
 msgid "Content type definition"
 msgstr "Definició de tipus de contingut"
 
-#: modules/forms/assets/editor.js:58 modules/forms/assets/editor.js:416
+#: modules/forms/assets/editor.js:58 modules/forms/assets/editor.js:507
 msgid "Message"
 msgstr "Missatge"
 
@@ -3218,15 +3223,38 @@ msgstr ""
 "Agrupa els enviaments d'aquest formulari al registre, en tots els idiomes. "
 "Canvia'l només si dues còpies del formulari s'han de comptar per separat."
 
-#: modules/forms/assets/editor.js:117
+#: modules/forms/assets/editor.js:120
+msgid "Dossier mode"
+msgstr "Mode expedient"
+
+#: modules/forms/assets/editor.js:121
+msgid ""
+"The sender gets a private link to come back, see what they sent and complete "
+"it. «Required» fields can be left for later; only the ones marked «Required "
+"to save» are needed to save. Put {{dossier_url}} in the acknowledgement."
+msgstr ""
+"El remitent rep un enllaç privat per tornar, veure el que va enviar i "
+"completar-ho. Els camps «Obligatori» es poden deixar per a més endavant; per "
+"desar només calen els marcats com a «Obligatori per desar». Posa "
+"{{dossier_url}} al justificant."
+
+#: modules/forms/assets/editor.js:131
+msgid "Link valid for (days)"
+msgstr "Enllaç vàlid durant (dies)"
+
+#: modules/forms/assets/editor.js:132
+msgid "Counted from the last time the link is sent or used."
+msgstr "Es compta des de l'última vegada que s'envia o s'utilitza l'enllaç."
+
+#: modules/forms/assets/editor.js:141
 msgid "Messages"
 msgstr "Missatges"
 
-#: modules/forms/assets/editor.js:120 modules/forms/assets/editor.js:127
+#: modules/forms/assets/editor.js:144 modules/forms/assets/editor.js:151
 msgid "Empty: the default message from Forms → Settings."
 msgstr "Buit: el missatge per defecte de Formularis → Paràmetres."
 
-#: modules/forms/assets/editor.js:153
+#: modules/forms/assets/editor.js:177
 msgid ""
 "The text between braces becomes the link to the privacy policy. Empty: the "
 "default text."
@@ -3234,11 +3262,11 @@ msgstr ""
 "El text entre claus es converteix en l'enllaç a la política de privadesa. "
 "Buit: el text per defecte."
 
-#: modules/forms/assets/editor.js:161
+#: modules/forms/assets/editor.js:185
 msgid "Name (key)"
 msgstr "Nom (clau)"
 
-#: modules/forms/assets/editor.js:162
+#: modules/forms/assets/editor.js:186
 msgid ""
 "Used in the email markers, e.g. {{name}}, and in the log. Lowercase letters, "
 "numbers, - and _."
@@ -3246,23 +3274,68 @@ msgstr ""
 "Es fa servir als marcadors dels correus, p. ex. {{name}}, i al registre. "
 "Minúscules, nombres, - i _."
 
-#: modules/forms/assets/editor.js:172
+#: modules/forms/assets/editor.js:196
 msgid "Required"
 msgstr "Obligatori"
 
-#: modules/forms/assets/editor.js:183
+#: modules/forms/assets/editor.js:207
+msgid "Required to save"
+msgstr "Obligatori per desar"
+
+#: modules/forms/assets/editor.js:208
+msgid ""
+"Without it the dossier cannot even be saved half-way. Keep it for the "
+"contact details; the first email field marked like this receives the link."
+msgstr ""
+"Sense aquest camp, l'expedient no es pot desar ni a mitges. Reserva'l per a "
+"les dades de contacte; el primer camp de correu marcat així rep l'enllaç."
+
+#: modules/forms/assets/editor.js:220
+msgid "Accepted types"
+msgstr "Tipus acceptats"
+
+#: modules/forms/assets/editor.js:221
+msgid ""
+"Any of pdf, jpg, png, separated by commas. Checked by the content of the "
+"file, not by its name."
+msgstr ""
+"Qualsevol de pdf, jpg, png, separats per comes. Es comprova pel contingut "
+"del fitxer, no pel nom."
+
+#: modules/forms/assets/editor.js:230
+msgid "Maximum size per file (MB)"
+msgstr "Mida màxima per fitxer (MB)"
+
+#: modules/forms/assets/editor.js:231
+msgid "It cannot be more than the server accepts: see Forms → Settings."
+msgstr ""
+"No pot superar el que accepta el servidor: consulta Formularis → Paràmetres."
+
+#: modules/forms/assets/editor.js:238
+msgid "Several files"
+msgstr "Diversos fitxers"
+
+#: modules/forms/assets/editor.js:245
+msgid "Help text"
+msgstr "Text d'ajuda"
+
+#: modules/forms/assets/editor.js:246
+msgid "Under the field. Empty: the accepted types and the maximum size."
+msgstr "Sota el camp. Buit: els tipus acceptats i la mida màxima."
+
+#: modules/forms/assets/editor.js:257
 msgid "First option (empty value)"
 msgstr "Primera opció (valor buit)"
 
-#: modules/forms/assets/editor.js:183
+#: modules/forms/assets/editor.js:257
 msgid "Placeholder"
 msgstr "Text d'exemple"
 
-#: modules/forms/assets/editor.js:191
+#: modules/forms/assets/editor.js:265
 msgid "Autocomplete"
 msgstr "Emplenament automàtic"
 
-#: modules/forms/assets/editor.js:192
+#: modules/forms/assets/editor.js:266
 msgid ""
 "What the browser may fill in: name, organization, email, tel, street-"
 "address… Empty: email and phone fields still get email and tel."
@@ -3270,19 +3343,19 @@ msgstr ""
 "El que pot emplenar el navegador: name, organization, email, tel, street-"
 "address… Buit: els camps de correu i telèfon porten igualment email i tel."
 
-#: modules/forms/assets/editor.js:203
+#: modules/forms/assets/editor.js:277
 msgid "Options"
 msgstr "Opcions"
 
-#: modules/forms/assets/editor.js:204
+#: modules/forms/assets/editor.js:278
 msgid "One per line."
 msgstr "Una per línia."
 
-#: modules/forms/assets/editor.js:211
+#: modules/forms/assets/editor.js:285
 msgid "Preselected option"
 msgstr "Opció preseleccionada"
 
-#: modules/forms/assets/editor.js:212
+#: modules/forms/assets/editor.js:286
 msgid ""
 "In a synced pattern, set it per page in the pattern block instead. A link "
 "can also choose it with ?af_ followed by the field name."
@@ -3290,23 +3363,23 @@ msgstr ""
 "En un patró sincronitzat es fixa per pàgina, al bloc del patró. Un enllaç "
 "també la pot triar amb ?af_ seguit del nom del camp."
 
-#: modules/forms/assets/editor.js:214
+#: modules/forms/assets/editor.js:288
 msgid "None"
 msgstr "Cap"
 
-#: modules/forms/assets/editor.js:226
+#: modules/forms/assets/editor.js:300
 msgid "Privacy consent"
 msgstr "Consentiment de privadesa"
 
-#: modules/forms/assets/editor.js:227
+#: modules/forms/assets/editor.js:301
 msgid "Always required, and links to the privacy policy."
 msgstr "Sempre obligatori, i enllaça a la política de privadesa."
 
-#: modules/forms/assets/editor.js:237
+#: modules/forms/assets/editor.js:311
 msgid "Privacy policy URL"
 msgstr "URL de la política de privadesa"
 
-#: modules/forms/assets/editor.js:238
+#: modules/forms/assets/editor.js:312
 msgid ""
 "Empty: the privacy policy page set in Settings → Privacy (translated, with "
 "WPML)."
@@ -3314,35 +3387,35 @@ msgstr ""
 "Buit: la pàgina de política de privadesa de Paràmetres → Privadesa "
 "(traduïda, amb WPML)."
 
-#: modules/forms/assets/editor.js:249
+#: modules/forms/assets/editor.js:323
 msgid "Width"
 msgstr "Amplada"
 
-#: modules/forms/assets/editor.js:252
+#: modules/forms/assets/editor.js:326
 msgid "Full"
 msgstr "Completa"
 
-#: modules/forms/assets/editor.js:253
+#: modules/forms/assets/editor.js:327
 msgid "Half"
 msgstr "Mitja"
 
-#: modules/forms/assets/editor.js:259
+#: modules/forms/assets/editor.js:333
 msgid "Field"
 msgstr "Camp"
 
-#: modules/forms/assets/editor.js:359
+#: modules/forms/assets/editor.js:436
 msgid "Button text"
 msgstr "Text del botó"
 
-#: modules/forms/assets/editor.js:409 modules/forms/assets/editor.js:428
+#: modules/forms/assets/editor.js:486 modules/forms/assets/editor.js:519
 msgid "Email notification"
 msgstr "Avís per correu"
 
-#: modules/forms/assets/editor.js:410
+#: modules/forms/assets/editor.js:487
 msgid "Name of this notification"
 msgstr "Nom d'aquest avís"
 
-#: modules/forms/assets/editor.js:411
+#: modules/forms/assets/editor.js:488
 msgid ""
 "Addresses separated by commas, or a marker such as {{email}}. Empty: the "
 "site administrator email."
@@ -3350,47 +3423,68 @@ msgstr ""
 "Adreces separades per comes, o un marcador com ara {{email}}. Buit: el "
 "correu de l'administrador del web."
 
-#: modules/forms/assets/editor.js:411 modules/forms/assets/editor.js:429
+#: modules/forms/assets/editor.js:488 modules/forms/assets/editor.js:520
 msgid "To"
 msgstr "Per a"
 
-#: modules/forms/assets/editor.js:412
+#: modules/forms/assets/editor.js:489
 msgid "An address or a marker such as {{email}}. Optional."
 msgstr "Una adreça o un marcador com ara {{email}}. Opcional."
 
-#: modules/forms/assets/editor.js:412
+#: modules/forms/assets/editor.js:489
 msgid "Reply to"
 msgstr "Respon a"
 
-#: modules/forms/assets/editor.js:413 modules/forms/assets/editor.js:430
+#: modules/forms/assets/editor.js:490 modules/forms/assets/editor.js:521
 msgid "Subject"
 msgstr "Assumpte"
 
-#: modules/forms/assets/editor.js:417
+#: modules/forms/assets/editor.js:494
+msgid "Send it"
+msgstr "Envia-ho"
+
+#: modules/forms/assets/editor.js:495
+msgid "In a dossier form, also when the sender comes back and saves changes."
+msgstr ""
+"En un formulari d'expedient, també quan el remitent torna i desa canvis."
+
+#: modules/forms/assets/editor.js:498
+msgid "When it is sent"
+msgstr "Quan s'envia"
+
+#: modules/forms/assets/editor.js:499
+msgid "When a dossier is changed"
+msgstr "Quan es modifica un expedient"
+
+#: modules/forms/assets/editor.js:500
+msgid "Both"
+msgstr "En tots dos casos"
+
+#: modules/forms/assets/editor.js:508
 msgid "Available markers:"
 msgstr "Marcadors disponibles:"
 
-#: modules/forms/assets/editor.js:429
+#: modules/forms/assets/editor.js:520
 msgid "site administrator"
 msgstr "administrador del web"
 
-#: modules/forms/assets/editor.js:431
+#: modules/forms/assets/editor.js:522
 msgid "Not shown to visitors. Edit it in the side panel."
 msgstr "Els visitants no el veuen. Es modifica al tauler lateral."
 
-#: modules/forms/assets/editor.js:466
+#: modules/forms/assets/editor.js:557
 msgid "Choose a form"
 msgstr "Tria un formulari"
 
-#: modules/forms/assets/editor.js:469
+#: modules/forms/assets/editor.js:560
 msgid "not published"
 msgstr "sense publicar"
 
-#: modules/forms/assets/editor.js:481
+#: modules/forms/assets/editor.js:572
 msgid "Edit this form"
 msgstr "Edita aquest formulari"
 
-#: modules/forms/assets/editor.js:494
+#: modules/forms/assets/editor.js:585
 msgid ""
 "Choose which of the site's forms to show here. Forms are created and edited "
 "in Forms → Forms."
@@ -3421,6 +3515,20 @@ msgstr "Una adreça de correu, comprovada al navegador i al servidor."
 msgctxt "block title"
 msgid "Email field"
 msgstr "Camp de correu"
+
+#: modules/forms/blocks/file/block.json
+msgctxt "block title"
+msgid "File field"
+msgstr "Camp de fitxer"
+
+#: modules/forms/blocks/file/block.json
+msgctxt "block description"
+msgid ""
+"One or several files (PDF, JPG, PNG). They are stored outside the web and "
+"only the team, or the owner of a dossier, can download them."
+msgstr ""
+"Un o diversos fitxers (PDF, JPG, PNG). Es desen fora del web i només "
+"l'equip, o el titular d'un expedient, els pot baixar."
 
 #: modules/forms/blocks/form-ref/block.json
 #: modules/forms/blocks/form/block.json
@@ -3538,142 +3646,293 @@ msgctxt "block description"
 msgid "Several lines of text."
 msgstr "Diverses línies de text."
 
-#: modules/forms/includes/admin/class-admin.php:48
-#: modules/forms/includes/admin/class-admin.php:56
-#: modules/forms/includes/admin/class-admin.php:106
+#: modules/forms/includes/admin/class-admin.php:52
+#: modules/forms/includes/admin/class-admin.php:60
+#: modules/forms/includes/admin/class-admin.php:110
 msgid "Form submissions"
 msgstr "Enviaments de formularis"
 
-#: modules/forms/includes/admin/class-admin.php:49
-#: modules/forms/includes/admin/class-admin.php:61
+#: modules/forms/includes/admin/class-admin.php:53
+#: modules/forms/includes/admin/class-admin.php:65
 #: modules/forms/includes/admin/class-forms-list.php:283
 #: modules/forms/includes/class-form-post-type.php:84
 msgid "Forms"
 msgstr "Formularis"
 
-#: modules/forms/includes/admin/class-admin.php:56
+#: modules/forms/includes/admin/class-admin.php:60
 msgid "Submissions"
 msgstr "Enviaments"
 
-#: modules/forms/includes/admin/class-admin.php:57
-#: modules/forms/includes/admin/class-admin.php:273
+#: modules/forms/includes/admin/class-admin.php:61
+#: modules/forms/includes/admin/class-admin.php:478
 msgid "Form settings"
 msgstr "Paràmetres dels formularis"
 
-#: modules/forms/includes/admin/class-admin.php:78
-#: modules/forms/includes/admin/class-admin.php:266
+#: modules/forms/includes/admin/class-admin.php:82
+#: modules/forms/includes/admin/class-admin.php:471
 #: modules/forms/includes/admin/class-forms-list.php:273
 msgid "You are not allowed to see this page."
 msgstr "No tens permís per veure aquesta pàgina."
 
-#: modules/forms/includes/admin/class-admin.php:106
+#: modules/forms/includes/admin/class-admin.php:110
 msgid ""
 "Every message sent through the site's forms, with the emails each one sent."
 msgstr ""
 "Tots els missatges enviats des dels formularis del web, amb els correus que "
 "va enviar cadascun."
 
-#: modules/forms/includes/admin/class-admin.php:106
+#: modules/forms/includes/admin/class-admin.php:110
 msgid "Export CSV"
 msgstr "Exporta en CSV"
 
 #. translators: %d: number of deleted submissions.
-#: modules/forms/includes/admin/class-admin.php:111
+#: modules/forms/includes/admin/class-admin.php:115
 #, php-format
 msgid "%d submission deleted."
 msgid_plural "%d submissions deleted."
 msgstr[0] "S'ha suprimit %d enviament."
 msgstr[1] "S'han suprimit %d enviaments."
 
-#: modules/forms/includes/admin/class-admin.php:129
+#: modules/forms/includes/admin/class-admin.php:133
 msgid "Submission not found"
 msgstr "No s'ha trobat l'enviament"
 
 #. translators: %d: submission number.
-#: modules/forms/includes/admin/class-admin.php:134
+#: modules/forms/includes/admin/class-admin.php:138
 #, php-format
 msgid "Submission #%d"
 msgstr "Enviament núm. %d"
 
-#: modules/forms/includes/admin/class-admin.php:137
+#: modules/forms/includes/admin/class-admin.php:142
 #: modules/forms/includes/admin/class-submissions-table.php:83
 msgid "Data"
 msgstr "Dades"
 
-#: modules/forms/includes/admin/class-admin.php:144
+#: modules/forms/includes/admin/class-admin.php:156
 #: modules/forms/includes/admin/class-forms-list.php:301
 #: modules/forms/includes/admin/class-submissions-table.php:85
 msgid "Notifications"
 msgstr "Avisos"
 
-#: modules/forms/includes/admin/class-admin.php:145
+#: modules/forms/includes/admin/class-admin.php:157
 msgid "Notification"
 msgstr "Avís"
 
-#: modules/forms/includes/admin/class-admin.php:145
+#: modules/forms/includes/admin/class-admin.php:157
 msgid "Recipients"
 msgstr "Destinataris"
 
-#: modules/forms/includes/admin/class-admin.php:145
+#: modules/forms/includes/admin/class-admin.php:157
 msgid "Result"
 msgstr "Resultat"
 
-#: modules/forms/includes/admin/class-admin.php:147
+#: modules/forms/includes/admin/class-admin.php:159
 #: modules/forms/includes/admin/class-submissions-table.php:73
 msgid "Failed"
 msgstr "Error"
 
-#: modules/forms/includes/admin/class-admin.php:147
+#: modules/forms/includes/admin/class-admin.php:159
+#: modules/forms/includes/admin/class-admin.php:270
 msgid "Sent"
 msgstr "Enviat"
 
-#: modules/forms/includes/admin/class-admin.php:151
+#: modules/forms/includes/admin/class-admin.php:163
 msgid "This form has no notifications."
 msgstr "Aquest formulari no té avisos."
 
-#: modules/forms/includes/admin/class-admin.php:155
+#: modules/forms/includes/admin/class-admin.php:167
 msgid "Details"
 msgstr "Detalls"
 
-#: modules/forms/includes/admin/class-admin.php:157
+#: modules/forms/includes/admin/class-admin.php:169
 #: modules/forms/includes/admin/class-forms-list.php:299
 #: modules/forms/includes/admin/class-submissions-table.php:82
 #: modules/forms/includes/class-form-post-type.php:85
 msgid "Form"
 msgstr "Formulari"
 
-#: modules/forms/includes/admin/class-admin.php:159
+#: modules/forms/includes/admin/class-admin.php:171
 msgid "Page"
 msgstr "Pàgina"
 
-#: modules/forms/includes/admin/class-admin.php:160
+#: modules/forms/includes/admin/class-admin.php:172
 #: modules/forms/includes/admin/class-submissions-table.php:84
 #: modules/language-switcher/blocks/language-switcher/render.php:87
 msgid "Language"
 msgstr "Idioma"
 
-#: modules/forms/includes/admin/class-admin.php:161
+#: modules/forms/includes/admin/class-admin.php:173
 msgid "IP (truncated)"
 msgstr "IP (truncada)"
 
-#: modules/forms/includes/admin/class-admin.php:162
+#: modules/forms/includes/admin/class-admin.php:174
 msgid "User agent"
 msgstr "Navegador (user agent)"
 
-#: modules/forms/includes/admin/class-admin.php:169
+#: modules/forms/includes/admin/class-admin.php:181
 msgid "Delete this submission"
 msgstr "Suprimeix aquest enviament"
 
-#: modules/forms/includes/admin/class-admin.php:176
+#. translators: %s: maximum upload size the server allows, e.g. «64 MB».
+#: modules/forms/includes/admin/class-admin.php:194
+#, php-format
+msgid "This server accepts uploads of up to %s."
+msgstr "Aquest servidor accepta pujades de fins a %s."
+
+#: modules/forms/includes/admin/class-admin.php:196
+msgid ""
+"No folder can be written for the files: File fields will fail. Define "
+"ESTRATEGIA_WEB_FORMS_PRIVATE_DIR in wp-config.php with a writable folder "
+"outside the web."
+msgstr ""
+"No hi ha cap carpeta on es puguin escriure els fitxers: els camps de fitxer "
+"fallaran. Defineix ESTRATEGIA_WEB_FORMS_PRIVATE_DIR a wp-config.php amb una "
+"carpeta amb permís d'escriptura fora del web."
+
+#: modules/forms/includes/admin/class-admin.php:200
+msgid ""
+"This folder is inside the web. If the server is nginx, the files could be "
+"downloaded by anyone who guesses their name. Define "
+"ESTRATEGIA_WEB_FORMS_PRIVATE_DIR in wp-config.php with a folder outside the "
+"web."
+msgstr ""
+"Aquesta carpeta és dins del web. Si el servidor és nginx, qualsevol que "
+"endevini el nom dels fitxers els podria baixar. Defineix "
+"ESTRATEGIA_WEB_FORMS_PRIVATE_DIR a wp-config.php amb una carpeta fora del "
+"web."
+
+#: modules/forms/includes/admin/class-admin.php:202
+msgid ""
+"Outside the web: only the team, and the owner of a dossier with their link, "
+"can download them. They are deleted with their submission."
+msgstr ""
+"Fora del web: només l'equip, i el titular d'un expedient amb el seu enllaç, "
+"els poden baixar. S'esborren amb el seu enviament."
+
+#: modules/forms/includes/admin/class-admin.php:236
+msgid ""
+"Sent: the client has received your note with a new link. The previous link "
+"no longer works."
+msgstr ""
+"Enviat: el client ha rebut la teva nota amb un enllaç nou. L'enllaç anterior "
+"ja no funciona."
+
+#: modules/forms/includes/admin/class-admin.php:237
+msgid ""
+"The email to the client could not be sent. Nothing has changed for them."
+msgstr "No s'ha pogut enviar el correu al client. Per a ell no ha canviat res."
+
+#: modules/forms/includes/admin/class-admin.php:238
+msgid ""
+"The link has been revoked. The client can no longer open the dossier until a "
+"new link is sent."
+msgstr ""
+"S'ha revocat l'enllaç. El client no podrà obrir l'expedient fins que se li "
+"enviï un enllaç nou."
+
+#: modules/forms/includes/admin/class-admin.php:254
+#: modules/forms/includes/admin/class-submissions-table.php:86
+msgid "Dossier"
+msgstr "Expedient"
+
+#: modules/forms/includes/admin/class-admin.php:256
+#: modules/forms/includes/admin/class-submissions-table.php:95
+msgid "Complete"
+msgstr "Complet"
+
+#: modules/forms/includes/admin/class-admin.php:256
+msgid "Incomplete"
+msgstr "Incomplet"
+
+#: modules/forms/includes/admin/class-admin.php:257
+msgid "Owner"
+msgstr "Titular"
+
+#: modules/forms/includes/admin/class-admin.php:259
+msgid "None (revoked). «Ask the client» sends a new one."
+msgstr "Cap (revocat). «Demana al client» n'envia un de nou."
+
+#. translators: %s: date and time.
+#: modules/forms/includes/admin/class-admin.php:261
+#, php-format
+msgid "Valid until %s"
+msgstr "Vàlid fins al %s"
+
+#: modules/forms/includes/admin/class-admin.php:262
+msgid "Last change"
+msgstr "Darrer canvi"
+
+#: modules/forms/includes/admin/class-admin.php:271
+msgid "Changed"
+msgstr "Modificat"
+
+#: modules/forms/includes/admin/class-admin.php:272
+msgid "Asked the client"
+msgstr "Demanat al client"
+
+#: modules/forms/includes/admin/class-admin.php:273
+msgid "New link sent"
+msgstr "Enllaç nou enviat"
+
+#: modules/forms/includes/admin/class-admin.php:274
+msgid "Link revoked"
+msgstr "Enllaç revocat"
+
+#: modules/forms/includes/admin/class-admin.php:276
+msgid "History"
+msgstr "Historial"
+
+#: modules/forms/includes/admin/class-admin.php:278
+msgid "client"
+msgstr "client"
+
+#: modules/forms/includes/admin/class-admin.php:290
+msgid "Ask the client"
+msgstr "Demana al client"
+
+#: modules/forms/includes/admin/class-admin.php:294
+msgid ""
+"What you need from them. It goes in the email, with a new link and the list "
+"of what is missing."
+msgstr ""
+"Què necessites que t'enviï. Va al correu, amb un enllaç nou i la llista del "
+"que falta."
+
+#: modules/forms/includes/admin/class-admin.php:296
+msgid "Send to the client"
+msgstr "Envia al client"
+
+#: modules/forms/includes/admin/class-admin.php:302
+msgid "Revoke link"
+msgstr "Revoca l'enllaç"
+
+#: modules/forms/includes/admin/class-admin.php:309
+#: modules/forms/includes/admin/class-admin.php:323
+#: modules/forms/includes/admin/class-admin.php:355
+#: modules/forms/includes/admin/class-admin.php:405
+#: modules/forms/includes/admin/class-admin.php:416
+msgid "You are not allowed to do this."
+msgstr "No tens permís per fer això."
+
+#: modules/forms/includes/admin/class-admin.php:315
+#: modules/forms/includes/class-files.php:362
+msgid "The file is no longer available."
+msgstr "El fitxer ja no està disponible."
+
+#: modules/forms/includes/admin/class-admin.php:329
+msgid "Nothing to send."
+msgstr "No hi ha res per enviar."
+
+#: modules/forms/includes/admin/class-admin.php:381
 msgid "Delete submissions"
 msgstr "Suprimeix els enviaments"
 
-#: modules/forms/includes/admin/class-admin.php:178
+#: modules/forms/includes/admin/class-admin.php:383
 msgid "No submissions selected."
 msgstr "No hi ha cap enviament seleccionat."
 
 #. translators: %d: number of submissions.
-#: modules/forms/includes/admin/class-admin.php:184
+#: modules/forms/includes/admin/class-admin.php:389
 #, php-format
 msgid ""
 "You are about to permanently delete %d submission. This cannot be undone."
@@ -3682,16 +3941,11 @@ msgid_plural ""
 msgstr[0] "Suprimiràs definitivament %d enviament. No es pot desfer."
 msgstr[1] "Suprimiràs definitivament %d enviaments. No es pot desfer."
 
-#: modules/forms/includes/admin/class-admin.php:194
+#: modules/forms/includes/admin/class-admin.php:399
 msgid "Yes, delete"
 msgstr "Sí, suprimeix"
 
-#: modules/forms/includes/admin/class-admin.php:200
-#: modules/forms/includes/admin/class-admin.php:211
-msgid "You are not allowed to do this."
-msgstr "No tens permís per fer això."
-
-#: modules/forms/includes/admin/class-admin.php:273
+#: modules/forms/includes/admin/class-admin.php:478
 msgid ""
 "Fields, notifications and messages of each form are set in the form block, "
 "in the editor. Here only what is common to all forms."
@@ -3699,50 +3953,54 @@ msgstr ""
 "Els camps, els avisos i els missatges de cada formulari es configuren al seu "
 "bloc, a l'editor. Aquí només hi ha el que és comú a tots."
 
-#: modules/forms/includes/admin/class-admin.php:276
+#: modules/forms/includes/admin/class-admin.php:481
 msgid "Submission log"
 msgstr "Registre d'enviaments"
 
-#: modules/forms/includes/admin/class-admin.php:279
+#: modules/forms/includes/admin/class-admin.php:484
 msgid "Keep submissions for (days)"
 msgstr "Conserva els enviaments durant (dies)"
 
-#: modules/forms/includes/admin/class-admin.php:281
+#: modules/forms/includes/admin/class-admin.php:486
 msgid "0 keeps them forever. Older submissions are deleted once a day."
 msgstr ""
 "0 els conserva per sempre. Els més antics se suprimeixen un cop al dia."
 
 #. translators: 1: date of the last purge, 2: deleted submissions.
-#: modules/forms/includes/admin/class-admin.php:285
+#: modules/forms/includes/admin/class-admin.php:490
 #, php-format
 msgid "Last purge: %1$s, %2$d deleted."
 msgstr "Última purga: %1$s, %2$d suprimits."
 
-#: modules/forms/includes/admin/class-admin.php:292
+#: modules/forms/includes/admin/class-admin.php:496
+msgid "Files"
+msgstr "Fitxers"
+
+#: modules/forms/includes/admin/class-admin.php:501
 msgid "Anti-spam"
 msgstr "Antispam"
 
-#: modules/forms/includes/admin/class-admin.php:295
+#: modules/forms/includes/admin/class-admin.php:504
 msgid "Minimum filling time (seconds)"
 msgstr "Temps mínim per emplenar-lo (segons)"
 
-#: modules/forms/includes/admin/class-admin.php:299
+#: modules/forms/includes/admin/class-admin.php:508
 msgid "Submissions allowed per IP"
 msgstr "Enviaments permesos per IP"
 
-#: modules/forms/includes/admin/class-admin.php:301
+#: modules/forms/includes/admin/class-admin.php:510
 msgid "every (minutes)"
 msgstr "cada (minuts)"
 
-#: modules/forms/includes/admin/class-admin.php:303
+#: modules/forms/includes/admin/class-admin.php:512
 msgid "0 submissions disables the limit."
 msgstr "0 enviaments desactiva el límit."
 
-#: modules/forms/includes/admin/class-admin.php:307
+#: modules/forms/includes/admin/class-admin.php:516
 msgid "Default texts"
 msgstr "Textos per defecte"
 
-#: modules/forms/includes/admin/class-admin.php:308
+#: modules/forms/includes/admin/class-admin.php:517
 msgid ""
 "Leave empty to use the built-in text, already translated. If you fill them "
 "in and the site uses WPML, translate them in WPML → String Translation "
@@ -3752,15 +4010,15 @@ msgstr ""
 "emplenes i el web fa servir WPML, es tradueixen a WPML → Traducció de "
 "cadenes (domini estrategia-web-forms)."
 
-#: modules/forms/includes/admin/class-admin.php:311
+#: modules/forms/includes/admin/class-admin.php:520
 msgid "Success message"
 msgstr "Missatge d'èxit"
 
-#: modules/forms/includes/admin/class-admin.php:315
+#: modules/forms/includes/admin/class-admin.php:524
 msgid "Error message"
 msgstr "Missatge d'error"
 
-#: modules/forms/includes/admin/class-admin.php:319
+#: modules/forms/includes/admin/class-admin.php:528
 msgid "Email footer"
 msgstr "Peu dels correus"
 
@@ -3865,56 +4123,190 @@ msgstr "Tots enviats"
 msgid "Some failed"
 msgstr "Algun ha fallat"
 
-#: modules/forms/includes/admin/class-submissions-table.php:106
+#. translators: %d: number of fields still missing.
+#: modules/forms/includes/admin/class-submissions-table.php:99
+#, php-format
+msgid "Incomplete: %d missing"
+msgid_plural "Incomplete: %d missing"
+msgstr[0] "Incomplet: en falta %d"
+msgstr[1] "Incomplet: en falten %d"
+
+#: modules/forms/includes/admin/class-submissions-table.php:119
 #: modules/redirects/includes/admin/class-tables.php:50
 msgctxt "list view"
 msgid "All"
 msgstr "Tots"
 
-#: modules/forms/includes/admin/class-submissions-table.php:134
+#: modules/forms/includes/admin/class-submissions-table.php:147
 msgid "No submissions yet."
 msgstr "Encara no hi ha enviaments."
 
-#: modules/forms/includes/admin/class-submissions-table.php:142
+#: modules/forms/includes/admin/class-submissions-table.php:155
 msgid "Filter by form"
 msgstr "Filtra per formulari"
 
-#: modules/forms/includes/admin/class-submissions-table.php:143
+#: modules/forms/includes/admin/class-submissions-table.php:156
 msgid "All forms"
 msgstr "Tots els formularis"
 
-#: modules/forms/includes/admin/class-submissions-table.php:154
+#: modules/forms/includes/admin/class-submissions-table.php:167
 msgid "Filter"
 msgstr "Filtra"
 
-#: modules/forms/includes/admin/class-submissions-table.php:169
+#: modules/forms/includes/admin/class-submissions-table.php:182
 msgid "View"
 msgstr "Mostra"
 
-#: modules/forms/includes/class-blocks.php:82
+#: modules/forms/includes/class-blocks.php:90
 msgid ""
 "The message could not be sent. Please check your connection and try again."
 msgstr ""
 "No s'ha pogut enviar el missatge. Comprova la connexió i torna-ho a provar."
 
-#: modules/forms/includes/class-blocks.php:106
+#: modules/forms/includes/class-blocks.php:117
+#: modules/forms/includes/class-blocks.php:172
 msgid "Leave this field empty"
 msgstr "Deixa aquest camp buit"
 
-#: modules/forms/includes/class-blocks.php:234
+#: modules/forms/includes/class-blocks.php:144
+#: modules/forms/includes/class-rest.php:166
+msgid ""
+"This link has expired or is no longer valid. You can ask for a new one below "
+"the form."
+msgstr ""
+"Aquest enllaç ha caducat o ja no és vàlid. Pots demanar-ne un de nou sota el "
+"formulari."
+
+#. translators: %s: the labels of the fields still missing, separated by commas.
+#: modules/forms/includes/class-blocks.php:149
+#, php-format
+msgid ""
+"You are completing your request. Still missing: %s. Save whenever you want: "
+"what you have sent is kept."
+msgstr ""
+"Estàs completant la teva sol·licitud. Encara falta: %s. Desa quan vulguis: "
+"el que ja has enviat es conserva."
+
+#: modules/forms/includes/class-blocks.php:150
+msgid ""
+"Your request is complete. You can review it and change whatever you need."
+msgstr ""
+"La teva sol·licitud és completa. Pots revisar-la i canviar el que necessitis."
+
+#: modules/forms/includes/class-blocks.php:166
+msgid "Already started? We will send you your link"
+msgstr "Ja l'has començada? T'enviem el teu enllaç"
+
+#: modules/forms/includes/class-blocks.php:176
+msgid "The email you used"
+msgstr "El correu que vas fer servir"
+
+#: modules/forms/includes/class-blocks.php:178
+msgid "Send me the link"
+msgstr "Envia'm l'enllaç"
+
+#: modules/forms/includes/class-blocks.php:325
 msgid "Choose an option"
 msgstr "Tria una opció"
 
-#: modules/forms/includes/class-blocks.php:260
+#. translators: 1: accepted types, e.g. «PDF, JPG, PNG»; 2: maximum size in MB.
+#: modules/forms/includes/class-blocks.php:387
+#, php-format
+msgid "%1$s. Up to %2$d MB per file."
+msgstr "%1$s. Fins a %2$d MB per fitxer."
+
+#: modules/forms/includes/class-blocks.php:396
 msgid "Send"
 msgstr "Envia"
 
 #. translators: the text between braces becomes the link to the privacy policy.
 #. translators: the text between braces becomes the link to the privacy policy; {text|url} links to that url.
-#: modules/forms/includes/class-blocks.php:309
-#: modules/forms/includes/class-blocks.php:335
+#: modules/forms/includes/class-blocks.php:445
+#: modules/forms/includes/class-blocks.php:471
 msgid "I have read and accept the {privacy policy}."
 msgstr "He llegit i accepto la {política de privadesa}."
+
+#: modules/forms/includes/class-dossier.php:321
+#: modules/forms/includes/class-rest.php:102
+msgid "This form is no longer available. Please reload the page."
+msgstr "Aquest formulari ja no està disponible. Torna a carregar la pàgina."
+
+#: modules/forms/includes/class-dossier.php:326
+msgid ""
+"If there is a request with that email, we have just sent it a new link. "
+"Check your inbox (and the spam folder)."
+msgstr ""
+"Si hi ha una sol·licitud amb aquest correu, hi acabem d'enviar un enllaç "
+"nou. Revisa la safata d'entrada (i la carpeta de correu brossa)."
+
+#: modules/forms/includes/class-dossier.php:332
+#: modules/forms/includes/class-rest.php:146
+msgid "The form has expired. Please reload the page and try again."
+msgstr ""
+"El formulari ha caducat. Torna a carregar la pàgina i torna-ho a provar."
+
+#: modules/forms/includes/class-dossier.php:335
+#: modules/forms/includes/class-rest.php:154
+msgid "Too many messages from your connection. Please try again later."
+msgstr "Massa missatges des de la teva connexió. Torna-ho a provar més tard."
+
+#. translators: %s: form title.
+#: modules/forms/includes/class-dossier.php:365
+#, php-format
+msgid "We need something else for «%s»"
+msgstr "Necessitem una cosa més per a «%s»"
+
+#. translators: %s: form title.
+#: modules/forms/includes/class-dossier.php:369
+#, php-format
+msgid "Your link to «%s»"
+msgstr "El teu enllaç per a «%s»"
+
+#: modules/forms/includes/class-dossier.php:370
+msgid "Here is the link to see and complete your request:"
+msgstr "Aquí tens l'enllaç per veure i completar la teva sol·licitud:"
+
+#: modules/forms/includes/class-dossier.php:373
+msgid "Still missing:"
+msgstr "Encara falta:"
+
+#. translators: %d: number of days.
+#: modules/forms/includes/class-dossier.php:377
+#, php-format
+msgid ""
+"The link works for %d day. Do not forward it: whoever has it can see your "
+"request."
+msgid_plural ""
+"The link works for %d days. Do not forward it: whoever has it can see your "
+"request."
+msgstr[0] ""
+"L'enllaç funciona durant %d dia. No el reenviïs: qui el tingui pot veure la "
+"teva sol·licitud."
+msgstr[1] ""
+"L'enllaç funciona durant %d dies. No el reenviïs: qui el tingui pot veure la "
+"teva sol·licitud."
+
+#. translators: %d: maximum number of files.
+#: modules/forms/includes/class-files.php:229
+#, php-format
+msgid "You can attach up to %d files here."
+msgstr "Aquí pots adjuntar fins a %d fitxers."
+
+#. translators: %s: maximum size, e.g. «10 MB».
+#: modules/forms/includes/class-files.php:251
+#, php-format
+msgid "The file is too big. The maximum is %s."
+msgstr "El fitxer és massa gran. El màxim és %s."
+
+#: modules/forms/includes/class-files.php:254
+msgid "The file could not be received. Please try again."
+msgstr "No s'ha pogut rebre el fitxer. Torna-ho a provar."
+
+#. translators: %s: accepted types, e.g. «PDF, JPG».
+#: modules/forms/includes/class-files.php:258
+#, php-format
+msgid "This type of file is not accepted. Accepted: %s."
+msgstr "No s'accepta aquest tipus de fitxer. S'accepten: %s."
 
 #: modules/forms/includes/class-form-post-type.php:88
 msgid "Edit form"
@@ -3945,6 +4337,7 @@ msgid "Form updated."
 msgstr "S'ha actualitzat el formulari."
 
 #: modules/forms/includes/class-notifier.php:61
+#: modules/forms/includes/class-notifier.php:181
 msgid "No valid recipient."
 msgstr "Cap destinatari vàlid."
 
@@ -3953,27 +4346,26 @@ msgid "New message"
 msgstr "Missatge nou"
 
 #: modules/forms/includes/class-notifier.php:111
+#: modules/forms/includes/class-notifier.php:201
 msgid "wp_mail() returned false."
 msgstr "wp_mail() ha retornat false."
 
-#: modules/forms/includes/class-rest.php:82
-msgid "This form is no longer available. Please reload the page."
-msgstr "Aquest formulari ja no està disponible. Torna a carregar la pàgina."
-
-#: modules/forms/includes/class-rest.php:125
+#: modules/forms/includes/class-rest.php:145
 msgid "The form was sent too quickly. Please wait a few seconds and try again."
 msgstr ""
 "El formulari s'ha enviat massa de pressa. Espera uns segons i torna-ho a "
 "provar."
 
-#: modules/forms/includes/class-rest.php:126
-msgid "The form has expired. Please reload the page and try again."
-msgstr ""
-"El formulari ha caducat. Torna a carregar la pàgina i torna-ho a provar."
+#: modules/forms/includes/class-rest.php:193
+msgid "The files could not be saved. Please try again later."
+msgstr "No s'han pogut desar els fitxers. Torna-ho a provar més tard."
 
-#: modules/forms/includes/class-rest.php:134
-msgid "Too many messages from your connection. Please try again later."
-msgstr "Massa missatges des de la teva connexió. Torna-ho a provar més tard."
+#: modules/forms/includes/class-rest.php:268
+msgid ""
+"Saved. You can come back whenever you want with the link we have sent to "
+"your email."
+msgstr ""
+"Desat. Pots tornar quan vulguis amb l'enllaç que t'hem enviat al correu."
 
 #: modules/forms/includes/class-settings.php:105
 msgid "Thank you. Your message has been sent."
@@ -3984,27 +4376,27 @@ msgid "The message could not be sent. Please check the form and try again."
 msgstr ""
 "No s'ha pogut enviar el missatge. Revisa el formulari i torna-ho a provar."
 
-#: modules/forms/includes/class-validator.php:54
+#: modules/forms/includes/class-validator.php:65
 msgid "You must check this box to continue."
 msgstr "Has de marcar aquesta casella per continuar."
 
-#: modules/forms/includes/class-validator.php:55
+#: modules/forms/includes/class-validator.php:66
 msgid "This field is required."
 msgstr "Aquest camp és obligatori."
 
-#: modules/forms/includes/class-validator.php:62
+#: modules/forms/includes/class-validator.php:73
 msgid "This text is too long."
 msgstr "Aquest text és massa llarg."
 
-#: modules/forms/includes/class-validator.php:69
+#: modules/forms/includes/class-validator.php:80
 msgid "Please enter a valid email address."
 msgstr "Escriu una adreça de correu vàlida."
 
-#: modules/forms/includes/class-validator.php:74
+#: modules/forms/includes/class-validator.php:85
 msgid "Please enter a valid phone number."
 msgstr "Escriu un número de telèfon vàlid."
 
-#: modules/forms/includes/class-validator.php:79
+#: modules/forms/includes/class-validator.php:90
 msgid "Please choose one of the options."
 msgstr "Tria una de les opcions."
 
@@ -4463,7 +4855,9 @@ msgstr "«%s» no té imatge destacada: el seu bloc anirà sense foto."
 msgid ""
 "«%s»: its photo only exists in WebP, which Outlook does not show. Upload it "
 "again as JPEG."
-msgstr "«%s»: la foto només existeix en WebP, que Outlook no mostra. Torna-la a pujar en JPEG."
+msgstr ""
+"«%s»: la foto només existeix en WebP, que Outlook no mostra. Torna-la a "
+"pujar en JPEG."
 
 #: modules/newsletter/includes/class-builder.php:193
 msgid "The email template has no {{blocks}}."
@@ -4481,7 +4875,8 @@ msgstr "No hi ha cap clau de Mailchimp vàlida als paràmetres."
 
 #: modules/newsletter/includes/class-mailchimp.php:108
 msgid "Mailchimp has no campaign sent to copy the audience and sender from."
-msgstr "Mailchimp no té cap campanya enviada d'on copiar l'audiència i el remitent."
+msgstr ""
+"Mailchimp no té cap campanya enviada d'on copiar l'audiència i el remitent."
 
 #: modules/newsletter/includes/class-mailchimp.php:117
 msgid "Mailchimp did not return the new campaign."
@@ -4491,7 +4886,9 @@ msgstr "Mailchimp no ha retornat la campanya nova."
 msgid ""
 "Mailchimp made the campaign with a drag-and-drop template, which would send "
 "the template and not these news. It has been deleted."
-msgstr "Mailchimp ha fet la campanya amb una plantilla d'arrossegar i deixar anar, que enviaria la plantilla i no aquestes notícies. S'ha esborrat."
+msgstr ""
+"Mailchimp ha fet la campanya amb una plantilla d'arrossegar i deixar anar, "
+"que enviaria la plantilla i no aquestes notícies. S'ha esborrat."
 
 #: modules/newsletter/includes/class-screen.php:47
 #: modules/newsletter/includes/class-screen.php:100
@@ -4523,7 +4920,9 @@ msgstr "Resultats de la cerca"
 msgid ""
 "Add the posts of this week, in the order they will go. The first one gives "
 "the subject."
-msgstr "Afegeix les entrades d'aquesta setmana, en l'ordre en què aniran. La primera dona l'assumpte."
+msgstr ""
+"Afegeix les entrades d'aquesta setmana, en l'ordre en què aniran. La primera "
+"dona l'assumpte."
 
 #: modules/newsletter/includes/class-screen.php:80
 msgid "Subject:"
@@ -4537,7 +4936,8 @@ msgstr "Codi copiat. Enganxa'l a Mailchimp (bloc de codi o «Paste in code»)."
 msgid ""
 "The browser did not let the code be copied: select it below and copy it by "
 "hand."
-msgstr "El navegador no ha deixat copiar el codi: selecciona'l a sota i copia'l a mà."
+msgstr ""
+"El navegador no ha deixat copiar el codi: selecciona'l a sota i copia'l a mà."
 
 #: modules/newsletter/includes/class-screen.php:83
 msgid "Creating the draft in Mailchimp…"
@@ -4557,7 +4957,9 @@ msgstr "Obre'l a Mailchimp"
 msgid ""
 "Before sending: send yourself the test from Mailchimp, OPEN it and read the "
 "headlines."
-msgstr "Abans d'enviar-lo: envia't la prova des de Mailchimp, OBRE-LA i llegeix els titulars."
+msgstr ""
+"Abans d'enviar-lo: envia't la prova des de Mailchimp, OBRE-LA i llegeix els "
+"titulars."
 
 #. translators: 1: subject of the campaign copied, 2: its date.
 #: modules/newsletter/includes/class-screen.php:89
@@ -4573,7 +4975,9 @@ msgstr "No s'ha pogut fer:"
 msgid ""
 "Choose the posts, put them in order and check the email. Then copy its code "
 "or create the draft in Mailchimp: nothing is sent from here."
-msgstr "Tria les entrades, posa-les en ordre i revisa el correu. Després copia'n el codi o crea l'esborrany a Mailchimp: des d'aquí no s'envia res."
+msgstr ""
+"Tria les entrades, posa-les en ordre i revisa el correu. Després copia'n el "
+"codi o crea l'esborrany a Mailchimp: des d'aquí no s'envia res."
 
 #: modules/newsletter/includes/class-screen.php:104
 msgid "Without a Mailchimp key only the code can be copied."
@@ -4627,13 +5031,17 @@ msgstr "Llegeix-ne més"
 msgid ""
 "The Mailchimp key must end in its datacenter (for example -us21). It was not "
 "saved."
-msgstr "La clau de Mailchimp ha d'acabar amb el seu centre de dades (per exemple -us21). No s'ha desat."
+msgstr ""
+"La clau de Mailchimp ha d'acabar amb el seu centre de dades (per exemple -"
+"us21). No s'ha desat."
 
 #: modules/newsletter/includes/class-settings.php:162
 msgid ""
 "The email template must contain {{blocks}}, where the news go. It was not "
 "saved."
-msgstr "La plantilla del correu ha de contenir {{blocks}}, on van les notícies. No s'ha desat."
+msgstr ""
+"La plantilla del correu ha de contenir {{blocks}}, on van les notícies. No "
+"s'ha desat."
 
 #: modules/newsletter/includes/class-settings.php:189
 msgid "Mailchimp"
@@ -4644,7 +5052,10 @@ msgid ""
 "The «Newsletter» screen (under Posts) creates the campaign as a DRAFT in "
 "Mailchimp, never sends it. Audience, segment and sender are copied from the "
 "last campaign sent."
-msgstr "La pantalla «Butlletí» (a Entrades) crea la campanya com a ESBORRANY a Mailchimp i no l'envia mai. L'audiència, el segment i el remitent es copien de la darrera campanya enviada."
+msgstr ""
+"La pantalla «Butlletí» (a Entrades) crea la campanya com a ESBORRANY a "
+"Mailchimp i no l'envia mai. L'audiència, el segment i el remitent es copien "
+"de la darrera campanya enviada."
 
 #: modules/newsletter/includes/class-settings.php:194
 msgid "API key"
@@ -4654,7 +5065,9 @@ msgstr "Clau de l'API"
 msgid ""
 "Mailchimp → Account → Extras → API keys. Without it, the screen only copies "
 "the code."
-msgstr "Mailchimp → Account → Extras → API keys. Sense clau, la pantalla només copia el codi."
+msgstr ""
+"Mailchimp → Account → Extras → API keys. Sense clau, la pantalla només copia "
+"el codi."
 
 #: modules/newsletter/includes/class-settings.php:199
 msgid "Saved. Leave it empty to keep it."
@@ -4671,7 +5084,8 @@ msgstr "ID de l'audiència"
 #: modules/newsletter/includes/class-settings.php:211
 msgid ""
 "Optional. Empty: the audience of the last campaign sent from the account."
-msgstr "Opcional. Buit: l'audiència de la darrera campanya enviada des del compte."
+msgstr ""
+"Opcional. Buit: l'audiència de la darrera campanya enviada des del compte."
 
 #: modules/newsletter/includes/class-settings.php:215
 msgid "Featured category"
@@ -4681,7 +5095,9 @@ msgstr "Categoria destacada"
 msgid ""
 "Slug of the category whose posts are proposed first (the front page one). "
 "Empty: only the latest posts."
-msgstr "Slug de la categoria les entrades de la qual es proposen primer (la de portada). Buit: només les darreres entrades."
+msgstr ""
+"Slug de la categoria les entrades de la qual es proposen primer (la de "
+"portada). Buit: només les darreres entrades."
 
 #: modules/newsletter/includes/class-settings.php:224
 msgid "Templates"
@@ -4693,7 +5109,11 @@ msgid ""
 "where the news go. Block: one piece of news, with {{link}}, {{image}}, "
 "{{title}}, {{excerpt}}, {{label}} and {{more}} («Read more» in the site "
 "language)."
-msgstr "Els camps buits fan servir un disseny senzill. Correu: l'HTML sencer, amb {{blocks}} on van les notícies. Bloc: una notícia, amb {{link}}, {{image}}, {{title}}, {{excerpt}}, {{label}} i {{more}} («Llegeix-ne més» en la llengua del lloc)."
+msgstr ""
+"Els camps buits fan servir un disseny senzill. Correu: l'HTML sencer, amb "
+"{{blocks}} on van les notícies. Bloc: una notícia, amb {{link}}, {{image}}, "
+"{{title}}, {{excerpt}}, {{label}} i {{more}} («Llegeix-ne més» en la llengua "
+"del lloc)."
 
 #: modules/newsletter/includes/class-settings.php:233
 msgid "Block"

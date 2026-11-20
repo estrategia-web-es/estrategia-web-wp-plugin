@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
 
 final class Migrations {
 
-	public const LATEST      = 1;
+	public const LATEST      = 2;
 	public const VERSION_OPT = 'estrategia_web_forms_db_version';
 	public const LOG_OPT     = 'estrategia_web_forms_migrations_log';
 

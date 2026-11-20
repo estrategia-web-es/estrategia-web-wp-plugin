@@ -37,7 +37,7 @@ no WPML) is in
 
 1. **Blocks**: «Form» (container) and inside it «Text field», «Email
    field», «Phone field», «Message field», «Dropdown field», «Checkbox»
-   (also the GDPR consent), «Send button» and «Email notification». Each
+   (also the GDPR consent), «File field» (2.11.0), «Send button» and «Email notification». Each
    field has a label, name (key), required, placeholder
    text and width (full / half). They can be put inside groups and columns: the
    form is laid out like any other block.
@@ -130,6 +130,8 @@ the reason for using the position and the pitfalls, in
 | `{{submission_date}}` | date and time of the submission, in the site's format |
 | `{{page_url}}` | the page the form was submitted from |
 | `{{site_name}}` | the site name |
+| `{{dossier_url}}` | (2.11.0, dossier forms) the sender's private link to come back and complete it; empty elsewhere |
+| `{{missing_fields}}` | (2.11.0, dossier forms) the labels of what is still missing, separated by commas |
 
 The old Spanish names (`{{todos_los_campos}}`, `{{fecha}}`, `{{url_pagina}}`,
 `{{nombre_sitio}}`) worked as aliases until 2.0.1, which removed them:
@@ -226,6 +228,51 @@ around it. The original content stays in the post meta
 submissions keep their identifier, so the log does not split. Everything
 else (order of steps, edge cases, the trap of re-serializing), in the
 header of [includes/class-form-migration.php](includes/class-form-migration.php).
+
+## Files and dossier mode (2.11.0)
+
+Both are switched on **form by form**; a form without them works as before.
+
+**File field.** Types (pdf, jpg, png) checked by the file's first bytes,
+not its name; a maximum size per file; one file or several. Where they are
+stored and why: [includes/class-files.php](includes/class-files.php). In
+short, OUTSIDE the web root (the folder above WordPress), because on
+nginx hosts —SiteGround among them— a «deny» `.htaccess` protects nothing.
+**Forms → Settings → Files** says where they are and goes red if they had
+to fall back inside the web; `ESTRATEGIA_WEB_FORMS_PRIVATE_DIR` in
+wp-config.php chooses another folder. The team downloads them from the
+submission; the emails only say their names. PHP's own limits
+(`upload_max_filesize`, `post_max_size`) go first: the settings screen
+says how much the server lets through.
+
+**Dossier mode** (form block → «Dossier»). For forms nobody fills in at one
+sitting — a grant application with a dozen data and three documents:
+
+1. In the fields, **«Required»** means «needed for the dossier to be
+   complete», and **«Required to save»** (it appears when the form is a
+   dossier) means «cannot even save without it». Keep the second for the
+   contact details. The first email field marked «Required to save» is
+   where the link goes.
+2. In the acknowledgement, put **`{{dossier_url}}`**: it is the sender's
+   private link. `{{missing_fields}}` says what is left.
+3. Each notification says **when** it goes: when it is sent (the default),
+   when a dossier is changed, or both. The team's usually «both»; the
+   acknowledgement with the link, only when it is sent.
+
+What the sender sees: after each save, the form again with what they sent,
+their files (downloadable, removable) and what is missing. The link works
+for the form's «Link valid for» days (90 by default) counted from its last
+use; with an old link, a «Send me the link» box asks for their email and
+sends a new one, only ever to the stored address.
+
+What the team sees, in **Forms → Submissions**: a «Dossier» column
+(complete, or how many fields are missing) and, in each one, its state, the
+link's expiry, the history, **«Ask the client»** (a note that goes by email
+with a new link and the list of what is missing) and **«Revoke link»**. The
+retention counts a dossier from its last change, and its files go with it.
+
+The rules, the edge cases and the trap (the token travels in the URL), in
+the header of [includes/class-dossier.php](includes/class-dossier.php).
 
 ## Decisions, with their reasons
 
@@ -349,6 +396,7 @@ intercepts them with `pre_wp_mail` and stores them for the test to read.
 | [tests/pure.test.mjs](tests/pure.test.mjs) | 1 | markers, truncated IP, token, preselection (with the machine's PHP); the base CSS does not remove the dropdown arrow |
 | [tests/preselect.test.mjs](tests/preselect.test.mjs) | 2 | option preselected by attribute, by URL (slug and position, foreign value ignored), per page in a synced block, and the no-JS return |
 | [tests/server.test.mjs](tests/server.test.mjs) | 2 | public HTML without recipients, empty required field on the server, invalid email and option, honeypot, minimum time, fake token, per-IP limit, full submission with N notifications and markers, no JS (303), purge |
+| [tests/dossier.test.mjs](tests/dossier.test.mjs) | 2 | (2.11.0) File field and dossier mode: half-way save, files refused by their bytes and stored outside the web, the link (filled-in form, private headers, owner's download), completing it, «send me the link», the team's file, «ask the client» and «revoke», expiry, and the purge taking the files |
 | [tests/autocomplete.test.mjs](tests/autocomplete.test.mjs) | 2 | `autocomplete` (0.2.2): the block's value is output (name, organization, on text, dropdown and textarea); email and phone with email and tel by default and changeable; a text field without it doesn't carry it; a value with quotes doesn't sneak through. Seen failing before the code |
 | browser scenarios [20-forms-js](tests/browser/20-forms-js.json) and [21-forms-no-js](tests/browser/21-forms-no-js.json) (was tests/browser.test.mjs) | browser | with JS without reloading and `aria-live`, native validation, server error bypassing the browser, real no-JS |
 | browser scenario [19-forms-editor](tests/browser/19-forms-editor.json) (was tests/admin.test.mjs; the screens went to level 2 on 28-10-2026) | browser | list, filter, detail view, CSV (and CSV injection), nonce, delete with confirmation, blocks in the editor; the preselection follows its text when reordering options, and opening and saving a page does not wipe the `content` of its synced block |

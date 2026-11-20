@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "estrategia-web-forms/file",
+	"version": "0.1.0",
+	"title": "File field",
+	"category": "widgets",
+	"icon": "media-document",
+	"description": "One or several files (PDF, JPG, PNG). They are stored outside the web and only the team, or the owner of a dossier, can download them.",
+	"textdomain": "estrategiaweb-toolkit",
+	"ancestor": [ "estrategia-web-forms/form" ],
+	"usesContext": [ "estrategia-web-forms/formId", "estrategia-web-forms/dossier" ],
+	"attributes": {
+		"label": { "type": "string", "default": "" },
+		"name": { "type": "string", "default": "" },
+		"required": { "type": "boolean", "default": false },
+		"requiredToSave": { "type": "boolean", "default": false },
+		"help": { "type": "string", "default": "" },
+		"accept": { "type": "string", "default": "pdf,jpg,png" },
+		"maxMb": { "type": "integer", "default": 10 },
+		"multiple": { "type": "boolean", "default": false },
+		"width": { "type": "string", "enum": [ "full", "half" ], "default": "full" }
+	},
+	"supports": { "html": false, "reusable": false },
+	"editorScript": "estrategia-web-forms-editor",
+	"style": "estrategia-web-forms"
+}
