@@ -36,6 +36,7 @@ final class Blocks {
 		'textarea'     => 'render_field',
 		'select'       => 'render_field',
 		'checkbox'     => 'render_field',
+		'file'         => 'render_field', // 2.11.0.
 		'submit'       => 'render_submit',
 		'notification' => 'render_nothing',
 		'form-ref'     => 'render_form_ref', // 2.0.0: a form post (eweb_form) shown in a page.
@@ -72,10 +73,17 @@ final class Blocks {
 		$dom_id     = 'af-' . ( '' !== $form_id ? $form_id : substr( $hash, 0, 8 ) );
 		$result     = self::result( $form_id );
 
+		// 2.11.0, dossier mode: the link in the URL, if it opens a dossier of this form.
+		$is_dossier = ! empty( $definition['dossier'] );
+		$token      = $is_dossier ? Dossier::token_in_url() : '';
+		$row        = '' !== $token ? Dossier::load( $token, $form_id ) : null;
+		$has_files  = in_array( 'file', array_column( $definition['fields'], 'type' ), true );
+		$status     = (string) ( $result['status'] ?? '' );
+
 		$context = array(
 			'message'  => $result['message'] ?? '',
-			'isError'  => isset( $result['status'] ) && 'ok' !== $result['status'],
-			'sent'     => 'ok' === ( $result['status'] ?? '' ),
+			'isError'  => '' !== $status && ! in_array( $status, array( 'ok', 'link_sent' ), true ),
+			'sent'     => 'ok' === $status && ! $is_dossier, // A dossier stays open after saving: it is still being filled in.
 			'busy'     => false,
 			'started'  => false,
 			'tokenUrl'     => rest_url( 'estrategia-web-forms/v1/token' ),
@@ -88,7 +96,7 @@ final class Blocks {
 				'id'     => $dom_id,
 				'action' => esc_url( rest_url( 'estrategia-web-forms/v1/submit' ) ),
 				'method' => 'post',
-			)
+			) + ( $has_files ? array( 'enctype' => 'multipart/form-data' ) : array() )
 		);
 
 		ob_start();
@@ -102,11 +110,15 @@ final class Blocks {
 			<input type="hidden" name="_af_def" value="<?php echo esc_attr( $hash ); ?>">
 			<input type="hidden" name="_af_token" value="<?php echo esc_attr( Token::create( $hash, time(), wp_salt( 'nonce' ) ) ); ?>">
 			<input type="hidden" name="_af_page" value="<?php echo esc_url( self::current_url() ); ?>">
+			<?php if ( $row ) : ?>
+				<input type="hidden" name="_af_dossier" value="<?php echo esc_attr( $token ); ?>">
+			<?php endif; ?>
 			<div class="estrategia-web-forms__hp" aria-hidden="true">
 				<label><?php esc_html_e( 'Leave this field empty', 'estrategiaweb-toolkit' ); ?>
 					<input type="text" name="af_website" value="" tabindex="-1" autocomplete="off">
 				</label>
 			</div>
+			<?php echo self::dossier_notice( $definition, $token, $row ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built escaped. ?>
 			<div class="estrategia-web-forms__fields">
 				<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML of the inner blocks, already escaped by each one. ?>
 			</div>
@@ -114,7 +126,66 @@ final class Blocks {
 				data-wp-text="context.message" data-wp-class--is-error="context.isError" data-wp-class--is-success="context.sent"><?php echo esc_html( $context['message'] ); ?></div>
 		</form>
 		<?php
-		return (string) ob_get_clean() . self::announce( $dom_id, $result );
+		$link_form = $is_dossier && ! $row ? self::dossier_link_form( $hash, $dom_id, '' !== $token ) : '';
+		return (string) ob_get_clean() . $link_form . self::announce( $dom_id, $result );
+	}
+
+	/**
+	 * Above the fields of a dossier form (2.11.0): where the visitor stands.
+	 * Opened with a valid link: what is still missing, or that it is
+	 * complete. With a link that does not work: that it does not, and that
+	 * a new one can be asked for below. Nothing on a plain visit.
+	 */
+	private static function dossier_notice( array $definition, string $token, ?array $row ): string {
+		if ( empty( $definition['dossier'] ) || '' === $token ) {
+			return '';
+		}
+		if ( ! $row ) {
+			return '<p class="estrategia-web-forms__notice estrategia-web-forms__notice--error">' . esc_html__( 'This link has expired or is no longer valid. You can ask for a new one below the form.', 'estrategiaweb-toolkit' ) . '</p>';
+		}
+		$missing = Dossier::labels( $definition, (array) $row['missing'] );
+		$text    = $missing
+			/* translators: %s: the labels of the fields still missing, separated by commas. */
+			? sprintf( __( 'You are completing your request. Still missing: %s. Save whenever you want: what you have sent is kept.', 'estrategiaweb-toolkit' ), implode( ', ', $missing ) )
+			: __( 'Your request is complete. You can review it and change whatever you need.', 'estrategiaweb-toolkit' );
+		return '<p class="estrategia-web-forms__notice">' . esc_html( $text ) . '</p>';
+	}
+
+	/**
+	 * «Send me my link» (2.11.0), under a dossier form opened without a
+	 * valid link. Its own <form> (forms cannot be nested), posting to
+	 * /dossier-link with the same definition, token and honeypot as the main
+	 * one; without JavaScript it comes back like a submission (303 with
+	 * ?af_result) and the answer shows in the main form's message area.
+	 */
+	private static function dossier_link_form( string $hash, string $dom_id, bool $open ): string {
+		$id = $dom_id . '-link';
+		ob_start();
+		?>
+		<details class="estrategia-web-forms__link"<?php echo $open ? ' open' : ''; ?>>
+			<summary><?php esc_html_e( 'Already started? We will send you your link', 'estrategiaweb-toolkit' ); ?></summary>
+			<form class="estrategia-web-forms__link-form" method="post" action="<?php echo esc_url( rest_url( Rest::NS . '/dossier-link' ) ); ?>">
+				<input type="hidden" name="_af_def" value="<?php echo esc_attr( $hash ); ?>">
+				<input type="hidden" name="_af_token" value="<?php echo esc_attr( Token::create( $hash, time(), wp_salt( 'nonce' ) ) ); ?>">
+				<input type="hidden" name="_af_page" value="<?php echo esc_url( self::current_url() ); ?>">
+				<div class="estrategia-web-forms__hp" aria-hidden="true">
+					<label><?php esc_html_e( 'Leave this field empty', 'estrategiaweb-toolkit' ); ?>
+						<input type="text" name="af_website" value="" tabindex="-1" autocomplete="off">
+					</label>
+				</div>
+				<label for="<?php echo esc_attr( $id ); ?>" class="estrategia-web-forms__label"><?php esc_html_e( 'The email you used', 'estrategiaweb-toolkit' ); ?></label>
+				<input id="<?php echo esc_attr( $id ); ?>" type="email" name="af_dossier_email" required autocomplete="email">
+				<div class="wp-block-button"><button type="submit" class="wp-block-button__link wp-element-button"><?php esc_html_e( 'Send me the link', 'estrategiaweb-toolkit' ); ?></button></div>
+			</form>
+		</details>
+		<?php
+		return (string) ob_get_clean();
+	}
+
+	/** The dossier the URL's link opens for this form, or null (2.11.0). */
+	private static function dossier_row( string $form_id ): ?array {
+		$token = Dossier::token_in_url();
+		return '' !== $token ? Dossier::load( $token, $form_id ) : null;
 	}
 
 	/**
@@ -196,19 +267,37 @@ final class Blocks {
 		$value    = (string) ( $result['values'][ $name ] ?? '' );
 		$width    = 'half' === ( $attributes['width'] ?? 'full' ) ? 'half' : 'full';
 
+		// 2.11.0, dossier mode: what the dossier holds, unless a no-JS return just brought what was typed;
+		// and the browser only insists on what a SAVE needs (Dossier::needed_to_save()), not on all the «*».
+		$in_dossier = ! empty( $block->context['estrategia-web-forms/dossier'] );
+		$row        = $in_dossier ? self::dossier_row( $form_id ) : null;
+		$stored     = array();
+		foreach ( $row ? (array) $row['data'] : array() as $item ) {
+			if ( ( $item['name'] ?? '' ) === $name ) {
+				$stored = $item;
+			}
+		}
+		if ( $stored && null === $result ) {
+			$value = (string) ( $stored['value'] ?? '' );
+		}
+		$browser_required = $in_dossier ? ( $consent || ! empty( $attributes['requiredToSave'] ) ) : $required;
+		if ( 'file' === $type ) {
+			$browser_required = $browser_required && empty( $stored['files'] );
+		}
+
 		$input_atts = array(
 			'id'               => $id,
-			'name'             => 'fields[' . $name . ']',
-			'required'         => $required,
-			'aria-describedby' => $id . '-error',
+			'name'             => 'file' === $type ? 'files[' . $name . '][]' : 'fields[' . $name . ']',
+			'required'         => $browser_required,
+			'aria-describedby' => ( 'file' === $type ? $id . '-help ' : '' ) . $id . '-error',
 			'aria-invalid'     => '' !== $error ? 'true' : false,
 		);
-		$autocomplete = 'checkbox' === $type ? '' : self::autocomplete( $type, $attributes );
+		$autocomplete = 'checkbox' === $type || 'file' === $type ? '' : self::autocomplete( $type, $attributes );
 		if ( '' !== $autocomplete ) {
 			$input_atts['autocomplete'] = $autocomplete;
 		}
 		$placeholder = (string) ( $attributes['placeholder'] ?? '' );
-		if ( '' !== $placeholder && 'checkbox' !== $type && 'select' !== $type ) {
+		if ( '' !== $placeholder && ! in_array( $type, array( 'checkbox', 'select', 'file' ), true ) ) {
 			$input_atts['placeholder'] = $placeholder;
 		}
 
@@ -227,14 +316,16 @@ final class Blocks {
 			printf( '<label for="%1$s" class="estrategia-web-forms__label">%2$s%3$s</label>', esc_attr( $id ), $label_html, $mark ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} else {
 			printf( '<label for="%1$s" class="estrategia-web-forms__label">%2$s%3$s</label>', esc_attr( $id ), $label_html, $mark ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			if ( 'textarea' === $type ) {
+			if ( 'file' === $type ) {
+				echo self::file_input( $attributes, $input_atts, (array) ( $stored['files'] ?? array() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built escaped.
+			} elseif ( 'textarea' === $type ) {
 				echo '<textarea' . self::atts( $input_atts + array( 'rows' => 5 ) ) . '>' . esc_textarea( $value ) . '</textarea>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			} elseif ( 'select' === $type ) {
 				echo '<select' . self::atts( $input_atts ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				$first = '' !== $placeholder ? $placeholder : __( 'Choose an option', 'estrategiaweb-toolkit' );
 				echo '<option value="">' . esc_html( $first ) . '</option>';
 				$options = self::options( (string) ( $attributes['options'] ?? '' ) );
-				if ( null === $result ) {
+				if ( null === $result && ! $stored ) {
 					$value = self::preselected( $name, $options, $attributes, $block );
 				}
 				foreach ( $options as $option ) {
@@ -252,6 +343,51 @@ final class Blocks {
 		printf( '<p id="%1$s-error" class="estrategia-web-forms__error" data-af-error="%2$s">%3$s</p>', esc_attr( $id ), esc_attr( $name ), esc_html( $error ) );
 		echo '</div>';
 		return (string) ob_get_clean();
+	}
+
+	/**
+	 * The file input (2.11.0): the files the dossier already holds (each
+	 * with its download link, for its owner, and a «Remove» box), the input
+	 * and a line saying what is accepted.
+	 *
+	 * @param array<string, mixed> $input_atts
+	 * @param array<int, array>    $files
+	 */
+	private static function file_input( array $attributes, array $input_atts, array $files ): string {
+		$types = Files::accepted( (string) ( $attributes['accept'] ?? '' ) );
+		$max   = max( 1, (int) ( $attributes['maxMb'] ?? Files::DEFAULT_MAX_MB ) );
+		$token = Dossier::token_in_url();
+		$id    = (string) $input_atts['id'];
+		$out   = '';
+		if ( $files ) {
+			$out .= '<ul class="estrategia-web-forms__files">';
+			foreach ( $files as $file ) {
+				$out .= sprintf(
+					'<li><a href="%1$s">%2$s</a> <span class="estrategia-web-forms__file-size">(%3$s)</span> <label class="estrategia-web-forms__remove"><input type="checkbox" name="af_remove[]" value="%4$s"> %5$s</label></li>',
+					esc_url( Dossier::file_url( $token, (string) $file['id'] ) ),
+					esc_html( (string) $file['name'] ),
+					esc_html( size_format( (int) $file['size'] ) ),
+					esc_attr( (string) $file['id'] ),
+					esc_html__( 'Remove', 'estrategiaweb-toolkit' )
+				);
+			}
+			$out .= '</ul>';
+		}
+		$input_atts += array(
+			'type'   => 'file',
+			'accept' => Files::accept_attribute( $types ),
+		);
+		if ( ! empty( $attributes['multiple'] ) ) {
+			$input_atts['multiple'] = true;
+		}
+		$out .= '<input' . self::atts( $input_atts ) . '>';
+		$help = trim( (string) ( $attributes['help'] ?? '' ) );
+		if ( '' === $help ) {
+			/* translators: 1: accepted types, e.g. «PDF, JPG, PNG»; 2: maximum size in MB. */
+			$help = sprintf( __( '%1$s. Up to %2$d MB per file.', 'estrategiaweb-toolkit' ), strtoupper( implode( ', ', $types ) ), $max );
+		}
+		$out .= '<p id="' . esc_attr( $id ) . '-help" class="estrategia-web-forms__help">' . esc_html( $help ) . '</p>';
+		return $out;
 	}
 
 	public static function render_submit( array $attributes ): string {

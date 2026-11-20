@@ -32,6 +32,12 @@ final class Validator {
 	);
 
 	/**
+	 * File fields are not looked at here: their uploads are Files::validate()'s.
+	 *
+	 * 2.11.0, a DOSSIER form: «Required» does not stop a save (the dossier is
+	 * stored as incomplete, Dossier::missing()); only the fields
+	 * Dossier::needed_to_save() lists do. A malformed value is still an error.
+	 *
 	 * @param array                $definition Definition loaded from the server.
 	 * @param array<string, mixed> $input      What arrived in fields[...], unslashed (wp_unslash).
 	 * @return array{values: array<string, string>, errors: array<string, string>}
@@ -39,8 +45,13 @@ final class Validator {
 	public static function validate( array $definition, array $input ): array {
 		$values = array();
 		$errors = array();
+		$needed = ! empty( $definition['dossier'] ) ? Dossier::needed_to_save( $definition ) : null;
 
 		foreach ( (array) ( $definition['fields'] ?? array() ) as $field ) {
+			if ( 'file' === $field['type'] ) {
+				continue;
+			}
+			$field['required'] = null === $needed ? ! empty( $field['required'] ) : in_array( $field['name'], $needed, true );
 			$name  = (string) $field['name'];
 			$raw   = $input[ $name ] ?? '';
 			$raw   = is_scalar( $raw ) ? (string) $raw : '';

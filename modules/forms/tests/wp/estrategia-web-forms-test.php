@@ -483,6 +483,31 @@ add_action(
 			}
 		);
 
+		// 2.11.0, dossier mode (tests/dossier.test.mjs): where the files are and whether each one still
+		// exists ({paths: [...]}), and making a dossier's link expire ({expire: id}) without waiting 90 days.
+		$route(
+			'/dossier',
+			'POST',
+			static function ( WP_REST_Request $r ) {
+				global $wpdb;
+				$expire = (int) $r->get_param( 'expire' );
+				if ( $expire ) {
+					$wpdb->update( \EstrategiaWeb\Forms\Migrations::submissions_table(), array( 'access_expires' => gmdate( 'Y-m-d H:i:s', time() - 60 ) ), array( 'id' => $expire ) );
+				}
+				$dir    = \EstrategiaWeb\Forms\Files::dir();
+				$exists = array();
+				foreach ( (array) $r->get_param( 'paths' ) as $path ) {
+					$exists[ (string) $path ] = '' !== $dir && is_file( $dir . '/' . $path );
+				}
+				return array(
+					'dir'     => $dir,
+					'abspath' => ABSPATH,
+					'public'  => \EstrategiaWeb\Forms\Files::is_public(),
+					'exists'  => $exists,
+				);
+			}
+		);
+
 		$route(
 			'/backdate',
 			'POST',

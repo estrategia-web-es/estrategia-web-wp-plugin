@@ -14,7 +14,8 @@
 		"to": { "type": "string", "default": "" },
 		"replyTo": { "type": "string", "default": "" },
 		"subject": { "type": "string", "default": "" },
-		"body": { "type": "string", "default": "" }
+		"body": { "type": "string", "default": "" },
+		"when": { "type": "string", "enum": [ "created", "updated", "always" ], "default": "created" }
 	},
 	"supports": { "html": false, "reusable": false },
 	"editorScript": "estrategia-web-forms-editor",

@@ -26,7 +26,7 @@ test( 'editor: opening and saving a page with the synced form keeps its preselec
 
 test( 'editor: the blocks are registered and a new form comes with its template with two notifications', () => {
 	const { names, inserter, form } = v( 'new-form' );
-	assert.deepEqual( names, [ 'checkbox', 'email', 'form', 'form-ref', 'notification', 'select', 'submit', 'tel', 'text', 'textarea' ].map( ( n ) => 'estrategia-web-forms/' + n ) );
+	assert.deepEqual( names, [ 'checkbox', 'email', 'file', 'form', 'form-ref', 'notification', 'select', 'submit', 'tel', 'text', 'textarea' ].map( ( n ) => 'estrategia-web-forms/' + n ), '2.11.0: «file» joins them' );
 	assert.deepEqual( inserter, { form: false, ref: true }, '2.0.0: a page gets the reference block; the form tree lives in a form post' );
 	assert.match( form.formId, /^form-[a-z0-9]+$/, 'the identifier is generated automatically' );
 	assert.deepEqual( form.inner, [ 'text', 'email', 'textarea', 'checkbox', 'submit', 'notification', 'notification' ] );

@@ -83,7 +83,20 @@ final class Submissions_Table extends \WP_List_Table {
 			'summary' => __( 'Data', 'estrategiaweb-toolkit' ),
 			'lang'    => __( 'Language', 'estrategiaweb-toolkit' ),
 			'status'  => __( 'Notifications', 'estrategiaweb-toolkit' ),
+			'dossier' => __( 'Dossier', 'estrategiaweb-toolkit' ), // 2.11.0: complete or what is missing; «—» on a plain form.
 		);
+	}
+
+	protected function column_dossier( $item ): string {
+		if ( ! Submissions::is_dossier( $item ) ) {
+			return '—';
+		}
+		if ( $item['complete'] ) {
+			return '<strong>' . esc_html__( 'Complete', 'estrategiaweb-toolkit' ) . '</strong>';
+		}
+		$missing = count( (array) $item['missing'] );
+		/* translators: %d: number of fields still missing. */
+		return esc_html( sprintf( _n( 'Incomplete: %d missing', 'Incomplete: %d missing', $missing, 'estrategiaweb-toolkit' ), $missing ) );
 	}
 
 	protected function get_sortable_columns(): array {

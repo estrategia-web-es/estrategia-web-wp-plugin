@@ -45,9 +45,59 @@ final class Submissions {
 				'ip'              => (string) $row['ip'],
 				'user_agent'      => substr( (string) $row['user_agent'], 0, 255 ),
 				'format_version'  => self::FORMAT,
+				// 2.11.0, dossier mode. A plain form leaves the defaults: no link, complete.
+				'access_hash'     => (string) ( $row['access_hash'] ?? '' ),
+				'access_expires'  => $row['access_expires'] ?? null,
+				'owner_email'     => substr( (string) ( $row['owner_email'] ?? '' ), 0, 254 ),
+				'complete'        => isset( $row['complete'] ) ? (int) (bool) $row['complete'] : 1,
+				'missing'         => (string) wp_json_encode( array_values( (array) ( $row['missing'] ?? array() ) ) ),
+				'history'         => (string) wp_json_encode( array_values( (array) ( $row['history'] ?? array() ) ) ),
 			)
 		);
 		return (int) $wpdb->insert_id;
+	}
+
+	/**
+	 * Changes the dossier columns of a row (2.11.0). Only the keys given;
+	 * data, missing and history are encoded here.
+	 *
+	 * @param array<string, mixed> $changes
+	 */
+	public static function update_dossier( int $id, array $changes ): void {
+		global $wpdb;
+		$allowed = array( 'data', 'status', 'notifications', 'updated_at', 'access_hash', 'access_expires', 'owner_email', 'complete', 'missing', 'history' );
+		$set     = array();
+		foreach ( $changes as $key => $value ) {
+			if ( ! in_array( $key, $allowed, true ) ) {
+				continue;
+			}
+			$set[ $key ] = in_array( $key, array( 'data', 'notifications', 'missing', 'history' ), true ) ? (string) wp_json_encode( array_values( (array) $value ) ) : $value;
+			if ( 'complete' === $key ) {
+				$set[ $key ] = (int) (bool) $value;
+			}
+		}
+		if ( $set ) {
+			$wpdb->update( Migrations::submissions_table(), $set, array( 'id' => $id ) );
+		}
+	}
+
+	/** The row a dossier link opens (by the hash of its token), whatever its expiry. */
+	public static function find_by_access_hash( string $hash ): ?array {
+		if ( ! preg_match( '/^[a-f0-9]{64}$/', $hash ) ) {
+			return null;
+		}
+		global $wpdb;
+		$table = Migrations::submissions_table();
+		$row   = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table WHERE access_hash = %s LIMIT 1", $hash ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		return $row && hash_equals( (string) $row['access_hash'], $hash ) ? self::decode( $row ) : null;
+	}
+
+	/** The latest dossier of a form sent with that email («Send me my link»). */
+	public static function find_latest_by_owner( string $form_id, string $email ): ?array {
+		global $wpdb;
+		$table = Migrations::submissions_table();
+		$row   = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table WHERE form_id = %s AND owner_email = %s ORDER BY id DESC LIMIT 1", $form_id, strtolower( $email ) ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		return $row ? self::decode( $row ) : null;
 	}
 
 	public static function update_notifications( int $id, string $status, array $notifications ): void {
@@ -152,10 +202,15 @@ final class Submissions {
 		}
 		$table        = Migrations::submissions_table();
 		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+		self::delete_files_of( "SELECT data FROM $table WHERE id IN ($placeholders)", $ids );
 		return (int) $wpdb->query( $wpdb->prepare( "DELETE FROM $table WHERE id IN ($placeholders)", $ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	}
 
-	/** Deletes the submissions older than $days days. Returns how many. */
+	/**
+	 * Deletes the submissions older than $days days. Returns how many.
+	 * A dossier counts from its last change (updated_at), not from when it
+	 * was first sent: a client who completed it last week keeps it.
+	 */
 	public static function purge_older_than( int $days ): int {
 		if ( $days <= 0 ) {
 			return 0;
@@ -163,13 +218,32 @@ final class Submissions {
 		global $wpdb;
 		$table  = Migrations::submissions_table();
 		$cutoff = gmdate( 'Y-m-d H:i:s', time() - $days * DAY_IN_SECONDS );
-		return (int) $wpdb->query( $wpdb->prepare( "DELETE FROM $table WHERE created_at < %s", $cutoff ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$where  = 'COALESCE(updated_at, created_at) < %s';
+		self::delete_files_of( "SELECT data FROM $table WHERE $where", array( $cutoff ) );
+		return (int) $wpdb->query( $wpdb->prepare( "DELETE FROM $table WHERE $where", $cutoff ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	}
+
+	/** The files go with their row: before deleting rows, their stored files. Only rows that have a file field are decoded. */
+	private static function delete_files_of( string $select, array $params ): void {
+		global $wpdb;
+		$rows = $wpdb->get_col( $wpdb->prepare( $select . " AND data LIKE '%%\"files\"%%'", $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		foreach ( (array) $rows as $json ) {
+			Files::delete( Files::of_row( array( 'data' => json_decode( (string) $json, true ) ?: array() ) ) );
+		}
 	}
 
 	public static function decode( array $row ): array {
 		$row['data']          = json_decode( (string) $row['data'], true ) ?: array();
 		$row['notifications'] = json_decode( (string) $row['notifications'], true ) ?: array();
+		$row['missing']       = json_decode( (string) ( $row['missing'] ?? '' ), true ) ?: array();
+		$row['history']       = json_decode( (string) ( $row['history'] ?? '' ), true ) ?: array();
+		$row['complete']      = (int) ( $row['complete'] ?? 1 );
 		$row['id']            = (int) $row['id'];
 		return $row;
+	}
+
+	/** True when the row is a dossier (it has or had a private link). */
+	public static function is_dossier( array $row ): bool {
+		return '' !== (string) ( $row['owner_email'] ?? '' );
 	}
 }

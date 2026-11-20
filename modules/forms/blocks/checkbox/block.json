@@ -9,11 +9,12 @@
 	"description": "A checkbox. As a privacy consent it is always required and links to the privacy policy.",
 	"textdomain": "estrategiaweb-toolkit",
 	"ancestor": [ "estrategia-web-forms/form" ],
-	"usesContext": [ "estrategia-web-forms/formId" ],
+	"usesContext": [ "estrategia-web-forms/formId", "estrategia-web-forms/dossier" ],
 	"attributes": {
 		"label": { "type": "string", "default": "" },
 		"name": { "type": "string", "default": "" },
 		"required": { "type": "boolean", "default": false },
+		"requiredToSave": { "type": "boolean", "default": false },
 		"placeholder": { "type": "string", "default": "" },
 		"width": { "type": "string", "enum": [ "full", "half" ], "default": "full" },
 		"consent": { "type": "boolean", "default": false },

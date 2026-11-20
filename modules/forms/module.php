@@ -52,6 +52,8 @@ require_once __DIR__ . '/includes/class-migrations.php';
 require_once __DIR__ . '/includes/class-definitions.php';
 require_once __DIR__ . '/includes/class-submissions.php';
 require_once __DIR__ . '/includes/class-validator.php';
+require_once __DIR__ . '/includes/class-files.php'; // 2.11.0: the File field, stored outside the web.
+require_once __DIR__ . '/includes/class-dossier.php'; // 2.11.0: dossier mode, a submission the sender can complete later.
 require_once __DIR__ . '/includes/class-notifier.php';
 require_once __DIR__ . '/includes/class-blocks.php';
 require_once __DIR__ . '/includes/class-form-post-type.php'; // 2.0.0: the form as a post of its own (eweb_form).
@@ -69,6 +71,7 @@ add_action( 'init', array( Cron::class, 'schedule' ) );
 
 add_action( 'init', array( Blocks::class, 'register' ) );
 Form_Post_Type::boot();
+Dossier::boot();
 add_action( 'rest_api_init', array( Rest::class, 'register_routes' ) );
 add_action( Cron::HOOK, array( Cron::class, 'purge' ) );
 add_action( 'update_option_' . Settings::OPTION, array( Settings::class, 'register_strings' ) );

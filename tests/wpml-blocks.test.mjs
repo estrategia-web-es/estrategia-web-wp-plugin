@@ -44,6 +44,8 @@ const EXCLUDED = {
   "estrategia-web-forms/select.name": "a key: the field's name in the log and the {{markers}}",
   "estrategia-web-forms/select.autocomplete": "a browser token, the same in every language",
   "estrategia-web-forms/checkbox.name": "a key: the field's name in the log and the {{markers}}",
+  "estrategia-web-forms/file.name": "a key: the field's name in the log and the {{markers}}",
+  "estrategia-web-forms/file.accept": "file types (pdf,jpg,png), the same in every language",
   "estrategia-web-forms/checkbox.placeholder": "not rendered: a checkbox has no placeholder (Blocks::render_field skips it)",
   "estrategia-web-forms/notification.label": "only the admin reads it, in the submissions log",
   "estrategia-web-forms/notification.to": "the recipient: the translator must not be able to redirect the emails",

@@ -99,6 +99,10 @@
 			<key name="label" label="Checkbox text" />
 			<key name="privacyUrl" label="Privacy policy URL" type="link" />
 		</gutenberg-block>
+		<gutenberg-block type="estrategia-web-forms/file" translate="1" label="Form: file field">
+			<key name="label" label="Field label" />
+			<key name="help" label="Field help" />
+		</gutenberg-block>
 		<gutenberg-block type="estrategia-web-forms/submit" translate="1" label="Form: send button">
 			<key name="text" label="Button text" />
 		</gutenberg-block>
