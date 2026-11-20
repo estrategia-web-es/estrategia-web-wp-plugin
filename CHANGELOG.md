@@ -46,8 +46,12 @@ documents, and nobody has them all at once.
   changed / both», and the markers `{{dossier_url}}` and `{{missing_fields}}`.
 - **Retention**: a dossier counts from its last change; deleting or purging
   a submission deletes its files.
-- Tests: `modules/forms/tests/dossier.test.mjs` (level 2, seen red with
-  three mutants) and the pure parts in pure.test.mjs. `tests/run.mjs` mounts
+- Tests: the decisions in level 1 (pure.test.mjs: file types by bytes,
+  what replaces what, which notifications, when a link opens, what is
+  missing) and only what needs WordPress in level 2, inside
+  server.test.mjs: the server budget stays at 58 (David, 20-11-2026: it is
+  there so tests go down a level, not to be raised). The admin's «Ask the
+  client» and «Revoke link» have no level 2 test. `tests/run.mjs` mounts
   `/estrategia-web-forms-private` per shard: without it each Playground
   worker had its own copy of that folder.
 

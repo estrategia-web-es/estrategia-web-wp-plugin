@@ -127,6 +127,38 @@ test("files: $_FILES as PHP builds it for files[field][], without the empty slot
   });
 });
 
+// Moved down from level 2 (20-11-2026: the server budget is not raised, David).
+test("files: what is wrong with an upload, in order — size (also PHP's limit), received, type by its bytes", () => {
+  assert.deepEqual(out.files.problem, {
+    ok: "",
+    too_big: "too_big",
+    php_limit: "too_big",
+    not_upload: "not_received",
+    partial: "not_received",
+    html_as_pdf: "type",
+    png_not_ok: "type",
+  });
+});
+
+test("files: after a save — one-file fields replace (the old one goes), several-files add, «Remove» drops", () => {
+  const ids = (r) => ({ files: Object.fromEntries(Object.entries(r.files).map(([k, v]) => [k, v.map((x) => x.id)])), dropped: r.dropped.map((x) => x.id) });
+  const m = out.files.merge;
+  assert.deepEqual(ids(m.replace_one), { files: { e: ["b"] }, dropped: ["a"] });
+  assert.deepEqual(ids(m.add_several), { files: { o: ["a", "b"] }, dropped: [] });
+  assert.deepEqual(ids(m.remove), { files: { o: ["a"] }, dropped: ["c"] });
+  assert.deepEqual(ids(m.untouched), { files: { e: ["a"] }, dropped: [] });
+  assert.deepEqual(ids(m.first_time), { files: { e: ["a"] }, dropped: [] });
+});
+
+test("dossier: which notifications go out when it is created and when it is changed", () => {
+  assert.deepEqual(out.dossier.on_created, ["team", "ack", "old snapshot"], "a notification without «when» is «created»");
+  assert.deepEqual(out.dossier.on_updated, ["team", "changes"], "the client's link is not sent again on every save");
+});
+
+test("dossier: a link opens only while it has a hash, has not expired, and on its own form", () => {
+  assert.deepEqual(out.dossier.open, { valid: true, any_form: true, other_form: false, expired: false, revoked: false, no_expiry: false });
+});
+
 // 2.11.0: the dossier's pure parts (includes/class-dossier.php).
 test("dossier: who receives the link and what a save cannot go without", () => {
   const d = out.dossier;

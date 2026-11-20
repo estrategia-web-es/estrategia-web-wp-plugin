@@ -34,8 +34,10 @@
  *
  * How to maintain:
  * - Who and when: whoever touches the submission flow (class-rest.php)
- *   checks tests/dossier.test.mjs; every branch of this class has a case
- *   there.
+ *   checks the dossier cases in tests/pure.test.mjs (the decisions: is_open,
+ *   missing, owner_field…) and in tests/server.test.mjs (what only WordPress
+ *   shows). The admin actions («Ask the client», «Revoke link») have no
+ *   level 2 test: whoever changes them tries them by hand.
  * - Edge case: a dossier link opened on a page whose form is a DIFFERENT
  *   form (another form_id) loads nothing and says the link is not valid. The
  *   link belongs to its form, not to the page.
@@ -204,14 +206,22 @@ final class Dossier {
 			return null;
 		}
 		if ( ! array_key_exists( $token, self::$loaded ) ) {
-			$row = Submissions::find_by_access_hash( self::hash( $token ) );
-			if ( $row && ( '' === (string) $row['access_expires'] || strtotime( $row['access_expires'] . ' UTC' ) < time() ) ) {
-				$row = null;
-			}
-			self::$loaded[ $token ] = $row;
+			self::$loaded[ $token ] = Submissions::find_by_access_hash( self::hash( $token ) );
 		}
 		$row = self::$loaded[ $token ];
-		return $row && ( '' === $form_id || $row['form_id'] === $form_id ) ? $row : null;
+		return $row && self::is_open( $row, time(), $form_id ) ? $row : null;
+	}
+
+	/**
+	 * Whether a dossier row may be opened now: it has a link (not revoked),
+	 * it has not expired, and it is of that form ('' = any). PURE (level 1).
+	 */
+	public static function is_open( array $row, int $now, string $form_id = '' ): bool {
+		$expires = (string) ( $row['access_expires'] ?? '' );
+		if ( '' === (string) ( $row['access_hash'] ?? '' ) || '' === $expires || strtotime( $expires . ' UTC' ) < $now ) {
+			return false;
+		}
+		return '' === $form_id || (string) $row['form_id'] === $form_id;
 	}
 
 	/** The token in the current URL, as it came ('' if none). */

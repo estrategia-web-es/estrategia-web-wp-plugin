@@ -29,17 +29,50 @@
 // Seen red again after round 2 (28-10-2026), every test, with the mutants above (one by one where a test reads what the one before left).
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { seed, settings, loadForm, submit, GOOD, TEAM, FAIL, FORM, testApi, BASE } from "./lib.mjs";
+import { seed, settings, loadForm, hiddenFields, submit, GOOD, TEAM, FAIL, FORM, testApi, BASE } from "./lib.mjs";
 
 // The URL of the run's WordPress, escaped for a regular expression (with EW_PORT it is not 9404).
 const SITE = BASE.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
 const html = async (url) => (await fetch(url)).text();
 
-let page, form, hidden, good, sent;
+// 2.11.0: a dossier form with a File field, seeded and loaded with the contact one (no request more).
+// Its decisions (types by bytes, what replaces what, which notifications, when a link opens, what is
+// missing) are level 1 in pure.test.mjs; here only what needs WordPress: PHP receiving a multipart
+// upload, the file outside the web root, the link's page and headers, the owner's download, the row.
+const DOSSIER = `<!-- wp:estrategia-web-forms/form {"formId":"ayuda","title":"Ayuda","dossier":true} -->
+<!-- wp:estrategia-web-forms/text {"label":"Empresa","name":"empresa","required":true,"requiredToSave":true} /-->
+<!-- wp:estrategia-web-forms/email {"label":"Correo","name":"email","required":true,"requiredToSave":true} /-->
+<!-- wp:estrategia-web-forms/text {"label":"IAE","name":"iae","required":true} /-->
+<!-- wp:estrategia-web-forms/file {"label":"Escrituras","name":"escrituras","required":true,"accept":"pdf","maxMb":1} /-->
+<!-- wp:estrategia-web-forms/notification {"label":"Equipo","to":"${TEAM}","subject":"Expediente {{empresa}}","when":"always"} /-->
+<!-- wp:estrategia-web-forms/notification {"label":"Enlace","to":"{{email}}","subject":"Tu solicitud","body":"Tu enlace: {{dossier_url}}"} /-->
+<!-- /wp:estrategia-web-forms/form -->`;
+const OWNER = "nicolae@ejemplo.test";
+const PDF = (tag) => new Blob([`%PDF-1.4\n% ${tag}\n%%EOF\n`], { type: "application/pdf" });
+const unescape = (s) => s.replace(/&#038;|&amp;/g, "&");
+const tokenIn = (text) => text.match(/af_dossier=([A-Za-z0-9_-]{43})/)?.[1] ?? null;
+/** As the form's JavaScript sends a form with files: multipart. */
+async function sendFiles(hiddenOf, fields, files = {}) {
+  const body = new FormData();
+  for (const [k, v] of Object.entries(hiddenOf)) body.append(k, v);
+  for (const [k, v] of Object.entries(fields)) body.append(`fields[${k}]`, v);
+  for (const [k, [name, blob]] of Object.entries(files)) body.append(`files[${k}][]`, blob, name);
+  body.append("_af_js", "1");
+  const res = await fetch(BASE + "/wp-json/estrategia-web-forms/v1/submit", { method: "POST", body });
+  return { status: res.status, json: await res.json() };
+}
+
+let page, form, hidden, good, sent, dossierPage, dossierHidden, dossier;
 before(async () => {
   // min_seconds 30: the too-early case is rejected on purpose; then it goes back to 1.
-  ({ pages: { contact: page } } = await seed({ settings: { min_seconds: 30, retention_days: 30 }, pages: [{ key: "contact", slug: "contacto", title: "Contacto", content: FORM }] }));
-  ({ html: form, hidden } = await loadForm(page.url));
+  ({ pages: { contact: page, ayuda: dossierPage } } = await seed({
+    settings: { min_seconds: 30, retention_days: 30 },
+    pages: [
+      { key: "contact", slug: "contacto", title: "Contacto", content: FORM },
+      { key: "ayuda", slug: "ayuda", title: "Ayuda", content: DOSSIER },
+    ],
+  }));
+  [{ html: form, hidden }, { hidden: dossierHidden }] = await Promise.all([loadForm(page.url), loadForm(dossierPage.url)]);
   // Round 2 (28-10-2026): the submissions that do not depend on each other go at once, here, and each
   // test below asserts its own answer. First the four the server answers BEFORE looking at min_seconds
   // or that min_seconds = 30 rejects (honeypot and definition go before the token; a forged
@@ -168,14 +201,91 @@ test("without JS, OK: the page that comes back fires «estrategia-web:form-sent�
   assert.ok(!again.includes("estrategia-web-forms-sent"), "but the signal is not: the conversion would count twice");
 });
 
+test("dossier (2.11.0): a half-way save with a file — refused by its bytes, stored outside the web, the link only in the sender's email", async () => {
+  const half = { empresa: "Stanila Reformas", email: OWNER };
+  const [fake, saved] = await Promise.all([
+    sendFiles(dossierHidden, { ...half, empresa: "fake" }, { escrituras: ["escrituras.pdf", new Blob(["<!doctype html><script>alert(1)</script>"])] }),
+    sendFiles(dossierHidden, half, { escrituras: ["Escrituras Stanila.pdf", PDF("A1")] }),
+  ]);
+  assert.equal(fake.status, 422, "an HTML page called .pdf");
+  assert.ok(fake.json.errors.escrituras);
+  assert.equal(saved.status, 200, JSON.stringify(saved.json));
+  const token = tokenIn(unescape(saved.json.redirect || ""));
+  assert.ok(token, "the answer sends the page to the dossier's own link");
+
+  const s = await testApi("/state");
+  const rows = s.submissions.filter((r) => r.form_id === "ayuda");
+  assert.equal(rows.length, 1, "the refused one left nothing");
+  const row = rows[0];
+  assert.equal(row.complete, 0);
+  assert.deepEqual(row.missing, ["iae"], "IAE missing; the file is there");
+  assert.ok(!JSON.stringify(row).includes(token), "only the token's sha256 is stored");
+  const file = row.data.find((d) => d.name === "escrituras").files[0];
+  const where = await testApi("/dossier", { method: "POST", body: { paths: [file.path] } });
+  assert.equal(where.public, false, "outside the web root: " + where.dir);
+  assert.equal(where.exists[file.path], true);
+  const toOwner = s.mails.filter((m) => m.to.includes(OWNER));
+  assert.equal(toOwner.length, 1);
+  assert.ok(toOwner[0].text.includes("af_dossier=" + token), "{{dossier_url}} in the acknowledgement");
+  assert.ok(!s.mails.some((m) => m.to.includes(TEAM) && m.text.includes(token)), "and not in the team's email");
+  dossier = { token, row, file };
+});
+
+test("dossier (2.11.0): the link opens it filled in and privately; the owner downloads, a wrong token does not; completing it keeps the row and deletes the replaced file", async () => {
+  const url = dossierPage.url + (dossierPage.url.includes("?") ? "&" : "?") + "af_dossier=" + dossier.token;
+  const res = await fetch(url);
+  const opened = await res.text();
+  assert.match(res.headers.get("cache-control") || "", /no-store/);
+  assert.equal(res.headers.get("referrer-policy"), "no-referrer");
+  assert.match(res.headers.get("x-robots-tag") || "", /noindex/);
+  assert.match(opened, /value="Stanila Reformas"/);
+  assert.match(opened, /Still missing: IAE/);
+  const link = unescape(opened.match(/href="([^"]*\/file\?[^"]*)"/)?.[1] ?? "");
+  const [own, wrong] = await Promise.all([fetch(link), fetch(link.replace(dossier.token, "x".repeat(43)))]);
+  assert.equal(own.status, 200);
+  assert.match(own.headers.get("content-disposition") || "", /attachment/);
+  assert.match(await own.text(), /^%PDF-1\.4\n% A1/);
+  assert.equal(wrong.status, 404);
+
+  const done = await sendFiles(hiddenFields(opened), { empresa: "Stanila Reformas", email: OWNER, iae: "501.3" }, { escrituras: ["firmadas.pdf", PDF("A2")] });
+  assert.equal(done.status, 200, JSON.stringify(done.json));
+  const row = (await testApi("/state")).submissions.find((r) => r.form_id === "ayuda");
+  assert.equal(row.id, dossier.row.id, "the same row");
+  assert.equal(row.complete, 1);
+  const now = row.data.find((d) => d.name === "escrituras").files[0];
+  const [where] = await Promise.all([
+    testApi("/dossier", { method: "POST", body: { paths: [dossier.file.path, now.path] } }),
+    // For the purge below: sent 31 days ago, but changed today.
+    testApi("/backdate", { method: "POST", body: { id: row.id, days: 31 } }),
+  ]);
+  assert.deepEqual(where.exists, { [dossier.file.path]: false, [now.path]: true });
+});
+
+test("dossier (2.11.0): «send me the link» writes only to the stored address, answers the same either way, and the old link stops working", async () => {
+  const ask = (email) => fetch(BASE + "/wp-json/estrategia-web-forms/v1/dossier-link", { method: "POST", body: new URLSearchParams({ ...dossierHidden, af_dossier_email: email }), redirect: "manual" });
+  const before = (await testApi("/mails")).length;
+  const [known, unknown] = await Promise.all([ask(OWNER.toUpperCase()), ask("nadie@ejemplo.test")]);
+  const back = (r) => unescape(r.headers.get("location") || "").replace(/af_result=[a-z0-9]+/, "");
+  assert.equal(known.status, 303);
+  assert.equal(back(known), back(unknown), "it does not reveal whether there is a dossier");
+  const mails = (await testApi("/mails")).slice(before);
+  assert.deepEqual(mails.map((m) => m.to[0]), [OWNER]);
+  const fresh = tokenIn(unescape(mails[0].html));
+  assert.ok(fresh && fresh !== dossier.token);
+  const old = await html(dossierPage.url + (dossierPage.url.includes("?") ? "&" : "?") + "af_dossier=" + dossier.token);
+  assert.match(old, /expired or is no longer valid/);
+});
+
 test("scheduled purge: deletes what is older than the retention (30 days) and leaves the rest", async () => {
-  // Two rows now: the good one and the no-JS one. The good one, 31 days old. At once, the next test's
-  // rate limit (it only counts the submissions after it).
+  // Three rows now: the good one, the no-JS one and the dossier (sent 31 days ago, changed today: it
+  // counts from its last change). The good one, 31 days old. At once, the next test's rate limit (it
+  // only counts the submissions after it).
   const [r] = await Promise.all([testApi("/purge", { method: "POST", body: { backdate: { id: good.id, days: 31 } } }), settings({ rate_limit: 1, rate_window: 10 })]);
   assert.equal(r.scheduled, true, "the purge is scheduled in WP-Cron");
   assert.equal(r.last_purge.deleted, 1);
-  assert.equal(r.left.length, 1);
-  assert.notEqual(r.left[0], Number(good.id));
+  assert.equal(r.left.length, 2);
+  assert.ok(!r.left.includes(Number(good.id)));
+  assert.ok(r.left.includes(dossier.row.id), "the dossier stays: 31 days since it was sent, 0 since its last change");
 });
 
 test("per-IP limit: the submission after the limit in the window is rejected", async () => {
