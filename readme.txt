@@ -4,7 +4,7 @@ Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.12.0
+Stable tag: 2.12.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,6 +64,10 @@ Terms: https://www.whatsapp.com/legal/terms-of-service · Privacy: https://www.w
 
 == Frequently Asked Questions ==
 
+= What can the code of a code banner contain? =
+
+What ad networks paste: scripts (from a file or inline), <ins>, iframes and linked images. Only a user with the unfiltered_html capability can write it, and it is filtered when it is shown. Inline JavaScript that contains & or < does not survive the filter; the banner's screen says so, and the fix is to load that script from a file.
+
 = Does it need a particular theme? =
 
 No. The Estrategia Web theme uses its blocks, but the plugin does not depend on it.
@@ -82,6 +86,9 @@ The cookie list includes an extract of the Open Cookie Database (https://github.
 
 == Changelog ==
 
+= 2.12.1 =
+* Every request value is sanitized as soon as it is read and everything printed is escaped where it is printed, also in the File field and dossier mode.
+
 = 2.12.0 =
 * Forms: every field can have a help text, shown in small print under it and read with it by screen readers. The placeholder stays for an example.
 * Forms: the «Send me the link» box of a dossier form is styled like the form above it.
@@ -90,6 +97,22 @@ The cookie list includes an extract of the Open Cookie Database (https://github.
 * Forms: a File field (PDF, JPG, PNG, checked by their content). Files are stored outside the web root and only the site team can download them.
 * Forms: dossier mode, per form. The sender can save half-way, gets a private link by email to come back and complete it, and can ask for a new link. The team sees what is missing, can ask the client for more and can revoke the link.
 * Forms: the retention counts a dossier from its last change, and deleting a submission deletes its files.
+
+= 2.10.4 =
+* Every request value is sanitized as soon as it is read, with no exceptions.
+* The code banner screen notes that the code is filtered when it is saved and when it is shown.
+
+= 2.10.3 =
+* The code of a code banner is also filtered when it is saved.
+* Form input is read and sanitized one field at a time.
+
+= 2.10.2 =
+* The code of a code banner is filtered when it is shown, and the banner's screen lists anything the filter would remove.
+* The banner list's styles are added through WordPress's style functions.
+
+= 2.10.1 =
+* Everything the plugin prints is escaped at the point of output, including block markup, form controls, icons and admin screens.
+* The plugin's Author URI now points to its GitHub organisation.
 
 = 2.10.0 =
 * Renamed to EstrategiaWeb Toolkit (text domain estrategiaweb-toolkit). Settings, content and blocks are unchanged.

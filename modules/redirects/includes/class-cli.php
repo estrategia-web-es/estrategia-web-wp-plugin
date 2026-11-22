@@ -95,6 +95,6 @@ final class Cli {
 			\WP_CLI::success( 'Exported to ' . $args[0] );
 			return;
 		}
-		echo $csv; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSV to the console.
+		\WP_CLI::line( rtrim( $csv, "\n" ) );
 	}
 }

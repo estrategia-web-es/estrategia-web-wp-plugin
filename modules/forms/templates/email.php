@@ -35,7 +35,7 @@ defined( 'ABSPATH' ) || exit;
 			<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:6px;">
 				<tr>
 					<td style="padding:24px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;color:#1e1e1e;">
-						<?php echo $content_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built and escaped in Notifier. ?>
+						<?php echo wp_kses_post( $content_html ); ?>
 					</td>
 				</tr>
 				<tr>

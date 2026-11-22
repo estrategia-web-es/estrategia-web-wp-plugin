@@ -101,9 +101,9 @@ final class Blocks {
 
 		ob_start();
 		?>
-		<form <?php echo $wrapper; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes. ?>
+		<form <?php echo wp_kses_data( $wrapper ); ?>
 			data-wp-interactive="estrategia-web-forms"
-			<?php echo wp_interactivity_data_wp_context( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<?php echo wp_kses_data( wp_interactivity_data_wp_context( $context ) ); ?>
 			data-wp-class--is-sent="context.sent"
 			data-wp-on--submit="actions.submit"
 			data-wp-on--focusin="actions.start">
@@ -118,7 +118,7 @@ final class Blocks {
 					<input type="text" name="af_website" value="" tabindex="-1" autocomplete="off">
 				</label>
 			</div>
-			<?php echo self::dossier_notice( $definition, $token, $row ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built escaped. ?>
+			<?php echo wp_kses( self::dossier_notice( $definition, $token, $row ), \EstrategiaWeb\Kses::allowed() ); ?>
 			<div class="estrategia-web-forms__fields">
 				<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML of the inner blocks, already escaped by each one. ?>
 			</div>
@@ -321,16 +321,16 @@ final class Blocks {
 
 		if ( 'checkbox' === $type ) {
 			$input_atts += array( 'type' => 'checkbox', 'value' => '1', 'checked' => '1' === $value );
-			echo '<input' . self::atts( $input_atts ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			printf( '<label for="%1$s" class="estrategia-web-forms__label">%2$s%3$s</label>', esc_attr( $id ), $label_html, $mark ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<input' . wp_kses_data( self::atts( $input_atts ) ) . '>';
+			printf( '<label for="%1$s" class="estrategia-web-forms__label">%2$s%3$s</label>', esc_attr( $id ), wp_kses_post( $label_html ), wp_kses_post( $mark ) );
 		} else {
-			printf( '<label for="%1$s" class="estrategia-web-forms__label">%2$s%3$s</label>', esc_attr( $id ), $label_html, $mark ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			printf( '<label for="%1$s" class="estrategia-web-forms__label">%2$s%3$s</label>', esc_attr( $id ), wp_kses_post( $label_html ), wp_kses_post( $mark ) );
 			if ( 'file' === $type ) {
-				echo self::file_input( $attributes, $input_atts, (array) ( $stored['files'] ?? array() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built escaped.
+				echo wp_kses( self::file_input( $attributes, $input_atts, (array) ( $stored['files'] ?? array() ) ), \EstrategiaWeb\Kses::allowed() );
 			} elseif ( 'textarea' === $type ) {
-				echo '<textarea' . self::atts( $input_atts + array( 'rows' => 5 ) ) . '>' . esc_textarea( $value ) . '</textarea>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<textarea' . wp_kses_data( self::atts( $input_atts + array( 'rows' => 5 ) ) ) . '>' . esc_textarea( $value ) . '</textarea>';
 			} elseif ( 'select' === $type ) {
-				echo '<select' . self::atts( $input_atts ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<select' . wp_kses_data( self::atts( $input_atts ) ) . '>';
 				$first = '' !== $placeholder ? $placeholder : __( 'Choose an option', 'estrategiaweb-toolkit' );
 				echo '<option value="">' . esc_html( $first ) . '</option>';
 				$options = self::options( (string) ( $attributes['options'] ?? '' ) );
@@ -346,7 +346,7 @@ final class Blocks {
 					'type'  => $type,
 					'value' => $value,
 				);
-				echo '<input' . self::atts( $input_atts + $extra ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<input' . wp_kses_data( self::atts( $input_atts + $extra ) ) . '>';
 			}
 		}
 		if ( '' !== $help ) {

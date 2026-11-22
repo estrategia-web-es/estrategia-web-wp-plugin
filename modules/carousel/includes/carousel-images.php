@@ -221,7 +221,7 @@ function preload_record( string $srcset, string $sizes, string $src, string $med
 /** Prints the recorded preloads in the <head> (wp_head, priority 1). */
 function preload_print(): void {
 	foreach ( preload_links() as $link ) {
-		echo $link . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in preload_record().
+		echo wp_kses( $link, \EstrategiaWeb\Kses::link() ) . "\n";
 	}
 }
 add_action( 'wp_head', __NAMESPACE__ . '\preload_print', 1 );

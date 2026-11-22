@@ -142,7 +142,7 @@ final class Admin {
 		echo '<h2>' . esc_html__( 'Data', 'estrategiaweb-toolkit' ) . '</h2><table class="widefat striped estrategia-web-forms-data"><tbody>';
 		foreach ( $row['data'] as $field ) {
 			if ( 'file' === ( $field['type'] ?? '' ) ) {
-				printf( '<tr><th scope="row" style="width:25%%">%s</th><td>%s</td></tr>', esc_html( $field['label'] ?: $field['name'] ), self::file_links( (int) $row['id'], (array) ( $field['files'] ?? array() ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built escaped.
+				printf( '<tr><th scope="row" style="width:25%%">%s</th><td>%s</td></tr>', esc_html( $field['label'] ?: $field['name'] ), wp_kses( self::file_links( (int) $row['id'], (array) ( $field['files'] ?? array() ) ), \EstrategiaWeb\Kses::allowed() ) );
 				continue;
 			}
 			$value = 'checkbox' === ( $field['type'] ?? '' ) ? ( '1' === $field['value'] ? __( 'Yes', 'estrategiaweb-toolkit' ) : __( 'No', 'estrategiaweb-toolkit' ) ) : (string) $field['value'];
@@ -286,9 +286,9 @@ final class Admin {
 		}
 		echo '</ul>';
 
-		$post = esc_url( admin_url( 'admin-post.php' ) );
+		$post = admin_url( 'admin-post.php' );
 		echo '<h3>' . esc_html__( 'Ask the client', 'estrategiaweb-toolkit' ) . '</h3>';
-		echo '<form method="post" action="' . $post . '">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
+		echo '<form method="post" action="' . esc_url( $post ) . '">';
 		echo '<input type="hidden" name="action" value="estrategia_web_forms_ask"><input type="hidden" name="id" value="' . esc_attr( (string) $row['id'] ) . '">';
 		wp_nonce_field( 'estrategia_web_forms_ask_' . $row['id'] );
 		echo '<p><label for="af-note">' . esc_html__( 'What you need from them. It goes in the email, with a new link and the list of what is missing.', 'estrategiaweb-toolkit' ) . '</label><br>';
@@ -296,7 +296,7 @@ final class Admin {
 		echo '<p><button type="submit" class="button button-primary">' . esc_html__( 'Send to the client', 'estrategiaweb-toolkit' ) . '</button></p></form>';
 
 		if ( '' !== (string) $row['access_hash'] ) {
-			echo '<form method="post" action="' . $post . '">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
+			echo '<form method="post" action="' . esc_url( $post ) . '">';
 			echo '<input type="hidden" name="action" value="estrategia_web_forms_revoke"><input type="hidden" name="id" value="' . esc_attr( (string) $row['id'] ) . '">';
 			wp_nonce_field( 'estrategia_web_forms_revoke_' . $row['id'] );
 			echo '<p><button type="submit" class="button">' . esc_html__( 'Revoke link', 'estrategiaweb-toolkit' ) . '</button></p></form>';
@@ -494,7 +494,7 @@ final class Admin {
 					</tr>
 					<tr>
 						<th scope="row"><?php esc_html_e( 'Files', 'estrategiaweb-toolkit' ); ?></th>
-						<td><?php echo self::files_status(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built escaped. ?></td>
+						<td><?php echo wp_kses( self::files_status(), \EstrategiaWeb\Kses::allowed() ); ?></td>
 					</tr>
 				</table>
 				<?php \EstrategiaWeb\Admin\Admin_UI::box_close(); ?>

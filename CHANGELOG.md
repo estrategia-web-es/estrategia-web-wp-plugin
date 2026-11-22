@@ -9,6 +9,20 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.12.1 — 22-11-2026 (the WordPress.org review rules, on everything)
+
+**What each site must do:** nothing.
+
+- Merges the WordPress.org review branch (2.10.1 to 2.10.4, approved on
+  20-11-2026 and published by SVN on 22-11-2026) into 2.12.0. The File field
+  and dossier mode (2.11, 2.12) are brought to the same rules: every
+  `$_POST`/`$_GET`/`$_FILES` inside a WordPress sanitizing function in the
+  same expression, everything printed escaped at the echo.
+- `node tools/wporg.mjs check` now fails before Plugin Check if any PHP
+  outside `tests/` carries a `phpcs:ignore` for input sanitizing or output
+  escaping (the five reviews were about exactly that).
+- `Kses::allowed()` lets `<input>` keep `accept` and `multiple` (File field).
+
 ## 2.12.0 — 20-11-2026 (forms: help text on every field)
 
 **What each site must do:** nothing. A field without help renders as before.
@@ -69,6 +83,79 @@ documents, and nobody has them all at once.
   client» and «Revoke link» have no level 2 test. `tests/run.mjs` mounts
   `/estrategia-web-forms-private` per shard: without it each Playground
   worker had its own copy of that folder.
+
+## 2.10.4 — 15-11-2026 (WordPress.org: the fifth review, no phpcs:ignore on input)
+
+**What each site must do:** nothing.
+
+- The review of 15-11-2026 did not accept handling a request value before a
+  sanitizing function, not even with a `phpcs:ignore` and a reason. The four
+  that were left are gone: none remains for `ValidatedSanitizedInput`.
+- A code banner's save no longer lists what the filter removed (that needed
+  the raw value). The screen carries a fixed note instead: the code is
+  filtered when saved and when shown, and inline JavaScript with `&` or `<`
+  breaks. The list stays for code stored unfiltered before 2.10.3.
+- The content-type fields of the classic screen are read by
+  `Registrar::posted()`, with the WordPress sanitizer of each type (an embed
+  through `wp_kses()` keeping the iframe's `src`), for the save and for the
+  required-fields check.
+- The redirects CSV import sanitizes the upload's temporary path.
+
+## 2.10.3 — 13-11-2026 (WordPress.org: the fourth review, input sanitized on save)
+
+**What each site must do:** nothing. Code banners already stored keep their
+code as it was until they are saved again; then it is stored filtered, the
+same way it was already shown since 2.10.2.
+
+- The review asked to sanitize on input, not only on output. The code of a
+  code banner is stored through `wp_kses()` with `Kses::banner()` (meta box,
+  REST and the AdRotate migration, through the meta's `sanitize_callback`).
+  What the filter removed is listed once on the next screen, from a transient;
+  through REST the response carries the filtered code.
+- The banner meta box, the content-type fields of the classic screen and the
+  redirect of the old menu pages read `$_POST`/`$_GET` one key at a time and
+  sanitize each one there, instead of taking the whole array.
+
+## 2.10.2 — 09-11-2026 (WordPress.org: the third review, code banners filtered)
+
+**What each site must do:** nothing. The six code banners of Gastronòmicament
+(09-11-2026) come out the same: none has inline JavaScript with `&` or `<`.
+
+The review of 08-11-2026 did not accept the code of a code banner printed raw,
+and asked for the banner list's `<style>` to go through the enqueue functions.
+
+- The code of a code banner goes through `wp_kses()` with `Kses::banner()`
+  (scripts, `<ins>`, iframes, linked images), and so does the whole zone at
+  the `printf`: `render.php` no longer has an escaping `phpcs:ignore`. Saving
+  it still needs `unfiltered_html`.
+- **The trap, and what was done about it:** `wp_kses()` normalizes entities
+  inside `<script>` too, so inline JavaScript with `&&` comes out as
+  `&amp;&amp;` and stops running. `Kses::losses()` compares what goes in with
+  what comes out, and the banner's edit screen lists what would be lost.
+- The state pills of the banner list: `wp_add_inline_style( 'wp-admin', … )`
+  on `admin_enqueue_scripts`, instead of an echoed `<style>`.
+- New `modules/banners/tests/code.test.mjs` (level 2).
+
+## 2.10.1 — 06-11-2026 (WordPress.org: the second review, escaping)
+
+**What each site must do:** nothing.
+
+The review of 05-11-2026 asked to escape what is printed at the point of
+output. Of the 55 `phpcs:ignore` on escaping, 5 stay, each with its reason:
+the inner blocks of the form and the carousel, `/llms.txt` (text/plain), the
+redirects CSV, and the code of a code banner, which is raw on purpose and
+controlled when it is saved (`unfiltered_html`; header of
+`modules/banners/blocks/banner-zone/render.php`).
+
+- New `includes/class-kses.php`: what `wp_kses()` may keep. Its header says how
+  it is maintained, and `tests/kses.test.mjs` fails if a directive of the
+  cookie notice is missing from it.
+- In the output of icons `viewBox` comes out as `viewbox` and `/>` as ` />`,
+  which is what `wp_kses()` writes. Browsers read both the same in HTML.
+- `Author URI` is now the GitHub organisation: the review's checker could not
+  open estrategiaweb.es.
+- `tests/run.mjs`: a golden WordPress emptied by the temp cleanup is rebuilt
+  instead of failing every boot.
 
 ## 2.10.0 — 03-11-2026 (WordPress.org: the name, the first review, llms.txt and German)
 

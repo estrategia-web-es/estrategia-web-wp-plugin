@@ -8,7 +8,8 @@
  * image banner and the code is ignored; that is the whole rule.
  *
  *   estrategia_web_banner_link     URL the image links to (sponsored, new tab)
- *   estrategia_web_banner_code     raw HTML; only users with unfiltered_html
+ *   estrategia_web_banner_code     HTML; only users with unfiltered_html write it,
+ *                                  and it is filtered when shown (Kses::banner())
  *   estrategia_web_banner_start    unix time, 0 = from now
  *   estrategia_web_banner_end      unix time, 0 = no end
  *   estrategia_web_banner_weight   1-10, how often it comes up when a zone shows fewer than it has
@@ -102,15 +103,18 @@ final class Post_Type {
 			);
 		}
 		add_action(
-			'admin_head-edit.php',
-			static function (): void {
-				if ( self::TYPE !== ( $GLOBALS['typenow'] ?? '' ) ) {
+			'admin_enqueue_scripts',
+			static function ( string $hook ): void {
+				if ( 'edit.php' !== $hook || self::TYPE !== ( $GLOBALS['typenow'] ?? '' ) ) {
 					return;
 				}
 				// The state as a pill: green showing, blue scheduled, grey expired or off. WordPress's admin colours.
-				echo '<style>.ewb-state{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;line-height:20px;background:#f0f0f1;color:#50575e}'
+				wp_add_inline_style(
+					'wp-admin',
+					'.ewb-state{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;line-height:20px;background:#f0f0f1;color:#50575e}'
 					. '.ewb-state--active{background:#edfaef;color:#00650f}.ewb-state--scheduled{background:#f0f6fc;color:#0a4b78}'
-					. '.column-ewb_state,.column-ewb_views,.column-ewb_clicks{width:9%}.column-ewb_dates{width:16%}</style>';
+					. '.column-ewb_state,.column-ewb_views,.column-ewb_clicks{width:9%}.column-ewb_dates{width:16%}'
+				);
 			}
 		);
 	}
@@ -178,10 +182,12 @@ final class Post_Type {
 			self::TYPE,
 			self::FIELDS['code'],
 			array(
-				'type'          => 'string',
-				'single'        => true,
-				'show_in_rest'  => true,
-				'auth_callback' => static fn() => current_user_can( 'unfiltered_html' ),
+				'type'              => 'string',
+				'single'            => true,
+				'show_in_rest'      => true,
+				'auth_callback'     => static fn() => current_user_can( 'unfiltered_html' ),
+				// Also through REST and the AdRotate migration (wp-cli), not only the meta box.
+				'sanitize_callback' => static fn( $value ) => wp_kses( (string) $value, \EstrategiaWeb\Kses::banner() ),
 			)
 		);
 	}
@@ -237,6 +243,20 @@ final class Post_Type {
 			<input type="url" id="ewb-link" name="ewb[link]" value="<?php echo esc_attr( $d['link'] ); ?>" class="widefat" placeholder="https://"></p>
 		<p><label for="ewb-code"><strong><?php esc_html_e( 'Code (adserver, iframe)', 'estrategiaweb-toolkit' ); ?></strong></label><br>
 			<textarea id="ewb-code" name="ewb[code]" rows="6" class="widefat code" <?php disabled( ! current_user_can( 'unfiltered_html' ) ); ?>><?php echo esc_textarea( $d['code'] ); ?></textarea></p>
+		<p class="description"><?php echo esc_html( __( 'This code is filtered when it is saved and when it is shown.', 'estrategiaweb-toolkit' ) . ' ' . __( 'Inline JavaScript with & or < breaks this way: move it to a .js file and load it with <script src>.', 'estrategiaweb-toolkit' ) ); ?></p>
+		<?php
+		// Code stored before 2.10.3 went in unfiltered: what the filter (Kses::banner()) removes when it is shown,
+		// said here until it is saved again. A save cannot list its own losses: that needs the raw request value,
+		// and the WordPress.org review of 15-11-2026 did not accept reading it (not even to compare). Hence the note above.
+		$lost = '' !== trim( $d['code'] ) ? \EstrategiaWeb\Kses::losses( $d['code'], \EstrategiaWeb\Kses::banner() ) : array();
+		if ( $lost ) {
+			echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'When it is shown, this code is filtered and these parts are removed or changed:', 'estrategiaweb-toolkit' ) . '</p><ul>';
+			foreach ( array_slice( $lost, 0, 10 ) as $line ) {
+				echo '<li><code>' . esc_html( $line ) . '</code></li>';
+			}
+			echo '</ul><p>' . esc_html__( 'Inline JavaScript with & or < breaks this way: move it to a .js file and load it with <script src>.', 'estrategiaweb-toolkit' ) . '</p></div>';
+		}
+		?>
 		<p style="display:flex;gap:24px;flex-wrap:wrap">
 			<label><strong><?php esc_html_e( 'Starts', 'estrategiaweb-toolkit' ); ?></strong><br><input type="datetime-local" name="ewb[start]" value="<?php echo esc_attr( self::local( $d['start'] ) ); ?>"></label>
 			<label><strong><?php esc_html_e( 'Ends', 'estrategiaweb-toolkit' ); ?></strong><br><input type="datetime-local" name="ewb[end]" value="<?php echo esc_attr( self::local( $d['end'] ) ); ?>"></label>
@@ -269,14 +289,20 @@ final class Post_Type {
 		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ! current_user_can( 'edit_post', $post_id ) ) {
 			return;
 		}
-		$in = isset( $_POST['ewb'] ) && is_array( $_POST['ewb'] ) ? wp_unslash( $_POST['ewb'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- each key sanitized below.
-		update_post_meta( $post_id, self::FIELDS['link'], esc_url_raw( (string) ( $in['link'] ?? '' ) ) );
-		update_post_meta( $post_id, self::FIELDS['start'], self::unix( sanitize_text_field( (string) ( $in['start'] ?? '' ) ) ) );
-		update_post_meta( $post_id, self::FIELDS['end'], self::unix( sanitize_text_field( (string) ( $in['end'] ?? '' ) ) ) );
-		update_post_meta( $post_id, self::FIELDS['weight'], min( 10, max( 1, (int) ( $in['weight'] ?? 5 ) ) ) );
-		if ( current_user_can( 'unfiltered_html' ) && isset( $in['code'] ) ) {
-			update_post_meta( $post_id, self::FIELDS['code'], (string) $in['code'] );
+		// Each field is read and sanitized on its own line (WordPress.org review of 12-11-2026: no array taken whole).
+		$link   = isset( $_POST['ewb']['link'] ) && is_string( $_POST['ewb']['link'] ) ? esc_url_raw( wp_unslash( $_POST['ewb']['link'] ) ) : '';
+		$start  = isset( $_POST['ewb']['start'] ) && is_string( $_POST['ewb']['start'] ) ? sanitize_text_field( wp_unslash( $_POST['ewb']['start'] ) ) : '';
+		$end    = isset( $_POST['ewb']['end'] ) && is_string( $_POST['ewb']['end'] ) ? sanitize_text_field( wp_unslash( $_POST['ewb']['end'] ) ) : '';
+		$weight = isset( $_POST['ewb']['weight'] ) ? absint( $_POST['ewb']['weight'] ) : 5;
+		update_post_meta( $post_id, self::FIELDS['link'], $link );
+		update_post_meta( $post_id, self::FIELDS['start'], self::unix( $start ) );
+		update_post_meta( $post_id, self::FIELDS['end'], self::unix( $end ) );
+		update_post_meta( $post_id, self::FIELDS['weight'], min( 10, max( 1, $weight ) ) );
+		if ( ! current_user_can( 'unfiltered_html' ) || ! isset( $_POST['ewb']['code'] ) || ! is_string( $_POST['ewb']['code'] ) ) {
+			return;
 		}
+		// Stored already filtered, with the same list the banner zone uses when it shows it (box() says so).
+		update_post_meta( $post_id, self::FIELDS['code'], wp_kses( wp_unslash( $_POST['ewb']['code'] ), \EstrategiaWeb\Kses::banner() ) );
 	}
 
 	/**

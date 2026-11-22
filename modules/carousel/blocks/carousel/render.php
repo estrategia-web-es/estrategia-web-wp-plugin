@@ -196,9 +196,9 @@ $estrategia_web_wrapper = get_block_wrapper_attributes(
 );
 ?>
 <div
-	<?php echo $estrategia_web_wrapper; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped by core. ?>
+	<?php echo wp_kses_data( $estrategia_web_wrapper ); ?>
 	data-wp-interactive="estrategia-web/carousel"
-	<?php echo wp_interactivity_data_wp_context( $estrategia_web_context ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+	<?php echo wp_kses_data( wp_interactivity_data_wp_context( $estrategia_web_context ) ); ?>
 	data-wp-init="callbacks.init"
 	data-wp-class--is-ready="context.ready"
 	data-wp-class--is-static="state.isStatic"
@@ -265,7 +265,7 @@ $estrategia_web_wrapper = get_block_wrapper_attributes(
 			class="estrategia-web-carousel__dot"
 			aria-controls="<?php echo esc_attr( $estrategia_web_track_id ); ?>"
 			aria-label="<?php echo esc_attr( sprintf( /* translators: %d: slide number. */ __( 'Go to slide %d', 'estrategiaweb-toolkit' ), $estrategia_web_i + 1 ) ); ?>"
-			<?php echo wp_interactivity_data_wp_context( array( 'index' => $estrategia_web_i ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+			<?php echo wp_kses_data( wp_interactivity_data_wp_context( array( 'index' => $estrategia_web_i ) ) ); ?>
 			data-wp-on--click="actions.goTo"
 			data-wp-bind--aria-current="state.isCurrentDot"
 		></button>

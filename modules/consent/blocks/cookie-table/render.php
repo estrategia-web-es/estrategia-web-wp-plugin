@@ -11,4 +11,4 @@
 
 defined( 'ABSPATH' ) || exit;
 
-echo \EstrategiaWeb\Site\Cookie_Table::render( (array) $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput -- built with escaping in render().
+echo wp_kses( \EstrategiaWeb\Site\Cookie_Table::render( (array) $attributes ), \EstrategiaWeb\Kses::allowed() );

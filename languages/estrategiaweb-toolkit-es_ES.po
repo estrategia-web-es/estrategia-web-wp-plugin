@@ -69,7 +69,7 @@ msgid "Not loaded: turn on %s."
 msgstr "No se carga: enciende %s."
 
 #: includes/admin/class-modules-page.php:176
-#: modules/banners/includes/class-post-type.php:318
+#: modules/banners/includes/class-post-type.php:344
 msgid "Off"
 msgstr "Apagado"
 
@@ -495,98 +495,98 @@ msgstr "Zona (su slug)"
 msgid "How many at a time (0: all, one under another)"
 msgstr "Cuántos a la vez (0: todos, uno debajo de otro)"
 
-#: modules/banners/includes/class-post-type.php:68
-#: modules/banners/includes/class-post-type.php:317
+#: modules/banners/includes/class-post-type.php:69
+#: modules/banners/includes/class-post-type.php:343
 msgid "Expired"
 msgstr "Caducado"
 
-#: modules/banners/includes/class-post-type.php:68
-#: modules/banners/includes/class-post-type.php:316
+#: modules/banners/includes/class-post-type.php:69
+#: modules/banners/includes/class-post-type.php:342
 msgid "Scheduled"
 msgstr "Programado"
 
-#: modules/banners/includes/class-post-type.php:68
-#: modules/banners/includes/class-post-type.php:315
+#: modules/banners/includes/class-post-type.php:69
+#: modules/banners/includes/class-post-type.php:341
 msgid "Showing"
 msgstr "Se muestra"
 
-#: modules/banners/includes/class-post-type.php:123
+#: modules/banners/includes/class-post-type.php:127
 msgid "Banners"
 msgstr "Banners"
 
-#: modules/banners/includes/class-post-type.php:124
-#: modules/banners/includes/class-post-type.php:213
+#: modules/banners/includes/class-post-type.php:128
+#: modules/banners/includes/class-post-type.php:219
 msgid "Banner"
 msgstr "Banner"
 
 #
-#: modules/banners/includes/class-post-type.php:125
-#: modules/banners/includes/class-post-type.php:126
+#: modules/banners/includes/class-post-type.php:129
+#: modules/banners/includes/class-post-type.php:130
 msgid "Add banner"
 msgstr "Añadir banner"
 
 #
-#: modules/banners/includes/class-post-type.php:127
+#: modules/banners/includes/class-post-type.php:131
 msgid "Edit banner"
 msgstr "Editar banner"
 
-#: modules/banners/includes/class-post-type.php:128
+#: modules/banners/includes/class-post-type.php:132
 msgid "New banner"
 msgstr "Nuevo banner"
 
 #
-#: modules/banners/includes/class-post-type.php:129
+#: modules/banners/includes/class-post-type.php:133
 msgid "Search banners"
 msgstr "Buscar banners"
 
 #
-#: modules/banners/includes/class-post-type.php:130
+#: modules/banners/includes/class-post-type.php:134
 msgid "No banners found."
 msgstr "No hay banners."
 
 #
-#: modules/banners/includes/class-post-type.php:131
+#: modules/banners/includes/class-post-type.php:135
 msgid "No banners found in Trash."
 msgstr "No hay banners en la papelera."
 
 #
-#: modules/banners/includes/class-post-type.php:132
+#: modules/banners/includes/class-post-type.php:136
 msgid "Banner image"
 msgstr "Imagen del banner"
 
 #
-#: modules/banners/includes/class-post-type.php:133
+#: modules/banners/includes/class-post-type.php:137
 msgid "Set banner image"
 msgstr "Poner imagen del banner"
 
-#: modules/banners/includes/class-post-type.php:158
+#: modules/banners/includes/class-post-type.php:162
 msgid "Banner zones"
 msgstr "Zonas de banners"
 
-#: modules/banners/includes/class-post-type.php:159
+#: modules/banners/includes/class-post-type.php:163
 msgid "Banner zone"
 msgstr "Zona de banners"
 
-#: modules/banners/includes/class-post-type.php:160
+#: modules/banners/includes/class-post-type.php:164
 msgid "Zones"
 msgstr "Zonas"
 
 #
-#: modules/banners/includes/class-post-type.php:161
+#: modules/banners/includes/class-post-type.php:165
 msgid "Add zone"
 msgstr "Añadir zona"
 
 #
-#: modules/banners/includes/class-post-type.php:162
+#: modules/banners/includes/class-post-type.php:166
 msgid "All zones"
 msgstr "Todas las zonas"
 
 #
-#: modules/banners/includes/class-post-type.php:214
+#: modules/banners/includes/class-post-type.php:220
 msgid "Statistics"
 msgstr "Estadísticas"
 
-#: modules/banners/includes/class-post-type.php:235
+#: modules/banners/includes/class-post-type.php:241
 msgid ""
 "With a banner image (box on the right) it is an image banner with its link; "
 "without one, the code below is shown."
@@ -594,30 +594,50 @@ msgstr ""
 "Con imagen del banner (caja de la derecha) es un banner de imagen con su "
 "enlace; sin imagen, se muestra el código de abajo."
 
-#: modules/banners/includes/class-post-type.php:236
+#: modules/banners/includes/class-post-type.php:242
 #: modules/forms/includes/admin/class-admin.php:258
 #: modules/social/includes/class-admin.php:94
 #: modules/social/includes/class-admin.php:143
 msgid "Link"
 msgstr "Enlace"
 
-#: modules/banners/includes/class-post-type.php:238
+#: modules/banners/includes/class-post-type.php:244
 msgid "Code (adserver, iframe)"
 msgstr "Código (adserver, iframe)"
 
-#: modules/banners/includes/class-post-type.php:241
+#: modules/banners/includes/class-post-type.php:246
+#: modules/banners/includes/class-post-type.php:257
+msgid ""
+"Inline JavaScript with & or < breaks this way: move it to a .js file and "
+"load it with <script src>."
+msgstr ""
+"El JavaScript en línea con & o < se rompe así: pásalo a un fichero .js y "
+"cárgalo con <script src>."
+
+#: modules/banners/includes/class-post-type.php:246
+msgid "This code is filtered when it is saved and when it is shown."
+msgstr "Este código se filtra al guardarlo y al mostrarlo."
+
+#: modules/banners/includes/class-post-type.php:253
+msgid ""
+"When it is shown, this code is filtered and these parts are removed or "
+"changed:"
+msgstr ""
+"Al mostrarse, este código se filtra y estas partes se quitan o cambian:"
+
+#: modules/banners/includes/class-post-type.php:261
 msgid "Starts"
 msgstr "Empieza"
 
-#: modules/banners/includes/class-post-type.php:242
+#: modules/banners/includes/class-post-type.php:262
 msgid "Ends"
 msgstr "Termina"
 
-#: modules/banners/includes/class-post-type.php:243
+#: modules/banners/includes/class-post-type.php:263
 msgid "Weight (1-10)"
 msgstr "Peso (1-10)"
 
-#: modules/banners/includes/class-post-type.php:245
+#: modules/banners/includes/class-post-type.php:265
 msgid ""
 "Empty dates: no limit. The weight only matters when a zone shows fewer "
 "banners than it has."
@@ -626,32 +646,32 @@ msgstr ""
 "banners de los que tiene."
 
 #. translators: 1: views, 2: clicks.
-#: modules/banners/includes/class-post-type.php:253
+#: modules/banners/includes/class-post-type.php:273
 #, php-format
 msgid "Total: %1$s views, %2$s clicks"
 msgstr "Total: %1$s vistas, %2$s clics"
 
 #
-#: modules/banners/includes/class-post-type.php:255
+#: modules/banners/includes/class-post-type.php:275
 msgid "No statistics yet."
 msgstr "Todavía no hay estadísticas."
 
-#: modules/banners/includes/class-post-type.php:258
-#: modules/banners/includes/class-post-type.php:293
+#: modules/banners/includes/class-post-type.php:278
+#: modules/banners/includes/class-post-type.php:319
 msgid "Clicks"
 msgstr "Clics"
 
-#: modules/banners/includes/class-post-type.php:258
+#: modules/banners/includes/class-post-type.php:278
 msgid "Day"
 msgstr "Día"
 
 #
-#: modules/banners/includes/class-post-type.php:258
-#: modules/banners/includes/class-post-type.php:292
+#: modules/banners/includes/class-post-type.php:278
+#: modules/banners/includes/class-post-type.php:318
 msgid "Views"
 msgstr "Vistas"
 
-#: modules/banners/includes/class-post-type.php:262
+#: modules/banners/includes/class-post-type.php:282
 msgid ""
 "Last 60 days with activity. A view is counted when the banner is on screen; "
 "code banners (adservers) count their clicks on their own side."
@@ -660,12 +680,12 @@ msgstr ""
 "pantalla; los banners de código (adservers) cuentan sus clics por su cuenta."
 
 #
-#: modules/banners/includes/class-post-type.php:290
+#: modules/banners/includes/class-post-type.php:316
 msgid "Dates"
 msgstr "Fechas"
 
 #
-#: modules/banners/includes/class-post-type.php:291
+#: modules/banners/includes/class-post-type.php:317
 #: modules/forms/includes/admin/class-admin.php:256
 msgid "State"
 msgstr "Estado"
@@ -2088,7 +2108,7 @@ msgstr "Bajar"
 
 #: modules/content-types/includes/admin/class-page.php:361
 #: modules/content-types/includes/class-fields-panel.php:192
-#: modules/forms/includes/class-blocks.php:376
+#: modules/forms/includes/class-blocks.php:381
 #: modules/newsletter/includes/class-screen.php:74
 #: modules/social/includes/class-admin.php:70
 msgid "Remove"
@@ -2450,8 +2470,8 @@ msgstr "Copiar el lunes a todos los días"
 msgid "Monday’s hours copied to every day."
 msgstr "Horario del lunes copiado a todos los días."
 
-#: modules/content-types/includes/class-fields-panel.php:348
-#: modules/content-types/includes/class-fields-panel.php:354
+#: modules/content-types/includes/class-fields-panel.php:352
+#: modules/content-types/includes/class-fields-panel.php:358
 msgid "— None —"
 msgstr "— Ninguno —"
 
@@ -2502,7 +2522,7 @@ msgstr ""
 "sus DIFERENCIAS (DIFFERENCES) y luego ejecútala sin --dry-run."
 
 #. translators: %s: list of field names
-#: modules/content-types/includes/class-registrar.php:140
+#: modules/content-types/includes/class-registrar.php:146
 #, php-format
 msgid ""
 "Not published: it has been saved as a draft. Fill in these fields to publish "
@@ -2512,7 +2532,7 @@ msgstr ""
 "publicarlo: %s."
 
 #. translators: %s: list of field names
-#: modules/content-types/includes/class-registrar.php:142
+#: modules/content-types/includes/class-registrar.php:148
 #, php-format
 msgid ""
 "These fields cannot be empty in a published item, so they keep their "
@@ -2522,14 +2542,14 @@ msgstr ""
 "conservan su valor anterior: %s."
 
 #. translators: %s: post type name
-#: modules/content-types/includes/class-registrar.php:162
+#: modules/content-types/includes/class-registrar.php:168
 #, php-format
 msgid ""
 "The type “%s” is already registered by other code: this file is ignored."
 msgstr "El tipo «%s» ya lo registra otro código: este fichero no se usa."
 
 #. translators: %s: taxonomy name
-#: modules/content-types/includes/class-registrar.php:194
+#: modules/content-types/includes/class-registrar.php:200
 #, php-format
 msgid ""
 "The taxonomy “%s” is already registered by other code: it is not registered "
@@ -2539,22 +2559,22 @@ msgstr ""
 
 #. translators: %s: singular name of a taxonomy, e.g. Cuisine
 #. translators: %s: singular name of a content type, e.g. Restaurant
-#: modules/content-types/includes/class-registrar.php:209
-#: modules/content-types/includes/class-registrar.php:297
+#: modules/content-types/includes/class-registrar.php:215
+#: modules/content-types/includes/class-registrar.php:303
 #, php-format
 msgid "Add %s"
 msgstr "Añadir %s"
 
 #. translators: %s: singular name of a taxonomy
 #. translators: %s: singular name of a content type
-#: modules/content-types/includes/class-registrar.php:211
-#: modules/content-types/includes/class-registrar.php:299
+#: modules/content-types/includes/class-registrar.php:217
+#: modules/content-types/includes/class-registrar.php:305
 #, php-format
 msgid "Edit %s"
 msgstr "Editar %s"
 
 #. translators: 1: field name, 2: post type name
-#: modules/content-types/includes/class-registrar.php:282
+#: modules/content-types/includes/class-registrar.php:288
 #, php-format
 msgid ""
 "The relation “%1$s” points to the type “%2$s”, which is not registered: it "
@@ -2564,28 +2584,28 @@ msgstr ""
 "guardar 0."
 
 #. translators: %s: singular name of a content type
-#: modules/content-types/includes/class-registrar.php:301
+#: modules/content-types/includes/class-registrar.php:307
 #, php-format
 msgid "View %s"
 msgstr "Ver %s"
 
 #. translators: %s: plural name of a content type, e.g. Restaurants
-#: modules/content-types/includes/class-registrar.php:303
+#: modules/content-types/includes/class-registrar.php:309
 #, php-format
 msgid "Search %s"
 msgstr "Buscar %s"
 
-#: modules/content-types/includes/class-registrar.php:304
+#: modules/content-types/includes/class-registrar.php:310
 #: modules/newsletter/includes/class-screen.php:78
 msgid "Nothing found."
 msgstr "No se ha encontrado nada."
 
-#: modules/content-types/includes/class-registrar.php:305
+#: modules/content-types/includes/class-registrar.php:311
 msgid "Nothing found in the trash."
 msgstr "No hay nada en la papelera."
 
 #. translators: %s: list of field names
-#: modules/content-types/includes/class-registrar.php:384
+#: modules/content-types/includes/class-registrar.php:422
 #, php-format
 msgid "Fill in these fields before publishing: %s."
 msgstr "Rellena estos campos antes de publicar: %s."
@@ -3331,7 +3351,9 @@ msgstr "Debajo del campo. Vacío: los tipos aceptados y el tamaño máximo."
 msgid ""
 "Under the field, in small print: instructions, where to find the data. Leave "
 "the placeholder for an example."
-msgstr "Debajo del campo, en letra pequeña: instrucciones o dónde encontrar el dato. El marcador de posición, para un ejemplo."
+msgstr ""
+"Debajo del campo, en letra pequeña: instrucciones o dónde encontrar el dato. "
+"El marcador de posición, para un ejemplo."
 
 #: modules/forms/assets/editor.js:263
 msgid "First option (empty value)"
@@ -3345,7 +3367,9 @@ msgstr "Texto de ejemplo"
 msgid ""
 "An example of what goes here. It disappears when typing: instructions go in "
 "«Help text»."
-msgstr "Un ejemplo de lo que va aquí. Desaparece al escribir: las instrucciones van en «Texto de ayuda»."
+msgstr ""
+"Un ejemplo de lo que va aquí. Desaparece al escribir: las instrucciones van "
+"en «Texto de ayuda»."
 
 #: modules/forms/assets/editor.js:272
 msgid "Autocomplete"
@@ -4181,7 +4205,7 @@ msgstr ""
 "intentarlo."
 
 #: modules/forms/includes/class-blocks.php:117
-#: modules/forms/includes/class-blocks.php:172
+#: modules/forms/includes/class-blocks.php:173
 msgid "Leave this field empty"
 msgstr "Deja este campo vacío"
 
@@ -4214,32 +4238,32 @@ msgstr ""
 msgid "Already started? We will send you your link"
 msgstr "¿Ya la has empezado? Te enviamos tu enlace"
 
-#: modules/forms/includes/class-blocks.php:176
+#: modules/forms/includes/class-blocks.php:179
 msgid "The email you used"
 msgstr "El correo que usaste"
 
-#: modules/forms/includes/class-blocks.php:178
+#: modules/forms/includes/class-blocks.php:182
 msgid "Send me the link"
 msgstr "Envíame el enlace"
 
-#: modules/forms/includes/class-blocks.php:329
+#: modules/forms/includes/class-blocks.php:334
 msgid "Choose an option"
 msgstr "Elige una opción"
 
 #. translators: 1: accepted types, e.g. «PDF, JPG, PNG»; 2: maximum size in MB.
-#: modules/forms/includes/class-blocks.php:399
+#: modules/forms/includes/class-blocks.php:404
 #, php-format
 msgid "%1$s. Up to %2$d MB per file."
 msgstr "%1$s. Hasta %2$d MB por archivo."
 
-#: modules/forms/includes/class-blocks.php:407
+#: modules/forms/includes/class-blocks.php:412
 msgid "Send"
 msgstr "Enviar"
 
 #. translators: the text between braces becomes the link to the privacy policy.
 #. translators: the text between braces becomes the link to the privacy policy; {text|url} links to that url.
-#: modules/forms/includes/class-blocks.php:456
-#: modules/forms/includes/class-blocks.php:482
+#: modules/forms/includes/class-blocks.php:461
+#: modules/forms/includes/class-blocks.php:487
 msgid "I have read and accept the {privacy policy}."
 msgstr "He leído y acepto la {política de privacidad}."
 

@@ -238,7 +238,7 @@ final class Fields_Panel {
 			 * @param string   $group The group's key.
 			 * @param \WP_Post $post  The post being edited.
 			 */
-			echo apply_filters( 'estrategia_web_content_types_box_preview', '', $group['key'], $post ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped by its callbacks.
+			echo wp_kses_post( apply_filters( 'estrategia_web_content_types_box_preview', '', $group['key'], $post ) );
 			echo '</details>';
 		}
 		echo '</div>';
@@ -260,12 +260,12 @@ final class Fields_Panel {
 			switch ( $field['kind'] ) {
 				case 'textarea':
 				case 'embed':
-					printf( '<textarea class="large-text" rows="3" id="%s" name="%s"%s>%s</textarea>', esc_attr( $id ), esc_attr( $name ), $attrs, esc_textarea( (string) $value ) ); // phpcs:ignore WordPress.Security.EscapeOutput
+					printf( '<textarea class="large-text" rows="3" id="%s" name="%s"%s>%s</textarea>', esc_attr( $id ), esc_attr( $name ), wp_kses_data( $attrs ), esc_textarea( (string) $value ) );
 					break;
 				case 'select':
 				case 'relation':
 				case 'rating':
-					printf( '<select id="%s" name="%s"%s>', esc_attr( $id ), esc_attr( $name ), $attrs ); // phpcs:ignore WordPress.Security.EscapeOutput
+					printf( '<select id="%s" name="%s"%s>', esc_attr( $id ), esc_attr( $name ), wp_kses_data( $attrs ) );
 					foreach ( self::options( $field ) as $v => $text ) {
 						printf( '<option value="%s"%s>%s</option>', esc_attr( (string) $v ), selected( (string) $value, (string) $v, false ), esc_html( $text ) );
 					}
@@ -273,7 +273,7 @@ final class Fields_Panel {
 					break;
 				case 'boolean':
 					// The hidden 0 first: an unticked box sends nothing.
-					printf( '<input type="hidden" name="%s" value="0"><input type="checkbox" id="%s" name="%s" value="1"%s%s>', esc_attr( $name ), esc_attr( $id ), esc_attr( $name ), checked( (bool) $value, true, false ), $attrs ); // phpcs:ignore WordPress.Security.EscapeOutput
+					printf( '<input type="hidden" name="%s" value="0"><input type="checkbox" id="%s" name="%s" value="1"%s%s>', esc_attr( $name ), esc_attr( $id ), esc_attr( $name ), checked( (bool) $value, true, false ), wp_kses_data( $attrs ) );
 					break;
 				case 'hours':
 					// One line per day: «08:00-14:00, 16:00-20:00»; empty = closed. fields-box.js adds «Copy Monday to every day».
@@ -287,7 +287,7 @@ final class Fields_Panel {
 							esc_attr( $name ),
 							esc_attr( $day ),
 							esc_attr( Hours::to_line( $value, $day ) ),
-							$attrs // phpcs:ignore WordPress.Security.EscapeOutput
+							wp_kses_data( $attrs )
 						);
 					}
 					echo '</fieldset>';
@@ -302,13 +302,13 @@ final class Fields_Panel {
 						esc_attr( $id ),
 						esc_attr( $name ),
 						(int) $value,
-						$attrs // phpcs:ignore WordPress.Security.EscapeOutput
+						wp_kses_data( $attrs )
 					);
 					break;
 				default:
 					$html_type = array( 'url' => 'url', 'email' => 'email', 'tel' => 'tel', 'date' => 'date', 'number' => 'number' )[ $field['kind'] ] ?? 'text';
 					$range     = 'number' === $field['kind'] ? ( null !== $field['min'] ? ' min="' . esc_attr( (string) $field['min'] ) . '"' : '' ) . ( null !== $field['max'] ? ' max="' . esc_attr( (string) $field['max'] ) . '"' : '' ) . ( $field['integer'] ? ' step="1"' : ' step="any"' ) : '';
-					printf( '<input type="%s" class="regular-text" id="%s" name="%s" value="%s"%s%s>', esc_attr( $html_type ), esc_attr( $id ), esc_attr( $name ), esc_attr( (string) $value ), $range, $attrs ); // phpcs:ignore WordPress.Security.EscapeOutput
+					printf( '<input type="%s" class="regular-text" id="%s" name="%s" value="%s"%s%s>', esc_attr( $html_type ), esc_attr( $id ), esc_attr( $name ), esc_attr( (string) $value ), wp_kses_data( $range ), wp_kses_data( $attrs ) );
 			}
 			if ( '' !== $field['help'] ) {
 				echo '<p class="description">' . esc_html( $field['help'] ) . '</p>';
@@ -324,17 +324,21 @@ final class Fields_Panel {
 			return;
 		}
 		$config = self::config( $post->post_type, $post_id );
-		$input  = isset( $_POST['estrategia_web_ct'] ) && is_array( $_POST['estrategia_web_ct'] ) ? wp_unslash( $_POST['estrategia_web_ct'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- sanitized on save (sanitize_meta).
+		// One field at a time, read sanitized by Registrar::posted() and validated by Registrar::sanitizer().
+		// The trap: both take the field as defined (type, meta_type, options…), not config()'s copy for the screen.
+		$defs = array_column( Loader::type( $post->post_type )['fields'] ?? array(), null, 'name' );
 		foreach ( $config ? $config['fields'] : array() as $field ) {
-			if ( $field['disabled'] || ! array_key_exists( $field['key'], $input ) || isset( Registrar::kept()[ $field['key'] ] ) ) {
+			$key   = $field['key'];
+			$value = isset( $defs[ $key ] ) && ! $field['disabled'] && ! isset( Registrar::kept()[ $key ] ) ? Registrar::posted( $defs[ $key ], $post_id ) : null;
+			if ( null === $value ) {
 				continue; // Locked (WPML), not sent, or a required one emptied on a published post (Registrar::check_required_classic()): left alone.
 			}
-			$value = $input[ $field['key'] ];
-			if ( 'hours' === $field['kind'] && is_array( $value ) ) {
+			if ( is_array( $value ) ) {
 				// One line per day (render_meta_box) → day → ranges; the sanitizer makes it the stored JSON.
 				$value = array_map( static fn( $line ) => Hours::from_line( (string) $line ), array_intersect_key( $value, array_flip( Hours::DAYS ) ) );
 			}
-			update_post_meta( $post_id, $field['key'], is_scalar( $value ) || 'hours' === $field['kind'] ? $value : '' );
+			$value = Registrar::sanitizer( $defs[ $key ] )( $value );
+			update_post_meta( $post_id, $field['key'], $value );
 		}
 	}
 

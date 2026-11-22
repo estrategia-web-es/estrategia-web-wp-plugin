@@ -76,8 +76,58 @@ function tarOfHead() {
   return r.stdout;
 }
 
+// THE REVIEW RULES (2.12.1, 22-11-2026). Five WordPress.org reviews (02 to 15-11-2026) were
+// about the same three things, and Plugin Check never saw them because a phpcs:ignore hid
+// them. So the zip is refused, before Plugin Check runs, if HEAD has outside tests/:
+//   1. a phpcs:ignore of WordPress.Security.ValidatedSanitizedInput (or a bare one on a
+//      line that reads $_POST/$_GET/$_REQUEST/$_FILES/$_COOKIE/$_SERVER) — NO exceptions:
+//      the 15-11-2026 review rejected one with a reason written next to it. The fix is to
+//      put the superglobal inside sanitize_*(), absint(), esc_url_raw(), wp_kses() or
+//      map_deep( …, 'sanitize_text_field' ) in the same expression;
+//   2. a phpcs:ignore of WordPress.Security.EscapeOutput not in ESCAPE_OK. The fix is to
+//      escape at the echo: esc_html(), esc_attr(), esc_url(), wp_kses( $html, Kses::allowed() );
+//   3. a <style> or <script> printed by hand (review of 08-11-2026): wp_add_inline_style()
+//      and wp_enqueue_script() / wp_add_inline_script().
+// NonceVerification ignores are not refused: the approved 2.10.4 has ~40 on read-only
+// $_GET navigation and the reviewers accepted them.
+// How to maintain: ESCAPE_OK holds the four EscapeOutput ignores that were in the APPROVED
+// 2.10.4 (so a reviewer has seen them). One is added only if it is in a version WordPress.org
+// approved, with that version and date; a new one is fixed, not listed. Edge case: the
+// «$content» of a block's inner blocks is in the list because WordPress already rendered and
+// escaped it; a helper that «returns escaped HTML» is NOT — wrap it in wp_kses() at the echo.
+// The trap: a rule that matches text in a string (a help line saying «<script src>») — rule 3
+// only looks at a tag right after a quote, which is how a tag printed by hand starts.
+const ESCAPE_OK = [
+  ["modules/carousel/blocks/carousel/render.php", "echo $content;"], // 2.10.4, approved 20-11-2026: inner blocks.
+  ["modules/forms/includes/class-blocks.php", "echo $content;"], //     2.10.4: inner blocks.
+  ["modules/llms/includes/class-runtime.php", "echo $body;"], //        2.10.4: text/plain with nosniff.
+  ["modules/redirects/includes/admin/class-page.php", "Importer::export()"], // 2.10.4: a CSV download.
+];
+function reviewRules() {
+  // HEAD's files, not the index's: the zip packs HEAD (ls-files would list a staged file HEAD lacks).
+  const files = git("ls-tree", "-r", "--name-only", "HEAD").split("\n").filter((f) => f.endsWith(".php") && !/(^|\/)tests\//.test(f));
+  const bad = [];
+  for (const f of files) {
+    show(f).split("\n").forEach((line, i) => {
+      const at = `${f}:${i + 1}`;
+      const ignore = (line.match(/phpcs:ignore\b(.*)$/) || [])[1];
+      if (ignore !== undefined) {
+        const sniffs = ignore.split("--")[0];
+        if (/ValidatedSanitizedInput/.test(sniffs) || (!/\S/.test(sniffs) && /\$_(POST|GET|REQUEST|FILES|COOKIE|SERVER)\b/.test(line)))
+          bad.push(`${at}  input not sanitized where it is read (rule 1): ${line.trim().slice(0, 140)}`);
+        if (/EscapeOutput/.test(sniffs) && !ESCAPE_OK.some(([file, code]) => file === f && line.includes(code)))
+          bad.push(`${at}  output not escaped at the echo (rule 2): ${line.trim().slice(0, 140)}`);
+      }
+      if (/['"]<(style|script)\b/i.test(line)) bad.push(`${at}  <style>/<script> printed by hand (rule 3): ${line.trim().slice(0, 140)}`);
+    });
+  }
+  if (bad.length) throw new Error(`WordPress.org review rules (header of reviewRules() in tools/wporg.mjs):\n  ${bad.join("\n  ")}`);
+  console.log(`✔ review rules: ${files.length} PHP files, no hidden input, output or inline tags`);
+}
+
 function zip() {
   const version = versions();
+  reviewRules();
   const dirty = git("status", "--porcelain", "--untracked-files=no").trim();
   if (dirty) console.log(`⚠ uncommitted changes are NOT in the zip (it packs HEAD):\n${dirty}`);
   fs.mkdirSync(DIST, { recursive: true });

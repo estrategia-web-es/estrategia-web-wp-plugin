@@ -551,7 +551,7 @@ final class Consent {
 							type="checkbox"
 							name="estrategia-web-consent-category"
 							value="<?php echo esc_attr( $slug ); ?>"
-							<?php echo wp_interactivity_data_wp_context( array( 'category' => $slug ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+							<?php echo wp_kses_data( wp_interactivity_data_wp_context( array( 'category' => $slug ) ) ); ?>
 							data-wp-bind--checked="state.isChecked"
 							data-wp-on--change="actions.toggleCategory"
 						>
@@ -578,7 +578,7 @@ final class Consent {
 			<?php endif; ?>
 		</section>
 		<?php
-		echo wp_interactivity_process_directives( (string) ob_get_clean() ); // phpcs:ignore WordPress.Security.EscapeOutput -- built above with escaping.
+		echo wp_kses( wp_interactivity_process_directives( (string) ob_get_clean() ), \EstrategiaWeb\Kses::allowed() );
 	}
 
 	/**

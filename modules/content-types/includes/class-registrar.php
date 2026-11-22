@@ -72,7 +72,13 @@ final class Registrar {
 		if ( ! $def || '' === $nonce || ! wp_verify_nonce( $nonce, 'estrategia_web_ct_' . $id ) ) {
 			return $data;
 		}
-		$input = isset( $_POST['estrategia_web_ct'] ) && is_array( $_POST['estrategia_web_ct'] ) ? wp_unslash( $_POST['estrategia_web_ct'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- only read to decide; sanitized on save.
+		$input = array();
+		foreach ( $def['fields'] as $field ) {
+			$value = self::posted( $field, $id );
+			if ( null !== $value ) {
+				$input[ $field['name'] ] = $value;
+			}
+		}
 		// A field locked by WPML in a translation is not sent: its stored value is the one that counts.
 		$missing = self::missing( $def['fields'], array_map( static fn( $v ) => is_scalar( $v ) ? $v : '', (array) $input ), $id );
 		if ( ! $missing ) {
@@ -315,6 +321,38 @@ final class Registrar {
 			}
 		}
 		return $out;
+	}
+
+	/**
+	 * A field's value as the classic screen posted it (render_meta_box), read
+	 * through the WordPress sanitizer that fits its type; null if not sent or
+	 * the nonce fails. Hours come as day → line; anything else as a string.
+	 * It is NOT the stored value: sanitizer() still validates it.
+	 *
+	 * Why here and per field (WordPress.org reviews of 12 and 15-11-2026): no
+	 * request array taken whole, and no request value handled before a
+	 * sanitizing function, not even with a phpcs:ignore. The nonce is checked
+	 * again here so the read stands on its own. The trap: an embed is the
+	 * <iframe> Google Maps gives, and sanitize_text_field() would strip it
+	 * whole, src included; escaping it instead hides the src from sanitizer().
+	 *
+	 * @return string|array<string, string>|null
+	 */
+	public static function posted( array $field, int $post_id ) {
+		$name = $field['name'];
+		if ( ! isset( $_POST['estrategia_web_ct_nonce'], $_POST['estrategia_web_ct'][ $name ] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['estrategia_web_ct_nonce'] ) ), 'estrategia_web_ct_' . $post_id ) ) {
+			return null;
+		}
+		if ( is_array( $_POST['estrategia_web_ct'][ $name ] ) ) {
+			return 'hours' === $field['type'] ? map_deep( wp_unslash( $_POST['estrategia_web_ct'][ $name ] ), 'sanitize_text_field' ) : null;
+		}
+		return match ( $field['type'] ) {
+			'textarea' => sanitize_textarea_field( wp_unslash( $_POST['estrategia_web_ct'][ $name ] ) ),
+			'url'      => esc_url_raw( wp_unslash( $_POST['estrategia_web_ct'][ $name ] ) ),
+			'email'    => sanitize_email( wp_unslash( $_POST['estrategia_web_ct'][ $name ] ) ),
+			'embed'    => wp_kses( wp_unslash( $_POST['estrategia_web_ct'][ $name ] ), array( 'iframe' => array( 'src' => true ) ) ),
+			default    => sanitize_text_field( wp_unslash( $_POST['estrategia_web_ct'][ $name ] ) ),
+		};
 	}
 
 	/**

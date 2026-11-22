@@ -151,8 +151,13 @@ final class Menu {
 		if ( null === $tab ) {
 			return;
 		}
-		$args = array_diff_key( wp_unslash( $_GET ), array( 'page' => 1, 'tab' => 1 ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		wp_safe_redirect( Settings_Page::url( $tab, array_map( 'rawurlencode', array_filter( $args, 'is_string' ) ) ) );
+		$args = array();
+		foreach ( array_diff_key( $_GET, array( 'page' => 1, 'tab' => 1 ) ) as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- navigation only; each pair sanitized below.
+			if ( is_string( $value ) ) {
+				$args[ sanitize_key( $key ) ] = rawurlencode( sanitize_text_field( wp_unslash( $value ) ) );
+			}
+		}
+		wp_safe_redirect( Settings_Page::url( $tab, $args ) );
 		exit;
 	}
 }
