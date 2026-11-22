@@ -1,4 +1,8 @@
 <?php
+namespace EstrategiaWeb\Forms;
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Dossier mode (2.11.0): a submission its sender can come back to and
  * complete, with a private link, instead of a message sent once.
@@ -49,11 +53,6 @@
  *   someone) sees it. The no-referrer and no-cache headers cover the other
  *   sites and the caches; the logs are each site's to look after.
  */
-
-namespace EstrategiaWeb\Forms;
-
-defined( 'ABSPATH' ) || exit;
-
 final class Dossier {
 
 	public const PARAM        = 'af_dossier';

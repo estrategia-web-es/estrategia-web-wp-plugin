@@ -331,6 +331,42 @@ final class Files {
 	}
 
 	/**
+	 * One upload to <folder>/<id>, through WordPress's own upload handler
+	 * (2.12.1: WordPress.org forbids move_uploaded_file()). The handler is
+	 * pointed at the private folder with upload_dir for this call only, keeps
+	 * our random id as the name, and does not re-check the type: check()
+	 * already read it from the content. wp_handle_sideload() for the test's
+	 * built uploads (is_upload()), which are not HTTP uploads.
+	 */
+	private static function move( array $upload, string $folder, string $id ): bool {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		$to = static fn( array $dirs ): array => array(
+			'path'    => $folder,
+			'url'     => '',
+			'subdir'  => '',
+			'basedir' => $folder,
+			'baseurl' => '',
+			'error'   => false,
+		) + $dirs;
+		$file      = array(
+			'name'     => $id,
+			'type'     => '',
+			'tmp_name' => $upload['tmp'],
+			'error'    => 0,
+			'size'     => (int) $upload['size'],
+		);
+		$overrides = array(
+			'test_form'                => false,
+			'test_type'                => false,
+			'unique_filename_callback' => static fn(): string => $id,
+		);
+		add_filter( 'upload_dir', $to );
+		$moved = is_uploaded_file( $upload['tmp'] ) ? wp_handle_upload( $file, $overrides ) : wp_handle_sideload( $file, $overrides );
+		remove_filter( 'upload_dir', $to );
+		return empty( $moved['error'] ) && isset( $moved['file'] ) && wp_normalize_path( $moved['file'] ) === wp_normalize_path( $folder . '/' . $id );
+	}
+
+	/**
 	 * Moves the accepted uploads into the private folder.
 	 *
 	 * @return array<string, array<int, array{id: string, name: string, size: int, type: string, path: string, at: string}>>|null null if the folder is unusable.
@@ -352,8 +388,7 @@ final class Files {
 			foreach ( $list as $upload ) {
 				$id   = bin2hex( random_bytes( 16 ) );
 				$path = $sub . '/' . $id;
-				$ok   = is_uploaded_file( $upload['tmp'] ) ? move_uploaded_file( $upload['tmp'], $dir . '/' . $path ) : rename( $upload['tmp'], $dir . '/' . $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename -- only for the test's built uploads (is_upload()).
-				if ( ! $ok ) {
+				if ( ! self::move( $upload, $dir . '/' . $sub, $id ) ) {
 					return null;
 				}
 				$out[ $field ][] = array(

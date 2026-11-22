@@ -226,7 +226,8 @@ final class Submissions {
 	/** The files go with their row: before deleting rows, their stored files. Only rows that have a file field are decoded. */
 	private static function delete_files_of( string $select, array $params ): void {
 		global $wpdb;
-		$rows = $wpdb->get_col( $wpdb->prepare( $select . " AND data LIKE '%%\"files\"%%'", $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$params[] = '%' . $wpdb->esc_like( '"files"' ) . '%';
+		$rows     = $wpdb->get_col( $wpdb->prepare( $select . ' AND data LIKE %s', $params ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		foreach ( (array) $rows as $json ) {
 			Files::delete( Files::of_row( array( 'data' => json_decode( (string) $json, true ) ?: array() ) ) );
 		}
