@@ -14,10 +14,18 @@
  * what the scenario saved. The budget counts files, not cases, on purpose: it
  * is the same on any machine and under any load, which a time is not.
  *
- * FAILS if the count is over the budget (the test does not enter: make it
- * level 1, taking the logic to a function that returns a value, or remove an
- * expensive test that no longer pays) or under it (lower the number in the same
- * commit, so that the room is not left for the next one).
+ * FAILS if the count is over the budget or under it (lower the number in the
+ * same commit, so that the room is not left for the next one).
+ *
+ * OVER THE BUDGET, THE ANSWER IS TO MOVE RULES DOWN, NOT TO RAISE IT (David,
+ * 22-11-2026: «el cupo no está para ampliar»). Take what the test checks into
+ * a function that returns a value, or a list a file declares, and check that
+ * at level 1; at level 2 stays only what cannot happen without WordPress, at
+ * level 3 only what cannot happen without a browser. Case with a name:
+ * banners/code.test.mjs came with the WordPress.org review branch and left the
+ * count at 59; what it checked was OUR list (Kses::banner()) and where the
+ * plugin calls wp_kses() with it, so it went to level 1 (it reads the list
+ * with the machine's PHP and the call sites from the source).
  *
  * How to maintain it. Whoever adds or removes an expensive test, in that same
  * commit. Swapping one for another leaves the number as it is. Only David
@@ -66,7 +74,7 @@ const budget = JSON.parse( fs.readFileSync( path.join( ROOT, 'tests/test-budget.
 
 for ( const kind of [ 'server', 'browser' ] ) {
 	test( `the ${ kind } tests are exactly the budget`, () => {
-		assert.ok( counted[ kind ] <= budget[ kind ], `${ counted[ kind ] } ${ kind } tests and the budget is ${ budget[ kind ] }. The new one does not enter: make it level 1, taking the logic to a function that returns a value, or remove an expensive test that no longer pays. Only David raises the budget (header of tests/test-budget.test.mjs).` );
+		assert.ok( counted[ kind ] <= budget[ kind ], `${ counted[ kind ] } ${ kind } tests and the budget is ${ budget[ kind ] }. The budget is not raised: move the rules down a level. Take what the test checks into a function that returns a value (or a list a file declares) and check it at level 1; leave at level ${ 'server' === kind ? 2 : 3 } only what cannot happen without ${ 'server' === kind ? 'WordPress' : 'a browser' } (header of tests/test-budget.test.mjs).` );
 		assert.ok( counted[ kind ] >= budget[ kind ], `${ counted[ kind ] } ${ kind } tests and the budget is still ${ budget[ kind ] }: lower it to ${ counted[ kind ] } in tests/test-budget.json, in this same commit.` );
 	} );
 }
