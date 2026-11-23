@@ -1129,7 +1129,7 @@ tool, and **that tool is the one to use**:
 |---|---|---|
 | estrategiaweb.es (`web2026.` still on 2.3.0) | `estrategiaweb-es/tools/desplegar.mjs`, log in `docs/despliegues.md` | 2.10.0 |
 | lavanderiamallorca.com (and `lavanderiamallorca.es`, `lavanderiasmallorca.com`) | `lavanderia-mallorca/despliegue/desplegar.mjs`, log in `despliegue/registro.md` | 2.3.0 |
-| gastronomicament.cat | WordPress.org (folder `estrategiaweb-toolkit/`) | 2.12.1 |
+| gastronomicament.cat | WordPress.org (folder `estrategiaweb-toolkit/`) | 2.13.0 |
 
 - **`main` runs ahead of every site** (2.10.0 today). Before taking a site
   from its version to a newer one, read the [CHANGELOG](CHANGELOG.md) for
