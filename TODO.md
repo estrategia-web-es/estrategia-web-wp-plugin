@@ -62,6 +62,29 @@ since 1.1.0, not at the «Estrategia Web → Modules» screen either.
 
 ---
 
+## Forms: Cloudflare Turnstile, if a site gets spam in volume
+**Date:** 09-11-2026 · **Due:** — (only when a site needs it)
+
+What the forms already stop: generic bots (honeypot, signed token with a
+3-second minimum, 5 per IP every 10 minutes). What they do not: a person, or a
+real browser filling the form, and a script written for our form can ask
+`/token`, wait and post. Not a security hole (it can only send a message).
+Trigger: spam in volume on one of OUR forms. On 09-11-2026 Gastronòmicament got
+a «Tourist travel catalogue» spam, but through Contact Form 7 with reCAPTCHA
+v3, not through this module (6 submissions ever, so nothing to do there).
+
+Measured on 09-11-2026 with Cloudflare's test key in Chromium: api.js 28 KB
+gzip, cached for a year, no long tasks on the page, 1.7-4.9 s to resolve in
+the background. Not measured: what its iframe does with a real key.
+
+If it is built: load it only on pages with a form and on the first focus,
+like the token (view.js); a «checking…» state for whoever submits before it
+resolves; and the privacy side (it sends IP and browser data to Cloudflare):
+a line in the privacy policy, and decide whether it goes through the consent
+notice.
+
+---
+
 
 ## After 2.0.1: what Lavandería's repo still calls (its repo, not this one)
 **Date:** 28-10-2026 · **Due:** before Lavandería's next deploy with this repo's main
