@@ -24,6 +24,9 @@
 //      after approval, SVN: trunk/ = the zip's contents, and tags/<version>/.
 //   4. «Tested up to» in readme.txt follows the newest WordPress tested; it
 //      can be bumped in SVN trunk without a new version.
+//   5. The NEXT DAY, update the fleet from MainWP (https://reports.estrategiaweb.es).
+//      Not the same day: WordPress.org's update service offers the new version
+//      later than the plugin page, and until then MainWP does not see it.
 // Warnings are not blocking, but the reviewers read them. Known and accepted
 // (29-10-2026): hooks named wpml_* (WPML's, not ours), direct queries to our
 // own tables, and the prefix of $wpdb->prefix-built table names.

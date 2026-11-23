@@ -1158,13 +1158,32 @@ tool, and **that tool is the one to use**:
   2.10.0). After that, the site's row in the table says «WordPress.org»
   and its deployer stops packing the plugin.
 - **How a change reaches every site: first the site that asked for it,
-  then WordPress.org** (David's rule, 23-11-2026). A fix or a new module is
+  then WordPress.org, then MainWP the next day** (David's rule, 23-11-2026:
+  the usual process). Three steps:
+  1. The plugin is changed and tried on the site of the incident or of the
+     request for the feature (below).
+  2. The version is published on WordPress.org and left to follow its own
+     course: nothing is forced on any site.
+  3. The NEXT DAY, every site of the fleet is updated from MainWP. Waiting a
+     day is what lets WordPress.org's update service offer the version
+     (next point); before that MainWP does not see it.
+
+  A fix or a new module is
   born from one site's bug or need, and it is tried THERE first: the
   committed files are copied by hand into that site's plugin folder, the
   real case that showed the problem is run again and checked (not just the
   tests: the first run on the real site is the test), and only then is the
-  version published on WordPress.org, from where every other site updates
-  itself. Nothing goes to WordPress.org that has not run on a real site.
+  version published on WordPress.org, from where the other sites take it
+  through MainWP (the fleet's update manager, https://reports.estrategiaweb.es;
+  automatic WordPress updates are off on them). Nothing goes to WordPress.org
+  that has not run on a real site.
+  - MainWP only sees a new version once WordPress.org's update service
+    (`api.wordpress.org/plugins/update-check/1.1/`) offers it, and that lags
+    behind the plugin page: on 23-11-2026 the page said 2.13.0 while the
+    update service still answered 2.12.1. Sync the site in MainWP after it
+    changes, not before. That lag is why step 3 is the next day.
+  - In MainWP, `update/plugins` (panel or API) updates EVERY pending plugin
+    of a site, not only this one: look at what is pending first.
   - Who and when: whoever makes the change, before tagging the version.
     The CHANGELOG entry says on which site and with which case it was
     checked.
