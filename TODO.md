@@ -67,6 +67,19 @@ since 1.1.0, not at the «Estrategia Web → Modules» screen either.
 **Date:** 28-10-2026 · **Due:** before Lavandería's next deploy with this repo's main
 
 The migrators removed in 2.0.1 are still read by Lavandería's deployer FROM THIS REPO: `despliegue/prefijo-tipos.mjs` (`script()`) reads `includes/class-prefix-migration.php` on every dry run of `desplegar.mjs`, so its `--seco` now stops; `despliegue/migrar-a-estrategia-web.mjs` reads `includes/class-armazon-migration.php` (only when the site still has the old plugins); `despliegue/tipo-negocio.php` asks `class_exists( Unprefixed_Meta )` to pick the meta key and now falls back to `client_url`; `tests/fixtures/lm-test.php` serves the old prefix routes. In Lavandería: remove `prefijo-tipos.*`, `prefijo-metas.php`, `migrar-a-estrategia-web.mjs` and their steps in `desplegar.mjs`, and make `tipo-negocio.php` use `estrategia_web_client_url` always (or pin `LM_SITE` to a 2.0.0 checkout until then).
+## Tests on GitHub Actions, on every pull request
+**Date:** 23-11-2026 · **Due:** — (David: «lo tenemos que abordar en algún momento»)
+
+Now that Juan works on the plugin too (CONTRIBUTING.md), level 1 should run
+by itself on every pull request, and a red one should block the merge (a
+required status check on `main`). What it needs: PHP on the runner
+(shivammathur/setup-php, the same 8.3 as WAMP here) and Node; then
+`node tests/run.mjs --nivel 1`. Measure first how long it takes there
+(7 s on this machine). Level 2 and `tools/wporg.mjs check` use Playground:
+decide separately whether they are worth it in CI (cost in minutes).
+
+---
+
 ## Repo remote (row 24)
 **Date:** 02-10-2026 · **Due:** before installing it on the first site
 
