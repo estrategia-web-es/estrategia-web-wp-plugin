@@ -13,9 +13,13 @@ of [tools/wporg.mjs](tools/wporg.mjs) and the header of each module.
 A change is born from ONE site: an incident, or a request for a feature.
 
 1. **Branch and pull request.** Nobody pushes to `main`: it requires a pull
-   request with one approval. (GitHub lets the admin skip it; we do not, so
-   that `main` only has reviewed changes.) Branch names: `modulo/<name>` for
-   a module, `fix/<what>`, `docs/<what>`.
+   request, with NO approval needed (David, 23-11-2026), so whoever opens it
+   merges it. (GitHub lets the admin push straight to `main`; we do not, so
+   that every change has its pull request saying where it was checked.)
+   Branch names: `modulo/<name>` for a module, `fix/<what>`, `docs/<what>`.
+   The trap: GitHub never lets you APPROVE your own pull request, but you
+   can always MERGE it when the rules allow; with one required approval,
+   each of us would be blocked waiting for the other.
 2. **Tests, level 1.** `node tests/run.mjs --nivel 1` (PHP without WordPress,
    seconds). A new test is seen in red once (break the code on purpose, watch
    it fail, put it back) and the test's header says how.
@@ -34,7 +38,10 @@ A change is born from ONE site: an incident, or a request for a feature.
    (`Version:` in estrategia-web.php, `ESTRATEGIA_WEB_VERSION`, `Stable tag:`
    in readme.txt), the entry in CHANGELOG.md and the one in readme.txt.
    Version rule: README, «Versions».
-5. **Review and merge.** The other one approves and merges.
+5. **Merge.** Whoever opened it merges it. A second look is welcome on
+   something risky (asked for in the pull request), not required. The real
+   brake will be the level 1 tests on GitHub Actions (TODO.md): when they
+   exist, a red one will block the merge.
 6. **Publish on WordPress.org**, from `main` after the merge:
 
        node tools/wporg.mjs check     0 errors; read the warnings
