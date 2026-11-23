@@ -9,6 +9,30 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.13.0 — 23-11-2026 (cache-purge: a field changed outside the editor empties its cached page)
+
+**What each site must do:** nothing. The module is `Default: on`, so it
+comes in switched on wherever the saved module list does not know it yet; it
+writes nothing and does nothing visible.
+
+- **New `cache-purge` module** (Media & performance). When a published
+  post's metadata changes and whoever changes it can edit the post (or it is
+  WP-CLI or cron), at the end of the request THAT post's page is purged once
+  with every installed cache plugin: SiteGround (by URL, without the trailing
+  slash, which SiteGround ignores while answering «Successfully Purged»), WP
+  Rocket, W3 Total Cache, WP Super Cache, LiteSpeed (by id). Then it fires
+  `estrategia_web_purge_post` for any other cache. A visitor never purges
+  (view counters stored as meta). Header of
+  [modules/cache-purge/module.php](modules/cache-purge/module.php).
+- **Checked first on the site that asked for it** (the rule in the README,
+  «How a change reaches every site», written with this version):
+  Gastronòmicament, 23-11-2026, the Sobrassada news (119974), whose ACF
+  gallery written with WP-CLI did not show. Copied from bc2c2f7: without the
+  module a field written by WP-CLI left the page `X-Proxy-Cache: HIT`; with
+  it the next visit was `MISS` and then `HIT` again, and another cached
+  news page (119963) stayed `HIT`. Only SiteGround has been tried for real;
+  the other four adapters follow each plugin's documented function.
+
 ## 2.12.1 — 22-11-2026 (the WordPress.org review rules, on everything)
 
 **What each site must do:** nothing.

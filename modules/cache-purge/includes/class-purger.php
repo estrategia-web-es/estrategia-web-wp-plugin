@@ -41,10 +41,12 @@ final class Purger {
 			'if' => 'wp_cache_post_change',
 			'by' => 'id',
 		),
-		// LiteSpeed Cache has no function: it listens to an action. LSCWP_V is its version constant.
+		// LiteSpeed Cache has no function: it listens to the action litespeed_purge_post,
+		// fired in purge() with its name written out (a name taken from this table
+		// is a dynamic hook name for Plugin Check, 2.13.0). LSCWP_V is its version constant.
 		'litespeed-cache' => array(
 			'if'     => 'LSCWP_V',
-			'action' => 'litespeed_purge_post',
+			'action' => true,
 			'by'     => 'id',
 		),
 	);
@@ -117,7 +119,7 @@ final class Purger {
 			$arg = 'url' === $adapter['by'] ? $url : $post_id;
 			if ( isset( $adapter['action'] ) ) {
 				if ( defined( $adapter['if'] ) ) {
-					do_action( $adapter['action'], $arg ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LiteSpeed Cache's own public hook.
+					do_action( 'litespeed_purge_post', $arg ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LiteSpeed Cache's own public hook.
 					$ran[] = $name;
 				}
 			} elseif ( function_exists( $adapter['if'] ) ) {

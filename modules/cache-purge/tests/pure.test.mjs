@@ -9,7 +9,8 @@
 // Seen red (23-11-2026): with who_counts() returning true for everyone (the
 // visitor test), with flush() purging once per field instead of once per post
 // (three SiteGround calls in the editor test) and with the URL built with a
-// trailing slash (the URL assert).
+// trailing slash (the URL assert). And with LiteSpeed's action renamed to
+// litespeed_purge_all (the LiteSpeed test, 23-11-2026).
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
@@ -46,5 +47,10 @@ test("WordPress's own bookkeeping fields and drafts do not purge", () => {
 
 test("from WP-CLI a change counts with nobody logged in; from the web it does not", () => {
   assert.deepEqual(web.nobody, []);
-  assert.equal(cli.nobody.length, 3);
+  assert.equal(cli.nobody.length, 4);
+});
+
+test("LiteSpeed, when installed, gets its own action with the post id (2.13.0: the name written out for Plugin Check)", () => {
+  assert.deepEqual(cli.nobody[2], ["action:litespeed_purge_post", 10]);
+  assert.ok(!web.editor.some((c) => c[0] === "action:litespeed_purge_post"), "not installed in the web run: not fired");
 });

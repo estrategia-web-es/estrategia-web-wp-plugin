@@ -6,16 +6,19 @@
  *
  * The stubs: two posts (10 published, 11 a draft), a user who can edit only
  * when $GLOBALS['can'] is true, and TWO cache plugins «installed» (SiteGround
- * and WP Rocket: their functions exist and record their calls). W3TC, Super
- * Cache and LiteSpeed are not, so their adapters must not run.
+ * and WP Rocket: their functions exist and record their calls). W3TC and Super
+ * Cache are not, so their adapters must not run.
  *
  *   php pure.php        a web request
- *   php pure.php cli    the same, with WP_CLI defined (it cannot be undefined: a separate run)
+ *   php pure.php cli    the same, with WP_CLI defined (it cannot be undefined: a
+ *                       separate run) AND LiteSpeed «installed» (LSCWP_V): the
+ *                       only adapter that works by action, not by function.
  */
 
 define( 'ABSPATH', __DIR__ . '/' );
 if ( 'cli' === ( $argv[1] ?? '' ) ) {
 	define( 'WP_CLI', true );
+	define( 'LSCWP_V', 'stub' );
 }
 
 $GLOBALS['can']   = false;

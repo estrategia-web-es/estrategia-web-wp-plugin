@@ -4,7 +4,7 @@ Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.12.1
+Stable tag: 2.13.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,7 +23,7 @@ Most small business sites need the same dozen things besides their design. Estra
 * **llms.txt**: the text AI assistants read to describe your site, written in the panel (with a draft from your company details and pages) and served at /llms.txt, one per language with WPML.
 * **Blocks**: carousel, two-click map, WhatsApp button, social links and a language switcher for WPML.
 * **Analytics behind consent**: Google Analytics 4, Google Ads and Google Tag Manager with Consent Mode v2, and Matomo without cookies. Nothing loads until you fill in an ID.
-* **Media**: WebP image sizes, phone photo uploads scaled down to 2560 px, sanitised SVG uploads and correctly sized featured images.
+* **Media and performance**: WebP image sizes, phone photo uploads scaled down to 2560 px, sanitised SVG uploads, correctly sized featured images, and the cached page of a post emptied when its fields change outside the editor (SiteGround, WP Rocket, LiteSpeed, W3 Total Cache, WP Super Cache).
 * **Newsletter**: choose the week's posts, preview the email and copy its HTML, or create the campaign as a draft in Mailchimp (never sent from WordPress).
 * **Small things**: external links in a new tab with an accessible label, and turning comments off everywhere.
 
@@ -85,6 +85,9 @@ Its settings, yes. Your data (form submissions, redirects, company details) is k
 The cookie list includes an extract of the Open Cookie Database (https://github.com/jkwakman/Open-Cookie-Database), © Jan Kwakman and contributors, Apache License 2.0. Details in modules/consent/data/NOTICE.
 
 == Changelog ==
+
+= 2.13.0 =
+* New «Cache purge on field changes» module, on by default: when a published post's fields are changed outside the editor (WP-CLI, a script, a scheduled task), that post's cached page is emptied in SiteGround, WP Rocket, LiteSpeed, W3 Total Cache or WP Super Cache, whichever is installed. Only that page, once per request, and never because of a visitor.
 
 = 2.12.1 =
 * Every request value is sanitized as soon as it is read and everything printed is escaped where it is printed, also in the File field and dossier mode.
