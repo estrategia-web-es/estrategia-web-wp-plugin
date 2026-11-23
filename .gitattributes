@@ -30,5 +30,7 @@
 /README.md export-ignore
 /CHANGELOG.md export-ignore
 /TODO.md export-ignore
+/CONTRIBUTING.md export-ignore
+/.github export-ignore
 /modules/*/tests export-ignore
 /modules/*/README.md export-ignore
