@@ -99,110 +99,115 @@ msgstr "Banners"
 
 #: includes/admin/module-strings.php:13
 msgctxt "module name"
+msgid "Cache purge on field changes"
+msgstr "Vaciado de caché al cambiar campos"
+
+#: includes/admin/module-strings.php:14
+msgctxt "module name"
 msgid "Carousel"
 msgstr "Carrusel"
 
-#: includes/admin/module-strings.php:14
+#: includes/admin/module-strings.php:15
 msgctxt "module name"
 msgid "No comments"
 msgstr "Sin comentarios"
 
-#: includes/admin/module-strings.php:15
+#: includes/admin/module-strings.php:16
 msgctxt "module name"
 msgid "Cookie notice"
 msgstr "Aviso de cookies"
 
-#: includes/admin/module-strings.php:16
+#: includes/admin/module-strings.php:17
 msgctxt "module name"
 msgid "Content types"
 msgstr "Tipos de contenido"
 
-#: includes/admin/module-strings.php:17
+#: includes/admin/module-strings.php:18
 msgctxt "module name"
 msgid "External links in a new tab"
 msgstr "Enlaces externos en pestaña nueva"
 
-#: includes/admin/module-strings.php:18
+#: includes/admin/module-strings.php:19
 msgctxt "module name"
 msgid "FAQ structured data"
 msgstr "Datos estructurados de preguntas frecuentes"
 
-#: includes/admin/module-strings.php:19
+#: includes/admin/module-strings.php:20
 msgctxt "module name"
 msgid "Featured image tuning"
 msgstr "Ajustes de la imagen destacada"
 
-#: includes/admin/module-strings.php:20
+#: includes/admin/module-strings.php:21
 msgctxt "module name"
 msgid "Forms"
 msgstr "Formularios"
 
-#: includes/admin/module-strings.php:21
+#: includes/admin/module-strings.php:22
 msgctxt "module name"
 msgid "Google tags"
 msgstr "Etiquetas de Google"
 
-#: includes/admin/module-strings.php:22
+#: includes/admin/module-strings.php:23
 msgctxt "module name"
 msgid "Language switcher"
 msgstr "Selector de idioma"
 
-#: includes/admin/module-strings.php:23
+#: includes/admin/module-strings.php:24
 msgctxt "module name"
 msgid "llms.txt"
 msgstr "llms.txt"
 
-#: includes/admin/module-strings.php:24
+#: includes/admin/module-strings.php:25
 msgctxt "module name"
 msgid "Local business data"
 msgstr "Datos de negocio local"
 
-#: includes/admin/module-strings.php:25
+#: includes/admin/module-strings.php:26
 msgctxt "module name"
 msgid "Map"
 msgstr "Mapa"
 
-#: includes/admin/module-strings.php:26
+#: includes/admin/module-strings.php:27
 msgctxt "module name"
 msgid "Matomo"
 msgstr "Matomo"
 
-#: includes/admin/module-strings.php:27
+#: includes/admin/module-strings.php:28
 msgctxt "module name"
 msgid "Newsletter"
 msgstr "Boletín"
 
-#: includes/admin/module-strings.php:28
+#: includes/admin/module-strings.php:29
 msgctxt "module name"
 msgid "Redirects"
 msgstr "Redirecciones"
 
-#: includes/admin/module-strings.php:29
+#: includes/admin/module-strings.php:30
 msgctxt "module name"
 msgid "Company data"
 msgstr "Datos de la empresa"
 
-#: includes/admin/module-strings.php:30
+#: includes/admin/module-strings.php:31
 msgctxt "module name"
 msgid "Social networks"
 msgstr "Redes sociales"
 
-#: includes/admin/module-strings.php:31
+#: includes/admin/module-strings.php:32
 msgctxt "module name"
 msgid "Image uploads"
 msgstr "Subidas de imágenes"
 
-#: includes/admin/module-strings.php:32
+#: includes/admin/module-strings.php:33
 msgctxt "module name"
 msgid "WebP images"
 msgstr "Imágenes en WebP"
 
-#: includes/admin/module-strings.php:33
+#: includes/admin/module-strings.php:34
 msgctxt "module name"
 msgid "WhatsApp button"
 msgstr "Botón de WhatsApp"
 
-#: includes/admin/module-strings.php:36
+#: includes/admin/module-strings.php:37
 msgctxt "module description"
 msgid ""
 "Image or code banners by zone and dates, with daily views and clicks, and "
@@ -211,7 +216,16 @@ msgstr ""
 "Banners de imagen o de código por zonas y fechas, con vistas y clics "
 "diarios, y migración desde AdRotate."
 
-#: includes/admin/module-strings.php:37
+#: includes/admin/module-strings.php:38
+msgctxt "module description"
+msgid ""
+"When a published post's fields change without going through the editor (a "
+"gallery, a date, a photo set from a script or WP-CLI), empties that post's "
+"page in the cache plugin the site uses: SiteGround, WP Rocket, LiteSpeed, W3 "
+"Total Cache or WP Super Cache."
+msgstr "Cuando cambian los campos de una entrada publicada sin pasar por el editor (una galería, una fecha, una foto puestas desde un script o WP-CLI), vacía la página de esa entrada en la caché que use el sitio: SiteGround, WP Rocket, LiteSpeed, W3 Total Cache o WP Super Cache."
+
+#: includes/admin/module-strings.php:39
 msgctxt "module description"
 msgid ""
 "Carousel block: a horizontal scrolling row of any blocks (or the posts of a "
@@ -222,7 +236,7 @@ msgstr ""
 "entradas de una Consulta), con flechas, puntos opcionales, bucle infinito y "
 "paso automático solo si se pide."
 
-#: includes/admin/module-strings.php:38
+#: includes/admin/module-strings.php:40
 msgctxt "module description"
 msgid ""
 "Turns comments off everywhere: closed on every post, no Comments menu, "
@@ -233,7 +247,7 @@ msgstr ""
 "menú Comentarios, sin widget del escritorio ni globo en la barra, sin "
 "bloques de comentarios en la web y sin feeds de comentarios."
 
-#: includes/admin/module-strings.php:39
+#: includes/admin/module-strings.php:41
 msgctxt "module description"
 msgid ""
 "Own cookie consent notice (Accept / Reject / Settings with declarable "
@@ -247,7 +261,7 @@ msgstr ""
 "alimenta un detector y un bloque con la tabla de cookies para la política de "
 "cookies."
 
-#: includes/admin/module-strings.php:40
+#: includes/admin/module-strings.php:42
 msgctxt "module description"
 msgid ""
 "Build your own content types, taxonomies and fields from the panel (or start "
@@ -258,7 +272,7 @@ msgstr ""
 "empieza desde una plantilla: clientes, opiniones, sedes, proyectos, "
 "portfolio), con el panel del editor, los Block Bindings y WPML generados."
 
-#: includes/admin/module-strings.php:41
+#: includes/admin/module-strings.php:43
 msgctxt "module description"
 msgid ""
 "Links to another domain open in a new tab, with rel=\"noopener\" and a "
@@ -268,7 +282,7 @@ msgstr ""
 "rel=\"noopener\" y un «(se abre en una pestaña nueva)» oculto para lectores "
 "de pantalla."
 
-#: includes/admin/module-strings.php:42
+#: includes/admin/module-strings.php:44
 msgctxt "module description"
 msgid ""
 "Publishes the page's FAQ accordions as schema.org FAQPage, inside Rank "
@@ -277,7 +291,7 @@ msgstr ""
 "Publica los acordeones de preguntas frecuentes de la página como FAQPage de "
 "schema.org, dentro del grafo de Rank Math o de Yoast si están."
 
-#: includes/admin/module-strings.php:43
+#: includes/admin/module-strings.php:45
 msgctxt "module description"
 msgid ""
 "Featured images with a fixed width in px download a file of that size, and a "
@@ -288,7 +302,7 @@ msgstr ""
 "y un logo cuyo texto alternativo solo repite el título que se ve al lado se "
 "marca como decorativo."
 
-#: includes/admin/module-strings.php:44
+#: includes/admin/module-strings.php:46
 msgctxt "module description"
 msgid ""
 "Block-based forms with several email notifications made from templates, a "
@@ -297,7 +311,7 @@ msgstr ""
 "Formularios por bloques con varios avisos por correo hechos con plantillas, "
 "registro de todo lo enviado y compatibles con WPML."
 
-#: includes/admin/module-strings.php:45
+#: includes/admin/module-strings.php:47
 msgctxt "module description"
 msgid ""
 "Google Analytics 4, Google Ads (with an optional conversion for form "
@@ -308,7 +322,7 @@ msgstr ""
 "formulario) y Google Tag Manager detrás del aviso de cookies, con Consent "
 "Mode v2. Un campo vacío no carga nada."
 
-#: includes/admin/module-strings.php:46
+#: includes/admin/module-strings.php:48
 msgctxt "module description"
 msgid ""
 "The «ES ▾» of the header: switches language to the same page, keyboard-"
@@ -317,7 +331,7 @@ msgstr ""
 "El «ES ▾» de la cabecera: cambia de idioma a la misma página, se puede usar "
 "con el teclado y lleva hreflang. Necesita WPML; sin él, no se muestra nada."
 
-#: includes/admin/module-strings.php:47
+#: includes/admin/module-strings.php:49
 msgctxt "module description"
 msgid ""
 "Serves /llms.txt, the text AI assistants read to describe the site, written "
@@ -327,7 +341,7 @@ msgstr ""
 "web, escrito en «Estrategia Web › Ajustes › llms.txt», uno por idioma con "
 "WPML."
 
-#: includes/admin/module-strings.php:48
+#: includes/admin/module-strings.php:50
 msgctxt "module description"
 msgid ""
 "Tells search engines about the company and its locations with schema.org "
@@ -338,7 +352,7 @@ msgstr ""
 "y LocalBusiness: dirección, horario, coordenadas), dentro del grafo de Rank "
 "Math o Yoast si están."
 
-#: includes/admin/module-strings.php:49
+#: includes/admin/module-strings.php:51
 msgctxt "module description"
 msgid ""
 "Two-click map block: a static image with the address; the Google Maps embed "
@@ -348,7 +362,7 @@ msgstr ""
 "Google Maps solo se carga cuando el visitante lo pide (o si aceptó las "
 "cookies de mapas)."
 
-#: includes/admin/module-strings.php:50
+#: includes/admin/module-strings.php:52
 msgctxt "module description"
 msgid ""
 "Matomo tracking code, cookieless or hybrid (no cookies until the visitor "
@@ -357,7 +371,7 @@ msgstr ""
 "Código de seguimiento de Matomo, sin cookies o híbrido (sin cookies hasta "
 "que el visitante acepta la analítica en el aviso de cookies)."
 
-#: includes/admin/module-strings.php:51
+#: includes/admin/module-strings.php:53
 msgctxt "module description"
 msgid ""
 "Choose the week's posts, preview the newsletter and copy its code or create "
@@ -366,7 +380,7 @@ msgstr ""
 "Elige las entradas de la semana, previsualiza el boletín y copia su código o "
 "crea el borrador en Mailchimp. Nunca envía."
 
-#: includes/admin/module-strings.php:52
+#: includes/admin/module-strings.php:54
 msgctxt "module description"
 msgid ""
 "Editable 301, 302 and 410 redirects with hit counters, CSV import and "
@@ -375,7 +389,7 @@ msgstr ""
 "Redirecciones 301, 302 y 410 editables, con contador de visitas, importación "
 "y exportación CSV y un registro de 404 opcional."
 
-#: includes/admin/module-strings.php:53
+#: includes/admin/module-strings.php:55
 msgctxt "module description"
 msgid ""
 "Company details with Block Bindings and the [estrategia_web_company] "
@@ -386,7 +400,7 @@ msgstr ""
 "[estrategia_web_company], los datos de una sede como fuente de Block "
 "Bindings y subida de SVG saneados."
 
-#: includes/admin/module-strings.php:54
+#: includes/admin/module-strings.php:56
 msgctxt "module description"
 msgid ""
 "Free, ordered list of social network links (name, link, icon from an "
@@ -395,7 +409,7 @@ msgstr ""
 "Lista libre y ordenada de enlaces a redes sociales (nombre, enlace e icono "
 "de una colección incluida o un SVG propio) y un bloque que los enseña."
 
-#: includes/admin/module-strings.php:55
+#: includes/admin/module-strings.php:57
 msgctxt "module description"
 msgid ""
 "Phone photos can be uploaded (up to 20 MB by default); WordPress scales them "
@@ -404,7 +418,7 @@ msgstr ""
 "Deja subir fotos del móvil (hasta 20 MB por defecto); WordPress las reduce a "
 "2560 px y en el disco solo se guarda la copia reducida."
 
-#: includes/admin/module-strings.php:56
+#: includes/admin/module-strings.php:58
 msgctxt "module description"
 msgid ""
 "Image sizes generated from JPEG and PNG uploads are saved as WebP (quality "
@@ -413,7 +427,7 @@ msgstr ""
 "Los tamaños que se generan al subir un JPEG o un PNG se guardan en WebP "
 "(calidad 75)."
 
-#: includes/admin/module-strings.php:57
+#: includes/admin/module-strings.php:59
 msgctxt "module description"
 msgid ""
 "Floating button that opens a WhatsApp chat with a predefined message. The "
@@ -422,37 +436,37 @@ msgstr ""
 "Botón flotante que abre un chat de WhatsApp con un mensaje predefinido. El "
 "número y el mensaje son opciones del sitio, no de cada página."
 
-#: includes/admin/module-strings.php:60
+#: includes/admin/module-strings.php:62
 msgctxt "module category"
 msgid "Content"
 msgstr "Contenido"
 
-#: includes/admin/module-strings.php:61
-msgctxt "module category"
-msgid "Privacy & analytics"
-msgstr "Privacidad y analítica"
-
-#: includes/admin/module-strings.php:62
-msgctxt "module category"
-msgid "SEO"
-msgstr "SEO"
-
 #: includes/admin/module-strings.php:63
-msgctxt "module category"
-msgid "Contact"
-msgstr "Contacto"
-
-#: includes/admin/module-strings.php:64
-msgctxt "module category"
-msgid "Languages"
-msgstr "Idiomas"
-
-#: includes/admin/module-strings.php:65
 msgctxt "module category"
 msgid "Media & performance"
 msgstr "Medios y rendimiento"
 
+#: includes/admin/module-strings.php:64
+msgctxt "module category"
+msgid "Privacy & analytics"
+msgstr "Privacidad y analítica"
+
+#: includes/admin/module-strings.php:65
+msgctxt "module category"
+msgid "SEO"
+msgstr "SEO"
+
 #: includes/admin/module-strings.php:66
+msgctxt "module category"
+msgid "Contact"
+msgstr "Contacto"
+
+#: includes/admin/module-strings.php:67
+msgctxt "module category"
+msgid "Languages"
+msgstr "Idiomas"
+
+#: includes/admin/module-strings.php:68
 msgctxt "module category"
 msgid "Other"
 msgstr "Otros"
@@ -3956,7 +3970,7 @@ msgid "You are not allowed to do this."
 msgstr "No tienes permiso para hacer esto."
 
 #: modules/forms/includes/admin/class-admin.php:315
-#: modules/forms/includes/class-files.php:411
+#: modules/forms/includes/class-files.php:446
 msgid "The file is no longer available."
 msgstr "El archivo ya no está disponible."
 
@@ -4267,12 +4281,12 @@ msgstr "Enviar"
 msgid "I have read and accept the {privacy policy}."
 msgstr "He leído y acepto la {política de privacidad}."
 
-#: modules/forms/includes/class-dossier.php:331
+#: modules/forms/includes/class-dossier.php:330
 #: modules/forms/includes/class-rest.php:102
 msgid "This form is no longer available. Please reload the page."
 msgstr "Este formulario ya no está disponible. Recarga la página."
 
-#: modules/forms/includes/class-dossier.php:336
+#: modules/forms/includes/class-dossier.php:335
 msgid ""
 "If there is a request with that email, we have just sent it a new link. "
 "Check your inbox (and the spam folder)."
@@ -4280,38 +4294,38 @@ msgstr ""
 "Si hay una solicitud con ese correo, acabamos de enviar un enlace nuevo a "
 "esa dirección. Revisa tu bandeja de entrada (y la carpeta de spam)."
 
-#: modules/forms/includes/class-dossier.php:342
+#: modules/forms/includes/class-dossier.php:341
 #: modules/forms/includes/class-rest.php:146
 msgid "The form has expired. Please reload the page and try again."
 msgstr "El formulario ha caducado. Recarga la página y vuelve a intentarlo."
 
-#: modules/forms/includes/class-dossier.php:345
+#: modules/forms/includes/class-dossier.php:344
 #: modules/forms/includes/class-rest.php:154
 msgid "Too many messages from your connection. Please try again later."
 msgstr "Demasiados mensajes desde tu conexión. Vuelve a intentarlo más tarde."
 
 #. translators: %s: form title.
-#: modules/forms/includes/class-dossier.php:375
+#: modules/forms/includes/class-dossier.php:374
 #, php-format
 msgid "We need something else for «%s»"
 msgstr "Necesitamos algo más para «%s»"
 
 #. translators: %s: form title.
-#: modules/forms/includes/class-dossier.php:379
+#: modules/forms/includes/class-dossier.php:378
 #, php-format
 msgid "Your link to «%s»"
 msgstr "Tu enlace para «%s»"
 
-#: modules/forms/includes/class-dossier.php:380
+#: modules/forms/includes/class-dossier.php:379
 msgid "Here is the link to see and complete your request:"
 msgstr "Aquí tienes el enlace para ver y completar tu solicitud:"
 
-#: modules/forms/includes/class-dossier.php:383
+#: modules/forms/includes/class-dossier.php:382
 msgid "Still missing:"
 msgstr "Aún falta:"
 
 #. translators: %d: number of days.
-#: modules/forms/includes/class-dossier.php:387
+#: modules/forms/includes/class-dossier.php:386
 #, php-format
 msgid ""
 "The link works for %d day. Do not forward it: whoever has it can see your "

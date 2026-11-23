@@ -13,6 +13,11 @@
 // serves whatever Stable tag says, so a mismatch publishes the wrong thing.
 //
 // How to maintain — on each release to WordPress.org:
+//   0. FIRST on the site that asked for the change (David's rule, 23-11-2026):
+//      copy the committed files into that site's plugin folder, run again the
+//      real case that showed the bug or the need, and check it. Only then
+//      release, and every other site updates from WordPress.org. Who, the
+//      edge cases and the trap: README, «How a change reaches every site».
 //   1. Version in the three places + CHANGELOG.md + readme.txt changelog, one commit.
 //   2. node tools/wporg.mjs check   → 0 errors (warnings: read them, see below).
 //   3. Upload: the first time, the zip at wordpress.org/plugins/developers/add;

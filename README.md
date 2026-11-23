@@ -43,6 +43,7 @@ stored and what it does, to this plugin.
 | `local-business` | (unreleased) schema.org structured data: the Organization on the front page and a LocalBusiness on each location's page and on the pages tied to one (address, hours, coordinates), inside Rank Math's or Yoast's graph when they are there; requires `site` and `content-types`: section «local-business module» | on |
 | `banners` | (unreleased) image or code banners by zone (`eweb_banner`, `eweb_banner_zone`), with dates, weight and daily views and clicks counted from the browser; `estrategia-web/banner-zone` block; `wp estrategia-web banners migrate-adrotate`. All of it in the header of [modules/banners/module.php](modules/banners/module.php) | **off** |
 | `redirects` | 301/302/410 redirects editable in **Estrategia Web → Redirects**, CSV import/export, optional 404 log, `wp estrategia-web redirects import\|list\|export`: [modules/redirects/module.php](modules/redirects/module.php) | **off** |
+| `cache-purge` | (unreleased) when a published post's fields change outside the editor (WP-CLI, a script, cron), empties THAT post's cached page in SiteGround, WP Rocket, LiteSpeed, W3 Total Cache or WP Super Cache, and fires `estrategia_web_purge_post` for any other cache. All of it in the header of [modules/cache-purge/module.php](modules/cache-purge/module.php) | on |
 | `newsletter` | (2.7.0) **Posts → Newsletter**: choose and order the week's posts, preview the email, copy its HTML or create the campaign as a DRAFT in Mailchimp (never sends); settings in **Settings › Newsletter**. All of it in the header of [modules/newsletter/module.php](modules/newsletter/module.php) | **off** |
 
 **On by default: the ones Lavandería already used** (also `matomo`, which
@@ -1128,7 +1129,7 @@ tool, and **that tool is the one to use**:
 |---|---|---|
 | estrategiaweb.es (`web2026.` still on 2.3.0) | `estrategiaweb-es/tools/desplegar.mjs`, log in `docs/despliegues.md` | 2.10.0 |
 | lavanderiamallorca.com (and `lavanderiamallorca.es`, `lavanderiasmallorca.com`) | `lavanderia-mallorca/despliegue/desplegar.mjs`, log in `despliegue/registro.md` | 2.3.0 |
-| gastronomicament.cat | by hand, steps in `gastronomicament-cat/CLAUDE.md` | 2.9.0 |
+| gastronomicament.cat | WordPress.org (folder `estrategiaweb-toolkit/`) | 2.12.1 |
 
 - **`main` runs ahead of every site** (2.10.0 today). Before taking a site
   from its version to a newer one, read the [CHANGELOG](CHANGELOG.md) for
@@ -1156,6 +1157,32 @@ tool, and **that tool is the one to use**:
   activate; options, content and modules are kept: [CHANGELOG](CHANGELOG.md),
   2.10.0). After that, the site's row in the table says «WordPress.org»
   and its deployer stops packing the plugin.
+- **How a change reaches every site: first the site that asked for it,
+  then WordPress.org** (David's rule, 23-11-2026). A fix or a new module is
+  born from one site's bug or need, and it is tried THERE first: the
+  committed files are copied by hand into that site's plugin folder, the
+  real case that showed the problem is run again and checked (not just the
+  tests: the first run on the real site is the test), and only then is the
+  version published on WordPress.org, from where every other site updates
+  itself. Nothing goes to WordPress.org that has not run on a real site.
+  - Who and when: whoever makes the change, before tagging the version.
+    The CHANGELOG entry says on which site and with which case it was
+    checked.
+  - Edge case with a name: `cache-purge` (23-11-2026) was born on
+    Gastronòmicament (the Sobrassada news, post 119974, whose gallery did
+    not show because SiteGround's cache was not emptied after writing the
+    field with WP-CLI). It is copied into
+    `gastronomicament.cat/wp-content/plugins/estrategiaweb-toolkit/modules/`,
+    checked by writing a field of 119974 with WP-CLI and fetching the page
+    with curl, and published after that.
+  - A change with nothing site-specific to try (a text, a translation, a
+    fix asked by the WordPress.org review) has no «site that asked for it»:
+    it goes to whichever site uses the touched module, or straight to the
+    release if no site uses it, and the CHANGELOG says so.
+  - The trap: the hand copy is overwritten by the next WordPress.org update
+    of that site. If another version is published from `main` without the
+    change, the site loses it silently. Copy from a commit, not from a
+    working tree with loose changes, and publish soon after the check.
 - **GitHub push protection** blocks pushes that look like secrets. The fake
   Mailchimp key in `modules/newsletter/tests/newsletter.test.mjs`
   (`0123456789abcdef…-us21`) tripped it on 05-11-2026 and was marked as

@@ -81,7 +81,7 @@ test("1.7.0: only «site» is core, and every other module has a known Category"
     "Privacy & analytics": ["consent", "google-tags", "matomo"],
     SEO: ["external-links", "faq-schema", "llms", "local-business", "redirects"],
     Languages: ["language-switcher"],
-    "Media & performance": ["uploads", "webp"],
+    "Media & performance": ["cache-purge", "uploads", "webp"],
   };
   for (const [slug, m] of Object.entries(out.available)) {
     if (m.core) continue;

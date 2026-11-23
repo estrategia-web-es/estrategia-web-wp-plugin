@@ -10,6 +10,7 @@ defined( 'ABSPATH' ) || exit;
 return array(
 	'module name' => array(
 		'Banners' => _x( 'Banners', 'module name', 'estrategiaweb-toolkit' ),
+		'Cache purge on field changes' => _x( 'Cache purge on field changes', 'module name', 'estrategiaweb-toolkit' ),
 		'Carousel' => _x( 'Carousel', 'module name', 'estrategiaweb-toolkit' ),
 		'No comments' => _x( 'No comments', 'module name', 'estrategiaweb-toolkit' ),
 		'Cookie notice' => _x( 'Cookie notice', 'module name', 'estrategiaweb-toolkit' ),
@@ -34,6 +35,7 @@ return array(
 	),
 	'module description' => array(
 		'Image or code banners by zone and dates, with daily views and clicks, and AdRotate migration.' => _x( 'Image or code banners by zone and dates, with daily views and clicks, and AdRotate migration.', 'module description', 'estrategiaweb-toolkit' ),
+		'When a published post\'s fields change without going through the editor (a gallery, a date, a photo set from a script or WP-CLI), empties that post\'s page in the cache plugin the site uses: SiteGround, WP Rocket, LiteSpeed, W3 Total Cache or WP Super Cache.' => _x( 'When a published post\'s fields change without going through the editor (a gallery, a date, a photo set from a script or WP-CLI), empties that post\'s page in the cache plugin the site uses: SiteGround, WP Rocket, LiteSpeed, W3 Total Cache or WP Super Cache.', 'module description', 'estrategiaweb-toolkit' ),
 		'Carousel block: a horizontal scrolling row of any blocks (or the posts of a Query) with arrows, optional dots, infinite loop and autoplay only if asked for.' => _x( 'Carousel block: a horizontal scrolling row of any blocks (or the posts of a Query) with arrows, optional dots, infinite loop and autoplay only if asked for.', 'module description', 'estrategiaweb-toolkit' ),
 		'Turns comments off everywhere: closed on every post, no Comments menu, dashboard widget or toolbar item, no comment blocks on the site and no comment feeds.' => _x( 'Turns comments off everywhere: closed on every post, no Comments menu, dashboard widget or toolbar item, no comment blocks on the site and no comment feeds.', 'module description', 'estrategiaweb-toolkit' ),
 		'Own cookie consent notice (Accept / Reject / Settings with declarable categories), the «Cookie settings» link block and the consent API for PHP and JavaScript, plus a cookie list fed by a detector and a cookie table block for the cookie policy.' => _x( 'Own cookie consent notice (Accept / Reject / Settings with declarable categories), the «Cookie settings» link block and the consent API for PHP and JavaScript, plus a cookie list fed by a detector and a cookie table block for the cookie policy.', 'module description', 'estrategiaweb-toolkit' ),
@@ -58,11 +60,11 @@ return array(
 	),
 	'module category' => array(
 		'Content' => _x( 'Content', 'module category', 'estrategiaweb-toolkit' ),
+		'Media & performance' => _x( 'Media & performance', 'module category', 'estrategiaweb-toolkit' ),
 		'Privacy & analytics' => _x( 'Privacy & analytics', 'module category', 'estrategiaweb-toolkit' ),
 		'SEO' => _x( 'SEO', 'module category', 'estrategiaweb-toolkit' ),
 		'Contact' => _x( 'Contact', 'module category', 'estrategiaweb-toolkit' ),
 		'Languages' => _x( 'Languages', 'module category', 'estrategiaweb-toolkit' ),
-		'Media & performance' => _x( 'Media & performance', 'module category', 'estrategiaweb-toolkit' ),
 		'Other' => _x( 'Other', 'module category', 'estrategiaweb-toolkit' ),
 	),
 );
