@@ -6,6 +6,7 @@
  * stdout.
  *
  *     php format.php    stdin: [{field, raw, attribute, args?, locale?, html?}, …]  → [string, …]
+ *                       or [{block: "<p …>…</p>", attrs}, …]  → Bindings::render_block() of each
  *
  * The fakes (what the assertions in the .mjs rely on):
  *   date    "D:<ymd>|<format>"            number  "N:<n>|<decimals>"
@@ -54,13 +55,20 @@ function sanitize_email( $email ) {
 
 require __DIR__ . '/../../includes/class-schema.php';
 require __DIR__ . '/../../includes/class-field-format.php';
+require __DIR__ . '/../../includes/class-bindings.php'; // Only render_block(), which calls nothing of WordPress.
 
+use EstrategiaWeb\ContentTypes\Bindings;
 use EstrategiaWeb\ContentTypes\Field_Format;
 use EstrategiaWeb\ContentTypes\Schema;
 
 $cases = json_decode( (string) stream_get_contents( STDIN ), true );
 $out   = array();
 foreach ( $cases as $case ) {
+	if ( isset( $case['block'] ) ) {
+		// A block's rendered HTML and its parsed attrs → what the render_block filter leaves.
+		$out[] = Bindings::render_block( $case['block'], array( 'blockName' => 'core/paragraph', 'attrs' => $case['attrs'] ?? array() ) );
+		continue;
+	}
 	$env   = array(
 		'locale' => $case['locale'] ?? 'ca',
 		'yes'    => 'Sí',

@@ -45,12 +45,17 @@ defined( 'ABSPATH' ) || exit;
  *             « · »; escaped. «; » between rows in an
  *             attribute. row_text(), sub_text().
  *
- * The repeater's trap: bound to a paragraph's content, the server prints
+ * The repeater's trap: bound to a paragraph's content, core prints
  * <p><ul>…</ul></p>, and HTML does not let a <p> hold a <ul>: the browser
  * closes the <p> before the list and makes an empty <p> of the closing
- * tag. The list shows; the two empty paragraphs take their margins. The
- * design approved a <ul> (24-11-2026); a theme that minds the gap hides
- * p:empty next to .estrategia-web-ct-list.
+ * tag, two empty paragraphs with their margins (seen 24-11-2026). Since
+ * 2.14.0 the server swaps that block's <p …>/</p> for <div …>/</div>, its
+ * attributes kept (list_block(), called from Bindings::render_block() on
+ * render_block, only for blocks bound to this source). Not done in format():
+ * the value cannot change its block's wrapper. The editor does not need it:
+ * the canvas builds the paragraph with DOM calls, not the HTML parser, so
+ * nothing is split there. A theme styling the list next to text targets
+ * div:has(> .estrategia-web-ct-list), not p.
  *
  * Empty, invalid or unpublished ⇒ "" (never the raw ID or "1").
  *
@@ -58,6 +63,8 @@ defined( 'ABSPATH' ) || exit;
  * - Who and when: whoever adds a FIELD TYPE (module.php, «A NEW FIELD TYPE»):
  *   its case goes in format() and in assets/bindings.js (the editor's copy of
  *   these rules), and a line in tests/format.test.mjs, in the same commit.
+ * - Whoever changes the list's markup (LIST_OPEN) keeps list_block() and
+ *   bindings.js on the same string: list_block() finds the list by it.
  * - Boundary case, with a name: a number field never filled in shows «0»,
  *   not "": the meta's registered default is 0 and «0 €» is a real answer
  *   (the same reason as Registrar::missing()). A select that was never saved
@@ -78,6 +85,28 @@ final class Field_Format {
 
 	/** Block attributes that carry a URL (the rest are text, except «id»). */
 	public const URL_ATTRIBUTES = array( 'url', 'href' );
+
+	/** The start of a repeater's list, as format() writes it. */
+	public const LIST_OPEN = '<ul class="estrategia-web-ct-list">';
+
+	/**
+	 * A bound block's rendered HTML whose OUTER element is a <p> holding a
+	 * repeater's list: the same block with <div …>…</div>, its attributes
+	 * (class, style, id…) kept byte for byte. Anything else, as it came. Only
+	 * the block's own first and last tag are touched (anchored at both ends),
+	 * never the page; an attribute value with «>» inside a quote is allowed.
+	 * The trap it avoids: the class header.
+	 */
+	public static function list_block( string $html ): string {
+		if ( ! str_contains( $html, self::LIST_OPEN ) ) {
+			return $html;
+		}
+		$attrs = '(?:\s(?:[^>"\']|"[^"]*"|\'[^\']*\')*)?';
+		if ( ! preg_match( '/^(\s*)<p(' . $attrs . ')>(.*)<\/p>(\s*)$/is', $html, $m ) ) {
+			return $html;
+		}
+		return $m[1] . '<div' . $m[2] . '>' . $m[3] . '</div>' . $m[4];
+	}
 
 	/**
 	 * @param array  $field     A NORMALIZED field (Schema::normalize_field()).
@@ -164,7 +193,7 @@ final class Field_Format {
 					return implode( '; ', $items );
 				}
 				// A textarea subfield's line breaks as <br>, like a textarea field.
-				return '<ul class="estrategia-web-ct-list">' . implode( '', array_map( static fn( $i ) => '<li>' . nl2br( esc_html( $i ), false ) . '</li>', $items ) ) . '</ul>';
+				return self::LIST_OPEN . implode( '', array_map( static fn( $i ) => '<li>' . nl2br( esc_html( $i ), false ) . '</li>', $items ) ) . '</ul>';
 
 			case 'url':
 			case 'embed':
