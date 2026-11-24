@@ -136,7 +136,71 @@
 		return listUrl + ( listUrl.includes( '?' ) ? '&' : '?' ) + 'type=' + encodeURIComponent( name );
 	}
 
-	const api = { fill, text, setText, getText, setSlug, move, keyFrom, groupChoices, editUrl };
+	/*
+	 * A REPEATER'S SUBFIELDS (24-11-2026, includes/class-repeater.php): what
+	 * the constructor writes into field.fields. A subfield is {name, type,
+	 * label, required?, options?}; options only for a select (the server
+	 * refuses them elsewhere, so a type change drops them).
+	 */
+
+	/** A subfield name not yet in the list: field_1, field_2… (the person renames it). */
+	function subfieldName( subs ) {
+		const taken = ( Array.isArray( subs ) ? subs : [] ).map( ( s ) => s && s.name );
+		let n = taken.length + 1;
+		while ( taken.includes( 'field_' + n ) ) {
+			n++;
+		}
+		return 'field_' + n;
+	}
+
+	/** Adds a text subfield at the end of field.fields (created if missing) and returns it. */
+	function addSubfield( field ) {
+		field.fields = Array.isArray( field.fields ) ? field.fields : [];
+		const sub = { name: subfieldName( field.fields ), type: 'text', label: '' };
+		field.fields.push( sub );
+		return sub;
+	}
+
+	/** Removes field.fields[i]. False when there is no such subfield. */
+	function removeSubfield( field, i ) {
+		if ( ! Array.isArray( field.fields ) || i < 0 || i >= field.fields.length ) {
+			return false;
+		}
+		field.fields.splice( i, 1 );
+		return true;
+	}
+
+	/** A subfield's type: a select gets its (empty) options, any other type loses them. */
+	function setSubfieldType( sub, type ) {
+		sub.type = type;
+		if ( type === 'select' ) {
+			sub.options = Array.isArray( sub.options ) ? sub.options : [];
+		} else {
+			delete sub.options;
+		}
+	}
+
+	/**
+	 * A field that BECOMES a repeater (its type select): the keys only a
+	 * repeater has are kept if it had them, and a first text subfield is
+	 * added, because a repeater without subfields is refused.
+	 */
+	function toRepeater( field ) {
+		field.type = 'repeater';
+		delete field.default;
+		if ( ! Array.isArray( field.fields ) || ! field.fields.length ) {
+			field.fields = [];
+			addSubfield( field );
+		}
+	}
+
+	/** The {placeholders} of a row format that are not subfield names (shown under the format; the server refuses them). */
+	function unknownPlaceholders( format, subs ) {
+		const names = ( Array.isArray( subs ) ? subs : [] ).map( ( s ) => s && s.name );
+		return Array.from( String( format || '' ).matchAll( /\{([a-z][a-z0-9_]*)\}/g ), ( m ) => m[ 1 ] ).filter( ( n ) => ! names.includes( n ) );
+	}
+
+	const api = { fill, text, setText, getText, setSlug, move, keyFrom, groupChoices, editUrl, subfieldName, addSubfield, removeSubfield, setSubfieldType, toRepeater, unknownPlaceholders };
 	if ( typeof module === 'object' && module.exports ) {
 		module.exports = api;
 	} else {

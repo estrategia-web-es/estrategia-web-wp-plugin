@@ -36,6 +36,13 @@
  * - Boundary case, with a name: «required» on a main-box type is the
  *   classic check (Registrar), because REST would refuse a publish whose
  *   field is filled in right there in the box.
+ * - A REPEATER (24-11-2026, class-repeater.php): the panel edits the list
+ *   REST gives; the box posts estrategia_web_ct[key][row][subfield] plus a
+ *   hidden estrategia_web_ct[key] = "" so that removing every row is a
+ *   change too (render_repeater()). Its save goes through wp_slash(): the
+ *   JSON's backslashes would be lost to update_post_meta()'s unslash. In a
+ *   WPML translation the rows are locked (config(), «lockRows») and the
+ *   save merges the posted texts into the stored rows.
  * - The trap: a <textarea> sends «\r\n»; the textarea sanitizer normalizes
  *   it (Registrar::sanitizer()), or the location's street would not compare
  *   line by line (tests/location-box.test.mjs saw it).
@@ -83,7 +90,20 @@ final class Fields_Panel {
 		$locked = Wpml::is_translation( $type, $post_id );
 		$fields = array();
 		foreach ( $def['fields'] as $field ) {
-			$copy     = 'copy' === $field['wpml'];
+			$copy = 'copy' === $field['wpml'];
+			// A repeater in a translation (class-repeater.php, WPML): its texts are translated here, its rows and the rest come from the original.
+			$rows_locked = $locked && 'translate' === $field['wpml'] && 'repeater' === $field['type'] && Repeater::is_mixed( $field );
+			$subs        = array();
+			foreach ( $field['fields'] as $sub ) {
+				$subs[] = array(
+					'key'      => $sub['name'],
+					'kind'     => $sub['type'],
+					'label'    => Schema::text( $sub['label'], $locale ),
+					'required' => $sub['required'],
+					'disabled' => $rows_locked && ! in_array( $sub['type'], Repeater::TRANSLATED, true ),
+					'options'  => array_map( static fn( $o ) => array( 'value' => $o['value'], 'label' => Schema::text( $o['label'], $locale ) ), $sub['options'] ),
+				);
+			}
 			$fields[] = array(
 				'key'       => $field['name'],
 				'kind'      => $field['type'],
@@ -100,7 +120,14 @@ final class Fields_Panel {
 				'postTypes' => $field['post_type'],
 				'default'   => $field['default'],
 				'group'     => $field['group'],
+				// repeater: its subfields, what a row is called («Acte»: «Acte 1»), and whether rows can be added, removed or moved here.
+				'fields'    => $subs,
+				'itemLabel' => null !== $field['item_label'] ? Schema::text( $field['item_label'], $locale ) : '',
+				'lockRows'  => $rows_locked,
 			);
+			if ( $rows_locked ) {
+				$fields[ count( $fields ) - 1 ]['help'] = __( 'The rows and the values that are not text come from the original language; translate the texts here.', 'estrategiaweb-toolkit' );
+			}
 		}
 		return array(
 			'postType' => $type,
@@ -143,7 +170,7 @@ final class Fields_Panel {
 		wp_enqueue_script(
 			self::HANDLE,
 			ESTRATEGIA_WEB_CONTENT_TYPES_URL . 'assets/fields-panel.js',
-			array( 'wp-plugins', 'wp-editor', 'wp-element', 'wp-components', 'wp-data', 'wp-core-data', 'wp-block-editor', 'wp-i18n' ),
+			array( 'wp-plugins', 'wp-editor', 'wp-element', 'wp-components', 'wp-data', 'wp-core-data', 'wp-block-editor', 'wp-i18n', 'wp-a11y' ),
 			ESTRATEGIA_WEB_VERSION,
 			false
 		);
@@ -192,9 +219,41 @@ final class Fields_Panel {
 					'remove'  => __( 'Remove', 'estrategiaweb-toolkit' ),
 					'copy'    => __( 'Copy Monday to every day', 'estrategiaweb-toolkit' ),
 					'copied'  => __( 'Monday’s hours copied to every day.', 'estrategiaweb-toolkit' ),
-				)
+				) + self::repeater_strings()
 			) . ';',
 			'before'
+		);
+	}
+
+	/**
+	 * The repeater's buttons and announcements in the meta box
+	 * (assets/fields-box.js). assets/fields-panel.js has the same texts
+	 * through wp.i18n: change both. «repeater row» is a context of its own
+	 * because the Catalan is not the constructor's «Treu» / «Mou amunt»
+	 * (David, 24-11-2026: Afegeix, Elimina, Puja, Baixa).
+	 */
+	private static function repeater_strings(): array {
+		return array(
+			'add'        => _x( 'Add', 'repeater row', 'estrategiaweb-toolkit' ),
+			/* translators: %s: what a row of a list is called, e.g. Act */
+			'addItem'    => _x( 'Add %s', 'repeater row', 'estrategiaweb-toolkit' ),
+			'remove'     => _x( 'Remove', 'repeater row', 'estrategiaweb-toolkit' ),
+			'up'         => _x( 'Move up', 'repeater row', 'estrategiaweb-toolkit' ),
+			'down'       => _x( 'Move down', 'repeater row', 'estrategiaweb-toolkit' ),
+			/* translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Remove» (its visible text must be in its name). */
+			'removeRow'  => _x( 'Remove %s', 'repeater row', 'estrategiaweb-toolkit' ),
+			/* translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Move up» (its visible text must be in its name). */
+			'upRow'      => _x( 'Move up %s', 'repeater row', 'estrategiaweb-toolkit' ),
+			/* translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Move down» (its visible text must be in its name). */
+			'downRow'    => _x( 'Move down %s', 'repeater row', 'estrategiaweb-toolkit' ),
+			/* translators: %d: the number of a row of a list */
+			'row'        => __( 'Row %d', 'estrategiaweb-toolkit' ),
+			/* translators: %s: a row of a list, e.g. Act 3 */
+			'added'      => _x( '%s added.', 'repeater row', 'estrategiaweb-toolkit' ),
+			'removed'    => _x( 'Row removed.', 'repeater row', 'estrategiaweb-toolkit' ),
+			/* translators: %s: the row's name at its new position, e.g. Act 1 */
+			'moved'      => _x( 'Moved: it is now %s.', 'repeater row', 'estrategiaweb-toolkit' ),
+			'none'       => __( '— None —', 'estrategiaweb-toolkit' ),
 		);
 	}
 
@@ -252,12 +311,15 @@ final class Fields_Panel {
 			$value = get_post_meta( $post->ID, $field['key'], true );
 			$attrs = ( $field['disabled'] ? ' disabled' : '' ) . ( $field['required'] ? ' aria-required="true"' : '' );
 			$label = $field['label'] . ( $field['required'] ? ' *' : '' );
-			$wide  = in_array( $field['kind'], array( 'textarea', 'embed', 'hours', 'image' ), true ) ? ' estrategia-web-ct-field--wide' : '';
+			$wide  = in_array( $field['kind'], array( 'textarea', 'embed', 'hours', 'image', 'repeater' ), true ) ? ' estrategia-web-ct-field--wide' : '';
 			echo '<div class="estrategia-web-ct-field estrategia-web-ct-field--' . esc_attr( $field['kind'] . $wide ) . '" data-meta-key="' . esc_attr( $field['key'] ) . '">';
-			if ( 'hours' !== $field['kind'] ) {
+			if ( ! in_array( $field['kind'], array( 'hours', 'repeater' ), true ) ) {
 				echo '<label for="' . esc_attr( $id ) . '">' . esc_html( $label ) . '</label>';
 			}
 			switch ( $field['kind'] ) {
+				case 'repeater':
+					self::render_repeater( $field, $label, $value, $attrs );
+					break;
 				case 'textarea':
 				case 'embed':
 					printf( '<textarea class="large-text" rows="3" id="%s" name="%s"%s>%s</textarea>', esc_attr( $id ), esc_attr( $name ), wp_kses_data( $attrs ), esc_textarea( (string) $value ) );
@@ -306,7 +368,7 @@ final class Fields_Panel {
 					);
 					break;
 				default:
-					$html_type = array( 'url' => 'url', 'email' => 'email', 'tel' => 'tel', 'date' => 'date', 'number' => 'number' )[ $field['kind'] ] ?? 'text';
+					$html_type = array( 'url' => 'url', 'email' => 'email', 'tel' => 'tel', 'date' => 'date', 'time' => 'time', 'number' => 'number' )[ $field['kind'] ] ?? 'text';
 					$range     = 'number' === $field['kind'] ? ( null !== $field['min'] ? ' min="' . esc_attr( (string) $field['min'] ) . '"' : '' ) . ( null !== $field['max'] ? ' max="' . esc_attr( (string) $field['max'] ) . '"' : '' ) . ( $field['integer'] ? ' step="1"' : ' step="any"' ) : '';
 					printf( '<input type="%s" class="regular-text" id="%s" name="%s" value="%s"%s%s>', esc_attr( $html_type ), esc_attr( $id ), esc_attr( $name ), esc_attr( (string) $value ), wp_kses_data( $range ), wp_kses_data( $attrs ) );
 			}
@@ -315,6 +377,72 @@ final class Fields_Panel {
 			}
 			echo '</div>';
 		}
+	}
+
+	/**
+	 * A repeater in the meta box (class-repeater.php): a fieldset per row with
+	 * its subfields, named estrategia_web_ct[key][<row>][<subfield>], and ONE
+	 * EMPTY ROW at the end, so that without JavaScript a row can still be
+	 * added (one per save; an empty row is not stored). assets/fields-box.js
+	 * adds the Add / Remove / Move up / Move down buttons and drops that spare
+	 * row. The row number in the name is only an identity: PHP keeps the
+	 * order of the form, so moving a row moves the inputs and nothing else.
+	 *
+	 * @param array $field  config()'s field.
+	 * @param mixed $stored What is stored (the JSON text).
+	 */
+	private static function render_repeater( array $field, string $label, $stored, string $attrs ): void {
+		$def   = array( 'fields' => array_map( static fn( $s ) => array( 'name' => $s['key'], 'type' => $s['kind'], 'options' => $s['options'] ), $field['fields'] ), 'max' => null );
+		$rows  = Repeater::rows( $stored, $def );
+		$spare = ! $field['disabled'] && ! $field['lockRows'] && ( null === $field['max'] || count( $rows ) < (int) $field['max'] );
+		printf(
+			'<fieldset class="estrategia-web-ct-repeater" id="%s" data-item-label="%s" data-min="%s" data-max="%s"%s><legend>%s</legend>',
+			esc_attr( 'estrategia-web-ct-' . $field['key'] ),
+			esc_attr( $field['itemLabel'] ),
+			esc_attr( null === $field['min'] ? '' : (string) $field['min'] ),
+			esc_attr( null === $field['max'] ? '' : (string) $field['max'] ),
+			$field['disabled'] || $field['lockRows'] ? ' data-locked=""' : '',
+			esc_html( $label )
+		);
+		// Sent even when every row was removed (then it is the list: "", nothing stored); a row's inputs replace it (PHP: the array wins).
+		printf( '<input type="hidden" name="%s" value="">', esc_attr( 'estrategia_web_ct[' . $field['key'] . ']' ) );
+		echo '<div class="estrategia-web-ct-rows">';
+		foreach ( $spare ? array_merge( $rows, array( array() ) ) : $rows as $i => $row ) {
+			self::render_row( $field, $i, $row, $attrs, $spare && $i === count( $rows ) );
+		}
+		echo '</div></fieldset>';
+	}
+
+	/** One row of a repeater (see render_repeater()). $spare: the empty row at the end. */
+	private static function render_row( array $field, int $i, array $row, string $attrs, bool $spare ): void {
+		$base  = 'estrategia-web-ct-' . $field['key'] . '-' . $i;
+		$title = '' !== $field['itemLabel']
+			? $field['itemLabel'] . ' ' . ( $i + 1 ) // «Acte 1»: the definition's own word, already in the editor's language.
+			/* translators: %d: the number of a row of a list */
+			: sprintf( __( 'Row %d', 'estrategiaweb-toolkit' ), $i + 1 );
+		printf( '<fieldset class="estrategia-web-ct-row" data-row="%d"%s><legend>%s</legend>', (int) $i, $spare ? ' data-spare=""' : '', esc_html( $title ) );
+		foreach ( $field['fields'] as $sub ) {
+			$id    = $base . '-' . $sub['key'];
+			$name  = 'estrategia_web_ct[' . $field['key'] . '][' . $i . '][' . $sub['key'] . ']';
+			$value = (string) ( $row[ $sub['key'] ] ?? '' );
+			$sub_a = ( $field['disabled'] || $sub['disabled'] ? ' disabled' : '' ) . ( $sub['required'] ? ' aria-required="true"' : '' );
+			echo '<p class="estrategia-web-ct-sub estrategia-web-ct-sub--' . esc_attr( $sub['kind'] ) . '" data-sub="' . esc_attr( $sub['key'] ) . '">';
+			echo '<label for="' . esc_attr( $id ) . '">' . esc_html( $sub['label'] . ( $sub['required'] ? ' *' : '' ) ) . '</label> ';
+			if ( 'textarea' === $sub['kind'] ) {
+				printf( '<textarea rows="2" class="large-text" id="%s" name="%s"%s>%s</textarea>', esc_attr( $id ), esc_attr( $name ), wp_kses_data( $sub_a ), esc_textarea( $value ) );
+			} elseif ( 'select' === $sub['kind'] ) {
+				printf( '<select id="%s" name="%s"%s><option value="">%s</option>', esc_attr( $id ), esc_attr( $name ), wp_kses_data( $sub_a ), esc_html__( '— None —', 'estrategiaweb-toolkit' ) );
+				foreach ( $sub['options'] as $option ) {
+					printf( '<option value="%s"%s>%s</option>', esc_attr( $option['value'] ), selected( $value, $option['value'], false ), esc_html( $option['label'] ) );
+				}
+				echo '</select>';
+			} else {
+				$type = array( 'number' => 'number', 'date' => 'date', 'time' => 'time', 'url' => 'url', 'email' => 'email', 'tel' => 'tel' )[ $sub['kind'] ] ?? 'text';
+				printf( '<input type="%s" class="regular-text" id="%s" name="%s" value="%s"%s%s>', esc_attr( $type ), esc_attr( $id ), esc_attr( $name ), esc_attr( $value ), 'number' === $type ? ' step="any"' : '', wp_kses_data( $sub_a ) );
+			}
+			echo '</p>';
+		}
+		echo '</fieldset>';
 	}
 
 	/** Saves the meta box. The sanitizer is register_post_meta's (update_post_meta → sanitize_meta). */
@@ -332,6 +460,14 @@ final class Fields_Panel {
 			$value = isset( $defs[ $key ] ) && ! $field['disabled'] && ! isset( Registrar::kept()[ $key ] ) ? Registrar::posted( $defs[ $key ], $post_id ) : null;
 			if ( null === $value ) {
 				continue; // Locked (WPML), not sent, or a required one emptied on a published post (Registrar::check_required_classic()): left alone.
+			}
+			if ( 'repeater' === $field['kind'] ) {
+				// A translation's locked rows (config()): its disabled inputs are not posted, so the rows and the
+				// copied subfields are the stored ones and only the texts come from the form.
+				$value = $field['lockRows'] ? Repeater::merge_translation( get_post_meta( $post_id, $key, true ), $value, $defs[ $key ] ) : Registrar::sanitizer( $defs[ $key ] )( $value );
+				// The trap (class-repeater.php): update_post_meta() unslashes, and JSON has backslashes («\"», «\n»).
+				update_post_meta( $post_id, $key, wp_slash( $value ) );
+				continue;
 			}
 			if ( is_array( $value ) ) {
 				// One line per day (render_meta_box) → day → ranges; the sanitizer makes it the stored JSON.

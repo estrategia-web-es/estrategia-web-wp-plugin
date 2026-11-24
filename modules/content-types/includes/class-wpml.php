@@ -33,6 +33,9 @@ defined( 'ABSPATH' ) || exit;
  *          image and relation with copy also get type="post-ids" (and the
  *          sub-type when there is one target): WPML then copies the ID of the
  *          TRANSLATED post/image, not the original's.
+ *          A repeater with text subfields is «translate» (Schema::
+ *          normalize_field()) and its OTHER subfields are copied by us, row
+ *          by row: sync() → sync_repeater() (class-repeater.php says why).
  *
  * WHEN WPML READS IT (the trap, the same as in modules/site): WPML does not
  * re-read its config on every request, only when an admin opens one of its
@@ -284,12 +287,68 @@ final class Wpml {
 		}
 		$type = (string) get_post_type( (int) $post_id );
 		$def  = Loader::type( $type );
-		if ( ! $def || ! in_array( $meta_key, self::copy_keys( $def ), true ) || self::is_translation( $type, (int) $post_id ) ) {
+		if ( ! $def || self::is_translation( $type, (int) $post_id ) ) {
+			return;
+		}
+		$repeater = self::merged_repeaters( $def )[ $meta_key ] ?? null;
+		if ( $repeater ) {
+			self::sync_repeater( (int) $post_id, $type, $repeater );
+			return;
+		}
+		if ( ! in_array( $meta_key, self::copy_keys( $def ), true ) ) {
 			return;
 		}
 		self::$syncing = true;
 		try {
 			do_action( 'wpml_sync_custom_field', (int) $post_id, $meta_key );
+		} finally {
+			self::$syncing = false;
+		}
+	}
+
+	/**
+	 * The repeaters whose copy is OURS (class-repeater.php, WPML): «translate»
+	 * with text subfields and others. Meta key → normalized field.
+	 *
+	 * @return array<string,array>
+	 */
+	public static function merged_repeaters( array $def ): array {
+		$out = array();
+		foreach ( $def['fields'] as $field ) {
+			if ( 'repeater' === $field['type'] && 'translate' === $field['wpml'] && Repeater::is_mixed( $field ) ) {
+				$out[ $field['name'] ] = $field;
+			}
+		}
+		return $out;
+	}
+
+	/**
+	 * A mixed repeater changed in the ORIGINAL: each translation gets the
+	 * original's rows with its own texts (Repeater::merge_translation()).
+	 * Through WPML's public filters for the translations; the write in a
+	 * translation fires sync() again, which skips it (a translation) and
+	 * $syncing cuts the rest.
+	 */
+	private static function sync_repeater( int $post_id, string $type, array $field ): void {
+		$element  = 'post_' . $type;
+		$trid     = apply_filters( 'wpml_element_trid', null, $post_id, $element );
+		$siblings = $trid ? (array) apply_filters( 'wpml_get_element_translations', null, $trid, $element ) : array();
+		$original = get_post_meta( $post_id, $field['name'], true );
+		self::$syncing = true;
+		try {
+			foreach ( $siblings as $sibling ) {
+				$id = is_object( $sibling ) ? (int) ( $sibling->element_id ?? 0 ) : 0;
+				if ( $id <= 0 || $id === $post_id ) {
+					continue;
+				}
+				$merged = Repeater::merge_translation( $original, get_post_meta( $id, $field['name'], true ), $field );
+				// wp_slash: update_post_meta() unslashes, and the JSON has backslashes (class-repeater.php, the trap).
+				if ( '' === $merged ) {
+					delete_post_meta( $id, $field['name'] );
+				} else {
+					update_post_meta( $id, $field['name'], wp_slash( $merged ) );
+				}
+			}
 		} finally {
 			self::$syncing = false;
 		}

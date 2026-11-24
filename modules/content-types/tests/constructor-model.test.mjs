@@ -5,6 +5,8 @@
 // refusing a «to» past the end, «move: out of the list» failed (the field
 // went to undefined's place and the list grew a hole); with setSlug() always
 // going through setText(), «a plain slug stays a string» got {"es": …}.
+// Seen red (24-11-2026, repeater): with setSubfieldType() keeping the options
+// on a time subfield, «repeater subfields» failed; restored, green.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
@@ -77,6 +79,44 @@ test("groupChoices: none, the groups in order, and a key no longer declared is k
   assert.deepEqual(model.groupChoices(groups, "", "es", "—"), [["", "—"], ["address", "Dirección"], ["map", "Mapa"]]);
   assert.deepEqual(model.groupChoices(groups, "gone", "en", "—").at(-1), ["gone", "gone"]);
   assert.deepEqual(model.groupChoices(undefined, "", "es", "—"), [["", "—"]]);
+});
+
+test("repeater: becoming one adds a first text subfield (none is refused), keeps the ones it had, and drops a default", () => {
+  const f = { name: "llest_actes", type: "text", label: "Actes", default: "x" };
+  model.toRepeater(f);
+  assert.deepEqual(f, { name: "llest_actes", type: "repeater", label: "Actes", fields: [{ name: "field_1", type: "text", label: "" }] });
+  const back = { name: "llest_actes", type: "text", fields: [{ name: "dia", type: "date", label: "Dia" }] };
+  model.toRepeater(back);
+  assert.deepEqual(back.fields, [{ name: "dia", type: "date", label: "Dia" }], "the JSON box's subfields are kept");
+});
+
+test("repeater subfields: add with a free name, type change drops or creates the options, remove, move", () => {
+  const f = { type: "repeater", fields: [{ name: "field_2", type: "text", label: "A" }] };
+  const added = model.addSubfield(f);
+  assert.equal(added.name, "field_3", "never a name already taken (field_2 is)");
+  assert.equal(model.subfieldName([{ name: "field_1" }, { name: "field_3" }]), "field_4");
+  model.setSubfieldType(added, "select");
+  assert.deepEqual(added.options, [], "a select gets its list to fill");
+  added.options = ["Vetlla"];
+  model.setSubfieldType(added, "select");
+  assert.deepEqual(added.options, ["Vetlla"], "the same type keeps what was typed");
+  model.setSubfieldType(added, "time");
+  assert.equal("options" in added, false, "any other type loses them: the server refuses options there");
+  assert.equal(model.move(f.fields, 1, 0), true);
+  assert.deepEqual(f.fields.map((s) => s.name), ["field_3", "field_2"]);
+  assert.equal(model.removeSubfield(f, 5), false);
+  assert.equal(model.removeSubfield(f, 0), true);
+  assert.deepEqual(f.fields.map((s) => s.name), ["field_2"]);
+  const empty = {};
+  model.addSubfield(empty);
+  assert.deepEqual(empty.fields, [{ name: "field_1", type: "text", label: "" }]);
+});
+
+test("repeater item_format: the {placeholders} that are not subfields", () => {
+  const subs = [{ name: "tipus" }, { name: "dia" }];
+  assert.deepEqual(model.unknownPlaceholders("{tipus}: {dia} {hora}", subs), ["hora"]);
+  assert.deepEqual(model.unknownPlaceholders("{tipus}: {dia}", subs), []);
+  assert.deepEqual(model.unknownPlaceholders(undefined, subs), []);
 });
 
 test("editUrl: the list's URL plus &type=", () => {

@@ -68,16 +68,25 @@ defined( 'ABSPATH' ) || exit;
  *   fields[]       name (the meta key, with prefix), type, label, help,
  *                  required, default, wpml (copy | translate | ignore), group,
  *                  options (select), post_type (relation), min/max/integer (number),
- *                  true_label/false_label (boolean: what the binding shows; "" = nothing)
+ *                  true_label/false_label (boolean: what the binding shows; "" = nothing),
+ *                  fields/min/max/item_format/item_label (repeater: its subfields,
+ *                  how many rows, a row as the binding shows it, a row's name)
  *   Field types: text, textarea, number, url, email, tel, image (attachment
  *   ID), date (YYYY-MM-DD), select, relation (ID of a post of a given type),
  *   boolean, rating (0–5, stars), embed (a map embed; the whole <iframe>
  *   may be pasted), local_image (an image of this site by theme path, site
  *   path or same-host URL), hours (opening hours per day of the week, JSON
- *   text: includes/class-hours.php). Labels, help and option labels are a string or an object
+ *   text: includes/class-hours.php), time (HH:MM), repeater (a list of rows,
+ *   each with its subfields — text, textarea, number, date, time, select,
+ *   url, email, tel —, JSON text, a list in REST: includes/class-repeater.php,
+ *   example examples/llest_esquela.json). Labels, help and option labels are a string or an object
  *   locale → string ({"ca": "…", "es": "…", "en": "…"}).
- *   NO repeaters and NO groups, on purpose: a recipe's ingredients go as
- *   blocks in the content. Example: examples/gment_restaurant.json.
+ *   The REPEATER (24-11-2026, for Llar d'Estels' funeral notices: the acts
+ *   of each one) is ONE level: no repeater, image or relation inside a row.
+ *   The boundary, with a name: a recipe's ingredients still go as blocks in
+ *   the content — a repeater is for rows of DATA a template shows the same
+ *   way every time (an act's day, time and place), not for text a person
+ *   lays out. Example: examples/gment_restaurant.json.
  *
  * WHAT A DEFINITION GENERATES (class-registrar.php): register_post_type and
  * register_taxonomy; one register_post_meta per field (show_in_rest, typed,
@@ -128,6 +137,11 @@ defined( 'ABSPATH' ) || exit;
  * constructor-editor.test.mjs (create «Restaurantes» with three fields in
  * the edit screen — tabs, collapsed rows, keyboard and drag reordering, a
  * field group — and its type and panel appear).
+ * The repeater and time (24-11-2026): level 1 repeater.test.mjs (what is
+ * stored, incomplete, the translation's merge, a row's format, the REST
+ * schema), and its lines in schema, format, wpml and constructor-model; the
+ * REST list in register.test.mjs (level 2); the sidebar panel in the
+ * browser scenario 16-ct-editor-panel.
  * 2.0.0: level 1 location-data.test.mjs (the derived texts and the
  * migration's parsers, with Lavandería's strings); level 2
  * location-migration.test.mjs (a 1.7.0 site migrated) and
@@ -176,6 +190,11 @@ defined( 'ABSPATH' ) || exit;
  *        it, the content-field binding shows "" for that type.
  *   A new KEY is 1, 2 and wherever it is used (true_label/false_label:
  *   Schema, the JSON Schema, Field_Format and Bindings::editor_field()).
+ *   A new SUBFIELD type of the repeater: the list in the header of
+ *   includes/class-repeater.php (its own list of places, same commit).
+ *   The repeater also has a place the others do not: Registrar::missing()
+ *   asks Repeater::incomplete() even when the field is not «required» (a
+ *   row without a required subfield stops a publish).
  *
  * - THE CONTENT-FIELD BINDING, who and when: whoever changes how a type is
  *   shown changes Field_Format and assets/bindings.js together (the level 3
@@ -230,6 +249,7 @@ define( 'ESTRATEGIA_WEB_CONTENT_TYPES_DIR', __DIR__ . '/' );
 define( 'ESTRATEGIA_WEB_CONTENT_TYPES_URL', plugin_dir_url( __FILE__ ) );
 
 require_once __DIR__ . '/includes/class-hours.php';
+require_once __DIR__ . '/includes/class-repeater.php';
 require_once __DIR__ . '/includes/class-schema.php';
 require_once __DIR__ . '/includes/class-sanitize.php';
 require_once __DIR__ . '/includes/class-store.php';

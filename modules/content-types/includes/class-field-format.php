@@ -37,6 +37,20 @@ defined( 'ABSPATH' ) || exit;
  *             hours («Mon–Sat: 8:00–16:00»), <br> between
  *             them («; » in an attribute); day names and
  *             the time format of the site's language
+ *   time      the site's time format                       —                       —
+ *   repeater  <ul class="estrategia-web-ct-list"><li> per   —                       —
+ *             row: its item_format with each {subfield}
+ *             (date, time, number in the site's format; a
+ *             select's label), or the values joined by
+ *             « · »; escaped. «; » between rows in an
+ *             attribute. row_text(), sub_text().
+ *
+ * The repeater's trap: bound to a paragraph's content, the server prints
+ * <p><ul>…</ul></p>, and HTML does not let a <p> hold a <ul>: the browser
+ * closes the <p> before the list and makes an empty <p> of the closing
+ * tag. The list shows; the two empty paragraphs take their margins. The
+ * design approved a <ul> (24-11-2026); a theme that minds the gap hides
+ * p:empty next to .estrategia-web-ct-list.
  *
  * Empty, invalid or unpublished ⇒ "" (never the raw ID or "1").
  *
@@ -126,6 +140,32 @@ final class Field_Format {
 				$lines = Hours::summary( $raw, (array) ( $env['days'] ?? array() ), $env['time'] ?? static fn( $t ) => $t );
 				return $html ? implode( '<br>', array_map( 'esc_html', $lines ) ) : implode( '; ', $lines );
 
+			case 'time':
+				if ( 'text' !== $kind || '' === Repeater::time( $str ) ) {
+					return '';
+				}
+				return $e( (string) call_user_func( $env['time'] ?? static fn( $t ) => $t, $str ) );
+
+			case 'repeater':
+				if ( 'text' !== $kind ) {
+					return '';
+				}
+				$items = array();
+				foreach ( Repeater::rows( $raw, $field ) as $row ) {
+					$item = self::row_text( $field, $row, $env );
+					if ( '' !== $item ) {
+						$items[] = $item;
+					}
+				}
+				if ( ! $items ) {
+					return '';
+				}
+				if ( ! $html ) {
+					return implode( '; ', $items );
+				}
+				// A textarea subfield's line breaks as <br>, like a textarea field.
+				return '<ul class="estrategia-web-ct-list">' . implode( '', array_map( static fn( $i ) => '<li>' . nl2br( esc_html( $i ), false ) . '</li>', $items ) ) . '</ul>';
+
 			case 'url':
 			case 'embed':
 			case 'email':
@@ -201,6 +241,53 @@ final class Field_Format {
 				return $link ? '<a href="' . esc_attr( esc_url_raw( $post['url'] ) ) . '">' . $title . '</a>' : $title;
 		}
 		return '';
+	}
+
+	/**
+	 * One row of a repeater as plain text (the caller escapes it): its
+	 * «item_format» in the request's language with each {subfield} as
+	 * sub_text() shows it (Repeater::apply_format(): an empty value takes its
+	 * joining text with it), or, without a format, the non-empty values
+	 * joined by « · ».
+	 *
+	 * @param array<string,string|int|float> $row A sanitized row (Repeater::rows()).
+	 */
+	public static function row_text( array $field, array $row, array $env ): string {
+		$values = array();
+		foreach ( $field['fields'] as $sub ) {
+			$values[ $sub['name'] ] = isset( $row[ $sub['name'] ] ) ? self::sub_text( $sub, $row[ $sub['name'] ], $env ) : '';
+		}
+		$format = null !== $field['item_format'] ? Schema::text( $field['item_format'], (string) ( $env['locale'] ?? '' ) ) : '';
+		if ( '' !== $format ) {
+			return Repeater::apply_format( $format, $values );
+		}
+		return implode( ' · ', array_filter( $values, static fn( $v ) => '' !== $v ) );
+	}
+
+	/** A subfield's value for people, plain: a date and a time in the site's format, a number localized, an option's label. */
+	public static function sub_text( array $sub, $value, array $env ): string {
+		$str = trim( (string) $value );
+		switch ( $sub['type'] ) {
+			case 'date':
+				return Schema::is_date( $str ) ? (string) call_user_func( $env['date'], $str, '' ) : '';
+			case 'time':
+				return '' !== Repeater::time( $str ) ? (string) call_user_func( $env['time'] ?? static fn( $t ) => $t, $str ) : '';
+			case 'number':
+				if ( ! is_numeric( $str ) ) {
+					return '';
+				}
+				$fraction = str_contains( $str, '.' ) ? rtrim( substr( $str, strpos( $str, '.' ) + 1 ), '0' ) : '';
+				return (string) call_user_func( $env['number'], (float) $str, min( 6, strlen( $fraction ) ) );
+			case 'select':
+				foreach ( $sub['options'] as $option ) {
+					if ( $option['value'] === $str ) {
+						return Schema::text( $option['label'], (string) ( $env['locale'] ?? '' ) );
+					}
+				}
+				return $str;
+			default:
+				return $str;
+		}
 	}
 
 	/** The URL a url, email or tel value links to; "" if it cannot be one. */

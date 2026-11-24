@@ -45,6 +45,10 @@ $out = match ( $argv[1] ?? '' ) {
 		'max_type'      => Schema::MAX_TYPE,
 		'max_taxonomy'  => Schema::MAX_TAXONOMY,
 		'max_field'     => Schema::MAX_FIELD,
+		// A repeater's subfields (class-repeater.php).
+		'subfield_keys'  => \EstrategiaWeb\ContentTypes\Repeater::SUBFIELD_KEYS,
+		'subfield_types' => \EstrategiaWeb\ContentTypes\Repeater::SUBFIELD_TYPES,
+		'max_subfield'   => \EstrategiaWeb\ContentTypes\Repeater::MAX_SUBFIELD,
 	),
 	default     => array( 'error' => 'unknown mode' ),
 };

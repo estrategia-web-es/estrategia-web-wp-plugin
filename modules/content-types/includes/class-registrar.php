@@ -80,7 +80,9 @@ final class Registrar {
 			}
 		}
 		// A field locked by WPML in a translation is not sent: its stored value is the one that counts.
-		$missing = self::missing( $def['fields'], array_map( static fn( $v ) => is_scalar( $v ) ? $v : '', (array) $input ), $id );
+		// Hours come as day → line (save_meta_box() reads them); a repeater's rows go as they are (Repeater::incomplete() reads them).
+		$repeaters = array_column( array_filter( $def['fields'], static fn( $f ) => 'repeater' === $f['type'] ), 'name', 'name' );
+		$missing   = self::missing( $def['fields'], array_map( static fn( $v ) => is_scalar( $v ) ? $v : '', array_diff_key( $input, $repeaters ) ) + array_intersect_key( $input, $repeaters ), $id );
 		if ( ! $missing ) {
 			return $data;
 		}
@@ -241,7 +243,11 @@ final class Registrar {
 						'description'       => Schema::text( $field['help'], $locale ),
 						'single'            => true,
 						'default'           => $field['default'],
-						'show_in_rest'      => true,
+						// A repeater is stored as JSON text and shown in REST as its list of rows (class-repeater.php).
+						'show_in_rest'      => 'repeater' === $field['type'] ? array(
+							'schema'           => Repeater::rest_schema( $field ),
+							'prepare_callback' => static fn( $value ) => Repeater::rows( $value, $field ),
+						) : true,
 						'sanitize_callback' => self::sanitizer( $field ),
 						'auth_callback'     => static fn( $allowed, $meta_key, $post_id ) => current_user_can( 'edit_post', $post_id ),
 					)
@@ -252,7 +258,7 @@ final class Registrar {
 			// the classic one (check_required_classic(), on the meta box's save). Boundary case: the FIRST
 			// publish in the block editor is already done when the meta box posts, so an empty required
 			// field is «kept» (the notice asks for it), not turned into a draft.
-			if ( 'main' !== $def['fields_box'] && array_filter( $def['fields'], static fn( $f ) => $f['required'] ) ) {
+			if ( 'main' !== $def['fields_box'] && array_filter( $def['fields'], static fn( $f ) => $f['required'] || 'repeater' === $f['type'] ) ) {
 				add_filter( 'rest_pre_insert_' . $name, array( self::class, 'check_required' ), 10, 2 );
 			}
 		}
@@ -344,6 +350,11 @@ final class Registrar {
 			return null;
 		}
 		if ( is_array( $_POST['estrategia_web_ct'][ $name ] ) ) {
+			if ( 'repeater' === $field['type'] ) {
+				// Row index → subfield → value. sanitize_textarea_field keeps a textarea's line breaks; each cell is then
+				// checked by its subfield's type in sanitizer() (Repeater::sub_value()).
+				return map_deep( wp_unslash( $_POST['estrategia_web_ct'][ $name ] ), 'sanitize_textarea_field' );
+			}
 			return 'hours' === $field['type'] ? map_deep( wp_unslash( $_POST['estrategia_web_ct'][ $name ] ), 'sanitize_text_field' ) : null;
 		}
 		return match ( $field['type'] ) {
@@ -378,6 +389,8 @@ final class Registrar {
 			'embed'       => static fn( $v ) => Sanitize::embed( $v ),
 			'local_image' => static fn( $v ) => Sanitize::local_image( (string) $v ),
 			'hours'       => static fn( $v ) => Hours::sanitize( $v ),
+			'time'        => static fn( $v ) => Repeater::time( $v ),
+			'repeater'    => static fn( $v ) => Repeater::sanitize( $v, $field ),
 			'number'   => static function ( $v ) use ( $field, $default ) {
 				if ( ! is_numeric( $v ) ) {
 					return $default;
@@ -432,10 +445,18 @@ final class Registrar {
 		$out    = array();
 		$locale = determine_locale();
 		foreach ( $fields as $field ) {
+			$sent = array_key_exists( $field['name'], $incoming );
+			if ( 'repeater' === $field['type'] ) {
+				// Not only when required: a row without a required subfield, or fewer rows than «min», stops a publish too (class-repeater.php).
+				$value = $sent ? $incoming[ $field['name'] ] : ( $post_id ? get_post_meta( $post_id, $field['name'], true ) : '' );
+				if ( Repeater::incomplete( $value, $field ) ) {
+					$out[ $field['name'] ] = Schema::text( $field['label'], $locale );
+				}
+				continue;
+			}
 			if ( ! $field['required'] ) {
 				continue;
 			}
-			$sent = array_key_exists( $field['name'], $incoming );
 			if ( 'number' === $field['type'] ) {
 				// 0 is a number (a free entry costs 0 €): empty is NOT GIVEN, never stored or sent blank.
 				$empty = $sent ? ! is_numeric( $incoming[ $field['name'] ] ) : ! ( $post_id && metadata_exists( 'post', $post_id, $field['name'] ) );

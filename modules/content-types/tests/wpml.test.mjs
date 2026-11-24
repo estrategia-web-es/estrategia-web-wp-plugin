@@ -12,6 +12,9 @@
 // Seen red (15-10-2026): without the post-ids attr for relation/image,
 // «relation and image with copy» failed; without the add_action of sync in
 // Wpml::boot(), «phone of the original» failed with [].
+// Seen red (24-11-2026, the repeater): with sync_repeater() writing the merge
+// WITHOUT wp_slash(), «repeater» failed (the quote's backslash lost: the
+// translation held broken JSON); restored, green.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
@@ -50,6 +53,7 @@ test("relation and image with copy: WPML copies the ID of the TRANSLATED post (p
 test("types and taxonomies: translate=1, display-as-translated=1+1 (never 2: WPML's XSD); a referenced taxonomy is not declared twice", () => {
   assert.deepEqual(cfg["custom-types"]["custom-type"], [
     { value: "gment_restaurant", attr: { translate: "1" } },
+    { value: "llest_esquela", attr: { translate: "1", "display-as-translated": "1" } },
     { value: "gment_wine", attr: { translate: "1", "display-as-translated": "1" } },
     { value: "eweb_content_type", attr: { translate: "0" } },
   ], "and the definitions' own post type (class-store.php), never translated");
@@ -73,6 +77,18 @@ test("no copy: «translate» fields, writes in the translation, other types", ()
   assert.deepEqual(wpml.on_translation, []);
   assert.equal(wpml.phone_after_trans, "971 00 00 02", "the original is not touched");
   assert.deepEqual(wpml.page_same_key, [], "a page with the same key is not ours");
+});
+
+test("repeater (llest_esquela's acts): «translate» for WPML, and its subfields that are not text copied by us, row by row", () => {
+  assert.deepEqual(field("llest_actes"), [{ value: "llest_actes", attr: { action: "translate" } }], "a repeater with a text subfield is translate");
+  assert.deepEqual(wpml.acts_syncs, [], "not WPML's copy: ours (WPML would overwrite the translated texts)");
+  assert.deepEqual(JSON.parse(wpml.acts_in_translation), [
+    { tipus: "Funeral", dia: "2026-11-25", hora: "18:00", lloc: "Parroquia de San Miguel" },
+    { tipus: "Vetlla", dia: "2026-11-24", lloc: 'Tanatori "Son Valentí"' },
+  ], "the new time copied, the translated place kept; the new act with the original's text, to be translated; the quote survives update_post_meta's unslash");
+  assert.deepEqual(wpml.acts_on_translation, []);
+  assert.match(wpml.acts_original_after, /Sant Miquel/, "a write in the translation does not touch the original");
+  assert.equal(wpml.acts_translation_deleted, false, "emptying the original empties the translation");
 });
 
 test("slugs per language: what goes into WPML's slug translation, original = the default language's", () => {

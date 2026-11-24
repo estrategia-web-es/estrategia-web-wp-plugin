@@ -354,6 +354,23 @@ final class Page {
 			'min'              => __( 'Minimum', 'estrategiaweb-toolkit' ),
 			'max'              => __( 'Maximum', 'estrategiaweb-toolkit' ),
 			'integer'          => __( 'Whole numbers only', 'estrategiaweb-toolkit' ),
+			// A repeater's own keys and its subfields (class-repeater.php; constructor.js, repeaterBody()).
+			'minRows'          => __( 'Fewest rows', 'estrategiaweb-toolkit' ),
+			'maxRows'          => __( 'Most rows', 'estrategiaweb-toolkit' ),
+			/* translators: %s: a language code such as es */
+			'itemLabel'        => __( 'What a row is called (%s)', 'estrategiaweb-toolkit' ),
+			'itemLabelHelp'    => __( 'In the editor: «Act» gives «Act 1», «Add Act».', 'estrategiaweb-toolkit' ),
+			/* translators: %s: a language code such as es */
+			'itemFormat'       => __( 'How a row is shown on the site (%s)', 'estrategiaweb-toolkit' ),
+			'itemFormatHelp'   => __( 'Each field of the row as {name}, e.g. «{type}: {day} {time}». Empty: the values joined by «·».', 'estrategiaweb-toolkit' ),
+			/* translators: %s: a placeholder name written in a row format */
+			'unknownPlaceholder' => __( '«{%s}» is not a field of the row.', 'estrategiaweb-toolkit' ),
+			'subfields'        => __( 'Fields of each row', 'estrategiaweb-toolkit' ),
+			/* translators: %d: position of a field inside a row */
+			'subfield'         => __( 'Row field %d', 'estrategiaweb-toolkit' ),
+			'subfieldName'     => __( 'Name (its key in the row)', 'estrategiaweb-toolkit' ),
+			'subfieldNameHelp' => __( 'Lowercase letters, digits and “_”, starting with a letter. Renaming it leaves what the rows already have under the old name unread.', 'estrategiaweb-toolkit' ),
+			'addSubfield'      => __( 'Add a field to the row', 'estrategiaweb-toolkit' ),
 			'trueLabel'        => __( 'Text when yes (empty: «Yes»)', 'estrategiaweb-toolkit' ),
 			'falseLabel'       => __( 'Text when no (empty: «No»)', 'estrategiaweb-toolkit' ),
 			'moveUp'           => __( 'Move up', 'estrategiaweb-toolkit' ),
@@ -388,6 +405,8 @@ final class Page {
 				'embed'       => __( 'Embedded map or video', 'estrategiaweb-toolkit' ),
 				'local_image' => __( 'Image of this site by path', 'estrategiaweb-toolkit' ),
 				'hours'       => __( 'Opening hours (days and times)', 'estrategiaweb-toolkit' ),
+				'time'        => __( 'Time of day', 'estrategiaweb-toolkit' ),
+				'repeater'    => __( 'Repeating list', 'estrategiaweb-toolkit' ),
 			),
 			'supportNames'     => array(
 				'title'           => __( 'Title', 'estrategiaweb-toolkit' ),

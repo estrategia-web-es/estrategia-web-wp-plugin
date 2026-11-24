@@ -239,7 +239,7 @@
 		el( 'div', { class: 'ewct-languages' }, languages().map( ( lang ) => control( fill( labelText, lang ), { ...opts, value: getText( holder, key, lang ), oninput: ( v ) => { setText( holder, key, lang, v ); opts.after && opts.after( lang, v ); }, attrs: { 'data-lang': lang, 'data-key': opts.dataKey || key, ...( opts.attrs || {} ) } } ) ) );
 
 	/** The keys a field type has of its own: removed when the type changes, or the server refuses them. */
-	const OWN = { select: [ 'options' ], relation: [ 'post_type' ], number: [ 'min', 'max', 'integer' ], boolean: [ 'true_label', 'false_label' ] };
+	const OWN = { select: [ 'options' ], relation: [ 'post_type' ], number: [ 'min', 'max', 'integer' ], boolean: [ 'true_label', 'false_label' ], repeater: [ 'fields', 'min', 'max', 'item_format', 'item_label' ] };
 
 	function optionsText( field ) {
 		return ( field.options || [] )
@@ -656,6 +656,75 @@
 			speak( fill( t.removed, fieldLabel( field ) ) );
 		}
 
+		/*
+		 * A REPEATER's own keys (24-11-2026, includes/class-repeater.php): the
+		 * rows' minimum and maximum, what a row is called and how it is shown
+		 * (per language), and its SUBFIELDS — each one a small box with name,
+		 * type, label per language, «required» and, for a select, its options;
+		 * Move up / Move down / Remove and «Add a field to the row». What is
+		 * written: constructor-model.js (addSubfield, setSubfieldType…). A
+		 * structural change repaints the fields and puts the focus back where
+		 * it was (the subfield's number, never an id: uid() changes on paint).
+		 */
+		function repeaterBody( field, i ) {
+			const subs = Array.isArray( field.fields ) ? field.fields : [];
+			const subLabel = ( sub, j ) => text( sub.label, mainLang() ) || sub.name || fill( t.subfield, j + 1 );
+			// Each selector in turn: the first that exists in the repainted row takes the focus.
+			const again = ( ...selectors ) => {
+				touch();
+				paintFields();
+				const row = rowOf( i );
+				const target = row && selectors.map( ( s ) => row.querySelector( s ) ).find( Boolean );
+				target && target.focus();
+			};
+			const warn = el( 'p', { class: 'description ewct-format-warning', 'data-key': 'item-format-warning', role: 'status' } );
+			const checkFormat = () => {
+				const formats = typeof field.item_format === 'object' && field.item_format ? Object.values( field.item_format ) : [ field.item_format ];
+				const unknown = [ ...new Set( formats.flatMap( ( f ) => M.unknownPlaceholders( f, subs ) ) ) ];
+				warn.textContent = unknown.map( ( n ) => fill( t.unknownPlaceholder, n ) ).join( ' ' );
+			};
+			checkFormat();
+			const whole = ( v ) => ( v === '' || isNaN( parseInt( v, 10 ) ) ? undefined : Math.max( 0, parseInt( v, 10 ) ) );
+			return [
+				control( t.minRows, { type: 'number', value: field.min ?? '', attrs: { 'data-key': 'min', min: 0, step: 1 }, oninput: ( v ) => { const n = whole( v ); if ( n === undefined ) { delete field.min; } else { field.min = n; } touch(); } } ),
+				control( t.maxRows, { type: 'number', value: field.max ?? '', attrs: { 'data-key': 'max', min: 1, step: 1 }, oninput: ( v ) => { const n = whole( v ); if ( n === undefined ) { delete field.max; } else { field.max = n; } touch(); } } ),
+				perLanguage( field, 'item_label', t.itemLabel, { after: touch, dataKey: 'item_label', help: t.itemLabelHelp } ),
+				perLanguage( field, 'item_format', t.itemFormat, { after: () => { checkFormat(); touch(); }, dataKey: 'item_format', help: t.itemFormatHelp } ),
+				warn,
+				el(
+					'fieldset',
+					{ class: 'ewct-subfields' },
+					el( 'legend', {}, t.subfields ),
+					el(
+						'ol',
+						{ class: 'ewct-subfield-list' },
+						subs.map( ( sub, j ) =>
+							el(
+								'li',
+								{ class: 'ewct-subfield', 'data-sub': j },
+								el( 'p', { class: 'ewct-subfield-title' }, el( 'strong', {}, fill( t.subfield, j + 1 ) ) ),
+								control( t.subfieldName, { value: sub.name || '', help: t.subfieldNameHelp, attrs: { 'data-key': 'sub-name', maxlength: 32 }, oninput: ( v ) => { sub.name = v; checkFormat(); touch(); } } ),
+								choice( t.fieldType, sub.type || 'text', ( data.subfieldTypes || [] ).map( ( ft ) => [ ft, t.fieldTypes[ ft ] || ft ] ), ( v ) => { M.setSubfieldType( sub, v ); again( '[data-sub="' + j + '"] [data-key="sub-type"]' ); }, { 'data-key': 'sub-type' } ),
+								perLanguage( sub, 'label', t.label, { after: touch, dataKey: 'sub-label' } ),
+								checkbox( t.required, Boolean( sub.required ), ( on ) => { if ( on ) { sub.required = true; } else { delete sub.required; } touch(); }, { 'data-key': 'sub-required' } ),
+								sub.type === 'select' ? control( t.options, { multiline: true, value: optionsText( sub ), help: 'value | ' + languages().join( ' | ' ), attrs: { 'data-key': 'sub-options' }, oninput: ( v ) => { sub.options = parseOptions( v ); touch(); } } ) : null,
+								el(
+									'p',
+									{ class: 'ewct-subfield-buttons' },
+									button( t.moveUp, () => { M.move( field.fields, j, j - 1 ); again( '[data-sub="' + ( j - 1 ) + '"] [data-action="sub-move-up"]:not([disabled])', '[data-sub="' + ( j - 1 ) + '"] [data-key="sub-name"]' ); }, { 'aria-label': fill( t.moveUpField, subLabel( sub, j ) ), disabled: j === 0, 'data-action': 'sub-move-up' } ),
+									' ',
+									button( t.moveDown, () => { M.move( field.fields, j, j + 1 ); again( '[data-sub="' + ( j + 1 ) + '"] [data-action="sub-move-down"]:not([disabled])', '[data-sub="' + ( j + 1 ) + '"] [data-key="sub-name"]' ); }, { 'aria-label': fill( t.moveDownField, subLabel( sub, j ) ), disabled: j === subs.length - 1, 'data-action': 'sub-move-down' } ),
+									' ',
+									button( t.remove, () => { M.removeSubfield( field, j ); speak( fill( t.removed, subLabel( sub, j ) ) ); again( field.fields.length ? '[data-sub="' + Math.min( j, field.fields.length - 1 ) + '"] [data-key="sub-name"]' : '[data-action="add-subfield"]' ); }, { class: 'button button-link-delete', 'aria-label': fill( t.removeField, subLabel( sub, j ) ), 'data-action': 'sub-remove' } )
+								)
+							)
+						)
+					),
+					button( t.addSubfield, () => { M.addSubfield( field ); again( '[data-sub="' + ( field.fields.length - 1 ) + '"] [data-key="sub-name"]' ); }, { 'data-action': 'add-subfield' } )
+				),
+			];
+		}
+
 		function fieldBody( field, i, refreshHead ) {
 			const lockedField = lockedFields.has( field.name ) && field.name;
 			const own = [];
@@ -672,8 +741,10 @@
 				);
 			} else if ( field.type === 'boolean' ) {
 				own.push( perLanguage( field, 'true_label', t.trueLabel + ' (%s)', { after: touch } ), perLanguage( field, 'false_label', t.falseLabel + ' (%s)', { after: touch } ) );
+			} else if ( field.type === 'repeater' ) {
+				own.push( repeaterBody( field, i ) );
 			}
-			const noDefault = [ 'image', 'relation' ].includes( field.type );
+			const noDefault = [ 'image', 'relation', 'repeater' ].includes( field.type );
 			return [
 				perLanguage( field, 'label', t.label, { after: () => { refreshHead(); touch(); } } ),
 				control( t.fieldName, { value: field.name || '', readonly: Boolean( lockedField ), help: lockedField ? t.fieldNameLocked : null, attrs: { 'data-key': 'field-name', maxlength: 64 }, oninput: ( v ) => { field.name = v; refreshHead(); touch(); } } ),
@@ -685,6 +756,9 @@
 					delete field.default;
 					if ( v === 'select' ) {
 						field.options = [];
+					}
+					if ( v === 'repeater' ) {
+						M.toRepeater( field );
 					}
 					if ( v === 'boolean' ) {
 						delete field.required;

@@ -100,6 +100,64 @@
 		return lines;
 	};
 
+	// time: the site's time format (Bindings' timeFormat), like the hours.
+	const timeText = ( t ) => ( /^([01]\d|2[0-3]):[0-5]\d$/.test( t ) ? ( wp.date && config.timeFormat ? wp.date.format( config.timeFormat, '1970-01-01T' + t + ':00' ) : t ) : '' );
+
+	// repeater: Field_Format::row_text() / sub_text() and Repeater::apply_format(), the editor's copy.
+	// The value is the list REST gives (already sanitized: it is what is stored).
+	const subText = ( sub, value ) => {
+		const str = value === undefined || value === null ? '' : String( value ).trim();
+		if ( str === '' ) {
+			return '';
+		}
+		switch ( sub.kind ) {
+			case 'date':
+				return /^\d{4}-\d{2}-\d{2}$/.test( str ) ? wp.date.dateI18n( config.dateFormat, str + 'T12:00:00Z', 'UTC' ) : '';
+			case 'time':
+				return timeText( str );
+			case 'number': {
+				if ( isNaN( Number( str ) ) ) {
+					return '';
+				}
+				const d = Math.min( 6, str.includes( '.' ) ? str.split( '.' )[ 1 ].replace( /0+$/, '' ).length : 0 );
+				try {
+					return new Intl.NumberFormat( config.locale, { minimumFractionDigits: d, maximumFractionDigits: d } ).format( Number( str ) );
+				} catch ( e ) {
+					return Number( str ).toFixed( d );
+				}
+			}
+			case 'select':
+				return sub.options[ str ] !== undefined ? sub.options[ str ] : str;
+			default:
+				return str;
+		}
+	};
+	const applyFormat = ( format, values ) => {
+		const parts = format.split( /(\{[a-z][a-z0-9_]*\})/ );
+		const keep = parts.map( () => true );
+		let first = true;
+		for ( let i = 1; i < parts.length; i += 2 ) {
+			const value = values[ parts[ i ].slice( 1, -1 ) ] || '';
+			if ( value === '' ) {
+				keep[ i ] = false;
+				if ( first ) {
+					keep[ i + 1 ] = i + 2 >= parts.length;
+				} else {
+					keep[ i - 1 ] = false;
+				}
+			} else {
+				parts[ i ] = value;
+				first = false;
+			}
+		}
+		return first ? '' : parts.filter( ( p, i ) => keep[ i ] ).join( '' ).trim();
+	};
+	const rowText = ( field, row ) => {
+		const values = {};
+		( field.fields || [] ).forEach( ( sub ) => ( values[ sub.key ] = subText( sub, row ? row[ sub.key ] : '' ) ) );
+		return field.itemFormat ? applyFormat( field.itemFormat, values ) : Object.values( values ).filter( Boolean ).join( ' · ' );
+	};
+
 	// The same rules as Field_Format::format(). undefined = «not known (yet)».
 	// html: the attribute is the block's HTML (escaped here) or an HTML attribute (plain): see PHP's is_html().
 	const format = ( select, field, raw, attribute, args, html ) => {
@@ -120,6 +178,26 @@
 				}
 				const lines = hoursSummary( str );
 				return html ? lines.map( escapeHtml ).join( '<br>' ) : lines.join( '; ' );
+			}
+			case 'time':
+				return kind === 'text' ? escape( timeText( str ) ) : '';
+			case 'repeater': {
+				if ( kind !== 'text' ) {
+					return '';
+				}
+				let list = raw;
+				if ( typeof raw === 'string' ) {
+					try {
+						list = raw ? JSON.parse( raw ) : [];
+					} catch ( e ) {
+						list = [];
+					}
+				}
+				const items = ( Array.isArray( list ) ? list : [] ).map( ( row ) => rowText( field, row ) ).filter( Boolean );
+				if ( ! items.length ) {
+					return '';
+				}
+				return html ? '<ul class="estrategia-web-ct-list">' + items.map( ( i ) => '<li>' + escapeHtml( i ).replace( /\r?\n/g, '<br>' ) + '</li>' ).join( '' ) + '</ul>' : items.join( '; ' );
 			}
 			case 'rating':
 				// The number, not stars (Field_Format: a screen reader reads «black star» four times). 0 = no rating.

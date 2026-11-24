@@ -1,0 +1,43 @@
+{
+  "$schema": "../content-types.schema.json",
+  "prefix": "llest_",
+  "name": "llest_esquela",
+  "slug": { "ca": "esqueles", "es": "esquelas" },
+  "labels": {
+    "singular": { "ca": "Esquela", "es": "Esquela" },
+    "plural": { "ca": "Esqueles", "es": "Esquelas" }
+  },
+  "icon": "dashicons-heart",
+  "supports": ["title", "editor", "thumbnail", "revisions"],
+  "fields": [
+    {
+      "name": "llest_actes",
+      "type": "repeater",
+      "label": { "ca": "Actes", "es": "Actos" },
+      "help": { "ca": "Un acte per fila: vetlla, funeral, rosari…", "es": "Un acto por fila: velatorio, funeral, rosario…" },
+      "item_label": { "ca": "Acte", "es": "Acto" },
+      "item_format": "{tipus}: {dia} {hora}–{fins}, {lloc}",
+      "max": 10,
+      "fields": [
+        {
+          "name": "tipus",
+          "type": "select",
+          "label": { "ca": "Tipus", "es": "Tipo" },
+          "required": true,
+          "options": [
+            { "value": "Vetlla", "label": { "ca": "Vetlla", "es": "Velatorio" } },
+            { "value": "Funeral", "label": { "ca": "Funeral", "es": "Funeral" } },
+            { "value": "Rosari", "label": { "ca": "Rosari", "es": "Rosario" } },
+            { "value": "Exèquies", "label": { "ca": "Exèquies", "es": "Exequias" } },
+            { "value": "Condol", "label": { "ca": "Condol", "es": "Duelo" } },
+            { "value": "Missa", "label": { "ca": "Missa", "es": "Misa" } }
+          ]
+        },
+        { "name": "dia", "type": "date", "label": { "ca": "Dia", "es": "Día" }, "required": true },
+        { "name": "hora", "type": "time", "label": { "ca": "Hora", "es": "Hora" } },
+        { "name": "fins", "type": "time", "label": { "ca": "Fins a", "es": "Hasta" } },
+        { "name": "lloc", "type": "text", "label": { "ca": "Lloc", "es": "Lugar" } }
+      ]
+    }
+  ]
+}
