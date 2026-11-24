@@ -40,7 +40,8 @@
  *   REST gives; the box posts estrategia_web_ct[key][row][subfield] plus a
  *   hidden estrategia_web_ct[key] = "" so that removing every row is a
  *   change too (render_repeater()). Its save goes through wp_slash(): the
- *   JSON's backslashes would be lost to update_post_meta()'s unslash. In a
+ *   JSON's backslashes would be lost to update_post_meta()'s unslash. Every
+ *   other field too (2.14.0): before, a text «C:\x» was stored «C:x». In a
  *   WPML translation the rows are locked (config(), «lockRows») and the
  *   save merges the posted texts into the stored rows.
  * - The trap: a <textarea> sends «\r\n»; the textarea sanitizer normalizes
@@ -475,7 +476,9 @@ final class Fields_Panel {
 				$value = array_map( static fn( $line ) => Hours::from_line( (string) $line ), array_intersect_key( $value, array_flip( Hours::DAYS ) ) );
 			}
 			$value = Registrar::sanitizer( $defs[ $key ] )( $value );
-			update_post_meta( $post_id, $field['key'], $value );
+			// The same trap, every type (2.14.0): posted() already unslashed, and update_post_meta() unslashes again,
+			// so «C:\x» was stored as «C:x». wp_slash() leaves numbers and booleans alone (tests/meta-box.test.mjs).
+			update_post_meta( $post_id, $field['key'], wp_slash( $value ) );
 		}
 	}
 
