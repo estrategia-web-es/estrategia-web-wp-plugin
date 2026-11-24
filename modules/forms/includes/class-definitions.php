@@ -42,8 +42,10 @@ final class Definitions {
 	 * to notifications. All are read with their default (?? …) wherever they
 	 * are used, so a format-1 snapshot of a cached page still works: it is a
 	 * plain form, as it was.
+	 * 3 (unreleased, 24-11-2026): «cc» and «bcc» on notifications, read with
+	 * ?? '' (Notifier): a format-2 snapshot simply has no copies.
 	 */
-	public const FORMAT = 2;
+	public const FORMAT = 3;
 
 	public const FIELD_BLOCKS = array(
 		'estrategia-web-forms/text'     => 'text',
@@ -164,6 +166,8 @@ final class Definitions {
 					'label'    => sanitize_text_field( (string) ( $atts['label'] ?? '' ) ),
 					'to'       => sanitize_text_field( (string) ( $atts['to'] ?? '' ) ),
 					'reply_to' => sanitize_text_field( (string) ( $atts['replyTo'] ?? '' ) ),
+					'cc'       => sanitize_text_field( (string) ( $atts['cc'] ?? '' ) ),
+					'bcc'      => sanitize_text_field( (string) ( $atts['bcc'] ?? '' ) ),
 					'subject'  => sanitize_text_field( (string) ( $atts['subject'] ?? '' ) ),
 					'body'     => sanitize_textarea_field( (string) ( $atts['body'] ?? '' ) ),
 					'when'     => in_array( $atts['when'] ?? '', self::WHEN, true ) ? (string) $atts['when'] : 'created',

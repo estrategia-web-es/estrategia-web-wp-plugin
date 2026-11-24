@@ -157,7 +157,13 @@ final class Admin {
 		echo '<th>' . esc_html__( 'Notification', 'estrategiaweb-toolkit' ) . '</th><th>' . esc_html__( 'Recipients', 'estrategiaweb-toolkit' ) . '</th><th>' . esc_html__( 'Result', 'estrategiaweb-toolkit' ) . '</th></tr></thead><tbody>';
 		foreach ( $row['notifications'] as $n ) {
 			$result = 'sent' === $n['status'] ? __( 'Sent', 'estrategiaweb-toolkit' ) : __( 'Failed', 'estrategiaweb-toolkit' ) . ': ' . $n['error'];
-			printf( '<tr><td>%s</td><td>%s</td><td>%s</td></tr>', esc_html( $n['label'] ), esc_html( $n['to'] ), esc_html( $result ) );
+			$to = esc_html( $n['to'] );
+			foreach ( array( 'cc' => 'Cc', 'bcc' => 'Bcc' ) as $key => $header ) { // Unreleased: the copies (older rows have none).
+				if ( '' !== (string) ( $n[ $key ] ?? '' ) ) {
+					$to .= '<br>' . esc_html( $header . ': ' . $n[ $key ] );
+				}
+			}
+			printf( '<tr><td>%s</td><td>%s</td><td>%s</td></tr>', esc_html( $n['label'] ), $to, esc_html( $result ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $to is escaped piece by piece above.
 		}
 		if ( ! $row['notifications'] ) {
 			echo '<tr><td colspan="3">' . esc_html__( 'This form has no notifications.', 'estrategiaweb-toolkit' ) . '</td></tr>';
@@ -176,10 +182,34 @@ final class Admin {
 		foreach ( $details as $label => $value ) {
 			printf( '<tr><th scope="row" style="width:25%%">%s</th><td>%s</td></tr>', esc_html( $label ), esc_html( (string) $value ) );
 		}
+		$entry = (int) ( $row['context_post_id'] ?? 0 );
+		if ( $entry > 0 ) {
+			printf( '<tr class="estrategia-web-forms-entry"><th scope="row" style="width:25%%">%s</th><td>%s</td></tr>', esc_html__( 'Entry', 'estrategiaweb-toolkit' ), wp_kses_post( self::entry_link( $entry ) ) );
+		}
 		echo '</tbody></table>';
 		$delete = add_query_arg( array( 'page' => self::PAGE, 'action' => 'delete', 'id' => $row['id'] ), admin_url( 'admin.php' ) );
 		echo '<p><a class="button button-link-delete" href="' . esc_url( $delete ) . '">' . esc_html__( 'Delete this submission', 'estrategiaweb-toolkit' ) . '</a></p>';
 		echo '</div>';
+	}
+
+	/**
+	 * The entry a submission was sent from (its signed context, the
+	 * {{post_*}} markers): its title linked to the entry, and «Edit» when the
+	 * user can. One deleted since: its number, said so.
+	 */
+	private static function entry_link( int $id ): string {
+		$post = get_post( $id );
+		if ( ! $post ) {
+			/* translators: %d: the id of a post that no longer exists. */
+			return esc_html( sprintf( __( '#%d (deleted)', 'estrategiaweb-toolkit' ), $id ) );
+		}
+		$title = '' !== get_the_title( $post ) ? get_the_title( $post ) : '#' . $id;
+		$html  = '<a href="' . esc_url( (string) get_permalink( $post ) ) . '">' . esc_html( wp_strip_all_tags( $title ) ) . '</a>';
+		$edit  = get_edit_post_link( $post, 'raw' );
+		if ( $edit ) {
+			$html .= ' · <a href="' . esc_url( $edit ) . '">' . esc_html__( 'Edit', 'estrategiaweb-toolkit' ) . '</a>';
+		}
+		return $html;
 	}
 
 	/**

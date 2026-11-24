@@ -13,6 +13,8 @@
 		"label": { "type": "string", "default": "" },
 		"to": { "type": "string", "default": "" },
 		"replyTo": { "type": "string", "default": "" },
+		"cc": { "type": "string", "default": "" },
+		"bcc": { "type": "string", "default": "" },
 		"subject": { "type": "string", "default": "" },
 		"body": { "type": "string", "default": "" },
 		"when": { "type": "string", "enum": [ "created", "updated", "always" ], "default": "created" }

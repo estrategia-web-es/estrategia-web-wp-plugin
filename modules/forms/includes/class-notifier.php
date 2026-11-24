@@ -19,7 +19,20 @@
  *   commit.
  * - Edge case: if the recipient comes from a field and the visitor left it
  *   empty or wrong, that notification is recorded as FAILED in the log, with
- *   the reason, and the other notifications go out anyway.
+ *   the reason, and the other notifications go out anyway. An EMPTY «To»
+ *   template is the administrator's email; a To that only had addresses
+ *   that did not survive is not (an acknowledgement to an empty {{email}}
+ *   must not land in the admin's inbox).
+ * - Recipients (unreleased, 24-11-2026): To, Cc, Bcc and Reply-To are all
+ *   validated after their markers are replaced, address by address
+ *   (Markers::addresses()); bad ones are dropped and the rest go. The Cc
+ *   does not repeat the To, the Bcc neither. The edge case, by name: the
+ *   obituary's condolences with Cc = {{post_field:correu_familia}} on an
+ *   obituary without that email go to the funeral home alone, «sent».
+ * - Who may choose a recipient: only the form's author, in the block. The
+ *   visitor reaches one only through a FIELD marker the author put there
+ *   ({{email}} in the acknowledgement's To or the team's Reply-To); the
+ *   entry markers read the entry signed into the form, never the request.
  * - The trap: wp_mail() returns true if the email was HANDED TO THE mail
  *   SERVER, not if it arrived. «Sent» in the log means that. If a site needs
  *   to know more, that is up to its SMTP, not this plugin.
@@ -34,8 +47,8 @@ final class Notifier {
 	/**
 	 * @param array                 $definition The form definition.
 	 * @param array<string, string> $values     Values already validated.
-	 * @param array{page_url: string, lang: string} $meta
-	 * @return array<int, array{label: string, to: string, status: string, error: string}>
+	 * @param array{page_url: string, lang: string, extra?: array, post?: ?\WP_Post} $meta «post»: the entry of the signed context, or null.
+	 * @return array<int, array{label: string, to: string, status: string, error: string, cc: string, bcc: string}>
 	 */
 	public static function send_all( array $definition, array $values, array $meta ): array {
 		$results = array();
@@ -49,18 +62,13 @@ final class Notifier {
 		$markers = self::marker_values( $definition, $values, $meta );
 		$label   = '' !== $n['label'] ? $n['label'] : sprintf( 'notification-%d', $index + 1 );
 
+		// Every address is validated AFTER its markers are replaced, one by one (Markers::addresses()).
 		$to_template = '' !== trim( (string) $n['to'] ) ? (string) $n['to'] : (string) get_option( 'admin_email' );
-		$recipients  = array_values( array_filter( array_map( 'trim', preg_split( '/[,;]/', Markers::replace( $to_template, $markers['text'] ) ) ), 'is_email' ) );
-		$to_display  = implode( ', ', $recipients );
-
-		if ( ! $recipients ) {
-			return array(
-				'label'  => $label,
-				'to'     => '',
-				'status' => 'failed',
-				'error'  => __( 'No valid recipient.', 'estrategiaweb-toolkit' ),
-			);
-		}
+		$address_of  = static fn( string $template, array $except = array() ): array => Markers::addresses( Markers::replace( $template, $markers['text'] ), 'is_email', $except );
+		$recipients  = $address_of( $to_template );
+		$cc          = $address_of( (string) ( $n['cc'] ?? '' ), $recipients );
+		$bcc         = $address_of( (string) ( $n['bcc'] ?? '' ), array_merge( $recipients, $cc ) );
+		$reply_to    = $address_of( (string) $n['reply_to'] );
 
 		$subject_template = '' !== trim( (string) $n['subject'] ) ? (string) $n['subject'] : '{{' . Markers::SITE_NAME . '}}: ' . ( $definition['title'] ?: __( 'New message', 'estrategiaweb-toolkit' ) );
 		$subject          = Markers::single_line( Markers::replace( $subject_template, $markers['text'] ) );
@@ -69,10 +77,15 @@ final class Notifier {
 		$text = Markers::replace( $body, $markers['text'] );
 		$html = Markers::replace( nl2br( esc_html( $body ), false ), $markers['html'] );
 
-		$headers  = array( 'Content-Type: text/html; charset=UTF-8', 'From: ' . self::from() );
-		$reply_to = Markers::single_line( Markers::replace( (string) $n['reply_to'], $markers['text'] ) );
-		if ( '' !== $reply_to && is_email( $reply_to ) ) {
-			$headers[] = 'Reply-To: ' . $reply_to;
+		$headers = array( 'Content-Type: text/html; charset=UTF-8', 'From: ' . self::from() );
+		if ( $reply_to ) {
+			$headers[] = 'Reply-To: ' . implode( ', ', $reply_to );
+		}
+		if ( $cc ) {
+			$headers[] = 'Cc: ' . implode( ', ', $cc );
+		}
+		if ( $bcc ) {
+			$headers[] = 'Bcc: ' . implode( ', ', $bcc );
 		}
 
 		$mail = array(
@@ -83,13 +96,30 @@ final class Notifier {
 			'headers' => $headers,
 		);
 		/**
-		 * Last touch to a notification before sending it.
+		 * Last touch to a notification before sending it. Since the entry
+		 * markers (unreleased) it runs EVEN when no To address survived: a
+		 * site can still set one here. With «to» still empty afterwards the
+		 * notification is logged as failed.
 		 *
-		 * @param array $mail       to, subject, html, text, headers.
+		 * @param array $mail       to, subject, html, text, headers (Cc, Bcc and Reply-To are headers).
 		 * @param array $n          The notification configuration.
 		 * @param array $definition The form definition.
 		 */
-		$mail = (array) apply_filters( 'estrategia_web_forms_email', $mail, $n, $definition );
+		$mail       = (array) apply_filters( 'estrategia_web_forms_email', $mail, $n, $definition );
+		$to_display = implode( ', ', (array) $mail['to'] );
+		$copies     = array(
+			'cc'  => implode( ', ', $cc ),
+			'bcc' => implode( ', ', $bcc ),
+		);
+
+		if ( ! array_filter( (array) $mail['to'] ) ) {
+			return array(
+				'label'  => $label,
+				'to'     => '',
+				'status' => 'failed',
+				'error'  => __( 'No valid recipient.', 'estrategiaweb-toolkit' ),
+			) + $copies;
+		}
 
 		$error    = '';
 		$on_fail  = static function ( \WP_Error $e ) use ( &$error ): void {
@@ -109,7 +139,7 @@ final class Notifier {
 			'to'     => $to_display,
 			'status' => $sent ? 'sent' : 'failed',
 			'error'  => $sent ? '' : ( '' !== $error ? $error : __( 'wp_mail() returned false.', 'estrategiaweb-toolkit' ) ),
-		);
+		) + $copies;
 	}
 
 	/**
@@ -151,7 +181,7 @@ final class Notifier {
 			),
 			array_intersect_key( (array) ( $meta['extra'] ?? array() ), array_flip( array( Markers::DOSSIER_URL, Markers::MISSING ) ) )
 		);
-		$fixed = array_merge( $fixed, $extra );
+		$fixed = array_merge( $fixed, $extra, self::entry_values( $definition, $meta['post'] ?? null ) );
 		$text  = array_merge( $text, $fixed, array( Markers::ALL_FIELDS => rtrim( $all_text ) ) );
 		foreach ( $fixed as $key => $value ) {
 			$html[ $key ] = esc_html( $value );
@@ -165,6 +195,35 @@ final class Notifier {
 			'text' => $text,
 			'html' => $html,
 		);
+	}
+
+	/**
+	 * The entry markers (class-markers.php): the title, the link and the
+	 * {{post_field:<key>}} that the form's notifications use, read from the
+	 * entry whose id came SIGNED with the form (Rest::context_post()). Without
+	 * one, all of them are known and empty, so a template never shows
+	 * «{{post_title}}» verbatim and the submission goes on.
+	 *
+	 * @return array<string, string>
+	 */
+	private static function entry_values( array $definition, ?\WP_Post $post ): array {
+		$templates = array();
+		foreach ( (array) ( $definition['notifications'] ?? array() ) as $n ) {
+			foreach ( array( 'to', 'cc', 'bcc', 'reply_to', 'subject', 'body' ) as $key ) {
+				$templates[] = (string) ( $n[ $key ] ?? '' );
+			}
+		}
+		$out = array(
+			Markers::POST_TITLE => $post ? wp_specialchars_decode( wp_strip_all_tags( (string) get_the_title( $post ) ), ENT_QUOTES ) : '',
+			Markers::POST_URL   => $post ? (string) get_permalink( $post ) : '',
+		);
+		$registered = $post ? array_keys( get_registered_meta_keys( 'post', $post->post_type ) + get_registered_meta_keys( 'post' ) ) : array();
+		foreach ( Markers::post_field_keys( ...$templates ) as $key ) {
+			$meta_key = $post ? Markers::post_field_key( $key, $post->post_type, $registered, static fn( string $k ): bool => is_protected_meta( $k, 'post' ) ) : '';
+			$value    = '' !== $meta_key ? get_post_meta( $post->ID, $meta_key, true ) : '';
+			$out[ Markers::POST_FIELD . ':' . $key ] = is_scalar( $value ) ? (string) $value : ''; // An array (a repeater, a gallery) has no text form here.
+		}
+		return $out;
 	}
 
 	/**

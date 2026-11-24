@@ -10,6 +10,8 @@
 // check_admin_referer() removed from Admin::export_csv() (2: the export
 // without a nonce answered 200); the confirmation screen deleting already (3).
 // Seen red again after round 2 (28-10-2026), every test, with the mutants above (one by one where a test reads what the one before left).
+// Unreleased (24-11-2026): the detail's «Entry» row and the Cc/Bcc under each notification's To.
+// Seen red with the «Entry» row's condition inverted (no row); restored, green.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { adminSession } from "../../../tests/lib.mjs";
@@ -32,12 +34,14 @@ const contact = (nombre, email) => ({
   ],
 });
 
-let s, ids, all, onlyQuote, onlyContact;
+let s, ids, all, onlyQuote, onlyContact, obituary;
 before(async () => {
-  [{ submissions: ids }, s] = await Promise.all([
+  [{ submissions: ids, pages: { obituary } }, s] = await Promise.all([
     seed({
+      // Unreleased: Ana's submission was sent from an obituary (its signed context) with the family in Cc.
+      pages: [{ key: "obituary", type: "post", slug: "joan-mas-registre", title: "Joan Mas", content: "" }],
       submissions: [
-        contact("Ana", "ana@ejemplo.test"),
+        { ...contact("Ana", "ana@ejemplo.test"), context_post: "obituary", notifications: [{ label: "Aviso al equipo", to: TEAM, cc: "familia@ejemplo.test", bcc: "arxiu@ejemplo.test", status: "sent" }, contact().notifications[1]] },
         contact("Bernat", "=cmd@ejemplo.test"),
         { form_id: "presupuesto", form_title: "Presupuesto", data: [{ name: "empresa", label: "Empresa", type: "text", value: "Acme" }] },
       ],
@@ -59,6 +63,10 @@ test("list, filter by form and a submission's detail with each notification's re
   const notes = detail.match(/<table[^>]*estrategia-web-forms-notifications[\s\S]*?<\/table>/)[0];
   assert.match(notes, /Aviso al equipo/);
   assert.match(notes, /fail@ejemplo\.test/);
+  assert.match(notes, /Cc: familia@ejemplo\.test<br>Bcc: arxiu@ejemplo\.test/, "the copies, under the To");
+  const entry = detail.match(/<tr class="estrategia-web-forms-entry">[\s\S]*?<\/tr>/)?.[0] ?? "";
+  assert.match(decode(entry), new RegExp(`<a href="${obituary.url.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&")}">Joan Mas</a>`), "the entry it was sent from, linked:\n" + entry);
+  assert.match(decode(entry), /post\.php\?post=\d+&action=edit/, "and its Edit link");
 });
 
 test("CSV export: header, rows and dangerous cells neutralized; without a nonce, neither export nor delete", async () => {

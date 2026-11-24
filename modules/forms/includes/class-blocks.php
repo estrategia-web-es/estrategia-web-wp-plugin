@@ -110,6 +110,10 @@ final class Blocks {
 			<input type="hidden" name="_af_def" value="<?php echo esc_attr( $hash ); ?>">
 			<input type="hidden" name="_af_token" value="<?php echo esc_attr( Token::create( $hash, time(), wp_salt( 'nonce' ) ) ); ?>">
 			<input type="hidden" name="_af_page" value="<?php echo esc_url( self::current_url() ); ?>">
+			<?php $ctx = Token::context( self::context_post_id(), $hash, wp_salt( 'nonce' ) ); ?>
+			<?php if ( '' !== $ctx ) : ?>
+				<input type="hidden" name="_af_ctx" value="<?php echo esc_attr( $ctx ); ?>">
+			<?php endif; ?>
 			<?php if ( $row ) : ?>
 				<input type="hidden" name="_af_dossier" value="<?php echo esc_attr( $token ); ?>">
 			<?php endif; ?>
@@ -548,6 +552,18 @@ final class Blocks {
 		}
 		$result = self::$results[ $key ];
 		return ( $result && ( $result['form_id'] ?? '' ) === $form_id ) ? $result : null;
+	}
+
+	/**
+	 * The entry the form is shown in, for the {{post_*}} markers: the queried
+	 * post of a singular view (an obituary, a page), 0 anywhere else (an
+	 * archive, the editor's preview, a REST render). Not
+	 * get_queried_object_id() alone: on a category archive that is a TERM
+	 * id, and a post with the same number would become the context.
+	 */
+	private static function context_post_id(): int {
+		$post = is_singular() ? get_queried_object() : null;
+		return $post instanceof \WP_Post ? (int) $post->ID : 0;
 	}
 
 	private static function current_url(): string {

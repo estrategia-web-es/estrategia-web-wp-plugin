@@ -183,6 +183,65 @@ test("dossier: the token is 32 random bytes in base64url and only its sha256 is 
   assert.equal(d.hash_is_sha256, true);
 });
 
+// Unreleased (24-11-2026): the entry the form is shown in (an obituary). Token::context() and the
+// {{post_*}} markers of class-markers.php; what WordPress adds (the hidden field, the entry still public,
+// the Cc header that leaves) is level 2 in form-ref.test.mjs.
+// Seen red (24-11-2026), one mutant at a time, each test at least once: context_id() returning the id
+// without checking the signature (other_def → 4242); sign_context() without the definition hash
+// (other_def → 4242); the context signed with the TOKEN's label «estrategia-web-forms|» (a_token →
+// 1790000000: a form token passed for a context); addresses() without the control-character check
+// (injection kept «familia@…\nBcc: spam@…»); trim(' ') instead of trim() (trailing_nl → []);
+// post_field_key() without its prefix step (prefixed → "correu_familia") and without $is_protected
+// (filtered → "secret"; a key with «_» is also refused by the key's own pattern, two guards); and the
+// marker pattern without «post_field:» (the subject kept {{post_title}}… verbatim).
+test("entry context: a signed id comes back only with its signature, its definition and its secret", () => {
+  const c = out.context;
+  assert.equal(c.ok, 4242);
+  assert.equal(c.shape, true, "«<id>.<40 hex>»");
+  assert.equal(c.absent, 0, "no _af_ctx: no context, and the submission goes on");
+  assert.equal(c.none_for_0, "", "outside a singular view there is nothing to sign");
+  assert.equal(c.other_def, 0, "copied from another form (another obituary): it does not hold");
+  assert.equal(c.other_id, 0, "changing the id breaks the signature");
+  assert.equal(c.tampered_sig, 0);
+  assert.equal(c.other_secret, 0, "signed by another site");
+  assert.equal(c.a_token, 0, "the form token is not a context");
+  assert.equal(c.garbage, 0);
+  assert.equal(c.leading_zero, 0, "only one way to write an id");
+});
+
+test("entry markers: title, url and post_field, case-insensitive; unknown ones stay; escaped in HTML", () => {
+  const e = out.entry;
+  assert.equal(e.subject, "Condol: Joan Mas Riera (familia@example.test) https://example.test/esqueles/joan-mas/");
+  assert.equal(e.protected, "[]", "a refused key is known and empty, never verbatim");
+  assert.equal(e.typo_kept, "{{post_feld:x}}|{{post_field:}}", "a typo shows in the email");
+  assert.equal(e.html_escaped, "Joan &lt;b&gt;");
+  assert.deepEqual(e.keys, ["correu_familia", "lle_data_funeral"], "only the post_field markers, lowercased, once");
+});
+
+test("entry markers: which meta {{post_field:<key>}} may read — registered, with the type's prefix, public; never «_»", () => {
+  assert.deepEqual(out.entry.key, {
+    registered: "lle_correu_familia",
+    prefixed: "lle_correu_familia",
+    public: "acf_email",
+    no_prefix: "correu_familia",
+    exact_first: "shared_key",
+    underscore: "",
+    filtered: "",
+    bad_chars: "",
+  });
+});
+
+test("addresses after the markers: one by one, bad and repeated ones dropped, a line break never adds a header", () => {
+  const a = out.entry.addresses;
+  assert.deepEqual(a.list, ["funeraria@example.test", "familia@example.test"], "commas and semicolons; the invalid, the empty and the repeated (any case) out");
+  assert.deepEqual(a.injection, [], "«familia@…\\nBcc: spam@…» is dropped whole, not cut at the break");
+  assert.deepEqual(a.cr_injection, ["ok@example.test"], "the poisoned one goes, the good one next to it stays");
+  assert.deepEqual(a.trailing_nl, ["familia@example.test"], "a meta saved from a textarea ends in a line break: that is not an injection");
+  assert.deepEqual(a.empty, []);
+  assert.deepEqual(a.except_to, ["familia@example.test"], "the Cc does not repeat the To");
+  assert.deepEqual(out.entry.addresses_trusting, [], "even with an is_email that accepts anything, a control character inside is dropped");
+});
+
 test("preselection: the first valid source wins; an invalid one yields to the next", () => {
   assert.equal(out.pre_first_wins, "Lavandería para hoteles");
   assert.equal(out.pre_falls_through, "Lavandería para barcos y yates", "a bad URL does not erase the page's value");

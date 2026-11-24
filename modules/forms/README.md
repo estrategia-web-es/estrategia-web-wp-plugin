@@ -82,8 +82,18 @@ no WPML) is in
    - **To**: addresses separated by commas or a marker (`{{email}}`).
      Empty = the site administrator's email.
    - **Reply to**: an address or a marker. Optional.
+   - **Cc** and **Bcc** (unreleased): copies and hidden copies, addresses
+     separated by commas or markers (`{{post_field:<key>}}`). Optional.
    - **Subject** and **Message**: text with markers. Empty message =
      `{{all_fields}}`.
+
+   Every address of To, Cc, Bcc and Reply-To is checked **after** its
+   markers are replaced, one by one: an empty or invalid one is dropped and
+   the rest go. One with a line break inside is dropped whole (it could only
+   be trying to add a header). The Cc does not repeat the To. An empty To is
+   the administrator's email; a To whose addresses all fell is logged as
+   failed (an acknowledgement to an empty `{{email}}` does not go to the
+   admin).
 5. The **consent checkbox** is always required. Whatever goes between braces
    in its label is the link: «I have read and accept the {privacy policy}.»
    (on a Spanish site, «He leído y acepto la {política de privacidad}»).
@@ -133,6 +143,9 @@ the reason for using the position and the pitfalls, in
 | `{{site_name}}` | the site name |
 | `{{dossier_url}}` | (2.11.0, dossier forms) the sender's private link to come back and complete it; empty elsewhere |
 | `{{missing_fields}}` | (2.11.0, dossier forms) the labels of what is still missing, separated by commas |
+| `{{post_title}}` | (unreleased) the title of the **entry** the form is shown in (below) |
+| `{{post_url}}` | (unreleased) its link |
+| `{{post_field:<key>}}` | (unreleased) one of its fields: a content-types field (`correu_familia` or with its prefix, `lle_correu_familia`) or a public meta; never one starting with `_` |
 
 The old Spanish names (`{{todos_los_campos}}`, `{{fecha}}`, `{{url_pagina}}`,
 `{{nombre_sitio}}`) worked as aliases until 2.0.1, which removed them:
@@ -145,6 +158,45 @@ the same name, and «date» is a likely field name. The details, in
 
 An empty optional field is replaced with nothing. A marker **that does not
 exist** (`{{emial}}`) is left as is, on purpose: the typo shows in the email.
+
+### Markers of the entry (unreleased, 24-11-2026)
+
+The same form in every entry of a type, and each submission knows which
+entry it came from. **The case, by name:** a funeral home's condolences
+form, one reference block in the obituary template. In its notification:
+
+- **To**: the funeral home's mailbox (`funeraria@…`);
+- **Cc**: `{{post_field:correu_familia}}` — the family's email, a field of
+  the obituary;
+- **Subject**: `Condolences: {{post_title}}`.
+
+How it works, and why it is safe: when the form is rendered in a singular
+view, the id of that entry goes into the form **signed** (hidden field
+`_af_ctx`, HMAC with `wp_salt('nonce')`, bound to the form's definition:
+[includes/class-token.php](includes/class-token.php)). On arrival the server
+checks the signature and that the entry still exists and is public, and
+reads the title, link and fields **from the entry itself**
+([includes/class-notifier.php](includes/class-notifier.php)). The family's
+email never travels in the page. Before, with Contact Form 7, it did: a
+hidden field with the email, which anyone could change to make the server
+send copies wherever they wanted.
+
+- No signature, a wrong one, one copied from another obituary, an entry
+  unpublished since: **no context**. The entry markers come out empty and
+  the submission goes on (the funeral home still gets it, without Cc). It
+  is never a rejection.
+- The log keeps the entry (`context_post_id`, migration 0003) and the
+  submission's detail links to it, with the Cc and Bcc of each
+  notification.
+- Who may choose a recipient: only whoever writes the form. A visitor
+  reaches one only through a field marker the author put there (`{{email}}`
+  in the acknowledgement's To or the team's Reply-To, as before).
+- **The trap:** marker names are lowercased, the key of `post_field` too.
+  A meta written with capitals (`correuFamilia`) cannot be reached; the
+  content-types fields are lowercase by their schema. And a meta that holds
+  a list (a repeater) comes out empty: it has no text form here.
+
+The rules, in the header of [includes/class-markers.php](includes/class-markers.php).
 
 ### Email template
 
@@ -394,7 +446,9 @@ intercepts them with `pre_wp_mail` and stores them for the test to read.
 
 | File | Level | What it tests |
 |---|---|---|
-| [tests/pure.test.mjs](tests/pure.test.mjs) | 1 | markers, truncated IP, token, preselection (with the machine's PHP); the base CSS does not remove the dropdown arrow |
+| [tests/pure.test.mjs](tests/pure.test.mjs) | 1 | markers, truncated IP, token, preselection (with the machine's PHP); the base CSS does not remove the dropdown arrow; (unreleased) the entry's signed context (valid, tampered, from another form or site, absent), the entry markers, which meta `post_field` may read and the addresses after the markers (line breaks never add a header) |
+| [tests/form-ref.test.mjs](tests/form-ref.test.mjs) | 2 | the reference block renders and submits like the inline form; (unreleased) an obituary's condolences: `_af_ctx` in the page, title, link and family email resolved on the server into Subject and Cc, refused metas kept out of the headers, a copied context gives none and the message still goes |
+| [tests/submissions-admin.test.mjs](tests/submissions-admin.test.mjs) | 2 | the Submissions screens: list, filter, detail, CSV, delete; (unreleased) the detail's «Entry» link and each notification's Cc/Bcc |
 | [tests/preselect.test.mjs](tests/preselect.test.mjs) | 2 | option preselected by attribute, by URL (slug and position, foreign value ignored), per page in a synced block, and the no-JS return |
 | [tests/server.test.mjs](tests/server.test.mjs) | 2 | public HTML without recipients, empty required field on the server, invalid email and option, honeypot, minimum time, fake token, per-IP limit, full submission with N notifications and markers, no JS (303), purge; (2.11.0) a dossier with a file: multipart upload refused by its bytes or stored outside the web, the link's page (filled in, private headers), the owner's download, completing it, «send me the link», and the purge counting from the last change. Its decisions are level 1 in pure.test.mjs; the admin's «ask the client» and «revoke» have no level 2 test (not raised: the budget, David 20-11-2026) |
 | [tests/autocomplete.test.mjs](tests/autocomplete.test.mjs) | 2 | `autocomplete` (0.2.2): the block's value is output (name, organization, on text, dropdown and textarea); email and phone with email and tel by default and changeable; a text field without it doesn't carry it; a value with quotes doesn't sneak through. Seen failing before the code |

@@ -50,6 +50,8 @@ const EXCLUDED = {
   "estrategia-web-forms/notification.label": "only the admin reads it, in the submissions log",
   "estrategia-web-forms/notification.to": "the recipient: the translator must not be able to redirect the emails",
   "estrategia-web-forms/notification.replyTo": "an address or a {{marker}}, the same in every language",
+  "estrategia-web-forms/notification.cc": "a recipient, like «to»: the translator must not be able to add copies",
+  "estrategia-web-forms/notification.bcc": "a recipient, like «to»: the translator must not be able to add hidden copies",
   "estrategia-web/whatsapp.phone": "a phone number, the same in every language",
   "estrategia-web/map.phone": "a phone number, the same in every language",
   "estrategia-web/map.imageUrl": "the same picture in every language (its alt text, imageAlt, is translated)",

@@ -13,7 +13,15 @@
 //     ({"servicio":{"defaultOption":2}}) still reaches the dropdown: the
 //     reference passes the block context on (Lavandería's quote form);
 //  5. a draft form, a reference to nothing or to a page render nothing;
-//  6. /wp/v2/eweb-forms answers only to someone who can edit pages.
+//  6. /wp/v2/eweb-forms answers only to someone who can edit pages;
+//  7. (unreleased, 24-11-2026) THE ENTRY: a reference in an obituary (a
+//     post) carries the post's id signed (_af_ctx), and the notification
+//     reads the post on the server — {{post_title}}, {{post_url}},
+//     {{post_field:correu_familia}} in the Cc —; a protected meta, a meta
+//     with a line break and a context copied from another page never
+//     reach a header. The rules are level 1 (pure.test.mjs); here what
+//     needs WordPress: the hidden field, get_post_meta, the Cc/Bcc headers
+//     handed to wp_mail and context_post_id in the log.
 // Everything is seeded in ONE request (seed() in lib.mjs) and each page is
 // loaded once (28-10-2026: from ~30 requests to ~13). Round 2: the four
 // pages are read at once in the first test, the JS and no-JS submissions go
@@ -28,6 +36,9 @@
 // do_blocks() (4), resolve() accepting drafts (5) and the REST guard asking
 // for «read» instead of «edit_pages» (6).
 // Seen red again after round 2 (28-10-2026), every test, with the mutants above (one by one where a test reads what the one before left).
+// Step 7 seen red (24-11-2026) with Rest::context_post() taking the id without checking its signature
+// (the copied context logged the contact page as the entry) and with the Cc header never added; restored, green.
+// Not covered here: an entry unpublished AFTER its page was cached (it would take one more request).
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { seed, loadForm, submit, state, GOOD, TEAM, FAIL, FORM, BASE } from "./lib.mjs";
@@ -36,15 +47,24 @@ import { wp, credentials } from "../../../tests/lib.mjs";
 const SITE = BASE.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
 const ref = (key) => `<!-- wp:estrategia-web-forms/form-ref {"ref":{{id:${key}}}} /-->`;
 const formOf = (html) => (html.match(/<form [\s\S]*?<\/form>/) || [""])[0];
-const withoutPerPage = (html) => formOf(html).replace(/(name="_af_(?:def|token|page)" value=")[^"]*"/g, '$1"');
+const withoutPerPage = (html) => formOf(html).replace(/(name="_af_(?:def|token|page|ctx)" value=")[^"]*"/g, '$1"');
 
-let form, refPage, inline, patternUser, empty, viaRef;
+// 7. The obituary's condolences (the case that brought the entry markers, Llar d'Estels).
+const FAMILY = "familia@ejemplo.test";
+const CONDOLENCES = `<!-- wp:estrategia-web-forms/form {"formId":"condolencies","title":"Condolències"} -->
+<!-- wp:estrategia-web-forms/text {"label":"Nom","name":"nom","required":true} /-->
+<!-- wp:estrategia-web-forms/textarea {"label":"Missatge","name":"missatge","required":true} /-->
+<!-- wp:estrategia-web-forms/notification {"label":"Funerària","to":"${TEAM}","cc":"{{post_field:correu_familia}}, {{post_field:_privat}}, {{post_field:injectat}}","bcc":"{{post_field:copia_oculta}}","subject":"Condol: {{post_title}}","body":"{{post_url}}\\n{{all_fields}}"} /-->
+<!-- /wp:estrategia-web-forms/form -->`;
+
+let form, refPage, inline, patternUser, empty, viaRef, obituary, viaObituary;
 
 before(async () => {
   const [s] = await Promise.all([seed({
     forms: [
       { key: "form", title: "Contacto", content: FORM },
       { key: "draft", title: "Borrador", content: FORM, status: "draft" },
+      { key: "condol", title: "Condolències", content: CONDOLENCES },
     ],
     pages: [
       { key: "ref", slug: "contacto-ref", title: "Contacto", content: `<!-- wp:paragraph --><p>Escríbenos</p><!-- /wp:paragraph -->\n${ref("form")}` },
@@ -52,17 +72,20 @@ before(async () => {
       { key: "pattern", type: "wp_block", slug: "formulario-ref", title: "Formulario ref", content: ref("form") },
       { key: "user", slug: "planchado-ref", title: "Planchado", content: `<!-- wp:block {"ref":{{id:pattern}},"content":{"servicio":{"defaultOption":2}}} /-->` },
       { key: "empty", slug: "ref-vacias", title: "Vacías", content: `<p>antes</p>${ref("draft")}<!-- wp:estrategia-web-forms/form-ref {"ref":0} /--><!-- wp:estrategia-web-forms/form-ref {"ref":999999} /-->${ref("ref")}<p>después</p>` },
+      // A post, as an obituary: its family's email ends in a line break (a textarea), «_privat» is protected,
+      // «injectat» tries to add a header.
+      { key: "obituary", type: "post", slug: "joan-mas", title: "Joan Mas", content: ref("condol"), meta: { correu_familia: FAMILY + "\n", _privat: "privat@ejemplo.test", injectat: "x@ejemplo.test\nBcc: spam@ejemplo.test", copia_oculta: "arxiu@ejemplo.test" } },
     ],
   }), credentials()]); // The users for the last test, at once.
   form = s.forms.form;
-  ({ ref: refPage, inline, user: patternUser, empty } = s.pages);
+  ({ ref: refPage, inline, user: patternUser, empty, obituary } = s.pages);
 });
 
 let viaPattern, emptyHtml, noJs, noJsBack, logged;
 test("the reference renders the same form as the inline tree (but for the per-page hidden values)", async () => {
   // Every page of the file is read here, at once (round 2, 28-10-2026); each test asserts its own.
-  const [a, b, c, d] = await Promise.all([loadForm(refPage.url), loadForm(inline.url), loadForm(patternUser.url), fetch(empty.url).then((r) => r.text())]);
-  [viaRef, viaPattern, emptyHtml] = [a, c, d];
+  const [a, b, c, d, e] = await Promise.all([loadForm(refPage.url), loadForm(inline.url), loadForm(patternUser.url), fetch(empty.url).then((r) => r.text()), loadForm(obituary.url)]);
+  [viaRef, viaPattern, emptyHtml, viaObituary] = [a, c, d, e];
   assert.match(a.html, /name="fields\[nombre\]"/, "the form is rendered through the reference");
   assert.equal(withoutPerPage(a.html), withoutPerPage(b.html));
   for (const secret of [TEAM, FAIL, "Aviso al equipo", "{{"]) assert.ok(!a.html.includes(secret), `the public HTML contains «${secret}»`);
@@ -105,6 +128,36 @@ test("a draft form, a reference to nothing and a reference to a page render noth
   const html = emptyHtml;
   assert.match(html, /<p>antes<\/p><p>después<\/p>/, "nothing between the two paragraphs");
   assert.doesNotMatch(html, /<form [^>]*estrategia-web-forms/);
+});
+
+test("an obituary's condolences: the entry's title, link and family email resolved on the server; a copied context gives none and the message still goes", async () => {
+  const { html, hidden } = viaObituary;
+  assert.match(hidden._af_ctx || "", new RegExp(`^${obituary.id}\\.[a-f0-9]{40}$`), "the post's id, signed");
+  for (const secret of [FAMILY, "arxiu@", "{{"]) assert.ok(!formOf(html).includes(secret), `the public form contains «${secret}»`);
+  // The same form with a context copied from another page (the contact page's, a valid signature for ANOTHER form).
+  const copied = { ...hidden, _af_ctx: viaRef.hidden._af_ctx };
+  const [good, forged] = await Promise.all([submit(hidden, { nom: "Bona", missatge: "Ho sentim" }), submit(copied, { nom: "Copiada", missatge: "Ho sentim" })]);
+  assert.deepEqual([good.status, forged.status], [200, 200], "a context that does not hold is not a rejection");
+  const { mails, submissions } = await state();
+  const rowOf = (nom) => submissions.find((s) => s.form_id === "condolencies" && s.data.some((d) => d.value === nom));
+  const [ok, bad] = [rowOf("Bona"), rowOf("Copiada")];
+  assert.equal(Number(ok.context_post_id), obituary.id, "the log keeps the entry");
+  assert.equal(Number(bad.context_post_id), 0);
+
+  const mail = mails.find((m) => m.subject === "Condol: Joan Mas");
+  assert.ok(mail, "the subject carries the post's title: " + mails.map((m) => m.subject).join(" | "));
+  assert.deepEqual(mail.to, [TEAM]);
+  assert.ok(mail.headers.includes(`Cc: ${FAMILY}`), "only the family in Cc (the protected meta and the one with a line break dropped):\n" + mail.headers.join("\n"));
+  assert.ok(mail.headers.includes("Bcc: arxiu@ejemplo.test"), "the Bcc from another field");
+  assert.ok(!mail.headers.join("\n").match(/spam@|privat@|x@ejemplo/), "nothing of the refused values reaches a header");
+  assert.match(mail.html, new RegExp(`${SITE}/joan-mas/`), "{{post_url}}");
+  assert.deepEqual([ok.notifications[0].cc, ok.notifications[0].bcc, ok.notifications[0].status], [FAMILY, "arxiu@ejemplo.test", "sent"], "the log says who got a copy");
+
+  const plain = mails.find((m) => m.subject === "Condol:");
+  assert.ok(plain, "without context the title is empty, not «{{post_title}}»");
+  assert.deepEqual(plain.to, [TEAM], "the funeral home still gets it");
+  assert.ok(!plain.headers.some((h) => /^(Cc|Bcc):/.test(h)), "and nobody else:\n" + plain.headers.join("\n"));
+  assert.equal(bad.notifications[0].status, "sent");
 });
 
 test("/wp/v2/eweb-forms: only for someone who can edit pages", async () => {
