@@ -237,7 +237,8 @@ final class Fields_Panel {
 			'add'        => _x( 'Add', 'repeater row', 'estrategiaweb-toolkit' ),
 			/* translators: %s: what a row of a list is called, e.g. Act */
 			'addItem'    => _x( 'Add %s', 'repeater row', 'estrategiaweb-toolkit' ),
-			'remove'     => _x( 'Remove', 'repeater row', 'estrategiaweb-toolkit' ),
+			// Not «remove»: that key is the image picker's (enqueue_box()), and the first one wins in the + of arrays.
+			'rowRemove'  => _x( 'Remove', 'repeater row', 'estrategiaweb-toolkit' ),
 			'up'         => _x( 'Move up', 'repeater row', 'estrategiaweb-toolkit' ),
 			'down'       => _x( 'Move down', 'repeater row', 'estrategiaweb-toolkit' ),
 			/* translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Remove» (its visible text must be in its name). */

@@ -140,8 +140,9 @@ defined( 'ABSPATH' ) || exit;
  * The repeater and time (24-11-2026): level 1 repeater.test.mjs (what is
  * stored, incomplete, the translation's merge, a row's format, the REST
  * schema), and its lines in schema, format, wpml and constructor-model; the
- * REST list in register.test.mjs (level 2); the sidebar panel in the
- * browser scenario 16-ct-editor-panel.
+ * REST list in register.test.mjs and the meta box's form in
+ * classic-required.test.mjs (level 2, gment_winery's «visits»); the sidebar
+ * panel and the box's buttons in the browser scenario 16-ct-editor-panel.
  * 2.0.0: level 1 location-data.test.mjs (the derived texts and the
  * migration's parsers, with Lavandería's strings); level 2
  * location-migration.test.mjs (a 1.7.0 site migrated) and

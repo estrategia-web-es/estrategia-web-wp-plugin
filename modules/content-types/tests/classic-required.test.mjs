@@ -16,6 +16,11 @@
 // Seen red (28-10-2026) at level 2, one expected value changed in each
 // test (status publish, a notice where there is none, an empty town in the
 // screen): the three red; restored, green.
+// The repeater (24-11-2026): its test is here because the meta box is this
+// form (gment_winery has a repeater, «visits»). Seen red with
+// save_meta_box() writing the JSON without wp_slash(): the quote's
+// backslash lost, the stored text no longer JSON, so nothing was stored
+// (REST gave ""); restored, green.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, adminSession, credentials, testApi, wp } from "../../../tests/lib.mjs";
@@ -79,4 +84,32 @@ test("emptying a required field of a published winery: it stays published and th
   assert.equal(post.meta.gment_winery_web, "https://sonprim.test/es/", "the other fields are saved");
   assert.match(notice(screen) ?? "", /Municipio/);
   assert.match(input(screen, "town"), /value="Binissalem"/, "the screen shows what is stored");
+});
+
+// The repeater in the meta box (24-11-2026, class-repeater.php): the same form, rows posted as
+// estrategia_web_ct[gment_winery_visits][<row>][<subfield>]. What JavaScript adds (the buttons) is the browser scenario 16's.
+const V = (row, sub) => `estrategia_web_ct[gment_winery_visits][${row}][${sub}]`;
+test("repeater in the meta box: rows saved in the ORDER of the form, each subfield sanitized, a quote surviving the unslash; emptied, nothing stored", async () => {
+  assert.match(screen, /<fieldset class="estrategia-web-ct-repeater" id="estrategia-web-ct-gment_winery_visits"[^>]*data-item-label="Visita"[^>]*data-max="3"/, "the repeater, with its row name and max for the script");
+  assert.match(screen, /<input type="hidden" name="estrategia_web_ct\[gment_winery_visits\]" value="">/, "sent even with no rows: removing every row is a change");
+  assert.match(screen, /<fieldset class="estrategia-web-ct-row" data-row="0" data-spare=""><legend>Visita 1<\/legend>/, "no rows yet: one spare empty row, so it works without JavaScript");
+  // Row 9 BEFORE row 0 (as a moved row would be): the numbers are only names, the order is the form's.
+  ({ html: screen, post } = await publish(screen, {
+    [V(9, "dia")]: "2026-12-05",
+    [V(9, "hora")]: "11:00",
+    [V(9, "nota")]: 'Tast "jove"\r\nAmb formatge',
+    [V(0, "dia")]: "2026-12-12",
+    [V(0, "hora")]: "9:00",
+    [V(0, "nota")]: "",
+  }));
+  assert.equal(post.status, "publish");
+  assert.deepEqual(post.meta.gment_winery_visits, [
+    { dia: "2026-12-05", hora: "11:00", nota: 'Tast "jove"\nAmb formatge' },
+    { dia: "2026-12-12" },
+  ], "REST gives the list; «9:00» is not HH:MM; the textarea's \\r\\n is \\n; the quote kept (wp_slash before update_post_meta)");
+  assert.match(screen, /<legend>Visita 2<\/legend>[\s\S]*?value="2026-12-12"/, "the screen shows the stored rows in their order");
+  assert.match(screen, /data-row="2" data-spare=""/, "two rows and max 3: one spare row");
+  // Without JavaScript a row is removed by emptying it.
+  ({ html: screen, post } = await publish(screen, { [V(0, "dia")]: "", [V(0, "hora")]: "", [V(0, "nota")]: "", [V(1, "dia")]: "" }));
+  assert.deepEqual(post.meta.gment_winery_visits, [], "empty rows are not stored: nothing left");
 });

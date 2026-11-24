@@ -1,6 +1,6 @@
 {
   "title": "Content types in the block editor: bound blocks show the formatted value, the source declares its fields, and the «details» panel stores what is typed with its JSON types",
-  "description": "The content-types module with the theme's example files on (gment_restaurant, gment_wine), logged in as the administrator: (1) a draft restaurant whose content is two Queries of paragraphs bound to estrategia-web/content-field — the canvas shows the option's label, the related post's title, the boolean's text, the number, and an empty field's name in brackets; the source has its label, is not editable and lists the fields of the type in context (none for a page); (2) the same restaurant's «Restaurante» panel shows the JSON's fields in the site language (required marked, tel input, select with its default and es labels) and what is typed is stored on publish; (3) a new wine: number, boolean, date and relation travel with their JSON types, and an emptied number goes as null (REST refuses \"\" for a number). What was stored is the editor's own post after its save. Read by browser-ct-editor-panel. It was editor-panel.test.mjs (level 3) until 29-10-2026.",
+  "description": "The content-types module with the theme's example files on (gment_restaurant, gment_wine), logged in as the administrator: (1) a draft restaurant whose content is two Queries of paragraphs bound to estrategia-web/content-field — the canvas shows the option's label, the related post's title, the boolean's text, the number, and an empty field's name in brackets; the source has its label, is not editable and lists the fields of the type in context (none for a page); (2) the same restaurant's «Restaurante» panel shows the JSON's fields in the site language (required marked, tel input, select with its default and es labels) and what is typed is stored on publish; (3) a new wine: number, boolean, date and relation travel with their JSON types, and an emptied number goes as null (REST refuses \"\" for a number); (4, 24-11-2026) a new esquela (examples/llest_esquela.json): its repeater «Actes» in the panel — Add, the subfields with their labels, Move up with the focus following the row, Remove — stored as a list on publish; (5) a new winery on the classic screen: the repeater «Visitas» of its meta box (assets/fields-box.js) — the spare row gone, Add up to max, rows renamed by position with their input numbers kept, Remove with its announcement. What was stored is the editor's own post after its save. Read by browser-ct-editor-panel. It was editor-panel.test.mjs (level 3) until 29-10-2026.",
   "writes": true,
   "timeout": 20000,
   "steps": [
@@ -71,6 +71,82 @@
     { "type": "customStep", "name": "capture", "parameters": { "label": "emptied", "settle": [], "save": ["console"], "values": {
       "dirty": "wp.data.select('core/editor').isEditedPostDirty()",
       "rest": "wp.apiFetch({ path: '/wp/v2/gment_wine/' + wp.data.select('core/editor').getCurrentPostId() + '?context=edit' }).then((p) => p.meta.gment_alcohol)"
+    } } },
+    { "type": "navigate", "url": "/wp-admin/post-new.php?post_type=llest_esquela" },
+    { "type": "waitForExpression", "timeout": 60000, "expression": "!!window.wp?.data?.select('core/editor')?.getCurrentPostType()" },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "(() => { wp.data.dispatch('core/preferences')?.set('core/edit-post', 'welcomeGuide', false); wp.data.dispatch('core/edit-post')?.openGeneralSidebar?.('edit-post/document'); wp.data.dispatch('core/editor').editPost({ title: 'Joan Ferrer Pons' }); })()" } },
+    { "type": "waitForElement", "selectors": [".estrategia-web-content-types-panel"] },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "(() => { const t = document.querySelector('.estrategia-web-content-types-panel .components-panel__body-toggle'); if (t && t.getAttribute('aria-expanded') === 'false') t.click(); })()" } },
+    { "type": "waitForElement", "selectors": ["[data-meta-key=\"llest_actes\"] [data-action=\"add-row\"]"] },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "repeater-empty", "settle": [], "values": {
+      "legend": "document.querySelector('[data-meta-key=\"llest_actes\"] legend').textContent",
+      "add": "document.querySelector('[data-meta-key=\"llest_actes\"] [data-action=\"add-row\"]').textContent",
+      "rows": "document.querySelectorAll('[data-meta-key=\"llest_actes\"] [data-row]').length"
+    } } },
+    { "type": "click", "selectors": ["[data-meta-key=\"llest_actes\"] [data-action=\"add-row\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "waitForElement", "selectors": ["[data-meta-key=\"llest_actes\"] [data-row=\"0\"] [data-sub=\"tipus\"] select"] },
+    { "type": "waitForExpression", "expression": "document.activeElement && document.activeElement.closest('[data-row=\"0\"]') !== null" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "repeater-added", "settle": [], "values": {
+      "legend": "document.querySelector('[data-meta-key=\"llest_actes\"] [data-row=\"0\"] legend').textContent",
+      "labels": "[...document.querySelectorAll('[data-meta-key=\"llest_actes\"] [data-row=\"0\"] label')].map((l) => l.textContent + '→' + (document.getElementById(l.htmlFor)?.tagName || ''))",
+      "options": "[...document.querySelectorAll('[data-meta-key=\"llest_actes\"] [data-row=\"0\"] [data-sub=\"tipus\"] option')].map((o) => o.textContent)",
+      "types": "['dia', 'hora', 'fins', 'lloc'].map((k) => document.querySelector('[data-meta-key=\"llest_actes\"] [data-row=\"0\"] [data-sub=\"' + k + '\"] input')?.type)",
+      "buttons": "[...document.querySelectorAll('[data-meta-key=\"llest_actes\"] [data-row=\"0\"] button')].map((b) => b.textContent + '|' + b.getAttribute('aria-label') + '|' + (b.disabled || b.getAttribute('aria-disabled') === 'true'))",
+      "focus": "document.activeElement.tagName"
+    } } },
+    { "type": "change", "selectors": ["[data-meta-key=\"llest_actes\"] [data-row=\"0\"] [data-sub=\"tipus\"] select"], "value": "Funeral" },
+    { "type": "change", "selectors": ["[data-meta-key=\"llest_actes\"] [data-row=\"0\"] [data-sub=\"dia\"] input"], "value": "2026-11-25" },
+    { "type": "change", "selectors": ["[data-meta-key=\"llest_actes\"] [data-row=\"0\"] [data-sub=\"hora\"] input"], "value": "17:00" },
+    { "type": "change", "selectors": ["[data-meta-key=\"llest_actes\"] [data-row=\"0\"] [data-sub=\"lloc\"] input"], "value": "Parròquia de Sant Miquel" },
+    { "type": "click", "selectors": ["[data-meta-key=\"llest_actes\"] [data-action=\"add-row\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "waitForElement", "selectors": ["[data-meta-key=\"llest_actes\"] [data-row=\"1\"] [data-sub=\"tipus\"] select"] },
+    { "type": "change", "selectors": ["[data-meta-key=\"llest_actes\"] [data-row=\"1\"] [data-sub=\"tipus\"] select"], "value": "Vetlla" },
+    { "type": "change", "selectors": ["[data-meta-key=\"llest_actes\"] [data-row=\"1\"] [data-sub=\"dia\"] input"], "value": "2026-11-24" },
+    { "type": "click", "selectors": ["[data-meta-key=\"llest_actes\"] [data-row=\"1\"] [data-action=\"move-up\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "waitForExpression", "expression": "document.querySelector('[data-meta-key=\"llest_actes\"] [data-row=\"0\"] [data-sub=\"tipus\"] select').value === 'Vetlla' && document.activeElement && document.activeElement.closest('[data-row=\"0\"]') !== null" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "repeater-moved", "settle": [], "values": {
+      "order": "[...document.querySelectorAll('[data-meta-key=\"llest_actes\"] [data-sub=\"tipus\"] select')].map((s) => s.value)",
+      "legends": "[...document.querySelectorAll('[data-meta-key=\"llest_actes\"] [data-row] > legend')].map((l) => l.textContent)",
+      "focus": "document.activeElement.closest('[data-row]')?.dataset.row + ':' + (document.activeElement.dataset.action || document.activeElement.tagName)"
+    } } },
+    { "type": "click", "selectors": ["[data-meta-key=\"llest_actes\"] [data-action=\"add-row\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "waitForElement", "selectors": ["[data-meta-key=\"llest_actes\"] [data-row=\"2\"] [data-action=\"remove-row\"]"] },
+    { "type": "click", "selectors": ["[data-meta-key=\"llest_actes\"] [data-row=\"2\"] [data-action=\"remove-row\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "waitForExpression", "expression": "document.querySelectorAll('[data-meta-key=\"llest_actes\"] [data-row]').length === 2" },
+    { "type": "customStep", "name": "run", "parameters": { "expression": "(() => { wp.data.dispatch('core/editor').editPost({ status: 'publish' }); return wp.data.dispatch('core/editor').savePost().catch(() => {}); })()" } },
+    { "type": "waitForExpression", "timeout": 30000, "expression": "!wp.data.select('core/editor').isSavingPost() && wp.data.select('core/editor').getCurrentPost().status === 'publish'" },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "esquela", "settle": [], "values": {
+      "post": "(() => { const p = wp.data.select('core/editor').getCurrentPost(); return { status: p.status, actes: p.meta.llest_actes }; })()"
+    } } },
+    { "type": "navigate", "url": "/wp-admin/post-new.php?post_type=gment_winery" },
+    { "type": "waitForElement", "selectors": ["#estrategia-web-ct-gment_winery_visits [data-action=\"add-row\"]"] },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "box-start", "settle": [], "values": {
+      "rows": "document.querySelectorAll('#estrategia-web-ct-gment_winery_visits .estrategia-web-ct-row').length",
+      "add": "document.querySelector('#estrategia-web-ct-gment_winery_visits [data-action=\"add-row\"]').textContent"
+    } } },
+    { "type": "click", "selectors": ["#estrategia-web-ct-gment_winery_visits [data-action=\"add-row\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "click", "selectors": ["#estrategia-web-ct-gment_winery_visits [data-action=\"add-row\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "change", "selectors": ["#estrategia-web-ct-gment_winery_visits .estrategia-web-ct-row:nth-of-type(1) input[type=\"date\"]"], "value": "2026-12-05" },
+    { "type": "change", "selectors": ["#estrategia-web-ct-gment_winery_visits .estrategia-web-ct-row:nth-of-type(2) input[type=\"date\"]"], "value": "2026-12-12" },
+    { "type": "click", "selectors": ["#estrategia-web-ct-gment_winery_visits .estrategia-web-ct-row:nth-of-type(2) [data-action=\"move-up\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "box-moved", "settle": [], "values": {
+      "rows": "[...document.querySelectorAll('#estrategia-web-ct-gment_winery_visits .estrategia-web-ct-row')].map((r) => ({ legend: r.querySelector('legend').textContent, day: r.querySelector('input[type=\"date\"]').value, name: r.querySelector('input[type=\"date\"]').name, labelFor: r.querySelector('label').htmlFor === r.querySelector('input[type=\"date\"]').id }))",
+      "buttons": "[...document.querySelectorAll('#estrategia-web-ct-gment_winery_visits .estrategia-web-ct-row:nth-of-type(1) button')].map((b) => b.textContent + '|' + b.getAttribute('aria-label') + '|' + b.disabled)",
+      "focus": "document.activeElement.dataset.action + ':' + document.activeElement.closest('.estrategia-web-ct-row')?.querySelector('legend').textContent",
+      "add": "document.querySelector('#estrategia-web-ct-gment_winery_visits [data-action=\"add-row\"]').disabled"
+    } } },
+    { "type": "click", "selectors": ["#estrategia-web-ct-gment_winery_visits [data-action=\"add-row\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "box-full", "settle": [], "values": {
+      "rows": "document.querySelectorAll('#estrategia-web-ct-gment_winery_visits .estrategia-web-ct-row').length",
+      "add": "document.querySelector('#estrategia-web-ct-gment_winery_visits [data-action=\"add-row\"]').disabled",
+      "names": "[...document.querySelectorAll('#estrategia-web-ct-gment_winery_visits input[type=\"date\"]')].map((i) => i.name)"
+    } } },
+    { "type": "click", "selectors": ["#estrategia-web-ct-gment_winery_visits .estrategia-web-ct-row:nth-of-type(1) [data-action=\"remove-row\"]"], "offsetX": 5, "offsetY": 5 },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "box-removed", "settle": [], "save": ["console"], "values": {
+      "rows": "[...document.querySelectorAll('#estrategia-web-ct-gment_winery_visits .estrategia-web-ct-row')].map((r) => r.querySelector('legend').textContent + '=' + r.querySelector('input[type=\"date\"]').value)",
+      "add": "document.querySelector('#estrategia-web-ct-gment_winery_visits [data-action=\"add-row\"]').disabled",
+      "status": "document.querySelector('#estrategia-web-ct-gment_winery_visits [role=\"status\"]').textContent",
+      "focus": "document.activeElement.type + ':' + document.activeElement.closest('.estrategia-web-ct-row')?.querySelector('legend').textContent"
     } } }
   ]
 }

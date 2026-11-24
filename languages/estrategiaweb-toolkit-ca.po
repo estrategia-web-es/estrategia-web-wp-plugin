@@ -2130,7 +2130,9 @@ msgstr "Com es mostra una fila al web (%s)"
 msgid ""
 "Each field of the row as {name}, e.g. «{type}: {day} {time}». Empty: the "
 "values joined by «·»."
-msgstr "Cada camp de la fila com a {nom}, p. ex. «{tipus}: {dia} {hora}». Buit: els valors units per «·»."
+msgstr ""
+"Cada camp de la fila com a {nom}, p. ex. «{tipus}: {dia} {hora}». Buit: els "
+"valors units per «·»."
 
 #. translators: %s: a placeholder name written in a row format
 #: modules/content-types/includes/admin/class-page.php:367
@@ -2156,7 +2158,9 @@ msgstr "Nom (la seva clau dins la fila)"
 msgid ""
 "Lowercase letters, digits and “_”, starting with a letter. Renaming it "
 "leaves what the rows already have under the old name unread."
-msgstr "Minúscules, xifres i «_», començant per una lletra. Si el canvies, el que les files ja tenen amb el nom antic deixa de llegir-se."
+msgstr ""
+"Minúscules, xifres i «_», començant per una lletra. Si el canvies, el que "
+"les files ja tenen amb el nom antic deixa de llegir-se."
 
 #: modules/content-types/includes/admin/class-page.php:373
 msgid "Add a field to the row"
@@ -2183,7 +2187,7 @@ msgid "Move down"
 msgstr "Mou avall"
 
 #: modules/content-types/includes/admin/class-page.php:378
-#: modules/content-types/includes/class-fields-panel.php:212
+#: modules/content-types/includes/class-fields-panel.php:219
 #: modules/forms/includes/class-blocks.php:381
 #: modules/newsletter/includes/class-screen.php:74
 #: modules/social/includes/class-admin.php:70
@@ -2516,27 +2520,29 @@ msgstr ""
 "L'URL de «%1$s» passa de /%2$s/ a /%3$s/: les seves adreces publicades es "
 "mouen."
 
-#: modules/content-types/includes/class-fields-panel.php:63
+#: modules/content-types/includes/class-fields-panel.php:70
 msgid "No rating"
 msgstr "Sense valoració"
 
-#: modules/content-types/includes/class-fields-panel.php:104
+#: modules/content-types/includes/class-fields-panel.php:111
 msgid "Changed in the original language: it is copied to the translations."
 msgstr "Es canvia a l'idioma original: es copia a les traduccions."
 
-#: modules/content-types/includes/class-fields-panel.php:122
+#: modules/content-types/includes/class-fields-panel.php:129
 msgid ""
 "The rows and the values that are not text come from the original language; "
 "translate the texts here."
-msgstr "Les files i els valors que no són text venen de l'idioma original; aquí tradueix els textos."
+msgstr ""
+"Les files i els valors que no són text venen de l'idioma original; aquí "
+"tradueix els textos."
 
 #. translators: %s: singular name of a content type, e.g. Restaurant
-#: modules/content-types/includes/class-fields-panel.php:130
+#: modules/content-types/includes/class-fields-panel.php:137
 #, php-format
 msgid "%s details"
 msgstr "%s: dades"
 
-#: modules/content-types/includes/class-fields-panel.php:133
+#: modules/content-types/includes/class-fields-panel.php:140
 msgid ""
 "Fields that are the same in every language are copied to the translations "
 "when you save; the others are translated in each language."
@@ -2544,100 +2550,100 @@ msgstr ""
 "Els camps que són iguals en tots els idiomes es copien a les traduccions "
 "quan deses; els altres es tradueixen en cada idioma."
 
-#: modules/content-types/includes/class-fields-panel.php:210
+#: modules/content-types/includes/class-fields-panel.php:217
 msgid "Choose image"
 msgstr "Tria una imatge"
 
-#: modules/content-types/includes/class-fields-panel.php:211
+#: modules/content-types/includes/class-fields-panel.php:218
 msgid "Replace image"
 msgstr "Canvia la imatge"
 
-#: modules/content-types/includes/class-fields-panel.php:213
+#: modules/content-types/includes/class-fields-panel.php:220
 msgid "Copy Monday to every day"
 msgstr "Copia el dilluns a tots els dies"
 
-#: modules/content-types/includes/class-fields-panel.php:214
+#: modules/content-types/includes/class-fields-panel.php:221
 msgid "Monday’s hours copied to every day."
 msgstr "Horari del dilluns copiat a tots els dies."
 
-#: modules/content-types/includes/class-fields-panel.php:230
+#: modules/content-types/includes/class-fields-panel.php:237
 msgctxt "repeater row"
 msgid "Add"
 msgstr "Afegeix"
 
 #. translators: %s: what a row of a list is called, e.g. Act
-#: modules/content-types/includes/class-fields-panel.php:232
+#: modules/content-types/includes/class-fields-panel.php:239
 #, php-format
 msgctxt "repeater row"
 msgid "Add %s"
 msgstr "Afegeix %s"
 
-#: modules/content-types/includes/class-fields-panel.php:233
+#: modules/content-types/includes/class-fields-panel.php:241
 msgctxt "repeater row"
 msgid "Remove"
 msgstr "Elimina"
 
-#: modules/content-types/includes/class-fields-panel.php:234
+#: modules/content-types/includes/class-fields-panel.php:242
 msgctxt "repeater row"
 msgid "Move up"
 msgstr "Puja"
 
-#: modules/content-types/includes/class-fields-panel.php:235
+#: modules/content-types/includes/class-fields-panel.php:243
 msgctxt "repeater row"
 msgid "Move down"
 msgstr "Baixa"
 
 #. translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Remove» (its visible text must be in its name).
-#: modules/content-types/includes/class-fields-panel.php:237
+#: modules/content-types/includes/class-fields-panel.php:245
 #, php-format
 msgctxt "repeater row"
 msgid "Remove %s"
 msgstr "Elimina %s"
 
 #. translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Move up» (its visible text must be in its name).
-#: modules/content-types/includes/class-fields-panel.php:239
+#: modules/content-types/includes/class-fields-panel.php:247
 #, php-format
 msgctxt "repeater row"
 msgid "Move up %s"
 msgstr "Puja %s"
 
 #. translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Move down» (its visible text must be in its name).
-#: modules/content-types/includes/class-fields-panel.php:241
+#: modules/content-types/includes/class-fields-panel.php:249
 #, php-format
 msgctxt "repeater row"
 msgid "Move down %s"
 msgstr "Baixa %s"
 
 #. translators: %d: the number of a row of a list
-#: modules/content-types/includes/class-fields-panel.php:243
-#: modules/content-types/includes/class-fields-panel.php:415
+#: modules/content-types/includes/class-fields-panel.php:251
+#: modules/content-types/includes/class-fields-panel.php:423
 #, php-format
 msgid "Row %d"
 msgstr "Fila %d"
 
 #. translators: %s: a row of a list, e.g. Act 3
-#: modules/content-types/includes/class-fields-panel.php:245
+#: modules/content-types/includes/class-fields-panel.php:253
 #, php-format
 msgctxt "repeater row"
 msgid "%s added."
 msgstr "S'ha afegit %s."
 
-#: modules/content-types/includes/class-fields-panel.php:246
+#: modules/content-types/includes/class-fields-panel.php:254
 msgctxt "repeater row"
 msgid "Row removed."
 msgstr "S'ha eliminat la fila."
 
 #. translators: %s: the row's name at its new position, e.g. Act 1
-#: modules/content-types/includes/class-fields-panel.php:248
+#: modules/content-types/includes/class-fields-panel.php:256
 #, php-format
 msgctxt "repeater row"
 msgid "Moved: it is now %s."
 msgstr "S'ha mogut: ara és %s."
 
-#: modules/content-types/includes/class-fields-panel.php:249
-#: modules/content-types/includes/class-fields-panel.php:427
-#: modules/content-types/includes/class-fields-panel.php:481
-#: modules/content-types/includes/class-fields-panel.php:487
+#: modules/content-types/includes/class-fields-panel.php:257
+#: modules/content-types/includes/class-fields-panel.php:435
+#: modules/content-types/includes/class-fields-panel.php:489
+#: modules/content-types/includes/class-fields-panel.php:495
 msgid "— None —"
 msgstr "— Cap —"
 
@@ -3267,7 +3273,8 @@ msgstr "%s.item_label ha de ser un text o un objecte idioma → text."
 #: modules/content-types/includes/class-schema.php:759
 #, php-format
 msgid "%s: a repeater needs “fields”, a non-empty list of subfields."
-msgstr "%s: una llista repetible necessita «fields», una llista no buida de subcamps."
+msgstr ""
+"%s: una llista repetible necessita «fields», una llista no buida de subcamps."
 
 #. translators: 1: where in the file, 2: position in the list, from 1
 #: modules/content-types/includes/class-schema.php:765
@@ -3281,7 +3288,9 @@ msgstr "%1$s.fields[%2$d]"
 msgid ""
 "%1$s.name must be lowercase letters, digits and “_”, starting with a letter, "
 "at most %2$d characters."
-msgstr "%1$s.name només pot tenir lletres minúscules, xifres i «_», ha de començar amb una lletra i tenir com a màxim %2$d caràcters."
+msgstr ""
+"%1$s.name només pot tenir lletres minúscules, xifres i «_», ha de començar "
+"amb una lletra i tenir com a màxim %2$d caràcters."
 
 #. translators: 1: where in the file, 2: a subfield name
 #: modules/content-types/includes/class-schema.php:778

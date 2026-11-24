@@ -8,6 +8,18 @@
   "fields": [
     { "name": "gment_winery_town", "type": "text", "label": { "es": "Municipio", "en": "Town" }, "required": true },
     { "name": "gment_winery_founded", "type": "number", "label": { "es": "Fundada", "en": "Founded" }, "integer": true, "required": true },
-    { "name": "gment_winery_web", "type": "url", "label": "Web" }
+    { "name": "gment_winery_web", "type": "url", "label": "Web" },
+    {
+      "name": "gment_winery_visits",
+      "type": "repeater",
+      "label": { "es": "Visitas", "en": "Visits" },
+      "item_label": { "es": "Visita", "en": "Visit" },
+      "max": 3,
+      "fields": [
+        { "name": "dia", "type": "date", "label": { "es": "Día", "en": "Day" } },
+        { "name": "hora", "type": "time", "label": { "es": "Hora", "en": "Time" } },
+        { "name": "nota", "type": "textarea", "label": { "es": "Nota", "en": "Note" } }
+      ]
+    }
   ]
 }

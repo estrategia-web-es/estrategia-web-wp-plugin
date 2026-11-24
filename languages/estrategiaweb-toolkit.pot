@@ -1973,7 +1973,7 @@ msgid "Move down"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:378
-#: modules/content-types/includes/class-fields-panel.php:212
+#: modules/content-types/includes/class-fields-panel.php:219
 #: modules/forms/includes/class-blocks.php:381
 #: modules/newsletter/includes/class-screen.php:74
 #: modules/social/includes/class-admin.php:70
@@ -2289,126 +2289,126 @@ msgid ""
 "move."
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:63
+#: modules/content-types/includes/class-fields-panel.php:70
 msgid "No rating"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:104
+#: modules/content-types/includes/class-fields-panel.php:111
 msgid "Changed in the original language: it is copied to the translations."
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:122
+#: modules/content-types/includes/class-fields-panel.php:129
 msgid ""
 "The rows and the values that are not text come from the original language; "
 "translate the texts here."
 msgstr ""
 
 #. translators: %s: singular name of a content type, e.g. Restaurant
-#: modules/content-types/includes/class-fields-panel.php:130
+#: modules/content-types/includes/class-fields-panel.php:137
 #, php-format
 msgid "%s details"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:133
+#: modules/content-types/includes/class-fields-panel.php:140
 msgid ""
 "Fields that are the same in every language are copied to the translations "
 "when you save; the others are translated in each language."
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:210
+#: modules/content-types/includes/class-fields-panel.php:217
 msgid "Choose image"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:211
+#: modules/content-types/includes/class-fields-panel.php:218
 msgid "Replace image"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:213
+#: modules/content-types/includes/class-fields-panel.php:220
 msgid "Copy Monday to every day"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:214
+#: modules/content-types/includes/class-fields-panel.php:221
 msgid "Monday’s hours copied to every day."
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:230
+#: modules/content-types/includes/class-fields-panel.php:237
 msgctxt "repeater row"
 msgid "Add"
 msgstr ""
 
 #. translators: %s: what a row of a list is called, e.g. Act
-#: modules/content-types/includes/class-fields-panel.php:232
+#: modules/content-types/includes/class-fields-panel.php:239
 #, php-format
 msgctxt "repeater row"
 msgid "Add %s"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:233
+#: modules/content-types/includes/class-fields-panel.php:241
 msgctxt "repeater row"
 msgid "Remove"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:234
+#: modules/content-types/includes/class-fields-panel.php:242
 msgctxt "repeater row"
 msgid "Move up"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:235
+#: modules/content-types/includes/class-fields-panel.php:243
 msgctxt "repeater row"
 msgid "Move down"
 msgstr ""
 
 #. translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Remove» (its visible text must be in its name).
-#: modules/content-types/includes/class-fields-panel.php:237
+#: modules/content-types/includes/class-fields-panel.php:245
 #, php-format
 msgctxt "repeater row"
 msgid "Remove %s"
 msgstr ""
 
 #. translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Move up» (its visible text must be in its name).
-#: modules/content-types/includes/class-fields-panel.php:239
+#: modules/content-types/includes/class-fields-panel.php:247
 #, php-format
 msgctxt "repeater row"
 msgid "Move up %s"
 msgstr ""
 
 #. translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Move down» (its visible text must be in its name).
-#: modules/content-types/includes/class-fields-panel.php:241
+#: modules/content-types/includes/class-fields-panel.php:249
 #, php-format
 msgctxt "repeater row"
 msgid "Move down %s"
 msgstr ""
 
 #. translators: %d: the number of a row of a list
-#: modules/content-types/includes/class-fields-panel.php:243
-#: modules/content-types/includes/class-fields-panel.php:415
+#: modules/content-types/includes/class-fields-panel.php:251
+#: modules/content-types/includes/class-fields-panel.php:423
 #, php-format
 msgid "Row %d"
 msgstr ""
 
 #. translators: %s: a row of a list, e.g. Act 3
-#: modules/content-types/includes/class-fields-panel.php:245
+#: modules/content-types/includes/class-fields-panel.php:253
 #, php-format
 msgctxt "repeater row"
 msgid "%s added."
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:246
+#: modules/content-types/includes/class-fields-panel.php:254
 msgctxt "repeater row"
 msgid "Row removed."
 msgstr ""
 
 #. translators: %s: the row's name at its new position, e.g. Act 1
-#: modules/content-types/includes/class-fields-panel.php:248
+#: modules/content-types/includes/class-fields-panel.php:256
 #, php-format
 msgctxt "repeater row"
 msgid "Moved: it is now %s."
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:249
-#: modules/content-types/includes/class-fields-panel.php:427
-#: modules/content-types/includes/class-fields-panel.php:481
-#: modules/content-types/includes/class-fields-panel.php:487
+#: modules/content-types/includes/class-fields-panel.php:257
+#: modules/content-types/includes/class-fields-panel.php:435
+#: modules/content-types/includes/class-fields-panel.php:489
+#: modules/content-types/includes/class-fields-panel.php:495
 msgid "— None —"
 msgstr ""
 

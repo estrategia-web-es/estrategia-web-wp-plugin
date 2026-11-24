@@ -25,6 +25,9 @@
 // expected value changed (the 21-character type, the blank address, the
 // label that is not an image, the permalink under /restaurants/, the rules
 // switched off): all five red; restored, green.
+// Seen red (24-11-2026, the repeater on llest_esquela): with the meta's
+// prepare_callback giving the stored value as it is, «repeater» failed (the
+// JSON text instead of the list); restored, green.
 import { test, describe, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, credentials, html, testApi, upload, png } from "../../../tests/lib.mjs";
@@ -50,7 +53,7 @@ after(() => ct("/setup", { method: "POST", body: { on: false } }));
 
 test("the valid files are registered; the broken ones are not, and their errors are listed", () => {
   assert.equal(state.module, true, "module loaded");
-  assert.deepEqual(state.registered.sort(), ["gment_cuisine", "gment_restaurant", "gment_wine", "gment_winery"]);
+  assert.deepEqual(state.registered.sort(), ["gment_cuisine", "gment_restaurant", "gment_wine", "gment_winery", "llest_esquela"]);
   assert.deepEqual(state.taxonomy.sort(), ["gment_restaurant", "gment_wine"], "the cuisine taxonomy is shared by reference");
   const long = state.errors["gment_too_long.json"].join(" | ");
   // In Spanish: the site under test speaks es_ES, and the errors are translated (languages/).
@@ -135,6 +138,41 @@ describe("two tracks at once", { concurrency: true }, () => {
       assert.equal(wrong.json.meta.gment_winery, 0, "a page is not a restaurant");
       assert.equal(wrong.json.meta.gment_label, 0, "not an image");
       assert.equal(wrong.json.meta.gment_released, "2026-10-15");
+    });
+
+    test("repeater (examples/llest_esquela.json, the acts of a funeral notice): REST takes and gives a LIST with its schema, sanitized subfield by subfield; a row without its required day stops a publish", async () => {
+      const [made, incomplete, options] = await batch(
+        post("/llest_esquela", {
+          title: "Joan Ferrer Pons",
+          status: "draft", // A draft may be incomplete: «Ball» empties the third row's required tipus.
+          meta: {
+            llest_actes: [
+              { tipus: "Funeral", dia: "2026-11-25", hora: "17:00", fins: "", lloc: 'Parròquia de "Sant Miquel"', extra: "unknown key" },
+              {},
+              { tipus: "Vetlla", dia: "2026-11-24", hora: "9:30", lloc: "<b>Tanatori</b> Son Valentí" },
+              { tipus: "Ball", dia: "2026-11-26" },
+            ],
+          },
+        }),
+        post("/llest_esquela", { title: "Sense dia", status: "publish", meta: { llest_actes: [{ tipus: "Missa", hora: "10:00" }] } }),
+        { method: "OPTIONS", path: "/wp/v2/llest_esquela" }
+      );
+      assert.equal(made.status, 201, made.text);
+      assert.deepEqual(made.json.meta.llest_actes, [
+        { tipus: "Funeral", dia: "2026-11-25", hora: "17:00", lloc: 'Parròquia de "Sant Miquel"' },
+        { tipus: "Vetlla", dia: "2026-11-24", lloc: "Tanatori Son Valentí" },
+        { dia: "2026-11-26" },
+      ], "a list, not JSON text; the empty row and the unknown key out; «9:30» and «Ball» (not an option) emptied, never the row");
+      assert.equal(incomplete.status, 400, incomplete.text);
+      assert.equal(incomplete.json.code, "estrategia_web_required_fields");
+      assert.match(incomplete.json.message, /Actos/, "the field's name in the site language");
+      const schema = options.json.schema.properties.meta.properties.llest_actes;
+      assert.equal(schema.type, "array", JSON.stringify(schema));
+      assert.equal(schema.items.type, "object");
+      assert.equal(schema.items.properties.hora.type, "string");
+      // Stored: ONE meta, the JSON text (Unicode as it is), and the quote's backslash survived.
+      const raw = await ct(`/location-meta?id=${made.json.id}`);
+      assert.equal(raw.llest_actes, '[{"tipus":"Funeral","dia":"2026-11-25","hora":"17:00","lloc":"Parròquia de \\"Sant Miquel\\""},{"tipus":"Vetlla","dia":"2026-11-24","lloc":"Tanatori Son Valentí"},{"dia":"2026-11-26"}]');
     });
   });
 

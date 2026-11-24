@@ -166,7 +166,8 @@
 			}
 			refresh();
 			const again = row.querySelector( '[data-action="' + ( by < 0 ? 'move-up' : 'move-down' ) + '"]' );
-			( again && ! again.disabled ? again : row.querySelector( 'button' ) ).focus();
+			// At the top or the bottom its own button is disabled (it cannot take the focus): the other one.
+			( again && ! again.disabled ? again : row.querySelector( '.estrategia-web-ct-row-buttons button:not([disabled])' ) ).focus();
 			status.textContent = fill( t.moved || 'Moved: it is now %s.', nameOf( rows().indexOf( row ) ) );
 		};
 		const decorate = ( row ) => {
@@ -177,7 +178,7 @@
 				document.createTextNode( ' ' ),
 				button( t.down || 'Move down', 'move-down', ( r ) => move( r, 1 ) ),
 				document.createTextNode( ' ' ),
-				button( t.remove || 'Remove', 'remove-row', ( r ) => {
+				button( t.rowRemove || 'Remove', 'remove-row', ( r ) => {
 					const i = rows().indexOf( r );
 					r.remove();
 					refresh();
