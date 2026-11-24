@@ -1,4 +1,9 @@
 <?php
+namespace EstrategiaWeb\Forms;
+
+// Before the header (2.14.0): after it, Plugin Check (tools/wporg.mjs check) reported the guard missing.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Replacement of {{name}} markers in the notification templates.
  *
@@ -43,7 +48,7 @@
  *   It takes a migration like Marker_Migration, not an alias: aliases stay
  *   forever (this one lasted from 1.4.0 to 2.0.1).
  *
- * ENTRY markers (unreleased, 24-11-2026): {{post_title}}, {{post_url}} and
+ * ENTRY markers (2.14.0, 24-11-2026): {{post_title}}, {{post_url}} and
  * {{post_field:<key>}} read the ENTRY the form was shown in (an obituary, a
  * product…), resolved on the server from the id signed into the form
  * (Token::context(), Rest::context_post()). Without a valid signature, or
@@ -63,10 +68,6 @@
  * control character (a line break: «a@b.c\nBcc: x@y.z») is dropped whole,
  * never cut, so a value can never add a header.
  */
-
-namespace EstrategiaWeb\Forms;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Markers {
 

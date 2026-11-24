@@ -42,7 +42,7 @@ final class Definitions {
 	 * to notifications. All are read with their default (?? …) wherever they
 	 * are used, so a format-1 snapshot of a cached page still works: it is a
 	 * plain form, as it was.
-	 * 3 (unreleased, 24-11-2026): «cc» and «bcc» on notifications, read with
+	 * 3 (2.14.0, 24-11-2026): «cc» and «bcc» on notifications, read with
 	 * ?? '' (Notifier): a format-2 snapshot simply has no copies.
 	 */
 	public const FORMAT = 3;

@@ -9,6 +9,47 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.14.0 — 24-11-2026 (content-types: repeater and time fields; forms: entry markers and Cc/Bcc)
+
+**What each site must do:** nothing. The forms migration 0003 adds a column
+to the submissions table by itself on the first load (Migrations::maybe_run,
+its line in `estrategia_web_forms_migrations_log`). A theme that styled a
+repeater bound to a paragraph through `p` now gets a `div` (below).
+
+- **content-types: «repeater» and «time» field types** (PR #6). A repeating
+  list of rows whose subfields the field declares (text, textarea, number,
+  date, time, select, url, email, tel), with `min` / `max`, `item_format`
+  and `item_label`; one meta holding JSON, sanitized subfield by subfield;
+  REST gives it as a list with its schema; edited in the sidebar panel and
+  in the meta box; shown by the content-field binding as
+  `<ul class="estrategia-web-ct-list">`. WPML: text subfields translated,
+  the rest copied row by row. `time` is HH:MM, shown in the site's time
+  format. Example: `examples/llest_esquela.json`. Header of
+  [modules/content-types/includes/class-repeater.php](modules/content-types/includes/class-repeater.php).
+- **forms: entry markers and Cc/Bcc** (PR #7). A form shown in a post
+  carries that post's id signed; on submission `{{post_title}}`,
+  `{{post_url}}` and `{{post_field:<key>}}` are resolved on the server
+  (never a meta starting with `_` or protected), and are empty when the
+  signature does not verify. Notifications get Cc and Bcc; To, Cc, Bcc and
+  Reply-To are validated address by address after the markers. Migration
+  0003: column `context_post_id`; a submission's detail links to its entry.
+  [modules/forms/README.md](modules/forms/README.md), «Markers of the entry».
+- **Fix, content-types: the meta box kept no backslash.** Saving from the
+  classic meta box (classic screen and main-area box) unslashed twice, so a
+  text «C:\x» was stored «C:x». Every field now goes through `wp_slash()`,
+  as the repeater already did. Level 1: `tests/meta-box.test.mjs`.
+- **Fix, content-types: a repeater bound to a paragraph printed
+  `<p><ul>…</ul></p>`**, which the browser splits into the list and two
+  empty paragraphs. The server now prints that block as a `<div>` with the
+  paragraph's attributes (`Bindings::render_block()`,
+  `Field_Format::list_block()`). Level 1: a case in `tests/format.test.mjs`.
+- The submission detail's recipients (To, Cc, Bcc) are also escaped at the
+  echo (`wp_kses`, only `<br>`): `tools/wporg.mjs check` refused PR #7's
+  line (review rule 2).
+- **Where it was checked:** level 1 tests only, at the time of this
+  commit. Llar d'Estels (the funeral notices, the site that asked for both
+  PRs) is where to try it before publishing (CONTRIBUTING, step 3).
+
 ## 2.13.0 — 23-11-2026 (cache-purge: a field changed outside the editor empties its cached page)
 
 **What each site must do:** nothing. The module is `Default: on`, so it

@@ -35,7 +35,7 @@
 
 	// The fixed markers (class-markers.php). The old Spanish names were
 	// renamed in saved forms by «migrate-form-markers» (2.0.1).
-	// The entry markers (unreleased): the entry the form is shown in, signed into the form and read on the
+	// The entry markers (2.14.0): the entry the form is shown in, signed into the form and read on the
 	// server; «<key>» is a field of the entry's type (class-markers.php, post_field_key()).
 	const FIXED_MARKERS = [ 'all_fields', 'submission_date', 'page_url', 'site_name', 'dossier_url', 'missing_fields', 'post_title', 'post_url', 'post_field:<key>' ];
 

@@ -17,7 +17,7 @@
  * form was rendered (or the first focus, with JS: see view.js), so «too
  * fast» and «expired» come out of the same check.
  *
- * THE ENTRY'S CONTEXT (unreleased, 24-11-2026): context() signs the id of
+ * THE ENTRY'S CONTEXT (2.14.0, 24-11-2026): context() signs the id of
  * the entry the form is shown in (an obituary) and context_id() reads it
  * back, so the {{post_*}} markers (class-markers.php) read THAT entry and
  * nothing a visitor typed. It travels as the hidden field _af_ctx. Same

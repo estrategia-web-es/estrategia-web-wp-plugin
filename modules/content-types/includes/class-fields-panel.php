@@ -1,4 +1,9 @@
 <?php
+namespace EstrategiaWeb\ContentTypes;
+
+// Before the header (2.14.0): after it, Plugin Check (tools/wporg.mjs check) reported the guard missing.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * THE FIELDS IN THE EDITOR: a panel «<Singular> details» in the document
  * sidebar of the block editor, with one control per field of the type. The
@@ -48,10 +53,6 @@
  *   it (Registrar::sanitizer()), or the location's street would not compare
  *   line by line (tests/location-box.test.mjs saw it).
  */
-
-namespace EstrategiaWeb\ContentTypes;
-
-defined( 'ABSPATH' ) || exit;
 
 final class Fields_Panel {
 
