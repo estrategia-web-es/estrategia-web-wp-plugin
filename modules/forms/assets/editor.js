@@ -35,7 +35,9 @@
 
 	// The fixed markers (class-markers.php). The old Spanish names were
 	// renamed in saved forms by «migrate-form-markers» (2.0.1).
-	const FIXED_MARKERS = [ 'all_fields', 'submission_date', 'page_url', 'site_name', 'dossier_url', 'missing_fields' ];
+	// The entry markers (unreleased): the entry the form is shown in, signed into the form and read on the
+	// server; «<key>» is a field of the entry's type (class-markers.php, post_field_key()).
+	const FIXED_MARKERS = [ 'all_fields', 'submission_date', 'page_url', 'site_name', 'dossier_url', 'missing_fields', 'post_title', 'post_url', 'post_field:<key>' ];
 
 	const randomId = ( prefix ) => prefix + '-' + Math.random().toString( 36 ).slice( 2, 8 );
 
@@ -494,6 +496,8 @@
 						text( 'label', __( 'Name of this notification', 'estrategiaweb-toolkit' ) ),
 						text( 'to', __( 'To', 'estrategiaweb-toolkit' ), __( 'Addresses separated by commas, or a marker such as {{email}}. Empty: the site administrator email.', 'estrategiaweb-toolkit' ) ),
 						text( 'replyTo', __( 'Reply to', 'estrategiaweb-toolkit' ), __( 'An address or a marker such as {{email}}. Optional.', 'estrategiaweb-toolkit' ) ),
+						text( 'cc', __( 'Cc', 'estrategiaweb-toolkit' ), __( 'Copy: addresses separated by commas, or a marker such as {{post_field:<key>}} (a field of the entry the form is shown in). Optional.', 'estrategiaweb-toolkit' ) ),
+						text( 'bcc', __( 'Bcc', 'estrategiaweb-toolkit' ), __( 'Blind copy: like Cc, but the other recipients do not see it. Optional.', 'estrategiaweb-toolkit' ) ),
 						text( 'subject', __( 'Subject', 'estrategiaweb-toolkit' ) ),
 						// 2.11.0: only a dossier form is ever «updated».
 						h( SelectControl, {

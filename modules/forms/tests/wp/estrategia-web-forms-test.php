@@ -228,7 +228,8 @@ add_action(
 						$out['forms'][ $key ] = (int) $id;
 					}
 					foreach ( (array) ( $p['pages'] ?? array() ) as $i => $pg ) {
-						$type = 'wp_block' === ( $pg['type'] ?? '' ) ? 'wp_block' : 'page';
+						// «post» (unreleased): an entry with «meta» {key: value}, for the {{post_*}} markers (form-ref.test.mjs).
+						$type = in_array( $pg['type'] ?? '', array( 'wp_block', 'post' ), true ) ? (string) $pg['type'] : 'page';
 						$slug = sanitize_title( $pg['slug'] ?? 'form' );
 						$old  = get_page_by_path( $slug, OBJECT, $type );
 						$id   = wp_insert_post(
@@ -248,6 +249,9 @@ add_action(
 							throw new RuntimeException( $id->get_error_message() );
 						}
 						delete_post_meta( $id, \EstrategiaWeb\Forms\Form_Migration::BACKUP_META );
+						foreach ( (array) ( $pg['meta'] ?? array() ) as $meta_key => $meta_value ) {
+							update_post_meta( $id, (string) $meta_key, wp_slash( (string) $meta_value ) );
+						}
 						$key         = (string) ( $pg['key'] ?? $slug );
 						$ids[ $key ] = (int) $id;
 						$one         = array(
@@ -262,7 +266,11 @@ add_action(
 						$out['pages'][ $key ] = $one;
 					}
 					foreach ( (array) ( $p['submissions'] ?? array() ) as $row ) {
-						$out['submissions'][] = \EstrategiaWeb\Forms\Submissions::insert( array_merge( array( 'form_title' => '', 'definition_hash' => '', 'post_id' => 0, 'page_url' => '', 'lang' => 'en_US', 'status' => 'sent', 'data' => array(), 'notifications' => array(), 'ip' => '127.0.0.0', 'user_agent' => 'estrategia-web-forms-test/1.0' ), (array) $row ) );
+						if ( isset( $row['context_post'] ) ) { // The key of a seeded page/post: the row's entry (context_post_id).
+							$row['context_post_id'] = $ids[ (string) $row['context_post'] ] ?? 0;
+							unset( $row['context_post'] );
+						}
+						$out['submissions'][]= \EstrategiaWeb\Forms\Submissions::insert( array_merge( array( 'form_title' => '', 'definition_hash' => '', 'post_id' => 0, 'page_url' => '', 'lang' => 'en_US', 'status' => 'sent', 'data' => array(), 'notifications' => array(), 'ip' => '127.0.0.0', 'user_agent' => 'estrategia-web-forms-test/1.0' ), (array) $row ) );
 					}
 					return $out;
 				} catch ( Throwable $e ) {

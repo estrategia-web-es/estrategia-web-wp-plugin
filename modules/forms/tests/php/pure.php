@@ -176,6 +176,59 @@ $secret = 'test-secret';
 $now    = 1790000000;
 $token  = Token::create( 'abc', $now, $secret );
 
+// Unreleased (24-11-2026): the entry the form is shown in — its signed id, the {{post_*}} markers,
+// which meta {{post_field:<key>}} may read and the To / Cc / Bcc addresses after the markers.
+$ctx         = Token::context( 4242, 'abc', $secret );
+$is_email    = static fn( $a ) => false !== filter_var( $a, FILTER_VALIDATE_EMAIL );
+$underscore  = static fn( $k ) => str_starts_with( $k, '_' ); // is_protected_meta()'s default rule.
+$registered  = array( 'lle_correu_familia', 'lle_data_funeral', 'shared_key' );
+$entry_marks = array(
+	Markers::POST_TITLE                     => 'Joan Mas Riera',
+	Markers::POST_URL                       => 'https://example.test/esqueles/joan-mas/',
+	Markers::POST_FIELD . ':correu_familia' => 'familia@example.test',
+	Markers::POST_FIELD . ':_privat'        => '',
+);
+$context_cases = array(
+	'ok'            => Token::context_id( $ctx, 'abc', $secret ),
+	'shape'         => (bool) preg_match( '/^4242\.[a-f0-9]{40}$/', $ctx ),
+	'absent'        => Token::context_id( '', 'abc', $secret ),
+	'none_for_0'    => Token::context( 0, 'abc', $secret ),
+	'other_def'     => Token::context_id( $ctx, 'xyz', $secret ),
+	'other_id'      => Token::context_id( '4243' . substr( $ctx, 4 ), 'abc', $secret ),
+	'tampered_sig'  => Token::context_id( substr( $ctx, 0, -1 ) . ( str_ends_with( $ctx, '0' ) ? '1' : '0' ), 'abc', $secret ),
+	'other_secret'  => Token::context_id( $ctx, 'abc', 'another-site' ),
+	'a_token'       => Token::context_id( $token, 'abc', $secret ),
+	'garbage'       => Token::context_id( '4242.<script>', 'abc', $secret ),
+	'leading_zero'  => Token::context_id( '0' . $ctx, 'abc', $secret ),
+);
+$entry_cases = array(
+	'subject'      => Markers::replace( 'Condol: {{post_title}} ({{ POST_FIELD:Correu_Familia }}) {{post_url}}', $entry_marks ),
+	'protected'    => Markers::replace( '[{{post_field:_privat}}]', $entry_marks ),
+	'typo_kept'    => Markers::replace( '{{post_feld:x}}|{{post_field:}}', $entry_marks ),
+	'html_escaped' => Markers::replace( '{{post_title}}', array( Markers::POST_TITLE => 'Joan <b>' ), $esc ),
+	'keys'         => Markers::post_field_keys( 'Cc {{post_field:correu_familia}}, {{ post_field:Correu_Familia }}', '{{post_field:lle_data_funeral}} {{post_title}} {{email}}', '' ),
+	'key'          => array(
+		'registered'   => Markers::post_field_key( 'lle_correu_familia', 'lle_esquela', $registered, $underscore ),
+		'prefixed'     => Markers::post_field_key( 'correu_familia', 'lle_esquela', $registered, $underscore ),
+		'public'       => Markers::post_field_key( 'acf_email', 'lle_esquela', $registered, $underscore ),
+		'no_prefix'    => Markers::post_field_key( 'correu_familia', 'post', $registered, $underscore ),
+		'exact_first'  => Markers::post_field_key( 'shared_key', 'lle_esquela', array( 'shared_key', 'lle_shared_key' ), $underscore ),
+		'underscore'   => Markers::post_field_key( '_edit_lock', 'lle_esquela', $registered, $underscore ),
+		'filtered'     => Markers::post_field_key( 'secret', 'lle_esquela', $registered, static fn( $k ) => 'secret' === $k ),
+		'bad_chars'    => Markers::post_field_key( 'a b', 'lle_esquela', $registered, $underscore ),
+	),
+	'addresses'    => array(
+		'list'         => Markers::addresses( ' funeraria@example.test, no-es-correu ;familia@example.test,, FAMILIA@example.test ', $is_email ),
+		'injection'    => Markers::addresses( "familia@example.test\nBcc: spam@example.test", $is_email ),
+		'cr_injection' => Markers::addresses( "familia@example.test\r\nX-Evil: 1, ok@example.test", $is_email ),
+		'trailing_nl'  => Markers::addresses( "familia@example.test\n", $is_email ),
+		'empty'        => Markers::addresses( '', $is_email ),
+		'except_to'    => Markers::addresses( 'Funeraria@example.test, familia@example.test', $is_email, array( 'funeraria@example.test' ) ),
+	),
+	// The control-character rule on its own, not leaning on the validator (WordPress's is_email() is not filter_var).
+	'addresses_trusting' => Markers::addresses( "familia@example.test\nBcc: spam@example.test", static fn() => true ),
+);
+
 echo json_encode(
 	array(
 		'known'          => Markers::replace( 'Hola {{nombre}}', $values ),
@@ -217,6 +270,8 @@ echo json_encode(
 		// 2.11.0: the File field and the dossier's pure parts.
 		'files'             => $files_cases,
 		'dossier'           => $dossier_cases,
+		'context'           => $context_cases,
+		'entry'             => $entry_cases,
 	),
 	JSON_UNESCAPED_UNICODE
 );

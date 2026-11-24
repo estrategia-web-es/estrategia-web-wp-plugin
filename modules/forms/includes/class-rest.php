@@ -11,7 +11,7 @@
  *
  * The order of the checks matters and is this one, from cheapest to most
  * expensive: definition → honeypot → token (nonce + minimum time) → per-IP
- * limit → validation → log → notifications.
+ * limit → validation → entry context (never rejects) → log → notifications.
  *
  * permission_callback is __return_true ON PURPOSE and is declared (row 17):
  * a contact form is public by definition. What protects it is not who calls
@@ -191,6 +191,8 @@ final class Rest {
 		}
 
 		// 6. Log first: if the notifications fail, the submission is not lost.
+		// The entry it was sent from, if its signed id holds (no rejection when it does not: Token::context()).
+		$post    = self::context_post( (string) ( $params['_af_ctx'] ?? '' ), $hash );
 		$merged  = Files::merge( $before, $remove, $stored, $multiple );
 		$dropped = $merged['dropped'];
 		$values  = $result['values'];
@@ -215,7 +217,7 @@ final class Rest {
 		$message = $success;
 		$target  = '';
 		if ( ! $is_dossier ) {
-			$id = Submissions::insert( self::base_row( $definition, $hash, $page_url, $ip, $data ) );
+			$id = Submissions::insert( self::base_row( $definition, $hash, $page_url, $ip, $data, $post ) );
 		} else {
 			$missing = Dossier::missing( $definition, $data );
 			$owner   = strtolower( (string) ( $values[ Dossier::owner_field( $definition ) ] ?? '' ) );
@@ -241,7 +243,7 @@ final class Rest {
 			} else {
 				$token = Dossier::new_token();
 				$id    = Submissions::insert(
-					self::base_row( $definition, $hash, $page_url, $ip, $data ) + array(
+					self::base_row( $definition, $hash, $page_url, $ip, $data, $post ) + array(
 						'access_hash'    => Dossier::hash( $token ),
 						'access_expires' => $expires,
 						'owner_email'    => $owner,
@@ -265,7 +267,7 @@ final class Rest {
 
 		// 7. Notifications: the ones for this event («created» or, in a dossier, «updated»).
 		$definition['notifications'] = Definitions::for_event( (array) $definition['notifications'], $event );
-		$notifications = Notifier::send_all( $definition, $values, array( 'page_url' => $page_url, 'lang' => $lang, 'extra' => $extra ) );
+		$notifications = Notifier::send_all( $definition, $values, array( 'page_url' => $page_url, 'lang' => $lang, 'extra' => $extra, 'post' => $post ) );
 		$failed        = count( array_filter( $notifications, static fn( $n ) => 'sent' !== $n['status'] ) );
 		$status        = 0 === $failed ? 'sent' : ( $failed === count( $notifications ) ? 'failed' : 'partial' );
 		Submissions::update_notifications( $id, $status, $notifications );
@@ -276,12 +278,13 @@ final class Rest {
 	}
 
 	/** The columns every submission has, dossier or not. */
-	private static function base_row( array $definition, string $hash, string $page_url, string $ip, array $data ): array {
+	private static function base_row( array $definition, string $hash, string $page_url, string $ip, array $data, ?\WP_Post $post ): array {
 		return array(
 			'form_id'         => (string) $definition['form_id'],
 			'form_title'      => $definition['title'],
 			'definition_hash' => $hash,
 			'post_id'         => (int) $definition['post_id'],
+			'context_post_id' => $post ? (int) $post->ID : 0,
 			'page_url'        => $page_url,
 			'lang'            => (string) $definition['lang'],
 			'status'          => 'pending',
@@ -290,6 +293,20 @@ final class Rest {
 			'ip'              => Ip::truncate( $ip ),
 			'user_agent'      => sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ?? '' ) ),
 		);
+	}
+
+	/**
+	 * The entry of a submission's context (_af_ctx, Token::context()): the
+	 * post whose id is signed for THIS definition, if it still exists and is
+	 * still public (published, of a viewable type). Anything else is null and
+	 * the entry markers come out empty: a draft, a trashed obituary, a forged
+	 * or copied signature, no _af_ctx at all (a page cached before the field
+	 * existed).
+	 */
+	public static function context_post( string $context, string $hash ): ?\WP_Post {
+		$id   = Token::context_id( $context, $hash, wp_salt( 'nonce' ) );
+		$post = $id ? get_post( $id ) : null;
+		return $post instanceof \WP_Post && 'publish' === $post->post_status && is_post_publicly_viewable( $post ) ? $post : null;
 	}
 
 	public static function client_ip(): string {

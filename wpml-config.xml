@@ -34,7 +34,7 @@
 	  the block.json). Number, boolean and enum attributes are left out by
 	  the test on their own.
 	- Edge cases, by name:
-	  · The recipient of a notification («to», «replyTo») is NOT translated,
+	  · The recipient of a notification («to», «replyTo», «cc», «bcc») is NOT translated,
 	    so the translator cannot redirect the emails. If a site needs a
 	    different recipient per language, it is set by hand on the translated
 	    page (and redone after each translation update, see above).
