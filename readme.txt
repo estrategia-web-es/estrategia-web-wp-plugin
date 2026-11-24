@@ -4,7 +4,7 @@ Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.13.0
+Stable tag: 2.14.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,12 @@ Its settings, yes. Your data (form submissions, redirects, company details) is k
 The cookie list includes an extract of the Open Cookie Database (https://github.com/jkwakman/Open-Cookie-Database), © Jan Kwakman and contributors, Apache License 2.0. Details in modules/consent/data/NOTICE.
 
 == Changelog ==
+
+= 2.14.0 =
+* Content types: a «Repeating list» field type (rows with their own text, date, time, number, choice, link, email or phone fields), shown as a list, and a «Time» field type.
+* Forms: a form inside a post can use that post's title, link and fields in its notices ({{post_title}}, {{post_url}}, {{post_field:key}}), and notices have Cc and Bcc.
+* Content types: text saved from the fields box under the editor keeps its backslashes.
+* Content types: a list bound to a paragraph no longer leaves two empty paragraphs around it.
 
 = 2.13.0 =
 * New «Cache purge on field changes» module, on by default: when a published post's fields are changed outside the editor (WP-CLI, a script, a scheduled task), that post's cached page is emptied in SiteGround, WP Rocket, LiteSpeed, W3 Total Cache or WP Super Cache, whichever is installed. Only that page, once per request, and never because of a visitor.

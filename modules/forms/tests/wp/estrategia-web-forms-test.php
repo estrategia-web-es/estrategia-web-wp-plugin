@@ -228,7 +228,7 @@ add_action(
 						$out['forms'][ $key ] = (int) $id;
 					}
 					foreach ( (array) ( $p['pages'] ?? array() ) as $i => $pg ) {
-						// «post» (unreleased): an entry with «meta» {key: value}, for the {{post_*}} markers (form-ref.test.mjs).
+						// «post» (2.14.0): an entry with «meta» {key: value}, for the {{post_*}} markers (form-ref.test.mjs).
 						$type = in_array( $pg['type'] ?? '', array( 'wp_block', 'post' ), true ) ? (string) $pg['type'] : 'page';
 						$slug = sanitize_title( $pg['slug'] ?? 'form' );
 						$old  = get_page_by_path( $slug, OBJECT, $type );

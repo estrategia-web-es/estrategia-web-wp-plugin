@@ -14,7 +14,7 @@
 //     reference passes the block context on (Lavandería's quote form);
 //  5. a draft form, a reference to nothing or to a page render nothing;
 //  6. /wp/v2/eweb-forms answers only to someone who can edit pages;
-//  7. (unreleased, 24-11-2026) THE ENTRY: a reference in an obituary (a
+//  7. (2.14.0, 24-11-2026) THE ENTRY: a reference in an obituary (a
 //     post) carries the post's id signed (_af_ctx), and the notification
 //     reads the post on the server — {{post_title}}, {{post_url}},
 //     {{post_field:correu_familia}} in the Cc —; a protected meta, a meta

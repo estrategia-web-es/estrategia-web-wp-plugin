@@ -8,6 +8,9 @@
 // the ID, «relation» failed («7» instead of the title).
 // Seen red (24-11-2026, repeater): with the <li> text not escaped, «repeater:
 // a <ul> …» failed (a raw quote and «&»); restored, green.
+// Seen red (24-11-2026, 2.14.0): with Bindings::render_block() returning the
+// block as it came, «repeater bound to a paragraph …» failed (the <p> kept
+// round the <ul>); restored, green.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
@@ -222,6 +225,26 @@ test("repeater: a <ul> with one <li> per row through its item_format (escaped), 
   ]);
   const got = run([{ field: acts, raw: rows, attribute: "alt", html: false }]);
   assert.deepEqual(got, ['Exèquies: D:2026-11-25| T17:00–T18:00, Sant Miquel "Palma" & co; Vetlla: D:2026-11-24| T16:00'],"into an attribute: plain, rows joined by «; »");
+});
+
+test("repeater bound to a paragraph: its <p> wrapper becomes a <div> with the same attributes (no <p><ul>); anything else untouched", () => {
+  const ours = { metadata: { bindings: { content: { source: "estrategia-web/content-field", args: { key: "llest_actes" } } } } };
+  const meta = { metadata: { bindings: { content: { source: "core/post-meta", args: { key: "llest_actes" } } } } };
+  const list = '<ul class="estrategia-web-ct-list"><li>Vetlla: a les 16 h</li></ul>';
+  const got = run([
+    { block: `\n<p class="has-text-align-center x" style="margin-top:0" data-x='a>b'>${list}</p>\n`, attrs: ours },
+    { block: "<p>Text: 1 &gt; 0</p>", attrs: ours },
+    { block: `<p>${list}</p>`, attrs: meta },
+    { block: `<p>${list}</p>`, attrs: {} },
+    { block: `<h2 class="t">${list}</h2>`, attrs: ours },
+  ]);
+  assert.deepEqual(got, [
+    `\n<div class="has-text-align-center x" style="margin-top:0" data-x='a>b'>${list}</div>\n`,
+    "<p>Text: 1 &gt; 0</p>",
+    `<p>${list}</p>`,
+    `<p>${list}</p>`,
+    `<h2 class="t">${list}</h2>`,
+  ]);
 });
 
 test("repeater without item_format: the row's non-empty values joined by « · »; a textarea's line breaks as <br>", () => {

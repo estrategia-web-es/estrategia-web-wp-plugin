@@ -176,7 +176,7 @@ $secret = 'test-secret';
 $now    = 1790000000;
 $token  = Token::create( 'abc', $now, $secret );
 
-// Unreleased (24-11-2026): the entry the form is shown in — its signed id, the {{post_*}} markers,
+// 2.14.0 (24-11-2026): the entry the form is shown in — its signed id, the {{post_*}} markers,
 // which meta {{post_field:<key>}} may read and the To / Cc / Bcc addresses after the markers.
 $ctx         = Token::context( 4242, 'abc', $secret );
 $is_email    = static fn( $a ) => false !== filter_var( $a, FILTER_VALIDATE_EMAIL );

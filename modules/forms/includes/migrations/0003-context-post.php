@@ -1,6 +1,6 @@
 <?php
 /**
- * 0003 — context_post_id: the ENTRY a submission was sent from (unreleased,
+ * 0003 — context_post_id: the ENTRY a submission was sent from (2.14.0,
  * 24-11-2026; the entry markers, class-markers.php).
  *
  * It is the id that came SIGNED with the form (Token::context()) and still

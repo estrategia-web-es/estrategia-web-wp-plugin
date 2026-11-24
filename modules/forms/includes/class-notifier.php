@@ -23,7 +23,7 @@
  *   template is the administrator's email; a To that only had addresses
  *   that did not survive is not (an acknowledgement to an empty {{email}}
  *   must not land in the admin's inbox).
- * - Recipients (unreleased, 24-11-2026): To, Cc, Bcc and Reply-To are all
+ * - Recipients (2.14.0, 24-11-2026): To, Cc, Bcc and Reply-To are all
  *   validated after their markers are replaced, address by address
  *   (Markers::addresses()); bad ones are dropped and the rest go. The Cc
  *   does not repeat the To, the Bcc neither. The edge case, by name: the
@@ -97,7 +97,7 @@ final class Notifier {
 		);
 		/**
 		 * Last touch to a notification before sending it. Since the entry
-		 * markers (unreleased) it runs EVEN when no To address survived: a
+		 * markers (2.14.0) it runs EVEN when no To address survived: a
 		 * site can still set one here. With «to» still empty afterwards the
 		 * notification is logged as failed.
 		 *

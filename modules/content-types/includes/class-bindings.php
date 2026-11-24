@@ -59,6 +59,29 @@ final class Bindings {
 	public static function boot(): void {
 		add_action( 'init', array( self::class, 'register' ), 20 ); // After the types (init 5).
 		add_action( 'enqueue_block_editor_assets', array( self::class, 'enqueue_editor' ) );
+		add_filter( 'render_block', array( self::class, 'render_block' ), 10, 2 );
+	}
+
+	/**
+	 * render_block (after core has put the bound values in): a block bound to
+	 * this source whose wrapper is a <p> holding a repeater's list gets a
+	 * <div> instead (Field_Format::list_block(): the trap told there). Only
+	 * blocks with one of OUR bindings are looked at; the rest pass as they are.
+	 *
+	 * @param string|mixed $content The block's rendered HTML.
+	 * @param array        $block   The parsed block.
+	 */
+	public static function render_block( $content, $block ) {
+		$bindings = $block['attrs']['metadata']['bindings'] ?? null;
+		if ( ! is_string( $content ) || ! is_array( $bindings ) ) {
+			return $content;
+		}
+		foreach ( $bindings as $binding ) {
+			if ( is_array( $binding ) && self::SOURCE === ( $binding['source'] ?? '' ) ) {
+				return Field_Format::list_block( $content );
+			}
+		}
+		return $content;
 	}
 
 	public static function register(): void {

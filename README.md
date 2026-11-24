@@ -1282,7 +1282,7 @@ The schema: `modules/content-types/content-types.schema.json`. How to maintain i
 | local_image | the stored path | the image URL (a theme path resolved in the child theme, then the parent) | — |
 | hours | one line per run of days with the same hours («lun–sáb: 8:00–16:00»), in the request's language and the site's time format | — | — |
 | time | the site's time format | — | — |
-| repeater | `<ul class="estrategia-web-ct-list">` with one `<li>` per row: its `item_format` with each `{subfield}` (date and time in the site's format, a select's label), or the values joined by « · »; escaped. Bound into a paragraph, the browser closes the `<p>` before the list | — | — |
+| repeater | `<ul class="estrategia-web-ct-list">` with one `<li>` per row: its `item_format` with each `{subfield}` (date and time in the site's format, a select's label), or the values joined by « · »; escaped. Bound into a paragraph, the server prints that block as a `<div>` with the paragraph's attributes (a `<p>` cannot hold a list) | — | — |
 | text, textarea | escaped (textarea: line breaks as `<br>`) | — | — |
 
 The related post and the image are those of the request's language (WPML). Empty, invalid or unpublished gives nothing. A button binds `url` and `text` to the same field, without `link`. How to maintain it, in the header of `modules/content-types/module.php`.

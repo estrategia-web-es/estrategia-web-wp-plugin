@@ -158,12 +158,13 @@ final class Admin {
 		foreach ( $row['notifications'] as $n ) {
 			$result = 'sent' === $n['status'] ? __( 'Sent', 'estrategiaweb-toolkit' ) : __( 'Failed', 'estrategiaweb-toolkit' ) . ': ' . $n['error'];
 			$to = esc_html( $n['to'] );
-			foreach ( array( 'cc' => 'Cc', 'bcc' => 'Bcc' ) as $key => $header ) { // Unreleased: the copies (older rows have none).
+			foreach ( array( 'cc' => 'Cc', 'bcc' => 'Bcc' ) as $key => $header ) { // 2.14.0: the copies (older rows have none).
 				if ( '' !== (string) ( $n[ $key ] ?? '' ) ) {
 					$to .= '<br>' . esc_html( $header . ': ' . $n[ $key ] );
 				}
 			}
-			printf( '<tr><td>%s</td><td>%s</td><td>%s</td></tr>', esc_html( $n['label'] ), $to, esc_html( $result ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $to is escaped piece by piece above.
+			// Escaped at the echo too (WordPress.org review, rule 2): only the <br> between addresses survives.
+			printf( '<tr><td>%s</td><td>%s</td><td>%s</td></tr>', esc_html( $n['label'] ), wp_kses( $to, array( 'br' => array() ) ), esc_html( $result ) );
 		}
 		if ( ! $row['notifications'] ) {
 			echo '<tr><td colspan="3">' . esc_html__( 'This form has no notifications.', 'estrategiaweb-toolkit' ) . '</td></tr>';

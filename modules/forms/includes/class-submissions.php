@@ -52,7 +52,7 @@ final class Submissions {
 				'complete'        => isset( $row['complete'] ) ? (int) (bool) $row['complete'] : 1,
 				'missing'         => (string) wp_json_encode( array_values( (array) ( $row['missing'] ?? array() ) ) ),
 				'history'         => (string) wp_json_encode( array_values( (array) ( $row['history'] ?? array() ) ) ),
-				// Unreleased (migration 0003): the entry of the signed context, 0 = none.
+				// 2.14.0 (migration 0003): the entry of the signed context, 0 = none.
 				'context_post_id' => (int) ( $row['context_post_id'] ?? 0 ),
 			)
 		);

@@ -183,7 +183,7 @@ test("dossier: the token is 32 random bytes in base64url and only its sha256 is 
   assert.equal(d.hash_is_sha256, true);
 });
 
-// Unreleased (24-11-2026): the entry the form is shown in (an obituary). Token::context() and the
+// 2.14.0 (24-11-2026): the entry the form is shown in (an obituary). Token::context() and the
 // {{post_*}} markers of class-markers.php; what WordPress adds (the hidden field, the entry still public,
 // the Cc header that leaves) is level 2 in form-ref.test.mjs.
 // Seen red (24-11-2026), one mutant at a time, each test at least once: context_id() returning the id

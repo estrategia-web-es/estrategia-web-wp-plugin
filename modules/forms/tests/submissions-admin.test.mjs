@@ -10,7 +10,7 @@
 // check_admin_referer() removed from Admin::export_csv() (2: the export
 // without a nonce answered 200); the confirmation screen deleting already (3).
 // Seen red again after round 2 (28-10-2026), every test, with the mutants above (one by one where a test reads what the one before left).
-// Unreleased (24-11-2026): the detail's «Entry» row and the Cc/Bcc under each notification's To.
+// 2.14.0 (24-11-2026): the detail's «Entry» row and the Cc/Bcc under each notification's To.
 // Seen red with the «Entry» row's condition inverted (no row); restored, green.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
@@ -38,7 +38,7 @@ let s, ids, all, onlyQuote, onlyContact, obituary;
 before(async () => {
   [{ submissions: ids, pages: { obituary } }, s] = await Promise.all([
     seed({
-      // Unreleased: Ana's submission was sent from an obituary (its signed context) with the family in Cc.
+      // 2.14.0: Ana's submission was sent from an obituary (its signed context) with the family in Cc.
       pages: [{ key: "obituary", type: "post", slug: "joan-mas-registre", title: "Joan Mas", content: "" }],
       submissions: [
         { ...contact("Ana", "ana@ejemplo.test"), context_post: "obituary", notifications: [{ label: "Aviso al equipo", to: TEAM, cc: "familia@ejemplo.test", bcc: "arxiu@ejemplo.test", status: "sent" }, contact().notifications[1]] },
