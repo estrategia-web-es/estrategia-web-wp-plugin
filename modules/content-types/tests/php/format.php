@@ -38,6 +38,20 @@ function esc_url_raw( $url, $protocols = null ) {
 	return in_array( $scheme, $protocols, true ) ? str_replace( ' ', '%20', (string) $url ) : '';
 }
 
+// A repeater's rows are read through Repeater::rows() (class-repeater.php), which calls these.
+function sanitize_text_field( $s ) {
+	return trim( (string) preg_replace( '/\s+/', ' ', strip_tags( (string) $s ) ) );
+}
+function sanitize_textarea_field( $s ) {
+	return trim( strip_tags( (string) $s ) );
+}
+function is_email( $email ) {
+	return str_contains( (string) $email, '@' ) ? $email : false;
+}
+function sanitize_email( $email ) {
+	return (string) $email;
+}
+
 require __DIR__ . '/../../includes/class-schema.php';
 require __DIR__ . '/../../includes/class-field-format.php';
 

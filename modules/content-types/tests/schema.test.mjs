@@ -6,6 +6,9 @@
 // Seen red (15-10-2026): with MAX_TYPE at 21, «type name: … 21 are refused»
 // AND the drift test failed (the JSON Schema still said 20); with the
 // boolean-required rule switched off, «field rules» failed.
+// Seen red (24-11-2026, repeater and time): with the item_format placeholder
+// check switched off, «repeater and time» failed (no error for {where});
+// with «time» out of the JSON Schema's subfield enum, the drift test failed.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
@@ -100,7 +103,7 @@ test("field rules: select, relation, number, date, boolean, image, duplicates, w
     [(d) => d.fields.push({ name: "gment_logo", type: "image", label: "Logo", default: 5 }), /an image cannot have a default/],
     [(d) => d.fields.push({ name: "gment_phone", type: "text", label: "Again" }), /declared twice/],
     [(d) => (d.fields[0].wpml = "duplicate"), /wpml must be one of: copy, translate, ignore/],
-    [(d) => (d.fields[0].type = "repeater"), /type must be one of/],
+    [(d) => (d.fields[0].type = "gallery"), /type must be one of/],
     [(d) => (d.fields[0].options = ["a"]), /options is only for fields of type “select”/],
     [(d) => (d.fields[0].label = { catalan: "Telèfon" }), /label is required/],
     [(d) => (d.labels = { singular: "Restaurant" }), /labels\.plural is required/],
@@ -128,6 +131,42 @@ test("field rules: select, relation, number, date, boolean, image, duplicates, w
   ok.fields.push({ name: "gment_related", type: "relation", label: "Related", post_type: ["gment_restaurant", "post"] });
   ok.fields.push({ name: "gment_terrace", type: "boolean", label: "Terrace", default: true, true_label: { ca: "Amb terrassa", es: "Con terraza" }, false_label: "" });
   assert.deepEqual(errors(ok), []);
+});
+
+test("repeater and time (24-11-2026): the Llar d'Estels example is valid, and what a repeater may not say", () => {
+  const esquela = JSON.parse(fs.readFileSync(path.join(MODULE, "examples", "llest_esquela.json"), "utf8"));
+  assert.deepEqual(errors(esquela), [], "examples/llest_esquela.json");
+  const acts = () => structuredClone(esquela.fields[0]);
+  const withField = (f) => ({ ...base(), fields: [f] });
+  const cases = [
+    [{ ...acts(), fields: [] }, /a repeater needs “fields”, a non-empty list/],
+    [(() => { const f = acts(); delete f.fields; return f; })(), /a repeater needs “fields”/],
+    [{ ...acts(), default: "[]" }, /a repeater cannot have a default/],
+    [{ ...acts(), min: 3, max: 2 }, /min is greater than max/],
+    [{ ...acts(), min: 1.5 }, /min must be a whole number of rows/],
+    [{ ...acts(), max: 0 }, /max must be at least 1/],
+    [{ ...acts(), item_format: "{tipus} at {where}" }, /item_format: “\{where\}” is not one of its subfields/],
+    [{ ...acts(), item_label: "" }, /item_label must be a string/],
+    [{ ...acts(), integer: true }, /integer is only for fields of type “number”/],
+    [{ ...acts(), fields: [...acts().fields, { name: "dia", type: "date", label: "Again" }] }, /the subfield “dia” is declared twice/],
+    [{ ...acts(), fields: [{ name: "Dia", type: "date", label: "D" }] }, /fields\[1\]\.name must be lowercase letters/],
+    [{ ...acts(), fields: [{ name: "x".repeat(33), type: "text", label: "D" }] }, /at most 32 characters/],
+    [{ ...acts(), fields: [{ name: "photo", type: "image", label: "P" }] }, /fields\[1\]\.type must be one of: text, textarea, number, date, time, select, url, email, tel/],
+    [{ ...acts(), fields: [{ name: "kind", type: "select", label: "K" }] }, /a select needs “options”/],
+    [{ ...acts(), fields: [{ name: "kind", type: "text", label: "K", options: ["a"] }] }, /options is only for fields of type “select”/],
+    [{ ...acts(), fields: [{ name: "kind", type: "text", label: "K", requird: true }] }, /Unknown key “fields\[1\]\.fields\[1\]\.requird”/],
+    [{ ...acts(), fields: [{ name: "kind", type: "text" }] }, /fields\[1\]\.label is required/],
+    [{ name: "gment_photos", type: "text", label: "P", fields: [] }, /fields is only for fields of type “repeater”/],
+    [{ name: "gment_photos", type: "text", label: "P", item_format: "{a}" }, /item_format is only for fields of type “repeater”/],
+    [{ name: "gment_photos", type: "text", label: "P", max: 3 }, /max is only for fields of type “number, repeater”/],
+    [{ name: "gment_opens", type: "time", label: "Opens", default: "9:00" }, /default must be a time as HH:MM/],
+  ];
+  for (const [field, re] of cases) {
+    const def = withField(field.name.startsWith("llest_") ? { ...field, name: "gment_actes" } : field);
+    hasError(def, re);
+  }
+  assert.deepEqual(errors(withField({ name: "gment_opens", type: "time", label: "Opens", default: "09:00", required: true })), [], "a time field with its default");
+  assert.deepEqual(errors(withField({ ...acts(), name: "gment_actes", required: true, min: 1, item_format: { ca: "{tipus}: {dia}", es: "{tipus}, {dia}" } })), [], "required, min, a format per language");
 });
 
 test("not a JSON object: one clear error", () => {
@@ -169,6 +208,13 @@ test("normalize: the defaults, WPML per field type, and custom-fields added when
     ["gment_founded", "integer", "copy", 0],
     ["gment_logo", "integer", "copy", 0],
   ]);
+  const esquela = php("normalize", JSON.parse(fs.readFileSync(path.join(MODULE, "examples", "llest_esquela.json"), "utf8")));
+  const acts = esquela.fields[0];
+  assert.deepEqual([acts.meta_type, acts.wpml, acts.default, acts.max, acts.min], ["string", "translate", "", 10, null], "a repeater: JSON text, translate (it has a text subfield; the rest is copied by Wpml::sync()), no default");
+  assert.deepEqual(acts.fields.map((s) => [s.name, s.type, s.required]), [["tipus", "select", true], ["dia", "date", true], ["hora", "time", false], ["fins", "time", false], ["lloc", "text", false]]);
+  assert.deepEqual(acts.fields[0].options[3], { value: "Exèquies", label: { ca: "Exèquies", es: "Exequias" } }, "a subfield's options normalized like a select's");
+  const noText = php("normalize", { prefix: "gment_", name: "gment_x", labels: { singular: "X", plural: "X" }, fields: [{ name: "gment_times", type: "repeater", label: "T", fields: [{ name: "at", type: "time", label: "At" }] }, { name: "gment_opens", type: "time", label: "O" }] });
+  assert.deepEqual(noText.fields.map((f) => f.wpml), ["copy", "copy"], "no text subfield: copied whole by WPML; a time is copied");
   const ex = php("normalize", example);
   assert.equal(ex.taxonomies[0].hierarchical, true);
   assert.deepEqual(ex.fields[2].options[0], { value: "€", label: { ca: "€ — econòmic", es: "€ — económico", en: "€ — budget" } });
@@ -203,4 +249,10 @@ test("content-types.schema.json says the same as the PHP validator (no drift)", 
   assert.equal(schema.$defs.field.properties.name.maxLength, lists.max_field);
   assert.equal(schema.additionalProperties, false);
   assert.equal(schema.$defs.field.additionalProperties, false);
+  // A repeater's subfields (24-11-2026).
+  assert.deepEqual(keys(schema.$defs.subfield.properties), [...lists.subfield_keys].sort(), "subfield keys");
+  assert.deepEqual(schema.$defs.subfield.properties.type.enum, lists.subfield_types, "subfield types");
+  assert.equal(schema.$defs.subfield.properties.name.maxLength, lists.max_subfield);
+  assert.equal(schema.$defs.subfield.additionalProperties, false);
+  assert.deepEqual(schema.$defs.field.properties.fields.items, { $ref: "#/$defs/subfield" });
 });

@@ -1,4 +1,4 @@
-// NIVEL: 1 — reads the browser scenario «16-ct-editor-panel»: blocks bound to estrategia-web/content-field show the formatted value, the source declares its fields, and the «details» panel stores what is typed with its JSON types. Opens no browser.
+// NIVEL: 1 — reads the browser scenario «16-ct-editor-panel»: blocks bound to estrategia-web/content-field show the formatted value, the source declares its fields, and the «details» panel stores what is typed with its JSON types; a repeater edited in the panel and in the classic meta box. Opens no browser.
 /**
  * Was editor-panel.test.mjs (level 3) until 29-10-2026; every assertion
  * kept, with one editor boot per post as before (the restaurant, whose
@@ -12,6 +12,12 @@
  * Seen red (16-10-2026, bindings): with format() returning the stored meta as
  * it is. Seen red (29-10-2026) with the price label in the canvas and the
  * stored alcohol expected otherwise; restored, green.
+ * The repeater (24-11-2026): an esquela (examples/llest_esquela.json) in the
+ * sidebar panel and a winery's visits in the classic meta box. Seen red with
+ * the panel's Move up leaving the row where it was (the scenario's wait for
+ * «Vetlla» first never held); and, for real on its first run, the box's
+ * Remove read «Quitar»: its text key collided with the image picker's
+ * «remove» in Fields_Panel::enqueue_box() (now «rowRemove»).
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -76,5 +82,54 @@ test( 'wine: number, boolean, date and relation travel with their types, and an 
 
 test( 'no JavaScript errors in the editor', () => {
 	const errors = errorsOf( get( null, 'emptied' ), { pageOnly: true } );
+	assert.deepEqual( errors, [], errors.join( '\n' ) );
+} );
+
+// The repeater (24-11-2026): llest_esquela's acts (examples/) in the sidebar panel, and gment_winery's
+// visits (tests/fixtures/valid/) in the classic screen's meta box. The site speaks es_ES.
+test( 'repeater in the sidebar panel: a row per act with its labelled subfields, Add / Move up / Move down / Remove with the row in their names, focus following the row', () => {
+	const empty = v( 'repeater-empty' );
+	assert.equal( empty.legend, 'Actos' );
+	assert.equal( empty.add, 'Añadir Acto', 'the button says what a row is called' );
+	assert.equal( empty.rows, 0 );
+	const added = v( 'repeater-added' );
+	assert.equal( added.legend, 'Acto 1' );
+	assert.deepEqual( added.labels, [ 'Tipo *→SELECT', 'Día *→INPUT', 'Hora→INPUT', 'Hasta→INPUT', 'Lugar→INPUT' ], 'each subfield with its label tied to its control; required marked' );
+	assert.deepEqual( added.options.slice( 1 ), [ 'Velatorio', 'Funeral', 'Rosario', 'Exequias', 'Duelo', 'Misa' ], 'the options\' labels in the site language' );
+	assert.deepEqual( added.types, [ 'date', 'time', 'time', 'text' ] );
+	assert.deepEqual( added.buttons, [ 'Subir|Subir Acto 1|true', 'Bajar|Bajar Acto 1|true', 'Eliminar|Eliminar Acto 1|false' ], 'real buttons, their visible text at the start of their name; a lone row neither moves nor stops a removal' );
+	assert.equal( added.focus, 'SELECT', 'a new row takes the focus' );
+	const moved = v( 'repeater-moved' );
+	assert.deepEqual( moved.order, [ 'Vetlla', 'Funeral' ] );
+	assert.deepEqual( moved.legends, [ 'Acto 1', 'Acto 2' ], 'the names follow the position' );
+	assert.equal( moved.focus, '0:SELECT', 'the focus went with the row (to its first control: at the top it cannot move up again)' );
+	const { post } = v( 'esquela' );
+	assert.equal( post.status, 'publish', JSON.stringify( post ).slice( 0, 300 ) );
+	assert.deepEqual( post.actes, [
+		{ tipus: 'Vetlla', dia: '2026-11-24' },
+		{ tipus: 'Funeral', dia: '2026-11-25', hora: '17:00', lloc: 'Parròquia de Sant Miquel' },
+	], 'stored in the order shown; the removed empty row is gone; REST gives the list back' );
+} );
+
+test( 'repeater in the meta box (fields-box.js): the spare row becomes the template, Add up to max, rows renamed by position, input names kept unique, focus and an announcement', () => {
+	const start = v( 'box-start' );
+	assert.equal( start.rows, 0, 'the spare empty row PHP adds for the form without JavaScript is gone' );
+	assert.equal( start.add, 'Añadir Visita' );
+	const moved = v( 'box-moved' );
+	assert.deepEqual( moved.rows.map( ( r ) => r.legend + '=' + r.day ), [ 'Visita 1=2026-12-12', 'Visita 2=2026-12-05' ] );
+	assert.deepEqual( moved.rows.map( ( r ) => r.name ), [ 'estrategia_web_ct[gment_winery_visits][2][dia]', 'estrategia_web_ct[gment_winery_visits][1][dia]' ], 'a moved row keeps its number: the order saved is the form\'s' );
+	assert.ok( moved.rows.every( ( r ) => r.labelFor ), 'each new label points at its own input' );
+	assert.deepEqual( moved.buttons, [ 'Subir|Subir Visita 1|true', 'Bajar|Bajar Visita 1|false', 'Eliminar|Eliminar Visita 1|false' ] );
+	assert.equal( moved.focus, 'move-down:Visita 1', 'at the top its Move up is disabled: the focus goes to Move down of the same row' );
+	const full = v( 'box-full' );
+	assert.equal( full.rows, 3 );
+	assert.equal( full.add, true, 'max 3: Add is disabled' );
+	assert.equal( new Set( full.names ).size, 3, 'three different numbers: ' + full.names.join( ', ' ) );
+	const removed = v( 'box-removed' );
+	assert.deepEqual( removed.rows, [ 'Visita 1=2026-12-05', 'Visita 2=' ] );
+	assert.equal( removed.add, false );
+	assert.equal( removed.status, 'Se ha eliminado la fila.' );
+	assert.equal( removed.focus, 'date:Visita 1', 'the focus goes to the row now in its place' );
+	const errors = errorsOf( get( null, 'box-removed' ), { pageOnly: true } );
 	assert.deepEqual( errors, [], errors.join( '\n' ) );
 } );

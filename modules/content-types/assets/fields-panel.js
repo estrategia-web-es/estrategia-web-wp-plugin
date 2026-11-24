@@ -10,7 +10,8 @@
  *
  * How to add a field type: a `case` in Field() below, the same in
  * Fields_Panel::render_meta_box() (classic screen), and the rest in the
- * header of module.php.
+ * header of module.php. A repeater SUBFIELD type: SubControl() below and
+ * Fields_Panel::render_row() (the list in includes/class-repeater.php).
  *
  * The trap: an EMPTIED number must travel as null (which deletes the meta,
  * so it goes back to its default). An empty string is refused by the REST
@@ -27,7 +28,7 @@
 	const { useSelect, useDispatch } = wp.data;
 	const { TextControl, TextareaControl, SelectControl, CheckboxControl, Button, BaseControl } = wp.components;
 	const { MediaUpload, MediaUploadCheck } = wp.blockEditor;
-	const { __ } = wp.i18n;
+	const { __, _x } = wp.i18n;
 	const Panel = ( wp.editor && wp.editor.PluginDocumentSettingPanel ) || ( wp.editPost && wp.editPost.PluginDocumentSettingPanel );
 	if ( ! Panel ) {
 		return;
@@ -193,9 +194,118 @@
 		);
 	}
 
+	/*
+	 * repeater (24-11-2026): one fieldset per row, legend «<item label> n»
+	 * («Acte 2»), its subfields, and Move up / Move down / Remove; «Add …»
+	 * under the rows. No dragging, on purpose. The value is the LIST REST
+	 * gives (Registrar's prepare_callback), and the whole list is sent back
+	 * on every change; the server keeps only what the subfields allow
+	 * (includes/class-repeater.php). Cells travel as strings, a number too:
+	 * REST takes a numeric string or "" for a number subfield (its schema),
+	 * unlike a number FIELD (the trap in this file's header).
+	 * The same texts as the meta box (Fields_Panel::repeater_strings()).
+	 * Focus follows the row that moved; what happened is spoken (wp.a11y).
+	 */
+	const speak = ( message ) => wp.a11y && wp.a11y.speak && wp.a11y.speak( message, 'polite' );
+	const fill = ( s, v ) => String( s ).replace( /%(?:1\$)?[sd]/, v );
+
+	function SubControl( { sub, value, disabled, onChange } ) {
+		const common = { label: sub.label + ( sub.required ? ' *' : '' ), disabled: disabled || sub.disabled, __nextHasNoMarginBottom: true, 'aria-required': sub.required ? 'true' : undefined };
+		const v = value === undefined || value === null ? '' : String( value );
+		if ( sub.kind === 'textarea' ) {
+			return h( TextareaControl, { ...common, value: v, rows: 2, onChange } );
+		}
+		if ( sub.kind === 'select' ) {
+			return h( SelectControl, { ...common, __next40pxDefaultSize: true, value: v, options: [ { value: '', label: __( '— None —', 'estrategiaweb-toolkit' ) } ].concat( sub.options ), onChange } );
+		}
+		const types = { number: 'number', date: 'date', time: 'time', url: 'url', email: 'email', tel: 'tel' };
+		return h( TextControl, { ...common, __next40pxDefaultSize: true, type: types[ sub.kind ] || 'text', step: sub.kind === 'number' ? 'any' : undefined, value: v, onChange } );
+	}
+
+	function RepeaterField( { field, value, onChange } ) {
+		const rows = Array.isArray( value ) ? value : [];
+		const fixed = field.disabled || field.lockRows;
+		const min = field.min === null || field.min === undefined ? 0 : field.min;
+		const max = field.max === null || field.max === undefined ? Infinity : field.max;
+		const nameOf = ( i ) => ( field.itemLabel ? field.itemLabel + ' ' + ( i + 1 ) : fill( __( 'Row %d', 'estrategiaweb-toolkit' ), i + 1 ) );
+		const id = idOf( field );
+		const focusLater = ( selector ) => setTimeout( () => {
+			const node = document.querySelector( '#' + id + ' ' + selector );
+			node && node.focus();
+		}, 0 );
+		const move = ( i, by ) => {
+			const next = rows.slice();
+			const [ row ] = next.splice( i, 1 );
+			next.splice( i + by, 0, row );
+			onChange( next );
+			const action = by < 0 && i + by > 0 ? 'move-up' : by > 0 && i + by < rows.length - 1 ? 'move-down' : null;
+			focusLater( '[data-row="' + ( i + by ) + '"] ' + ( action ? '[data-action="' + action + '"]' : 'input, select, textarea' ) );
+			/* translators: %s: the row's name at its new position, e.g. Act 1 */
+			speak( fill( _x( 'Moved: it is now %s.', 'repeater row', 'estrategiaweb-toolkit' ), nameOf( i + by ) ) );
+		};
+		const button = ( text, label, action, onClick, disabled, destructive ) =>
+			h( Button, { variant: 'link', isDestructive: destructive, 'aria-label': label, 'data-action': action, disabled, onClick, style: { marginRight: '12px' } }, text );
+		return h(
+			'fieldset',
+			{ id, className: 'estrategia-web-repeater' },
+			h( 'legend', { style: { fontWeight: 600, marginBottom: '4px' } }, labelOf( field ) ),
+			field.help ? h( 'p', { className: 'components-base-control__help', style: { marginTop: 0 } }, field.help ) : null,
+			rows.map( ( row, i ) =>
+				h(
+					'fieldset',
+					{ key: i, 'data-row': i, style: { border: '1px solid #ddd', padding: '4px 8px 8px', margin: '0 0 8px' } },
+					h( 'legend', { style: { fontWeight: 500, padding: '0 4px' } }, nameOf( i ) ),
+					field.fields.map( ( sub ) =>
+						h(
+							'div',
+							{ key: sub.key, 'data-sub': sub.key, style: { marginBottom: '6px' } },
+							h( SubControl, { sub, value: row && row[ sub.key ], disabled: field.disabled, onChange: ( v ) => onChange( rows.map( ( r, j ) => ( j === i ? { ...r, [ sub.key ]: v } : r ) ) ) } )
+						)
+					),
+					fixed
+						? null
+						: h(
+								'div',
+								null,
+								/* translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Move up» (its visible text must be in its name). */
+								button( _x( 'Move up', 'repeater row', 'estrategiaweb-toolkit' ), fill( _x( 'Move up %s', 'repeater row', 'estrategiaweb-toolkit' ), nameOf( i ) ), 'move-up', () => move( i, -1 ), i === 0 ),
+								/* translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Move down» (its visible text must be in its name). */
+								button( _x( 'Move down', 'repeater row', 'estrategiaweb-toolkit' ), fill( _x( 'Move down %s', 'repeater row', 'estrategiaweb-toolkit' ), nameOf( i ) ), 'move-down', () => move( i, 1 ), i === rows.length - 1 ),
+								/* translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Remove» (its visible text must be in its name). */
+								button( _x( 'Remove', 'repeater row', 'estrategiaweb-toolkit' ), fill( _x( 'Remove %s', 'repeater row', 'estrategiaweb-toolkit' ), nameOf( i ) ), 'remove-row', () => {
+									onChange( rows.filter( ( r, j ) => j !== i ) );
+									focusLater( rows.length > 1 ? '[data-row="' + Math.min( i, rows.length - 2 ) + '"] input, [data-row="' + Math.min( i, rows.length - 2 ) + '"] select' : '[data-action="add-row"]' );
+									speak( _x( 'Row removed.', 'repeater row', 'estrategiaweb-toolkit' ) );
+								}, rows.length <= min, true )
+						  )
+				)
+			),
+			fixed
+				? null
+				: h(
+						Button,
+						{
+							variant: 'secondary',
+							'data-action': 'add-row',
+							disabled: rows.length >= max,
+							onClick: () => {
+								onChange( rows.concat( [ {} ] ) );
+								focusLater( '[data-row="' + rows.length + '"] input, [data-row="' + rows.length + '"] select, [data-row="' + rows.length + '"] textarea' );
+								/* translators: %s: a row of a list, e.g. Act 3 */
+								speak( fill( _x( '%s added.', 'repeater row', 'estrategiaweb-toolkit' ), nameOf( rows.length ) ) );
+							},
+						},
+						/* translators: %s: what a row of a list is called, e.g. Act */
+						field.itemLabel ? fill( _x( 'Add %s', 'repeater row', 'estrategiaweb-toolkit' ), field.itemLabel ) : _x( 'Add', 'repeater row', 'estrategiaweb-toolkit' )
+				  )
+		);
+	}
+
 	function Field( { field, value, onChange } ) {
 		const common = { label: labelOf( field ), help: field.help, disabled: field.disabled, __nextHasNoMarginBottom: true };
 		switch ( field.kind ) {
+			case 'repeater':
+				return h( RepeaterField, { field, value, onChange } );
 			case 'textarea':
 			case 'embed':
 				return h( TextareaControl, { ...common, value: value || '', rows: 3, onChange } );
@@ -226,7 +336,7 @@
 			case 'hours':
 				return h( HoursField, { field, value, onChange } );
 			default: {
-				const types = { url: 'url', email: 'email', tel: 'tel', date: 'date' };
+				const types = { url: 'url', email: 'email', tel: 'tel', date: 'date', time: 'time' };
 				return h( TextControl, { ...common, __next40pxDefaultSize: true, type: types[ field.kind ] || 'text', value: value || '', onChange } );
 			}
 		}

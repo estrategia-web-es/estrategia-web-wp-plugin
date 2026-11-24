@@ -145,6 +145,22 @@
         }
       ]
     },
+    "subfield": {
+      "description": "One subfield of a repeater: a key inside each row (not a meta key: no prefix).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type", "label"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "maxLength": 32 },
+        "type": { "enum": ["text", "textarea", "number", "date", "time", "select", "url", "email", "tel"] },
+        "label": { "$ref": "#/$defs/text" },
+        "required": { "type": "boolean", "description": "A row without it is kept, but the field cannot be published so." },
+        "options": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/option" } }
+      },
+      "if": { "properties": { "type": { "const": "select" } } },
+      "then": { "required": ["options"] },
+      "else": { "not": { "required": ["options"] } }
+    },
     "field": {
       "type": "object",
       "additionalProperties": false,
@@ -152,8 +168,8 @@
       "properties": {
         "name": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "maxLength": 64, "description": "The meta key. Starts with prefix." },
         "type": {
-          "enum": ["text", "textarea", "number", "url", "email", "tel", "image", "date", "select", "relation", "boolean", "rating", "embed", "local_image", "hours"],
-          "description": "rating: 0 (none) to 5, picked as stars. embed: a map or video embed URL; pasting the whole <iframe> keeps its src. local_image: an image of THIS site by theme path (assets/maps/x.webp), site path or same-domain URL. hours: opening hours per day, stored as JSON text {\"mo\":[\"08:00-14:00\",\"16:00-20:00\"],…} (mo…su; closed days left out)."
+          "enum": ["text", "textarea", "number", "url", "email", "tel", "image", "date", "select", "relation", "boolean", "rating", "embed", "local_image", "hours", "time", "repeater"],
+          "description": "rating: 0 (none) to 5, picked as stars. embed: a map or video embed URL; pasting the whole <iframe> keeps its src. local_image: an image of THIS site by theme path (assets/maps/x.webp), site path or same-domain URL. hours: opening hours per day, stored as JSON text {\"mo\":[\"08:00-14:00\",\"16:00-20:00\"],…} (mo…su; closed days left out). time: a time of day, HH:MM (24 h). repeater: a list of rows, each with the subfields of «fields», stored as JSON text [{\"tipus\":\"Funeral\",\"dia\":\"2026-11-25\",\"hora\":\"17:00\"},…] (only the subfields with a value; empty rows dropped; at most «max» rows) and shown in REST as that list. How it is kept and maintained: includes/class-repeater.php."
         },
         "label": { "$ref": "#/$defs/text" },
         "help": { "$ref": "#/$defs/text" },
@@ -168,16 +184,22 @@
             { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,19}$" } }
           ]
         },
-        "min": { "type": "number" },
-        "max": { "type": "number" },
+        "min": { "type": "number", "description": "number: the smallest value. repeater: the fewest rows a filled-in list may have (a whole number)." },
+        "max": { "type": "number", "description": "number: the largest value. repeater: the most rows stored (a whole number, from 1); the rest are cut." },
         "integer": { "type": "boolean" },
+        "fields": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/subfield" }, "description": "repeater only: the subfields of each row, in order." },
+        "item_format": { "$ref": "#/$defs/text", "description": "repeater only: one row as the estrategia-web/content-field binding shows it, with {subfield} placeholders, e.g. \"{tipus}: {dia} {hora}–{fins}, {lloc}\". An empty value takes with it the text that joins it to the previous one. Without it: the row's values joined by « · »." },
+        "item_label": { "$ref": "#/$defs/text", "description": "repeater only: what a row is called in the editor («Acte»: «Acte 1», «Add Acte»)." },
         "true_label": { "$ref": "#/$defs/booleanText", "description": "boolean only: what the estrategia-web/content-field binding shows when it is true. Default: «Yes», translated. \"\" shows nothing." },
         "false_label": { "$ref": "#/$defs/booleanText", "description": "boolean only: what the estrategia-web/content-field binding shows when it is false. Default: «No», translated. \"\" shows nothing." }
       },
       "allOf": [
         { "if": { "properties": { "type": { "const": "select" } } }, "then": { "required": ["options"] }, "else": { "not": { "required": ["options"] } } },
         { "if": { "properties": { "type": { "const": "relation" } } }, "then": { "required": ["post_type"], "not": { "required": ["default"] } }, "else": { "not": { "required": ["post_type"] } } },
-        { "if": { "properties": { "type": { "const": "number" } } }, "else": { "not": { "anyOf": [{ "required": ["min"] }, { "required": ["max"] }, { "required": ["integer"] }] } } },
+        { "if": { "properties": { "type": { "const": "number" } } }, "else": { "not": { "anyOf": [{ "required": ["integer"] }] } } },
+        { "if": { "properties": { "type": { "enum": ["number", "repeater"] } } }, "else": { "not": { "anyOf": [{ "required": ["min"] }, { "required": ["max"] }] } } },
+        { "if": { "properties": { "type": { "const": "repeater" } } }, "then": { "required": ["fields"], "not": { "required": ["default"] }, "properties": { "min": { "type": "integer", "minimum": 0 }, "max": { "type": "integer", "minimum": 1 } } }, "else": { "not": { "anyOf": [{ "required": ["fields"] }, { "required": ["item_format"] }, { "required": ["item_label"] }] } } },
+        { "if": { "properties": { "type": { "const": "time" } } }, "then": { "properties": { "default": { "type": "string", "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$" } } } },
         { "if": { "properties": { "type": { "const": "image" } } }, "then": { "not": { "required": ["default"] } } },
         { "if": { "properties": { "type": { "const": "rating" } } }, "then": { "properties": { "default": { "type": "integer", "minimum": 0, "maximum": 5 } } } },
         { "if": { "properties": { "type": { "const": "hours" } } }, "then": { "properties": { "default": { "type": "string" } } } },

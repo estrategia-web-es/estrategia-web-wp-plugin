@@ -120,6 +120,7 @@ final class Rest {
 			'redirects' => self::redirects_on(),
 			'dirs'      => Loader::dirs(),
 			'fieldTypes' => Schema::FIELD_TYPES,
+			'subfieldTypes' => Repeater::SUBFIELD_TYPES, // A repeater's subfields (class-repeater.php).
 			'supports'  => Schema::SUPPORTS,
 		);
 	}

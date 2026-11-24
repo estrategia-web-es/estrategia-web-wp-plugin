@@ -21,6 +21,7 @@ namespace EstrategiaWeb\ContentTypes;
 defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/class-hours.php'; // check_type_rules() validates an «hours» default with it (also in the level 1 tests, which load this file alone).
+require_once __DIR__ . '/class-repeater.php'; // The subfield types and keys of a «repeater», and the «time» rule.
 
 final class Schema {
 
@@ -35,7 +36,7 @@ final class Schema {
 
 	public const TYPE_KEYS = array( '$schema', 'template', 'prefix', 'name', 'slug', 'labels', 'description', 'icon', 'supports', 'public', 'has_archive', 'show_in_rest', 'hierarchical', 'menu_position', 'wpml', 'fields_box', 'groups', 'taxonomies', 'fields' );
 	public const TAXONOMY_KEYS = array( 'name', 'slug', 'labels', 'hierarchical', 'public', 'show_in_rest', 'show_admin_column', 'wpml' );
-	public const FIELD_KEYS = array( 'name', 'type', 'label', 'help', 'required', 'default', 'wpml', 'group', 'options', 'post_type', 'min', 'max', 'integer', 'true_label', 'false_label' );
+	public const FIELD_KEYS = array( 'name', 'type', 'label', 'help', 'required', 'default', 'wpml', 'group', 'options', 'post_type', 'min', 'max', 'integer', 'true_label', 'false_label', 'fields', 'item_format', 'item_label' );
 
 	/**
 	 * WHERE THE FIELDS ARE EDITED (2.0.0, David: «una página vacía y todos
@@ -77,8 +78,11 @@ final class Schema {
 	 * an image of THIS site given by path or URL. See Registrar::sanitizer().
 	 * hours (22-10-2026): opening hours per day of the week, stored as JSON
 	 * text (class-hours.php); modules/local-business turns it into schema.org.
+	 * time and repeater (24-11-2026): a time of day as HH:MM, and a list of
+	 * rows with the subfields declared in its «fields», stored as JSON text
+	 * (class-repeater.php, which says why and how it is maintained).
 	 */
-	public const FIELD_TYPES = array( 'text', 'textarea', 'number', 'url', 'email', 'tel', 'image', 'date', 'select', 'relation', 'boolean', 'rating', 'embed', 'local_image', 'hours' );
+	public const FIELD_TYPES = array( 'text', 'textarea', 'number', 'url', 'email', 'tel', 'image', 'date', 'select', 'relation', 'boolean', 'rating', 'embed', 'local_image', 'hours', 'time', 'repeater' );
 	public const SUPPORTS = array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields', 'comments', 'revisions', 'page-attributes', 'post-formats' );
 	public const FIELD_WPML = array( 'copy', 'translate', 'ignore' );
 	public const TYPE_WPML = array( 'translate', 'display-as-translated', 'ignore' );
@@ -429,10 +433,21 @@ final class Schema {
 			'boolean' => false,
 			default   => '',
 		};
-		$options = array();
-		foreach ( $field['options'] ?? array() as $option ) {
-			$options[] = is_array( $option ) ? array( 'value' => (string) $option['value'], 'label' => $option['label'] ) : array( 'value' => (string) $option, 'label' => (string) $option );
+		$options = self::normalize_options( $field['options'] ?? array() );
+		// repeater: its subfields, each with its options normalized like a select's.
+		$subs = array();
+		foreach ( 'repeater' === $type ? $field['fields'] ?? array() : array() as $sub ) {
+			$subs[] = array(
+				'name'     => $sub['name'],
+				'type'     => $sub['type'],
+				'label'    => $sub['label'],
+				'required' => (bool) ( $sub['required'] ?? false ),
+				'options'  => self::normalize_options( $sub['options'] ?? array() ),
+			);
 		}
+		// Text a person reads changes with the language; everything else is the same in all of them.
+		// A repeater with a text subfield is «translate»: its other subfields are copied by Wpml::sync() (class-repeater.php).
+		$texts = 'repeater' === $type ? array_intersect( array_column( $subs, 'type' ), Repeater::TRANSLATED ) : array();
 		return array(
 			'name'      => $field['name'],
 			'type'      => $type,
@@ -441,8 +456,7 @@ final class Schema {
 			'help'      => $field['help'] ?? '',
 			'required'  => (bool) ( $field['required'] ?? false ),
 			'default'   => $field['default'] ?? $empty,
-			// Text a person reads changes with the language; everything else is the same in all of them.
-			'wpml'      => $field['wpml'] ?? ( in_array( $type, array( 'text', 'textarea' ), true ) ? 'translate' : 'copy' ),
+			'wpml'      => $field['wpml'] ?? ( in_array( $type, array( 'text', 'textarea' ), true ) || $texts ? 'translate' : 'copy' ),
 			'group'     => $field['group'] ?? '',
 			'options'   => $options,
 			'post_type' => (array) ( $field['post_type'] ?? array() ),
@@ -451,7 +465,20 @@ final class Schema {
 			// boolean: what the content-field binding shows; null = the translated «Yes» / «No».
 			'true_label'  => $field['true_label'] ?? null,
 			'false_label' => $field['false_label'] ?? null,
+			// repeater: the subfields, a row's format for the content-field binding and a row's name in the editor (null: none).
+			'fields'      => $subs,
+			'item_format' => $field['item_format'] ?? null,
+			'item_label'  => $field['item_label'] ?? null,
 		);
+	}
+
+	/** Options as [{value, label}]: a plain string is both. */
+	private static function normalize_options( array $list ): array {
+		$options = array();
+		foreach ( $list as $option ) {
+			$options[] = is_array( $option ) ? array( 'value' => (string) $option['value'], 'label' => $option['label'] ) : array( 'value' => (string) $option, 'label' => (string) $option );
+		}
+		return $options;
 	}
 
 	/**
@@ -567,10 +594,10 @@ final class Schema {
 				$errors[] = sprintf( __( '%1$s.group “%2$s” is not one of the definition’s «groups».', 'estrategiaweb-toolkit' ), $where, self::show( $field['group'] ) );
 			}
 			// Keys that only make sense for one type: a typo there would be silently ignored.
-			$only = array( 'options' => 'select', 'post_type' => 'relation', 'min' => 'number', 'max' => 'number', 'integer' => 'number', 'true_label' => 'boolean', 'false_label' => 'boolean' );
+			$only = array( 'options' => 'select', 'post_type' => 'relation', 'min' => 'number, repeater', 'max' => 'number, repeater', 'integer' => 'number', 'true_label' => 'boolean', 'false_label' => 'boolean', 'fields' => 'repeater', 'item_format' => 'repeater', 'item_label' => 'repeater' );
 			foreach ( $only as $key => $for ) {
-				if ( array_key_exists( $key, $field ) && $type !== $for ) {
-					/* translators: 1: where in the file, 2: a key, 3: a field type */
+				if ( array_key_exists( $key, $field ) && ! in_array( $type, explode( ', ', $for ), true ) ) {
+					/* translators: 1: where in the file, 2: a key, 3: a field type (or several, separated by commas) */
 					$errors[] = sprintf( __( '%1$s.%2$s is only for fields of type “%3$s”.', 'estrategiaweb-toolkit' ), $where, $key, $for );
 				}
 			}
@@ -585,31 +612,16 @@ final class Schema {
 		$has    = array_key_exists( 'default', $field );
 		$def    = $field['default'] ?? null;
 		if ( 'select' === $type ) {
-			$options = $field['options'] ?? null;
-			$values  = array();
-			if ( ! is_array( $options ) || ! array_is_list( $options ) || ! $options ) {
+			$values = self::check_options( $field['options'] ?? null, $where, $errors );
+			if ( null !== $values && $has && ! in_array( $def, $values, true ) ) {
 				/* translators: %s: where in the file */
-				$errors[] = sprintf( __( '%s: a select needs “options”, a non-empty list.', 'estrategiaweb-toolkit' ), $where );
-			} else {
-				foreach ( $options as $option ) {
-					$value = is_array( $option ) ? ( $option['value'] ?? null ) : $option;
-					$ok    = is_array( $option ) ? ( is_string( $value ) && isset( $option['label'] ) && self::is_text( $option['label'] ) && ! array_diff( array_keys( $option ), array( 'value', 'label' ) ) ) : is_string( $option );
-					if ( ! $ok || '' === $value ) {
-						/* translators: %s: where in the file */
-						$errors[] = sprintf( __( '%s.options: each option is a non-empty string or {"value": "…", "label": …}.', 'estrategiaweb-toolkit' ), $where );
-						break;
-					}
-					$values[] = $value;
-				}
-				if ( count( $values ) !== count( array_unique( $values ) ) ) {
-					/* translators: %s: where in the file */
-					$errors[] = sprintf( __( '%s.options: two options have the same value.', 'estrategiaweb-toolkit' ), $where );
-				}
-				if ( $has && ! in_array( $def, $values, true ) ) {
-					/* translators: %s: where in the file */
-					$errors[] = sprintf( __( '%s.default must be the value of one of the options.', 'estrategiaweb-toolkit' ), $where );
-				}
+				$errors[] = sprintf( __( '%s.default must be the value of one of the options.', 'estrategiaweb-toolkit' ), $where );
 			}
+		} elseif ( 'repeater' === $type ) {
+			$errors = array_merge( $errors, self::check_repeater( $field, $where ) );
+		} elseif ( 'time' === $type && $has && ( ! is_string( $def ) || Repeater::time( $def ) !== $def ) ) {
+			/* translators: %s: where in the file */
+			$errors[] = sprintf( __( '%s.default must be a time as HH:MM (24 hours).', 'estrategiaweb-toolkit' ), $where );
 		} elseif ( 'relation' === $type ) {
 			$targets = $field['post_type'] ?? null;
 			$list    = is_string( $targets ) ? array( $targets ) : $targets;
@@ -676,6 +688,129 @@ final class Schema {
 		} elseif ( $has && 'date' === $type && ! self::is_date( $def ) ) {
 			/* translators: %s: where in the file */
 			$errors[] = sprintf( __( '%s.default must be a date as YYYY-MM-DD.', 'estrategiaweb-toolkit' ), $where );
+		}
+		return $errors;
+	}
+
+	/**
+	 * A select's «options» (a field's or a repeater subfield's).
+	 *
+	 * @param string[] $errors Appended to.
+	 * @return string[]|null The option values, or null when there is no usable list.
+	 */
+	private static function check_options( $options, string $where, array &$errors ): ?array {
+		if ( ! is_array( $options ) || ! array_is_list( $options ) || ! $options ) {
+			/* translators: %s: where in the file */
+			$errors[] = sprintf( __( '%s: a select needs “options”, a non-empty list.', 'estrategiaweb-toolkit' ), $where );
+			return null;
+		}
+		$values = array();
+		foreach ( $options as $option ) {
+			$value = is_array( $option ) ? ( $option['value'] ?? null ) : $option;
+			$ok    = is_array( $option ) ? ( is_string( $value ) && isset( $option['label'] ) && self::is_text( $option['label'] ) && ! array_diff( array_keys( $option ), array( 'value', 'label' ) ) ) : is_string( $option );
+			if ( ! $ok || '' === $value ) {
+				/* translators: %s: where in the file */
+				$errors[] = sprintf( __( '%s.options: each option is a non-empty string or {"value": "…", "label": …}.', 'estrategiaweb-toolkit' ), $where );
+				break;
+			}
+			$values[] = $value;
+		}
+		if ( count( $values ) !== count( array_unique( $values ) ) ) {
+			/* translators: %s: where in the file */
+			$errors[] = sprintf( __( '%s.options: two options have the same value.', 'estrategiaweb-toolkit' ), $where );
+		}
+		return $values;
+	}
+
+	/**
+	 * A «repeater» (class-repeater.php): «fields», a non-empty list of
+	 * subfields {name, type, label, required?, options?}; «min» / «max», whole
+	 * numbers of rows; «item_format», a text whose {placeholders} are
+	 * subfield names; «item_label», a text. No default: a list of rows is
+	 * typed by a person, not preset.
+	 */
+	private static function check_repeater( array $field, string $where ): array {
+		$errors = array();
+		if ( array_key_exists( 'default', $field ) ) {
+			/* translators: %s: where in the file */
+			$errors[] = sprintf( __( '%s: a repeater cannot have a default.', 'estrategiaweb-toolkit' ), $where );
+		}
+		foreach ( array( 'min', 'max' ) as $key ) {
+			if ( isset( $field[ $key ] ) && ( ! is_int( $field[ $key ] ) || $field[ $key ] < 0 ) ) {
+				/* translators: 1: where in the file, 2: min or max */
+				$errors[] = sprintf( __( '%1$s.%2$s must be a whole number of rows, from 0.', 'estrategiaweb-toolkit' ), $where, $key );
+			}
+		}
+		if ( isset( $field['min'], $field['max'] ) && is_int( $field['min'] ) && is_int( $field['max'] ) && $field['min'] > $field['max'] ) {
+			/* translators: %s: where in the file */
+			$errors[] = sprintf( __( '%s: min is greater than max.', 'estrategiaweb-toolkit' ), $where );
+		}
+		if ( isset( $field['max'] ) && 0 === $field['max'] ) {
+			/* translators: %s: where in the file */
+			$errors[] = sprintf( __( '%s.max must be at least 1: a list of no rows stores nothing.', 'estrategiaweb-toolkit' ), $where );
+		}
+		if ( isset( $field['item_label'] ) && ! self::is_text( $field['item_label'] ) ) {
+			/* translators: %s: where in the file */
+			$errors[] = sprintf( __( '%s.item_label must be a string or an object of locale → string.', 'estrategiaweb-toolkit' ), $where );
+		}
+		$subs = $field['fields'] ?? null;
+		if ( ! is_array( $subs ) || ! array_is_list( $subs ) || ! $subs ) {
+			/* translators: %s: where in the file */
+			$errors[] = sprintf( __( '%s: a repeater needs “fields”, a non-empty list of subfields.', 'estrategiaweb-toolkit' ), $where );
+			return $errors;
+		}
+		$names = array();
+		foreach ( $subs as $i => $sub ) {
+			/* translators: 1: where in the file, 2: position in the list, from 1 */
+			$at = sprintf( __( '%1$s.fields[%2$d]', 'estrategiaweb-toolkit' ), $where, $i + 1 );
+			if ( ! is_array( $sub ) || array_is_list( $sub ) ) {
+				/* translators: %s: where in the file */
+				$errors[] = sprintf( __( '%s: must be an object.', 'estrategiaweb-toolkit' ), $at );
+				continue;
+			}
+			$errors = array_merge( $errors, self::unknown_keys( $sub, Repeater::SUBFIELD_KEYS, $at . '.' ) );
+			$name   = $sub['name'] ?? null;
+			if ( ! is_string( $name ) || ! preg_match( '/^[a-z][a-z0-9_]*$/', $name ) || strlen( $name ) > Repeater::MAX_SUBFIELD ) {
+				/* translators: 1: where in the file, 2: max length */
+				$errors[] = sprintf( __( '%1$s.name must be lowercase letters, digits and “_”, starting with a letter, at most %2$d characters.', 'estrategiaweb-toolkit' ), $at, Repeater::MAX_SUBFIELD );
+			} elseif ( in_array( $name, $names, true ) ) {
+				/* translators: 1: where in the file, 2: a subfield name */
+				$errors[] = sprintf( __( '%1$s: the subfield “%2$s” is declared twice.', 'estrategiaweb-toolkit' ), $where, $name );
+			} else {
+				$names[] = $name;
+			}
+			$type = $sub['type'] ?? null;
+			if ( ! in_array( $type, Repeater::SUBFIELD_TYPES, true ) ) {
+				/* translators: 1: where in the file, 2: allowed values */
+				$errors[] = sprintf( __( '%1$s.type must be one of: %2$s.', 'estrategiaweb-toolkit' ), $at, implode( ', ', Repeater::SUBFIELD_TYPES ) );
+			}
+			if ( ! isset( $sub['label'] ) || ! self::is_text( $sub['label'] ) ) {
+				/* translators: %s: where in the file */
+				$errors[] = sprintf( __( '%s.label is required (a string or an object of locale → string).', 'estrategiaweb-toolkit' ), $at );
+			}
+			if ( isset( $sub['required'] ) && ! is_bool( $sub['required'] ) ) {
+				/* translators: %s: where in the file */
+				$errors[] = sprintf( __( '%s.required must be true or false.', 'estrategiaweb-toolkit' ), $at );
+			}
+			if ( 'select' === $type ) {
+				self::check_options( $sub['options'] ?? null, $at, $errors );
+			} elseif ( array_key_exists( 'options', $sub ) ) {
+				/* translators: 1: where in the file, 2: a key, 3: a field type (or several, separated by commas) */
+				$errors[] = sprintf( __( '%1$s.%2$s is only for fields of type “%3$s”.', 'estrategiaweb-toolkit' ), $at, 'options', 'select' );
+			}
+		}
+		if ( isset( $field['item_format'] ) ) {
+			if ( ! self::is_text( $field['item_format'] ) ) {
+				/* translators: %s: where in the file */
+				$errors[] = sprintf( __( '%s.item_format must be a string or an object of locale → string.', 'estrategiaweb-toolkit' ), $where );
+			} else {
+				foreach ( (array) $field['item_format'] as $format ) {
+					foreach ( array_diff( Repeater::placeholders( $format ), $names ) as $unknown ) {
+						/* translators: 1: where in the file, 2: a {placeholder} */
+						$errors[] = sprintf( __( '%1$s.item_format: “{%2$s}” is not one of its subfields.', 'estrategiaweb-toolkit' ), $where, $unknown );
+					}
+				}
+			}
 		}
 		return $errors;
 	}

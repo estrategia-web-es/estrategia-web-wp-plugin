@@ -233,6 +233,16 @@ final class Bindings {
 			'no'        => null === $field['false_label'] ? $env['no'] : Schema::text( $field['false_label'], $locale ),
 			'integer'   => 'integer' === $field['meta_type'],
 			'postTypes' => $field['post_type'],
+			// repeater: its subfields (a select's labels already in the editor's language) and a row's format.
+			'fields'     => array_map(
+				static fn( $sub ) => array(
+					'key'     => $sub['name'],
+					'kind'    => $sub['type'],
+					'options' => (object) array_column( array_map( static fn( $o ) => array( $o['value'], Schema::text( $o['label'], $locale ) ), $sub['options'] ), 1, 0 ),
+				),
+				$field['fields']
+			),
+			'itemFormat' => null !== $field['item_format'] ? Schema::text( $field['item_format'], $locale ) : '',
 		);
 	}
 }

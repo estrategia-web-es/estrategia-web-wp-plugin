@@ -57,3 +57,34 @@
 	padding: 8px 12px;
 	margin: 0 0 12px;
 }
+/* repeater (24-11-2026): each row a bordered box, its subfields side by side when they fit. */
+.estrategia-web-ct-box .estrategia-web-ct-repeater > legend {
+	font-weight: 600;
+	margin-bottom: 4px;
+}
+.estrategia-web-ct-box .estrategia-web-ct-row {
+	border: 1px solid #dcdcde;
+	padding: 4px 12px 8px;
+	margin: 0 0 8px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 16px;
+	align-items: flex-end;
+}
+.estrategia-web-ct-box .estrategia-web-ct-row > legend {
+	font-weight: 500;
+	padding: 0 4px;
+}
+.estrategia-web-ct-box .estrategia-web-ct-sub {
+	margin: 4px 0;
+	display: flex;
+	flex-direction: column;
+}
+.estrategia-web-ct-box .estrategia-web-ct-sub--textarea,
+.estrategia-web-ct-box .estrategia-web-ct-sub--text {
+	flex: 1 1 14rem;
+}
+.estrategia-web-ct-box .estrategia-web-ct-row-buttons {
+	flex-basis: 100%;
+	margin: 4px 0 0;
+}

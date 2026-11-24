@@ -6,9 +6,12 @@
 // failed («€€» instead of «€€ — mitjà»); with the boolean ignoring
 // true_label, «boolean» failed; with relation in a text attribute returning
 // the ID, «relation» failed («7» instead of the title).
+// Seen red (24-11-2026, repeater): with the <li> text not escaped, «repeater:
+// a <ul> …» failed (a raw quote and «&»); restored, green.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import fs from "node:fs";
 import path from "node:path";
 
 const HERE = import.meta.dirname;
@@ -190,4 +193,40 @@ test("hours: one line per run of days with the same hours, <br> in HTML and «; 
   ]);
   const got = run([{ field: hours, raw: week, attribute: "alt", html: false }]);
   assert.deepEqual(got, ["dl.–dv.: T08:00–T16:00; ds.: T09:00–T13:00, T17:00–T20:00"]);
+});
+
+test("time: the site's time format; nothing for an invalid time or a URL", () => {
+  check({ name: "gment_opens", type: "time", label: "Obre" }, [
+    ["09:30", "content", {}, "ca", "T09:30"],
+    ["9:30", "content", {}, "ca", ""],
+    ["", "content", {}, "ca", ""],
+    ["09:30", "url", {}, "ca", ""],
+  ]);
+});
+
+// The funeral notice's acts (examples/llest_esquela.json): select label in the request's language, date and time in the site's format.
+const acts = JSON.parse(fs.readFileSync(path.join(HERE, "..", "examples", "llest_esquela.json"), "utf8")).fields[0];
+const rows = JSON.stringify([
+  { tipus: "Exèquies", dia: "2026-11-25", hora: "17:00", fins: "18:00", lloc: 'Sant Miquel "Palma" & co' },
+  { tipus: "Vetlla", dia: "2026-11-24", hora: "16:00" },
+]);
+
+test("repeater: a <ul> with one <li> per row through its item_format (escaped), the select's label in the request's language", () => {
+  check(acts, [
+    [rows, "content", {}, "ca", '<ul class="estrategia-web-ct-list"><li>Exèquies: D:2026-11-25| T17:00–T18:00, Sant Miquel &quot;Palma&quot; &amp; co</li><li>Vetlla: D:2026-11-24| T16:00</li></ul>'],
+    [rows, "content", {}, "es_ES", '<ul class="estrategia-web-ct-list"><li>Exequias: D:2026-11-25| T17:00–T18:00, Sant Miquel &quot;Palma&quot; &amp; co</li><li>Velatorio: D:2026-11-24| T16:00</li></ul>'],
+    ["", "content", {}, "ca", ""],
+    ["[{}]", "content", {}, "ca", ""],
+    [rows, "url", {}, "ca", ""],
+    [rows, "id", {}, "ca", ""],
+  ]);
+  const got = run([{ field: acts, raw: rows, attribute: "alt", html: false }]);
+  assert.deepEqual(got, ['Exèquies: D:2026-11-25| T17:00–T18:00, Sant Miquel "Palma" & co; Vetlla: D:2026-11-24| T16:00'],"into an attribute: plain, rows joined by «; »");
+});
+
+test("repeater without item_format: the row's non-empty values joined by « · »; a textarea's line breaks as <br>", () => {
+  const plain = { name: "gment_dishes", type: "repeater", label: "Plats", fields: [{ name: "nom", type: "text", label: "Nom" }, { name: "preu", type: "number", label: "Preu" }, { name: "nota", type: "textarea", label: "Nota" }] };
+  check(plain, [
+    ['[{"nom":"Arròs brut","preu":14.5},{"nom":"Frit","nota":"De porc\\nAmb pebre"}]', "content", {}, "ca", '<ul class="estrategia-web-ct-list"><li>Arròs brut · N:14.5|1</li><li>Frit · De porc<br>\nAmb pebre</li></ul>'],
+  ]);
 });
