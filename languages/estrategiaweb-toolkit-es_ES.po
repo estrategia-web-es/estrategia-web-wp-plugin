@@ -2193,7 +2193,7 @@ msgid "Move down"
 msgstr "Bajar"
 
 #: modules/content-types/includes/admin/class-page.php:379
-#: modules/content-types/includes/class-fields-panel.php:221
+#: modules/content-types/includes/class-fields-panel.php:226
 #: modules/forms/includes/class-blocks.php:385
 #: modules/newsletter/includes/class-screen.php:74
 #: modules/social/includes/class-admin.php:70
@@ -2531,11 +2531,11 @@ msgstr ""
 msgid "No rating"
 msgstr "Sin valoración"
 
-#: modules/content-types/includes/class-fields-panel.php:113
+#: modules/content-types/includes/class-fields-panel.php:116
 msgid "Changed in the original language: it is copied to the translations."
 msgstr "Se cambia en el idioma original: se copia a las traducciones."
 
-#: modules/content-types/includes/class-fields-panel.php:131
+#: modules/content-types/includes/class-fields-panel.php:136
 msgid ""
 "The rows and the values that are not text come from the original language; "
 "translate the texts here."
@@ -2544,12 +2544,12 @@ msgstr ""
 "traduce los textos."
 
 #. translators: %s: singular name of a content type, e.g. Restaurant
-#: modules/content-types/includes/class-fields-panel.php:139
+#: modules/content-types/includes/class-fields-panel.php:144
 #, php-format
 msgid "%s details"
 msgstr "%s: datos"
 
-#: modules/content-types/includes/class-fields-panel.php:142
+#: modules/content-types/includes/class-fields-panel.php:147
 msgid ""
 "Fields that are the same in every language are copied to the translations "
 "when you save; the others are translated in each language."
@@ -2557,100 +2557,100 @@ msgstr ""
 "Los campos que son iguales en todos los idiomas se copian a las traducciones "
 "al guardar; los demás se traducen en cada idioma."
 
-#: modules/content-types/includes/class-fields-panel.php:219
+#: modules/content-types/includes/class-fields-panel.php:224
 msgid "Choose image"
 msgstr "Elegir imagen"
 
-#: modules/content-types/includes/class-fields-panel.php:220
+#: modules/content-types/includes/class-fields-panel.php:225
 msgid "Replace image"
 msgstr "Cambiar la imagen"
 
-#: modules/content-types/includes/class-fields-panel.php:222
+#: modules/content-types/includes/class-fields-panel.php:227
 msgid "Copy Monday to every day"
 msgstr "Copiar el lunes a todos los días"
 
-#: modules/content-types/includes/class-fields-panel.php:223
+#: modules/content-types/includes/class-fields-panel.php:228
 msgid "Monday’s hours copied to every day."
 msgstr "Horario del lunes copiado a todos los días."
 
-#: modules/content-types/includes/class-fields-panel.php:239
+#: modules/content-types/includes/class-fields-panel.php:244
 msgctxt "repeater row"
 msgid "Add"
 msgstr "Añadir"
 
 #. translators: %s: what a row of a list is called, e.g. Act
-#: modules/content-types/includes/class-fields-panel.php:241
+#: modules/content-types/includes/class-fields-panel.php:246
 #, php-format
 msgctxt "repeater row"
 msgid "Add %s"
 msgstr "Añadir %s"
 
-#: modules/content-types/includes/class-fields-panel.php:243
+#: modules/content-types/includes/class-fields-panel.php:248
 msgctxt "repeater row"
 msgid "Remove"
 msgstr "Eliminar"
 
-#: modules/content-types/includes/class-fields-panel.php:244
+#: modules/content-types/includes/class-fields-panel.php:249
 msgctxt "repeater row"
 msgid "Move up"
 msgstr "Subir"
 
-#: modules/content-types/includes/class-fields-panel.php:245
+#: modules/content-types/includes/class-fields-panel.php:250
 msgctxt "repeater row"
 msgid "Move down"
 msgstr "Bajar"
 
 #. translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Remove» (its visible text must be in its name).
-#: modules/content-types/includes/class-fields-panel.php:247
+#: modules/content-types/includes/class-fields-panel.php:252
 #, php-format
 msgctxt "repeater row"
 msgid "Remove %s"
 msgstr "Eliminar %s"
 
 #. translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Move up» (its visible text must be in its name).
-#: modules/content-types/includes/class-fields-panel.php:249
+#: modules/content-types/includes/class-fields-panel.php:254
 #, php-format
 msgctxt "repeater row"
 msgid "Move up %s"
 msgstr "Subir %s"
 
 #. translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Move down» (its visible text must be in its name).
-#: modules/content-types/includes/class-fields-panel.php:251
+#: modules/content-types/includes/class-fields-panel.php:256
 #, php-format
 msgctxt "repeater row"
 msgid "Move down %s"
 msgstr "Bajar %s"
 
 #. translators: %d: the number of a row of a list
-#: modules/content-types/includes/class-fields-panel.php:253
-#: modules/content-types/includes/class-fields-panel.php:425
+#: modules/content-types/includes/class-fields-panel.php:258
+#: modules/content-types/includes/class-fields-panel.php:441
 #, php-format
 msgid "Row %d"
 msgstr "Fila %d"
 
 #. translators: %s: a row of a list, e.g. Act 3
-#: modules/content-types/includes/class-fields-panel.php:255
+#: modules/content-types/includes/class-fields-panel.php:260
 #, php-format
 msgctxt "repeater row"
 msgid "%s added."
 msgstr "Se ha añadido %s."
 
-#: modules/content-types/includes/class-fields-panel.php:256
+#: modules/content-types/includes/class-fields-panel.php:261
 msgctxt "repeater row"
 msgid "Row removed."
 msgstr "Se ha eliminado la fila."
 
 #. translators: %s: the row's name at its new position, e.g. Act 1
-#: modules/content-types/includes/class-fields-panel.php:258
+#: modules/content-types/includes/class-fields-panel.php:263
 #, php-format
 msgctxt "repeater row"
 msgid "Moved: it is now %s."
 msgstr "Se ha movido: ahora es %s."
 
-#: modules/content-types/includes/class-fields-panel.php:259
-#: modules/content-types/includes/class-fields-panel.php:437
-#: modules/content-types/includes/class-fields-panel.php:493
-#: modules/content-types/includes/class-fields-panel.php:499
+#: modules/content-types/includes/class-fields-panel.php:264
+#: modules/content-types/includes/class-fields-panel.php:453
+#: modules/content-types/includes/class-fields-panel.php:510
+#: modules/content-types/includes/class-fields-panel.php:516
 msgid "— None —"
 msgstr "— Ninguno —"
 
@@ -2958,8 +2958,8 @@ msgstr "groups[%d]"
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:239
-#: modules/content-types/includes/class-schema.php:559
-#: modules/content-types/includes/class-schema.php:774
+#: modules/content-types/includes/class-schema.php:562
+#: modules/content-types/includes/class-schema.php:781
 #, php-format
 msgid "%s: must be an object."
 msgstr "%s: tiene que ser un objeto."
@@ -2981,8 +2981,8 @@ msgstr "El grupo «%s» está declarado dos veces."
 
 #. translators: %s: where in the file
 #: modules/content-types/includes/class-schema.php:255
-#: modules/content-types/includes/class-schema.php:580
-#: modules/content-types/includes/class-schema.php:795
+#: modules/content-types/includes/class-schema.php:583
+#: modules/content-types/includes/class-schema.php:802
 #, php-format
 msgid "%s.label is required (a string or an object of locale → string)."
 msgstr "%s.label es obligatorio (un texto o un objeto idioma → texto)."
@@ -3035,110 +3035,117 @@ msgstr ""
 "El slug «%1$s» (idioma «%2$s») ya es la URL de «%3$s» en %4$s: dos tipos o "
 "taxonomías no pueden compartir URL."
 
-#: modules/content-types/includes/class-schema.php:511
+#: modules/content-types/includes/class-schema.php:514
 msgid "“taxonomies” must be a list."
 msgstr "«taxonomies» tiene que ser una lista."
 
 #. translators: %d: position in the list, from 1
-#: modules/content-types/includes/class-schema.php:516
+#: modules/content-types/includes/class-schema.php:519
 #, php-format
 msgid "taxonomies[%d]"
 msgstr "taxonomies[%d]"
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:520
+#: modules/content-types/includes/class-schema.php:523
 #, php-format
 msgid "%s: a reference must be a taxonomy name."
 msgstr "%s: una referencia tiene que ser el nombre de una taxonomía."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:526
+#: modules/content-types/includes/class-schema.php:529
 #, php-format
 msgid "%s: must be a taxonomy name or an object."
 msgstr "%s: tiene que ser el nombre de una taxonomía o un objeto."
 
 #. translators: 1: where in the file, 2: a key
-#: modules/content-types/includes/class-schema.php:536
+#: modules/content-types/includes/class-schema.php:539
 #, php-format
 msgid "%1$s.%2$s must be true or false."
 msgstr "%1$s.%2$s tiene que ser true o false."
 
 #. translators: 1: where in the file, 2: allowed values
-#: modules/content-types/includes/class-schema.php:541
-#: modules/content-types/includes/class-schema.php:596
+#: modules/content-types/includes/class-schema.php:544
+#: modules/content-types/includes/class-schema.php:603
 #, php-format
 msgid "%1$s.wpml must be one of: %2$s."
 msgstr "%1$s.wpml tiene que ser uno de: %2$s."
 
-#: modules/content-types/includes/class-schema.php:550
+#: modules/content-types/includes/class-schema.php:553
 msgid "“fields” must be a list."
 msgstr "«fields» tiene que ser una lista."
 
 #. translators: %d: position in the list, from 1
-#: modules/content-types/includes/class-schema.php:556
+#: modules/content-types/includes/class-schema.php:559
 #, php-format
 msgid "fields[%d]"
 msgstr "fields[%d]"
 
 #. translators: %s: field name
-#: modules/content-types/includes/class-schema.php:568
+#: modules/content-types/includes/class-schema.php:571
 #, php-format
 msgid "The field “%s” is declared twice."
 msgstr "El campo «%s» está declarado dos veces."
 
 #. translators: 1: where in the file, 2: allowed values
-#: modules/content-types/includes/class-schema.php:575
-#: modules/content-types/includes/class-schema.php:791
+#: modules/content-types/includes/class-schema.php:578
+#: modules/content-types/includes/class-schema.php:798
 #, php-format
 msgid "%1$s.type must be one of: %2$s."
 msgstr "%1$s.type tiene que ser uno de: %2$s."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:584
+#: modules/content-types/includes/class-schema.php:587
 #, php-format
 msgid "%s.help must be a string or an object of locale → string."
 msgstr "%s.help tiene que ser un texto o un objeto idioma → texto."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:588
-#: modules/content-types/includes/class-schema.php:799
+#: modules/content-types/includes/class-schema.php:591
+#: modules/content-types/includes/class-schema.php:806
 #, php-format
 msgid "%s.required must be true or false."
 msgstr "%s.required tiene que ser true o false."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:592
+#: modules/content-types/includes/class-schema.php:595
 #, php-format
 msgid "%s.private must be true or false."
 msgstr "%s.private tiene que ser true o false."
 
+#. translators: %s: where in the file
+#: modules/content-types/includes/class-schema.php:599
+#: modules/content-types/includes/class-schema.php:810
+#, php-format
+msgid "%s.suggest can only be \"used\", on a text field."
+msgstr "%s.suggest solo puede ser \"used\", en un campo de texto."
+
 #. translators: 1: where in the file, 2: a value from the JSON file
-#: modules/content-types/includes/class-schema.php:600
+#: modules/content-types/includes/class-schema.php:607
 #, php-format
 msgid "%1$s.group “%2$s” is not one of the definition’s «groups»."
 msgstr "%1$s.group «%2$s» no es ninguno de los «groups» de la definición."
 
 #. translators: 1: where in the file, 2: a key, 3: a field type (or several, separated by commas)
-#: modules/content-types/includes/class-schema.php:607
-#: modules/content-types/includes/class-schema.php:805
+#: modules/content-types/includes/class-schema.php:614
+#: modules/content-types/includes/class-schema.php:816
 #, php-format
 msgid "%1$s.%2$s is only for fields of type “%3$s”."
 msgstr "%1$s.%2$s solo vale para campos de tipo «%3$s»."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:624
+#: modules/content-types/includes/class-schema.php:631
 #, php-format
 msgid "%s.default must be the value of one of the options."
 msgstr "%s.default tiene que ser el valor de una de las opciones."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:630
+#: modules/content-types/includes/class-schema.php:637
 #, php-format
 msgid "%s.default must be a time as HH:MM (24 hours)."
 msgstr "%s.default tiene que ser una hora HH:MM (24 horas)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:636
+#: modules/content-types/includes/class-schema.php:643
 #, php-format
 msgid "%s: a relation needs “post_type”, a post type name or a list of them."
 msgstr ""
@@ -3146,33 +3153,33 @@ msgstr ""
 "ellos."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:640
+#: modules/content-types/includes/class-schema.php:647
 #, php-format
 msgid "%s: a relation cannot have a default (it is the ID of a post)."
 msgstr ""
 "%s: una relación no puede tener valor por defecto (es el ID de una entrada)."
 
 #. translators: 1: where in the file, 2: min or max
-#: modules/content-types/includes/class-schema.php:646
+#: modules/content-types/includes/class-schema.php:653
 #, php-format
 msgid "%1$s.%2$s must be a number."
 msgstr "%1$s.%2$s tiene que ser un número."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:651
+#: modules/content-types/includes/class-schema.php:658
 #, php-format
 msgid "%s.integer must be true or false."
 msgstr "%s.integer tiene que ser true o false."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:655
-#: modules/content-types/includes/class-schema.php:752
+#: modules/content-types/includes/class-schema.php:662
+#: modules/content-types/includes/class-schema.php:759
 #, php-format
 msgid "%s: min is greater than max."
 msgstr "%s: min es mayor que max."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:660
+#: modules/content-types/includes/class-schema.php:667
 #, php-format
 msgid ""
 "%s.default must be a number within min and max (a whole number if “integer”)."
@@ -3181,20 +3188,20 @@ msgstr ""
 "«integer»)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:665
+#: modules/content-types/includes/class-schema.php:672
 #, php-format
 msgid "%s: a boolean cannot be required (“no” is an answer)."
 msgstr ""
 "%s: un booleano no puede ser obligatorio («no» también es una respuesta)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:669
+#: modules/content-types/includes/class-schema.php:676
 #, php-format
 msgid "%s.default must be true or false."
 msgstr "%s.default tiene que ser true o false."
 
 #. translators: 1: where in the file, 2: true_label or false_label
-#: modules/content-types/includes/class-schema.php:675
+#: modules/content-types/includes/class-schema.php:682
 #, php-format
 msgid ""
 "%1$s.%2$s must be a string (\"\" to show nothing) or an object of locale → "
@@ -3204,20 +3211,20 @@ msgstr ""
 "idioma → texto."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:681
+#: modules/content-types/includes/class-schema.php:688
 #, php-format
 msgid "%s.default must be a whole number from 0 (no rating) to 5."
 msgstr "%s.default tiene que ser un número entero de 0 (sin valoración) a 5."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:686
+#: modules/content-types/includes/class-schema.php:693
 #, php-format
 msgid "%s: an image cannot have a default (it is the ID of an attachment)."
 msgstr ""
 "%s: una imagen no puede tener valor por defecto (es el ID de un adjunto)."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:690
+#: modules/content-types/includes/class-schema.php:697
 #, php-format
 msgid ""
 "%s.default must be opening hours as stored, e.g. {\"mo\":[\"08:00-14:00\"]}, "
@@ -3227,25 +3234,25 @@ msgstr ""
 "[\"08:00-14:00\"]}, o \"\"."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:693
+#: modules/content-types/includes/class-schema.php:700
 #, php-format
 msgid "%s.default must be a string."
 msgstr "%s.default tiene que ser un texto."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:696
+#: modules/content-types/includes/class-schema.php:703
 #, php-format
 msgid "%s.default must be a date as YYYY-MM-DD."
 msgstr "%s.default tiene que ser una fecha AAAA-MM-DD."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:710
+#: modules/content-types/includes/class-schema.php:717
 #, php-format
 msgid "%s: a select needs “options”, a non-empty list."
 msgstr "%s: un select necesita «options», una lista no vacía."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:719
+#: modules/content-types/includes/class-schema.php:726
 #, php-format
 msgid ""
 "%s.options: each option is a non-empty string or {\"value\": \"…\", "
@@ -3255,50 +3262,50 @@ msgstr ""
 "…}."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:726
+#: modules/content-types/includes/class-schema.php:733
 #, php-format
 msgid "%s.options: two options have the same value."
 msgstr "%s.options: dos opciones tienen el mismo valor."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:742
+#: modules/content-types/includes/class-schema.php:749
 #, php-format
 msgid "%s: a repeater cannot have a default."
 msgstr "%s: una lista repetible no puede tener valor por defecto."
 
 #. translators: 1: where in the file, 2: min or max
-#: modules/content-types/includes/class-schema.php:747
+#: modules/content-types/includes/class-schema.php:754
 #, php-format
 msgid "%1$s.%2$s must be a whole number of rows, from 0."
 msgstr "%1$s.%2$s tiene que ser un número entero de filas, desde 0."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:756
+#: modules/content-types/includes/class-schema.php:763
 #, php-format
 msgid "%s.max must be at least 1: a list of no rows stores nothing."
 msgstr "%s.max tiene que ser al menos 1: una lista sin filas no guarda nada."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:760
+#: modules/content-types/includes/class-schema.php:767
 #, php-format
 msgid "%s.item_label must be a string or an object of locale → string."
 msgstr "%s.item_label tiene que ser un texto o un objeto idioma → texto."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:765
+#: modules/content-types/includes/class-schema.php:772
 #, php-format
 msgid "%s: a repeater needs “fields”, a non-empty list of subfields."
 msgstr ""
 "%s: una lista repetible necesita «fields», una lista no vacía de subcampos."
 
 #. translators: 1: where in the file, 2: position in the list, from 1
-#: modules/content-types/includes/class-schema.php:771
+#: modules/content-types/includes/class-schema.php:778
 #, php-format
 msgid "%1$s.fields[%2$d]"
 msgstr "%1$s.fields[%2$d]"
 
 #. translators: 1: where in the file, 2: max length
-#: modules/content-types/includes/class-schema.php:781
+#: modules/content-types/includes/class-schema.php:788
 #, php-format
 msgid ""
 "%1$s.name must be lowercase letters, digits and “_”, starting with a letter, "
@@ -3308,52 +3315,52 @@ msgstr ""
 "empezar por una letra y tener como máximo %2$d caracteres."
 
 #. translators: 1: where in the file, 2: a subfield name
-#: modules/content-types/includes/class-schema.php:784
+#: modules/content-types/includes/class-schema.php:791
 #, php-format
 msgid "%1$s: the subfield “%2$s” is declared twice."
 msgstr "%1$s: el subcampo «%2$s» está declarado dos veces."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:811
+#: modules/content-types/includes/class-schema.php:822
 #, php-format
 msgid "%s.item_format must be a string or an object of locale → string."
 msgstr "%s.item_format tiene que ser un texto o un objeto idioma → texto."
 
 #. translators: 1: where in the file, 2: a {placeholder}
-#: modules/content-types/includes/class-schema.php:816
+#: modules/content-types/includes/class-schema.php:827
 #, php-format
 msgid "%1$s.item_format: “{%2$s}” is not one of its subfields."
 msgstr "%1$s.item_format: «{%2$s}» no es uno de sus subcampos."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:832
+#: modules/content-types/includes/class-schema.php:843
 #, php-format
 msgid "%s must be lowercase letters, digits and “_”, starting with a letter."
 msgstr ""
 "%s tiene que llevar letras minúsculas, cifras y «_», y empezar por una letra."
 
 #. translators: 1: where in the file, 2: the name, 3: max length, 4: its length
-#: modules/content-types/includes/class-schema.php:837
+#: modules/content-types/includes/class-schema.php:848
 #, php-format
 msgid ""
 "%1$s “%2$s” is longer than %3$d characters (%4$d): WordPress would cut it."
 msgstr "%1$s «%2$s» pasa de %3$d caracteres (%4$d): WordPress lo cortaría."
 
 #. translators: 1: where in the file, 2: the name, 3: the prefix
-#: modules/content-types/includes/class-schema.php:844
+#: modules/content-types/includes/class-schema.php:855
 #, php-format
 msgid "%1$s “%2$s” must start with the prefix “%3$s”."
 msgstr "%1$s «%2$s» tiene que empezar por el prefijo «%3$s»."
 
 #. translators: 1: where in the file, 2: the name, 3: a reserved prefix
-#: modules/content-types/includes/class-schema.php:849
+#: modules/content-types/includes/class-schema.php:860
 #, php-format
 msgid "%1$s “%2$s” uses the reserved prefix “%3$s”."
 msgstr "%1$s «%2$s» usa el prefijo reservado «%3$s»."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:870
-#: modules/content-types/includes/class-schema.php:878
+#: modules/content-types/includes/class-schema.php:881
+#: modules/content-types/includes/class-schema.php:889
 #, php-format
 msgid ""
 "%s must be a URL path (lowercase ASCII letters, digits, “-” and “/”, no "
@@ -3363,31 +3370,31 @@ msgstr ""
 "«/», sin barras en los extremos) o un objeto de locale → una ruta así."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:912
+#: modules/content-types/includes/class-schema.php:923
 #, php-format
 msgid "%s is required: {\"singular\": …, \"plural\": …}."
 msgstr "%s es obligatorio: {\"singular\": …, \"plural\": …}."
 
 #. translators: %s: where in the file
-#: modules/content-types/includes/class-schema.php:916
+#: modules/content-types/includes/class-schema.php:927
 #, php-format
 msgid "%s must be an object: {\"singular\": …, \"plural\": …}."
 msgstr "%s tiene que ser un objeto: {\"singular\": …, \"plural\": …}."
 
 #. translators: 1: where in the file, 2: singular or plural
-#: modules/content-types/includes/class-schema.php:922
+#: modules/content-types/includes/class-schema.php:933
 #, php-format
 msgid "%1$s.%2$s is required: a string or an object of locale → string."
 msgstr "%1$s.%2$s es obligatorio: un texto o un objeto idioma → texto."
 
 #. translators: 1: where in the file, 2: a label key such as details
-#: modules/content-types/includes/class-schema.php:928
+#: modules/content-types/includes/class-schema.php:939
 #, php-format
 msgid "%1$s.%2$s must be a string or an object of locale → string."
 msgstr "%1$s.%2$s tiene que ser un texto o un objeto locale → texto."
 
 #. translators: 1: a key, 2: allowed keys
-#: modules/content-types/includes/class-schema.php:955
+#: modules/content-types/includes/class-schema.php:966
 #, php-format
 msgid "Unknown key “%1$s”. Allowed: %2$s."
 msgstr "Clave desconocida «%1$s». Se admiten: %2$s."

@@ -535,6 +535,7 @@ return array(
 		'%s.help must be a string or an object of locale → string.' => '%s.help ha de ser un text o un objecte idioma → text.',
 		'%s.required must be true or false.' => '%s.required ha de ser true o false.',
 		'%s.private must be true or false.' => '%s.private ha de ser true o false.',
+		'%s.suggest can only be "used", on a text field.' => '%s.suggest només pot ser "used", en un camp de text.',
 		'%1$s.group “%2$s” is not one of the definition’s «groups».' => '%1$s.group «%2$s» no és cap dels «groups» de la definició.',
 		'%1$s.%2$s is only for fields of type “%3$s”.' => '%1$s.%2$s només val per a camps de tipus «%3$s».',
 		'%s.default must be the value of one of the options.' => '%s.default ha de ser el valor d\'una de les opcions.',

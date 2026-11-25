@@ -155,6 +155,7 @@
         "type": { "enum": ["text", "textarea", "number", "date", "time", "select", "url", "email", "tel"] },
         "label": { "$ref": "#/$defs/text" },
         "required": { "type": "boolean", "description": "A row without it is kept, but the field cannot be published so." },
+        "suggest": { "const": "used", "description": "Text subfields only: the box suggests what this subfield already says in other entries of the type, most used first." },
         "options": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/option" } }
       },
       "if": { "properties": { "type": { "const": "select" } } },
@@ -174,6 +175,7 @@
         "label": { "$ref": "#/$defs/text" },
         "help": { "$ref": "#/$defs/text" },
         "required": { "type": "boolean", "description": "Publishing with it empty is refused: a 400 in the block editor; on the classic screen (types without editor) the post stays a draft, or keeps the previous value if it was already published." },
+        "suggest": { "const": "used", "description": "Text fields only: the box suggests what this field already says in other entries of the type, most used first (a church, a relationship), and anything else can still be typed." },
         "private": { "type": "boolean", "description": "Only for who can edit the entry: left out of the REST answers of everybody else and shown as nothing by the content-field binding. The server still reads it ({{post_field:…}} in a form's notification). For a family's email, a private phone." },
         "default": { "description": "A value the field could store: an option value for select, YYYY-MM-DD for date, a number within min/max, true/false. Not for image or relation." },
         "wpml": { "enum": ["copy", "translate", "ignore"], "description": "Default: translate for text and textarea, copy for the rest." },

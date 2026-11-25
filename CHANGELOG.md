@@ -37,6 +37,16 @@ family's email of an obituary, the Cc of the condolences form
   in its own uploads that took the visitor away from the page.
   `External_Links::is_document()` (pure, level 1) and its level 2 case.
 
+- **content-types: suggestions on text fields (`"suggest": "used"`).** A
+  text field, or a repeater's text subfield, offers as you type what it
+  already says in the other entries of the type, most used first; anything
+  else can still be typed. A `<datalist>` on the input (the browser's own
+  list), in the meta box and in the block editor's panel, one per field so a
+  cloned repeater row keeps it. The case: Llar d'Estels' funeral notices, 31
+  places for 87 acts and 50 relationships for 159 uses, typed by hand each
+  time. `Suggestions::rank()` (pure, level 1 in `tests/repeater.test.mjs`),
+  the key in Schema, the JSON Schema and the validator (text only).
+
 ## 2.14.0 — 24-11-2026 (content-types: repeater and time fields; forms: entry markers and Cc/Bcc)
 
 **What each site must do:** nothing. The forms migration 0003 adds a column

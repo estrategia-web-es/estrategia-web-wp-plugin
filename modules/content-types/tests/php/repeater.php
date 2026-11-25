@@ -44,9 +44,11 @@ function sanitize_email( $email ) {
 }
 
 require __DIR__ . '/../../includes/class-schema.php';
+require __DIR__ . '/../../includes/class-suggestions.php';
 
 use EstrategiaWeb\ContentTypes\Repeater;
 use EstrategiaWeb\ContentTypes\Schema;
+use EstrategiaWeb\ContentTypes\Suggestions;
 
 $cases = json_decode( (string) stream_get_contents( STDIN ), true );
 $out   = array();
@@ -62,6 +64,8 @@ foreach ( $cases as $case ) {
 		'format'     => Repeater::apply_format( $a[0], $a[1] ),
 		'schema'     => Repeater::rest_schema( $f( $a[0] ) ),
 		'mixed'      => Repeater::is_mixed( $f( $a[0] ) ),
+		'rank'       => Suggestions::rank( $a[0] ), // 2.15.0: the suggestions, most used first.
+		'suggest'    => Schema::normalize_field( $a[0] )['fields'][0]['suggest'] ?? null,
 	};
 }
 echo json_encode( $out, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );

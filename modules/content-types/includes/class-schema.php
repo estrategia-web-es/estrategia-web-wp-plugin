@@ -36,7 +36,7 @@ final class Schema {
 
 	public const TYPE_KEYS = array( '$schema', 'template', 'prefix', 'name', 'slug', 'labels', 'description', 'icon', 'supports', 'public', 'has_archive', 'show_in_rest', 'hierarchical', 'menu_position', 'wpml', 'fields_box', 'groups', 'taxonomies', 'fields' );
 	public const TAXONOMY_KEYS = array( 'name', 'slug', 'labels', 'hierarchical', 'public', 'show_in_rest', 'show_admin_column', 'wpml' );
-	public const FIELD_KEYS = array( 'name', 'type', 'label', 'help', 'required', 'private', 'default', 'wpml', 'group', 'options', 'post_type', 'min', 'max', 'integer', 'true_label', 'false_label', 'fields', 'item_format', 'item_label' );
+	public const FIELD_KEYS = array( 'name', 'type', 'label', 'help', 'required', 'private', 'suggest', 'default', 'wpml', 'group', 'options', 'post_type', 'min', 'max', 'integer', 'true_label', 'false_label', 'fields', 'item_format', 'item_label' );
 
 	/**
 	 * WHERE THE FIELDS ARE EDITED (2.0.0, David: «una página vacía y todos
@@ -443,6 +443,7 @@ final class Schema {
 				'label'    => $sub['label'],
 				'required' => (bool) ( $sub['required'] ?? false ),
 				'options'  => self::normalize_options( $sub['options'] ?? array() ),
+				'suggest'  => 'used' === ( $sub['suggest'] ?? '' ) ? 'used' : '',
 			);
 		}
 		// Text a person reads changes with the language; everything else is the same in all of them.
@@ -457,6 +458,8 @@ final class Schema {
 			'required'  => (bool) ( $field['required'] ?? false ),
 			// 2.14.1: only for who can edit the entry (REST, binding); the server still reads it ({{post_field:…}}). Registrar::hide_private().
 			'private'   => (bool) ( $field['private'] ?? false ),
+			// 2.15.0: «used» = the text box suggests what other entries of the type already say (class-suggestions.php).
+			'suggest'   => 'used' === ( $field['suggest'] ?? '' ) ? 'used' : '',
 			'default'   => $field['default'] ?? $empty,
 			'wpml'      => $field['wpml'] ?? ( in_array( $type, array( 'text', 'textarea' ), true ) || $texts ? 'translate' : 'copy' ),
 			'group'     => $field['group'] ?? '',
@@ -590,6 +593,10 @@ final class Schema {
 			if ( isset( $field['private'] ) && ! is_bool( $field['private'] ) ) {
 				/* translators: %s: where in the file */
 				$errors[] = sprintf( __( '%s.private must be true or false.', 'estrategiaweb-toolkit' ), $where );
+			}
+			if ( isset( $field['suggest'] ) && ( 'used' !== $field['suggest'] || 'text' !== ( $field['type'] ?? '' ) ) ) {
+				/* translators: %s: where in the file */
+				$errors[] = sprintf( __( '%s.suggest can only be "used", on a text field.', 'estrategiaweb-toolkit' ), $where );
 			}
 			if ( isset( $field['wpml'] ) && ! in_array( $field['wpml'], self::FIELD_WPML, true ) ) {
 				/* translators: 1: where in the file, 2: allowed values */
@@ -797,6 +804,10 @@ final class Schema {
 			if ( isset( $sub['required'] ) && ! is_bool( $sub['required'] ) ) {
 				/* translators: %s: where in the file */
 				$errors[] = sprintf( __( '%s.required must be true or false.', 'estrategiaweb-toolkit' ), $at );
+			}
+			if ( isset( $sub['suggest'] ) && ( 'used' !== $sub['suggest'] || 'text' !== $type ) ) {
+				/* translators: %s: where in the file */
+				$errors[] = sprintf( __( '%s.suggest can only be "used", on a text field.', 'estrategiaweb-toolkit' ), $at );
 			}
 			if ( 'select' === $type ) {
 				self::check_options( $sub['options'] ?? null, $at, $errors );

@@ -88,6 +88,7 @@ The cookie list includes an extract of the Open Cookie Database (https://github.
 
 = 2.15.0 =
 * Content types: a field can be marked «Private». Only people who can edit the post see it; it is left out of what visitors get through the REST API and is never shown on the site. Forms can still use it in their notices, for example to send a copy to a family's email.
+* Content types: a text field can suggest, as you type, what it already says in other posts (a place, a relationship), and anything else can still be typed.
 * External links: links to documents (PDF, Word, Excel, ZIP…), also the site's own, open in a new tab; a link marked «download» still just saves the file.
 
 = 2.14.0 =
