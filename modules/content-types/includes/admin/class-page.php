@@ -343,6 +343,7 @@ final class Page {
 			/* translators: %s: a language code such as es */
 			'help'             => __( 'Help (%s)', 'estrategiaweb-toolkit' ),
 			'required'         => __( 'Required to publish', 'estrategiaweb-toolkit' ),
+			'private'          => __( 'Private: only for editors, never shown on the site', 'estrategiaweb-toolkit' ),
 			'default'          => __( 'Default value', 'estrategiaweb-toolkit' ),
 			'wpmlField'        => __( 'In translations', 'estrategiaweb-toolkit' ),
 			'wpmlAuto'         => __( 'Automatic (texts translated, the rest copied)', 'estrategiaweb-toolkit' ),

@@ -4,7 +4,7 @@ Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.14.0
+Stable tag: 2.15.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,9 @@ Its settings, yes. Your data (form submissions, redirects, company details) is k
 The cookie list includes an extract of the Open Cookie Database (https://github.com/jkwakman/Open-Cookie-Database), © Jan Kwakman and contributors, Apache License 2.0. Details in modules/consent/data/NOTICE.
 
 == Changelog ==
+
+= 2.15.0 =
+* Content types: a field can be marked «Private». Only people who can edit the post see it; it is left out of what visitors get through the REST API and is never shown on the site. Forms can still use it in their notices, for example to send a copy to a family's email.
 
 = 2.14.0 =
 * Content types: a «Repeating list» field type (rows with their own text, date, time, number, choice, link, email or phone fields), shown as a list, and a «Time» field type.

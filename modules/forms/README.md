@@ -179,7 +179,10 @@ reads the title, link and fields **from the entry itself**
 ([includes/class-notifier.php](includes/class-notifier.php)). The family's
 email never travels in the page. Before, with Contact Form 7, it did: a
 hidden field with the email, which anyone could change to make the server
-send copies wherever they wanted.
+send copies wherever they wanted. **And the field must be `"private": true`**
+(2.15.0): without it, WordPress gives every field of a public entry to
+anybody at `/wp-json/wp/v2/<type>`, the email included. Seen on Llar
+d'Estels' staging on 25-11-2026.
 
 - No signature, a wrong one, one copied from another obituary, an entry
   unpublished since: **no context**. The entry markers come out empty and

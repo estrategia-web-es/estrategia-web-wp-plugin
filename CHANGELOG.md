@@ -9,6 +9,26 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.15.0 — 25-11-2026 (content-types: «private» fields)
+
+**What each site must do:** mark as `"private": true` (or tick «Private» in
+the field's row of the constructor) every field that must not be public.
+Until then, ANY field of a content type can be read by anybody at
+`/wp-json/wp/v2/<type>` — that is how WordPress treats a public post's meta
+with `show_in_rest`. The case that found it (Llar d'Estels, 25-11-2026): the
+family's email of an obituary, the Cc of the condolences form
+(`{{post_field:correu_familia}}`), was readable by anyone.
+
+- **content-types: the `private` key of a field.** Who cannot edit the entry
+  does not get it in REST (`Registrar::hide_private()`, a `rest_prepare_<type>`
+  filter: the block editor's panel still reads and saves it, so
+  `show_in_rest => false` was not an option), and the content-field binding
+  never prints it, not even for an editor (a page can be cached and served to
+  anyone). The server still reads it: `{{post_field:…}}` in a form's
+  notification works as before. In the JSON Schema, the validator, the
+  constructor (a checkbox per field) and `examples/llest_esquela.json`
+  (`llest_correu_familia`). Level 2: `tests/register.test.mjs`, seen red.
+
 ## 2.14.0 — 24-11-2026 (content-types: repeater and time fields; forms: entry markers and Cc/Bcc)
 
 **What each site must do:** nothing. The forms migration 0003 adds a column
