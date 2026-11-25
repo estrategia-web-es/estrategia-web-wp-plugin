@@ -47,6 +47,12 @@ family's email of an obituary, the Cc of the condolences form
   time. `Suggestions::rank()` (pure, level 1 in `tests/repeater.test.mjs`),
   the key in Schema, the JSON Schema and the validator (text only).
 
+- **Fix, local-business: names without HTML entities.** A location's name
+  went to the JSON-LD texturized and encoded («Funerària Porreres &#8211;
+  Llar d&#8217;Estels») and the company's with «&#039;»: Google reads JSON-LD
+  as text. Now decoded (`html_entity_decode`). Seen on Llar d'Estels' three
+  funeral homes; level 2 in `tests/output.test.mjs`, seen red.
+
 ## 2.14.0 — 24-11-2026 (content-types: repeater and time fields; forms: entry markers and Cc/Bcc)
 
 **What each site must do:** nothing. The forms migration 0003 adds a column
