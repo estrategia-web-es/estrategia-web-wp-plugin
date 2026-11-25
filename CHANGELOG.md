@@ -29,6 +29,14 @@ family's email of an obituary, the Cc of the condolences form
   constructor (a checkbox per field) and `examples/llest_esquela.json`
   (`llest_correu_familia`). Level 2: `tests/register.test.mjs`, seen red.
 
+- **external-links: documents in a new tab too.** A link to a document
+  (`.pdf`, `.doc(x)`, `.odt`, `.rtf`, `.xls(x)`, `.ods`, `.ppt(x)`, `.odp`,
+  `.zip`), even one of the site itself, gets the same `target="_blank"`,
+  `noopener` and notice as an external link; one with `download` does not
+  (it saves the file). The case: Llar d'Estels' «Carta de Serveis ↓», a PDF
+  in its own uploads that took the visitor away from the page.
+  `External_Links::is_document()` (pure, level 1) and its level 2 case.
+
 ## 2.14.0 — 24-11-2026 (content-types: repeater and time fields; forms: entry markers and Cc/Bcc)
 
 **What each site must do:** nothing. The forms migration 0003 adds a column

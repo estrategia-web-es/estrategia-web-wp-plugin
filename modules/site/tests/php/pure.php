@@ -110,6 +110,10 @@ echo json_encode(
 			),
 			array_map( static fn( $h ) => External_Links::is_external( $h, 'www.web.test' ), $hrefs )
 		),
+		'document'           => array_combine(
+			$docs = array( '/wp-content/uploads/2026/11/carta.pdf', 'https://web.test/x/Carta.PDF?v=2#page=3', 'llistat.xlsx', '/pdf/', '/foto.jpg', '/carta-pdf', '#x.pdf', 'mailto:a@b.pdf' ),
+			array_map( static fn( $h ) => External_Links::is_document( $h ), $docs )
+		),
 		'rel_empty'          => External_Links::add_rel( '', 'noopener' ),
 		'rel_keep'           => External_Links::add_rel( ' nofollow  sponsored ', 'noopener' ),
 		'rel_dup'            => External_Links::add_rel( 'NoOpener nofollow', 'noopener' ),
