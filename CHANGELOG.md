@@ -9,6 +9,22 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.16.1 — 25-11-2026 (local-business: a department's url when locations have no pages)
+
+**What each site must do:** nothing.
+
+- **local-business: the front page's departments point at a page that exists.**
+  With a location type WITHOUT public pages («public»: false, Llar d'Estels),
+  each department's `url` was the location's permalink (`/seus/campos/`), a
+  URL that does not exist and redirected to the front page (audit,
+  25-11-2026). Now it is the published page tied to the location (the one
+  whose blocks bind to its slug, the link `tied_to()` already reads), and the
+  home URL if there is none. With public pages, nothing changes.
+  `Data::location_url()`; test «a location type without public pages» in
+  `output.test.mjs` (`?ew_lb_private=1` in the test mu-plugin). Checked on
+  the Llar d'Estels staging: /contacte/, /funeraria-campos/,
+  /funeraria-llucmajor/.
+
 ## 2.16.0 — 25-11-2026 (consent: compact notice on phones, and a variable to lift it)
 
 **What each site must do:** nothing. A site with a FIXED BAR at the bottom
