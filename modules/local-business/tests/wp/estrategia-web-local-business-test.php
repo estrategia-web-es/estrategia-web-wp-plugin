@@ -185,7 +185,8 @@ add_action(
 			echo '<script type="application/ld+json" class="rank-math-schema">' . wp_json_encode( array( '@context' => 'https://schema.org', '@graph' => array_values( $data ) ) ) . "</script>\n"; // phpcs:ignore
 		} elseif ( 'yoast' === $host ) {
 			$graph = array(
-				array( '@type' => 'Organization', '@id' => $home . '#organization', 'name' => 'Yoast name' ),
+				// The name as Yoast takes it from the site name: WordPress keeps «'» as &#039; (2.15.0).
+				array( '@type' => 'Organization', '@id' => $home . '#organization', 'name' => 'Yoast d&#039;Oms' ),
 				array( '@type' => 'WebPage', '@id' => $home . '#webpage' ),
 			);
 			$graph = apply_filters( 'wpseo_schema_graph', $graph, null );

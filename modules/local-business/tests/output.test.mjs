@@ -144,7 +144,7 @@ test("with Yoast: our nodes appended to its list, its Organization completed", (
   assert.equal(jsonLdBlocks(text).length, 1);
   const nodes = nodesOf(text);
   assert.deepEqual(nodes.map((n) => [].concat(n["@type"])[0]), ["Organization", "WebPage", "DryCleaningOrLaundry"]);
-  assert.equal(nodes[0].name, "Yoast name");
+  assert.equal(nodes[0].name, "Yoast d'Oms", "its name kept, without the &#039; WordPress stores (2.15.0)");
   assert.equal(nodes[2].parentOrganization["@id"], nodes[0]["@id"]);
 });
 
