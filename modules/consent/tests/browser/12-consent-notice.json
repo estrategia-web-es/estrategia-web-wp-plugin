@@ -28,6 +28,11 @@
     { "type": "customStep", "name": "capture", "parameters": { "label": "gap-402", "values": {
       "gap": "(() => { const text = document.querySelector('.estrategia-web-consent__text'); const title = document.querySelector('.estrategia-web-consent__title'); const range = document.createRange(); range.selectNodeContents(text); const lastLine = Math.max(...[...range.getClientRects()].map((r) => r.bottom)); const button = document.querySelector('.estrategia-web-consent__actions').getBoundingClientRect().top; return { gap: button - lastLine, titleGap: text.getBoundingClientRect().top - title.getBoundingClientRect().bottom }; })()"
     } } },
+    { "type": "setViewport", "width": 390, "height": 844 },
+    { "type": "customStep", "name": "capture", "parameters": { "label": "mobile-390", "values": {
+      "box": "(() => { const n = document.querySelector('#estrategia-web-consent').getBoundingClientRect(); const b = [...document.querySelectorAll('.estrategia-web-consent__actions .estrategia-web-consent__button')].map((e) => { const r = e.getBoundingClientRect(); return { top: Math.round(r.top), width: Math.round(r.width), height: Math.round(r.height) }; }); return { height: n.height, bottom: innerHeight - n.bottom, buttons: b }; })()",
+      "lifted": "(() => { document.documentElement.style.setProperty('--estrategia-web-consent-bottom', '64px'); const n = document.querySelector('#estrategia-web-consent').getBoundingClientRect(); const out = innerHeight - n.bottom; document.documentElement.style.removeProperty('--estrategia-web-consent-bottom'); return out; })()"
+    } } },
     { "type": "setViewport", "width": 1512, "height": 900 },
     { "type": "customStep", "name": "capture", "parameters": { "label": "gap-1512", "values": {
       "gap": "(() => { const text = document.querySelector('.estrategia-web-consent__text'); const title = document.querySelector('.estrategia-web-consent__title'); const range = document.createRange(); range.selectNodeContents(text); const lastLine = Math.max(...[...range.getClientRects()].map((r) => r.bottom)); const button = document.querySelector('.estrategia-web-consent__actions').getBoundingClientRect().top; return { gap: button - lastLine, titleGap: text.getBoundingClientRect().top - title.getBoundingClientRect().bottom }; })()"

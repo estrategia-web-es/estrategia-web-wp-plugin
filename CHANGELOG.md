@@ -9,6 +9,27 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.16.0 — 25-11-2026 (consent: compact notice on phones, and a variable to lift it)
+
+**What each site must do:** nothing. A site with a FIXED BAR at the bottom
+of the screen (a «Call now» or WhatsApp bar on mobile) can set
+`--estrategia-web-consent-bottom` to that bar's height in its theme, and the
+notice sits above the bar instead of covering it. Goes after 2.15.0 (PR #9).
+
+- **consent: compact on phones** (below 600 px). On a 390 px phone the
+  notice took ~380 px, almost half the screen, and in Llar d'Estels it hid
+  the «Call now» bar (audit, 25-11-2026). Now: closer to the edges, smaller
+  title and text (the text is not cut), and the three buttons in ONE row, the
+  same width (accept and reject still weigh the same), each at least 44 px
+  tall. The 16 px between the text and the buttons stays. Measured in
+  scenario 12 at 390×844: test «1 bis» of browser-consent-notice.test.mjs
+  (max 260 px, one row, same width, 44 px).
+- **consent: `--estrategia-web-consent-bottom`**, how much the notice rises
+  from the bottom edge (0 if the theme does not set it). The same test checks
+  that 64px lifts it 64 px.
+- The block's `version` goes to 0.6.0, so the stylesheet URL changes and no
+  cache keeps serving the old one.
+
 ## 2.14.0 — 24-11-2026 (content-types: repeater and time fields; forms: entry markers and Cc/Bcc)
 
 **What each site must do:** nothing. The forms migration 0003 adds a column

@@ -59,6 +59,16 @@ test( '1. first visit: consent-ready once with null, Accept and Reject weigh the
 	assert.ok( m.size < m.buttonSize, `the line (${ m.size }px) is not smaller than the buttons (${ m.buttonSize }px)` );
 } );
 
+test( '1 bis. 2.16.0: on a 390 px phone the notice is compact and the theme can lift it', () => {
+	const { box, lifted } = v( 'mobile-390' );
+	// Before 2.16.0 it measured ~380 px at 390 (Llar d'Estels, 25-11-2026) and hid the «Call now» bar.
+	assert.ok( box.height <= 260, `the notice takes ${ Math.round( box.height ) } px of a 844 px screen (max 260)` );
+	assert.equal( new Set( box.buttons.map( ( b ) => b.top ) ).size, 1, `the three buttons are not in one row: ${ JSON.stringify( box.buttons ) }` );
+	assert.ok( Math.max( ...box.buttons.map( ( b ) => b.width ) ) - Math.min( ...box.buttons.map( ( b ) => b.width ) ) <= 1, 'the three buttons must be the same width (accept and reject weigh the same)' );
+	assert.ok( box.buttons.every( ( b ) => b.height >= 44 ), `a button under 44 px tall: ${ JSON.stringify( box.buttons ) }` );
+	assert.ok( Math.abs( lifted - box.bottom - 64 ) <= 1, `--estrategia-web-consent-bottom: 64px should lift it 64 px (from ${ box.bottom } to ${ lifted })` );
+} );
+
 test( '1. 0.5.1: at least 16 px between the text and the buttons, at 402 and 1512', () => {
 	for ( const width of [ 402, 1512 ] ) {
 		const { gap } = v( `gap-${ width }` );

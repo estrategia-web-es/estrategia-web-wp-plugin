@@ -3,7 +3,7 @@
 	"__comment": "estrategia-web-site/consent — «Cookie settings» button that reopens the notice. The notice and all the consent logic live in includes/class-consent.php (its header is the documentation). No editor of its own: supports.autoRegister (WP 7.0). The old name, estrategia-web/consent (parent theme ≤ 0.6.0), is registered by Consent::register_blocks() as a hidden alias.",
 	"apiVersion": 3,
 	"name": "estrategia-web-site/consent",
-	"version": "0.5.0",
+	"version": "0.6.0",
 	"title": "Cookie settings link",
 	"category": "widgets",
 	"icon": "shield",
