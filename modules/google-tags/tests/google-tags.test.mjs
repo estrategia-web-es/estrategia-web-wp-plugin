@@ -30,7 +30,13 @@ import { BASE, credentials, html, reset, testApi, wp } from "../../../tests/lib.
 const front = async (tags) =>
   (await html(`${BASE}/?${tags ? "ew-options=" + encodeURIComponent(JSON.stringify({ estrategia_web_google_tags: tags })) + "&" : ""}nocache=${Date.now()}`)).text;
 const TAG = 'id="estrategia-web-google-tags"';
-const offered = (page) => [...page.matchAll(/name="estrategia-web-consent-category"\s+value="([^"]+)"/g)].map((m) => m[1]);
+// Attribute order is not ours: WordPress 7.2 rewrites the tags it processes with directives in
+// alphabetical order (name, type, value), 7.1 left them as written. Read each <input> as a whole.
+const offered = (page) =>
+  [...page.matchAll(/<input\b[^>]*>/g)]
+    .map((m) => m[0])
+    .filter((tag) => tag.includes('name="estrategia-web-consent-category"'))
+    .map((tag) => (tag.match(/\svalue="([^"]+)"/) || [])[1]);
 const cookiesReset = () => fetch(BASE + "/wp-json/estrategia-web-cookies-test/v1/reset", { method: "POST" });
 const save = (value) => wp("/settings", { method: "POST", body: { estrategia_web_google_tags: value } });
 

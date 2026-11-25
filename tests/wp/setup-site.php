@@ -29,6 +29,14 @@ if ( is_wp_error( $ew_activated ) ) {
 	throw new RuntimeException( 'setup-site: the plugin did not activate: ' . $ew_activated->get_error_message() );
 }
 
+// The theme is PINNED, not WordPress's default (25-11-2026): 7.2 ships «Ipsum» as the new default,
+// and its colours (rgba text) and editor broke checks that measure OUR markup on Twenty Twenty-Five.
+// A test checks the plugin, not whichever theme the WordPress zip brings. To move to another theme,
+// change it here and run the whole battery: the contrast and editor checks were written against this one.
+if ( 'twentytwentyfive' !== get_stylesheet() ) {
+	switch_theme( 'twentytwentyfive' );
+}
+
 update_option( 'permalink_structure', '/%postname%/' );
 update_option( 'blogname', 'Sitio de pruebas' );
 update_option( 'admin_email', 'admin@ejemplo.test' );

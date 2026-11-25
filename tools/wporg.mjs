@@ -96,6 +96,13 @@ function tarOfHead() {
 //      escape at the echo: esc_html(), esc_attr(), esc_url(), wp_kses( $html, Kses::allowed() );
 //   3. a <style> or <script> printed by hand (review of 08-11-2026): wp_add_inline_style()
 //      and wp_enqueue_script() / wp_add_inline_script().
+//   4. (2.14.1, 25-11-2026, not a review: WordPress 7.2) wp_kses_data() or wp_kses_post()
+//      around a STRING OF ATTRIBUTES with escaped values: get_block_wrapper_attributes(),
+//      self::atts(), a $wrapper/$wrap/$atts variable. 7.2's HTML-API kses reads it as text and
+//      decodes &quot;, which breaks the attribute (the language switcher stopped opening). The
+//      fix is to pass the whole opening tag: wp_kses( '<div ' . $wrapper . '>', Kses::allowed() ).
+//      Edge cases that pass: wp_interactivity_data_wp_context() alone (single quotes, no
+//      entities) and content-types' fixed « disabled» string (header of includes/class-kses.php).
 // NonceVerification ignores are not refused: the approved 2.10.4 has ~40 on read-only
 // $_GET navigation and the reviewers accepted them.
 // How to maintain: ESCAPE_OK holds the four EscapeOutput ignores that were in the APPROVED
@@ -127,10 +134,12 @@ function reviewRules() {
           bad.push(`${at}  output not escaped at the echo (rule 2): ${line.trim().slice(0, 140)}`);
       }
       if (/['"]<(style|script)\b/i.test(line)) bad.push(`${at}  <style>/<script> printed by hand (rule 3): ${line.trim().slice(0, 140)}`);
+      if (/wp_kses_(data|post)\(\s*(get_block_wrapper_attributes|self::atts|\$[a-z_]*(wrapper|wrap|atts)\b)/.test(line))
+        bad.push(`${at}  attribute string through wp_kses_data/post, broken by WordPress 7.2 (rule 4): ${line.trim().slice(0, 140)}`);
     });
   }
   if (bad.length) throw new Error(`WordPress.org review rules (header of reviewRules() in tools/wporg.mjs):\n  ${bad.join("\n  ")}`);
-  console.log(`✔ review rules: ${files.length} PHP files, no hidden input, output or inline tags`);
+  console.log(`✔ review rules: ${files.length} PHP files, no hidden input, output, inline tags or bare attribute strings in kses`);
 }
 
 function zip() {
