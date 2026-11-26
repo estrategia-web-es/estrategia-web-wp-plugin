@@ -101,6 +101,13 @@ test("merge: a translation keeps its texts, takes the rest and the rows from the
   assert.equal(one("mixed", { ...ACTES, fields: [{ name: "lloc", type: "text", label: "L" }] }), false, "only texts: WPML's translate is enough");
 });
 
+test("suggestions (2.15.0): most used first, then A→Z; capitals and spaces are one value shown as its most used spelling; empties out", () => {
+  const used = ["Tanatori de Campos", "Parròquia de Santanyí", " tanatori de  campos ", "Tanatori de Campos", "", "Església de Porreres", "Parròquia de Santanyí"];
+  assert.deepEqual(one("rank", used), ["Tanatori de Campos", "Parròquia de Santanyí", "Església de Porreres"]);
+  const field = { name: "llest_actes", type: "repeater", label: "Actes", fields: [{ name: "lloc", type: "text", label: "Lloc", suggest: "used" }] };
+  assert.equal(one("suggest", field), "used", "the subfield keeps «suggest» through normalize_field()");
+});
+
 test("format: {subfield} replaced; an empty value takes its joining text with it", () => {
   const F = "{tipus}: {dia} {hora}–{fins}, {lloc}";
   const all = { tipus: "Funeral", dia: "25/11", hora: "17:00", fins: "18:00", lloc: "Sant Miquel" };

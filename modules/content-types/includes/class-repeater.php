@@ -74,7 +74,7 @@ final class Repeater {
 	/** The types a subfield may have (a field of the definition may have more). */
 	public const SUBFIELD_TYPES = array( 'text', 'textarea', 'number', 'date', 'time', 'select', 'url', 'email', 'tel' );
 	/** The keys a subfield may have. */
-	public const SUBFIELD_KEYS = array( 'name', 'type', 'label', 'required', 'options' );
+	public const SUBFIELD_KEYS = array( 'name', 'type', 'label', 'required', 'options', 'suggest' ); // suggest: 2.15.0, class-suggestions.php.
 	/** Subfield types whose value is translated (the rest are copied from the original). */
 	public const TRANSLATED = array( 'text', 'textarea' );
 	/** A subfield name is a JSON key inside the meta, not a meta key: no prefix, short. */

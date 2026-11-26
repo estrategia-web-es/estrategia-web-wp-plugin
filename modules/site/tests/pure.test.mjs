@@ -64,6 +64,11 @@ test("external links (0.5.2): another host yes; the same one, www, subdomains, r
   ]);
 });
 
+test("documents (2.15.0): a .pdf/.xlsx path, internal or not, with query or anchor, is a document; a page, an image or an anchor is not", () => {
+  const docs = Object.entries(out.document).filter(([, v]) => v).map(([k]) => k);
+  assert.deepEqual(docs, ["/wp-content/uploads/2026/11/carta.pdf", "https://web.test/x/Carta.PDF?v=2#page=3", "llistat.xlsx"]);
+});
+
 test("rel (0.5.2): noopener is added without removing what was there or repeating it", () => {
   assert.equal(out.rel_empty, "noopener");
   assert.equal(out.rel_keep, "nofollow sponsored noopener");

@@ -99,14 +99,14 @@ final class Blocks {
 			) + ( $has_files ? array( 'enctype' => 'multipart/form-data' ) : array() )
 		);
 
+		// The opening tag goes through wp_kses() WHOLE, never the attribute string alone (includes/class-kses.php, WordPress 7.2).
+		$open = '<form ' . $wrapper
+			. ' data-wp-interactive="estrategia-web-forms" ' . wp_interactivity_data_wp_context( $context )
+			. ' data-wp-class--is-sent="context.sent" data-wp-on--submit="actions.submit" data-wp-on--focusin="actions.start">';
+
 		ob_start();
+		echo wp_kses( $open, \EstrategiaWeb\Kses::allowed() );
 		?>
-		<form <?php echo wp_kses_data( $wrapper ); ?>
-			data-wp-interactive="estrategia-web-forms"
-			<?php echo wp_kses_data( wp_interactivity_data_wp_context( $context ) ); ?>
-			data-wp-class--is-sent="context.sent"
-			data-wp-on--submit="actions.submit"
-			data-wp-on--focusin="actions.start">
 			<input type="hidden" name="_af_def" value="<?php echo esc_attr( $hash ); ?>">
 			<input type="hidden" name="_af_token" value="<?php echo esc_attr( Token::create( $hash, time(), wp_salt( 'nonce' ) ) ); ?>">
 			<input type="hidden" name="_af_page" value="<?php echo esc_url( self::current_url() ); ?>">
@@ -325,16 +325,17 @@ final class Blocks {
 
 		if ( 'checkbox' === $type ) {
 			$input_atts += array( 'type' => 'checkbox', 'value' => '1', 'checked' => '1' === $value );
-			echo '<input' . wp_kses_data( self::atts( $input_atts ) ) . '>';
+			echo wp_kses( '<input' . self::atts( $input_atts ) . '>', \EstrategiaWeb\Kses::allowed() );
 			printf( '<label for="%1$s" class="estrategia-web-forms__label">%2$s%3$s</label>', esc_attr( $id ), wp_kses_post( $label_html ), wp_kses_post( $mark ) );
 		} else {
 			printf( '<label for="%1$s" class="estrategia-web-forms__label">%2$s%3$s</label>', esc_attr( $id ), wp_kses_post( $label_html ), wp_kses_post( $mark ) );
 			if ( 'file' === $type ) {
 				echo wp_kses( self::file_input( $attributes, $input_atts, (array) ( $stored['files'] ?? array() ) ), \EstrategiaWeb\Kses::allowed() );
 			} elseif ( 'textarea' === $type ) {
-				echo '<textarea' . wp_kses_data( self::atts( $input_atts + array( 'rows' => 5 ) ) ) . '>' . esc_textarea( $value ) . '</textarea>';
+				// WHOLE, content and closing tag included: 7.2's kses drops an unclosed <textarea> entirely (its content is text until </textarea>).
+				echo wp_kses( '<textarea' . self::atts( $input_atts + array( 'rows' => 5 ) ) . '>' . esc_textarea( $value ) . '</textarea>', \EstrategiaWeb\Kses::allowed() );
 			} elseif ( 'select' === $type ) {
-				echo '<select' . wp_kses_data( self::atts( $input_atts ) ) . '>';
+				echo wp_kses( '<select' . self::atts( $input_atts ) . '>', \EstrategiaWeb\Kses::allowed() );
 				$first = '' !== $placeholder ? $placeholder : __( 'Choose an option', 'estrategiaweb-toolkit' );
 				echo '<option value="">' . esc_html( $first ) . '</option>';
 				$options = self::options( (string) ( $attributes['options'] ?? '' ) );
@@ -350,7 +351,7 @@ final class Blocks {
 					'type'  => $type,
 					'value' => $value,
 				);
-				echo '<input' . wp_kses_data( self::atts( $input_atts + $extra ) ) . '>';
+				echo wp_kses( '<input' . self::atts( $input_atts + $extra ) . '>', \EstrategiaWeb\Kses::allowed() );
 			}
 		}
 		if ( '' !== $help ) {

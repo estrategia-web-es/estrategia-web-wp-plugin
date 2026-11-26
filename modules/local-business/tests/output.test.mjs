@@ -30,7 +30,7 @@ before(async () => {
   // stores one in the option since round 1.
   await Promise.all([reset(), credentials()]);
   const [, s, map] = await Promise.all([
-    saveCompany({ enabled_types: ["location"], company_name: "Lavandería de pruebas", phone: "971 00 00 00", email: "info@ejemplo.test", hours: { tu: "13:00-16:00, 20:00-23:30", we: "13:00-16:00" } }),
+    saveCompany({ enabled_types: ["location"], company_name: "Lavandería d'Oms", phone: "971 00 00 00", email: "info@ejemplo.test", hours: { tu: "13:00-16:00, 20:00-23:30", we: "13:00-16:00" } }),
     wp("/settings", { method: "POST", body: { estrategia_web_local_business_type: "DryCleaningOrLaundry", estrategia_web_social_links: [{ name: "", url: "https://www.facebook.com/ejemplo", icon: "facebook" }] } }),
     upload("mapa-son-oms.png", "image/png", png(8, 6)),
   ]);
@@ -45,7 +45,7 @@ before(async () => {
   let bad;
   [sonOms, noData, tied, none, bad] = await Promise.all([
     make({
-      title: "Lavandería Industrial",
+      title: "Lavandería Industrial - Son Oms", // 2.15.0: a hyphen and (in the company) an apostrophe, which WordPress turns into entities.
       slug: "son-oms",
       meta: {
         estrategia_web_location_phone: "+34 871 049 656",
@@ -103,7 +103,7 @@ test("without an SEO plugin, a page tied to a location: our own script, its Loca
   assert.deepEqual(checkLocalBusiness(lb), { errors: [], warnings: [] });
   assert.equal(lb.url, tied.url, "url: the page being read");
   assert.equal(lb["@id"], sonOms.link + "#localbusiness", "@id: the location's own page");
-  assert.equal(lb.name, "Lavandería Industrial");
+  assert.equal(lb.name, "Lavandería Industrial – Son Oms", "the title as the page shows it, without entities (&#8211;)");
   assert.equal(lb.telephone, "+34 871 049 656");
   assert.equal(lb.image, staticMap, "the static map of the media library");
   assert.equal(lb.address.streetAddress, "Calle Camp Franc, 11, Nave 14, Polígono Son Oms", "the street's two lines on one (2.0.0)");
@@ -129,8 +129,8 @@ test("the location's own page and the front page (departments: only the location
   assert.equal(nodesOf(got.own).find((n) => n["@type"] === "DryCleaningOrLaundry").url, sonOms.link);
   const home = nodesOf(got.home);
   assert.equal(home.length, 1, "the front page: the Organization alone");
-  assert.equal(home[0].name, "Lavandería de pruebas");
-  assert.deepEqual(home[0].department.map((d) => d.name), ["Lavandería Industrial"], "«Sede sin datos» is left out, not half published");
+  assert.equal(home[0].name, "Lavandería d'Oms", "no &#039;");
+  assert.deepEqual(home[0].department.map((d) => d.name), ["Lavandería Industrial – Son Oms"], "«Sede sin datos» is left out, not half published");
   assert.equal(home[0].openingHoursSpecification, undefined, "with locations, each has its own hours, not the company's");
   assert.deepEqual(jsonLdBlocks(got.none), [], "a page about no location: nothing");
 });
@@ -142,10 +142,13 @@ test("the location's own page and the front page (departments: only the location
 test("a location type without public pages: the front page's department points at the page tied to it", () => {
   const home = nodesOf(got.homePrivate);
   assert.equal(home.length, 1, "the front page: the Organization alone");
-  const dep = home[0].department.find((d) => d.name === "Lavandería Industrial");
+  // By the start of the name: 2.15.0 gave the fixture « - Son Oms» to test entities, and the @id is
+  // «#location-son-oms» without public pages but «<permalink>#localbusiness» with them.
+  const sonOmsDep = (nodes) => nodes[0].department.find((d) => String(d.name).startsWith("Lavandería Industrial"));
+  const dep = sonOmsDep(home);
   assert.ok(dep, JSON.stringify(home[0].department));
   assert.equal(dep.url, tied.url, "url: the page whose blocks bind to the location (lavanderia-industrial), not the location's own permalink");
-  assert.equal(nodesOf(got.home)[0].department.find((d) => d.name === "Lavandería Industrial").url, sonOms.link, "with public pages: the location's own page, as before");
+  assert.equal(sonOmsDep(nodesOf(got.home)).url, sonOms.link, "with public pages: the location's own page, as before");
 });
 
 test("with Rank Math: ONE graph, theirs — our LocalBusiness inside, their Organization completed, not duplicated", () => {
@@ -171,7 +174,7 @@ test("with Yoast: our nodes appended to its list, its Organization completed", (
   assert.equal(jsonLdBlocks(text).length, 1);
   const nodes = nodesOf(text);
   assert.deepEqual(nodes.map((n) => [].concat(n["@type"])[0]), ["Organization", "WebPage", "DryCleaningOrLaundry"]);
-  assert.equal(nodes[0].name, "Yoast name");
+  assert.equal(nodes[0].name, "Yoast d'Oms", "its name kept, without the &#039; WordPress stores (2.15.0)");
   assert.equal(nodes[2].parentOrganization["@id"], nodes[0]["@id"]);
 });
 

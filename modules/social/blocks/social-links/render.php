@@ -53,8 +53,8 @@ $estrategia_web_items = Links::resolved( 'estrategia-web-social-links__icon' );
 if ( ! $estrategia_web_items ) {
 	if ( wp_is_serving_rest_request() ) {
 		printf(
-			'<p %s>%s</p>',
-			wp_kses_data( get_block_wrapper_attributes() ),
+			'%s%s</p>',
+			wp_kses( '<p ' . get_block_wrapper_attributes() . '>', \EstrategiaWeb\Kses::allowed() ), // Whole tag (includes/class-kses.php, WordPress 7.2).
 			esc_html__( 'Social networks: add them in Estrategia Web › Social networks.', 'estrategiaweb-toolkit' )
 		);
 	}
@@ -65,7 +65,7 @@ $estrategia_web_display = in_array( $attributes['display'] ?? '', array( 'icons'
 $estrategia_web_size    = in_array( $attributes['size'] ?? '', array( 'small', 'medium', 'large' ), true ) ? $attributes['size'] : 'medium';
 $estrategia_web_owner   = Links::owner();
 ?>
-<ul <?php echo wp_kses_data( get_block_wrapper_attributes( array( 'class' => 'estrategia-web-social-links is-display-' . $estrategia_web_display . ' is-size-' . $estrategia_web_size ) ) ); ?>>
+<?php echo wp_kses( '<ul ' . get_block_wrapper_attributes( array( 'class' => 'estrategia-web-social-links is-display-' . $estrategia_web_display . ' is-size-' . $estrategia_web_size ) ) . '>', \EstrategiaWeb\Kses::allowed() ); // Whole tag (includes/class-kses.php, WordPress 7.2). ?>
 	<?php foreach ( $estrategia_web_items as $estrategia_web_item ) : ?>
 		<?php
 		/* translators: 1: network name («Instagram»), 2: company name. */

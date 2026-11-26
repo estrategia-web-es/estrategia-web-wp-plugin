@@ -195,18 +195,17 @@ $estrategia_web_wrapper = get_block_wrapper_attributes(
 	)
 );
 ?>
-<div
-	<?php echo wp_kses_data( $estrategia_web_wrapper ); ?>
-	data-wp-interactive="estrategia-web/carousel"
-	<?php echo wp_kses_data( wp_interactivity_data_wp_context( $estrategia_web_context ) ); ?>
-	data-wp-init="callbacks.init"
-	data-wp-class--is-ready="context.ready"
-	data-wp-class--is-static="state.isStatic"
-	data-wp-on-async--mouseenter="actions.hoverIn"
-	data-wp-on-async--mouseleave="actions.hoverOut"
-	data-wp-on-async--focusin="actions.focusIn"
-	data-wp-on-async--focusout="actions.focusOut"
->
+<?php
+// The opening tag goes through wp_kses() WHOLE, never the attribute string alone (includes/class-kses.php, WordPress 7.2).
+echo wp_kses(
+	'<div ' . $estrategia_web_wrapper
+	. ' data-wp-interactive="estrategia-web/carousel" ' . wp_interactivity_data_wp_context( $estrategia_web_context )
+	. ' data-wp-init="callbacks.init" data-wp-class--is-ready="context.ready" data-wp-class--is-static="state.isStatic"'
+	. ' data-wp-on-async--mouseenter="actions.hoverIn" data-wp-on-async--mouseleave="actions.hoverOut"'
+	. ' data-wp-on-async--focusin="actions.focusIn" data-wp-on-async--focusout="actions.focusOut">',
+	\EstrategiaWeb\Kses::allowed()
+);
+?>
 	<div
 		class="estrategia-web-carousel__track"
 		id="<?php echo esc_attr( $estrategia_web_track_id ); ?>"

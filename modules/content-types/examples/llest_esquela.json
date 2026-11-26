@@ -38,6 +38,13 @@
         { "name": "fins", "type": "time", "label": { "ca": "Fins a", "es": "Hasta" } },
         { "name": "lloc", "type": "text", "label": { "ca": "Lloc", "es": "Lugar" } }
       ]
+    },
+    {
+      "name": "llest_correu_familia",
+      "type": "email",
+      "private": true,
+      "label": { "ca": "Correu de la família", "es": "Correo de la familia" },
+      "help": { "ca": "Rep una còpia de cada condol ({{post_field:correu_familia}}). No surt al web.", "es": "Recibe copia de cada pésame ({{post_field:correu_familia}}). No sale en la web." }
     }
   ]
 }

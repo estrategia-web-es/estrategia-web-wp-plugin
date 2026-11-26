@@ -62,9 +62,18 @@ const ALL = [
   [{ categories: ["maps"], powered_by: false }],
   [{}, { estrategia_web_site: { matomo_url: "https://stats.example.test/", matomo_site_id: 3, matomo_mode: "hybrid" } }],
 ];
-const offered = (page) => [...page.matchAll(/name="estrategia-web-consent-category"\s+value="([^"]+)"/g)].map((m) => m[1]);
+// Attribute order is not ours: WordPress 7.2 rewrites the tags it processes with directives in
+// alphabetical order (name, type, value), 7.1 left them as written. Read each <input> as a whole.
+const offered = (page) =>
+  [...page.matchAll(/<input\b[^>]*>/g)]
+    .map((m) => m[0])
+    .filter((tag) => tag.includes('name="estrategia-web-consent-category"'))
+    .map((tag) => (tag.match(/\svalue="([^"]+)"/) || [])[1]);
+// The button's attributes are checked one by one, not in a row: 7.2 sorts them (see offered()).
 const links = (page) =>
-  [...page.matchAll(/<p ([^>]*estrategia-web-consent-link[^>]*)><button type="button" class="estrategia-web-consent-link__button" aria-controls="estrategia-web-consent"[^>]*>([^<]*)<\/button><\/p>/g)].map((m) => ({ cls: m[1], label: m[2] }));
+  [...page.matchAll(/<p ([^>]*estrategia-web-consent-link[^>]*)>(<button\b[^>]*>)([^<]*)<\/button><\/p>/g)]
+    .filter(([, , button]) => ['type="button"', 'class="estrategia-web-consent-link__button"', 'aria-controls="estrategia-web-consent"'].every((a) => button.includes(a)))
+    .map((m) => ({ cls: m[1], label: m[3] }));
 
 /** The notice's «Powered by» line: { html, text, anchor: { href, target, rel } | null }, or null. */
 function powered(page) {

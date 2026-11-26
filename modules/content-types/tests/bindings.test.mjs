@@ -115,8 +115,10 @@ test("restaurant: the select shows its label (core/post-meta, its value); tel an
 test("wine: relation → the restaurant's title and link, image → URL (in the size asked for) and alt in core/image, boolean, date, number, email", async () => {
   const { status, text } = await html(url["ct-wines"]);
   assert.equal(status, 200);
-  assert.equal(inner(text, "winery"), "Ca n&#8217;Andreu", "the title, as WordPress renders it (get_the_title)");
-  assert.equal(inner(text, "winery-link"), `<a href="${BASE}/restaurantes/ca-nandreu/">Ca n&#8217;Andreu</a>`);
+  // wptexturize writes the apostrophe as &#8217;; WordPress 7.2 (its HTML-API kses) gives the character itself. The same text.
+  const curly = (s) => s?.replace(/&#8217;/g, "’");
+  assert.equal(curly(inner(text, "winery")), "Ca n’Andreu", "the title, as WordPress renders it (get_the_title)");
+  assert.equal(curly(inner(text, "winery-link")), `<a href="${BASE}/restaurantes/ca-nandreu/">Ca n’Andreu</a>`);
   const thumb = pic.media_details.sizes.thumbnail?.source_url ?? pic.source_url;
   const img = text.match(/<figure[^>]*ct-image[^>]*>[\s\S]*?<\/figure>/)?.[0] ?? "";
   assert.ok(img.includes(`src="${thumb}"`), "the image URL, in the size asked for: " + img);

@@ -241,7 +241,9 @@ test("dossier (2.11.0): the link opens it filled in and privately; the owner dow
   assert.match(opened, /value="Stanila Reformas"/);
   assert.match(opened, /Still missing: IAE/);
   // The help line (2.11.0): under the field, read with it, and the placeholder kept for the example.
-  assert.match(opened, /<input[^>]*name="fields\[iae\]"[^>]*aria-describedby="af-ayuda-iae-help af-ayuda-iae-error"[^>]*placeholder="501\.3"/);
+  // Each attribute on its own: WordPress 7.2 sorts them (aria-describedby now comes before name).
+  const iae = opened.match(/<input[^>]*name="fields\[iae\]"[^>]*>/)?.[0] || "";
+  for (const a of ['aria-describedby="af-ayuda-iae-help af-ayuda-iae-error"', 'placeholder="501.3"']) assert.ok(iae.includes(a), `the iae field lacks ${a}: ${iae}`);
   assert.match(opened, /<p id="af-ayuda-iae-help" class="estrategia-web-forms__help">Si no lo sabes, sube el modelo 036\.<\/p>/);
   assert.match(opened, /<p id="af-ayuda-escrituras-help" class="estrategia-web-forms__help">PDF\. Up to 1 MB per file\.<\/p>/, "a File field without help says what it accepts");
   assert.doesNotMatch(opened, /name="fields\[empresa\]"[^>]*-help/, "no help, no aria-describedby pointing to a line that does not exist");

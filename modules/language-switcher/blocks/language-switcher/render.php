@@ -87,7 +87,8 @@ if ( 'inline' === ( $attributes['layout'] ?? 'dropdown' ) ) {
 			'aria-label' => __( 'Language', 'estrategiaweb-toolkit' ),
 		)
 	);
-	echo '<nav ' . wp_kses_data( $estrategia_web_wrap ) . '><ul class="estrategia-web-language__inline">';
+	// The opening tag goes through wp_kses() WHOLE, never the attribute string alone (includes/class-kses.php, WordPress 7.2).
+	echo wp_kses( '<nav ' . $estrategia_web_wrap . '>', \EstrategiaWeb\Kses::allowed() ) . '<ul class="estrategia-web-language__inline">';
 	foreach ( $estrategia_web_languages as $estrategia_web_language ) {
 		$estrategia_web_code = (string) $estrategia_web_language['code'];
 		$estrategia_web_full = $estrategia_web_name( $estrategia_web_language );
@@ -112,7 +113,7 @@ $estrategia_web_wrapper = get_block_wrapper_attributes(
 	)
 );
 ?>
-<div <?php echo wp_kses_data( $estrategia_web_wrapper ); ?>>
+<?php echo wp_kses( '<div ' . $estrategia_web_wrapper . '>', \EstrategiaWeb\Kses::allowed() ); // Whole tag, never the attribute string alone (includes/class-kses.php, WordPress 7.2). ?>
 	<button type="button" class="estrategia-web-language__toggle" aria-expanded="false" aria-controls="<?php echo esc_attr( $estrategia_web_list_id ); ?>" data-wp-on--click="actions.toggle" data-wp-bind--aria-expanded="context.open">
 		<span class="screen-reader-text"><?php esc_html_e( 'Language:', 'estrategiaweb-toolkit' ); ?> </span><span lang="<?php echo esc_attr( (string) $estrategia_web_current['code'] ); ?>"><?php echo esc_html( $estrategia_web_label ); ?></span>
 	</button>
