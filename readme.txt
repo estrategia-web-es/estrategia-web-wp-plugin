@@ -4,7 +4,7 @@ Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.2
 Requires PHP: 8.1
-Stable tag: 2.16.2
+Stable tag: 2.17.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,9 @@ Its settings, yes. Your data (form submissions, redirects, company details) is k
 The cookie list includes an extract of the Open Cookie Database (https://github.com/jkwakman/Open-Cookie-Database), © Jan Kwakman and contributors, Apache License 2.0. Details in modules/consent/data/NOTICE.
 
 == Changelog ==
+
+= 2.17.0 =
+* New «Security headers» module, off by default: adds the browser security headers a site is missing (HSTS over https, framing only from the site itself, a referrer policy, no camera, microphone or location) and hides the PHP version, without repeating any header another plugin already sends.
 
 = 2.16.2 =
 * Compatible with WordPress 7.2. Its new HTML filter broke the attributes of several blocks (the language switcher stopped opening, and the carousel, map, social links, WhatsApp button, banner zone and form fields could lose values with quotes); they now print correctly on 7.1 and 7.2.

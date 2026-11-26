@@ -9,6 +9,24 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.17.0 — 26-11-2026 (new module: security headers)
+
+**What each site must do:** nothing; the module ships off. A site that wants
+it switches it on in Estrategia Web → Modules, and checks once with
+`curl -I` on a page that the headers go out and X-Powered-By is gone.
+
+- **New «Security headers» module (security-headers), off by default.**
+  Adds HSTS (one year, no preload, only over https), X-Frame-Options
+  SAMEORIGIN, nosniff, Referrer-Policy strict-origin-when-cross-origin and a
+  Permissions-Policy without camera, microphone or location, each ONLY if no
+  one else sends it (wp_headers at 100, case-insensitive, and what PHP has
+  already queued), and removes X-Powered-By. Writes nothing. The rest of the
+  hardening (login attempts, XML-RPC, folders) is left to SiteGround
+  Security and caching to Speed Optimizer, which both work outside
+  SiteGround. Born with the Llar d'Estels audit: its future hosting (OVH)
+  sends none of these headers. A site changes the list with the
+  `estrategia_web_security_headers` filter. Test: `pure.test.mjs` (level 1).
+
 ## 2.16.2 — 26-11-2026 (WordPress 7.2: attribute strings no longer go through kses alone)
 
 **What each site must do:** update before WordPress 7.2 (8-12-2026). On 7.2
