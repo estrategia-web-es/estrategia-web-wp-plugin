@@ -28,6 +28,9 @@
 // maybe_enable() ignoring the filter: «switched off» got target="_blank".
 // Round 2 (28-10-2026): reset, notice and page in ONE request (core /setup). Seen red again with
 // is_external() always true («x-int with target»).
+// 2.15.0 (25-11-2026): documents of the site (x-pdf) and the «download» exception
+// (x-pdf-dl). Seen red with is_document() returning false: level 1 failed first
+// and stopped the run.
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, testApi, html, wp, credentials } from "../../../tests/lib.mjs";
@@ -52,6 +55,8 @@ const CONTENT = `
 <a id="x-relkeep" href="https://patrocinador.test/" rel="nofollow sponsored">Con rel</a>
 <a id="x-aria" href="https://maps.google.com/?q=x" aria-label="Cómo llegar">Mapa</a>
 <a id="x-img" href="https://instagram.com/x"><img src="/x.png" alt="Instagram"></a>
+<a id="x-pdf" href="/wp-content/uploads/carta.pdf">Carta de serveis</a>
+<a id="x-pdf-dl" href="/wp-content/uploads/carta.pdf" download>Descarregau</a>
 </p>`;
 
 // Attributes of the <a> tag with that id, already decoded (&quot; &amp;…).
@@ -105,6 +110,14 @@ test("with target it is not touched; with rel noopener is appended; with aria-la
   assert.equal(rel.rel, "nofollow sponsored noopener");
   assert.equal(anchor(text, "x-aria")["aria-label"], `Cómo llegar ${NOTICE}`);
   assert.equal(anchor(text, "x-img")["aria-label"], `Instagram ${NOTICE}`);
+});
+
+test("a document of the site itself (2.15.0, the PDF of a price list) opens in a new tab; with «download», not", () => {
+  const pdf = anchor(text, "x-pdf");
+  assert.equal(pdf.target, "_blank");
+  assert.match(pdf.rel, /noopener/);
+  assert.equal(pdf["aria-label"], `Carta de serveis ${NOTICE}`);
+  assert.equal(anchor(text, "x-pdf-dl").target, undefined, "a download link saves the file: no new tab");
 });
 
 test("the cookie notice's «Powered by» is not duplicated", () => {

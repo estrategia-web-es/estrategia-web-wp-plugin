@@ -261,7 +261,36 @@ final class Registrar {
 			if ( 'main' !== $def['fields_box'] && array_filter( $def['fields'], static fn( $f ) => $f['required'] || 'repeater' === $f['type'] ) ) {
 				add_filter( 'rest_pre_insert_' . $name, array( self::class, 'check_required' ), 10, 2 );
 			}
+			if ( array_filter( $def['fields'], static fn( $f ) => $f['private'] ) && ! has_filter( 'rest_prepare_' . $name, array( self::class, 'hide_private' ) ) ) {
+				add_filter( 'rest_prepare_' . $name, array( self::class, 'hide_private' ), 10, 2 );
+			}
 		}
+	}
+
+	/**
+	 * «private» fields (2.15.0) out of the REST answer of whoever cannot edit
+	 * the entry. Why: every field goes to REST with show_in_rest (the block
+	 * editor's panel reads and saves them there), and core lets ANYONE read a
+	 * public post's meta: the family's email of an obituary
+	 * ({{post_field:correu_familia}}, the Cc of the condolences) was readable
+	 * at /wp-json/wp/v2/<type>. show_in_rest => false is not the way: the
+	 * editor could not save the field. The editor keeps seeing it (it can
+	 * edit), the server keeps reading it (get_post_meta), and the binding
+	 * never prints it (Bindings::get_value()).
+	 */
+	public static function hide_private( \WP_REST_Response $response, \WP_Post $post ): \WP_REST_Response {
+		$data = $response->get_data();
+		if ( empty( $data['meta'] ) || ! is_array( $data['meta'] ) || current_user_can( 'edit_post', $post->ID ) ) {
+			return $response;
+		}
+		$def = Loader::types()[ $post->post_type ] ?? null;
+		foreach ( $def ? $def['fields'] : array() as $field ) {
+			if ( $field['private'] ) {
+				unset( $data['meta'][ $field['name'] ] );
+			}
+		}
+		$response->set_data( $data );
+		return $response;
 	}
 
 	/**

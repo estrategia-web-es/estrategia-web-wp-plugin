@@ -101,7 +101,9 @@ final class Data {
 			'hours'     => $hours,
 			'type'      => self::business_type(),
 			'id'        => self::organization_id(),
-			'name'      => '' !== $name ? $name : wp_specialchars_decode( (string) get_bloginfo( 'name' ), ENT_QUOTES ),
+			// html_entity_decode and not wp_specialchars_decode (2.15.0): WordPress keeps «'» as &#039; in the
+			// site name, and Google reads JSON-LD as text, so «Llar d&#039;Estels» was what it got.
+			'name'      => html_entity_decode( '' !== $name ? $name : (string) get_bloginfo( 'name' ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ),
 			'url'       => (string) apply_filters( 'wpml_home_url', home_url( '/' ) ),
 			'logo'      => $logo_id ? (string) wp_get_attachment_image_url( $logo_id, 'full' ) : '',
 			'telephone' => Company::value( 'phone' ),
@@ -209,7 +211,9 @@ final class Data {
 			array(
 				'id'          => self::location_id( $location ),
 				'type'        => Types::valid( $own_type ) ?? self::business_type(),
-				'name'        => wp_specialchars_decode( get_the_title( $location ), ENT_QUOTES ),
+				// get_the_title() texturizes: « - » becomes &#8211; and «'» &#8217;, numeric entities that
+				// wp_specialchars_decode() leaves, so the name reached Google with them (Llar d'Estels, 2.15.0).
+				'name'        => html_entity_decode( get_the_title( $location ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ),
 				'url'         => $url,
 				'image'       => self::image( $location, $meta ),
 				'telephone'   => '' !== $meta( 'phone' ) ? $meta( 'phone' ) : Company::value( 'phone' ),

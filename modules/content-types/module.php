@@ -259,6 +259,7 @@ require_once __DIR__ . '/includes/class-loader.php';
 require_once __DIR__ . '/includes/class-changes.php';
 require_once __DIR__ . '/includes/class-registrar.php';
 require_once __DIR__ . '/includes/class-wpml.php';
+require_once __DIR__ . '/includes/class-suggestions.php';
 require_once __DIR__ . '/includes/class-fields-panel.php';
 require_once __DIR__ . '/includes/class-field-format.php';
 require_once __DIR__ . '/includes/class-bindings.php';

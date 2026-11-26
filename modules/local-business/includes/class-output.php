@@ -75,6 +75,13 @@ final class Output {
 			return $graph;
 		}
 		self::$delivered = true;
+		// 2.15.0: Yoast names its Organization, WebSite and WebPage with the site name as WordPress keeps
+		// it, «'» as &#039; («Llar d&#039;Estels»), and Google reads JSON-LD as text. Decoded here, name only.
+		foreach ( $graph as $i => $node ) {
+			if ( is_array( $node ) && isset( $node['name'] ) && is_string( $node['name'] ) && str_contains( $node['name'], '&' ) ) {
+				$graph[ $i ]['name'] = html_entity_decode( $node['name'], ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+			}
+		}
 		list( $org, $locations ) = self::page();
 		return ( null === $org && ! $locations ) ? $graph : Graph::merge( $graph, $org, $locations );
 	}

@@ -27,6 +27,38 @@ it switches it on in Estrategia Web → Modules, and checks once with
   sends none of these headers. A site changes the list with the
   `estrategia_web_security_headers` filter. Test: `pure.test.mjs` (level 1).
 
+## 2.16.2 — 26-11-2026 (WordPress 7.2: attribute strings no longer go through kses alone)
+
+**What each site must do:** update before WordPress 7.2 (8-12-2026). On 7.2
+without this version, the language switcher does not open.
+
+- **WordPress 7.2 turns on a `wp_kses()` built on the HTML API**
+  (`default-filters.php`: `wp_kses_force_legacy_parser` → false). Given a bare
+  string of attributes (`get_block_wrapper_attributes()`), it reads it as text
+  and decodes `&quot;`: `data-wp-context="{&quot;open&quot;:false}"` came out
+  as `data-wp-context="{"open":false}"`, the browser cut it and the language
+  switcher lost its context. The opening tags of the language switcher,
+  carousel, map, social links, WhatsApp, banner zone and forms (the `<form>`
+  and every control) now go through `wp_kses()` WHOLE. Measured on 7.1.4 and
+  7.2-RC3: same values, quotes, `&` and `<` included. The rule, its edge
+  cases and the `<textarea>` trap (7.2 drops an unclosed one entirely) are in
+  the header of [includes/class-kses.php](includes/class-kses.php).
+- `Kses::DIRECTIVES` holds every directive the plugin prints, and `allowed()`
+  gained `aria-describedby`, `aria-label`, `aria-labelledby`, `aria-hidden`,
+  `aria-controls`, `aria-current`, `aria-expanded`, `aria-roledescription`
+  for the tags it adds, and `autocomplete` for `<select>` and `<textarea>`:
+  form fields lost them once they went through the list.
+- Guards: `tests/kses.test.mjs` (level 1) scans every module for a directive
+  missing from the list and for the old pattern; rule 4 of `reviewRules()`
+  in `tools/wporg.mjs` refuses it in the zip.
+- Tests: readme «Tested up to: 7.2». Checks that read attributes in a fixed
+  order now read each one (7.2 sorts them), `&#8217;` and `’` count as the
+  same, an unregistered admin page may answer 404 (7.2) or 403 (7.1), the
+  test site pins Twenty Twenty-Five (7.2's default is «Ipsum»), the editor
+  scenario waits for the editor to be ready before inserting, and
+  modules-page expects cache-purge (on since 2.13.0; it was red on `main`).
+  The battery passes on 7.1.4 and on 7.2-RC3.
+
 ## 2.16.1 — 25-11-2026 (local-business: a department's url when locations have no pages)
 
 **What each site must do:** nothing.
@@ -63,6 +95,50 @@ notice sits above the bar instead of covering it. Goes after 2.15.0 (PR #9).
   that 64px lifts it 64 px.
 - The block's `version` goes to 0.6.0, so the stylesheet URL changes and no
   cache keeps serving the old one.
+
+## 2.15.0 — 25-11-2026 (content-types: «private» fields)
+
+**What each site must do:** mark as `"private": true` (or tick «Private» in
+the field's row of the constructor) every field that must not be public.
+Until then, ANY field of a content type can be read by anybody at
+`/wp-json/wp/v2/<type>` — that is how WordPress treats a public post's meta
+with `show_in_rest`. The case that found it (Llar d'Estels, 25-11-2026): the
+family's email of an obituary, the Cc of the condolences form
+(`{{post_field:correu_familia}}`), was readable by anyone.
+
+- **content-types: the `private` key of a field.** Who cannot edit the entry
+  does not get it in REST (`Registrar::hide_private()`, a `rest_prepare_<type>`
+  filter: the block editor's panel still reads and saves it, so
+  `show_in_rest => false` was not an option), and the content-field binding
+  never prints it, not even for an editor (a page can be cached and served to
+  anyone). The server still reads it: `{{post_field:…}}` in a form's
+  notification works as before. In the JSON Schema, the validator, the
+  constructor (a checkbox per field) and `examples/llest_esquela.json`
+  (`llest_correu_familia`). Level 2: `tests/register.test.mjs`, seen red.
+
+- **external-links: documents in a new tab too.** A link to a document
+  (`.pdf`, `.doc(x)`, `.odt`, `.rtf`, `.xls(x)`, `.ods`, `.ppt(x)`, `.odp`,
+  `.zip`), even one of the site itself, gets the same `target="_blank"`,
+  `noopener` and notice as an external link; one with `download` does not
+  (it saves the file). The case: Llar d'Estels' «Carta de Serveis ↓», a PDF
+  in its own uploads that took the visitor away from the page.
+  `External_Links::is_document()` (pure, level 1) and its level 2 case.
+
+- **content-types: suggestions on text fields (`"suggest": "used"`).** A
+  text field, or a repeater's text subfield, offers as you type what it
+  already says in the other entries of the type, most used first; anything
+  else can still be typed. A `<datalist>` on the input (the browser's own
+  list), in the meta box and in the block editor's panel, one per field so a
+  cloned repeater row keeps it. The case: Llar d'Estels' funeral notices, 31
+  places for 87 acts and 50 relationships for 159 uses, typed by hand each
+  time. `Suggestions::rank()` (pure, level 1 in `tests/repeater.test.mjs`),
+  the key in Schema, the JSON Schema and the validator (text only).
+
+- **Fix, local-business: names without HTML entities.** A location's name
+  went to the JSON-LD texturized and encoded («Funerària Porreres &#8211;
+  Llar d&#8217;Estels») and the company's with «&#039;»: Google reads JSON-LD
+  as text. Now decoded (`html_entity_decode`). Seen on Llar d'Estels' three
+  funeral homes; level 2 in `tests/output.test.mjs`, seen red.
 
 ## 2.14.0 — 24-11-2026 (content-types: repeater and time fields; forms: entry markers and Cc/Bcc)
 

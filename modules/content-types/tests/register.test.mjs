@@ -28,6 +28,9 @@
 // Seen red (24-11-2026, the repeater on llest_esquela): with the meta's
 // prepare_callback giving the stored value as it is, «repeater» failed (the
 // JSON text instead of the list); restored, green.
+// Seen red (25-11-2026, the «private» field): without Registrar::hide_private()
+// registered, the anonymous request got {"llest_correu_familia":
+// "familia@example.com"}; restored, green.
 import { test, describe, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { BASE, credentials, html, testApi, upload, png } from "../../../tests/lib.mjs";
@@ -173,6 +176,17 @@ describe("two tracks at once", { concurrency: true }, () => {
       // Stored: ONE meta, the JSON text (Unicode as it is), and the quote's backslash survived.
       const raw = await ct(`/location-meta?id=${made.json.id}`);
       assert.equal(raw.llest_actes, '[{"tipus":"Funeral","dia":"2026-11-25","hora":"17:00","lloc":"Parròquia de \\"Sant Miquel\\""},{"tipus":"Vetlla","dia":"2026-11-24","lloc":"Tanatori Son Valentí"},{"dia":"2026-11-26"}]');
+    });
+
+    test("a «private» field (the family's email of the obituary): the editor reads and saves it through REST; an anonymous visitor does not get it", async () => {
+      const [made] = await batch(post("/llest_esquela", { title: "Maria Pons Vich", status: "publish", meta: { llest_correu_familia: "familia@example.com" } }));
+      assert.equal(made.status, 201, made.text);
+      assert.equal(made.json.meta.llest_correu_familia, "familia@example.com", "who can edit sees it (and the panel can save it)");
+      const anon = await fetch(`${BASE}/wp-json/wp/v2/llest_esquela/${made.json.id}`);
+      assert.equal(anon.status, 200);
+      const meta = (await anon.json()).meta;
+      assert.ok(!("llest_correu_familia" in meta), "anonymous: the private field is out: " + JSON.stringify(meta));
+      assert.ok("llest_actes" in meta, "anonymous: the other fields are still there");
     });
   });
 

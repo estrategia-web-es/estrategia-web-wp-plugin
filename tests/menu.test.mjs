@@ -84,7 +84,8 @@ test("old URLs: Company details keeps its own; Cookies and Google redirect to th
 test("modules off: their pages leave no gap, Modules is still last; with google-tags AND matomo off there is no Analytics tab, so Google's old URL is not redirected (403, as before)", () => {
   assert.deepEqual(submenu(r.offIndex.text, "toplevel_page_estrategia-web-site"), ["estrategia-web-site", "estrategia-web-content-types", "estrategia-web-settings", "estrategia-web"]);
   assert.notEqual(r.offGoogle.status, 302);
-  assert.equal(r.offGoogle.status, 403);
+  // An admin page nobody registered: 403 up to 7.1, 404 «The requested page does not exist» since 7.2 (wp-admin/includes/menu.php). Core's answer, not ours.
+  assert.ok([403, 404].includes(r.offGoogle.status), `not redirected, refused: ${r.offGoogle.status}`);
 });
 
 test("edge case: «site» loads even when the saved module list lacks it (and social, which requires it, too); Modules keeps its old URL", () => {

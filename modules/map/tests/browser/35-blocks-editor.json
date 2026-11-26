@@ -12,7 +12,7 @@
     { "type": "change", "selectors": ["#user_login"], "value": "admin" },
     { "type": "change", "selectors": ["#user_pass"], "value": "password" },
     { "type": "click", "selectors": ["#wp-submit"], "offsetX": 10, "offsetY": 10, "assertedEvents": [{ "type": "navigation" }] },
-    { "type": "waitForExpression", "timeout": 60000, "expression": "!!(window.wp?.blocks?.getBlockType?.('core/paragraph') && wp.blocks.getBlockType('estrategia-web/map') && wp.blocks.getBlockType('estrategia-web/whatsapp') && wp.blocks.getBlockType('estrategia-web/carousel'))" },
+    { "type": "waitForExpression", "timeout": 60000, "expression": "!!(window.wp?.blocks?.getBlockType?.('core/paragraph') && wp.blocks.getBlockType('estrategia-web/map') && wp.blocks.getBlockType('estrategia-web/whatsapp') && wp.blocks.getBlockType('estrategia-web/carousel') && wp.data.select('core/editor').__unstableIsEditorReady())" },
     { "type": "customStep", "name": "run", "parameters": { "expression": "(() => { const { createBlock } = wp.blocks; wp.data.dispatch('core/block-editor').insertBlocks([createBlock('estrategia-web/map', { address: 'Calle Falsa 1' }), createBlock('estrategia-web/whatsapp', { phone: '34600111222' }), createBlock('estrategia-web/carousel', {}, [createBlock('core/paragraph', { content: 'Uno' }), createBlock('core/paragraph', { content: 'Dos' })])]); })()" } },
     { "type": "waitForExpression", "expression": "!!document.querySelector('iframe[name=\"editor-canvas\"]')?.contentDocument?.body?.innerText.includes('Calle Falsa 1')" },
     { "type": "customStep", "name": "capture", "parameters": {

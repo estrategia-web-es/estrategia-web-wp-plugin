@@ -769,6 +769,7 @@
 				}, { 'data-key': 'field-type' } ),
 				perLanguage( field, 'help', t.help, { after: touch } ),
 				field.type === 'boolean' ? null : checkbox( t.required, Boolean( field.required ), ( on ) => { if ( on ) { field.required = true; } else { delete field.required; } touch(); }, { 'data-key': 'required' } ),
+				checkbox( t.private, Boolean( field.private ), ( on ) => { if ( on ) { field.private = true; } else { delete field.private; } touch(); }, { 'data-key': 'private' } ),
 				noDefault ? null : control( t.default, { value: field.default ?? '', attrs: { 'data-key': 'default' }, oninput: ( v ) => { const d = defaultValue( field, v ); if ( d === undefined ) { delete field.default; } else { field.default = d; } touch(); } } ),
 				choice( t.wpmlField, field.wpml || '', [ [ '', t.wpmlAuto ], [ 'copy', t.wpmlCopy ], [ 'translate', t.wpmlFieldTranslate ], [ 'ignore', t.wpmlFieldIgnore ] ], ( v ) => { if ( v ) { field.wpml = v; } else { delete field.wpml; } touch(); }, { 'data-key': 'field-wpml' } ),
 				choice( t.fieldGroup, field.group || '', M.groupChoices( draft.groups, field.group, mainLang(), t.noGroup ), ( v ) => { if ( v ) { field.group = v; } else { delete field.group; } touch(); }, { 'data-key': 'field-group' } ),

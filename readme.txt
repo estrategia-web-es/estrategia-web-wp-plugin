@@ -2,7 +2,7 @@
 Contributors: estrategiaweb
 Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
-Tested up to: 7.1
+Tested up to: 7.2
 Requires PHP: 8.1
 Stable tag: 2.17.0
 License: GPLv2 or later
@@ -89,12 +89,21 @@ The cookie list includes an extract of the Open Cookie Database (https://github.
 = 2.17.0 =
 * New «Security headers» module, off by default: adds the browser security headers a site is missing (HSTS over https, framing only from the site itself, a referrer policy, no camera, microphone or location) and hides the PHP version, without repeating any header another plugin already sends.
 
+= 2.16.2 =
+* Compatible with WordPress 7.2. Its new HTML filter broke the attributes of several blocks (the language switcher stopped opening, and the carousel, map, social links, WhatsApp button, banner zone and form fields could lose values with quotes); they now print correctly on 7.1 and 7.2.
+* Forms: the help text link of a field (aria-describedby) and autocomplete on dropdowns and text areas are kept.
+
 = 2.16.1 =
 * Local business: on the front page, a location without a page of its own now links to the page that talks about it (or to the home page), not to an address that does not exist.
 
 = 2.16.0 =
 * Cookie notice: on phones it is compact (smaller text, the three buttons in one row) and no longer covers half the screen.
 * Cookie notice: a theme with a fixed bar at the bottom can lift the notice above it with the --estrategia-web-consent-bottom CSS variable.
+
+= 2.15.0 =
+* Content types: a field can be marked «Private». Only people who can edit the post see it; it is left out of what visitors get through the REST API and is never shown on the site. Forms can still use it in their notices, for example to send a copy to a family's email.
+* Content types: a text field can suggest, as you type, what it already says in other posts (a place, a relationship), and anything else can still be typed.
+* External links: links to documents (PDF, Word, Excel, ZIP…), also the site's own, open in a new tab; a link marked «download» still just saves the file.
 
 = 2.14.0 =
 * Content types: a «Repeating list» field type (rows with their own text, date, time, number, choice, link, email or phone fields), shown as a list, and a «Time» field type.

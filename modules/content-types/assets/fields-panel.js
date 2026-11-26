@@ -219,7 +219,8 @@
 			return h( SelectControl, { ...common, __next40pxDefaultSize: true, value: v, options: [ { value: '', label: __( '— None —', 'estrategiaweb-toolkit' ) } ].concat( sub.options ), onChange } );
 		}
 		const types = { number: 'number', date: 'date', time: 'time', url: 'url', email: 'email', tel: 'tel' };
-		return h( TextControl, { ...common, __next40pxDefaultSize: true, type: types[ sub.kind ] || 'text', step: sub.kind === 'number' ? 'any' : undefined, value: v, onChange } );
+		// 2.15.0: «list» points to the subfield's datalist, painted once by FieldsPanel (Suggestions).
+		return h( TextControl, { ...common, __next40pxDefaultSize: true, type: types[ sub.kind ] || 'text', step: sub.kind === 'number' ? 'any' : undefined, value: v, onChange, list: sub.list || undefined, autoComplete: sub.list ? 'off' : undefined } );
 	}
 
 	function RepeaterField( { field, value, onChange } ) {
@@ -337,7 +338,7 @@
 				return h( HoursField, { field, value, onChange } );
 			default: {
 				const types = { url: 'url', email: 'email', tel: 'tel', date: 'date', time: 'time' };
-				return h( TextControl, { ...common, __next40pxDefaultSize: true, type: types[ field.kind ] || 'text', value: value || '', onChange } );
+				return h( TextControl, { ...common, __next40pxDefaultSize: true, type: types[ field.kind ] || 'text', value: value || '', onChange, list: field.list || undefined, autoComplete: field.list ? 'off' : undefined } );
 			}
 		}
 	}
@@ -370,7 +371,11 @@
 			config.note ? h( 'p', null, config.note ) : null,
 			config.fields.map( ( field ) =>
 				h( 'div', { key: field.key, style: { marginBottom: '16px' }, 'data-meta-key': field.key }, h( Field, { field, value: meta[ field.key ], onChange: ( v ) => editPost( { meta: { [ field.key ]: v } } ) } ) )
-			)
+			),
+			// 2.15.0: the suggestions (class-suggestions.php), one datalist per field or subfield, once.
+			config.fields.flatMap( ( field ) => [ field ].concat( field.fields || [] ) )
+				.filter( ( f ) => f.list )
+				.map( ( f ) => h( 'datalist', { key: f.list, id: f.list }, ( f.suggest || [] ).map( ( v ) => h( 'option', { key: v, value: v } ) ) ) )
 		);
 	}
 

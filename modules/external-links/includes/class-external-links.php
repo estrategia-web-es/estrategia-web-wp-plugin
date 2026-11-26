@@ -113,7 +113,12 @@ final class External_Links {
 		while ( $p->next_tag( 'A' ) ) {
 			++$i;
 			$href = $p->get_attribute( 'href' );
-			if ( ! is_string( $href ) || null !== $p->get_attribute( 'target' ) || ! self::is_external( $href, $home_host ) ) {
+			if ( ! is_string( $href ) || null !== $p->get_attribute( 'target' ) ) {
+				continue;
+			}
+			// 2.15.0: a document of the site itself (the PDF of a price list) opens in a new tab too,
+			// unless the link says «download» (it saves the file; it never leaves the page).
+			if ( ! self::is_external( $href, $home_host ) && ! ( null === $p->get_attribute( 'download' ) && self::is_document( $href ) ) ) {
 				continue;
 			}
 			$p->set_attribute( 'target', '_blank' );
@@ -193,6 +198,25 @@ final class External_Links {
 		$host = self::bare_host( $parts['host'] );
 		$home = self::bare_host( $home_host );
 		return '' !== $home && $host !== $home && ! str_ends_with( $host, '.' . $home );
+	}
+
+	/** Extensions of a document that a visitor opens to read or keep (not images: a gallery link to the big picture stays). */
+	public const DOCUMENTS = array( 'pdf', 'doc', 'docx', 'odt', 'rtf', 'xls', 'xlsx', 'ods', 'ppt', 'pptx', 'odp', 'zip' );
+
+	/**
+	 * Whether the link is a document (2.15.0, David on Llar d'Estels: «descargas en pestaña nueva»,
+	 * the «Carta de Serveis ↓» PDF), by the extension of its PATH, internal or not. PURE:
+	 * tests/php/pure.php. Edge case: «/carta.pdf?v=2#page=3» is a document; «/pdf/» (a page) is not.
+	 */
+	public static function is_document( string $href ): bool {
+		$parts = parse_url( trim( $href ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url -- pure class.
+		$scheme = strtolower( (string) ( $parts['scheme'] ?? '' ) );
+		$path   = $parts['path'] ?? null;
+		// mailto:a@b.pdf has a «path» too: only http(s) or a relative link can be a document.
+		if ( ! in_array( $scheme, array( '', 'http', 'https' ), true ) || ! is_string( $path ) || ! preg_match( '/\.([a-z0-9]{2,5})$/i', $path, $m ) ) {
+			return false;
+		}
+		return in_array( strtolower( $m[1] ), self::DOCUMENTS, true );
 	}
 
 	/** «WWW.X.es.» → «x.es». */

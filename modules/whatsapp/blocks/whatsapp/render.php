@@ -46,8 +46,8 @@ $estrategia_web_phone   = preg_replace( '/^00/', '', preg_replace( '/\D+/', '', 
 if ( '' === $estrategia_web_phone ) {
 	if ( wp_is_serving_rest_request() ) {
 		printf(
-			'<p %s>%s</p>',
-			wp_kses_data( get_block_wrapper_attributes() ),
+			'%s%s</p>',
+			wp_kses( '<p ' . get_block_wrapper_attributes() . '>', \EstrategiaWeb\Kses::allowed() ), // Whole tag (includes/class-kses.php, WordPress 7.2).
 			esc_html__( 'WhatsApp button: set the phone number in the block settings or in the estrategia_web_whatsapp_phone site option.', 'estrategiaweb-toolkit' )
 		);
 	}
@@ -61,12 +61,14 @@ if ( '' !== trim( $estrategia_web_message ) ) {
 $estrategia_web_position = in_array( $attributes['position'], array( 'bottom-right', 'bottom-left' ), true ) ? $attributes['position'] : 'bottom-right';
 $estrategia_web_label    = '' !== trim( (string) $attributes['label'] ) ? $attributes['label'] : __( 'Chat on WhatsApp', 'estrategiaweb-toolkit' );
 ?>
-<a
-	<?php echo wp_kses_data( get_block_wrapper_attributes( array( 'class' => 'estrategia-web-whatsapp is-position-' . $estrategia_web_position ) ) ); ?>
-	href="<?php echo esc_url( $estrategia_web_href ); ?>"
-	target="_blank"
-	rel="noopener noreferrer"
->
+<?php
+// The opening tag goes through wp_kses() WHOLE, never the attribute string alone (includes/class-kses.php, WordPress 7.2).
+echo wp_kses(
+	'<a ' . get_block_wrapper_attributes( array( 'class' => 'estrategia-web-whatsapp is-position-' . $estrategia_web_position ) )
+	. ' href="' . esc_url( $estrategia_web_href ) . '" target="_blank" rel="noopener noreferrer">',
+	\EstrategiaWeb\Kses::allowed()
+);
+?>
 	<svg class="estrategia-web-whatsapp__icon" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
 		<path fill="currentColor" d="M12 2a10 10 0 0 0-8.66 15l-1.3 4.8 4.92-1.29A10 10 0 1 0 12 2zm0 1.8a8.2 8.2 0 1 1-4.18 15.25l-.3-.18-2.92.77.78-2.85-.2-.31A8.2 8.2 0 0 1 12 3.8z"/>
 		<path fill="currentColor" d="M8.9 7.2c-.2-.45-.4-.46-.6-.47h-.5a1 1 0 0 0-.72.34 3 3 0 0 0-.94 2.24 5.2 5.2 0 0 0 1.1 2.77 11.9 11.9 0 0 0 4.97 4.37c2.46.97 2.96.78 3.5.73a2.9 2.9 0 0 0 1.96-1.38 2.4 2.4 0 0 0 .17-1.38c-.07-.12-.26-.2-.55-.34s-1.73-.85-2-.95-.46-.14-.66.15-.75.94-.92 1.14-.34.21-.63.07a8 8 0 0 1-2.35-1.45 8.8 8.8 0 0 1-1.62-2.02c-.17-.29 0-.45.13-.59l.43-.5a2 2 0 0 0 .29-.48.53.53 0 0 0-.03-.5c-.07-.15-.64-1.6-.9-2.17z"/>
