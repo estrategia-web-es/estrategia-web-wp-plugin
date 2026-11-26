@@ -78,10 +78,10 @@ test("1.7.0: only «site» is core, and every other module has a known Category"
   const expected = {
     Content: ["banners", "carousel", "comments-off", "content-types", "featured-images", "map", "newsletter"],
     Contact: ["forms", "social", "whatsapp"],
-    "Privacy & analytics": ["consent", "google-tags", "matomo", "security-headers"],
+    "Privacy & analytics": ["consent", "google-tags", "matomo"],
     SEO: ["external-links", "faq-schema", "llms", "local-business", "redirects"],
     Languages: ["language-switcher"],
-    "Media & performance": ["cache-purge", "uploads", "webp"],
+    "Media & performance": ["cache-purge", "security-headers", "uploads", "webp"],
   };
   for (const [slug, m] of Object.entries(out.available)) {
     if (m.core) continue;

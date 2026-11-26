@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) || exit;
  * Description: Adds the browser security headers a site is missing (HSTS over https, framing only from the site itself, a referrer policy and no camera, microphone or location) and hides the PHP version. It never repeats a header another plugin already sends.
  * Default: off
  * Requires:
- * Category: Privacy & analytics
+ * Category: Media & performance
  *
  * Born on 26-11-2026 with the Llar d'Estels audit: its future hosting (OVH,
  * Apache) sends none of these headers and says «X-Powered-By: PHP/8.5». The
