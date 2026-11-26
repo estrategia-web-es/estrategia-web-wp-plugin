@@ -3,7 +3,7 @@
  * Plugin Name:       EstrategiaWeb Toolkit
  * Plugin URI:        https://github.com/estrategia-web-es/estrategia-web-wp-plugin
  * Description:       Site essentials as modules you switch on and off in "Estrategia Web → Modules": cookie consent, block forms, content types, company details, redirects, schema.org, map, carousel, WhatsApp, analytics behind consent, llms.txt, WebP and more.
- * Version:           2.16.1
+ * Version:           2.16.2
  * Requires at least: 7.1
  * Requires PHP:      8.1
  * Author:            Estrategia Web
@@ -43,7 +43,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const ESTRATEGIA_WEB_VERSION = '2.16.1';
+const ESTRATEGIA_WEB_VERSION = '2.16.2';
 const ESTRATEGIA_WEB_FILE    = __FILE__;
 define( 'ESTRATEGIA_WEB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'ESTRATEGIA_WEB_URL', plugin_dir_url( __FILE__ ) );

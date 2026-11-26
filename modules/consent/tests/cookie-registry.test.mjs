@@ -49,7 +49,13 @@ async function admin(method, body, as = "administrator", query = "") {
   return { status: res.status, json: await res.json().catch(() => null) };
 }
 
-const offered = (page) => [...page.matchAll(/name="estrategia-web-consent-category"\s+value="([^"]+)"/g)].map((m) => m[1]);
+// Attribute order is not ours: WordPress 7.2 rewrites the tags it processes with directives in
+// alphabetical order (name, type, value), 7.1 left them as written. Read each <input> as a whole.
+const offered = (page) =>
+  [...page.matchAll(/<input\b[^>]*>/g)]
+    .map((m) => m[0])
+    .filter((tag) => tag.includes('name="estrategia-web-consent-category"'))
+    .map((tag) => (tag.match(/\svalue="([^"]+)"/) || [])[1]);
 const revision = (page) => page.match(/"revision":"([0-9a-f]+)"/)?.[1];
 
 let tablePath;

@@ -22,9 +22,29 @@ defined( 'ABSPATH' ) || exit;
  *   losses()   what wp_kses() would remove or change in a piece of HTML, so
  *              that the banner screen can say it instead of failing silently.
  *
- * A string of ATTRIBUTES (get_block_wrapper_attributes(),
- * wp_interactivity_data_wp_context()) does not come here: it has no tags, so
- * it goes through wp_kses_data(), which leaves it as it is.
+ * A string of ATTRIBUTES (get_block_wrapper_attributes(), a form control's
+ * attributes) NEVER goes through wp_kses_data() or wp_kses_post() on its own.
+ * Build the WHOLE opening tag and pass that: echo wp_kses( '<div ' . $wrapper
+ * . '>', Kses::allowed() ). Measured on 25-11-2026 against 7.2-RC3: WordPress
+ * 7.2 turns on a wp_kses() built on the HTML API (default-filters.php,
+ * wp_kses_force_legacy_parser → false), which reads a bare attribute string as
+ * TEXT and decodes its entities: data-wp-context="{&quot;open&quot;:false}"
+ * came out as data-wp-context="{"open":false}", the browser cut it, and the
+ * language switcher stopped opening. With the whole tag, both kses keep every
+ * value (JSON with quotes, «&», «<»); 7.2 sorts the attributes alphabetically,
+ * which changes nothing. 7.1 left a bare string alone, which is why it worked
+ * until then. tools/wporg.mjs (reviewRules) refuses the old pattern in the zip.
+ * The trap of 7.2 with a whole tag: an UNCLOSED <textarea> (or any tag whose
+ * content is raw text) comes out EMPTY, because the HTML API reads everything
+ * after it as its text. A <textarea> goes in with its content and its
+ * </textarea>; <div>, <form>, <select>, <ul>… may go in open.
+ * Edge cases, measured the same day: wp_interactivity_data_wp_context() ALONE
+ * may still go through wp_kses_data() (it single-quotes the JSON and writes
+ * no entities, so 7.2 leaves it as it is: the carousel's dots, the consent
+ * checkboxes); so may a string of FIXED fragments with no escaped value in it
+ * (content-types' « disabled» / « aria-required="true"»). What is refused is
+ * a string that carries esc_attr()'d values: get_block_wrapper_attributes(),
+ * a form control's self::atts(), any $wrapper.
  *
  * How to maintain:
  * - Who: whoever adds a directive, an attribute or a tag to HTML that goes
@@ -60,26 +80,50 @@ defined( 'ABSPATH' ) || exit;
 
 final class Kses {
 
-	/** The directives printed in HTML that goes through allowed(). */
+	/**
+	 * The directives with a suffix the plugin prints. ALL of them, not only the
+	 * ones that go through allowed() today: since 2.16.2 the opening tags of the
+	 * blocks go through wp_kses() whole, and a directive missing here would
+	 * vanish without a word. tests/kses-directives.test.mjs compares this list
+	 * with the source and fails on one that is missing.
+	 */
 	private const DIRECTIVES = array(
 		'data-wp-init',
 		'data-wp-watch',
-		'data-wp-bind--hidden',
-		'data-wp-bind--checked',
+		'data-wp-bind--aria-current',
 		'data-wp-bind--aria-expanded',
+		'data-wp-bind--aria-label',
+		'data-wp-bind--checked',
+		'data-wp-bind--disabled',
+		'data-wp-bind--hidden',
+		'data-wp-bind--src',
+		'data-wp-class--is-error',
+		'data-wp-class--is-loaded',
+		'data-wp-class--is-playing',
+		'data-wp-class--is-ready',
+		'data-wp-class--is-sent',
+		'data-wp-class--is-static',
+		'data-wp-class--is-success',
 		'data-wp-on--change',
 		'data-wp-on--click',
+		'data-wp-on--focusin',
 		'data-wp-on--keydown',
 		'data-wp-on--submit',
+		'data-wp-on-async--focusin',
+		'data-wp-on-async--focusout',
+		'data-wp-on-async--mouseenter',
+		'data-wp-on-async--mouseleave',
+		'data-wp-on-async--scroll',
+		'data-wp-on-document--click',
 	);
 
 	/** Tags allowed() adds to the ones of a post, with their own attributes. */
 	private const FORM_TAGS = array(
 		'form'     => array( 'action', 'method', 'novalidate' ),
 		'input'    => array( 'type', 'name', 'value', 'checked', 'disabled', 'required', 'readonly', 'placeholder', 'form', 'min', 'max', 'step', 'autocomplete', 'accept', 'multiple' ),
-		'select'   => array( 'name', 'form', 'disabled', 'required', 'multiple' ),
+		'select'   => array( 'name', 'form', 'disabled', 'required', 'multiple', 'autocomplete' ),
 		'option'   => array( 'value', 'selected', 'disabled' ),
-		'textarea' => array( 'name', 'rows', 'cols', 'disabled', 'required', 'readonly', 'placeholder', 'form' ),
+		'textarea' => array( 'name', 'rows', 'cols', 'disabled', 'required', 'readonly', 'placeholder', 'form', 'autocomplete' ),
 		'fieldset' => array( 'disabled' ),
 		'legend'   => array(),
 		'label'    => array( 'for' ),
@@ -87,7 +131,9 @@ final class Kses {
 	);
 
 	/** Attributes every tag may carry, besides WordPress's global ones. */
-	private const COMMON = array( 'tabindex', 'aria-modal', 'aria-invalid', 'aria-required', 'aria-live', 'aria-atomic' );
+	// WordPress's own globals (aria-describedby, aria-label, aria-labelledby, aria-hidden) reach only
+	// the tags of the post list, not those FORM_TAGS adds: <input> lost aria-describedby (25-11-2026).
+	private const COMMON = array( 'tabindex', 'aria-modal', 'aria-invalid', 'aria-required', 'aria-live', 'aria-atomic', 'aria-controls', 'aria-current', 'aria-expanded', 'aria-roledescription', 'aria-describedby', 'aria-label', 'aria-labelledby', 'aria-hidden' );
 
 	/** Attributes of <img> a post's list leaves out, printed by wp_get_attachment_image(). */
 	private const IMAGE = array( 'srcset', 'sizes', 'decoding', 'fetchpriority' );

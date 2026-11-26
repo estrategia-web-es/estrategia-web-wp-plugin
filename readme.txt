@@ -2,9 +2,9 @@
 Contributors: estrategiaweb
 Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
-Tested up to: 7.1
+Tested up to: 7.2
 Requires PHP: 8.1
-Stable tag: 2.16.1
+Stable tag: 2.16.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,10 @@ Its settings, yes. Your data (form submissions, redirects, company details) is k
 The cookie list includes an extract of the Open Cookie Database (https://github.com/jkwakman/Open-Cookie-Database), © Jan Kwakman and contributors, Apache License 2.0. Details in modules/consent/data/NOTICE.
 
 == Changelog ==
+
+= 2.16.2 =
+* Compatible with WordPress 7.2. Its new HTML filter broke the attributes of several blocks (the language switcher stopped opening, and the carousel, map, social links, WhatsApp button, banner zone and form fields could lose values with quotes); they now print correctly on 7.1 and 7.2.
+* Forms: the help text link of a field (aria-describedby) and autocomplete on dropdowns and text areas are kept.
 
 = 2.16.1 =
 * Local business: on the front page, a location without a page of its own now links to the page that talks about it (or to the home page), not to an address that does not exist.

@@ -9,6 +9,38 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.16.2 — 26-11-2026 (WordPress 7.2: attribute strings no longer go through kses alone)
+
+**What each site must do:** update before WordPress 7.2 (8-12-2026). On 7.2
+without this version, the language switcher does not open.
+
+- **WordPress 7.2 turns on a `wp_kses()` built on the HTML API**
+  (`default-filters.php`: `wp_kses_force_legacy_parser` → false). Given a bare
+  string of attributes (`get_block_wrapper_attributes()`), it reads it as text
+  and decodes `&quot;`: `data-wp-context="{&quot;open&quot;:false}"` came out
+  as `data-wp-context="{"open":false}"`, the browser cut it and the language
+  switcher lost its context. The opening tags of the language switcher,
+  carousel, map, social links, WhatsApp, banner zone and forms (the `<form>`
+  and every control) now go through `wp_kses()` WHOLE. Measured on 7.1.4 and
+  7.2-RC3: same values, quotes, `&` and `<` included. The rule, its edge
+  cases and the `<textarea>` trap (7.2 drops an unclosed one entirely) are in
+  the header of [includes/class-kses.php](includes/class-kses.php).
+- `Kses::DIRECTIVES` holds every directive the plugin prints, and `allowed()`
+  gained `aria-describedby`, `aria-label`, `aria-labelledby`, `aria-hidden`,
+  `aria-controls`, `aria-current`, `aria-expanded`, `aria-roledescription`
+  for the tags it adds, and `autocomplete` for `<select>` and `<textarea>`:
+  form fields lost them once they went through the list.
+- Guards: `tests/kses.test.mjs` (level 1) scans every module for a directive
+  missing from the list and for the old pattern; rule 4 of `reviewRules()`
+  in `tools/wporg.mjs` refuses it in the zip.
+- Tests: readme «Tested up to: 7.2». Checks that read attributes in a fixed
+  order now read each one (7.2 sorts them), `&#8217;` and `’` count as the
+  same, an unregistered admin page may answer 404 (7.2) or 403 (7.1), the
+  test site pins Twenty Twenty-Five (7.2's default is «Ipsum»), the editor
+  scenario waits for the editor to be ready before inserting, and
+  modules-page expects cache-purge (on since 2.13.0; it was red on `main`).
+  The battery passes on 7.1.4 and on 7.2-RC3.
+
 ## 2.16.1 — 25-11-2026 (local-business: a department's url when locations have no pages)
 
 **What each site must do:** nothing.

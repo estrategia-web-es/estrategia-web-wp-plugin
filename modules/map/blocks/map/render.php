@@ -200,8 +200,8 @@ if ( '' === $estrategia_web_maps_url && '' !== estrategia_web_map_coords( $estra
 if ( '' === $estrategia_web_embed && '' === $estrategia_web_maps_url ) {
 	if ( wp_is_serving_rest_request() ) {
 		printf(
-			'<p %s>%s</p>',
-			wp_kses_data( get_block_wrapper_attributes() ),
+			'%s%s</p>',
+			wp_kses( '<p ' . get_block_wrapper_attributes() . '>', \EstrategiaWeb\Kses::allowed() ), // Whole tag (includes/class-kses.php, WordPress 7.2).
 			esc_html__( 'Map: add the address and the Google Maps embed URL in the block settings.', 'estrategiaweb-toolkit' )
 		);
 	}
@@ -289,13 +289,17 @@ $estrategia_web_title = '' !== $estrategia_web_address
 	? sprintf( __( 'Map: %s', 'estrategiaweb-toolkit' ), $estrategia_web_address )
 	: __( 'Map', 'estrategiaweb-toolkit' );
 ?>
-<figure
-	<?php echo wp_kses_data( get_block_wrapper_attributes( array( 'class' => 'estrategia-web-map' . ( '' !== $estrategia_web_static ? ' has-static-map' : '' ) . ( $estrategia_web_details ? '' : ' is-without-details' ) ) ) ); ?>
-	data-wp-interactive="estrategia-web/map"
-	<?php echo wp_kses_data( wp_interactivity_data_wp_context( array( 'loaded' => false, 'embedUrl' => $estrategia_web_embed ) ) ); ?>
-	data-wp-init="callbacks.init"
-	data-wp-class--is-loaded="context.loaded"
->
+<?php
+// The opening tag goes through wp_kses() WHOLE, never the attribute string alone (includes/class-kses.php, WordPress 7.2).
+echo wp_kses(
+	'<figure '
+	. get_block_wrapper_attributes( array( 'class' => 'estrategia-web-map' . ( '' !== $estrategia_web_static ? ' has-static-map' : '' ) . ( $estrategia_web_details ? '' : ' is-without-details' ) ) )
+	. ' data-wp-interactive="estrategia-web/map" '
+	. wp_interactivity_data_wp_context( array( 'loaded' => false, 'embedUrl' => $estrategia_web_embed ) )
+	. ' data-wp-init="callbacks.init" data-wp-class--is-loaded="context.loaded">',
+	\EstrategiaWeb\Kses::allowed()
+);
+?>
 	<?php if ( ! $estrategia_web_no_frame ) : ?>
 	<div class="estrategia-web-map__frame"<?php echo $estrategia_web_frame_later ? ' hidden data-wp-bind--hidden="!context.loaded"' : ''; ?>>
 		<?php if ( '' !== $estrategia_web_image ) : ?>

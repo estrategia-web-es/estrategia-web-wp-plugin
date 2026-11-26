@@ -100,10 +100,17 @@ foreach ( $estrategia_web_banners as $estrategia_web_id => $estrategia_web_d ) {
 	);
 }
 
+// The opening tag goes through wp_kses() WHOLE, never the attribute string alone (includes/class-kses.php, WordPress 7.2).
 printf(
-	'<div %s data-count="%d" data-endpoint="%s">%s</div>',
-	wp_kses_data( get_block_wrapper_attributes( array( 'class' => 'estrategia-web-banner-zone estrategia-web-banner-zone--' . $estrategia_web_zone ) ) ),
-	(int) $estrategia_web_count,
-	esc_url( rest_url( 'estrategia-web/v1/banners/hits' ) ),
+	'%s%s</div>',
+	wp_kses(
+		sprintf(
+			'<div %s data-count="%d" data-endpoint="%s">',
+			get_block_wrapper_attributes( array( 'class' => 'estrategia-web-banner-zone estrategia-web-banner-zone--' . $estrategia_web_zone ) ),
+			(int) $estrategia_web_count,
+			esc_url( rest_url( 'estrategia-web/v1/banners/hits' ) )
+		),
+		\EstrategiaWeb\Kses::allowed()
+	),
 	wp_kses( $estrategia_web_items, \EstrategiaWeb\Kses::banner() )
 );
