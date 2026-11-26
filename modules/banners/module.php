@@ -21,6 +21,7 @@
  *   includes/class-rules.php      the pure part: state, weighted pick, AdRotate → banner
  *   includes/class-store.php      the statistics table
  *   includes/class-post-type.php  type, zones, fields, screen, columns
+ *   includes/class-board.php      the «Banners» screen: one box per state
  *   includes/class-rest.php       POST estrategia-web/v1/banners/hits
  *   includes/class-cli.php        wp estrategia-web banners migrate-adrotate
  *   blocks/banner-zone/           the block (render.php: what it prints and why)
@@ -55,12 +56,14 @@ require_once __DIR__ . '/includes/class-store.php';
 require_once __DIR__ . '/includes/class-post-type.php';
 require_once __DIR__ . '/includes/class-rest.php';
 require_once __DIR__ . '/includes/class-state.php';
+require_once __DIR__ . '/includes/class-board.php';
 
 // Idempotent on every load: enabling the module does not go through activation.
 add_action( 'plugins_loaded', array( Store::class, 'maybe_install' ) );
 Post_Type::boot();
 Rest::boot();
 State::boot();
+Board::boot();
 add_action( 'init', static fn() => register_block_type( __DIR__ . '/blocks/banner-zone' ) );
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {

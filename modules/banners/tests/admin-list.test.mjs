@@ -58,10 +58,34 @@ after(clean);
 
 test("the views count each state, the old banner without dates counts as showing", async () => {
   const s = await adminSession();
-  const { status, text } = await s.get("/wp-admin/edit.php?post_type=eweb_banner");
+  // all_posts=1: the bare list URL opens the boxes by state (includes/class-board.php), tested below.
+  const { status, text } = await s.get("/wp-admin/edit.php?post_type=eweb_banner&all_posts=1");
   assert.equal(status, 200);
   assert.deepEqual(views(text), { active: 2, scheduled: 1, expired: 1 });
   assert.match(text, /class="ewb-state ewb-state--active"/);
+});
+
+test("the «Banners» menu opens one box per state, each with its banners; «All banners» stays on the list", async () => {
+  const s = await adminSession();
+  const bare = await s.get("/wp-admin/edit.php?post_type=eweb_banner");
+  assert.equal(bare.status, 302);
+  assert.match(bare.location, /edit\.php\?post_type=eweb_banner&page=eweb-banners-board$/);
+  const { status, text } = await s.get("/wp-admin/edit.php?post_type=eweb_banner&page=eweb-banners-board");
+  assert.equal(status, 200);
+  // Which test banners each box holds, read from its <section> (other banners on the site are ignored).
+  const box = (state) => {
+    const m = text.match(new RegExp(`<section class="ewb-board__box ewb-board__box--${state}"[\\s\\S]*?</section>`));
+    assert.ok(m, "no box for " + state);
+    return [...m[0].matchAll(/post=(\d+)&(?:amp;|#038;)action=edit/g)].map((x) => name(Number(x[1]))).filter(Boolean).sort();
+  };
+  assert.deepEqual(
+    { active: box("active"), scheduled: box("scheduled"), expired: box("expired"), off: box("off") },
+    { active: ["active", "old"], scheduled: ["scheduled"], expired: ["expired"], off: ["draft"] }
+  );
+  assert.match(text, /edit\.php\?post_type=eweb_banner&(?:amp;|#038;)all_posts=1/); // The way back to the list.
+  const all = await s.get("/wp-admin/edit.php?post_type=eweb_banner&all_posts=1");
+  assert.equal(all.status, 200);
+  assert.deepEqual(rows(all.text).map(name).sort(), ["active", "draft", "expired", "old", "scheduled"]);
 });
 
 test("each view lists only its banners (the expired draft is not «expired»: it is off)", async () => {
