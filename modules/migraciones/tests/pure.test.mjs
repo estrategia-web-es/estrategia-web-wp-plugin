@@ -39,6 +39,18 @@ test("a failing migration stops the queue; the rest stay pending", () => {
   assert.ok(o.falla_acciones.includes("sg"));
 });
 
+test("a failure does not record the theme version; the next load retries only what failed, and it is logged", () => {
+  assert.equal(o.ver_falla_status, "error");
+  assert.equal(o.ver_falla_apuntada, null);
+  assert.deepEqual(o.ver_falla_hecho, { "2026-11-26-primera": "ok", "2026-11-27-segunda": "error" });
+  assert.ok(o.ver_falla_log.includes("estrategia_web_migracion:2026-11-27-segunda:error"));
+  assert.deepEqual(o.ver_reintento, ["error", [], "2026-11-27-segunda"]);
+  assert.equal(o.ver_reintento_apuntada, null);
+  assert.deepEqual(o.ver_ok, ["ok", ["2026-11-27-segunda", "2026-11-28-tercera"], "1.1"]);
+  assert.equal(o.ver_igual, null);
+  assert.equal(o.ver_bloqueo_apuntada, null);
+});
+
 test("a held lock runs nothing; a stale one is replaced; the lock is always released", () => {
   assert.equal(o.bloqueada, "locked");
   assert.equal(o.caducada, "ok");

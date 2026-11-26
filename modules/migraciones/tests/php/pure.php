@@ -65,6 +65,30 @@ $out['falla_hecho'] = array_map( static fn( $d ) => $d['resultado'], Runner::don
 $out['falla_pendientes'] = array_keys( Runner::pending( $files, Runner::done() ) );
 $out['falla_acciones'] = $GLOBALS['actions'];
 
+// Theme version: not recorded if a migration fails or the lock is held.
+$GLOBALS['opts'] = array();
+$GLOBALS['actions'] = array();
+$r1 = Runner::run_for_version( '1.1', $files );
+$out['ver_falla_status']   = $r1['status'];
+$out['ver_falla_apuntada'] = $GLOBALS['opts'][ Runner::OPT_VERSION ] ?? null;
+$out['ver_falla_hecho']    = array_map( static fn( $d ) => $d['resultado'], Runner::done() );
+$out['ver_falla_log']      = $GLOBALS['actions'];
+// Next load: the good one is not repeated, the failed one is retried (and fails again).
+$GLOBALS['actions'] = array();
+$r2 = Runner::run_for_version( '1.1', $files );
+$out['ver_reintento'] = array( $r2['status'], $r2['applied'], $r2['failed'] );
+$out['ver_reintento_apuntada'] = $GLOBALS['opts'][ Runner::OPT_VERSION ] ?? null;
+// Fixed: now it runs to the end and the version is recorded.
+$mk( '2026-11-27-segunda', 'return "dos";' );
+$r3 = Runner::run_for_version( '1.1', $files );
+$out['ver_ok'] = array( $r3['status'], $r3['applied'], $GLOBALS['opts'][ Runner::OPT_VERSION ] ?? null );
+$out['ver_igual'] = Runner::run_for_version( '1.1', $files );
+// Lock held: version not recorded.
+$GLOBALS['opts'] = array( Runner::OPT_LOCK => time() );
+Runner::run_for_version( '2.0', $files );
+$out['ver_bloqueo_apuntada'] = $GLOBALS['opts'][ Runner::OPT_VERSION ] ?? null;
+$mk( '2026-11-27-segunda', 'throw new \RuntimeException("rota");' );
+
 // Lock held by someone else: nothing runs; a stale lock is replaced.
 $GLOBALS['opts'] = array( Runner::OPT_LOCK => time() );
 $out['bloqueada'] = Runner::run( false, $files )['status'];

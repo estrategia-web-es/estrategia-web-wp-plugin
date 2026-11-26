@@ -41,8 +41,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * A lock (add_option is atomic) stops two simultaneous visits from running
  * the same migration twice; it expires after 5 minutes. The version is
- * written once the attempt ends, success or not: a failed migration is
- * retried with the CLI or when the theme's version changes again.
+ * written ONLY if the run ended well: if the lock is held or a migration
+ * fails, it is not, and the next load tries again (the ones already applied
+ * are not repeated: they are recorded one by one).
  *
  * Log: every run leaves a line in the PHP error log and fires the action
  * estrategia_web_migracion( $name, $result, $detail ). (There is no shared

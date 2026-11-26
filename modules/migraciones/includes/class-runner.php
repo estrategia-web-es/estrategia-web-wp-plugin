@@ -18,14 +18,27 @@ final class Runner {
 	 * Hooked to init: runs when the theme's version changed.
 	 */
 	public static function on_init(): void {
-		$version = (string) wp_get_theme()->get( 'Version' );
+		self::run_for_version( (string) wp_get_theme()->get( 'Version' ) );
+	}
+
+	/**
+	 * Runs the pending migrations if $version is not the one recorded. The
+	 * version is recorded ONLY when the run ended well: if the lock is held or
+	 * a migration fails, it is not, so the next load tries again (issue #18:
+	 * «si una falla, se para ahí»). What was applied before the failure stays
+	 * recorded per migration, and the failure is logged (apply_one).
+	 *
+	 * @return array|null The run result, or null if nothing had to run.
+	 */
+	public static function run_for_version( string $version, ?array $files = null ): ?array {
 		if ( '' === $version || get_option( self::OPT_VERSION ) === $version ) {
-			return;
+			return null;
 		}
-		$res = self::run();
-		if ( 'locked' !== $res['status'] ) {
+		$res = self::run( false, $files );
+		if ( 'ok' === $res['status'] ) {
 			update_option( self::OPT_VERSION, $version, false );
 		}
+		return $res;
 	}
 
 	/**
