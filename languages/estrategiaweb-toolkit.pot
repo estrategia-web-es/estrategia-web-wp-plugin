@@ -181,37 +181,42 @@ msgstr ""
 
 #: includes/admin/module-strings.php:30
 msgctxt "module name"
-msgid "Company data"
+msgid "Security headers"
 msgstr ""
 
 #: includes/admin/module-strings.php:31
 msgctxt "module name"
-msgid "Social networks"
+msgid "Company data"
 msgstr ""
 
 #: includes/admin/module-strings.php:32
 msgctxt "module name"
-msgid "Image uploads"
+msgid "Social networks"
 msgstr ""
 
 #: includes/admin/module-strings.php:33
 msgctxt "module name"
-msgid "WebP images"
+msgid "Image uploads"
 msgstr ""
 
 #: includes/admin/module-strings.php:34
 msgctxt "module name"
+msgid "WebP images"
+msgstr ""
+
+#: includes/admin/module-strings.php:35
+msgctxt "module name"
 msgid "WhatsApp button"
 msgstr ""
 
-#: includes/admin/module-strings.php:37
+#: includes/admin/module-strings.php:38
 msgctxt "module description"
 msgid ""
 "Image or code banners by zone and dates, with daily views and clicks, and "
 "AdRotate migration."
 msgstr ""
 
-#: includes/admin/module-strings.php:38
+#: includes/admin/module-strings.php:39
 msgctxt "module description"
 msgid ""
 "When a published post's fields change without going through the editor (a "
@@ -220,7 +225,7 @@ msgid ""
 "Total Cache or WP Super Cache."
 msgstr ""
 
-#: includes/admin/module-strings.php:39
+#: includes/admin/module-strings.php:40
 msgctxt "module description"
 msgid ""
 "Carousel block: a horizontal scrolling row of any blocks (or the posts of a "
@@ -228,7 +233,7 @@ msgid ""
 "for."
 msgstr ""
 
-#: includes/admin/module-strings.php:40
+#: includes/admin/module-strings.php:41
 msgctxt "module description"
 msgid ""
 "Turns comments off everywhere: closed on every post, no Comments menu, "
@@ -236,7 +241,7 @@ msgid ""
 "comment feeds."
 msgstr ""
 
-#: includes/admin/module-strings.php:41
+#: includes/admin/module-strings.php:42
 msgctxt "module description"
 msgid ""
 "Own cookie consent notice (Accept / Reject / Settings with declarable "
@@ -245,7 +250,7 @@ msgid ""
 "block for the cookie policy."
 msgstr ""
 
-#: includes/admin/module-strings.php:42
+#: includes/admin/module-strings.php:43
 msgctxt "module description"
 msgid ""
 "Build your own content types, taxonomies and fields from the panel (or start "
@@ -253,21 +258,21 @@ msgid ""
 "with the editor panel, Block Bindings and WPML generated."
 msgstr ""
 
-#: includes/admin/module-strings.php:43
+#: includes/admin/module-strings.php:44
 msgctxt "module description"
 msgid ""
 "Links to another domain open in a new tab, with rel=\"noopener\" and a "
 "hidden «(opens in a new tab)» for screen readers."
 msgstr ""
 
-#: includes/admin/module-strings.php:44
+#: includes/admin/module-strings.php:45
 msgctxt "module description"
 msgid ""
 "Publishes the page's FAQ accordions as schema.org FAQPage, inside Rank "
 "Math's or Yoast's graph when they are there."
 msgstr ""
 
-#: includes/admin/module-strings.php:45
+#: includes/admin/module-strings.php:46
 msgctxt "module description"
 msgid ""
 "Featured images with a fixed width in px download a file of that size, and a "
@@ -275,14 +280,14 @@ msgid ""
 "decorative."
 msgstr ""
 
-#: includes/admin/module-strings.php:46
+#: includes/admin/module-strings.php:47
 msgctxt "module description"
 msgid ""
 "Block-based forms with several email notifications made from templates, a "
 "log of everything sent and WPML support."
 msgstr ""
 
-#: includes/admin/module-strings.php:47
+#: includes/admin/module-strings.php:48
 msgctxt "module description"
 msgid ""
 "Google Analytics 4, Google Ads (with an optional conversion for form "
@@ -290,21 +295,21 @@ msgid ""
 "Mode v2. An empty field loads nothing."
 msgstr ""
 
-#: includes/admin/module-strings.php:48
+#: includes/admin/module-strings.php:49
 msgctxt "module description"
 msgid ""
 "The «ES ▾» of the header: switches language to the same page, keyboard-"
 "accessible and with hreflang. Needs WPML; without it, nothing is shown."
 msgstr ""
 
-#: includes/admin/module-strings.php:49
+#: includes/admin/module-strings.php:50
 msgctxt "module description"
 msgid ""
 "Serves /llms.txt, the text AI assistants read to describe the site, written "
 "in «Estrategia Web › Settings › llms.txt», one per language with WPML."
 msgstr ""
 
-#: includes/admin/module-strings.php:50
+#: includes/admin/module-strings.php:51
 msgctxt "module description"
 msgid ""
 "Tells search engines about the company and its locations with schema.org "
@@ -312,35 +317,44 @@ msgid ""
 "Math's or Yoast's graph when they are there."
 msgstr ""
 
-#: includes/admin/module-strings.php:51
+#: includes/admin/module-strings.php:52
 msgctxt "module description"
 msgid ""
 "Two-click map block: a static image with the address; the Google Maps embed "
 "only loads after the visitor asks for it (or accepted the maps cookies)."
 msgstr ""
 
-#: includes/admin/module-strings.php:52
+#: includes/admin/module-strings.php:53
 msgctxt "module description"
 msgid ""
 "Matomo tracking code, cookieless or hybrid (no cookies until the visitor "
 "accepts analytics in the cookie notice)."
 msgstr ""
 
-#: includes/admin/module-strings.php:53
+#: includes/admin/module-strings.php:54
 msgctxt "module description"
 msgid ""
 "Choose the week's posts, preview the newsletter and copy its code or create "
 "the draft in Mailchimp. It never sends."
 msgstr ""
 
-#: includes/admin/module-strings.php:54
+#: includes/admin/module-strings.php:55
 msgctxt "module description"
 msgid ""
 "Editable 301, 302 and 410 redirects with hit counters, CSV import and "
 "export, and an optional 404 log."
 msgstr ""
 
-#: includes/admin/module-strings.php:55
+#: includes/admin/module-strings.php:56
+msgctxt "module description"
+msgid ""
+"Adds the browser security headers a site is missing (HSTS over https, "
+"framing only from the site itself, a referrer policy and no camera, "
+"microphone or location) and hides the PHP version. It never repeats a header "
+"another plugin already sends."
+msgstr ""
+
+#: includes/admin/module-strings.php:57
 msgctxt "module description"
 msgid ""
 "Company details with Block Bindings and the [estrategia_web_company] "
@@ -348,65 +362,65 @@ msgid ""
 "sanitised SVG uploads."
 msgstr ""
 
-#: includes/admin/module-strings.php:56
+#: includes/admin/module-strings.php:58
 msgctxt "module description"
 msgid ""
 "Free, ordered list of social network links (name, link, icon from an "
 "included collection or your own SVG) and a block that shows them."
 msgstr ""
 
-#: includes/admin/module-strings.php:57
+#: includes/admin/module-strings.php:59
 msgctxt "module description"
 msgid ""
 "Phone photos can be uploaded (up to 20 MB by default); WordPress scales them "
 "down to 2560 px and only the scaled copy is kept on disk."
 msgstr ""
 
-#: includes/admin/module-strings.php:58
+#: includes/admin/module-strings.php:60
 msgctxt "module description"
 msgid ""
 "Image sizes generated from JPEG and PNG uploads are saved as WebP (quality "
 "75)."
 msgstr ""
 
-#: includes/admin/module-strings.php:59
+#: includes/admin/module-strings.php:61
 msgctxt "module description"
 msgid ""
 "Floating button that opens a WhatsApp chat with a predefined message. The "
 "number and the message are site options, not per page."
 msgstr ""
 
-#: includes/admin/module-strings.php:62
+#: includes/admin/module-strings.php:64
 msgctxt "module category"
 msgid "Content"
 msgstr ""
 
-#: includes/admin/module-strings.php:63
+#: includes/admin/module-strings.php:65
 msgctxt "module category"
 msgid "Media & performance"
 msgstr ""
 
-#: includes/admin/module-strings.php:64
+#: includes/admin/module-strings.php:66
 msgctxt "module category"
 msgid "Privacy & analytics"
 msgstr ""
 
-#: includes/admin/module-strings.php:65
+#: includes/admin/module-strings.php:67
 msgctxt "module category"
 msgid "SEO"
 msgstr ""
 
-#: includes/admin/module-strings.php:66
+#: includes/admin/module-strings.php:68
 msgctxt "module category"
 msgid "Contact"
 msgstr ""
 
-#: includes/admin/module-strings.php:67
+#: includes/admin/module-strings.php:69
 msgctxt "module category"
 msgid "Languages"
 msgstr ""
 
-#: includes/admin/module-strings.php:68
+#: includes/admin/module-strings.php:70
 msgctxt "module category"
 msgid "Other"
 msgstr ""
@@ -534,7 +548,7 @@ msgid ""
 msgstr ""
 
 #: modules/banners/includes/class-post-type.php:242
-#: modules/forms/includes/admin/class-admin.php:288
+#: modules/forms/includes/admin/class-admin.php:289
 #: modules/social/includes/class-admin.php:94
 #: modules/social/includes/class-admin.php:143
 msgid "Link"
@@ -614,7 +628,7 @@ msgid "Dates"
 msgstr ""
 
 #: modules/banners/includes/class-post-type.php:317
-#: modules/forms/includes/admin/class-admin.php:286
+#: modules/forms/includes/admin/class-admin.php:287
 msgid "State"
 msgstr ""
 
@@ -1502,7 +1516,7 @@ msgstr ""
 #: modules/content-types/includes/admin/class-page.php:246
 #: modules/forms/includes/admin/class-admin.php:134
 #: modules/forms/includes/admin/class-admin.php:139
-#: modules/forms/includes/admin/class-admin.php:413
+#: modules/forms/includes/admin/class-admin.php:414
 msgid "Back to the list"
 msgstr ""
 
@@ -1973,7 +1987,7 @@ msgid "Move down"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:378
-#: modules/content-types/includes/class-fields-panel.php:219
+#: modules/content-types/includes/class-fields-panel.php:221
 #: modules/forms/includes/class-blocks.php:385
 #: modules/newsletter/includes/class-screen.php:74
 #: modules/social/includes/class-admin.php:70
@@ -2017,7 +2031,7 @@ msgid "Save anyway"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:389
-#: modules/forms/includes/admin/class-admin.php:430
+#: modules/forms/includes/admin/class-admin.php:431
 msgid "Cancel"
 msgstr ""
 
@@ -2063,7 +2077,7 @@ msgid "Image"
 msgstr ""
 
 #: modules/content-types/includes/admin/class-page.php:400
-#: modules/forms/includes/admin/class-admin.php:176
+#: modules/forms/includes/admin/class-admin.php:177
 #: modules/forms/includes/admin/class-submissions-table.php:81
 msgid "Date"
 msgstr ""
@@ -2168,7 +2182,7 @@ msgid ""
 msgstr ""
 
 #: modules/content-types/includes/admin/class-types-table.php:114
-#: modules/forms/includes/admin/class-admin.php:210
+#: modules/forms/includes/admin/class-admin.php:211
 #: modules/forms/includes/admin/class-forms-list.php:241
 #: modules/redirects/includes/admin/class-tables.php:150
 msgid "Edit"
@@ -2223,18 +2237,18 @@ msgstr ""
 msgid "Inactive"
 msgstr ""
 
-#: modules/content-types/includes/class-bindings.php:68
+#: modules/content-types/includes/class-bindings.php:91
 msgid "Content field"
 msgstr ""
 
-#: modules/content-types/includes/class-bindings.php:123
+#: modules/content-types/includes/class-bindings.php:146
 #: modules/forms/includes/admin/class-admin.php:148
 #: modules/forms/includes/class-notifier.php:266
 #: modules/redirects/includes/admin/class-tables.php:174
 msgid "Yes"
 msgstr ""
 
-#: modules/content-types/includes/class-bindings.php:124
+#: modules/content-types/includes/class-bindings.php:147
 #: modules/forms/includes/admin/class-admin.php:148
 #: modules/forms/includes/class-notifier.php:266
 #: modules/redirects/includes/admin/class-tables.php:174
@@ -2290,126 +2304,126 @@ msgid ""
 "move."
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:70
+#: modules/content-types/includes/class-fields-panel.php:72
 msgid "No rating"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:111
+#: modules/content-types/includes/class-fields-panel.php:113
 msgid "Changed in the original language: it is copied to the translations."
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:129
+#: modules/content-types/includes/class-fields-panel.php:131
 msgid ""
 "The rows and the values that are not text come from the original language; "
 "translate the texts here."
 msgstr ""
 
 #. translators: %s: singular name of a content type, e.g. Restaurant
-#: modules/content-types/includes/class-fields-panel.php:137
+#: modules/content-types/includes/class-fields-panel.php:139
 #, php-format
 msgid "%s details"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:140
+#: modules/content-types/includes/class-fields-panel.php:142
 msgid ""
 "Fields that are the same in every language are copied to the translations "
 "when you save; the others are translated in each language."
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:217
+#: modules/content-types/includes/class-fields-panel.php:219
 msgid "Choose image"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:218
+#: modules/content-types/includes/class-fields-panel.php:220
 msgid "Replace image"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:220
+#: modules/content-types/includes/class-fields-panel.php:222
 msgid "Copy Monday to every day"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:221
+#: modules/content-types/includes/class-fields-panel.php:223
 msgid "Monday’s hours copied to every day."
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:237
+#: modules/content-types/includes/class-fields-panel.php:239
 msgctxt "repeater row"
 msgid "Add"
 msgstr ""
 
 #. translators: %s: what a row of a list is called, e.g. Act
-#: modules/content-types/includes/class-fields-panel.php:239
+#: modules/content-types/includes/class-fields-panel.php:241
 #, php-format
 msgctxt "repeater row"
 msgid "Add %s"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:241
+#: modules/content-types/includes/class-fields-panel.php:243
 msgctxt "repeater row"
 msgid "Remove"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:242
+#: modules/content-types/includes/class-fields-panel.php:244
 msgctxt "repeater row"
 msgid "Move up"
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:243
+#: modules/content-types/includes/class-fields-panel.php:245
 msgctxt "repeater row"
 msgid "Move down"
 msgstr ""
 
 #. translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Remove» (its visible text must be in its name).
-#: modules/content-types/includes/class-fields-panel.php:245
+#: modules/content-types/includes/class-fields-panel.php:247
 #, php-format
 msgctxt "repeater row"
 msgid "Remove %s"
 msgstr ""
 
 #. translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Move up» (its visible text must be in its name).
-#: modules/content-types/includes/class-fields-panel.php:247
+#: modules/content-types/includes/class-fields-panel.php:249
 #, php-format
 msgctxt "repeater row"
 msgid "Move up %s"
 msgstr ""
 
 #. translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Move down» (its visible text must be in its name).
-#: modules/content-types/includes/class-fields-panel.php:249
+#: modules/content-types/includes/class-fields-panel.php:251
 #, php-format
 msgctxt "repeater row"
 msgid "Move down %s"
 msgstr ""
 
 #. translators: %d: the number of a row of a list
-#: modules/content-types/includes/class-fields-panel.php:251
-#: modules/content-types/includes/class-fields-panel.php:423
+#: modules/content-types/includes/class-fields-panel.php:253
+#: modules/content-types/includes/class-fields-panel.php:425
 #, php-format
 msgid "Row %d"
 msgstr ""
 
 #. translators: %s: a row of a list, e.g. Act 3
-#: modules/content-types/includes/class-fields-panel.php:253
+#: modules/content-types/includes/class-fields-panel.php:255
 #, php-format
 msgctxt "repeater row"
 msgid "%s added."
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:254
+#: modules/content-types/includes/class-fields-panel.php:256
 msgctxt "repeater row"
 msgid "Row removed."
 msgstr ""
 
 #. translators: %s: the row's name at its new position, e.g. Act 1
-#: modules/content-types/includes/class-fields-panel.php:256
+#: modules/content-types/includes/class-fields-panel.php:258
 #, php-format
 msgctxt "repeater row"
 msgid "Moved: it is now %s."
 msgstr ""
 
-#: modules/content-types/includes/class-fields-panel.php:257
-#: modules/content-types/includes/class-fields-panel.php:435
-#: modules/content-types/includes/class-fields-panel.php:489
-#: modules/content-types/includes/class-fields-panel.php:495
+#: modules/content-types/includes/class-fields-panel.php:259
+#: modules/content-types/includes/class-fields-panel.php:437
+#: modules/content-types/includes/class-fields-panel.php:493
+#: modules/content-types/includes/class-fields-panel.php:499
 msgid "— None —"
 msgstr ""
 
@@ -3627,12 +3641,12 @@ msgid "Submissions"
 msgstr ""
 
 #: modules/forms/includes/admin/class-admin.php:61
-#: modules/forms/includes/admin/class-admin.php:508
+#: modules/forms/includes/admin/class-admin.php:509
 msgid "Form settings"
 msgstr ""
 
 #: modules/forms/includes/admin/class-admin.php:82
-#: modules/forms/includes/admin/class-admin.php:501
+#: modules/forms/includes/admin/class-admin.php:502
 #: modules/forms/includes/admin/class-forms-list.php:273
 msgid "You are not allowed to see this page."
 msgstr ""
@@ -3693,71 +3707,71 @@ msgid "Failed"
 msgstr ""
 
 #: modules/forms/includes/admin/class-admin.php:159
-#: modules/forms/includes/admin/class-admin.php:300
+#: modules/forms/includes/admin/class-admin.php:301
 msgid "Sent"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:169
+#: modules/forms/includes/admin/class-admin.php:170
 msgid "This form has no notifications."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:173
+#: modules/forms/includes/admin/class-admin.php:174
 msgid "Details"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:175
+#: modules/forms/includes/admin/class-admin.php:176
 #: modules/forms/includes/admin/class-forms-list.php:299
 #: modules/forms/includes/admin/class-submissions-table.php:82
 #: modules/forms/includes/class-form-post-type.php:85
 msgid "Form"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:177
+#: modules/forms/includes/admin/class-admin.php:178
 msgid "Page"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:178
+#: modules/forms/includes/admin/class-admin.php:179
 #: modules/forms/includes/admin/class-submissions-table.php:84
 #: modules/language-switcher/blocks/language-switcher/render.php:87
 msgid "Language"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:179
+#: modules/forms/includes/admin/class-admin.php:180
 msgid "IP (truncated)"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:180
+#: modules/forms/includes/admin/class-admin.php:181
 msgid "User agent"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:187
+#: modules/forms/includes/admin/class-admin.php:188
 msgid "Entry"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:191
+#: modules/forms/includes/admin/class-admin.php:192
 msgid "Delete this submission"
 msgstr ""
 
 #. translators: %d: the id of a post that no longer exists.
-#: modules/forms/includes/admin/class-admin.php:204
+#: modules/forms/includes/admin/class-admin.php:205
 #, php-format
 msgid "#%d (deleted)"
 msgstr ""
 
 #. translators: %s: maximum upload size the server allows, e.g. «64 MB».
-#: modules/forms/includes/admin/class-admin.php:224
+#: modules/forms/includes/admin/class-admin.php:225
 #, php-format
 msgid "This server accepts uploads of up to %s."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:226
+#: modules/forms/includes/admin/class-admin.php:227
 msgid ""
 "No folder can be written for the files: File fields will fail. Define "
 "ESTRATEGIA_WEB_FORMS_PRIVATE_DIR in wp-config.php with a writable folder "
 "outside the web."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:230
+#: modules/forms/includes/admin/class-admin.php:231
 msgid ""
 "This folder is inside the web. If the server is nginx, the files could be "
 "downloaded by anyone who guesses their name. Define "
@@ -3765,130 +3779,130 @@ msgid ""
 "web."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:232
+#: modules/forms/includes/admin/class-admin.php:233
 msgid ""
 "Outside the web: only the team, and the owner of a dossier with their link, "
 "can download them. They are deleted with their submission."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:266
+#: modules/forms/includes/admin/class-admin.php:267
 msgid ""
 "Sent: the client has received your note with a new link. The previous link "
 "no longer works."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:267
+#: modules/forms/includes/admin/class-admin.php:268
 msgid ""
 "The email to the client could not be sent. Nothing has changed for them."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:268
+#: modules/forms/includes/admin/class-admin.php:269
 msgid ""
 "The link has been revoked. The client can no longer open the dossier until a "
 "new link is sent."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:284
+#: modules/forms/includes/admin/class-admin.php:285
 #: modules/forms/includes/admin/class-submissions-table.php:86
 msgid "Dossier"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:286
+#: modules/forms/includes/admin/class-admin.php:287
 #: modules/forms/includes/admin/class-submissions-table.php:95
 msgid "Complete"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:286
+#: modules/forms/includes/admin/class-admin.php:287
 msgid "Incomplete"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:287
+#: modules/forms/includes/admin/class-admin.php:288
 msgid "Owner"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:289
+#: modules/forms/includes/admin/class-admin.php:290
 msgid "None (revoked). «Ask the client» sends a new one."
 msgstr ""
 
 #. translators: %s: date and time.
-#: modules/forms/includes/admin/class-admin.php:291
+#: modules/forms/includes/admin/class-admin.php:292
 #, php-format
 msgid "Valid until %s"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:292
+#: modules/forms/includes/admin/class-admin.php:293
 msgid "Last change"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:301
+#: modules/forms/includes/admin/class-admin.php:302
 msgid "Changed"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:302
+#: modules/forms/includes/admin/class-admin.php:303
 msgid "Asked the client"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:303
+#: modules/forms/includes/admin/class-admin.php:304
 msgid "New link sent"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:304
+#: modules/forms/includes/admin/class-admin.php:305
 msgid "Link revoked"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:306
+#: modules/forms/includes/admin/class-admin.php:307
 msgid "History"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:308
+#: modules/forms/includes/admin/class-admin.php:309
 msgid "client"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:320
+#: modules/forms/includes/admin/class-admin.php:321
 msgid "Ask the client"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:324
+#: modules/forms/includes/admin/class-admin.php:325
 msgid ""
 "What you need from them. It goes in the email, with a new link and the list "
 "of what is missing."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:326
+#: modules/forms/includes/admin/class-admin.php:327
 msgid "Send to the client"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:332
+#: modules/forms/includes/admin/class-admin.php:333
 msgid "Revoke link"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:339
-#: modules/forms/includes/admin/class-admin.php:353
-#: modules/forms/includes/admin/class-admin.php:385
-#: modules/forms/includes/admin/class-admin.php:435
-#: modules/forms/includes/admin/class-admin.php:446
+#: modules/forms/includes/admin/class-admin.php:340
+#: modules/forms/includes/admin/class-admin.php:354
+#: modules/forms/includes/admin/class-admin.php:386
+#: modules/forms/includes/admin/class-admin.php:436
+#: modules/forms/includes/admin/class-admin.php:447
 msgid "You are not allowed to do this."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:345
+#: modules/forms/includes/admin/class-admin.php:346
 #: modules/forms/includes/class-files.php:446
 msgid "The file is no longer available."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:359
+#: modules/forms/includes/admin/class-admin.php:360
 msgid "Nothing to send."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:411
+#: modules/forms/includes/admin/class-admin.php:412
 msgid "Delete submissions"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:413
+#: modules/forms/includes/admin/class-admin.php:414
 msgid "No submissions selected."
 msgstr ""
 
 #. translators: %d: number of submissions.
-#: modules/forms/includes/admin/class-admin.php:419
+#: modules/forms/includes/admin/class-admin.php:420
 #, php-format
 msgid ""
 "You are about to permanently delete %d submission. This cannot be undone."
@@ -3897,78 +3911,78 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: modules/forms/includes/admin/class-admin.php:429
+#: modules/forms/includes/admin/class-admin.php:430
 msgid "Yes, delete"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:508
+#: modules/forms/includes/admin/class-admin.php:509
 msgid ""
 "Fields, notifications and messages of each form are set in the form block, "
 "in the editor. Here only what is common to all forms."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:511
+#: modules/forms/includes/admin/class-admin.php:512
 msgid "Submission log"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:514
+#: modules/forms/includes/admin/class-admin.php:515
 msgid "Keep submissions for (days)"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:516
+#: modules/forms/includes/admin/class-admin.php:517
 msgid "0 keeps them forever. Older submissions are deleted once a day."
 msgstr ""
 
 #. translators: 1: date of the last purge, 2: deleted submissions.
-#: modules/forms/includes/admin/class-admin.php:520
+#: modules/forms/includes/admin/class-admin.php:521
 #, php-format
 msgid "Last purge: %1$s, %2$d deleted."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:526
+#: modules/forms/includes/admin/class-admin.php:527
 msgid "Files"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:531
+#: modules/forms/includes/admin/class-admin.php:532
 msgid "Anti-spam"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:534
+#: modules/forms/includes/admin/class-admin.php:535
 msgid "Minimum filling time (seconds)"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:538
+#: modules/forms/includes/admin/class-admin.php:539
 msgid "Submissions allowed per IP"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:540
+#: modules/forms/includes/admin/class-admin.php:541
 msgid "every (minutes)"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:542
+#: modules/forms/includes/admin/class-admin.php:543
 msgid "0 submissions disables the limit."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:546
+#: modules/forms/includes/admin/class-admin.php:547
 msgid "Default texts"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:547
+#: modules/forms/includes/admin/class-admin.php:548
 msgid ""
 "Leave empty to use the built-in text, already translated. If you fill them "
 "in and the site uses WPML, translate them in WPML → String Translation "
 "(domain estrategia-web-forms)."
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:550
+#: modules/forms/includes/admin/class-admin.php:551
 msgid "Success message"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:554
+#: modules/forms/includes/admin/class-admin.php:555
 msgid "Error message"
 msgstr ""
 
-#: modules/forms/includes/admin/class-admin.php:558
+#: modules/forms/includes/admin/class-admin.php:559
 msgid "Email footer"
 msgstr ""
 
@@ -4475,8 +4489,8 @@ msgstr ""
 #: modules/llms/includes/admin/class-tab.php:108
 msgid ""
 "The web server sends that file before WordPress runs, so what is written "
-"here is not seen. Delete the file from the server (it is next to wp-config."
-"php)."
+"here is not seen. Delete the file from the server (it is next to wp-"
+"config.php)."
 msgstr ""
 
 #: modules/llms/includes/admin/class-tab.php:108
@@ -5048,6 +5062,7 @@ msgstr ""
 
 #. translators: "%3F" is the URL-encoded "?", not a placeholder: keep it as is.
 #: modules/redirects/includes/admin/class-page.php:271
+#, php-format
 msgid ""
 "The old path, without the domain. Upper case, a final slash and any extra ?"
 "parameters are ignored when matching; ?p=123 and ?page_id=123 are the same, "

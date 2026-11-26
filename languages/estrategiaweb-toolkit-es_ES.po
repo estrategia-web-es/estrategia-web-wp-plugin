@@ -184,30 +184,35 @@ msgstr "Redirecciones"
 
 #: includes/admin/module-strings.php:30
 msgctxt "module name"
+msgid "Security headers"
+msgstr "Cabeceras de seguridad"
+
+#: includes/admin/module-strings.php:31
+msgctxt "module name"
 msgid "Company data"
 msgstr "Datos de la empresa"
 
-#: includes/admin/module-strings.php:31
+#: includes/admin/module-strings.php:32
 msgctxt "module name"
 msgid "Social networks"
 msgstr "Redes sociales"
 
-#: includes/admin/module-strings.php:32
+#: includes/admin/module-strings.php:33
 msgctxt "module name"
 msgid "Image uploads"
 msgstr "Subidas de imágenes"
 
-#: includes/admin/module-strings.php:33
+#: includes/admin/module-strings.php:34
 msgctxt "module name"
 msgid "WebP images"
 msgstr "Imágenes en WebP"
 
-#: includes/admin/module-strings.php:34
+#: includes/admin/module-strings.php:35
 msgctxt "module name"
 msgid "WhatsApp button"
 msgstr "Botón de WhatsApp"
 
-#: includes/admin/module-strings.php:37
+#: includes/admin/module-strings.php:38
 msgctxt "module description"
 msgid ""
 "Image or code banners by zone and dates, with daily views and clicks, and "
@@ -216,7 +221,7 @@ msgstr ""
 "Banners de imagen o de código por zonas y fechas, con vistas y clics "
 "diarios, y migración desde AdRotate."
 
-#: includes/admin/module-strings.php:38
+#: includes/admin/module-strings.php:39
 msgctxt "module description"
 msgid ""
 "When a published post's fields change without going through the editor (a "
@@ -229,7 +234,7 @@ msgstr ""
 "la página de esa entrada en la caché que use el sitio: SiteGround, WP "
 "Rocket, LiteSpeed, W3 Total Cache o WP Super Cache."
 
-#: includes/admin/module-strings.php:39
+#: includes/admin/module-strings.php:40
 msgctxt "module description"
 msgid ""
 "Carousel block: a horizontal scrolling row of any blocks (or the posts of a "
@@ -240,7 +245,7 @@ msgstr ""
 "entradas de una Consulta), con flechas, puntos opcionales, bucle infinito y "
 "paso automático solo si se pide."
 
-#: includes/admin/module-strings.php:40
+#: includes/admin/module-strings.php:41
 msgctxt "module description"
 msgid ""
 "Turns comments off everywhere: closed on every post, no Comments menu, "
@@ -251,7 +256,7 @@ msgstr ""
 "menú Comentarios, sin widget del escritorio ni globo en la barra, sin "
 "bloques de comentarios en la web y sin feeds de comentarios."
 
-#: includes/admin/module-strings.php:41
+#: includes/admin/module-strings.php:42
 msgctxt "module description"
 msgid ""
 "Own cookie consent notice (Accept / Reject / Settings with declarable "
@@ -265,7 +270,7 @@ msgstr ""
 "alimenta un detector y un bloque con la tabla de cookies para la política de "
 "cookies."
 
-#: includes/admin/module-strings.php:42
+#: includes/admin/module-strings.php:43
 msgctxt "module description"
 msgid ""
 "Build your own content types, taxonomies and fields from the panel (or start "
@@ -276,7 +281,7 @@ msgstr ""
 "empieza desde una plantilla: clientes, opiniones, sedes, proyectos, "
 "portfolio), con el panel del editor, los Block Bindings y WPML generados."
 
-#: includes/admin/module-strings.php:43
+#: includes/admin/module-strings.php:44
 msgctxt "module description"
 msgid ""
 "Links to another domain open in a new tab, with rel=\"noopener\" and a "
@@ -286,7 +291,7 @@ msgstr ""
 "rel=\"noopener\" y un «(se abre en una pestaña nueva)» oculto para lectores "
 "de pantalla."
 
-#: includes/admin/module-strings.php:44
+#: includes/admin/module-strings.php:45
 msgctxt "module description"
 msgid ""
 "Publishes the page's FAQ accordions as schema.org FAQPage, inside Rank "
@@ -295,7 +300,7 @@ msgstr ""
 "Publica los acordeones de preguntas frecuentes de la página como FAQPage de "
 "schema.org, dentro del grafo de Rank Math o de Yoast si están."
 
-#: includes/admin/module-strings.php:45
+#: includes/admin/module-strings.php:46
 msgctxt "module description"
 msgid ""
 "Featured images with a fixed width in px download a file of that size, and a "
@@ -306,7 +311,7 @@ msgstr ""
 "y un logo cuyo texto alternativo solo repite el título que se ve al lado se "
 "marca como decorativo."
 
-#: includes/admin/module-strings.php:46
+#: includes/admin/module-strings.php:47
 msgctxt "module description"
 msgid ""
 "Block-based forms with several email notifications made from templates, a "
@@ -315,7 +320,7 @@ msgstr ""
 "Formularios por bloques con varios avisos por correo hechos con plantillas, "
 "registro de todo lo enviado y compatibles con WPML."
 
-#: includes/admin/module-strings.php:47
+#: includes/admin/module-strings.php:48
 msgctxt "module description"
 msgid ""
 "Google Analytics 4, Google Ads (with an optional conversion for form "
@@ -326,7 +331,7 @@ msgstr ""
 "formulario) y Google Tag Manager detrás del aviso de cookies, con Consent "
 "Mode v2. Un campo vacío no carga nada."
 
-#: includes/admin/module-strings.php:48
+#: includes/admin/module-strings.php:49
 msgctxt "module description"
 msgid ""
 "The «ES ▾» of the header: switches language to the same page, keyboard-"
@@ -335,7 +340,7 @@ msgstr ""
 "El «ES ▾» de la cabecera: cambia de idioma a la misma página, se puede usar "
 "con el teclado y lleva hreflang. Necesita WPML; sin él, no se muestra nada."
 
-#: includes/admin/module-strings.php:49
+#: includes/admin/module-strings.php:50
 msgctxt "module description"
 msgid ""
 "Serves /llms.txt, the text AI assistants read to describe the site, written "
@@ -345,7 +350,7 @@ msgstr ""
 "web, escrito en «Estrategia Web › Ajustes › llms.txt», uno por idioma con "
 "WPML."
 
-#: includes/admin/module-strings.php:50
+#: includes/admin/module-strings.php:51
 msgctxt "module description"
 msgid ""
 "Tells search engines about the company and its locations with schema.org "
@@ -356,7 +361,7 @@ msgstr ""
 "y LocalBusiness: dirección, horario, coordenadas), dentro del grafo de Rank "
 "Math o Yoast si están."
 
-#: includes/admin/module-strings.php:51
+#: includes/admin/module-strings.php:52
 msgctxt "module description"
 msgid ""
 "Two-click map block: a static image with the address; the Google Maps embed "
@@ -366,7 +371,7 @@ msgstr ""
 "Google Maps solo se carga cuando el visitante lo pide (o si aceptó las "
 "cookies de mapas)."
 
-#: includes/admin/module-strings.php:52
+#: includes/admin/module-strings.php:53
 msgctxt "module description"
 msgid ""
 "Matomo tracking code, cookieless or hybrid (no cookies until the visitor "
@@ -375,7 +380,7 @@ msgstr ""
 "Código de seguimiento de Matomo, sin cookies o híbrido (sin cookies hasta "
 "que el visitante acepta la analítica en el aviso de cookies)."
 
-#: includes/admin/module-strings.php:53
+#: includes/admin/module-strings.php:54
 msgctxt "module description"
 msgid ""
 "Choose the week's posts, preview the newsletter and copy its code or create "
@@ -384,7 +389,7 @@ msgstr ""
 "Elige las entradas de la semana, previsualiza el boletín y copia su código o "
 "crea el borrador en Mailchimp. Nunca envía."
 
-#: includes/admin/module-strings.php:54
+#: includes/admin/module-strings.php:55
 msgctxt "module description"
 msgid ""
 "Editable 301, 302 and 410 redirects with hit counters, CSV import and "
@@ -393,7 +398,16 @@ msgstr ""
 "Redirecciones 301, 302 y 410 editables, con contador de visitas, importación "
 "y exportación CSV y un registro de 404 opcional."
 
-#: includes/admin/module-strings.php:55
+#: includes/admin/module-strings.php:56
+msgctxt "module description"
+msgid ""
+"Adds the browser security headers a site is missing (HSTS over https, "
+"framing only from the site itself, a referrer policy and no camera, "
+"microphone or location) and hides the PHP version. It never repeats a header "
+"another plugin already sends."
+msgstr "Añade las cabeceras de seguridad del navegador que le faltan al sitio (HSTS con https, que solo el propio sitio pueda incrustarlo, una política de referente y sin cámara, micrófono ni ubicación) y oculta la versión de PHP. Nunca repite una cabecera que ya envíe otro plugin."
+
+#: includes/admin/module-strings.php:57
 msgctxt "module description"
 msgid ""
 "Company details with Block Bindings and the [estrategia_web_company] "
@@ -404,7 +418,7 @@ msgstr ""
 "[estrategia_web_company], los datos de una sede como fuente de Block "
 "Bindings y subida de SVG saneados."
 
-#: includes/admin/module-strings.php:56
+#: includes/admin/module-strings.php:58
 msgctxt "module description"
 msgid ""
 "Free, ordered list of social network links (name, link, icon from an "
@@ -413,7 +427,7 @@ msgstr ""
 "Lista libre y ordenada de enlaces a redes sociales (nombre, enlace e icono "
 "de una colección incluida o un SVG propio) y un bloque que los enseña."
 
-#: includes/admin/module-strings.php:57
+#: includes/admin/module-strings.php:59
 msgctxt "module description"
 msgid ""
 "Phone photos can be uploaded (up to 20 MB by default); WordPress scales them "
@@ -422,7 +436,7 @@ msgstr ""
 "Deja subir fotos del móvil (hasta 20 MB por defecto); WordPress las reduce a "
 "2560 px y en el disco solo se guarda la copia reducida."
 
-#: includes/admin/module-strings.php:58
+#: includes/admin/module-strings.php:60
 msgctxt "module description"
 msgid ""
 "Image sizes generated from JPEG and PNG uploads are saved as WebP (quality "
@@ -431,7 +445,7 @@ msgstr ""
 "Los tamaños que se generan al subir un JPEG o un PNG se guardan en WebP "
 "(calidad 75)."
 
-#: includes/admin/module-strings.php:59
+#: includes/admin/module-strings.php:61
 msgctxt "module description"
 msgid ""
 "Floating button that opens a WhatsApp chat with a predefined message. The "
@@ -440,37 +454,37 @@ msgstr ""
 "Botón flotante que abre un chat de WhatsApp con un mensaje predefinido. El "
 "número y el mensaje son opciones del sitio, no de cada página."
 
-#: includes/admin/module-strings.php:62
+#: includes/admin/module-strings.php:64
 msgctxt "module category"
 msgid "Content"
 msgstr "Contenido"
 
-#: includes/admin/module-strings.php:63
+#: includes/admin/module-strings.php:65
 msgctxt "module category"
 msgid "Media & performance"
 msgstr "Medios y rendimiento"
 
-#: includes/admin/module-strings.php:64
+#: includes/admin/module-strings.php:66
 msgctxt "module category"
 msgid "Privacy & analytics"
 msgstr "Privacidad y analítica"
 
-#: includes/admin/module-strings.php:65
+#: includes/admin/module-strings.php:67
 msgctxt "module category"
 msgid "SEO"
 msgstr "SEO"
 
-#: includes/admin/module-strings.php:66
+#: includes/admin/module-strings.php:68
 msgctxt "module category"
 msgid "Contact"
 msgstr "Contacto"
 
-#: includes/admin/module-strings.php:67
+#: includes/admin/module-strings.php:69
 msgctxt "module category"
 msgid "Languages"
 msgstr "Idiomas"
 
-#: includes/admin/module-strings.php:68
+#: includes/admin/module-strings.php:70
 msgctxt "module category"
 msgid "Other"
 msgstr "Otros"
@@ -613,7 +627,7 @@ msgstr ""
 "enlace; sin imagen, se muestra el código de abajo."
 
 #: modules/banners/includes/class-post-type.php:242
-#: modules/forms/includes/admin/class-admin.php:288
+#: modules/forms/includes/admin/class-admin.php:289
 #: modules/social/includes/class-admin.php:94
 #: modules/social/includes/class-admin.php:143
 msgid "Link"
@@ -704,7 +718,7 @@ msgstr "Fechas"
 
 #
 #: modules/banners/includes/class-post-type.php:317
-#: modules/forms/includes/admin/class-admin.php:286
+#: modules/forms/includes/admin/class-admin.php:287
 msgid "State"
 msgstr "Estado"
 
@@ -1686,7 +1700,7 @@ msgstr "Editar «%s»"
 #: modules/content-types/includes/admin/class-page.php:246
 #: modules/forms/includes/admin/class-admin.php:134
 #: modules/forms/includes/admin/class-admin.php:139
-#: modules/forms/includes/admin/class-admin.php:413
+#: modules/forms/includes/admin/class-admin.php:414
 msgid "Back to the list"
 msgstr "Volver a la lista"
 
@@ -2189,7 +2203,7 @@ msgid "Move down"
 msgstr "Bajar"
 
 #: modules/content-types/includes/admin/class-page.php:378
-#: modules/content-types/includes/class-fields-panel.php:219
+#: modules/content-types/includes/class-fields-panel.php:221
 #: modules/forms/includes/class-blocks.php:385
 #: modules/newsletter/includes/class-screen.php:74
 #: modules/social/includes/class-admin.php:70
@@ -2235,7 +2249,7 @@ msgid "Save anyway"
 msgstr "Guardar igualmente"
 
 #: modules/content-types/includes/admin/class-page.php:389
-#: modules/forms/includes/admin/class-admin.php:430
+#: modules/forms/includes/admin/class-admin.php:431
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -2281,7 +2295,7 @@ msgid "Image"
 msgstr "Imagen"
 
 #: modules/content-types/includes/admin/class-page.php:400
-#: modules/forms/includes/admin/class-admin.php:176
+#: modules/forms/includes/admin/class-admin.php:177
 #: modules/forms/includes/admin/class-submissions-table.php:81
 msgid "Date"
 msgstr "Fecha"
@@ -2388,7 +2402,7 @@ msgstr ""
 "importa un fichero JSON."
 
 #: modules/content-types/includes/admin/class-types-table.php:114
-#: modules/forms/includes/admin/class-admin.php:210
+#: modules/forms/includes/admin/class-admin.php:211
 #: modules/forms/includes/admin/class-forms-list.php:241
 #: modules/redirects/includes/admin/class-tables.php:150
 msgid "Edit"
@@ -2443,18 +2457,18 @@ msgstr "Activa"
 msgid "Inactive"
 msgstr "Inactivo"
 
-#: modules/content-types/includes/class-bindings.php:68
+#: modules/content-types/includes/class-bindings.php:91
 msgid "Content field"
 msgstr "Campo de contenido"
 
-#: modules/content-types/includes/class-bindings.php:123
+#: modules/content-types/includes/class-bindings.php:146
 #: modules/forms/includes/admin/class-admin.php:148
 #: modules/forms/includes/class-notifier.php:266
 #: modules/redirects/includes/admin/class-tables.php:174
 msgid "Yes"
 msgstr "Sí"
 
-#: modules/content-types/includes/class-bindings.php:124
+#: modules/content-types/includes/class-bindings.php:147
 #: modules/forms/includes/admin/class-admin.php:148
 #: modules/forms/includes/class-notifier.php:266
 #: modules/redirects/includes/admin/class-tables.php:174
@@ -2523,15 +2537,15 @@ msgstr ""
 "La URL de «%1$s» pasa de /%2$s/ a /%3$s/: sus direcciones publicadas se "
 "mueven."
 
-#: modules/content-types/includes/class-fields-panel.php:70
+#: modules/content-types/includes/class-fields-panel.php:72
 msgid "No rating"
 msgstr "Sin valoración"
 
-#: modules/content-types/includes/class-fields-panel.php:111
+#: modules/content-types/includes/class-fields-panel.php:113
 msgid "Changed in the original language: it is copied to the translations."
 msgstr "Se cambia en el idioma original: se copia a las traducciones."
 
-#: modules/content-types/includes/class-fields-panel.php:129
+#: modules/content-types/includes/class-fields-panel.php:131
 msgid ""
 "The rows and the values that are not text come from the original language; "
 "translate the texts here."
@@ -2540,12 +2554,12 @@ msgstr ""
 "traduce los textos."
 
 #. translators: %s: singular name of a content type, e.g. Restaurant
-#: modules/content-types/includes/class-fields-panel.php:137
+#: modules/content-types/includes/class-fields-panel.php:139
 #, php-format
 msgid "%s details"
 msgstr "%s: datos"
 
-#: modules/content-types/includes/class-fields-panel.php:140
+#: modules/content-types/includes/class-fields-panel.php:142
 msgid ""
 "Fields that are the same in every language are copied to the translations "
 "when you save; the others are translated in each language."
@@ -2553,100 +2567,100 @@ msgstr ""
 "Los campos que son iguales en todos los idiomas se copian a las traducciones "
 "al guardar; los demás se traducen en cada idioma."
 
-#: modules/content-types/includes/class-fields-panel.php:217
+#: modules/content-types/includes/class-fields-panel.php:219
 msgid "Choose image"
 msgstr "Elegir imagen"
 
-#: modules/content-types/includes/class-fields-panel.php:218
+#: modules/content-types/includes/class-fields-panel.php:220
 msgid "Replace image"
 msgstr "Cambiar la imagen"
 
-#: modules/content-types/includes/class-fields-panel.php:220
+#: modules/content-types/includes/class-fields-panel.php:222
 msgid "Copy Monday to every day"
 msgstr "Copiar el lunes a todos los días"
 
-#: modules/content-types/includes/class-fields-panel.php:221
+#: modules/content-types/includes/class-fields-panel.php:223
 msgid "Monday’s hours copied to every day."
 msgstr "Horario del lunes copiado a todos los días."
 
-#: modules/content-types/includes/class-fields-panel.php:237
+#: modules/content-types/includes/class-fields-panel.php:239
 msgctxt "repeater row"
 msgid "Add"
 msgstr "Añadir"
 
 #. translators: %s: what a row of a list is called, e.g. Act
-#: modules/content-types/includes/class-fields-panel.php:239
+#: modules/content-types/includes/class-fields-panel.php:241
 #, php-format
 msgctxt "repeater row"
 msgid "Add %s"
 msgstr "Añadir %s"
 
-#: modules/content-types/includes/class-fields-panel.php:241
+#: modules/content-types/includes/class-fields-panel.php:243
 msgctxt "repeater row"
 msgid "Remove"
 msgstr "Eliminar"
 
-#: modules/content-types/includes/class-fields-panel.php:242
+#: modules/content-types/includes/class-fields-panel.php:244
 msgctxt "repeater row"
 msgid "Move up"
 msgstr "Subir"
 
-#: modules/content-types/includes/class-fields-panel.php:243
+#: modules/content-types/includes/class-fields-panel.php:245
 msgctxt "repeater row"
 msgid "Move down"
 msgstr "Bajar"
 
 #. translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Remove» (its visible text must be in its name).
-#: modules/content-types/includes/class-fields-panel.php:245
+#: modules/content-types/includes/class-fields-panel.php:247
 #, php-format
 msgctxt "repeater row"
 msgid "Remove %s"
 msgstr "Eliminar %s"
 
 #. translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Move up» (its visible text must be in its name).
-#: modules/content-types/includes/class-fields-panel.php:247
+#: modules/content-types/includes/class-fields-panel.php:249
 #, php-format
 msgctxt "repeater row"
 msgid "Move up %s"
 msgstr "Subir %s"
 
 #. translators: %s: a row of a list, e.g. Act 2. Start with the words of the button «Move down» (its visible text must be in its name).
-#: modules/content-types/includes/class-fields-panel.php:249
+#: modules/content-types/includes/class-fields-panel.php:251
 #, php-format
 msgctxt "repeater row"
 msgid "Move down %s"
 msgstr "Bajar %s"
 
 #. translators: %d: the number of a row of a list
-#: modules/content-types/includes/class-fields-panel.php:251
-#: modules/content-types/includes/class-fields-panel.php:423
+#: modules/content-types/includes/class-fields-panel.php:253
+#: modules/content-types/includes/class-fields-panel.php:425
 #, php-format
 msgid "Row %d"
 msgstr "Fila %d"
 
 #. translators: %s: a row of a list, e.g. Act 3
-#: modules/content-types/includes/class-fields-panel.php:253
+#: modules/content-types/includes/class-fields-panel.php:255
 #, php-format
 msgctxt "repeater row"
 msgid "%s added."
 msgstr "Se ha añadido %s."
 
-#: modules/content-types/includes/class-fields-panel.php:254
+#: modules/content-types/includes/class-fields-panel.php:256
 msgctxt "repeater row"
 msgid "Row removed."
 msgstr "Se ha eliminado la fila."
 
 #. translators: %s: the row's name at its new position, e.g. Act 1
-#: modules/content-types/includes/class-fields-panel.php:256
+#: modules/content-types/includes/class-fields-panel.php:258
 #, php-format
 msgctxt "repeater row"
 msgid "Moved: it is now %s."
 msgstr "Se ha movido: ahora es %s."
 
-#: modules/content-types/includes/class-fields-panel.php:257
-#: modules/content-types/includes/class-fields-panel.php:435
-#: modules/content-types/includes/class-fields-panel.php:489
-#: modules/content-types/includes/class-fields-panel.php:495
+#: modules/content-types/includes/class-fields-panel.php:259
+#: modules/content-types/includes/class-fields-panel.php:437
+#: modules/content-types/includes/class-fields-panel.php:493
+#: modules/content-types/includes/class-fields-panel.php:499
 msgid "— None —"
 msgstr "— Ninguno —"
 
@@ -2883,8 +2897,8 @@ msgid ""
 "“prefix” must be 2 to 9 lowercase letters or digits followed by “_” (e.g. "
 "“gment_”)."
 msgstr ""
-"«prefix» tiene que ser de 2 a 9 letras minúsculas o cifras seguidas de "
-"«_» (por ejemplo, «gment_»)."
+"«prefix» tiene que ser de 2 a 9 letras minúsculas o cifras seguidas de «_» "
+"(por ejemplo, «gment_»)."
 
 #. translators: %s: a prefix such as eweb_
 #: modules/content-types/includes/class-schema.php:136
@@ -3978,12 +3992,12 @@ msgid "Submissions"
 msgstr "Envíos"
 
 #: modules/forms/includes/admin/class-admin.php:61
-#: modules/forms/includes/admin/class-admin.php:508
+#: modules/forms/includes/admin/class-admin.php:509
 msgid "Form settings"
 msgstr "Ajustes de formularios"
 
 #: modules/forms/includes/admin/class-admin.php:82
-#: modules/forms/includes/admin/class-admin.php:501
+#: modules/forms/includes/admin/class-admin.php:502
 #: modules/forms/includes/admin/class-forms-list.php:273
 msgid "You are not allowed to see this page."
 msgstr "No tienes permiso para ver esta página."
@@ -4046,74 +4060,74 @@ msgid "Failed"
 msgstr "Fallo"
 
 #: modules/forms/includes/admin/class-admin.php:159
-#: modules/forms/includes/admin/class-admin.php:300
+#: modules/forms/includes/admin/class-admin.php:301
 msgid "Sent"
 msgstr "Enviado"
 
-#: modules/forms/includes/admin/class-admin.php:169
+#: modules/forms/includes/admin/class-admin.php:170
 msgid "This form has no notifications."
 msgstr "Este formulario no tiene avisos."
 
-#: modules/forms/includes/admin/class-admin.php:173
+#: modules/forms/includes/admin/class-admin.php:174
 msgid "Details"
 msgstr "Detalles"
 
-#: modules/forms/includes/admin/class-admin.php:175
+#: modules/forms/includes/admin/class-admin.php:176
 #: modules/forms/includes/admin/class-forms-list.php:299
 #: modules/forms/includes/admin/class-submissions-table.php:82
 #: modules/forms/includes/class-form-post-type.php:85
 msgid "Form"
 msgstr "Formulario"
 
-#: modules/forms/includes/admin/class-admin.php:177
+#: modules/forms/includes/admin/class-admin.php:178
 msgid "Page"
 msgstr "Página"
 
-#: modules/forms/includes/admin/class-admin.php:178
+#: modules/forms/includes/admin/class-admin.php:179
 #: modules/forms/includes/admin/class-submissions-table.php:84
 #: modules/language-switcher/blocks/language-switcher/render.php:87
 msgid "Language"
 msgstr "Idioma"
 
-#: modules/forms/includes/admin/class-admin.php:179
+#: modules/forms/includes/admin/class-admin.php:180
 msgid "IP (truncated)"
 msgstr "IP (truncada)"
 
-#: modules/forms/includes/admin/class-admin.php:180
+#: modules/forms/includes/admin/class-admin.php:181
 msgid "User agent"
 msgstr "Navegador (user agent)"
 
-#: modules/forms/includes/admin/class-admin.php:187
+#: modules/forms/includes/admin/class-admin.php:188
 msgid "Entry"
 msgstr "Entrada"
 
-#: modules/forms/includes/admin/class-admin.php:191
+#: modules/forms/includes/admin/class-admin.php:192
 msgid "Delete this submission"
 msgstr "Borrar este envío"
 
 #. translators: %d: the id of a post that no longer exists.
-#: modules/forms/includes/admin/class-admin.php:204
+#: modules/forms/includes/admin/class-admin.php:205
 #, php-format
 msgid "#%d (deleted)"
 msgstr "#%d (borrada)"
 
 #. translators: %s: maximum upload size the server allows, e.g. «64 MB».
-#: modules/forms/includes/admin/class-admin.php:224
+#: modules/forms/includes/admin/class-admin.php:225
 #, php-format
 msgid "This server accepts uploads of up to %s."
 msgstr "Este servidor acepta subidas de hasta %s."
 
-#: modules/forms/includes/admin/class-admin.php:226
+#: modules/forms/includes/admin/class-admin.php:227
 msgid ""
 "No folder can be written for the files: File fields will fail. Define "
 "ESTRATEGIA_WEB_FORMS_PRIVATE_DIR in wp-config.php with a writable folder "
 "outside the web."
 msgstr ""
 "No hay ninguna carpeta en la que se puedan escribir los archivos: los campos "
-"de archivo fallarán. Define ESTRATEGIA_WEB_FORMS_PRIVATE_DIR en wp-config."
-"php con una carpeta con permiso de escritura fuera de la web."
+"de archivo fallarán. Define ESTRATEGIA_WEB_FORMS_PRIVATE_DIR en wp-"
+"config.php con una carpeta con permiso de escritura fuera de la web."
 
-#: modules/forms/includes/admin/class-admin.php:230
+#: modules/forms/includes/admin/class-admin.php:231
 msgid ""
 "This folder is inside the web. If the server is nginx, the files could be "
 "downloaded by anyone who guesses their name. Define "
@@ -4125,7 +4139,7 @@ msgstr ""
 "ESTRATEGIA_WEB_FORMS_PRIVATE_DIR en wp-config.php con una carpeta fuera de "
 "la web."
 
-#: modules/forms/includes/admin/class-admin.php:232
+#: modules/forms/includes/admin/class-admin.php:233
 msgid ""
 "Outside the web: only the team, and the owner of a dossier with their link, "
 "can download them. They are deleted with their submission."
@@ -4133,7 +4147,7 @@ msgstr ""
 "Fuera de la web: solo el equipo, y el titular de un expediente con su "
 "enlace, pueden descargarlos. Se borran con su envío."
 
-#: modules/forms/includes/admin/class-admin.php:266
+#: modules/forms/includes/admin/class-admin.php:267
 msgid ""
 "Sent: the client has received your note with a new link. The previous link "
 "no longer works."
@@ -4141,13 +4155,13 @@ msgstr ""
 "Enviado: el cliente ha recibido tu nota con un enlace nuevo. El enlace "
 "anterior ya no funciona."
 
-#: modules/forms/includes/admin/class-admin.php:267
+#: modules/forms/includes/admin/class-admin.php:268
 msgid ""
 "The email to the client could not be sent. Nothing has changed for them."
 msgstr ""
 "No se ha podido enviar el correo al cliente. Para él no ha cambiado nada."
 
-#: modules/forms/includes/admin/class-admin.php:268
+#: modules/forms/includes/admin/class-admin.php:269
 msgid ""
 "The link has been revoked. The client can no longer open the dossier until a "
 "new link is sent."
@@ -4155,67 +4169,67 @@ msgstr ""
 "Se ha revocado el enlace. El cliente no podrá abrir el expediente hasta que "
 "se le envíe un enlace nuevo."
 
-#: modules/forms/includes/admin/class-admin.php:284
+#: modules/forms/includes/admin/class-admin.php:285
 #: modules/forms/includes/admin/class-submissions-table.php:86
 msgid "Dossier"
 msgstr "Expediente"
 
-#: modules/forms/includes/admin/class-admin.php:286
+#: modules/forms/includes/admin/class-admin.php:287
 #: modules/forms/includes/admin/class-submissions-table.php:95
 msgid "Complete"
 msgstr "Completo"
 
-#: modules/forms/includes/admin/class-admin.php:286
+#: modules/forms/includes/admin/class-admin.php:287
 msgid "Incomplete"
 msgstr "Incompleto"
 
-#: modules/forms/includes/admin/class-admin.php:287
+#: modules/forms/includes/admin/class-admin.php:288
 msgid "Owner"
 msgstr "Titular"
 
-#: modules/forms/includes/admin/class-admin.php:289
+#: modules/forms/includes/admin/class-admin.php:290
 msgid "None (revoked). «Ask the client» sends a new one."
 msgstr "Ninguno (revocado). «Pedir al cliente» envía uno nuevo."
 
 #. translators: %s: date and time.
-#: modules/forms/includes/admin/class-admin.php:291
+#: modules/forms/includes/admin/class-admin.php:292
 #, php-format
 msgid "Valid until %s"
 msgstr "Válido hasta el %s"
 
-#: modules/forms/includes/admin/class-admin.php:292
+#: modules/forms/includes/admin/class-admin.php:293
 msgid "Last change"
 msgstr "Último cambio"
 
-#: modules/forms/includes/admin/class-admin.php:301
+#: modules/forms/includes/admin/class-admin.php:302
 msgid "Changed"
 msgstr "Modificado"
 
-#: modules/forms/includes/admin/class-admin.php:302
+#: modules/forms/includes/admin/class-admin.php:303
 msgid "Asked the client"
 msgstr "Pedido al cliente"
 
-#: modules/forms/includes/admin/class-admin.php:303
+#: modules/forms/includes/admin/class-admin.php:304
 msgid "New link sent"
 msgstr "Enlace nuevo enviado"
 
-#: modules/forms/includes/admin/class-admin.php:304
+#: modules/forms/includes/admin/class-admin.php:305
 msgid "Link revoked"
 msgstr "Enlace revocado"
 
-#: modules/forms/includes/admin/class-admin.php:306
+#: modules/forms/includes/admin/class-admin.php:307
 msgid "History"
 msgstr "Historial"
 
-#: modules/forms/includes/admin/class-admin.php:308
+#: modules/forms/includes/admin/class-admin.php:309
 msgid "client"
 msgstr "cliente"
 
-#: modules/forms/includes/admin/class-admin.php:320
+#: modules/forms/includes/admin/class-admin.php:321
 msgid "Ask the client"
 msgstr "Pedir al cliente"
 
-#: modules/forms/includes/admin/class-admin.php:324
+#: modules/forms/includes/admin/class-admin.php:325
 msgid ""
 "What you need from them. It goes in the email, with a new link and the list "
 "of what is missing."
@@ -4223,41 +4237,41 @@ msgstr ""
 "Qué necesitas que te envíe. Va en el correo, con un enlace nuevo y la lista "
 "de lo que falta."
 
-#: modules/forms/includes/admin/class-admin.php:326
+#: modules/forms/includes/admin/class-admin.php:327
 msgid "Send to the client"
 msgstr "Enviar al cliente"
 
-#: modules/forms/includes/admin/class-admin.php:332
+#: modules/forms/includes/admin/class-admin.php:333
 msgid "Revoke link"
 msgstr "Revocar enlace"
 
-#: modules/forms/includes/admin/class-admin.php:339
-#: modules/forms/includes/admin/class-admin.php:353
-#: modules/forms/includes/admin/class-admin.php:385
-#: modules/forms/includes/admin/class-admin.php:435
-#: modules/forms/includes/admin/class-admin.php:446
+#: modules/forms/includes/admin/class-admin.php:340
+#: modules/forms/includes/admin/class-admin.php:354
+#: modules/forms/includes/admin/class-admin.php:386
+#: modules/forms/includes/admin/class-admin.php:436
+#: modules/forms/includes/admin/class-admin.php:447
 msgid "You are not allowed to do this."
 msgstr "No tienes permiso para hacer esto."
 
-#: modules/forms/includes/admin/class-admin.php:345
+#: modules/forms/includes/admin/class-admin.php:346
 #: modules/forms/includes/class-files.php:446
 msgid "The file is no longer available."
 msgstr "El archivo ya no está disponible."
 
-#: modules/forms/includes/admin/class-admin.php:359
+#: modules/forms/includes/admin/class-admin.php:360
 msgid "Nothing to send."
 msgstr "No hay nada que enviar."
 
-#: modules/forms/includes/admin/class-admin.php:411
+#: modules/forms/includes/admin/class-admin.php:412
 msgid "Delete submissions"
 msgstr "Borrar envíos"
 
-#: modules/forms/includes/admin/class-admin.php:413
+#: modules/forms/includes/admin/class-admin.php:414
 msgid "No submissions selected."
 msgstr "No hay envíos seleccionados."
 
 #. translators: %d: number of submissions.
-#: modules/forms/includes/admin/class-admin.php:419
+#: modules/forms/includes/admin/class-admin.php:420
 #, php-format
 msgid ""
 "You are about to permanently delete %d submission. This cannot be undone."
@@ -4266,11 +4280,11 @@ msgid_plural ""
 msgstr[0] "Vas a borrar definitivamente %d envío. No se puede deshacer."
 msgstr[1] "Vas a borrar definitivamente %d envíos. No se puede deshacer."
 
-#: modules/forms/includes/admin/class-admin.php:429
+#: modules/forms/includes/admin/class-admin.php:430
 msgid "Yes, delete"
 msgstr "Sí, borrar"
 
-#: modules/forms/includes/admin/class-admin.php:508
+#: modules/forms/includes/admin/class-admin.php:509
 msgid ""
 "Fields, notifications and messages of each form are set in the form block, "
 "in the editor. Here only what is common to all forms."
@@ -4278,53 +4292,53 @@ msgstr ""
 "Los campos, los avisos y los mensajes de cada formulario se configuran en su "
 "bloque, en el editor. Aquí solo lo común a todos."
 
-#: modules/forms/includes/admin/class-admin.php:511
+#: modules/forms/includes/admin/class-admin.php:512
 msgid "Submission log"
 msgstr "Registro de envíos"
 
-#: modules/forms/includes/admin/class-admin.php:514
+#: modules/forms/includes/admin/class-admin.php:515
 msgid "Keep submissions for (days)"
 msgstr "Conservar los envíos durante (días)"
 
-#: modules/forms/includes/admin/class-admin.php:516
+#: modules/forms/includes/admin/class-admin.php:517
 msgid "0 keeps them forever. Older submissions are deleted once a day."
 msgstr "0 los conserva siempre. Los más antiguos se borran una vez al día."
 
 #. translators: 1: date of the last purge, 2: deleted submissions.
-#: modules/forms/includes/admin/class-admin.php:520
+#: modules/forms/includes/admin/class-admin.php:521
 #, php-format
 msgid "Last purge: %1$s, %2$d deleted."
 msgstr "Última purga: %1$s, %2$d borrados."
 
-#: modules/forms/includes/admin/class-admin.php:526
+#: modules/forms/includes/admin/class-admin.php:527
 msgid "Files"
 msgstr "Archivos"
 
-#: modules/forms/includes/admin/class-admin.php:531
+#: modules/forms/includes/admin/class-admin.php:532
 msgid "Anti-spam"
 msgstr "Antispam"
 
-#: modules/forms/includes/admin/class-admin.php:534
+#: modules/forms/includes/admin/class-admin.php:535
 msgid "Minimum filling time (seconds)"
 msgstr "Tiempo mínimo de relleno (segundos)"
 
-#: modules/forms/includes/admin/class-admin.php:538
+#: modules/forms/includes/admin/class-admin.php:539
 msgid "Submissions allowed per IP"
 msgstr "Envíos permitidos por IP"
 
-#: modules/forms/includes/admin/class-admin.php:540
+#: modules/forms/includes/admin/class-admin.php:541
 msgid "every (minutes)"
 msgstr "cada (minutos)"
 
-#: modules/forms/includes/admin/class-admin.php:542
+#: modules/forms/includes/admin/class-admin.php:543
 msgid "0 submissions disables the limit."
 msgstr "0 envíos desactiva el límite."
 
-#: modules/forms/includes/admin/class-admin.php:546
+#: modules/forms/includes/admin/class-admin.php:547
 msgid "Default texts"
 msgstr "Textos por defecto"
 
-#: modules/forms/includes/admin/class-admin.php:547
+#: modules/forms/includes/admin/class-admin.php:548
 msgid ""
 "Leave empty to use the built-in text, already translated. If you fill them "
 "in and the site uses WPML, translate them in WPML → String Translation "
@@ -4334,15 +4348,15 @@ msgstr ""
 "y la web usa WPML, se traducen en WPML → Traducción de cadenas (dominio "
 "estrategia-web-forms)."
 
-#: modules/forms/includes/admin/class-admin.php:550
+#: modules/forms/includes/admin/class-admin.php:551
 msgid "Success message"
 msgstr "Mensaje de éxito"
 
-#: modules/forms/includes/admin/class-admin.php:554
+#: modules/forms/includes/admin/class-admin.php:555
 msgid "Error message"
 msgstr "Mensaje de error"
 
-#: modules/forms/includes/admin/class-admin.php:558
+#: modules/forms/includes/admin/class-admin.php:559
 msgid "Email footer"
 msgstr "Pie de los correos"
 
@@ -4903,8 +4917,8 @@ msgstr "Rank Math también sirve /llms.txt."
 #: modules/llms/includes/admin/class-tab.php:108
 msgid ""
 "The web server sends that file before WordPress runs, so what is written "
-"here is not seen. Delete the file from the server (it is next to wp-config."
-"php)."
+"here is not seen. Delete the file from the server (it is next to wp-"
+"config.php)."
 msgstr ""
 "El servidor web envía ese fichero antes de que se ejecute WordPress, así que "
 "lo que se escribe aquí no se ve. Borra el fichero del servidor (está junto a "
@@ -5362,8 +5376,8 @@ msgid ""
 "The Mailchimp key must end in its datacenter (for example -us21). It was not "
 "saved."
 msgstr ""
-"La clave de Mailchimp debe acabar con su centro de datos (por ejemplo -"
-"us21). No se ha guardado."
+"La clave de Mailchimp debe acabar con su centro de datos (por ejemplo "
+"-us21). No se ha guardado."
 
 #: modules/newsletter/includes/class-settings.php:162
 msgid ""
@@ -5541,6 +5555,7 @@ msgstr "Origen"
 
 #. translators: "%3F" is the URL-encoded "?", not a placeholder: keep it as is.
 #: modules/redirects/includes/admin/class-page.php:271
+#, php-format
 msgid ""
 "The old path, without the domain. Upper case, a final slash and any extra ?"
 "parameters are ignored when matching; ?p=123 and ?page_id=123 are the same, "

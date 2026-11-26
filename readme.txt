@@ -4,7 +4,7 @@ Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.16.1
+Stable tag: 2.17.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,9 @@ Its settings, yes. Your data (form submissions, redirects, company details) is k
 The cookie list includes an extract of the Open Cookie Database (https://github.com/jkwakman/Open-Cookie-Database), © Jan Kwakman and contributors, Apache License 2.0. Details in modules/consent/data/NOTICE.
 
 == Changelog ==
+
+= 2.17.0 =
+* New «Security headers» module, off by default: adds the browser security headers a site is missing (HSTS over https, framing only from the site itself, a referrer policy, no camera, microphone or location) and hides the PHP version, without repeating any header another plugin already sends.
 
 = 2.16.1 =
 * Local business: on the front page, a location without a page of its own now links to the page that talks about it (or to the home page), not to an address that does not exist.

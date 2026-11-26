@@ -78,7 +78,7 @@ test("1.7.0: only «site» is core, and every other module has a known Category"
   const expected = {
     Content: ["banners", "carousel", "comments-off", "content-types", "featured-images", "map", "newsletter"],
     Contact: ["forms", "social", "whatsapp"],
-    "Privacy & analytics": ["consent", "google-tags", "matomo"],
+    "Privacy & analytics": ["consent", "google-tags", "matomo", "security-headers"],
     SEO: ["external-links", "faq-schema", "llms", "local-business", "redirects"],
     Languages: ["language-switcher"],
     "Media & performance": ["cache-purge", "uploads", "webp"],
