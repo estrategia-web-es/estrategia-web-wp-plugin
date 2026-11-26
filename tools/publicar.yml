@@ -43,11 +43,15 @@ jobs:
           fi
           cabecera=$(sed -n 's/^ \* Version:[[:space:]]*//p' estrategia-web.php | head -1 | tr -d '\r ')
           stable=$(sed -n 's/^Stable tag:[[:space:]]*//p' readme.txt | head -1 | tr -d '\r ')
-          constante=$(sed -n "s/.*define( *'ESTRATEGIA_WEB_VERSION', *'\([^']*\)'.*/\1/p" estrategia-web.php | head -1)
+          # El plugin la declara así: const ESTRATEGIA_WEB_VERSION = 'X.Y.Z';
+          constante=$(sed -n "s/^[[:space:]]*const ESTRATEGIA_WEB_VERSION[[:space:]]*=[[:space:]]*'\([^']*\)'.*/\1/p" estrategia-web.php | head -1)
+          if [ -z "$constante" ]; then
+            echo "::error::No encuentro «const ESTRATEGIA_WEB_VERSION = '…';» en estrategia-web.php; la comprobación no puede darse por buena."; exit 1
+          fi
           fallo=0
           [ "$cabecera" = "$version" ] || { echo "::error::Version: de estrategia-web.php es «$cabecera», la etiqueta es «$version»."; fallo=1; }
           [ "$stable" = "$version" ] || { echo "::error::Stable tag de readme.txt es «$stable», la etiqueta es «$version»."; fallo=1; }
-          [ -z "$constante" ] || [ "$constante" = "$version" ] || { echo "::error::ESTRATEGIA_WEB_VERSION es «$constante», la etiqueta es «$version»."; fallo=1; }
+          [ "$constante" = "$version" ] || { echo "::error::ESTRATEGIA_WEB_VERSION es «$constante», la etiqueta es «$version»."; fallo=1; }
           [ "$fallo" = 0 ] || exit 1
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
