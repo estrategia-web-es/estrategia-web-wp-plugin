@@ -9,6 +9,40 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.19.0 — 26-11-2026 (Site Health: the Estrategia Web checks)
+
+**What each site must do:** nothing. The new module is on by default and
+only reports; after updating, open **Tools › Site Health** and read the
+results with the «Estrategia Web» badge. Born with the Llar d'Estels audit
+(25-26/11/2026): twelve findings any of our sites can have.
+
+- **New module `site-health`** (Default: on, category Media & performance):
+  adds tests to WordPress' own Site Health screen through
+  `site_status_tests`. ONE FILE PER CHECK in `modules/site-health/checks/`
+  (gather() reads the site, judge() decides from that data alone); the
+  registry (`includes/class-registry.php`) loads them, so a future audit
+  adds a check by adding a file. Results are good / recommended / critical,
+  with a description and a link to the screen where it is fixed.
+- **Critical:** search engines discouraged on a site that is not a staging
+  (environment type, or a host name like staging*/dev/*.local or a subdomain
+  of estrategiaweb.es); a legal page (legal notice, privacy policy, cookie
+  policy) missing or not linked from any menu or footer.
+- **Recommended:** a legal page unchanged for 12 months; pending cookies in
+  the consent registry or no page with the cookie table (consent on);
+  incomplete company details (legal name, tax ID, address, phone);
+  locations without coordinates, Google Business profile or page; no
+  social profiles (empty sameAs); no login limiting (SiteGround Security or
+  another known limiter) with XML-RPC open; no page cache outside
+  SiteGround; Yoast templates, timezone or date format still at their
+  English factory values on a non-English site; llms.txt off or empty, and
+  FAQ blocks faq-schema cannot read.
+- **Async** (run by the screen through `GET estrategia-web/v1/site-health/<id>`,
+  capability `view_site_health_checks`): the security headers (a loopback
+  GET of the home page) and DMARC (a DNS lookup). A failed loopback or
+  lookup says «could not check», never «missing».
+- Tests: `modules/site-health/tests/judge.test.mjs` and
+  `registry.test.mjs` (level 1), `site-health.test.mjs` (level 2).
+
 ## 2.18.0 — 26-11-2026 (locations: the page of each one in a Query, and the Google profile)
 
 **What each site must do:** nothing to keep working. A site whose locations

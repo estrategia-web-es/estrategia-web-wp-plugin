@@ -182,30 +182,35 @@ msgstr "Sicherheits-Header"
 
 #: includes/admin/module-strings.php:31
 msgctxt "module name"
+msgid "Site Health checks"
+msgstr "Website-Zustand-Prüfungen"
+
+#: includes/admin/module-strings.php:32
+msgctxt "module name"
 msgid "Company data"
 msgstr "Firmendaten"
 
-#: includes/admin/module-strings.php:32
+#: includes/admin/module-strings.php:33
 msgctxt "module name"
 msgid "Social networks"
 msgstr "Soziale Netzwerke"
 
-#: includes/admin/module-strings.php:33
+#: includes/admin/module-strings.php:34
 msgctxt "module name"
 msgid "Image uploads"
 msgstr "Bild-Uploads"
 
-#: includes/admin/module-strings.php:34
+#: includes/admin/module-strings.php:35
 msgctxt "module name"
 msgid "WebP images"
 msgstr "WebP-Bilder"
 
-#: includes/admin/module-strings.php:35
+#: includes/admin/module-strings.php:36
 msgctxt "module name"
 msgid "WhatsApp button"
 msgstr "WhatsApp-Button"
 
-#: includes/admin/module-strings.php:38
+#: includes/admin/module-strings.php:39
 msgctxt "module description"
 msgid ""
 "Image or code banners by zone and dates, with daily views and clicks, and "
@@ -214,7 +219,7 @@ msgstr ""
 "Bild- oder Code-Banner nach Bereich und Zeitraum, mit täglichen Ansichten "
 "und Klicks sowie Migration von AdRotate."
 
-#: includes/admin/module-strings.php:39
+#: includes/admin/module-strings.php:40
 msgctxt "module description"
 msgid ""
 "When a published post's fields change without going through the editor (a "
@@ -227,7 +232,7 @@ msgstr ""
 "Funktion die Seite dieses Beitrags im Cache-Plugin der Website: SiteGround, "
 "WP Rocket, LiteSpeed, W3 Total Cache oder WP Super Cache."
 
-#: includes/admin/module-strings.php:40
+#: includes/admin/module-strings.php:41
 msgctxt "module description"
 msgid ""
 "Carousel block: a horizontal scrolling row of any blocks (or the posts of a "
@@ -238,7 +243,7 @@ msgstr ""
 "der Beiträge eines Abfrage-Loops) mit Pfeilen, optionalen Punkten, "
 "Endlosschleife und automatischer Wiedergabe nur auf Wunsch."
 
-#: includes/admin/module-strings.php:41
+#: includes/admin/module-strings.php:42
 msgctxt "module description"
 msgid ""
 "Turns comments off everywhere: closed on every post, no Comments menu, "
@@ -249,7 +254,7 @@ msgstr ""
 "„Kommentare“, kein Dashboard-Widget und kein Eintrag in der Werkzeugleiste, "
 "keine Kommentar-Blöcke auf der Website und keine Kommentar-Feeds."
 
-#: includes/admin/module-strings.php:42
+#: includes/admin/module-strings.php:43
 msgctxt "module description"
 msgid ""
 "Own cookie consent notice (Accept / Reject / Settings with declarable "
@@ -263,7 +268,7 @@ msgstr ""
 "befüllte Cookie-Liste und ein Cookie-Tabellen-Block für die Cookie-"
 "Richtlinie."
 
-#: includes/admin/module-strings.php:43
+#: includes/admin/module-strings.php:44
 msgctxt "module description"
 msgid ""
 "Build your own content types, taxonomies and fields from the panel (or start "
@@ -274,7 +279,7 @@ msgstr ""
 "starten Sie mit einem Template: Kunden, Testimonials, Standorte, Projekte, "
 "Portfolio), inklusive generiertem Editor-Panel, Block Bindings und WPML."
 
-#: includes/admin/module-strings.php:44
+#: includes/admin/module-strings.php:45
 msgctxt "module description"
 msgid ""
 "Links to another domain open in a new tab, with rel=\"noopener\" and a "
@@ -284,7 +289,7 @@ msgstr ""
 "rel=\"noopener\" und einem versteckten „(öffnet in einem neuen Tab)“ für "
 "Screenreader."
 
-#: includes/admin/module-strings.php:45
+#: includes/admin/module-strings.php:46
 msgctxt "module description"
 msgid ""
 "Publishes the page's FAQ accordions as schema.org FAQPage, inside Rank "
@@ -293,7 +298,7 @@ msgstr ""
 "Veröffentlicht die FAQ-Akkordeons der Seite als schema.org FAQPage, "
 "innerhalb des Graphen von Rank Math oder Yoast, falls vorhanden."
 
-#: includes/admin/module-strings.php:46
+#: includes/admin/module-strings.php:47
 msgctxt "module description"
 msgid ""
 "Featured images with a fixed width in px download a file of that size, and a "
@@ -304,7 +309,7 @@ msgstr ""
 "Größe, und ein Logo, dessen Alternativtext nur den daneben angezeigten Titel "
 "wiederholt, wird als dekorativ markiert."
 
-#: includes/admin/module-strings.php:47
+#: includes/admin/module-strings.php:48
 msgctxt "module description"
 msgid ""
 "Block-based forms with several email notifications made from templates, a "
@@ -314,7 +319,7 @@ msgstr ""
 "Templates, einem Protokoll von allem, was gesendet wurde, und WPML-"
 "Unterstützung."
 
-#: includes/admin/module-strings.php:48
+#: includes/admin/module-strings.php:49
 msgctxt "module description"
 msgid ""
 "Google Analytics 4, Google Ads (with an optional conversion for form "
@@ -325,7 +330,7 @@ msgstr ""
 "Einsendungen) und Google Tag Manager hinter dem Cookie-Hinweis, mit Consent "
 "Mode v2. Ein leeres Feld lädt nichts."
 
-#: includes/admin/module-strings.php:49
+#: includes/admin/module-strings.php:50
 msgctxt "module description"
 msgid ""
 "The «ES ▾» of the header: switches language to the same page, keyboard-"
@@ -334,7 +339,7 @@ msgstr ""
 "Das „ES ▾“ im Header: wechselt die Sprache auf derselben Seite, per Tastatur "
 "bedienbar und mit hreflang. Benötigt WPML; ohne WPML wird nichts angezeigt."
 
-#: includes/admin/module-strings.php:50
+#: includes/admin/module-strings.php:51
 msgctxt "module description"
 msgid ""
 "Serves /llms.txt, the text AI assistants read to describe the site, written "
@@ -344,7 +349,7 @@ msgstr ""
 "zu beschreiben, verfasst unter „Estrategia Web › Einstellungen › llms.txt“, "
 "mit WPML einer pro Sprache."
 
-#: includes/admin/module-strings.php:51
+#: includes/admin/module-strings.php:52
 msgctxt "module description"
 msgid ""
 "Tells search engines about the company and its locations with schema.org "
@@ -356,7 +361,7 @@ msgstr ""
 "Koordinaten), innerhalb des Graphen von Rank Math oder Yoast, falls "
 "vorhanden."
 
-#: includes/admin/module-strings.php:52
+#: includes/admin/module-strings.php:53
 msgctxt "module description"
 msgid ""
 "Two-click map block: a static image with the address; the Google Maps embed "
@@ -366,7 +371,7 @@ msgstr ""
 "eingebettete Google Maps-Karte lädt erst, wenn der Besucher sie anfordert "
 "(oder die Karten-Cookies akzeptiert hat)."
 
-#: includes/admin/module-strings.php:53
+#: includes/admin/module-strings.php:54
 msgctxt "module description"
 msgid ""
 "Matomo tracking code, cookieless or hybrid (no cookies until the visitor "
@@ -375,7 +380,7 @@ msgstr ""
 "Matomo-Tracking-Code, cookielos oder hybrid (keine Cookies, bis der Besucher "
 "Statistiken im Cookie-Hinweis akzeptiert)."
 
-#: includes/admin/module-strings.php:54
+#: includes/admin/module-strings.php:55
 msgctxt "module description"
 msgid ""
 "Choose the week's posts, preview the newsletter and copy its code or create "
@@ -385,7 +390,7 @@ msgstr ""
 "Vorschau an und kopieren Sie den Code oder legen Sie den Entwurf in "
 "Mailchimp an. Versendet nie."
 
-#: includes/admin/module-strings.php:55
+#: includes/admin/module-strings.php:56
 msgctxt "module description"
 msgid ""
 "Editable 301, 302 and 410 redirects with hit counters, CSV import and "
@@ -394,7 +399,7 @@ msgstr ""
 "Bearbeitbare 301-, 302- und 410-Weiterleitungen mit Aufrufzählern, CSV-"
 "Import und -Export und optionalem 404-Protokoll."
 
-#: includes/admin/module-strings.php:56
+#: includes/admin/module-strings.php:57
 msgctxt "module description"
 msgid ""
 "Adds the browser security headers a site is missing (HSTS over https, "
@@ -408,7 +413,23 @@ msgstr ""
 "Version. Einen Header, den schon ein anderes Plugin sendet, sendet es nie "
 "doppelt."
 
-#: includes/admin/module-strings.php:57
+#: includes/admin/module-strings.php:58
+msgctxt "module description"
+msgid ""
+"Adds the Estrategia Web checks to Tools › Site Health: search engines, legal "
+"pages, cookies, company details, locations, social profiles, security "
+"headers, login protection, page cache, DMARC, untranslated SEO texts, "
+"llms.txt and FAQ blocks. Each one says why it matters and links to the "
+"screen where it is fixed. It only reports: it changes nothing."
+msgstr ""
+"Fügt die Prüfungen von Estrategia Web unter Werkzeuge › Website-Zustand "
+"hinzu: Suchmaschinen, rechtliche Seiten, Cookies, Firmendaten, Standorte, "
+"soziale Profile, Sicherheits-Header, Login-Schutz, Seiten-Cache, DMARC, "
+"unübersetzte SEO-Texte, llms.txt und FAQ-Blöcke. Jede erklärt, warum sie "
+"wichtig ist, und verlinkt die Seite, auf der es behoben wird. Sie meldet "
+"nur: Sie ändert nichts."
+
+#: includes/admin/module-strings.php:59
 msgctxt "module description"
 msgid ""
 "Company details with Block Bindings and the [estrategia_web_company] "
@@ -419,7 +440,7 @@ msgstr ""
 "die Daten eines Standorts als Block-Bindings-Quelle und bereinigte SVG-"
 "Uploads."
 
-#: includes/admin/module-strings.php:58
+#: includes/admin/module-strings.php:60
 msgctxt "module description"
 msgid ""
 "Free, ordered list of social network links (name, link, icon from an "
@@ -429,7 +450,7 @@ msgstr ""
 "aus einer mitgelieferten Sammlung oder eigenes SVG) und ein Block, der sie "
 "anzeigt."
 
-#: includes/admin/module-strings.php:59
+#: includes/admin/module-strings.php:61
 msgctxt "module description"
 msgid ""
 "Phone photos can be uploaded (up to 20 MB by default); WordPress scales them "
@@ -439,7 +460,7 @@ msgstr ""
 "verkleinert sie auf 2560 px und auf dem Server bleibt nur die verkleinerte "
 "Kopie."
 
-#: includes/admin/module-strings.php:60
+#: includes/admin/module-strings.php:62
 msgctxt "module description"
 msgid ""
 "Image sizes generated from JPEG and PNG uploads are saved as WebP (quality "
@@ -448,7 +469,7 @@ msgstr ""
 "Die aus hochgeladenen JPEG- und PNG-Dateien erzeugten Bildgrößen werden als "
 "WebP gespeichert (Qualität 75)."
 
-#: includes/admin/module-strings.php:61
+#: includes/admin/module-strings.php:63
 msgctxt "module description"
 msgid ""
 "Floating button that opens a WhatsApp chat with a predefined message. The "
@@ -458,37 +479,37 @@ msgstr ""
 "Nachricht öffnet. Nummer und Nachricht sind Website-Optionen, nicht pro "
 "Seite."
 
-#: includes/admin/module-strings.php:64
+#: includes/admin/module-strings.php:66
 msgctxt "module category"
 msgid "Content"
 msgstr "Inhalt"
 
-#: includes/admin/module-strings.php:65
+#: includes/admin/module-strings.php:67
 msgctxt "module category"
 msgid "Media & performance"
 msgstr "Medien & Performance"
 
-#: includes/admin/module-strings.php:66
+#: includes/admin/module-strings.php:68
 msgctxt "module category"
 msgid "Privacy & analytics"
 msgstr "Datenschutz & Statistiken"
 
-#: includes/admin/module-strings.php:67
+#: includes/admin/module-strings.php:69
 msgctxt "module category"
 msgid "SEO"
 msgstr "SEO"
 
-#: includes/admin/module-strings.php:68
+#: includes/admin/module-strings.php:70
 msgctxt "module category"
 msgid "Contact"
 msgstr "Kontakt"
 
-#: includes/admin/module-strings.php:69
+#: includes/admin/module-strings.php:71
 msgctxt "module category"
 msgid "Languages"
 msgstr "Sprachen"
 
-#: includes/admin/module-strings.php:70
+#: includes/admin/module-strings.php:72
 msgctxt "module category"
 msgid "Other"
 msgstr "Sonstiges"
@@ -2304,6 +2325,7 @@ msgid "Email"
 msgstr "E-Mail"
 
 #: modules/content-types/includes/admin/class-page.php:399
+#: modules/site-health/checks/company-details.php:44
 #: modules/site/includes/class-company.php:134
 msgid "Phone"
 msgstr "Telefon"
@@ -5009,6 +5031,8 @@ msgid "There is a llms.txt file in the website's folder."
 msgstr "Im Ordner der Website liegt eine Datei llms.txt."
 
 #: modules/llms/includes/admin/class-tab.php:153
+#: modules/site-health/checks/legal-pages.php:140
+#: modules/site-health/checks/llms-and-faq.php:119
 msgid "Pages"
 msgstr "Seiten"
 
@@ -5863,6 +5887,635 @@ msgstr ""
 msgid "Redirects are managed by %s."
 msgstr "Weiterleitungen werden von %s verwaltet."
 
+#: modules/site-health/checks/company-details.php:30
+#: modules/site-health/checks/company-details.php:55
+msgid "Company details are complete"
+msgstr "Die Firmendaten sind vollständig"
+
+#: modules/site-health/checks/company-details.php:41
+#: modules/site/includes/class-company.php:130
+msgid "Legal name"
+msgstr "Rechtlicher Name"
+
+#: modules/site-health/checks/company-details.php:42
+#: modules/site/includes/class-company.php:131
+msgid "Tax ID"
+msgstr "Steuernummer"
+
+#: modules/site-health/checks/company-details.php:43
+#: modules/site/includes/class-company.php:138
+msgid "Address"
+msgstr "Adresse"
+
+#: modules/site-health/checks/company-details.php:56
+msgid "The legal name, tax ID, address and phone are filled in."
+msgstr "Rechtlicher Name, Steuernummer, Adresse und Telefon sind ausgefüllt."
+
+#: modules/site-health/checks/company-details.php:61
+msgid "Company details are incomplete"
+msgstr "Die Firmendaten sind unvollständig"
+
+#: modules/site-health/checks/company-details.php:62
+msgid ""
+"The legal notice must show the legal name, tax ID, address and a phone, and "
+"the site tells Google about the company from these same fields. Empty fields:"
+msgstr ""
+"Das Impressum muss den rechtlichen Namen, die Steuernummer, die Adresse und "
+"ein Telefon zeigen, und die Website informiert Google mit genau diesen "
+"Feldern über die Firma. Leere Felder:"
+
+#: modules/site-health/checks/company-details.php:67
+msgid "Estrategia Web › Company details"
+msgstr "Estrategia Web › Firmendaten"
+
+#: modules/site-health/checks/cookies-pending.php:34
+#: modules/site-health/checks/cookies-pending.php:68
+msgid "Cookies are confirmed and listed"
+msgstr "Die Cookies sind bestätigt und aufgelistet"
+
+#. translators: 1: number of cookies, 2: their names, comma-separated.
+#: modules/site-health/checks/cookies-pending.php:57
+#, php-format
+msgid "%1$d cookie waiting for confirmation: %2$s"
+msgid_plural "%1$d cookies waiting for confirmation: %2$s"
+msgstr[0] "%1$d Cookie wartet auf Bestätigung: %2$s"
+msgstr[1] "%1$d Cookies warten auf Bestätigung: %2$s"
+
+#: modules/site-health/checks/cookies-pending.php:63
+msgid "No published page shows the cookie table block"
+msgstr "Keine veröffentlichte Seite zeigt den Block der Cookie-Tabelle"
+
+#: modules/site-health/checks/cookies-pending.php:69
+msgid ""
+"Every detected cookie has been reviewed, and the cookie table is on a "
+"published page."
+msgstr ""
+"Alle erkannten Cookies wurden geprüft, und die Cookie-Tabelle steht auf "
+"einer veröffentlichten Seite."
+
+#: modules/site-health/checks/cookies-pending.php:74
+msgid "The cookie policy does not list every cookie"
+msgstr "Die Cookie-Richtlinie listet nicht alle Cookies auf"
+
+#: modules/site-health/checks/cookies-pending.php:75
+msgid ""
+"Visitors read the cookies in the cookie table, which only shows the "
+"confirmed ones. A cookie still pending is used on the site but not explained."
+msgstr ""
+"Besucher lesen die Cookies in der Cookie-Tabelle, die nur die bestätigten "
+"zeigt. Ein noch offenes Cookie wird auf der Website verwendet, aber nicht "
+"erklärt."
+
+#: modules/site-health/checks/cookies-pending.php:80
+msgid "Estrategia Web › Settings › Cookies"
+msgstr "Estrategia Web › Einstellungen › Cookies"
+
+#: modules/site-health/checks/dmarc.php:40
+#: modules/site-health/checks/dmarc.php:70
+msgid "The mail domain has a DMARC record"
+msgstr "Die E-Mail-Domain hat einen DMARC-Eintrag"
+
+#. translators: 1: a domain, 2: its DMARC record.
+#: modules/site-health/checks/dmarc.php:72
+#, php-format
+msgid "_dmarc.%1$s: %2$s"
+msgstr "_dmarc.%1$s: %2$s"
+
+#: modules/site-health/checks/dmarc.php:80
+msgid "Could not check the DMARC record"
+msgstr "Der DMARC-Eintrag konnte nicht geprüft werden"
+
+#. translators: %s: a domain.
+#: modules/site-health/checks/dmarc.php:82
+#, php-format
+msgid ""
+"The DNS lookup of _dmarc.%s did not answer from this server, so it is not "
+"known whether the record exists. Check it with any online DMARC checker."
+msgstr ""
+"Die DNS-Abfrage von _dmarc.%s hat von diesem Server aus nicht geantwortet, "
+"daher ist unbekannt, ob der Eintrag existiert. Prüfen Sie es mit einem "
+"beliebigen DMARC-Prüfer im Netz."
+
+#: modules/site-health/checks/dmarc.php:87
+msgid "The mail domain has no DMARC record"
+msgstr "Die E-Mail-Domain hat keinen DMARC-Eintrag"
+
+#: modules/site-health/checks/dmarc.php:88
+msgid ""
+"Without DMARC, mail from the domain (the site's form notifications too) "
+"lands in spam more often, and anyone can send mail pretending to be the "
+"domain."
+msgstr ""
+"Ohne DMARC landen E-Mails der Domain (auch die Benachrichtigungen der "
+"Formulare der Website) öfter im Spam, und jeder kann E-Mails im Namen der "
+"Domain versenden."
+
+#. translators: %s: a domain.
+#: modules/site-health/checks/dmarc.php:92
+#, php-format
+msgid ""
+"Add a TXT record at _dmarc.%s in the domain's DNS, for example «v=DMARC1; "
+"p=none; rua=mailto:…» to start."
+msgstr ""
+"Fügen Sie im DNS der Domain einen TXT-Eintrag unter _dmarc.%s hinzu, zum "
+"Beispiel «v=DMARC1; p=none; rua=mailto:…» für den Anfang."
+
+#: modules/site-health/checks/english-defaults.php:48
+#: modules/site-health/checks/english-defaults.php:86
+msgid "No texts left in English"
+msgstr "Keine Texte mehr auf Englisch"
+
+#. translators: 1: a Yoast SEO setting key, 2: its value.
+#: modules/site-health/checks/english-defaults.php:71
+#, php-format
+msgid "Yoast SEO, %1$s: «%2$s»"
+msgstr "Yoast SEO, %1$s: «%2$s»"
+
+#: modules/site-health/checks/english-defaults.php:78
+msgid ""
+"Timezone: UTC (scheduled posts and dates are off by the local difference)"
+msgstr ""
+"Zeitzone: UTC (geplante Beiträge und Datumsangaben weichen um den lokalen "
+"Unterschied ab)"
+
+#: modules/site-health/checks/english-defaults.php:81
+msgid "Date format: «F j, Y», the English one (November 26, 2026)"
+msgstr "Datumsformat: «F j, Y», das englische (November 26, 2026)"
+
+#: modules/site-health/checks/english-defaults.php:87
+msgid ""
+"The SEO title templates, the timezone and the date format are not the "
+"English factory values."
+msgstr ""
+"Die SEO-Titelvorlagen, die Zeitzone und das Datumsformat sind nicht die "
+"englischen Werkseinstellungen."
+
+#: modules/site-health/checks/english-defaults.php:94
+msgid "Yoast SEO › Settings"
+msgstr "Yoast SEO › Einstellungen"
+
+#: modules/site-health/checks/english-defaults.php:100
+msgid "Settings › General"
+msgstr "Einstellungen › Allgemein"
+
+#: modules/site-health/checks/english-defaults.php:105
+msgid "Some settings are still the English factory values"
+msgstr "Einige Einstellungen haben noch die englischen Werkswerte"
+
+#: modules/site-health/checks/english-defaults.php:106
+msgid ""
+"These values were written when the site was installed in English and did not "
+"change with the site's language. Visitors and search engines see them as "
+"they are."
+msgstr ""
+"Diese Werte wurden geschrieben, als die Website auf Englisch installiert "
+"wurde, und haben sich mit der Sprache der Website nicht geändert. Besucher "
+"und Suchmaschinen sehen sie so, wie sie sind."
+
+#: modules/site-health/checks/legal-pages.php:46
+#: modules/site-health/checks/legal-pages.php:175
+msgid "Legal pages exist and are linked"
+msgstr "Die rechtlichen Seiten existieren und sind verlinkt"
+
+#: modules/site-health/checks/legal-pages.php:108
+msgid "Legal notice"
+msgstr "Impressum"
+
+#: modules/site-health/checks/legal-pages.php:109
+msgid "Privacy policy"
+msgstr "Datenschutzerklärung"
+
+#: modules/site-health/checks/legal-pages.php:110
+msgid "Cookie policy"
+msgstr "Cookie-Richtlinie"
+
+#. translators: 1: kind of legal page (Legal notice…), 2: the page's title.
+#: modules/site-health/checks/legal-pages.php:131
+#, php-format
+msgid "%1$s («%2$s») is not linked from any menu or footer"
+msgstr "%1$s («%2$s») ist in keinem Menü und keiner Fußzeile verlinkt"
+
+#. translators: 1: kind of legal page (Legal notice…), 2: the page's title.
+#: modules/site-health/checks/legal-pages.php:134
+#, php-format
+msgid "%1$s («%2$s») was last changed more than 12 months ago"
+msgstr "%1$s («%2$s») wurde zuletzt vor mehr als 12 Monaten geändert"
+
+#: modules/site-health/checks/legal-pages.php:144
+msgid "Settings › Privacy"
+msgstr "Einstellungen › Datenschutz"
+
+#: modules/site-health/checks/legal-pages.php:148
+msgid "Footer and menus (Site Editor)"
+msgstr "Fußzeile und Menüs (Website-Editor)"
+
+#: modules/site-health/checks/legal-pages.php:154
+msgid "A legal page is missing or cannot be reached"
+msgstr "Eine rechtliche Seite fehlt oder ist nicht erreichbar"
+
+#: modules/site-health/checks/legal-pages.php:155
+msgid ""
+"A business site needs a legal notice, a privacy policy and a cookie policy, "
+"linked from every page (usually the footer). A page that exists but is not "
+"linked does not count."
+msgstr ""
+"Die Website eines Unternehmens braucht ein Impressum, eine "
+"Datenschutzerklärung und eine Cookie-Richtlinie, von jeder Seite aus "
+"verlinkt (meist in der Fußzeile). Eine Seite, die existiert, aber nicht "
+"verlinkt ist, zählt nicht."
+
+#. translators: %s: kind of legal page (Legal notice…).
+#: modules/site-health/checks/legal-pages.php:158
+#, php-format
+msgid "%s: no published page found"
+msgstr "%s: keine veröffentlichte Seite gefunden"
+
+#: modules/site-health/checks/legal-pages.php:167
+msgid "A legal page has not been reviewed for a year"
+msgstr "Eine rechtliche Seite wurde seit einem Jahr nicht überprüft"
+
+#: modules/site-health/checks/legal-pages.php:168
+msgid ""
+"Legal texts should describe what the site does today. If a form, a map or an "
+"analytics tag was added since, the text may be out of date."
+msgstr ""
+"Rechtstexte sollten beschreiben, was die Website heute tut. Wurde seitdem "
+"ein Formular, eine Karte oder ein Analyse-Tag hinzugefügt, kann der Text "
+"veraltet sein."
+
+#: modules/site-health/checks/legal-pages.php:176
+msgid ""
+"The legal notice, the privacy policy and the cookie policy are published, "
+"linked and reviewed in the last 12 months."
+msgstr ""
+"Impressum, Datenschutzerklärung und Cookie-Richtlinie sind veröffentlicht, "
+"verlinkt und in den letzten 12 Monaten überprüft."
+
+#: modules/site-health/checks/llms-and-faq.php:42
+#: modules/site-health/checks/llms-and-faq.php:125
+msgid "AI assistants and search engines can read the site's summary and FAQs"
+msgstr ""
+"KI-Assistenten und Suchmaschinen können die Zusammenfassung und die FAQ der "
+"Website lesen"
+
+#: modules/site-health/checks/llms-and-faq.php:75
+msgid "The llms.txt module is off: the site has no llms.txt."
+msgstr "Das Modul llms.txt ist ausgeschaltet: Die Website hat keine llms.txt."
+
+#: modules/site-health/checks/llms-and-faq.php:78
+#: modules/site-health/checks/social-profiles.php:56
+msgid "Estrategia Web › Modules"
+msgstr "Estrategia Web › Module"
+
+#: modules/site-health/checks/llms-and-faq.php:81
+msgid "The llms.txt module is on but its text is empty."
+msgstr "Das Modul llms.txt ist eingeschaltet, aber sein Text ist leer."
+
+#: modules/site-health/checks/llms-and-faq.php:84
+msgid "Estrategia Web › Settings › llms.txt"
+msgstr "Estrategia Web › Einstellungen › llms.txt"
+
+#. translators: %s: a page's title.
+#: modules/site-health/checks/llms-and-faq.php:103
+#, php-format
+msgid ""
+"«%s»: an accordion without a FAQ style (if it is a FAQ, choose the FAQ style "
+"in the block's Styles)"
+msgstr ""
+"«%s»: ein Akkordeon ohne FAQ-Stil (wenn es eine FAQ ist, wählen Sie den FAQ-"
+"Stil in den Stilen des Blocks)"
+
+#. translators: %s: a page's title.
+#: modules/site-health/checks/llms-and-faq.php:108
+#, php-format
+msgid ""
+"«%s»: questions in Details blocks (turn them into an accordion with the FAQ "
+"style)"
+msgstr ""
+"«%s»: Fragen in Details-Blöcken (wandeln Sie sie in ein Akkordeon mit dem "
+"FAQ-Stil um)"
+
+#: modules/site-health/checks/llms-and-faq.php:113
+msgid "Only the first 30 pages with these blocks were read."
+msgstr "Nur die ersten 30 Seiten mit diesen Blöcken wurden gelesen."
+
+#: modules/site-health/checks/llms-and-faq.php:126
+msgid ""
+"The site has an llms.txt, and its FAQs are blocks the FAQ schema module "
+"reads."
+msgstr ""
+"Die Website hat eine llms.txt, und ihre FAQ sind Blöcke, die das FAQ-Schema-"
+"Modul liest."
+
+#: modules/site-health/checks/llms-and-faq.php:131
+msgid "The site's summary or FAQs are not readable by machines"
+msgstr ""
+"Die Zusammenfassung oder die FAQ der Website sind für Maschinen nicht lesbar"
+
+#: modules/site-health/checks/llms-and-faq.php:132
+msgid ""
+"AI assistants read llms.txt to learn what the site is about, and Google "
+"shows FAQs from their structured data, which the FAQ schema module only "
+"builds from accordions with the FAQ style."
+msgstr ""
+"KI-Assistenten lesen llms.txt, um zu erfahren, worum es auf der Website "
+"geht, und Google zeigt FAQ aus ihren strukturierten Daten, die das FAQ-"
+"Schema-Modul nur aus Akkordeons mit dem FAQ-Stil erzeugt."
+
+#: modules/site-health/checks/locations.php:43
+#: modules/site-health/checks/locations.php:99
+msgid "Locations are complete"
+msgstr "Die Standorte sind vollständig"
+
+#: modules/site-health/checks/locations.php:83
+msgid "no coordinates"
+msgstr "keine Koordinaten"
+
+#: modules/site-health/checks/locations.php:86
+msgid "no Google Business profile"
+msgstr "kein Google-Business-Profil"
+
+#: modules/site-health/checks/locations.php:89
+msgid "no page of its own"
+msgstr "keine eigene Seite"
+
+#. translators: 1: a location's name, 2: what it lacks, comma-separated.
+#: modules/site-health/checks/locations.php:93
+#, php-format
+msgid "%1$s: %2$s"
+msgstr "%1$s: %2$s"
+
+#: modules/site-health/checks/locations.php:100
+msgid "Every location has what search engines and the site's buttons need."
+msgstr ""
+"Jeder Standort hat, was Suchmaschinen und die Schaltflächen der Website "
+"brauchen."
+
+#: modules/site-health/checks/locations.php:105
+msgid "Some locations are incomplete"
+msgstr "Einige Standorte sind unvollständig"
+
+#: modules/site-health/checks/locations.php:106
+msgid ""
+"Coordinates and the Google Business profile tie each location to its place "
+"on Google Maps; a location without a page sends its «see more» button to the "
+"home page."
+msgstr ""
+"Koordinaten und das Google-Business-Profil verbinden jeden Standort mit "
+"seinem Ort in Google Maps; ein Standort ohne Seite schickt seine "
+"Schaltfläche «mehr» auf die Startseite."
+
+#: modules/site-health/checks/locations.php:111
+msgid "Locations"
+msgstr "Standorte"
+
+#: modules/site-health/checks/login-protection.php:41
+#: modules/site-health/checks/login-protection.php:59
+msgid "Login attempts are limited"
+msgstr "Anmeldeversuche sind begrenzt"
+
+#. translators: %s: plugin names, comma-separated.
+#: modules/site-health/checks/login-protection.php:61
+#, php-format
+msgid "Repeated failed logins are blocked by: %s."
+msgstr "Wiederholte fehlgeschlagene Anmeldungen blockiert: %s."
+
+#: modules/site-health/checks/login-protection.php:66
+msgid "Nothing limits login attempts"
+msgstr "Nichts begrenzt die Anmeldeversuche"
+
+#: modules/site-health/checks/login-protection.php:67
+msgid ""
+"Anyone can keep trying passwords on the login page for as long as they like. "
+"SiteGround Security limits the attempts and closes XML-RPC, and works on any "
+"hosting."
+msgstr ""
+"Jeder kann auf der Anmeldeseite beliebig lange Passwörter ausprobieren. "
+"SiteGround Security begrenzt die Versuche, schließt XML-RPC und funktioniert "
+"bei jedem Hosting."
+
+#: modules/site-health/checks/login-protection.php:70
+msgid ""
+"XML-RPC is open: it accepts hundreds of password attempts in a single "
+"request."
+msgstr ""
+"XML-RPC ist offen: Es nimmt Hunderte von Passwortversuchen in einer einzigen "
+"Anfrage an."
+
+#: modules/site-health/checks/login-protection.php:71
+msgid "XML-RPC is already closed."
+msgstr "XML-RPC ist bereits geschlossen."
+
+#: modules/site-health/checks/login-protection.php:76
+msgid "Install SiteGround Security"
+msgstr "SiteGround Security installieren"
+
+#: modules/site-health/checks/page-cache.php:46
+#: modules/site-health/checks/page-cache.php:81
+msgid "Pages are cached"
+msgstr "Seiten werden zwischengespeichert"
+
+#: modules/site-health/checks/page-cache.php:63
+msgid "Pages are cached by the hosting"
+msgstr "Das Hosting speichert die Seiten zwischen"
+
+#: modules/site-health/checks/page-cache.php:64
+msgid "The site is hosted on SiteGround, whose servers cache the pages."
+msgstr ""
+"Die Website liegt bei SiteGround, dessen Server die Seiten zwischenspeichern."
+
+#. translators: %s: plugin names, comma-separated.
+#: modules/site-health/checks/page-cache.php:83
+#, php-format
+msgid "Pages are cached by: %s."
+msgstr "Seiten werden zwischengespeichert von: %s."
+
+#: modules/site-health/checks/page-cache.php:89
+msgid "Pages are not cached"
+msgstr "Seiten werden nicht zwischengespeichert"
+
+#: modules/site-health/checks/page-cache.php:91
+msgid ""
+"SiteGround Speed Optimizer is active but its file-based cache is off, and "
+"outside SiteGround that is the only page cache it has. Every visit builds "
+"the page from scratch."
+msgstr ""
+"SiteGround Speed Optimizer ist aktiv, aber sein dateibasierter Cache ist "
+"aus, und außerhalb von SiteGround ist das sein einziger Seiten-Cache. Jeder "
+"Besuch baut die Seite neu auf."
+
+#: modules/site-health/checks/page-cache.php:92
+msgid ""
+"The site is not on SiteGround and no page cache plugin is active, so every "
+"visit builds the page from scratch. SiteGround Speed Optimizer's file-based "
+"cache works on any hosting."
+msgstr ""
+"Die Website liegt nicht bei SiteGround und kein Seiten-Cache-Plugin ist "
+"aktiv, daher baut jeder Besuch die Seite neu auf. Der dateibasierte Cache "
+"von SiteGround Speed Optimizer funktioniert bei jedem Hosting."
+
+#: modules/site-health/checks/page-cache.php:97
+msgid "Speed Optimizer › Caching"
+msgstr "Speed Optimizer › Caching"
+
+#: modules/site-health/checks/page-cache.php:101
+msgid "Install SiteGround Speed Optimizer"
+msgstr "SiteGround Speed Optimizer installieren"
+
+#: modules/site-health/checks/search-engines.php:34
+#: modules/site-health/checks/search-engines.php:50
+msgid "Search engines can index the site"
+msgstr "Suchmaschinen können die Website indexieren"
+
+#: modules/site-health/checks/search-engines.php:51
+msgid "The site does not ask search engines to stay away."
+msgstr "Die Website bittet Suchmaschinen nicht, fernzubleiben."
+
+#: modules/site-health/checks/search-engines.php:57
+msgid "This staging copy is hidden from search engines"
+msgstr "Diese Testkopie ist vor Suchmaschinen verborgen"
+
+#: modules/site-health/checks/search-engines.php:58
+msgid ""
+"Search engines are discouraged, which is right for a copy that is not the "
+"real site. Untick it on the real site on launch day."
+msgstr ""
+"Suchmaschinen werden abgehalten, was für eine Kopie, die nicht die echte "
+"Website ist, richtig ist. Entfernen Sie den Haken auf der echten Website am "
+"Tag des Starts."
+
+#: modules/site-health/checks/search-engines.php:63
+msgid "Search engines are told not to index the site"
+msgstr "Suchmaschinen werden gebeten, die Website nicht zu indexieren"
+
+#: modules/site-health/checks/search-engines.php:64
+msgid ""
+"«Discourage search engines from indexing this site» is ticked on a site that "
+"does not look like a staging copy. Google drops a site like this from its "
+"results."
+msgstr ""
+"«Suchmaschinen davon abhalten, diese Website zu indexieren» ist bei einer "
+"Website angehakt, die nicht wie eine Testkopie aussieht. Google entfernt "
+"eine solche Website aus seinen Ergebnissen."
+
+#: modules/site-health/checks/search-engines.php:68
+msgid "Settings › Reading"
+msgstr "Einstellungen › Lesen"
+
+#: modules/site-health/checks/security-headers.php:36
+#: modules/site-health/checks/security-headers.php:95
+msgid "The site sends the browser security headers"
+msgstr "Die Website sendet die Sicherheits-Header für den Browser"
+
+#: modules/site-health/checks/security-headers.php:64
+msgid "Estrategia Web › Modules › Security headers"
+msgstr "Estrategia Web › Module › Sicherheits-Header"
+
+#: modules/site-health/checks/security-headers.php:70
+msgid "Could not check the security headers"
+msgstr "Die Sicherheits-Header konnten nicht geprüft werden"
+
+#: modules/site-health/checks/security-headers.php:71
+msgid ""
+"The site could not load its own home page to read the headers it sends. This "
+"is not a missing header: WordPress' «loopback request» test explains why the "
+"site cannot call itself."
+msgstr ""
+"Die Website konnte ihre eigene Startseite nicht laden, um die gesendeten "
+"Header zu lesen. Das ist kein fehlender Header: Der Test «Loopback-Anfrage» "
+"von WordPress erklärt, warum die Website sich nicht selbst aufrufen kann."
+
+#. translators: %s: an HTTP status code or an error message.
+#: modules/site-health/checks/security-headers.php:73
+#, php-format
+msgid "Answer: %s"
+msgstr "Antwort: %s"
+
+#. translators: %s: an HTTP header name.
+#: modules/site-health/checks/security-headers.php:85
+#, php-format
+msgid "Missing: %s"
+msgstr "Fehlt: %s"
+
+#. translators: %s: the value of the X-Powered-By header, e.g. PHP/8.3.6.
+#: modules/site-health/checks/security-headers.php:90
+#, php-format
+msgid "Exposed: X-Powered-By: %s"
+msgstr "Sichtbar: X-Powered-By: %s"
+
+#: modules/site-health/checks/security-headers.php:96
+msgid ""
+"The home page sends the security headers browsers use, and does not tell "
+"which PHP version runs it."
+msgstr ""
+"Die Startseite sendet die Sicherheits-Header, die Browser verwenden, und "
+"verrät nicht, welche PHP-Version sie ausführt."
+
+#: modules/site-health/checks/security-headers.php:101
+msgid "Some browser security headers are missing"
+msgstr "Einige Sicherheits-Header für den Browser fehlen"
+
+#: modules/site-health/checks/security-headers.php:102
+msgid ""
+"These headers tell browsers to use https, not to show the site inside "
+"another one and not to give pages access to the camera or location. The "
+"Security headers module adds the ones that are missing."
+msgstr ""
+"Diese Header sagen Browsern, https zu verwenden, die Website nicht in einer "
+"anderen anzuzeigen und Seiten keinen Zugriff auf Kamera oder Standort zu "
+"geben. Das Modul Sicherheits-Header ergänzt die fehlenden."
+
+#: modules/site-health/checks/social-profiles.php:33
+#: modules/site-health/checks/social-profiles.php:42
+msgid "The company's social profiles are listed"
+msgstr "Die sozialen Profile der Firma sind aufgeführt"
+
+#: modules/site-health/checks/social-profiles.php:43
+msgid "Search engines are told which social profiles belong to the company."
+msgstr "Suchmaschinen erfahren, welche sozialen Profile zur Firma gehören."
+
+#: modules/site-health/checks/social-profiles.php:48
+msgid "The company has no social profiles listed"
+msgstr "Für die Firma sind keine sozialen Profile aufgeführt"
+
+#: modules/site-health/checks/social-profiles.php:50
+msgid ""
+"The Social networks module is off, so nothing tells search engines which "
+"profiles belong to the company (the «sameAs» of its structured data is "
+"empty)."
+msgstr ""
+"Das Modul Soziale Netzwerke ist ausgeschaltet, daher sagt nichts den "
+"Suchmaschinen, welche Profile zur Firma gehören (das «sameAs» ihrer "
+"strukturierten Daten ist leer)."
+
+#: modules/site-health/checks/social-profiles.php:51
+msgid ""
+"The list of social networks is empty, so nothing tells search engines which "
+"profiles belong to the company (the «sameAs» of its structured data is "
+"empty)."
+msgstr ""
+"Die Liste der sozialen Netzwerke ist leer, daher sagt nichts den "
+"Suchmaschinen, welche Profile zur Firma gehören (das «sameAs» ihrer "
+"strukturierten Daten ist leer)."
+
+#: modules/site-health/checks/social-profiles.php:60
+msgid "Estrategia Web › Social networks"
+msgstr "Estrategia Web › Soziale Netzwerke"
+
+#. translators: %s: the name of a Site Health check.
+#: modules/site-health/includes/class-registry.php:142
+#, php-format
+msgid "Could not check: %s"
+msgstr "Konnte nicht geprüft werden: %s"
+
+#: modules/site-health/includes/class-registry.php:143
+msgid ""
+"The check stopped with an error. Nothing on the site was changed; the error "
+"is below."
+msgstr ""
+"Die Prüfung wurde mit einem Fehler beendet. An der Website wurde nichts "
+"geändert; der Fehler steht unten."
+
 #: modules/site/includes/admin/class-admin.php:54
 #: modules/uploads/includes/class-uploads.php:65
 msgid "Media"
@@ -5929,14 +6582,6 @@ msgstr "Text, der beim Öffnen des Chats bereits eingetragen ist."
 msgid "Company name"
 msgstr "Firmenname"
 
-#: modules/site/includes/class-company.php:130
-msgid "Legal name"
-msgstr "Rechtlicher Name"
-
-#: modules/site/includes/class-company.php:131
-msgid "Tax ID"
-msgstr "Steuernummer"
-
 #: modules/site/includes/class-company.php:132
 msgid "Company registry"
 msgstr "Handelsregistereintrag"
@@ -5952,10 +6597,6 @@ msgstr "WhatsApp"
 #: modules/site/includes/class-company.php:137
 msgid "WhatsApp message"
 msgstr "WhatsApp-Nachricht"
-
-#: modules/site/includes/class-company.php:138
-msgid "Address"
-msgstr "Adresse"
 
 #: modules/site/includes/class-company.php:139
 msgid "Opening hours"
