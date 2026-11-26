@@ -353,7 +353,7 @@ Keys: `address` (placeholders `{street}` `{postal_code}` `{locality}`
 (Company details) use the same format.
 | `estrategia_web_location_phone_href` | `tel:+34971112233`, from `estrategia_web_location_phone` (same country code as the company) |
 | `estrategia_web_location_email_href` | `mailto:…`, from `estrategia_web_location_email` |
-| `estrategia_web_location_page_url` | **derived (2.18.0)**: the page tied to the location — its permalink if the type has public pages; otherwise the published page whose blocks bind to its slug (the oldest); otherwise home. The button of each card in a Query Loop of locations, no slug. A type with `"public": false` is not listed by core's Query Loop at all: then by slug |
+| `estrategia_web_location_page_url` | **derived (2.18.0)**: the page tied to the location — its permalink if the type has public pages; otherwise the published page whose blocks bind to its slug (the oldest); otherwise home. The button of each card in a Query Loop of locations, no slug. A type with `"public": false` is listed by the Query Loop too since 2.18.0 (content-types' `Query_Loop`: core alone drops a non-viewable type and lists posts) |
 
 Same treatment as the company source: escaped text with `<br>`, and in `url`
 only `http`, `https`, `tel` and `mailto`. **A location that does not exist,

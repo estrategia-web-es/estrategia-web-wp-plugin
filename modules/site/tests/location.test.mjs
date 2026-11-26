@@ -25,17 +25,21 @@
 // 2.18.0 (Llar d'Estels, 26-11-2026): estrategia_web_location_page_url, the url of a button in
 // each card of the Query, without slug: with a public location type, each location's permalink.
 // The NON-public half (?ew_lb_private=1: the local-business test mu-plugin makes the location type
-// not public for that request, as on Llar d'Estels) is read BY SLUG, not in the Query: WordPress'
-// core/query drops a postType that is not viewable (build_query_vars_from_query_block(),
-// is_post_type_viewable(); WP 7.1.4) and lists posts instead — measured here on 26-11-2026, the
-// private read's Query had 1 item, not 3. The value is the same code either way (Location::value()).
+// not public for that request, as on Llar d'Estels), by slug AND in a Query ordered by menu_order
+// (Palma 1, Maioris 2, Inca 3: not their title order, Inca, Maioris, Palma). WordPress' core/query
+// drops a postType that is not viewable (build_query_vars_from_query_block(), is_post_type_viewable();
+// WP 7.1.4) and listed posts instead — measured here on 26-11-2026, 1 item, not 3 —; content-types'
+// Query_Loop puts a type of ours back. Core's private wp_block (synced patterns: also show_in_rest)
+// is NOT ours, and a Query of it still does not list the pattern (the edge case of class-query-loop.php).
 // Each location's TIED page: Maioris → this very page (it binds to «maioris» by slug), Palma →
 // «sede-palma» (its button is there), Inca → home: its button is in a SYNCED PATTERN, which ties it
 // for local-business (bound_slugs reads patterns) but not for the page lookup (the LIKE reads the
 // page's own content) — the edge case named in class-location-pages.php.
 // Seen red (26-11-2026) with value() returning get_permalink() for the key (the private buttons
 // gave …/sedes/maioris/ instead of …/sedes-prueba/), and with the key left out of value() (every
-// button's href came out empty).
+// button's href came out empty). The Query half seen red (26-11-2026) with Query_Loop::boot()
+// commented out (the private menu_order Query had 1 item, not 3), and with the «declared by this
+// module» check removed (the wp_block Query listed «Inca button»).
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { reset, wp, saveCompany, seedPage, html, upload, png, type } from "../../../tests/lib.mjs";
@@ -84,6 +88,21 @@ ${para("t-static", { key: STATIC })}
 <div class="wp-block-button t-page"><a class="wp-block-button__link wp-element-button" href="#">More</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons -->
+<!-- /wp:post-template --></div>
+<!-- /wp:query -->
+<!-- wp:query ${JSON.stringify({ queryId: 4, className: "tq-menu", query: { perPage: 10, pages: 0, offset: 0, postType: type("location"), order: "asc", orderBy: "menu_order", inherit: false } })} -->
+<div class="wp-block-query tq-menu"><!-- wp:post-template -->
+<!-- wp:post-title /-->
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button ${attrs("t-mo-page", { url: { source: SRC, args: { key: "estrategia_web_location_page_url" } } })} -->
+<div class="wp-block-button t-mo-page"><a class="wp-block-button__link wp-element-button" href="#">More</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons -->
+<!-- /wp:post-template --></div>
+<!-- /wp:query -->
+<!-- wp:query ${JSON.stringify({ queryId: 5, className: "tq-wpblock", query: { perPage: 10, pages: 0, offset: 0, postType: "wp_block", order: "asc", orderBy: "title", inherit: false } })} -->
+<div class="wp-block-query tq-wpblock"><!-- wp:post-template -->
+<!-- wp:post-title /-->
 <!-- /wp:post-template --></div>
 <!-- /wp:query -->`;
 
@@ -164,8 +183,8 @@ before(async () => {
   assert.equal(img.status, 201, img.text);
   assert.equal(img2.status, 201, img2.text);
   [image, other, page, palmaPage] = [img.json, img2.json, p, pp];
-  const make = async (title, slug, status, m) => {
-    const r = await wp(`/${type("location")}`, { method: "POST", body: { title, slug, status, meta: m } });
+  const make = async (title, slug, status, m, menu_order = 0) => {
+    const r = await wp(`/${type("location")}`, { method: "POST", body: { title, slug, status, meta: m, menu_order } });
     assert.equal(r.status, 201, r.text);
     return r.json;
   };
@@ -181,9 +200,9 @@ before(async () => {
       estrategia_web_location_hours: JSON.stringify({ mo: ["08:00-20:00"], tu: ["08:00-20:00"], we: ["08:00-20:00"], th: ["08:00-20:00"], fr: ["08:00-20:00"] }),
       estrategia_web_location_map_query: MAP_QUERY,
       estrategia_web_location_static_map_id: image.id,
-    }),
-    make("Palma location", "palma", "publish", { estrategia_web_location_street: "Carrer de Palma 1", estrategia_web_location_postal_code: "07001", estrategia_web_location_locality: "Palma", estrategia_web_location_phone: "971 44 55 66" }),
-    make("Inca location", "inca", "publish", { estrategia_web_location_static_map_id: other.id }),
+    }, 2),
+    make("Palma location", "palma", "publish", { estrategia_web_location_street: "Carrer de Palma 1", estrategia_web_location_postal_code: "07001", estrategia_web_location_locality: "Palma", estrategia_web_location_phone: "971 44 55 66" }, 1),
+    make("Inca location", "inca", "publish", { estrategia_web_location_static_map_id: other.id }, 3),
     make("Draft location", "borrador", "draft", { estrategia_web_location_phone: "971 99 99 99", estrategia_web_location_street: "Must not appear" }),
     make("Not an image", "no-imagen", "draft", { estrategia_web_location_static_map_id: page.id }),
     make("No such post", "no-existe-id", "draft", { estrategia_web_location_static_map_id: 999999 }),
@@ -247,6 +266,20 @@ test("page_url: without slug in a Query, a public type gives each location's per
   assert.equal(href(privateText, "t-page-maioris"), page.url, "not public: Maioris → this page (it binds to maioris)");
   assert.equal(href(palmaPrivate, "t-page-palma"), palmaPage.url, "not public: Palma → sede-palma");
   assert.equal(href(privateText, "t-page-inca"), new URL(page.url).origin + "/", "not public: Inca → home (tied only through a synced pattern)");
+});
+
+const queryItems = (t, cls) => [...(t.match(new RegExp(`<div[^>]*${cls}[\\s\\S]*?</ul>`))?.[0] ?? "").matchAll(/<li[\s\S]*?<\/li>/g)].map((m) => m[0]);
+const titles = (lis) => lis.map((li) => li.match(/wp-block-post-title[^>]*>(?:<a[^>]*>)?([^<]*)/)?.[1]);
+
+test("a Query Loop of the NON-public location type lists the locations, by menu_order (not title), each button to its tied page", () => {
+  const li = queryItems(privateText, "tq-menu");
+  assert.deepEqual(titles(li), ["Palma location", "Maioris &#038; Llucmajor", "Inca location"], "menu_order 1, 2, 3 — the title order would be Inca, Maioris, Palma");
+  assert.deepEqual(li.map((l) => href(l, "t-mo-page")), [palmaPage.url, page.url, new URL(page.url).origin + "/"], "Palma → sede-palma, Maioris → this page, Inca → home");
+  assert.deepEqual(titles(queryItems(text, "tq-menu")), ["Palma location", "Maioris &#038; Llucmajor", "Inca location"], "public: the same order");
+});
+
+test("a Query Loop of a private type that is NOT declared by content-types (core's wp_block) is left to WordPress: the pattern is not listed", () => {
+  for (const t of [text, privateText]) assert.ok(!titles(queryItems(t, "tq-wpblock")).includes("Inca button"), JSON.stringify(titles(queryItems(t, "tq-wpblock"))));
 });
 
 test("estrategia_web_location_static_map_id: an image attachment is saved; an id that is not an image attachment, 0", () => {

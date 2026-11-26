@@ -98,10 +98,11 @@ not; stylesheet names; patterns). The ones that matter for the plugin:
   four places, and a new location page left links pointing to the old one).
   The card's button goes to the location's page with
   `{"url":{"source":"estrategia-web-site/location","args":{"key":"estrategia_web_location_page_url"}}}`.
-  The trap: core's Query Loop drops a post type that is not viewable
-  (`"public": false`) and lists posts instead (measured 26-11-2026, WP 7.1.4:
-  `build_query_vars_from_query_block()` checks `is_post_type_viewable()`).
-  With a non-public type the binding still works by slug.
+  A non-public type (`"public": false`) works too since 2.18.0: core's
+  Query Loop drops a type that is not viewable and lists posts (WP 7.1.4,
+  `build_query_vars_from_query_block()`), and content-types puts back the
+  types it declares (`class-query-loop.php`). Order the loop by
+  `menu_order` (the «Order» of each entry), not by title.
 
 **GAP — there is no child theme template.** Today you copy Lavandería and
 delete its own stuff by hand; there is no empty `armazon-wp-hijo` with the

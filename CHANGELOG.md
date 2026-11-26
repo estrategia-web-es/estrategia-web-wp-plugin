@@ -24,10 +24,17 @@ then it has no Google profile field. Born with the Llar d'Estels audit.
   (`Location_Pages`, modules/site/includes/class-location-pages.php) so it
   works with local-business switched off. For the button of each card:
   `{"url":{"source":"estrategia-web-site/location","args":{"key":"estrategia_web_location_page_url"}}}`,
-  no slug. **The trap:** WordPress' Query Loop does not list a post type
-  that is not viewable (`"public": false`; core's
-  `build_query_vars_from_query_block()`), so with such a type the loop shows
-  posts, and the key works only by slug. Test: site `location.test.mjs`.
+  no slug. Test: site `location.test.mjs`.
+- **A Query Loop of a NON-public type of content-types now lists it.**
+  WordPress' Query Loop drops a post type that is not viewable
+  (`"public": false`; core's `build_query_vars_from_query_block()` checks
+  `is_post_type_viewable()`, WP 7.1.4) and silently lists posts instead.
+  content-types puts the type back (`query_loop_block_query_vars`,
+  modules/content-types/includes/class-query-loop.php) ONLY for a type it
+  declared that has show_in_rest; everything else core builds (order,
+  orderBy — menu_order —, perPage…) is kept. Core's or another plugin's
+  private types (`wp_block`) are left alone. Llar d'Estels' three locations
+  in a loop, ordered by menu_order. Test: site `location.test.mjs`.
 - **New location field «Google Business profile»**
   (`estrategia_web_location_google_profile`, a URL, group «For Google»).
   When filled in with an http(s) URL, the location's LocalBusiness node gets

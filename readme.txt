@@ -88,6 +88,7 @@ The cookie list includes an extract of the Open Cookie Database (https://github.
 
 = 2.18.0 =
 * Locations: a new link to each location's page, for the button of every card in a list of locations.
+* Content types: a Query Loop of a type without public pages now lists that type instead of the blog posts.
 * Locations: a new «Google Business profile» field; the location's search data then point to its Google card.
 
 = 2.17.0 =
