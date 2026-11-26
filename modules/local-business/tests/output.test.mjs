@@ -128,10 +128,13 @@ test("the location's own page and the front page (departments: only the location
 test("a location type without public pages: the front page's department points at the page tied to it", () => {
   const home = nodesOf(got.homePrivate);
   assert.equal(home.length, 1, "the front page: the Organization alone");
-  const dep = home[0].department.find((d) => d.name === "Lavandería Industrial");
+  // By the start of the name: 2.15.0 gave the fixture « - Son Oms» to test entities, and the @id is
+  // «#location-son-oms» without public pages but «<permalink>#localbusiness» with them.
+  const sonOmsDep = (nodes) => nodes[0].department.find((d) => String(d.name).startsWith("Lavandería Industrial"));
+  const dep = sonOmsDep(home);
   assert.ok(dep, JSON.stringify(home[0].department));
   assert.equal(dep.url, tied.url, "url: the page whose blocks bind to the location (lavanderia-industrial), not the location's own permalink");
-  assert.equal(nodesOf(got.home)[0].department.find((d) => d.name === "Lavandería Industrial").url, sonOms.link, "with public pages: the location's own page, as before");
+  assert.equal(sonOmsDep(nodesOf(got.home)).url, sonOms.link, "with public pages: the location's own page, as before");
 });
 
 test("with Rank Math: ONE graph, theirs — our LocalBusiness inside, their Organization completed, not duplicated", () => {
