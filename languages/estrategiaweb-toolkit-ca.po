@@ -182,30 +182,35 @@ msgstr "Capçaleres de seguretat"
 
 #: includes/admin/module-strings.php:31
 msgctxt "module name"
+msgid "Site Health checks"
+msgstr "Comprovacions de Salut del lloc"
+
+#: includes/admin/module-strings.php:32
+msgctxt "module name"
 msgid "Company data"
 msgstr "Dades de l'empresa"
 
-#: includes/admin/module-strings.php:32
+#: includes/admin/module-strings.php:33
 msgctxt "module name"
 msgid "Social networks"
 msgstr "Xarxes socials"
 
-#: includes/admin/module-strings.php:33
+#: includes/admin/module-strings.php:34
 msgctxt "module name"
 msgid "Image uploads"
 msgstr "Pujades d'imatges"
 
-#: includes/admin/module-strings.php:34
+#: includes/admin/module-strings.php:35
 msgctxt "module name"
 msgid "WebP images"
 msgstr "Imatges en WebP"
 
-#: includes/admin/module-strings.php:35
+#: includes/admin/module-strings.php:36
 msgctxt "module name"
 msgid "WhatsApp button"
 msgstr "Botó de WhatsApp"
 
-#: includes/admin/module-strings.php:38
+#: includes/admin/module-strings.php:39
 msgctxt "module description"
 msgid ""
 "Image or code banners by zone and dates, with daily views and clicks, and "
@@ -214,7 +219,7 @@ msgstr ""
 "Bàners d'imatge o de codi per zones i dates, amb vistes i clics diaris, i "
 "migració des d'AdRotate."
 
-#: includes/admin/module-strings.php:39
+#: includes/admin/module-strings.php:40
 msgctxt "module description"
 msgid ""
 "When a published post's fields change without going through the editor (a "
@@ -227,7 +232,7 @@ msgstr ""
 "pàgina d'aquella entrada a la memòria cau que faci servir el lloc: "
 "SiteGround, WP Rocket, LiteSpeed, W3 Total Cache o WP Super Cache."
 
-#: includes/admin/module-strings.php:40
+#: includes/admin/module-strings.php:41
 msgctxt "module description"
 msgid ""
 "Carousel block: a horizontal scrolling row of any blocks (or the posts of a "
@@ -238,7 +243,7 @@ msgstr ""
 "les entrades d'una consulta), amb fletxes, punts opcionals, bucle infinit i "
 "reproducció automàtica només si es demana."
 
-#: includes/admin/module-strings.php:41
+#: includes/admin/module-strings.php:42
 msgctxt "module description"
 msgid ""
 "Turns comments off everywhere: closed on every post, no Comments menu, "
@@ -249,7 +254,7 @@ msgstr ""
 "el menú Comentaris, el giny del tauler ni l'element de la barra d'eines, "
 "sense blocs de comentaris al web i sense canals de comentaris."
 
-#: includes/admin/module-strings.php:42
+#: includes/admin/module-strings.php:43
 msgctxt "module description"
 msgid ""
 "Own cookie consent notice (Accept / Reject / Settings with declarable "
@@ -263,7 +268,7 @@ msgstr ""
 "alimenta un detector i un bloc amb la taula de galetes per a la política de "
 "galetes."
 
-#: includes/admin/module-strings.php:43
+#: includes/admin/module-strings.php:44
 msgctxt "module description"
 msgid ""
 "Build your own content types, taxonomies and fields from the panel (or start "
@@ -274,7 +279,7 @@ msgstr ""
 "(o comença des d'una plantilla: clients, opinions, seus, projectes, "
 "portafolis), amb el tauler de l'editor, els Block Bindings i WPML generats."
 
-#: includes/admin/module-strings.php:44
+#: includes/admin/module-strings.php:45
 msgctxt "module description"
 msgid ""
 "Links to another domain open in a new tab, with rel=\"noopener\" and a "
@@ -284,7 +289,7 @@ msgstr ""
 "rel=\"noopener\" i un «(s'obre en una pestanya nova)» ocult per als lectors "
 "de pantalla."
 
-#: includes/admin/module-strings.php:45
+#: includes/admin/module-strings.php:46
 msgctxt "module description"
 msgid ""
 "Publishes the page's FAQ accordions as schema.org FAQPage, inside Rank "
@@ -293,7 +298,7 @@ msgstr ""
 "Publica els acordions de preguntes freqüents de la pàgina com a FAQPage de "
 "schema.org, dins del graf de Rank Math o de Yoast si hi són."
 
-#: includes/admin/module-strings.php:46
+#: includes/admin/module-strings.php:47
 msgctxt "module description"
 msgid ""
 "Featured images with a fixed width in px download a file of that size, and a "
@@ -304,7 +309,7 @@ msgstr ""
 "i un logotip amb un text alternatiu que només repeteix el títol que es veu "
 "al costat es marca com a decoratiu."
 
-#: includes/admin/module-strings.php:47
+#: includes/admin/module-strings.php:48
 msgctxt "module description"
 msgid ""
 "Block-based forms with several email notifications made from templates, a "
@@ -313,7 +318,7 @@ msgstr ""
 "Formularis fets amb blocs, amb diversos avisos per correu fets amb "
 "plantilles, registre de tot el que s'envia i compatibles amb WPML."
 
-#: includes/admin/module-strings.php:48
+#: includes/admin/module-strings.php:49
 msgctxt "module description"
 msgid ""
 "Google Analytics 4, Google Ads (with an optional conversion for form "
@@ -324,7 +329,7 @@ msgstr ""
 "formulari) i Google Tag Manager darrere l'avís de galetes, amb Consent Mode "
 "v2. Un camp buit no carrega res."
 
-#: includes/admin/module-strings.php:49
+#: includes/admin/module-strings.php:50
 msgctxt "module description"
 msgid ""
 "The «ES ▾» of the header: switches language to the same page, keyboard-"
@@ -334,7 +339,7 @@ msgstr ""
 "servir amb el teclat i porta hreflang. Necessita WPML; sense WPML, no es "
 "mostra res."
 
-#: includes/admin/module-strings.php:50
+#: includes/admin/module-strings.php:51
 msgctxt "module description"
 msgid ""
 "Serves /llms.txt, the text AI assistants read to describe the site, written "
@@ -344,7 +349,7 @@ msgstr ""
 "el web, escrit a «Estrategia Web › Paràmetres › llms.txt», un per idioma amb "
 "WPML."
 
-#: includes/admin/module-strings.php:51
+#: includes/admin/module-strings.php:52
 msgctxt "module description"
 msgid ""
 "Tells search engines about the company and its locations with schema.org "
@@ -355,7 +360,7 @@ msgstr ""
 "(Organization i LocalBusiness: adreça, horari, coordenades), dins del graf "
 "de Rank Math o Yoast si hi són."
 
-#: includes/admin/module-strings.php:52
+#: includes/admin/module-strings.php:53
 msgctxt "module description"
 msgid ""
 "Two-click map block: a static image with the address; the Google Maps embed "
@@ -365,7 +370,7 @@ msgstr ""
 "Google Maps només es carrega quan el visitant el demana (o si ha acceptat "
 "les galetes de mapes)."
 
-#: includes/admin/module-strings.php:53
+#: includes/admin/module-strings.php:54
 msgctxt "module description"
 msgid ""
 "Matomo tracking code, cookieless or hybrid (no cookies until the visitor "
@@ -374,7 +379,7 @@ msgstr ""
 "Codi de seguiment de Matomo, sense galetes o híbrid (sense galetes fins que "
 "el visitant accepta l'analítica a l'avís de galetes)."
 
-#: includes/admin/module-strings.php:54
+#: includes/admin/module-strings.php:55
 msgctxt "module description"
 msgid ""
 "Choose the week's posts, preview the newsletter and copy its code or create "
@@ -383,7 +388,7 @@ msgstr ""
 "Tria les entrades de la setmana, previsualitza el butlletí i copia'n el codi "
 "o crea l'esborrany a Mailchimp. No envia mai."
 
-#: includes/admin/module-strings.php:55
+#: includes/admin/module-strings.php:56
 msgctxt "module description"
 msgid ""
 "Editable 301, 302 and 410 redirects with hit counters, CSV import and "
@@ -392,16 +397,36 @@ msgstr ""
 "Redireccions 301, 302 i 410 editables, amb comptador de visites, importació "
 "i exportació CSV i un registre de 404 opcional."
 
-#: includes/admin/module-strings.php:56
+#: includes/admin/module-strings.php:57
 msgctxt "module description"
 msgid ""
 "Adds the browser security headers a site is missing (HSTS over https, "
 "framing only from the site itself, a referrer policy and no camera, "
 "microphone or location) and hides the PHP version. It never repeats a header "
 "another plugin already sends."
-msgstr "Afegeix les capçaleres de seguretat del navegador que li falten al lloc (HSTS amb https, que només el mateix lloc el pugui incrustar, una política de referent i sense càmera, micròfon ni ubicació) i amaga la versió de PHP. No repeteix mai una capçalera que ja enviï un altre plugin."
+msgstr ""
+"Afegeix les capçaleres de seguretat del navegador que li falten al lloc "
+"(HSTS amb https, que només el mateix lloc el pugui incrustar, una política "
+"de referent i sense càmera, micròfon ni ubicació) i amaga la versió de PHP. "
+"No repeteix mai una capçalera que ja enviï un altre plugin."
 
-#: includes/admin/module-strings.php:57
+#: includes/admin/module-strings.php:58
+msgctxt "module description"
+msgid ""
+"Adds the Estrategia Web checks to Tools › Site Health: search engines, legal "
+"pages, cookies, company details, locations, social profiles, security "
+"headers, login protection, page cache, DMARC, untranslated SEO texts, "
+"llms.txt and FAQ blocks. Each one says why it matters and links to the "
+"screen where it is fixed. It only reports: it changes nothing."
+msgstr ""
+"Afegeix les comprovacions d'Estrategia Web a Eines › Salut del lloc: motors "
+"de cerca, pàgines legals, galetes, dades de l'empresa, seus, perfils "
+"socials, capçaleres de seguretat, protecció de l'accés, memòria cau de "
+"pàgines, DMARC, textos SEO sense traduir, llms.txt i blocs de preguntes "
+"freqüents. Cada una explica per què importa i enllaça amb la pantalla on es "
+"corregeix. Només informa: no canvia res."
+
+#: includes/admin/module-strings.php:59
 msgctxt "module description"
 msgid ""
 "Company details with Block Bindings and the [estrategia_web_company] "
@@ -412,7 +437,7 @@ msgstr ""
 "[estrategia_web_company], les dades d'una seu com a font de Block Bindings i "
 "pujada de SVG sanejats."
 
-#: includes/admin/module-strings.php:58
+#: includes/admin/module-strings.php:60
 msgctxt "module description"
 msgid ""
 "Free, ordered list of social network links (name, link, icon from an "
@@ -421,7 +446,7 @@ msgstr ""
 "Llista lliure i ordenada d'enllaços a xarxes socials (nom, enllaç i icona "
 "d'una col·lecció inclosa o un SVG propi) i un bloc que els mostra."
 
-#: includes/admin/module-strings.php:59
+#: includes/admin/module-strings.php:61
 msgctxt "module description"
 msgid ""
 "Phone photos can be uploaded (up to 20 MB by default); WordPress scales them "
@@ -430,7 +455,7 @@ msgstr ""
 "Permet pujar fotos del mòbil (fins a 20 MB per defecte); WordPress les "
 "redueix a 2560 px i al disc només es conserva la còpia reduïda."
 
-#: includes/admin/module-strings.php:60
+#: includes/admin/module-strings.php:62
 msgctxt "module description"
 msgid ""
 "Image sizes generated from JPEG and PNG uploads are saved as WebP (quality "
@@ -439,7 +464,7 @@ msgstr ""
 "Les mides que es generen en pujar un JPEG o un PNG es desen en WebP "
 "(qualitat 75)."
 
-#: includes/admin/module-strings.php:61
+#: includes/admin/module-strings.php:63
 msgctxt "module description"
 msgid ""
 "Floating button that opens a WhatsApp chat with a predefined message. The "
@@ -448,37 +473,37 @@ msgstr ""
 "Botó flotant que obre un xat de WhatsApp amb un missatge predefinit. El "
 "número i el missatge són opcions del lloc, no de cada pàgina."
 
-#: includes/admin/module-strings.php:64
+#: includes/admin/module-strings.php:66
 msgctxt "module category"
 msgid "Content"
 msgstr "Contingut"
 
-#: includes/admin/module-strings.php:65
+#: includes/admin/module-strings.php:67
 msgctxt "module category"
 msgid "Media & performance"
 msgstr "Multimèdia i rendiment"
 
-#: includes/admin/module-strings.php:66
+#: includes/admin/module-strings.php:68
 msgctxt "module category"
 msgid "Privacy & analytics"
 msgstr "Privadesa i analítica"
 
-#: includes/admin/module-strings.php:67
+#: includes/admin/module-strings.php:69
 msgctxt "module category"
 msgid "SEO"
 msgstr "SEO"
 
-#: includes/admin/module-strings.php:68
+#: includes/admin/module-strings.php:70
 msgctxt "module category"
 msgid "Contact"
 msgstr "Contacte"
 
-#: includes/admin/module-strings.php:69
+#: includes/admin/module-strings.php:71
 msgctxt "module category"
 msgid "Languages"
 msgstr "Idiomes"
 
-#: includes/admin/module-strings.php:70
+#: includes/admin/module-strings.php:72
 msgctxt "module category"
 msgid "Other"
 msgstr "Altres"
@@ -2288,6 +2313,7 @@ msgid "Email"
 msgstr "Correu electrònic"
 
 #: modules/content-types/includes/admin/class-page.php:399
+#: modules/site-health/checks/company-details.php:44
 #: modules/site/includes/class-company.php:134
 msgid "Phone"
 msgstr "Telèfon"
@@ -4939,6 +4965,8 @@ msgid "There is a llms.txt file in the website's folder."
 msgstr "Hi ha un fitxer llms.txt a la carpeta del web."
 
 #: modules/llms/includes/admin/class-tab.php:153
+#: modules/site-health/checks/legal-pages.php:140
+#: modules/site-health/checks/llms-and-faq.php:119
 msgid "Pages"
 msgstr "Pàgines"
 
@@ -5783,6 +5811,632 @@ msgstr "Aquesta redirecció faria un bucle amb altres."
 msgid "Redirects are managed by %s."
 msgstr "Les redireccions les gestiona %s."
 
+#: modules/site-health/checks/company-details.php:30
+#: modules/site-health/checks/company-details.php:55
+msgid "Company details are complete"
+msgstr "Les dades de l'empresa són completes"
+
+#: modules/site-health/checks/company-details.php:41
+#: modules/site/includes/class-company.php:130
+msgid "Legal name"
+msgstr "Raó social"
+
+#: modules/site-health/checks/company-details.php:42
+#: modules/site/includes/class-company.php:131
+msgid "Tax ID"
+msgstr "NIF/CIF"
+
+#: modules/site-health/checks/company-details.php:43
+#: modules/site/includes/class-company.php:138
+msgid "Address"
+msgstr "Adreça"
+
+#: modules/site-health/checks/company-details.php:56
+msgid "The legal name, tax ID, address and phone are filled in."
+msgstr "La raó social, el NIF, l'adreça i el telèfon estan emplenats."
+
+#: modules/site-health/checks/company-details.php:61
+msgid "Company details are incomplete"
+msgstr "Les dades de l'empresa són incompletes"
+
+#: modules/site-health/checks/company-details.php:62
+msgid ""
+"The legal notice must show the legal name, tax ID, address and a phone, and "
+"the site tells Google about the company from these same fields. Empty fields:"
+msgstr ""
+"L'avís legal ha de mostrar la raó social, el NIF, l'adreça i un telèfon, i "
+"el lloc informa Google de l'empresa amb aquests mateixos camps. Camps buits:"
+
+#: modules/site-health/checks/company-details.php:67
+msgid "Estrategia Web › Company details"
+msgstr "Estrategia Web › Dades de l'empresa"
+
+#: modules/site-health/checks/cookies-pending.php:34
+#: modules/site-health/checks/cookies-pending.php:68
+msgid "Cookies are confirmed and listed"
+msgstr "Les galetes estan confirmades i llistades"
+
+#. translators: 1: number of cookies, 2: their names, comma-separated.
+#: modules/site-health/checks/cookies-pending.php:57
+#, php-format
+msgid "%1$d cookie waiting for confirmation: %2$s"
+msgid_plural "%1$d cookies waiting for confirmation: %2$s"
+msgstr[0] "%1$d galeta pendent de confirmar: %2$s"
+msgstr[1] "%1$d galetes pendents de confirmar: %2$s"
+
+#: modules/site-health/checks/cookies-pending.php:63
+msgid "No published page shows the cookie table block"
+msgstr "Cap pàgina publicada mostra el bloc de la taula de galetes"
+
+#: modules/site-health/checks/cookies-pending.php:69
+msgid ""
+"Every detected cookie has been reviewed, and the cookie table is on a "
+"published page."
+msgstr ""
+"Totes les galetes detectades s'han revisat, i la taula de galetes és en una "
+"pàgina publicada."
+
+#: modules/site-health/checks/cookies-pending.php:74
+msgid "The cookie policy does not list every cookie"
+msgstr "La política de galetes no llista totes les galetes"
+
+#: modules/site-health/checks/cookies-pending.php:75
+msgid ""
+"Visitors read the cookies in the cookie table, which only shows the "
+"confirmed ones. A cookie still pending is used on the site but not explained."
+msgstr ""
+"Els visitants llegeixen les galetes a la taula de galetes, que només mostra "
+"les confirmades. Una galeta encara pendent s'usa al lloc però no s'explica."
+
+#: modules/site-health/checks/cookies-pending.php:80
+msgid "Estrategia Web › Settings › Cookies"
+msgstr "Estrategia Web › Paràmetres › Galetes"
+
+#: modules/site-health/checks/dmarc.php:40
+#: modules/site-health/checks/dmarc.php:70
+msgid "The mail domain has a DMARC record"
+msgstr "El domini de correu té un registre DMARC"
+
+#. translators: 1: a domain, 2: its DMARC record.
+#: modules/site-health/checks/dmarc.php:72
+#, php-format
+msgid "_dmarc.%1$s: %2$s"
+msgstr "_dmarc.%1$s: %2$s"
+
+#: modules/site-health/checks/dmarc.php:80
+msgid "Could not check the DMARC record"
+msgstr "No s'ha pogut comprovar el registre DMARC"
+
+#. translators: %s: a domain.
+#: modules/site-health/checks/dmarc.php:82
+#, php-format
+msgid ""
+"The DNS lookup of _dmarc.%s did not answer from this server, so it is not "
+"known whether the record exists. Check it with any online DMARC checker."
+msgstr ""
+"La consulta DNS de _dmarc.%s no ha respost des d'aquest servidor, així que "
+"no se sap si el registre existeix. Comprova-ho amb qualsevol verificador de "
+"DMARC en línia."
+
+#: modules/site-health/checks/dmarc.php:87
+msgid "The mail domain has no DMARC record"
+msgstr "El domini de correu no té registre DMARC"
+
+#: modules/site-health/checks/dmarc.php:88
+msgid ""
+"Without DMARC, mail from the domain (the site's form notifications too) "
+"lands in spam more often, and anyone can send mail pretending to be the "
+"domain."
+msgstr ""
+"Sense DMARC, el correu del domini (també els avisos dels formularis del "
+"lloc) acaba més sovint al correu brossa, i qualsevol pot enviar correu fent-"
+"se passar pel domini."
+
+#. translators: %s: a domain.
+#: modules/site-health/checks/dmarc.php:92
+#, php-format
+msgid ""
+"Add a TXT record at _dmarc.%s in the domain's DNS, for example «v=DMARC1; "
+"p=none; rua=mailto:…» to start."
+msgstr ""
+"Afegeix un registre TXT a _dmarc.%s al DNS del domini, per exemple "
+"«v=DMARC1; p=none; rua=mailto:…» per començar."
+
+#: modules/site-health/checks/english-defaults.php:48
+#: modules/site-health/checks/english-defaults.php:86
+msgid "No texts left in English"
+msgstr "No queden textos en anglès"
+
+#. translators: 1: a Yoast SEO setting key, 2: its value.
+#: modules/site-health/checks/english-defaults.php:71
+#, php-format
+msgid "Yoast SEO, %1$s: «%2$s»"
+msgstr "Yoast SEO, %1$s: «%2$s»"
+
+#: modules/site-health/checks/english-defaults.php:78
+msgid ""
+"Timezone: UTC (scheduled posts and dates are off by the local difference)"
+msgstr ""
+"Zona horària: UTC (les entrades programades i les dates van desfasades per "
+"la diferència local)"
+
+#: modules/site-health/checks/english-defaults.php:81
+msgid "Date format: «F j, Y», the English one (November 26, 2026)"
+msgstr "Format de data: «F j, Y», l'anglès (November 26, 2026)"
+
+#: modules/site-health/checks/english-defaults.php:87
+msgid ""
+"The SEO title templates, the timezone and the date format are not the "
+"English factory values."
+msgstr ""
+"Les plantilles de títol SEO, la zona horària i el format de data no són els "
+"valors de fàbrica en anglès."
+
+#: modules/site-health/checks/english-defaults.php:94
+msgid "Yoast SEO › Settings"
+msgstr "Yoast SEO › Paràmetres"
+
+#: modules/site-health/checks/english-defaults.php:100
+msgid "Settings › General"
+msgstr "Paràmetres › Generals"
+
+#: modules/site-health/checks/english-defaults.php:105
+msgid "Some settings are still the English factory values"
+msgstr "Alguns paràmetres encara tenen els valors de fàbrica en anglès"
+
+#: modules/site-health/checks/english-defaults.php:106
+msgid ""
+"These values were written when the site was installed in English and did not "
+"change with the site's language. Visitors and search engines see them as "
+"they are."
+msgstr ""
+"Aquests valors es varen escriure quan el lloc es va instal·lar en anglès i "
+"no varen canviar amb l'idioma del lloc. Els visitants i els motors de cerca "
+"els veuen tal com són."
+
+#: modules/site-health/checks/legal-pages.php:46
+#: modules/site-health/checks/legal-pages.php:175
+msgid "Legal pages exist and are linked"
+msgstr "Les pàgines legals existeixen i estan enllaçades"
+
+#: modules/site-health/checks/legal-pages.php:108
+msgid "Legal notice"
+msgstr "Avís legal"
+
+#: modules/site-health/checks/legal-pages.php:109
+msgid "Privacy policy"
+msgstr "Política de privadesa"
+
+#: modules/site-health/checks/legal-pages.php:110
+msgid "Cookie policy"
+msgstr "Política de galetes"
+
+#. translators: 1: kind of legal page (Legal notice…), 2: the page's title.
+#: modules/site-health/checks/legal-pages.php:131
+#, php-format
+msgid "%1$s («%2$s») is not linked from any menu or footer"
+msgstr "%1$s («%2$s») no està enllaçada des de cap menú ni peu de pàgina"
+
+#. translators: 1: kind of legal page (Legal notice…), 2: the page's title.
+#: modules/site-health/checks/legal-pages.php:134
+#, php-format
+msgid "%1$s («%2$s») was last changed more than 12 months ago"
+msgstr "%1$s («%2$s») es va modificar per darrera vegada fa més de 12 mesos"
+
+#: modules/site-health/checks/legal-pages.php:144
+msgid "Settings › Privacy"
+msgstr "Paràmetres › Privadesa"
+
+#: modules/site-health/checks/legal-pages.php:148
+msgid "Footer and menus (Site Editor)"
+msgstr "Peu de pàgina i menús (Editor del lloc)"
+
+#: modules/site-health/checks/legal-pages.php:154
+msgid "A legal page is missing or cannot be reached"
+msgstr "Falta una pàgina legal o no s'hi pot arribar"
+
+#: modules/site-health/checks/legal-pages.php:155
+msgid ""
+"A business site needs a legal notice, a privacy policy and a cookie policy, "
+"linked from every page (usually the footer). A page that exists but is not "
+"linked does not count."
+msgstr ""
+"El lloc d'una empresa necessita un avís legal, una política de privadesa i "
+"una política de galetes, enllaçats des de cada pàgina (normalment al peu). "
+"Una pàgina que existeix però no està enllaçada no compta."
+
+#. translators: %s: kind of legal page (Legal notice…).
+#: modules/site-health/checks/legal-pages.php:158
+#, php-format
+msgid "%s: no published page found"
+msgstr "%s: no s'ha trobat cap pàgina publicada"
+
+#: modules/site-health/checks/legal-pages.php:167
+msgid "A legal page has not been reviewed for a year"
+msgstr "Una pàgina legal fa un any que no es revisa"
+
+#: modules/site-health/checks/legal-pages.php:168
+msgid ""
+"Legal texts should describe what the site does today. If a form, a map or an "
+"analytics tag was added since, the text may be out of date."
+msgstr ""
+"Els textos legals han de descriure el que fa el lloc avui. Si des de llavors "
+"s'hi ha afegit un formulari, un mapa o una etiqueta d'analítica, el text pot "
+"estar desfasat."
+
+#: modules/site-health/checks/legal-pages.php:176
+msgid ""
+"The legal notice, the privacy policy and the cookie policy are published, "
+"linked and reviewed in the last 12 months."
+msgstr ""
+"L'avís legal, la política de privadesa i la política de galetes estan "
+"publicats, enllaçats i revisats els darrers 12 mesos."
+
+#: modules/site-health/checks/llms-and-faq.php:42
+#: modules/site-health/checks/llms-and-faq.php:125
+msgid "AI assistants and search engines can read the site's summary and FAQs"
+msgstr ""
+"Els assistents d'IA i els motors de cerca poden llegir el resum i les "
+"preguntes freqüents del lloc"
+
+#: modules/site-health/checks/llms-and-faq.php:75
+msgid "The llms.txt module is off: the site has no llms.txt."
+msgstr "El mòdul llms.txt està desactivat: el lloc no té llms.txt."
+
+#: modules/site-health/checks/llms-and-faq.php:78
+#: modules/site-health/checks/social-profiles.php:56
+msgid "Estrategia Web › Modules"
+msgstr "Estrategia Web › Mòduls"
+
+#: modules/site-health/checks/llms-and-faq.php:81
+msgid "The llms.txt module is on but its text is empty."
+msgstr "El mòdul llms.txt està activat però el seu text és buit."
+
+#: modules/site-health/checks/llms-and-faq.php:84
+msgid "Estrategia Web › Settings › llms.txt"
+msgstr "Estrategia Web › Paràmetres › llms.txt"
+
+#. translators: %s: a page's title.
+#: modules/site-health/checks/llms-and-faq.php:103
+#, php-format
+msgid ""
+"«%s»: an accordion without a FAQ style (if it is a FAQ, choose the FAQ style "
+"in the block's Styles)"
+msgstr ""
+"«%s»: un acordió sense estil de preguntes freqüents (si ho és, tria l'estil "
+"FAQ als Estils del bloc)"
+
+#. translators: %s: a page's title.
+#: modules/site-health/checks/llms-and-faq.php:108
+#, php-format
+msgid ""
+"«%s»: questions in Details blocks (turn them into an accordion with the FAQ "
+"style)"
+msgstr ""
+"«%s»: preguntes en blocs Detalls (converteix-les en un acordió amb l'estil "
+"FAQ)"
+
+#: modules/site-health/checks/llms-and-faq.php:113
+msgid "Only the first 30 pages with these blocks were read."
+msgstr "Només s'han llegit les primeres 30 pàgines amb aquests blocs."
+
+#: modules/site-health/checks/llms-and-faq.php:126
+msgid ""
+"The site has an llms.txt, and its FAQs are blocks the FAQ schema module "
+"reads."
+msgstr ""
+"El lloc té un llms.txt, i les seves preguntes freqüents són blocs que el "
+"mòdul d'esquema FAQ llegeix."
+
+#: modules/site-health/checks/llms-and-faq.php:131
+msgid "The site's summary or FAQs are not readable by machines"
+msgstr ""
+"El resum o les preguntes freqüents del lloc no són llegibles per a les "
+"màquines"
+
+#: modules/site-health/checks/llms-and-faq.php:132
+msgid ""
+"AI assistants read llms.txt to learn what the site is about, and Google "
+"shows FAQs from their structured data, which the FAQ schema module only "
+"builds from accordions with the FAQ style."
+msgstr ""
+"Els assistents d'IA llegeixen llms.txt per saber de què va el lloc, i Google "
+"mostra les preguntes freqüents a partir de les seves dades estructurades, "
+"que el mòdul d'esquema FAQ només crea a partir d'acordions amb l'estil FAQ."
+
+#: modules/site-health/checks/locations.php:43
+#: modules/site-health/checks/locations.php:99
+msgid "Locations are complete"
+msgstr "Les seus són completes"
+
+#: modules/site-health/checks/locations.php:83
+msgid "no coordinates"
+msgstr "sense coordenades"
+
+#: modules/site-health/checks/locations.php:86
+msgid "no Google Business profile"
+msgstr "sense perfil de Google Business"
+
+#: modules/site-health/checks/locations.php:89
+msgid "no page of its own"
+msgstr "sense pàgina pròpia"
+
+#. translators: 1: a location's name, 2: what it lacks, comma-separated.
+#: modules/site-health/checks/locations.php:93
+#, php-format
+msgid "%1$s: %2$s"
+msgstr "%1$s: %2$s"
+
+#: modules/site-health/checks/locations.php:100
+msgid "Every location has what search engines and the site's buttons need."
+msgstr ""
+"Cada seu té el que necessiten els motors de cerca i els botons del lloc."
+
+#: modules/site-health/checks/locations.php:105
+msgid "Some locations are incomplete"
+msgstr "Algunes seus són incompletes"
+
+#: modules/site-health/checks/locations.php:106
+msgid ""
+"Coordinates and the Google Business profile tie each location to its place "
+"on Google Maps; a location without a page sends its «see more» button to the "
+"home page."
+msgstr ""
+"Les coordenades i el perfil de Google Business lliguen cada seu al seu lloc "
+"a Google Maps; una seu sense pàgina envia el seu botó «veure'n més» a la "
+"pàgina d'inici."
+
+#: modules/site-health/checks/locations.php:111
+msgid "Locations"
+msgstr "Seus"
+
+#: modules/site-health/checks/login-protection.php:41
+#: modules/site-health/checks/login-protection.php:59
+msgid "Login attempts are limited"
+msgstr "Els intents d'accés estan limitats"
+
+#. translators: %s: plugin names, comma-separated.
+#: modules/site-health/checks/login-protection.php:61
+#, php-format
+msgid "Repeated failed logins are blocked by: %s."
+msgstr "Els accessos fallits repetits els bloqueja: %s."
+
+#: modules/site-health/checks/login-protection.php:66
+msgid "Nothing limits login attempts"
+msgstr "Res no limita els intents d'accés"
+
+#: modules/site-health/checks/login-protection.php:67
+msgid ""
+"Anyone can keep trying passwords on the login page for as long as they like. "
+"SiteGround Security limits the attempts and closes XML-RPC, and works on any "
+"hosting."
+msgstr ""
+"Qualsevol pot provar contrasenyes a la pàgina d'accés tant de temps com "
+"vulgui. SiteGround Security limita els intents i tanca XML-RPC, i funciona a "
+"qualsevol allotjament."
+
+#: modules/site-health/checks/login-protection.php:70
+msgid ""
+"XML-RPC is open: it accepts hundreds of password attempts in a single "
+"request."
+msgstr ""
+"XML-RPC és obert: accepta centenars d'intents de contrasenya en una sola "
+"petició."
+
+#: modules/site-health/checks/login-protection.php:71
+msgid "XML-RPC is already closed."
+msgstr "XML-RPC ja és tancat."
+
+#: modules/site-health/checks/login-protection.php:76
+msgid "Install SiteGround Security"
+msgstr "Instal·la SiteGround Security"
+
+#: modules/site-health/checks/page-cache.php:46
+#: modules/site-health/checks/page-cache.php:81
+msgid "Pages are cached"
+msgstr "Les pàgines es desen a la memòria cau"
+
+#: modules/site-health/checks/page-cache.php:63
+msgid "Pages are cached by the hosting"
+msgstr "L'allotjament desa les pàgines a la memòria cau"
+
+#: modules/site-health/checks/page-cache.php:64
+msgid "The site is hosted on SiteGround, whose servers cache the pages."
+msgstr ""
+"El lloc està allotjat a SiteGround, els servidors del qual desen les pàgines "
+"a la memòria cau."
+
+#. translators: %s: plugin names, comma-separated.
+#: modules/site-health/checks/page-cache.php:83
+#, php-format
+msgid "Pages are cached by: %s."
+msgstr "Desa les pàgines a la memòria cau: %s."
+
+#: modules/site-health/checks/page-cache.php:89
+msgid "Pages are not cached"
+msgstr "Les pàgines no es desen a la memòria cau"
+
+#: modules/site-health/checks/page-cache.php:91
+msgid ""
+"SiteGround Speed Optimizer is active but its file-based cache is off, and "
+"outside SiteGround that is the only page cache it has. Every visit builds "
+"the page from scratch."
+msgstr ""
+"SiteGround Speed Optimizer està actiu però la seva memòria cau en fitxers "
+"està desactivada, i fora de SiteGround és l'única memòria cau de pàgines que "
+"té. Cada visita construeix la pàgina de zero."
+
+#: modules/site-health/checks/page-cache.php:92
+msgid ""
+"The site is not on SiteGround and no page cache plugin is active, so every "
+"visit builds the page from scratch. SiteGround Speed Optimizer's file-based "
+"cache works on any hosting."
+msgstr ""
+"El lloc no és a SiteGround i no hi ha cap extensió de memòria cau de pàgines "
+"activa, així que cada visita construeix la pàgina de zero. La memòria cau en "
+"fitxers de SiteGround Speed Optimizer funciona a qualsevol allotjament."
+
+#: modules/site-health/checks/page-cache.php:97
+msgid "Speed Optimizer › Caching"
+msgstr "Speed Optimizer › Caching"
+
+#: modules/site-health/checks/page-cache.php:101
+msgid "Install SiteGround Speed Optimizer"
+msgstr "Instal·la SiteGround Speed Optimizer"
+
+#: modules/site-health/checks/search-engines.php:34
+#: modules/site-health/checks/search-engines.php:50
+msgid "Search engines can index the site"
+msgstr "Els motors de cerca poden indexar el lloc"
+
+#: modules/site-health/checks/search-engines.php:51
+msgid "The site does not ask search engines to stay away."
+msgstr "El lloc no demana als motors de cerca que no hi entrin."
+
+#: modules/site-health/checks/search-engines.php:57
+msgid "This staging copy is hidden from search engines"
+msgstr "Aquesta còpia de proves està amagada als motors de cerca"
+
+#: modules/site-health/checks/search-engines.php:58
+msgid ""
+"Search engines are discouraged, which is right for a copy that is not the "
+"real site. Untick it on the real site on launch day."
+msgstr ""
+"Es demana als motors de cerca que no l'indexin, cosa correcta per a una "
+"còpia que no és el lloc real. Desmarca-ho al lloc real el dia del llançament."
+
+#: modules/site-health/checks/search-engines.php:63
+msgid "Search engines are told not to index the site"
+msgstr "Es demana als motors de cerca que no indexin el lloc"
+
+#: modules/site-health/checks/search-engines.php:64
+msgid ""
+"«Discourage search engines from indexing this site» is ticked on a site that "
+"does not look like a staging copy. Google drops a site like this from its "
+"results."
+msgstr ""
+"«Demana als motors de cerca que no indexin aquest lloc» està marcat en un "
+"lloc que no sembla una còpia de proves. Google treu un lloc així dels seus "
+"resultats."
+
+#: modules/site-health/checks/search-engines.php:68
+msgid "Settings › Reading"
+msgstr "Paràmetres › Lectura"
+
+#: modules/site-health/checks/security-headers.php:36
+#: modules/site-health/checks/security-headers.php:95
+msgid "The site sends the browser security headers"
+msgstr "El lloc envia les capçaleres de seguretat del navegador"
+
+#: modules/site-health/checks/security-headers.php:64
+msgid "Estrategia Web › Modules › Security headers"
+msgstr "Estrategia Web › Mòduls › Capçaleres de seguretat"
+
+#: modules/site-health/checks/security-headers.php:70
+msgid "Could not check the security headers"
+msgstr "No s'han pogut comprovar les capçaleres de seguretat"
+
+#: modules/site-health/checks/security-headers.php:71
+msgid ""
+"The site could not load its own home page to read the headers it sends. This "
+"is not a missing header: WordPress' «loopback request» test explains why the "
+"site cannot call itself."
+msgstr ""
+"El lloc no ha pogut carregar la seva pròpia pàgina d'inici per llegir les "
+"capçaleres que envia. No és una capçalera que falta: la prova «petició de "
+"loopback» de WordPress explica per què el lloc no es pot cridar a si mateix."
+
+#. translators: %s: an HTTP status code or an error message.
+#: modules/site-health/checks/security-headers.php:73
+#, php-format
+msgid "Answer: %s"
+msgstr "Resposta: %s"
+
+#. translators: %s: an HTTP header name.
+#: modules/site-health/checks/security-headers.php:85
+#, php-format
+msgid "Missing: %s"
+msgstr "Falta: %s"
+
+#. translators: %s: the value of the X-Powered-By header, e.g. PHP/8.3.6.
+#: modules/site-health/checks/security-headers.php:90
+#, php-format
+msgid "Exposed: X-Powered-By: %s"
+msgstr "Exposada: X-Powered-By: %s"
+
+#: modules/site-health/checks/security-headers.php:96
+msgid ""
+"The home page sends the security headers browsers use, and does not tell "
+"which PHP version runs it."
+msgstr ""
+"La pàgina d'inici envia les capçaleres de seguretat que usen els navegadors, "
+"i no diu quina versió de PHP la fa funcionar."
+
+#: modules/site-health/checks/security-headers.php:101
+msgid "Some browser security headers are missing"
+msgstr "Falten algunes capçaleres de seguretat del navegador"
+
+#: modules/site-health/checks/security-headers.php:102
+msgid ""
+"These headers tell browsers to use https, not to show the site inside "
+"another one and not to give pages access to the camera or location. The "
+"Security headers module adds the ones that are missing."
+msgstr ""
+"Aquestes capçaleres diuen als navegadors que usin https, que no mostrin el "
+"lloc dins un altre i que no donin a les pàgines accés a la càmera ni a la "
+"ubicació. El mòdul Capçaleres de seguretat afegeix les que falten."
+
+#: modules/site-health/checks/social-profiles.php:33
+#: modules/site-health/checks/social-profiles.php:42
+msgid "The company's social profiles are listed"
+msgstr "Els perfils socials de l'empresa estan llistats"
+
+#: modules/site-health/checks/social-profiles.php:43
+msgid "Search engines are told which social profiles belong to the company."
+msgstr "Es diu als motors de cerca quins perfils socials són de l'empresa."
+
+#: modules/site-health/checks/social-profiles.php:48
+msgid "The company has no social profiles listed"
+msgstr "L'empresa no té perfils socials llistats"
+
+#: modules/site-health/checks/social-profiles.php:50
+msgid ""
+"The Social networks module is off, so nothing tells search engines which "
+"profiles belong to the company (the «sameAs» of its structured data is "
+"empty)."
+msgstr ""
+"El mòdul Xarxes socials està desactivat, així que res no diu als motors de "
+"cerca quins perfils són de l'empresa (el «sameAs» de les seves dades "
+"estructurades és buit)."
+
+#: modules/site-health/checks/social-profiles.php:51
+msgid ""
+"The list of social networks is empty, so nothing tells search engines which "
+"profiles belong to the company (the «sameAs» of its structured data is "
+"empty)."
+msgstr ""
+"La llista de xarxes socials és buida, així que res no diu als motors de "
+"cerca quins perfils són de l'empresa (el «sameAs» de les seves dades "
+"estructurades és buit)."
+
+#: modules/site-health/checks/social-profiles.php:60
+msgid "Estrategia Web › Social networks"
+msgstr "Estrategia Web › Xarxes socials"
+
+#. translators: %s: the name of a Site Health check.
+#: modules/site-health/includes/class-registry.php:142
+#, php-format
+msgid "Could not check: %s"
+msgstr "No s'ha pogut comprovar: %s"
+
+#: modules/site-health/includes/class-registry.php:143
+msgid ""
+"The check stopped with an error. Nothing on the site was changed; the error "
+"is below."
+msgstr ""
+"La comprovació s'ha aturat amb un error. No s'ha canviat res del lloc; "
+"l'error és a continuació."
+
 #: modules/site/includes/admin/class-admin.php:54
 #: modules/uploads/includes/class-uploads.php:65
 msgid "Media"
@@ -5846,14 +6500,6 @@ msgstr "Text que apareix ja escrit quan s'obre el xat."
 msgid "Company name"
 msgstr "Nom comercial"
 
-#: modules/site/includes/class-company.php:130
-msgid "Legal name"
-msgstr "Raó social"
-
-#: modules/site/includes/class-company.php:131
-msgid "Tax ID"
-msgstr "NIF/CIF"
-
 #: modules/site/includes/class-company.php:132
 msgid "Company registry"
 msgstr "Inscripció registral"
@@ -5869,10 +6515,6 @@ msgstr "WhatsApp"
 #: modules/site/includes/class-company.php:137
 msgid "WhatsApp message"
 msgstr "Missatge de WhatsApp"
-
-#: modules/site/includes/class-company.php:138
-msgid "Address"
-msgstr "Adreça"
 
 #: modules/site/includes/class-company.php:139
 msgid "Opening hours"
@@ -5907,7 +6549,7 @@ msgid "TikTok"
 msgstr "TikTok"
 
 #: modules/site/includes/class-company.php:147
-#: modules/site/includes/class-location.php:161
+#: modules/site/includes/class-location.php:169
 msgid "Phone (link)"
 msgstr "Telèfon (enllaç)"
 
@@ -5916,7 +6558,7 @@ msgid "Secondary phone (link)"
 msgstr "Telèfon secundari (enllaç)"
 
 #: modules/site/includes/class-company.php:149
-#: modules/site/includes/class-location.php:162
+#: modules/site/includes/class-location.php:170
 msgid "Email (link)"
 msgstr "Correu electrònic (enllaç)"
 
@@ -5924,33 +6566,37 @@ msgstr "Correu electrònic (enllaç)"
 msgid "WhatsApp (link)"
 msgstr "WhatsApp (enllaç)"
 
-#: modules/site/includes/class-location.php:74
+#: modules/site/includes/class-location.php:80
 msgid "Location details"
 msgstr "Dades de la seu"
 
-#: modules/site/includes/class-location.php:151
+#: modules/site/includes/class-location.php:159
 msgid "Address (text)"
 msgstr "Adreça (text)"
 
-#: modules/site/includes/class-location.php:152
+#: modules/site/includes/class-location.php:160
 msgid "Opening hours (text)"
 msgstr "Horari (text)"
 
-#: modules/site/includes/class-location.php:153
+#: modules/site/includes/class-location.php:161
 msgid "Google Maps link"
 msgstr "Enllaç a Google Maps"
 
-#: modules/site/includes/class-location.php:154
+#: modules/site/includes/class-location.php:162
 msgid "Map embed URL"
 msgstr "URL per incrustar el mapa"
 
-#: modules/site/includes/class-location.php:155
+#: modules/site/includes/class-location.php:163
 msgid "Static map image (URL)"
 msgstr "Imatge estàtica del mapa (URL)"
 
-#: modules/site/includes/class-location.php:157
+#: modules/site/includes/class-location.php:165
 msgid "Location name"
 msgstr "Nom de la seu"
+
+#: modules/site/includes/class-location.php:171
+msgid "Location page (link)"
+msgstr "Pàgina de la seu (enllaç)"
 
 #: modules/site/includes/class-settings.php:169
 msgid "Company details and site options of the Estrategia Web Site plugin."

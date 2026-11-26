@@ -46,6 +46,8 @@ const CONTRACT = {
     fields: ["estrategia_web_location_phone", "estrategia_web_location_email",
       "estrategia_web_location_street", "estrategia_web_location_postal_code", "estrategia_web_location_locality", "estrategia_web_location_region", "estrategia_web_location_country", "estrategia_web_location_hours",
       "estrategia_web_location_map_query", "estrategia_web_location_static_map_id",
+      // 2.18.0: the Google Business profile (sameAs + hasMap in modules/local-business), first of «For Google».
+      "estrategia_web_location_google_profile",
       "estrategia_web_location_latitude", "estrategia_web_location_longitude", "estrategia_web_location_business_type"],
   },
   project: { name: "eweb_project", taxonomies: ["eweb_project_category"], fields: [] },
@@ -94,6 +96,7 @@ test("the templates keep the old names: type, taxonomies and meta keys (nothing 
       estrategia_web_location_region: "copy",
       estrategia_web_location_country: "copy",
       estrategia_web_location_hours: "copy",
+      estrategia_web_location_google_profile: "copy",
       estrategia_web_location_latitude: "copy",
       estrategia_web_location_longitude: "copy",
       estrategia_web_location_business_type: "copy",

@@ -9,6 +9,76 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.19.0 — 26-11-2026 (Site Health: the Estrategia Web checks)
+
+**What each site must do:** nothing. The new module is on by default and
+only reports; after updating, open **Tools › Site Health** and read the
+results with the «Estrategia Web» badge. Born with the Llar d'Estels audit
+(25-26/11/2026): twelve findings any of our sites can have.
+
+- **New module `site-health`** (Default: on, category Media & performance):
+  adds tests to WordPress' own Site Health screen through
+  `site_status_tests`. ONE FILE PER CHECK in `modules/site-health/checks/`
+  (gather() reads the site, judge() decides from that data alone); the
+  registry (`includes/class-registry.php`) loads them, so a future audit
+  adds a check by adding a file. Results are good / recommended / critical,
+  with a description and a link to the screen where it is fixed.
+- **Critical:** search engines discouraged on a site that is not a staging
+  (environment type, or a host name like staging*/dev/*.local or a subdomain
+  of estrategiaweb.es); a legal page (legal notice, privacy policy, cookie
+  policy) missing or not linked from any menu or footer.
+- **Recommended:** a legal page unchanged for 12 months; pending cookies in
+  the consent registry or no page with the cookie table (consent on);
+  incomplete company details (legal name, tax ID, address, phone);
+  locations without coordinates, Google Business profile or page; no
+  social profiles (empty sameAs); no login limiting (SiteGround Security or
+  another known limiter) with XML-RPC open; no page cache outside
+  SiteGround; Yoast templates, timezone or date format still at their
+  English factory values on a non-English site; llms.txt off or empty, and
+  FAQ blocks faq-schema cannot read.
+- **Async** (run by the screen through `GET estrategia-web/v1/site-health/<id>`,
+  capability `view_site_health_checks`): the security headers (a loopback
+  GET of the home page) and DMARC (a DNS lookup). A failed loopback or
+  lookup says «could not check», never «missing».
+- Tests: `modules/site-health/tests/judge.test.mjs` and
+  `registry.test.mjs` (level 1), `site-health.test.mjs` (level 2).
+
+## 2.18.0 — 26-11-2026 (locations: the page of each one in a Query, and the Google profile)
+
+**What each site must do:** nothing to keep working. A site whose locations
+definition is a COPY of the template (Content types) is offered the new
+field in the Content types editor and adds it with its button; until
+then it has no Google profile field. Born with the Llar d'Estels audit.
+
+- **New binding key `estrategia_web_location_page_url`** (source
+  `estrategia-web-site/location`): the URL of the page tied to the location
+  — its permalink if the type has public pages; otherwise the published page
+  whose blocks bind to its slug; otherwise home. The same rule as the front
+  page's departments (2.16.1), moved from local-business to the site module
+  (`Location_Pages`, modules/site/includes/class-location-pages.php) so it
+  works with local-business switched off. For the button of each card:
+  `{"url":{"source":"estrategia-web-site/location","args":{"key":"estrategia_web_location_page_url"}}}`,
+  no slug. Test: site `location.test.mjs`.
+- **A Query Loop of a NON-public type of content-types now lists it.**
+  WordPress' Query Loop drops a post type that is not viewable
+  (`"public": false`; core's `build_query_vars_from_query_block()` checks
+  `is_post_type_viewable()`, WP 7.1.4) and silently lists posts instead.
+  content-types puts the type back (`query_loop_block_query_vars`,
+  modules/content-types/includes/class-query-loop.php) ONLY for a type it
+  declared that has show_in_rest; everything else core builds (order,
+  orderBy — menu_order —, perPage…) is kept. Core's or another plugin's
+  private types (`wp_block`) are left alone. Llar d'Estels' three locations
+  in a loop, ordered by menu_order. Test: site `location.test.mjs`.
+- **New location field «Google Business profile»**
+  (`estrategia_web_location_google_profile`, a URL, group «For Google»).
+  When filled in with an http(s) URL, the location's LocalBusiness node gets
+  `sameAs: [it]` and `hasMap: it`; nothing when empty. The company's sameAs
+  (social links) does not change. Tests: `graph.test.mjs` (level 1),
+  `output.test.mjs`.
+- docs/web-nueva.md, section 2: FAQs are `core/accordion` with the parent's
+  «FAQ (list)» style; content-type content is listed with a Query Loop and
+  bindings, never by hand.
+
 ## 2.17.0 — 26-11-2026 (new module: security headers)
 
 **What each site must do:** nothing; the module ships off. A site that wants

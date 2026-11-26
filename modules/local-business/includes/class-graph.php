@@ -19,6 +19,10 @@ defined( 'ABSPATH' ) || exit;
  *   to one            geo, url (THIS page), image, parentOrganization → the
  *                     Organization's @id; and the Organization itself when no
  *                     SEO plugin already has one to point to.
+ *                     With its «Google Business profile» filled in (2.18.0):
+ *                     sameAs [that URL] and hasMap (that URL), http/https only;
+ *                     nothing when empty. The company's sameAs (social
+ *                     links) is the Organization's and does not change.
  *
  * WHEN A LOCATION IS LEFT OUT (no node at all, rather than half a one):
  * without a name, or without an address Google can use — a street AND a
@@ -95,7 +99,8 @@ final class Graph {
 	 *
 	 * @param array $location id, type, name, url, telephone, email, image, street,
 	 *                        postal_code, locality, region, country, hours (stored
-	 *                        JSON), latitude, longitude, parent (the Organization's @id or "")
+	 *                        JSON), latitude, longitude, google (the Google Business profile URL),
+	 *                        parent (the Organization's @id or "")
 	 */
 	public static function local_business( array $location ): ?array {
 		$s       = static fn( string $key ): string => trim( (string) ( $location[ $key ] ?? '' ) );
@@ -120,6 +125,7 @@ final class Graph {
 			? array( '@type' => 'GeoCoordinates', 'latitude' => $lat, 'longitude' => $lon )
 			: array();
 		$parent = $s( 'parent' );
+		$google = preg_match( '#^https?://[^\s/]+#i', $s( 'google' ) ) ? $s( 'google' ) : '';
 		return self::compact(
 			array(
 				'@type'                     => Types::valid( $location['type'] ?? null ) ?? Types::DEFAULT,
@@ -132,6 +138,8 @@ final class Graph {
 				'address'                   => $address,
 				'geo'                       => $geo,
 				'openingHoursSpecification' => Hours::specification( $location['hours'] ?? '' ),
+				'sameAs'                    => '' !== $google ? array( $google ) : array(),
+				'hasMap'                    => $google,
 				'parentOrganization'        => '' !== $parent ? array( '@id' => $parent ) : array(),
 			)
 		);

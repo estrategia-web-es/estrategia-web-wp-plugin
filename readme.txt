@@ -4,7 +4,7 @@ Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.2
 Requires PHP: 8.1
-Stable tag: 2.17.0
+Stable tag: 2.19.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,14 @@ Its settings, yes. Your data (form submissions, redirects, company details) is k
 The cookie list includes an extract of the Open Cookie Database (https://github.com/jkwakman/Open-Cookie-Database), © Jan Kwakman and contributors, Apache License 2.0. Details in modules/consent/data/NOTICE.
 
 == Changelog ==
+
+= 2.19.0 =
+* New «Site Health checks» module, on by default: twelve checks in Tools › Site Health under the «Estrategia Web» badge (search engines discouraged, legal pages, pending cookies, company details, locations, social profiles, security headers, login limiting, page cache, DMARC, settings left in English, llms.txt and FAQ blocks), each with why it matters and a link to where it is fixed. It only reports: it changes nothing.
+
+= 2.18.0 =
+* Locations: a new link to each location's page, for the button of every card in a list of locations.
+* Content types: a Query Loop of a type without public pages now lists that type instead of the blog posts.
+* Locations: a new «Google Business profile» field; the location's search data then point to its Google card.
 
 = 2.17.0 =
 * New «Security headers» module, off by default: adds the browser security headers a site is missing (HSTS over https, framing only from the site itself, a referrer policy, no camera, microphone or location) and hides the PHP version, without repeating any header another plugin already sends.

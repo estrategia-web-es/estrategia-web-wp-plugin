@@ -18,6 +18,7 @@ import { reset, wp, saveCompany, seedPage, html, type, upload, png, BASE, creden
 import { checkLocalBusiness, checkOrganization, jsonLdBlocks, nodesOf } from "./google-rules.mjs";
 
 const SRC = "estrategia-web-site/location";
+const GOOGLE = "https://maps.google.com/?cid=7417053169526176902";
 const HOURS = { mo: ["08:00-16:00"], tu: ["08:00-16:00"], we: ["08:00-16:00"], th: ["08:00-16:00"], fr: ["08:00-16:00"], sa: ["08:00-16:00"] };
 let sonOms, noData, staticMap, tied, none;
 const got = {};
@@ -58,6 +59,7 @@ before(async () => {
         estrategia_web_location_latitude: 39.5379694,
         estrategia_web_location_longitude: 2.7349615,
         estrategia_web_location_static_map_id: map.json.id,
+        estrategia_web_location_google_profile: GOOGLE,
       },
     }),
     // A location whose address was never filled in: it publishes nothing for itself.
@@ -109,6 +111,18 @@ test("without an SEO plugin, a page tied to a location: our own script, its Loca
   assert.deepEqual(checkOrganization(org), { errors: [] });
   assert.equal(lb.parentOrganization["@id"], org["@id"]);
   assert.deepEqual(org.sameAs, ["https://www.facebook.com/ejemplo"]);
+});
+
+// 2.18.0 (Llar d'Estels audit, 26-11-2026). The rules (http/https only, nothing when empty) are graph.test.mjs.
+// Seen red (26-11-2026) with Data::location_node() not passing the field to Graph: no sameAs, no hasMap.
+test("the location's Google Business profile: sameAs and hasMap on ITS node (tied page, own page, department); the company's sameAs unchanged", () => {
+  assert.equal(sonOms.meta.estrategia_web_location_google_profile, GOOGLE, "stored as typed (a url field)");
+  for (const [where, nodes] of [["tied page", nodesOf(got.tied)], ["own page", nodesOf(got.own)], ["front page", nodesOf(got.home)[0].department]]) {
+    const lb = nodes.find((n) => n["@type"] === "DryCleaningOrLaundry");
+    assert.deepEqual(lb.sameAs, [GOOGLE], where);
+    assert.equal(lb.hasMap, GOOGLE, where);
+  }
+  assert.deepEqual(nodesOf(got.tied).find((n) => n["@type"] === "Organization").sameAs, ["https://www.facebook.com/ejemplo"], "the Organization keeps the social links only");
 });
 
 test("the location's own page and the front page (departments: only the location that can be one; the company hours ignored)", () => {

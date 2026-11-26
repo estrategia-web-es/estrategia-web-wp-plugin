@@ -268,6 +268,7 @@ require_once __DIR__ . '/includes/class-site-types.php';
 require_once __DIR__ . '/includes/class-location-data.php';
 require_once __DIR__ . '/includes/class-location-fields.php';
 require_once __DIR__ . '/includes/class-location-migration.php';
+require_once __DIR__ . '/includes/class-query-loop.php';
 
 Store::boot();
 Location_Fields::boot();
@@ -277,6 +278,7 @@ Wpml::boot();
 Fields_Panel::boot();
 Bindings::boot();
 Rest::boot();
+Query_Loop::boot(); // 2.18.0: a Query Loop of a non-public type of ours lists it (header of the class).
 Site_Types::boot(); // modules/site's old types → definitions, once; «enabled_types» still switches them.
 
 // Another theme, other folders: read again and let the hash decide the flush.

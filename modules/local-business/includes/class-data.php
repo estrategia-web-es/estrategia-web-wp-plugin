@@ -36,12 +36,11 @@ defined( 'ABSPATH' ) || exit;
  * - Boundary case, with a name: a location whose «Type of business» is
  *   «The company's» (the template's default) takes the company's type
  *   («Company details › Type of business»).
- * - The trap that cost the English pages (measured 22-10-2026 with real
- *   WPML): a WP_Query by «name» on an /en/ request gets «AND ID = <the
- *   English copy's id>» added by WPML (its parse_query, which
- *   suppress_filters does not stop) next to «post_name = 'maioris'», and
- *   finds NOTHING. tied_to() looks the slug up with get_page_by_path(),
- *   plain SQL, and then takes the translation itself.
+ * - Which page a location stands for and which locations a page is tied
+ *   to (location_url(), tied_to(), bound_slugs()) live in the site module
+ *   since 2.18.0: modules/site/includes/class-location-pages.php, with the
+ *   WPML trap of the slug lookup (measured 22-10-2026). The binding key
+ *   estrategia_web_location_page_url uses the same rule. Change it THERE.
  * - The other one: the get_posts() of all_locations() uses
  *   suppress_filters, so WPML does not narrow them to the request's language
  *   — and the English copies (maioris-en) come back TOO in the list of all
@@ -51,6 +50,7 @@ defined( 'ABSPATH' ) || exit;
 
 use EstrategiaWeb\Site\Company;
 use EstrategiaWeb\Site\Location;
+use EstrategiaWeb\Site\Location_Pages;
 use EstrategiaWeb\Site\Type_Names;
 
 final class Data {
@@ -73,6 +73,7 @@ final class Data {
 		'type'        => 'estrategia_web_location_business_type',
 		'static_id'   => 'estrategia_web_location_static_map_id',
 		'static_map'  => 'estrategia_web_location_static_map',
+		'google'      => 'estrategia_web_location_google_profile',
 	);
 
 	public static function business_type(): string {
@@ -149,51 +150,14 @@ final class Data {
 	}
 
 	/**
-	 * The page a location stands for, as a department of the front page's Organization (2.16.1).
-	 * - A location type WITH public pages: the location's own page, as before.
-	 * - WITHOUT them (Llar d'Estels, «public»: false): the published page TIED to it, the one
-	 *   whose blocks bind to its slug (the same link tied_to() reads the other way round). Before,
-	 *   get_permalink() gave /seus/campos/, a URL that does not exist and redirected to the front
-	 *   page (audit of 25-11-2026).
-	 * - No tied page: the home URL, never a URL that does not resolve.
-	 * Edge case: a page tied only through a SYNCED PATTERN is not found by the query (the binding
-	 * is in the pattern, not in the page): home. Two tied pages: the oldest one (lowest ID).
-	 * Checked in tests/output.test.mjs, «a location type without public pages».
+	 * The page a location stands for, as a department of the front page's Organization (2.16.1):
+	 * its own page if the type has public pages; otherwise the page tied to it; otherwise home.
+	 * Since 2.18.0 the rule lives in the site module (Location_Pages, its header says why), so the
+	 * binding key estrategia_web_location_page_url gives the same URL. Checked here in
+	 * tests/output.test.mjs, «a location type without public pages».
 	 */
 	public static function location_url( \WP_Post $location ): string {
-		if ( is_post_type_viewable( $location->post_type ) ) {
-			return (string) get_permalink( $location );
-		}
-		$page = self::page_tied_to( $location );
-		return $page ? (string) get_permalink( self::translated( $page ) ) : (string) apply_filters( 'wpml_home_url', home_url( '/' ) );
-	}
-
-	/** The oldest published page of a viewable type whose blocks bind to this location, or null. */
-	private static function page_tied_to( \WP_Post $location ): ?\WP_Post {
-		global $wpdb;
-		$slug = self::original( $location )->post_name;
-		if ( '' === $slug ) {
-			return null;
-		}
-		$types = array_values( array_filter( get_post_types( array(), 'names' ), 'is_post_type_viewable' ) );
-		if ( ! $types ) {
-			return null;
-		}
-		$in  = implode( ',', array_fill( 0, count( $types ), '%s' ) );
-		$ids = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- a LIKE over post_content has no API; front page only, once per location.
-			$wpdb->prepare(
-				"SELECT ID FROM {$wpdb->posts} WHERE post_status = 'publish' AND post_type IN ($in) AND post_content LIKE %s AND post_content LIKE %s ORDER BY ID ASC LIMIT 20", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $in is placeholders only.
-				array_merge( $types, array( '%' . $wpdb->esc_like( Location::SOURCE ) . '%', '%' . $wpdb->esc_like( '"slug":"' . $slug . '"' ) . '%' ) )
-			)
-		);
-		foreach ( $ids as $id ) {
-			$post = get_post( (int) $id );
-			// The LIKE is a sieve; tied_to() is the rule (the slug inside a location binding, not elsewhere).
-			if ( $post && in_array( $location->ID, array_map( static fn( $l ) => $l->ID, self::tied_to( $post ) ), true ) ) {
-				return $post;
-			}
-		}
-		return null;
+		return Location_Pages::url( $location );
 	}
 
 	/** One location (in the request's language) as a LocalBusiness node, or null. */
@@ -227,52 +191,21 @@ final class Data {
 				'hours'       => $meta( 'hours' ),
 				'latitude'    => $meta( 'latitude' ),
 				'longitude'   => $meta( 'longitude' ),
+				// 2.18.0: the Google Business profile link → sameAs and hasMap (Graph checks http/https).
+				'google'      => $meta( 'google' ),
 				'parent'      => $parent,
 			)
 		);
 	}
 
-	/** The locations a page's content binds to by slug, in the request's language. @return \WP_Post[] */
+	/** The locations a page's content binds to by slug, in the request's language (Location_Pages, 2.18.0). @return \WP_Post[] */
 	public static function tied_to( \WP_Post $post ): array {
-		$slugs = self::bound_slugs( parse_blocks( (string) $post->post_content ), array() );
-		$out   = array();
-		foreach ( array_unique( $slugs ) as $slug ) {
-			// get_page_by_path() and not Location::by_slug(): see «The trap» (WPML and a slug query on /en/).
-			$location = post_type_exists( self::location_type() ) ? get_page_by_path( sanitize_title( $slug ), OBJECT, self::location_type() ) : null;
-			if ( $location instanceof \WP_Post && 'publish' === $location->post_status ) {
-				$out[] = self::translated( $location );
-			}
-		}
-		return $out;
+		return Location_Pages::tied_to( $post );
 	}
 
-	/**
-	 * The slugs of estrategia-web-site/location bindings in a list of parsed
-	 * blocks, inner blocks and synced patterns included.
-	 *
-	 * @param int[] $seen Synced patterns already read (a pattern that includes itself).
-	 * @return string[]
-	 */
+	/** The slugs of estrategia-web-site/location bindings in parsed blocks (Location_Pages, 2.18.0). @return string[] */
 	public static function bound_slugs( array $blocks, array $seen ): array {
-		$out = array();
-		foreach ( $blocks as $block ) {
-			foreach ( (array) ( $block['attrs']['metadata']['bindings'] ?? array() ) as $binding ) {
-				if ( is_array( $binding ) && Location::SOURCE === ( $binding['source'] ?? '' ) && '' !== (string) ( $binding['args']['slug'] ?? '' ) ) {
-					$out[] = (string) $binding['args']['slug'];
-				}
-			}
-			$ref = (int) ( $block['attrs']['ref'] ?? 0 );
-			if ( 'core/block' === ( $block['blockName'] ?? '' ) && $ref && ! in_array( $ref, $seen, true ) ) {
-				$pattern = get_post( $ref );
-				if ( $pattern && 'wp_block' === $pattern->post_type ) {
-					$out = array_merge( $out, self::bound_slugs( parse_blocks( (string) $pattern->post_content ), array_merge( $seen, array( $ref ) ) ) );
-				}
-			}
-			if ( ! empty( $block['innerBlocks'] ) ) {
-				$out = array_merge( $out, self::bound_slugs( $block['innerBlocks'], $seen ) );
-			}
-		}
-		return $out;
+		return Location_Pages::bound_slugs( $blocks, $seen );
 	}
 
 	/** Every published location, ONE per original, in the request's language (see «The trap»). @return \WP_Post[] */
@@ -327,16 +260,10 @@ final class Data {
 	}
 
 	private static function translated( \WP_Post $post ): \WP_Post {
-		$id = (int) apply_filters( 'wpml_object_id', $post->ID, $post->post_type, true );
-		return ( $id && $id !== $post->ID && get_post( $id ) ) ? get_post( $id ) : $post;
+		return Location_Pages::translated( $post );
 	}
 
 	private static function original( \WP_Post $post ): \WP_Post {
-		$lang = apply_filters( 'wpml_default_language', null );
-		if ( ! is_string( $lang ) || '' === $lang ) {
-			return $post;
-		}
-		$id = (int) apply_filters( 'wpml_object_id', $post->ID, $post->post_type, true, $lang );
-		return ( $id && $id !== $post->ID && get_post( $id ) ) ? get_post( $id ) : $post;
+		return Location_Pages::original( $post );
 	}
 }

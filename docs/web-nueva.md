@@ -88,6 +88,21 @@ not; stylesheet names; patterns). The ones that matter for the plugin:
 - **The cookie notice categories** the site needs (`maps` if there are
   maps) are declared by the child with the `estrategia_web_consent_categories`
   filter (see `lavanderia-mallorca/theme/functions.php`).
+- **FAQs are `core/accordion` with the parent theme's «FAQ (list)» style**
+  (`is-style-faq-list`). A child theme never makes its own FAQ format
+  (26-11-2026, Llar d'Estels audit: its FAQs were `core/details` inside a
+  group, which `modules/faq-schema` cannot read, so no FAQ schema).
+- **Anything that lives in a content type** (locations, testimonials…) **is
+  listed with a Query Loop and bindings**, never written by hand in pages
+  (26-11-2026, Llar d'Estels audit: its three locations were hard-coded in
+  four places, and a new location page left links pointing to the old one).
+  The card's button goes to the location's page with
+  `{"url":{"source":"estrategia-web-site/location","args":{"key":"estrategia_web_location_page_url"}}}`.
+  A non-public type (`"public": false`) works too since 2.18.0: core's
+  Query Loop drops a type that is not viewable and lists posts (WP 7.1.4,
+  `build_query_vars_from_query_block()`), and content-types puts back the
+  types it declares (`class-query-loop.php`). Order the loop by
+  `menu_order` (the «Order» of each entry), not by title.
 
 **GAP — there is no child theme template.** Today you copy Lavandería and
 delete its own stuff by hand; there is no empty `armazon-wp-hijo` with the
