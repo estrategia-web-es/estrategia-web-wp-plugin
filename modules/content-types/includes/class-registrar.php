@@ -268,7 +268,7 @@ final class Registrar {
 	}
 
 	/**
-	 * «private» fields (2.14.1) out of the REST answer of whoever cannot edit
+	 * «private» fields (2.15.0) out of the REST answer of whoever cannot edit
 	 * the entry. Why: every field goes to REST with show_in_rest (the block
 	 * editor's panel reads and saves them there), and core lets ANYONE read a
 	 * public post's meta: the family's email of an obituary

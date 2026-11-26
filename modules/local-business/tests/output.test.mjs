@@ -76,7 +76,7 @@ before(async () => {
   ]);
   got.badType = bad.status;
   // Every page once, in parallel: plain, and the tied one with each SEO double.
-  const reads = { tied: tied.url, own: sonOms.link, home: BASE + "/", none: none.url, rankmath: tied.url + "?ew_lb_host=rankmath", local: tied.url + "?ew_lb_host=rankmath-local", yoast: tied.url + "?ew_lb_host=yoast" };
+  const reads = { tied: tied.url, own: sonOms.link, home: BASE + "/", homePrivate: BASE + "/?ew_lb_private=1", none: none.url, rankmath: tied.url + "?ew_lb_host=rankmath", local: tied.url + "?ew_lb_host=rankmath-local", yoast: tied.url + "?ew_lb_host=yoast" };
   const texts = await Promise.all(Object.values(reads).map(async (u) => (await html(u)).text));
   Object.keys(reads).forEach((k, i) => (got[k] = texts[i]));
 });
@@ -119,6 +119,19 @@ test("the location's own page and the front page (departments: only the location
   assert.deepEqual(home[0].department.map((d) => d.name), ["Lavandería Industrial – Son Oms"], "«Sede sin datos» is left out, not half published");
   assert.equal(home[0].openingHoursSpecification, undefined, "with locations, each has its own hours, not the company's");
   assert.deepEqual(jsonLdBlocks(got.none), [], "a page about no location: nothing");
+});
+
+// 2.16.1 (Llar d'Estels, 25-11-2026): with «public»: false the department's url was the location's
+// permalink (/seus/campos/), which does not exist and redirected to the front page.
+// Seen red (25-11-2026) with the front page using get_permalink() again: the url was …/sedes/son-oms/
+// instead of …/lavanderia-industrial/.
+test("a location type without public pages: the front page's department points at the page tied to it", () => {
+  const home = nodesOf(got.homePrivate);
+  assert.equal(home.length, 1, "the front page: the Organization alone");
+  const dep = home[0].department.find((d) => d.name === "Lavandería Industrial");
+  assert.ok(dep, JSON.stringify(home[0].department));
+  assert.equal(dep.url, tied.url, "url: the page whose blocks bind to the location (lavanderia-industrial), not the location's own permalink");
+  assert.equal(nodesOf(got.home)[0].department.find((d) => d.name === "Lavandería Industrial").url, sonOms.link, "with public pages: the location's own page, as before");
 });
 
 test("with Rank Math: ONE graph, theirs — our LocalBusiness inside, their Organization completed, not duplicated", () => {

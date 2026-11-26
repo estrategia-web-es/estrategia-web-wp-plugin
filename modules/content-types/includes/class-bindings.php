@@ -111,7 +111,7 @@ final class Bindings {
 			return '';
 		}
 		$field = self::field( $post->post_type, $key );
-		// A «private» field (2.14.1) is never printed on a page, not even for an editor: a page can be cached
+		// A «private» field (2.15.0) is never printed on a page, not even for an editor: a page can be cached
 		// and served to anyone, so «who is looking» cannot decide it here.
 		if ( ! $field || ! empty( $field['private'] ) ) {
 			return '';

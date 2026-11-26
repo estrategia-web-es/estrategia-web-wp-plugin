@@ -456,7 +456,7 @@ final class Schema {
 			'label'     => $field['label'],
 			'help'      => $field['help'] ?? '',
 			'required'  => (bool) ( $field['required'] ?? false ),
-			// 2.14.1: only for who can edit the entry (REST, binding); the server still reads it ({{post_field:…}}). Registrar::hide_private().
+			// 2.15.0: only for who can edit the entry (REST, binding); the server still reads it ({{post_field:…}}). Registrar::hide_private().
 			'private'   => (bool) ( $field['private'] ?? false ),
 			// 2.15.0: «used» = the text box suggests what other entries of the type already say (class-suggestions.php).
 			'suggest'   => 'used' === ( $field['suggest'] ?? '' ) ? 'used' : '',

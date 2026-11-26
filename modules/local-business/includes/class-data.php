@@ -123,7 +123,7 @@ final class Data {
 		if ( is_front_page() ) {
 			$departments = array();
 			foreach ( self::all_locations() as $location ) {
-				$node = self::location_node( $location, (string) get_permalink( $location ), '' );
+				$node = self::location_node( $location, self::location_url( $location ), '' );
 				if ( $node ) {
 					$departments[] = $node;
 				}
@@ -146,6 +146,54 @@ final class Data {
 			}
 		}
 		return $nodes ? array( Graph::organization( $company ), $nodes ) : array( null, array() );
+	}
+
+	/**
+	 * The page a location stands for, as a department of the front page's Organization (2.16.1).
+	 * - A location type WITH public pages: the location's own page, as before.
+	 * - WITHOUT them (Llar d'Estels, «public»: false): the published page TIED to it, the one
+	 *   whose blocks bind to its slug (the same link tied_to() reads the other way round). Before,
+	 *   get_permalink() gave /seus/campos/, a URL that does not exist and redirected to the front
+	 *   page (audit of 25-11-2026).
+	 * - No tied page: the home URL, never a URL that does not resolve.
+	 * Edge case: a page tied only through a SYNCED PATTERN is not found by the query (the binding
+	 * is in the pattern, not in the page): home. Two tied pages: the oldest one (lowest ID).
+	 * Checked in tests/output.test.mjs, «a location type without public pages».
+	 */
+	public static function location_url( \WP_Post $location ): string {
+		if ( is_post_type_viewable( $location->post_type ) ) {
+			return (string) get_permalink( $location );
+		}
+		$page = self::page_tied_to( $location );
+		return $page ? (string) get_permalink( self::translated( $page ) ) : (string) apply_filters( 'wpml_home_url', home_url( '/' ) );
+	}
+
+	/** The oldest published page of a viewable type whose blocks bind to this location, or null. */
+	private static function page_tied_to( \WP_Post $location ): ?\WP_Post {
+		global $wpdb;
+		$slug = self::original( $location )->post_name;
+		if ( '' === $slug ) {
+			return null;
+		}
+		$types = array_values( array_filter( get_post_types( array(), 'names' ), 'is_post_type_viewable' ) );
+		if ( ! $types ) {
+			return null;
+		}
+		$in  = implode( ',', array_fill( 0, count( $types ), '%s' ) );
+		$ids = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- a LIKE over post_content has no API; front page only, once per location.
+			$wpdb->prepare(
+				"SELECT ID FROM {$wpdb->posts} WHERE post_status = 'publish' AND post_type IN ($in) AND post_content LIKE %s AND post_content LIKE %s ORDER BY ID ASC LIMIT 20", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $in is placeholders only.
+				array_merge( $types, array( '%' . $wpdb->esc_like( Location::SOURCE ) . '%', '%' . $wpdb->esc_like( '"slug":"' . $slug . '"' ) . '%' ) )
+			)
+		);
+		foreach ( $ids as $id ) {
+			$post = get_post( (int) $id );
+			// The LIKE is a sieve; tied_to() is the rule (the slug inside a location binding, not elsewhere).
+			if ( $post && in_array( $location->ID, array_map( static fn( $l ) => $l->ID, self::tied_to( $post ) ), true ) ) {
+				return $post;
+			}
+		}
+		return null;
 	}
 
 	/** One location (in the request's language) as a LocalBusiness node, or null. */

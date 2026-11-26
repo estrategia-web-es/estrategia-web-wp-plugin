@@ -19,13 +19,21 @@
  * tests/consent-browser.test.mjs). A theme that dims it has to measure it
  * again.
  */
+/*
+ * --estrategia-web-consent-bottom (2.16.0): how much the notice rises from the
+ * bottom edge. A theme with a FIXED BAR at the bottom (Llar d'Estels: the
+ * «Call now» bar on mobile) sets it to that bar's height, so the notice sits
+ * ABOVE the bar and never hides it. Without it, 0: as before. It is a
+ * variable and not a fixed rule because only the theme knows its bar.
+ * Checked in browser-consent-notice.test.mjs, test «1 bis» (scenario 12, step «mobile-390»).
+ */
 .estrategia-web-consent {
 	position: fixed;
 	inset-inline: var(--wp--preset--spacing--16, 1rem);
-	inset-block-end: var(--wp--preset--spacing--16, 1rem);
+	inset-block-end: calc(var(--estrategia-web-consent-bottom, 0px) + var(--wp--preset--spacing--16, 1rem));
 	z-index: 100000;
 	max-inline-size: 40rem;
-	max-block-size: calc(100vh - 2rem);
+	max-block-size: calc(100vh - 2rem - var(--estrategia-web-consent-bottom, 0px));
 	overflow-y: auto;
 	margin-inline: auto;
 	padding: var(--wp--preset--spacing--24, 1.5rem);
@@ -151,6 +159,59 @@
 	font: inherit;
 	text-decoration: underline;
 	cursor: pointer;
+}
+
+/*
+ * MOBILE, COMPACT (2.16.0). On a 390 px phone the notice took ~380 px, almost
+ * half the screen, and hid what a visitor most needs there: Llar d'Estels'
+ * «Call now» bar (audit of 25-11-2026, Lighthouse screenshot). Below 600 px:
+ * - closer to the edges and less padding;
+ * - smaller title and text (the text is NOT cut: the notice has to inform);
+ * - the three buttons in ONE row, still the same width and weight (AEPD:
+ *   accept and reject weigh the same), each at least 44 px tall (touch).
+ * Unchanged on purpose: the 16 px between text and buttons and the 4 px under
+ * the title (step 1 of the test), and «Powered by» smaller than the buttons.
+ * Edge case: a long button label («Rebutjau-les totes») wraps to two lines
+ * inside its button instead of pushing the row to two rows.
+ */
+@media (max-width: 600px) {
+	.estrategia-web-consent {
+		inset-inline: var(--wp--preset--spacing--8, 0.5rem);
+		inset-block-end: calc(var(--estrategia-web-consent-bottom, 0px) + var(--wp--preset--spacing--8, 0.5rem));
+		max-block-size: calc(100vh - 1rem - var(--estrategia-web-consent-bottom, 0px));
+		padding: 0.75rem 0.875rem;
+	}
+
+	.estrategia-web-consent .estrategia-web-consent__title {
+		margin-block-end: 0.25rem;
+		font-size: 1rem;
+	}
+
+	.estrategia-web-consent .estrategia-web-consent__text {
+		margin-block-end: 1rem;
+		font-size: 0.8125rem;
+		line-height: 1.4;
+	}
+
+	.estrategia-web-consent__actions {
+		flex-wrap: nowrap;
+		gap: 0.375rem;
+	}
+
+	.estrategia-web-consent .estrategia-web-consent__actions .estrategia-web-consent__button {
+		flex: 1 1 0;
+		min-inline-size: 0;
+		min-block-size: 44px;
+		padding: 0.375rem 0.5rem;
+		font-size: 0.8125rem;
+		line-height: 1.2;
+		white-space: normal;
+	}
+
+	.estrategia-web-consent .estrategia-web-consent__powered {
+		margin-block-start: 0.25rem;
+		font-size: 0.6875rem;
+	}
 }
 
 /*

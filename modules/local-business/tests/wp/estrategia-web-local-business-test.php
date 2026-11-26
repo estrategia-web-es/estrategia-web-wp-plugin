@@ -167,6 +167,25 @@ add_action(
 	}
 );
 
+/*
+ * ?ew_lb_private=1 (2.16.1): for ONE request, the location type has NO public pages, as on
+ * Llar d'Estels («public»: false). tests/output.test.mjs reads the front page with it to check
+ * that a department points at the page tied to the location, not at a permalink that does not exist.
+ */
+add_filter(
+	'register_post_type_args',
+	static function ( array $args, string $post_type ): array {
+		if ( empty( $_GET['ew_lb_private'] ) || ! class_exists( \EstrategiaWeb\LocalBusiness\Data::class ) || \EstrategiaWeb\LocalBusiness\Data::location_type() !== $post_type ) { // phpcs:ignore WordPress.Security.NonceVerification
+			return $args;
+		}
+		$args['public']             = false;
+		$args['publicly_queryable'] = false;
+		return $args;
+	},
+	10,
+	2
+);
+
 add_action(
 	'wp_head',
 	static function () {
