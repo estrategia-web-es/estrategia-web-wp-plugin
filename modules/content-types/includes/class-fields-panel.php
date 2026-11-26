@@ -381,7 +381,7 @@ final class Fields_Panel {
 					$list      = null !== ( $field['suggest'] ?? null ) ? Suggestions::list_id( $field['key'] ) : '';
 					printf( '<input type="%s" class="regular-text" id="%s" name="%s" value="%s"%s%s%s>', esc_attr( $html_type ), esc_attr( $id ), esc_attr( $name ), esc_attr( (string) $value ), wp_kses_data( $range ), wp_kses_data( $attrs ), $list ? ' list="' . esc_attr( $list ) . '" autocomplete="off"' : '' );
 					if ( $list ) {
-						echo Suggestions::datalist( $list, $field['suggest'] ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside.
+						echo wp_kses( Suggestions::datalist( $list, $field['suggest'] ), \EstrategiaWeb\Kses::allowed() );
 					}
 			}
 			if ( '' !== $field['help'] ) {
@@ -426,7 +426,7 @@ final class Fields_Panel {
 		// One datalist per suggesting subfield, outside the rows: a row added by JavaScript is a clone and keeps «list».
 		foreach ( $field['fields'] as $sub ) {
 			if ( null !== ( $sub['suggest'] ?? null ) ) {
-				echo Suggestions::datalist( Suggestions::list_id( $field['key'], $sub['key'] ), $sub['suggest'] ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside.
+				echo wp_kses( Suggestions::datalist( Suggestions::list_id( $field['key'], $sub['key'] ), $sub['suggest'] ), \EstrategiaWeb\Kses::allowed() );
 			}
 		}
 		echo '</fieldset>';
@@ -457,8 +457,8 @@ final class Fields_Panel {
 				echo '</select>';
 			} else {
 				$type = array( 'number' => 'number', 'date' => 'date', 'time' => 'time', 'url' => 'url', 'email' => 'email', 'tel' => 'tel' )[ $sub['kind'] ] ?? 'text';
-				$list = null !== ( $sub['suggest'] ?? null ) ? ' list="' . esc_attr( Suggestions::list_id( $field['key'], $sub['key'] ) ) . '" autocomplete="off"' : '';
-				printf( '<input type="%s" class="regular-text" id="%s" name="%s" value="%s"%s%s%s>', esc_attr( $type ), esc_attr( $id ), esc_attr( $name ), esc_attr( $value ), 'number' === $type ? ' step="any"' : '', wp_kses_data( $sub_a ), $list );
+				$list = null !== ( $sub['suggest'] ?? null ) ? Suggestions::list_id( $field['key'], $sub['key'] ) : '';
+				printf( '<input type="%s" class="regular-text" id="%s" name="%s" value="%s"%s%s%s>', esc_attr( $type ), esc_attr( $id ), esc_attr( $name ), esc_attr( $value ), 'number' === $type ? ' step="any"' : '', wp_kses_data( $sub_a ), $list ? ' list="' . esc_attr( $list ) . '" autocomplete="off"' : '' );
 			}
 			echo '</p>';
 		}

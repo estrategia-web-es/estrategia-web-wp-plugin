@@ -120,7 +120,8 @@ final class Kses {
 	/** Tags allowed() adds to the ones of a post, with their own attributes. */
 	private const FORM_TAGS = array(
 		'form'     => array( 'action', 'method', 'novalidate' ),
-		'input'    => array( 'type', 'name', 'value', 'checked', 'disabled', 'required', 'readonly', 'placeholder', 'form', 'min', 'max', 'step', 'autocomplete', 'accept', 'multiple' ),
+		'input'    => array( 'type', 'name', 'value', 'checked', 'disabled', 'required', 'readonly', 'placeholder', 'form', 'min', 'max', 'step', 'autocomplete', 'accept', 'multiple', 'list' ),
+		'datalist' => array(), // 2.16.2: the content-types suggestions (class-suggestions.php); its id is in the common list.
 		'select'   => array( 'name', 'form', 'disabled', 'required', 'multiple', 'autocomplete' ),
 		'option'   => array( 'value', 'selected', 'disabled' ),
 		'textarea' => array( 'name', 'rows', 'cols', 'disabled', 'required', 'readonly', 'placeholder', 'form', 'autocomplete' ),
