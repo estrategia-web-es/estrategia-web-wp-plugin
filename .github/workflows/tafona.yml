@@ -1,0 +1,33 @@
+# Tafona in the plugin: an issue labelled «claude» becomes a PR, and the
+# reviewer gives its verdict (https://github.com/estrategia-web-es/tafona).
+# No site of its own, so no prod_host: the plugin reaches the sites through
+# a release, not through this file. Nothing else of the process lives here.
+name: Tafona
+
+on:
+  issues:
+    types: [opened, labeled]
+  issue_comment:
+    types: [created]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: "PR que revisar"
+        required: true
+
+jobs:
+  trabajar:
+    if: github.event_name == 'issues' || github.event_name == 'issue_comment'
+    permissions: { contents: write, pull-requests: write, issues: write, id-token: write, actions: write }
+    uses: estrategia-web-es/tafona/.github/workflows/trabajar.yml@main
+    secrets: inherit
+
+  revisar:
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && !github.event.pull_request.draft && github.event.pull_request.user.type != 'Bot')
+    permissions: { contents: read, pull-requests: write, issues: write, id-token: write }
+    uses: estrategia-web-es/tafona/.github/workflows/revisar.yml@main
+    with:
+      pr: ${{ inputs.pr || format('{0}', github.event.pull_request.number) }}
+    secrets: inherit
