@@ -101,6 +101,14 @@
       "group": "map"
     },
     {
+      "name": "estrategia_web_location_google_profile",
+      "type": "url",
+      "label": { "en": "Google Business profile", "es": "Ficha de Google Business", "ca": "Fitxa de Google Business" },
+      "help": { "en": "The link to this location's card on Google Maps (Share › Copy link, or https://maps.google.com/?cid=…). Search engines read it as the same business. Empty: not given.", "es": "El enlace a la ficha de esta sede en Google Maps (Compartir › Copiar enlace, o https://maps.google.com/?cid=…). Los buscadores lo leen como el mismo negocio. Vacío: no se da.", "ca": "L'enllaç a la fitxa d'aquesta seu a Google Maps (Comparteix › Copia l'enllaç, o https://maps.google.com/?cid=…). Els cercadors el llegeixen com el mateix negoci. Buit: no es dona." },
+      "wpml": "copy",
+      "group": "google"
+    },
+    {
       "name": "estrategia_web_location_latitude",
       "type": "number",
       "label": { "en": "Latitude", "es": "Latitud", "ca": "Latitud" },

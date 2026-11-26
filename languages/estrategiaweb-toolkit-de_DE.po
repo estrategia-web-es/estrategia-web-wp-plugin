@@ -400,7 +400,12 @@ msgid ""
 "framing only from the site itself, a referrer policy and no camera, "
 "microphone or location) and hides the PHP version. It never repeats a header "
 "another plugin already sends."
-msgstr "Ergänzt die Sicherheits-Header für den Browser, die der Website fehlen (HSTS über https, Einbetten nur durch die Website selbst, eine Referrer-Richtlinie und kein Zugriff auf Kamera, Mikrofon oder Standort), und verbirgt die PHP-Version. Einen Header, den schon ein anderes Plugin sendet, sendet es nie doppelt."
+msgstr ""
+"Ergänzt die Sicherheits-Header für den Browser, die der Website fehlen (HSTS "
+"über https, Einbetten nur durch die Website selbst, eine Referrer-Richtlinie "
+"und kein Zugriff auf Kamera, Mikrofon oder Standort), und verbirgt die PHP-"
+"Version. Einen Header, den schon ein anderes Plugin sendet, sendet es nie "
+"doppelt."
 
 #: includes/admin/module-strings.php:57
 msgctxt "module description"
@@ -5955,7 +5960,7 @@ msgid "TikTok"
 msgstr "TikTok"
 
 #: modules/site/includes/class-company.php:147
-#: modules/site/includes/class-location.php:161
+#: modules/site/includes/class-location.php:169
 msgid "Phone (link)"
 msgstr "Telefon (Link)"
 
@@ -5964,7 +5969,7 @@ msgid "Secondary phone (link)"
 msgstr "Zweite Telefonnummer (Link)"
 
 #: modules/site/includes/class-company.php:149
-#: modules/site/includes/class-location.php:162
+#: modules/site/includes/class-location.php:170
 msgid "Email (link)"
 msgstr "E-Mail (Link)"
 
@@ -5972,33 +5977,37 @@ msgstr "E-Mail (Link)"
 msgid "WhatsApp (link)"
 msgstr "WhatsApp (Link)"
 
-#: modules/site/includes/class-location.php:74
+#: modules/site/includes/class-location.php:80
 msgid "Location details"
 msgstr "Standortdaten"
 
-#: modules/site/includes/class-location.php:151
+#: modules/site/includes/class-location.php:159
 msgid "Address (text)"
 msgstr "Adresse (Text)"
 
-#: modules/site/includes/class-location.php:152
+#: modules/site/includes/class-location.php:160
 msgid "Opening hours (text)"
 msgstr "Öffnungszeiten (Text)"
 
-#: modules/site/includes/class-location.php:153
+#: modules/site/includes/class-location.php:161
 msgid "Google Maps link"
 msgstr "Google-Maps-Link"
 
-#: modules/site/includes/class-location.php:154
+#: modules/site/includes/class-location.php:162
 msgid "Map embed URL"
 msgstr "Karten-Einbettungs-URL"
 
-#: modules/site/includes/class-location.php:155
+#: modules/site/includes/class-location.php:163
 msgid "Static map image (URL)"
 msgstr "Statisches Kartenbild (URL)"
 
-#: modules/site/includes/class-location.php:157
+#: modules/site/includes/class-location.php:165
 msgid "Location name"
 msgstr "Name des Standorts"
+
+#: modules/site/includes/class-location.php:171
+msgid "Location page (link)"
+msgstr "Seite des Standorts (Link)"
 
 #: modules/site/includes/class-settings.php:169
 msgid "Company details and site options of the Estrategia Web Site plugin."

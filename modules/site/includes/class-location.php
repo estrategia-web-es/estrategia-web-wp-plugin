@@ -24,6 +24,12 @@ defined( 'ABSPATH' ) || exit;
  * `estrategia_web_location_address` (text from the address parts),
  * `_schedule` (text from the «hours» field), `_map_url` and `_map_embed`
  * (from the map query) and `_static_map` (the media library image's URL).
+ * Since 2.18.0 `estrategia_web_location_page_url`: the page tied to the
+ * location (Location_Pages::url(): its permalink if the type has public
+ * pages; otherwise the page whose blocks bind to its slug; otherwise home).
+ * It is the `url` of each card's button in a Query of locations, no slug
+ * (Llar d'Estels, 26-11-2026: three locations, a non-public type, each card
+ * to /funeraria-porreres/, /funeraria-campos/, /funeraria-llucmajor/).
  * core/post-meta cannot show them: bind them through THIS source.
  * Text and URLs are rendered the same as in the company source
  * (Bindings::format): line breaks to <br> in text, esc_url_raw with
@@ -65,7 +71,7 @@ final class Location {
 	/** The type's KEY; in wp_posts it is called Type_Names::name( TYPE ) (1.2.0). */
 	public const TYPE = 'location';
 
-	public const DERIVED = array( 'estrategia_web_location_phone_href', 'estrategia_web_location_email_href' );
+	public const DERIVED = array( 'estrategia_web_location_phone_href', 'estrategia_web_location_email_href', 'estrategia_web_location_page_url' );
 
 	public static function register(): void {
 		register_block_bindings_source(
@@ -131,6 +137,8 @@ final class Location {
 				return Links::tel( $meta( 'estrategia_web_location_phone' ), Company::country_code() );
 			case 'estrategia_web_location_email_href':
 				return Links::mailto( $meta( 'estrategia_web_location_email' ) );
+			case 'estrategia_web_location_page_url':
+				return Location_Pages::url( $post );
 		}
 		// 2.0.0: the old stored texts are DERIVED now, under the same keys (Location_Fields).
 		if ( class_exists( Location_Fields::class ) && in_array( $key, Location_Fields::LEGACY, true ) ) {
@@ -160,6 +168,7 @@ final class Location {
 			+ array(
 				'estrategia_web_location_phone_href' => __( 'Phone (link)', 'estrategiaweb-toolkit' ),
 				'estrategia_web_location_email_href' => __( 'Email (link)', 'estrategiaweb-toolkit' ),
+				'estrategia_web_location_page_url'   => __( 'Location page (link)', 'estrategiaweb-toolkit' ),
 			);
 	}
 

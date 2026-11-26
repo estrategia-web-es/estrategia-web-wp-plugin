@@ -1078,6 +1078,7 @@ Gracias por escribirnos. Hemos recibido tu mensaje y te responderemos pronto.
 		'Map embed URL' => 'URL para incrustar el mapa',
 		'Static map image (URL)' => 'Imagen estática del mapa (URL)',
 		'Location name' => 'Nombre de la sede',
+		'Location page (link)' => 'Página de la sede (enlace)',
 		'Company details and site options of the Estrategia Web Site plugin.' => 'Datos de la empresa y opciones de la web del plugin Estrategia Web Site.',
 		'The email address is not valid. The previous one has been kept.' => 'El correo electrónico no es válido. Se ha mantenido el anterior.',
 		'The WhatsApp number is not valid (international format, digits only). The previous one has been kept.' => 'El número de WhatsApp no es válido (formato internacional, solo dígitos). Se ha mantenido el anterior.',

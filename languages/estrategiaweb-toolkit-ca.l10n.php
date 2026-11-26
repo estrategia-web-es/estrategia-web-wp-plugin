@@ -1078,6 +1078,7 @@ Gràcies per escriure\'ns. Hem rebut el teu missatge i et respondrem aviat.
 		'Map embed URL' => 'URL per incrustar el mapa',
 		'Static map image (URL)' => 'Imatge estàtica del mapa (URL)',
 		'Location name' => 'Nom de la seu',
+		'Location page (link)' => 'Pàgina de la seu (enllaç)',
 		'Company details and site options of the Estrategia Web Site plugin.' => 'Dades de l\'empresa i opcions del web de l\'extensió Estrategia Web Site.',
 		'The email address is not valid. The previous one has been kept.' => 'L\'adreça de correu electrònic no és vàlida. S\'ha mantingut l\'anterior.',
 		'The WhatsApp number is not valid (international format, digits only). The previous one has been kept.' => 'El número de WhatsApp no és vàlid (format internacional, només xifres). S\'ha mantingut l\'anterior.',

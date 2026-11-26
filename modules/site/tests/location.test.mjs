@@ -21,6 +21,21 @@
 // expected phone changed, the second phone's tel: expected for the first,
 // the expected tax ID changed in the legal sentence, and the registry
 // expected to keep its <i>.
+//
+// 2.18.0 (Llar d'Estels, 26-11-2026): estrategia_web_location_page_url, the url of a button in
+// each card of the Query, without slug: with a public location type, each location's permalink.
+// The NON-public half (?ew_lb_private=1: the local-business test mu-plugin makes the location type
+// not public for that request, as on Llar d'Estels) is read BY SLUG, not in the Query: WordPress'
+// core/query drops a postType that is not viewable (build_query_vars_from_query_block(),
+// is_post_type_viewable(); WP 7.1.4) and lists posts instead — measured here on 26-11-2026, the
+// private read's Query had 1 item, not 3. The value is the same code either way (Location::value()).
+// Each location's TIED page: Maioris → this very page (it binds to «maioris» by slug), Palma →
+// «sede-palma» (its button is there), Inca → home: its button is in a SYNCED PATTERN, which ties it
+// for local-business (bound_slugs reads patterns) but not for the page lookup (the LIKE reads the
+// page's own content) — the edge case named in class-location-pages.php.
+// Seen red (26-11-2026) with value() returning get_permalink() for the key (the private buttons
+// gave …/sedes/maioris/ instead of …/sedes-prueba/), and with the key left out of value() (every
+// button's href came out empty).
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { reset, wp, saveCompany, seedPage, html, upload, png, type } from "../../../tests/lib.mjs";
@@ -53,6 +68,8 @@ ${para("t-none", { slug: "no-existe", key: "estrategia_web_location_phone" })}
 ${para("t-draft", { slug: "borrador", key: "estrategia_web_location_phone" })}
 ${para("t-nokey", { slug: "maioris", key: "phone" })}
 ${para("t-ctx", { key: "estrategia_web_location_phone" })}
+${pageButton("maioris")}
+<!-- wp:block {"ref":PATTERN_REF} /-->
 <!-- wp:query ${query} -->
 <div class="wp-block-query"><!-- wp:post-template -->
 <!-- wp:post-title /-->
@@ -62,8 +79,21 @@ ${para("t-static", { key: STATIC })}
 <!-- wp:image ${JSON.stringify({ className: "t-img", metadata: { bindings: { url: { source: SRC, args: { key: STATIC } } } } })} -->
 <figure class="wp-block-image t-img"><img src="" alt=""/></figure>
 <!-- /wp:image -->
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button ${attrs("t-page", { url: { source: SRC, args: { key: "estrategia_web_location_page_url" } } })} -->
+<div class="wp-block-button t-page"><a class="wp-block-button__link wp-element-button" href="#">More</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons -->
 <!-- /wp:post-template --></div>
 <!-- /wp:query -->`;
+
+function pageButton(slug) {
+  return `<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button ${attrs("t-page-" + slug, { url: { source: SRC, args: { slug, key: "estrategia_web_location_page_url" } } })} -->
+<div class="wp-block-button t-page-${slug}"><a class="wp-block-button__link wp-element-button" href="#">${slug}</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons -->`;
+}
 
 const bind = (attr, key) => JSON.stringify({ metadata: { bindings: { [attr]: { source: "estrategia-web-site/company", args: { key } } } } });
 
@@ -106,7 +136,7 @@ const LEGAL = `<!-- wp:paragraph {"className":"c-legal"} -->
 <p class="c-bound">x</p>
 <!-- /wp:paragraph -->`;
 
-let text, image, other, page, made;
+let text, privateText, palmaPrivate, image, other, page, palmaPage, made;
 before(async () => {
   await reset();
   await saveCompany({
@@ -123,10 +153,17 @@ before(async () => {
       address: "Calle Mayor 1\n07001 Palma",
       social: { instagram: "https://instagram.com/prueba" },
     });
-  const [img, img2, p] = await Promise.all([upload("mapa-maioris.png", "image/png", png(8, 4, [40, 120, 200])), upload("mapa-inca.png", "image/png", png(8, 4, [200, 120, 40])), seedPage(PAGE + "\n" + COMPANY + "\n" + LEGAL, "sedes-prueba")]);
+  const pattern = await wp("/blocks", { method: "POST", body: { title: "Inca button", status: "publish", content: pageButton("inca") } });
+  assert.equal(pattern.status, 201, pattern.text);
+  const [img, img2, p, pp] = await Promise.all([
+    upload("mapa-maioris.png", "image/png", png(8, 4, [40, 120, 200])),
+    upload("mapa-inca.png", "image/png", png(8, 4, [200, 120, 40])),
+    seedPage(PAGE.replace("PATTERN_REF", String(pattern.json.id)) + "\n" + COMPANY + "\n" + LEGAL, "sedes-prueba"),
+    seedPage(pageButton("palma"), "sede-palma"),
+  ]);
   assert.equal(img.status, 201, img.text);
   assert.equal(img2.status, 201, img2.text);
-  [image, other, page] = [img.json, img2.json, p];
+  [image, other, page, palmaPage] = [img.json, img2.json, p, pp];
   const make = async (title, slug, status, m) => {
     const r = await wp(`/${type("location")}`, { method: "POST", body: { title, slug, status, meta: m } });
     assert.equal(r.status, 201, r.text);
@@ -152,9 +189,14 @@ before(async () => {
     make("No such post", "no-existe-id", "draft", { estrategia_web_location_static_map_id: 999999 }),
     make("Negative", "negativo", "draft", { estrategia_web_location_static_map_id: -3 }),
   ]);
-  const r = await html(page.url);
+  const priv = (u) => u + (u.includes("?") ? "&" : "?") + "ew_lb_private=1";
+  const [r, rp, rpp] = await Promise.all([html(page.url), html(priv(page.url)), html(priv(palmaPage.url))]);
   assert.equal(r.status, 200);
+  assert.equal(rp.status, 200);
+  assert.equal(rpp.status, 200);
   text = r.text;
+  privateText = rp.text;
+  palmaPrivate = rpp.text;
 });
 
 const between = (t, cls, tag) => t.match(new RegExp(`<${tag}[^>]*${cls}[^>]*>([\\s\\S]*?)</${tag}>`))?.[1];
@@ -197,6 +239,14 @@ test("without slug, inside a Query of locations: each <li> shows the address of 
   assert.equal(between(li[1], "t-addr", "p").replace(/\n/g, ""), "Carrer de Maioris 3<br>07620 Llucmajor");
   assert.equal(between(li[1], "t-phone", "p"), "tel:+34971112233");
   assert.equal(between(li[2], "t-addr", "p").replace(/\n/g, ""), "Carrer de Palma 1<br>07001 Palma");
+});
+
+test("page_url: without slug in a Query, a public type gives each location's permalink; a non-public one, the page tied to it (or home)", () => {
+  assert.deepEqual(items().map((li) => href(li, "t-page")), [made[2].link, made[0].link, made[1].link], "Inca, Maioris, Palma: their own pages");
+  assert.deepEqual([href(text, "t-page-maioris"), href(text, "t-page-inca")], [made[0].link, made[2].link], "by slug, the same");
+  assert.equal(href(privateText, "t-page-maioris"), page.url, "not public: Maioris → this page (it binds to maioris)");
+  assert.equal(href(palmaPrivate, "t-page-palma"), palmaPage.url, "not public: Palma → sede-palma");
+  assert.equal(href(privateText, "t-page-inca"), new URL(page.url).origin + "/", "not public: Inca → home (tied only through a synced pattern)");
 });
 
 test("estrategia_web_location_static_map_id: an image attachment is saved; an id that is not an image attachment, 0", () => {

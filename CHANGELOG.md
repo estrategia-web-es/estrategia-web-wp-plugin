@@ -9,6 +9,35 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.18.0 — 26-11-2026 (locations: the page of each one in a Query, and the Google profile)
+
+**What each site must do:** nothing to keep working. A site whose locations
+definition is a COPY of the template (Content types) is offered the new
+field in the Content types editor and adds it with its button; until
+then it has no Google profile field. Born with the Llar d'Estels audit.
+
+- **New binding key `estrategia_web_location_page_url`** (source
+  `estrategia-web-site/location`): the URL of the page tied to the location
+  — its permalink if the type has public pages; otherwise the published page
+  whose blocks bind to its slug; otherwise home. The same rule as the front
+  page's departments (2.16.1), moved from local-business to the site module
+  (`Location_Pages`, modules/site/includes/class-location-pages.php) so it
+  works with local-business switched off. For the button of each card:
+  `{"url":{"source":"estrategia-web-site/location","args":{"key":"estrategia_web_location_page_url"}}}`,
+  no slug. **The trap:** WordPress' Query Loop does not list a post type
+  that is not viewable (`"public": false`; core's
+  `build_query_vars_from_query_block()`), so with such a type the loop shows
+  posts, and the key works only by slug. Test: site `location.test.mjs`.
+- **New location field «Google Business profile»**
+  (`estrategia_web_location_google_profile`, a URL, group «For Google»).
+  When filled in with an http(s) URL, the location's LocalBusiness node gets
+  `sameAs: [it]` and `hasMap: it`; nothing when empty. The company's sameAs
+  (social links) does not change. Tests: `graph.test.mjs` (level 1),
+  `output.test.mjs`.
+- docs/web-nueva.md, section 2: FAQs are `core/accordion` with the parent's
+  «FAQ (list)» style; content-type content is listed with a Query Loop and
+  bindings, never by hand.
+
 ## 2.17.0 — 26-11-2026 (new module: security headers)
 
 **What each site must do:** nothing; the module ships off. A site that wants

@@ -5389,7 +5389,7 @@ msgid "TikTok"
 msgstr ""
 
 #: modules/site/includes/class-company.php:147
-#: modules/site/includes/class-location.php:161
+#: modules/site/includes/class-location.php:169
 msgid "Phone (link)"
 msgstr ""
 
@@ -5398,7 +5398,7 @@ msgid "Secondary phone (link)"
 msgstr ""
 
 #: modules/site/includes/class-company.php:149
-#: modules/site/includes/class-location.php:162
+#: modules/site/includes/class-location.php:170
 msgid "Email (link)"
 msgstr ""
 
@@ -5406,32 +5406,36 @@ msgstr ""
 msgid "WhatsApp (link)"
 msgstr ""
 
-#: modules/site/includes/class-location.php:74
+#: modules/site/includes/class-location.php:80
 msgid "Location details"
 msgstr ""
 
-#: modules/site/includes/class-location.php:151
+#: modules/site/includes/class-location.php:159
 msgid "Address (text)"
 msgstr ""
 
-#: modules/site/includes/class-location.php:152
+#: modules/site/includes/class-location.php:160
 msgid "Opening hours (text)"
 msgstr ""
 
-#: modules/site/includes/class-location.php:153
+#: modules/site/includes/class-location.php:161
 msgid "Google Maps link"
 msgstr ""
 
-#: modules/site/includes/class-location.php:154
+#: modules/site/includes/class-location.php:162
 msgid "Map embed URL"
 msgstr ""
 
-#: modules/site/includes/class-location.php:155
+#: modules/site/includes/class-location.php:163
 msgid "Static map image (URL)"
 msgstr ""
 
-#: modules/site/includes/class-location.php:157
+#: modules/site/includes/class-location.php:165
 msgid "Location name"
+msgstr ""
+
+#: modules/site/includes/class-location.php:171
+msgid "Location page (link)"
 msgstr ""
 
 #: modules/site/includes/class-settings.php:169

@@ -1078,6 +1078,7 @@ vielen Dank für Ihre Nachricht. Wir haben sie erhalten und melden uns in Kürze
 		'Map embed URL' => 'Karten-Einbettungs-URL',
 		'Static map image (URL)' => 'Statisches Kartenbild (URL)',
 		'Location name' => 'Name des Standorts',
+		'Location page (link)' => 'Seite des Standorts (Link)',
 		'Company details and site options of the Estrategia Web Site plugin.' => 'Firmendaten und Website-Optionen des Plugins Estrategia Web Site.',
 		'The email address is not valid. The previous one has been kept.' => 'Die E-Mail-Adresse ist ungültig. Die vorherige wurde beibehalten.',
 		'The WhatsApp number is not valid (international format, digits only). The previous one has been kept.' => 'Die WhatsApp-Nummer ist ungültig (internationales Format, nur Ziffern). Die vorherige wurde beibehalten.',

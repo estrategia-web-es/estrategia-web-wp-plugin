@@ -77,6 +77,24 @@ test("a location is left out without a name or an address Google can use; empty 
   assert.deepEqual(check.warnings, ["telephone (recommended) is missing", "openingHoursSpecification (recommended) is missing", "geo (recommended) is missing", "url (recommended) is missing", "image (recommended) is missing"]);
 });
 
+// 2.18.0 (Llar d'Estels audit, 26-11-2026): each location's Google Business profile.
+// Seen red (26-11-2026) with local_business() not filtering the scheme: the javascript: and ftp: cases
+// came out as sameAs/hasMap; and with hasMap left out: the filled-in case failed.
+test("a location's Google Business profile: sameAs [it] and hasMap; nothing when empty or not http(s)", () => {
+  const CID = "https://maps.google.com/?cid=7417053169526176902";
+  const node = one("local_business", { ...SON_OMS, google: CID });
+  assert.deepEqual(node.sameAs, [CID]);
+  assert.equal(node.hasMap, CID);
+  assert.deepEqual(checkLocalBusiness(node, TYPES), { errors: [], warnings: [] });
+  for (const bad of ["", "  ", "javascript:alert(1)", "ftp://maps.google.com/x", "maps.google.com/?cid=1"]) {
+    const n = one("local_business", { ...SON_OMS, google: bad });
+    assert.equal(n.sameAs, undefined, JSON.stringify(bad));
+    assert.equal(n.hasMap, undefined, JSON.stringify(bad));
+  }
+  const org = one("organization", COMPANY, [one("local_business", { ...SON_OMS, google: CID, parent: "" })]);
+  assert.deepEqual(org.sameAs, ["https://www.facebook.com/x"], "the company's sameAs does not change");
+});
+
 test("the Organization: only web links in sameAs, once each; the locations as departments", () => {
   const dept = one("local_business", { ...SON_OMS, parent: "" });
   const org = one("organization", COMPANY, [dept]);

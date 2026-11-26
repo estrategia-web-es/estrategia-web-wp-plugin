@@ -60,6 +60,7 @@ require_once __DIR__ . '/includes/class-settings.php';
 require_once __DIR__ . '/includes/class-company.php';
 require_once __DIR__ . '/includes/class-bindings.php';
 require_once __DIR__ . '/includes/class-location.php';
+require_once __DIR__ . '/includes/class-location-pages.php';
 require_once __DIR__ . '/includes/class-shortcode.php';
 require_once __DIR__ . '/includes/class-content-types.php';
 require_once __DIR__ . '/includes/class-svg.php';
