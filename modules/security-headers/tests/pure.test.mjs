@@ -59,3 +59,8 @@ test("estrategia_web_security_headers: a site can leave a header out or change i
   assert.ok(!("Permissions-Policy" in out.filtered));
   assert.equal(out.filtered["X-Frame-Options"], "DENY");
 });
+
+test("WPML's generator meta tag (its version) is unhooked from wp_head", () => {
+  ok();
+  assert.deepEqual(out.wpml, [["wp_head", "meta_generator_tag"]]);
+});

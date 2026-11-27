@@ -9,6 +9,17 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.18.0 — 27-11-2026 (security headers: WPML's version out of the HTML)
+
+**What each site must do:** nothing. The headers (HSTS, X-Frame-Options,
+Referrer-Policy, Permissions-Policy) were already in the «Security headers»
+module (2.17.0), which ships off: a site with WPML that shows no headers has
+the module switched off; switch it on in Estrategia Web → Modules.
+
+- **Security headers: WPML's generator tag is removed.** WPML prints
+  `<meta name="generator" content="WPML ver:…">` on every page; with the
+  module on, it is unhooked from wp_head on «wp». Test: `pure.test.mjs`.
+
 ## 2.17.0 — 26-11-2026 (new module: security headers)
 
 **What each site must do:** nothing; the module ships off. A site that wants

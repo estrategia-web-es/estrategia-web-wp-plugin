@@ -44,6 +44,10 @@ defined( 'ABSPATH' ) || exit;
  *   twice. Header always set from SiteGround Security's .htaccess replaces
  *   ours, so its nosniff is not duplicated; anything else seen twice on a
  *   real site is fixed with the filter (return the header without that key).
+ * - WPML's version (2.18.0): WPML prints <meta name="generator" content="WPML ver:x.y.z …"> from
+ *   SitePress::meta_generator_tag on wp_head. It is unhooked on «wp» (after
+ *   WPML has hooked it, before wp_head runs). It only touches that WPML
+ *   method; WordPress' own generator is SiteGround Security's.
  * - The pitfall: X-Powered-By is not in wp_headers; PHP adds it before
  *   WordPress starts, so it is removed with header_remove(), which only works
  *   if the hosting has not added it AFTER PHP (some do, from the web server):
@@ -115,6 +119,17 @@ add_action(
 	static function (): void {
 		if ( ! headers_sent() ) {
 			header_remove( 'X-Powered-By' );
+		}
+	}
+);
+
+/** WPML publishes its version in a generator meta tag: take it off the public HTML. */
+add_action(
+	'wp',
+	static function (): void {
+		global $sitepress;
+		if ( is_object( $sitepress ) && method_exists( $sitepress, 'meta_generator_tag' ) ) {
+			remove_action( 'wp_head', array( $sitepress, 'meta_generator_tag' ) );
 		}
 	}
 );
