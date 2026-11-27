@@ -11,15 +11,15 @@ four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
 ## 2.18.0 — 27-11-2026 (llms.txt without a written text)
 
-**What each site must do:** a site that already saved its module list and gets
-404 on /llms.txt switches «llms.txt» on in Estrategia Web → Modules, or runs
-`tools/activar-llms.sh` (it has `--seco`), then checks `/llms.txt`.
+**What each site must do:** nothing; the module ships off. A site switches
+«llms.txt» on in Estrategia Web → Modules (or runs `tools/activar-llms.sh`, it
+has `--seco`) once its text is reviewed, then checks `/llms.txt`.
 
 - `llms`: a language without a saved text is served a generated draft (site
   name, description, company facts and main pages) instead of a 404; a text
-  written in Settings › llms.txt still replaces it. Disabling = switching the
-  module off. `Default: on` (only reaches sites that never saved their module
-  list). Audit issue #16 (gastronomicament).
+  written in Settings › llms.txt still replaces it. `Default: off` (decision
+  of 27-11-2026: switched on site by site, once its text is reviewed). Audit
+  issue #16 (gastronomicament).
 
 ## 2.17.0 — 26-11-2026 (new module: security headers)
 

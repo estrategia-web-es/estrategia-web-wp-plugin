@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Module Name: llms.txt
  * Description: Serves /llms.txt, the text AI assistants read to describe the site: generated from the site's name, description and main pages, or written in «Estrategia Web › Settings › llms.txt», one per language with WPML.
- * Default: on
+ * Default: off
  * Requires:
  * Category: SEO
  *
@@ -33,11 +33,10 @@ defined( 'ABSPATH' ) || exit;
  * (Runtime::with_drafts), so switching the module on is enough. The option to
  * disable it is the module's switch in «Estrategia Web › Modules» (off → 404).
  *
- * WHY Default: on (27-11-2026): what applies to every site goes in the
- * plugin. It only reaches sites that have never saved their module list
- * (llms is already in _known on the others: edge case in
- * includes/class-modules.php), so the rest turn it on by hand or with
- * tools/activar-llms.sh.
+ * WHY Default: off (David, 27-11-2026): the generated draft is public text
+ * nobody has reviewed (it includes company facts), so each site switches the
+ * module on once its text is reviewed: in «Estrategia Web › Modules», or
+ * with tools/activar-llms.sh.
  *
  * Where everything lives:
  *   includes/class-text.php       the pure part: which request is a llms.txt

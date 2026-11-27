@@ -87,7 +87,7 @@ The cookie list includes an extract of the Open Cookie Database (https://github.
 == Changelog ==
 
 = 2.18.0 =
-* The llms.txt module now serves a generated /llms.txt (site name, description and main pages) when no text has been written, and is on by default on sites that have never saved their module list.
+* The llms.txt module (still off by default) now serves a generated /llms.txt (site name, description and main pages) when no text has been written; switch it on site by site once its text is reviewed.
 
 = 2.17.0 =
 * New «Security headers» module, off by default: adds the browser security headers a site is missing (HSTS over https, framing only from the site itself, a referrer policy, no camera, microphone or location) and hides the PHP version, without repeating any header another plugin already sends.
