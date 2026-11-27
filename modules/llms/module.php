@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Module Name: llms.txt
- * Description: Serves /llms.txt, the text AI assistants read to describe the site, written in «Estrategia Web › Settings › llms.txt», one per language with WPML.
+ * Description: Serves /llms.txt, the text AI assistants read to describe the site: generated from the site's name, description and main pages, or written in «Estrategia Web › Settings › llms.txt», one per language with WPML.
  * Default: off
  * Requires:
  * Category: SEO
@@ -28,8 +28,15 @@ defined( 'ABSPATH' ) || exit;
  * others, because a bot asks for /llms.txt and does not negotiate
  * languages. That section is added here, never written by hand.
  *
- * WHY Default: off: it is a text someone has to write; an empty one serves
- * nothing (/llms.txt keeps answering 404).
+ * WITHOUT A WRITTEN TEXT (audit, 27-11-2026, issue #16: gastronomicament
+ * answered 404): a language with no saved text is served the generated draft
+ * (Runtime::with_drafts), so switching the module on is enough. The option to
+ * disable it is the module's switch in «Estrategia Web › Modules» (off → 404).
+ *
+ * WHY Default: off (David, 27-11-2026): the generated draft is public text
+ * nobody has reviewed (it includes company facts), so each site switches the
+ * module on once its text is reviewed: in «Estrategia Web › Modules», or
+ * with tools/activar-llms.sh.
  *
  * Where everything lives:
  *   includes/class-text.php       the pure part: which request is a llms.txt
@@ -75,9 +82,10 @@ require_once __DIR__ . '/includes/class-languages.php';
 require_once __DIR__ . '/includes/class-conflicts.php';
 require_once __DIR__ . '/includes/class-runtime.php';
 
+require_once __DIR__ . '/includes/admin/class-tab.php'; // Also on the front end: Runtime uses Tab::draft().
+
 Runtime::boot();
 
 if ( is_admin() ) {
-	require_once __DIR__ . '/includes/admin/class-tab.php';
 	Tab::boot();
 }

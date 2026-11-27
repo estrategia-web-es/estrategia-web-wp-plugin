@@ -9,6 +9,18 @@ The history of the forms up to their 1.0.0 is in
 [modules/forms/CHANGELOG.md](modules/forms/CHANGELOG.md), and that of the
 four blocks, in the theme README (armazon-wp-padre, «Versions»).
 
+## 2.19.0 — 27-11-2026 (llms.txt without a written text)
+
+**What each site must do:** nothing; the module ships off. A site switches
+«llms.txt» on in Estrategia Web → Modules (or runs `tools/activar-llms.sh`, it
+has `--seco`) once its text is reviewed, then checks `/llms.txt`.
+
+- `llms`: a language without a saved text is served a generated draft (site
+  name, description, company facts and main pages) instead of a 404; a text
+  written in Settings › llms.txt still replaces it. `Default: off` (decision
+  of 27-11-2026: switched on site by site, once its text is reviewed). Audit
+  issue #16 (gastronomicament).
+
 ## 2.18.0 — 27-11-2026 (security headers: WPML's version out of the HTML)
 
 **What each site must do:** nothing. The headers (HSTS, X-Frame-Options,

@@ -12,8 +12,7 @@ defined( 'ABSPATH' ) || exit;
  * (the file is for assistants, not a result in Google; Rank Math sends the
  * same) and «X-Content-Type-Options: nosniff» (the text is not escaped: it is
  * served as text and must never be read as HTML). HEAD gets the headers only.
- * A language without text is not answered: the request goes on and ends in
- * WordPress's normal 404.
+ * A language without a saved text gets the generated draft (with_drafts()).
  *
  * How to maintain: a header to add goes in serve(); what the file says is
  * Text::body().
@@ -65,11 +64,33 @@ final class Runtime {
 			return;
 		}
 		$code  = '' === $code ? Languages::current() : $code;
-		$texts = self::texts();
+		$texts = self::with_drafts( self::texts(), $code );
 		if ( ! isset( $texts[ $code ] ) ) {
 			return;
 		}
 		self::serve( self::body( $code, $texts ) );
+	}
+
+	/**
+	 * The saved texts plus, for each language WITHOUT one, the generated draft
+	 * (Tab::draft(): site name, description and main pages). So with the module
+	 * on, /llms.txt never answers 404; writing a text in the tab replaces the
+	 * draft for that language. Only built when /llms.txt is requested.
+	 *
+	 * @param array<string, string> $texts Saved texts.
+	 * @return array<string, string>
+	 */
+	public static function with_drafts( array $texts, string $code ): array {
+		$codes = array_unique( array_merge( array( $code ), array_keys( Languages::all() ) ) );
+		foreach ( $codes as $c ) {
+			if ( ! isset( $texts[ $c ] ) ) {
+				$draft = trim( Tab::draft( (string) $c ) );
+				if ( '' !== $draft ) {
+					$texts[ $c ] = $draft;
+				}
+			}
+		}
+		return $texts;
 	}
 
 	/** The file of a language: its text, and the other languages' links in the default one's. */
