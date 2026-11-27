@@ -4,7 +4,7 @@ Tags: cookie consent, contact form, redirects, schema, gdpr
 Requires at least: 7.1
 Tested up to: 7.2
 Requires PHP: 8.1
-Stable tag: 2.18.0
+Stable tag: 2.19.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,8 +86,11 @@ The cookie list includes an extract of the Open Cookie Database (https://github.
 
 == Changelog ==
 
-= 2.18.0 =
+= 2.19.0 =
 * The llms.txt module (still off by default) now serves a generated /llms.txt (site name, description and main pages) when no text has been written; switch it on site by site once its text is reviewed.
+
+= 2.18.0 =
+* Security headers module: it also removes WPML's version from the public HTML (the generator meta tag).
 
 = 2.17.0 =
 * New «Security headers» module, off by default: adds the browser security headers a site is missing (HSTS over https, framing only from the site itself, a referrer policy, no camera, microphone or location) and hides the PHP version, without repeating any header another plugin already sends.

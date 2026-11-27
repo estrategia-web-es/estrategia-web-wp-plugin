@@ -1,0 +1,126 @@
+# Publica el plugin en WordPress.org al crear una release (Tafona, 26-11-2026).
+# DEBE VIVIR en .github/workflows/publicar.yml: se entrega en tools/ porque la
+# app que abrió la PR no puede escribir en .github/workflows. Muévelo con
+#   git mv tools/publicar.yml .github/workflows/publicar.yml
+# Qué entra en el paquete lo decide .gitattributes (export-ignore), igual que
+# `node tools/wporg.mjs zip`; aquí se empaqueta con `git archive` y la acción de
+# 10up sube esa carpeta (BUILD_DIR), así que NO hace falta un .distignore.
+name: Publicar en WordPress.org
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Versión a probar en seco (X.Y.Z); sube NADA"
+        required: true
+
+permissions:
+  contents: write   # adjuntar el zip a la release
+
+env:
+  SLUG: estrategiaweb-toolkit
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    env:
+      EVENTO: ${{ github.event_name }}
+      ETIQUETA: ${{ github.event.release.tag_name || format('v{0}', inputs.version) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || github.sha }}
+
+      - name: Comprobar que la versión es la de la etiqueta
+        id: version
+        run: |
+          set -eu
+          version="${ETIQUETA#v}"
+          if ! printf '%s' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::La etiqueta «$ETIQUETA» no es vX.Y.Z."; exit 1
+          fi
+          cabecera=$(sed -n 's/^ \* Version:[[:space:]]*//p' estrategia-web.php | head -1 | tr -d '\r ')
+          stable=$(sed -n 's/^Stable tag:[[:space:]]*//p' readme.txt | head -1 | tr -d '\r ')
+          # El plugin la declara así: const ESTRATEGIA_WEB_VERSION = 'X.Y.Z';
+          constante=$(sed -n "s/^[[:space:]]*const ESTRATEGIA_WEB_VERSION[[:space:]]*=[[:space:]]*'\([^']*\)'.*/\1/p" estrategia-web.php | head -1)
+          if [ -z "$constante" ]; then
+            echo "::error::No encuentro «const ESTRATEGIA_WEB_VERSION = '…';» en estrategia-web.php; la comprobación no puede darse por buena."; exit 1
+          fi
+          fallo=0
+          [ "$cabecera" = "$version" ] || { echo "::error::Version: de estrategia-web.php es «$cabecera», la etiqueta es «$version»."; fallo=1; }
+          [ "$stable" = "$version" ] || { echo "::error::Stable tag de readme.txt es «$stable», la etiqueta es «$version»."; fallo=1; }
+          [ "$constante" = "$version" ] || { echo "::error::ESTRATEGIA_WEB_VERSION es «$constante», la etiqueta es «$version»."; fallo=1; }
+          [ "$fallo" = 0 ] || exit 1
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Comprobar las credenciales del SVN
+        if: github.event_name == 'release'
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        run: |
+          if [ -z "$SVN_USERNAME" ] || [ -z "$SVN_PASSWORD" ]; then
+            echo "::error::Faltan los secretos SVN_USERNAME y/o SVN_PASSWORD (Settings → Secrets and variables → Actions). No se ha intentado publicar nada."
+            exit 1
+          fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+
+      - name: Pruebas de nivel 1 (PHP sin WordPress)
+        run: node tests/run.mjs --nivel 1
+
+      - name: Preparar el paquete (git archive, reglas de .gitattributes)
+        run: |
+          set -eu
+          mkdir -p "$RUNNER_TEMP/paquete" dist
+          git archive --format=tar HEAD | tar -x -C "$RUNNER_TEMP/paquete"
+          echo "BUILD_DIR=$RUNNER_TEMP/paquete" >> "$GITHUB_ENV"
+
+      - name: Plugin Check
+        uses: WordPress/plugin-check-action@v1
+        with:
+          build-dir: ${{ env.BUILD_DIR }}
+          exclude-checks: ""
+
+      - name: Publicar en WordPress.org
+        id: deploy
+        # Fijada a una versión concreta; súbela a mano, revisando su changelog.
+        uses: 10up/action-wordpress-plugin-deploy@2.3.0
+        env:
+          SVN_USERNAME: ${{ github.event_name == 'release' && secrets.SVN_USERNAME || 'prueba-en-seco' }}
+          SVN_PASSWORD: ${{ github.event_name == 'release' && secrets.SVN_PASSWORD || 'prueba-en-seco' }}
+          SLUG: ${{ env.SLUG }}
+          VERSION: ${{ steps.version.outputs.version }}
+          BUILD_DIR: ${{ env.BUILD_DIR }}
+          ASSETS_DIR: .wordpress-org
+          GENERATE_ZIP: true
+          # En seco (workflow_dispatch): lista lo que subiría, sin subir.
+          DRY_RUN: ${{ github.event_name != 'release' }}
+
+      - name: Adjuntar el zip a la release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$ETIQUETA" "${{ steps.deploy.outputs.zip-path }}" --clobber
+
+  # Once it is on WordPress.org (only on a real release, not the dry run): the
+  # issues of this release go to «Publicado» on the board and get the label
+  # «publicado», which starts Tafona's verification (David, 27-11-2026).
+  # Without the secret TAFONA_TOKEN in this repo they get the label but are
+  # not verified on their own: the run says so with a warning.
+  publicado:
+    needs: publicar
+    if: github.event_name == 'release'
+    permissions: { contents: read, issues: write, pull-requests: read }
+    uses: estrategia-web-es/tafona/.github/workflows/publicado.yml@main
+    with:
+      version: ${{ github.event.release.tag_name }}
+    secrets:
+      TAFONA_TOKEN: ${{ secrets.TAFONA_TOKEN }}

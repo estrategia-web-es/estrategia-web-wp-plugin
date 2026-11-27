@@ -42,7 +42,20 @@ A change is born from ONE site: an incident, or a request for a feature.
    something risky (asked for in the pull request), not required. The real
    brake will be the level 1 tests on GitHub Actions (TODO.md): when they
    exist, a red one will block the merge.
-6. **Publish on WordPress.org**, from `main` after the merge:
+6. **Publish on WordPress.org by creating a release** (OK from David or Juan).
+   Merging only accumulates in `main`; the release publishes. To prepare a
+   version: an issue «Publicar vX.Y.Z» with the `claude` label opens the
+   version pull request (the number in the three places, CHANGELOG, readme).
+   Once merged, create the release with tag `vX.Y.Z` on GitHub: the workflow
+   `publicar.yml` checks the tag against `Version:` and `Stable tag:`, runs the
+   level 1 tests and Plugin Check, publishes `trunk` and `tags/X.Y.Z` with
+   `10up/action-wordpress-plugin-deploy` (assets of `.wordpress-org/` if it
+   exists) and attaches the zip to the release. It needs the secrets
+   `SVN_USERNAME` and `SVN_PASSWORD` (until they exist it fails with a clear
+   message and does nothing). Dry run: Actions → «Publicar en WordPress.org» →
+   Run workflow with a version: it lists what it would upload, uploads nothing.
+   What travels is decided by `.gitattributes` (`export-ignore`), so there is
+   no `.distignore`. The manual way, if the workflow is down:
 
        node tools/wporg.mjs check     0 errors; read the warnings
 
