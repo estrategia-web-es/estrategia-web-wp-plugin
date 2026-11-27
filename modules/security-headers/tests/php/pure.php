@@ -24,6 +24,9 @@ function add_action( $hook, $cb, $prio = 10 ) {
 function apply_filters( $hook, $value ) {
 	return $GLOBALS['filter'] ? ( $GLOBALS['filter'] )( $value ) : $value;
 }
+function remove_action( $hook, $cb ) {
+	$GLOBALS['removed'][] = array( $hook, $cb );
+}
 function is_ssl() {
 	return $GLOBALS['https'];
 }
@@ -54,5 +57,13 @@ $GLOBALS['filter'] = static function ( $h ) {
 	return $h;
 };
 $out['filtered'] = missing( array(), array(), true );
+
+// WPML: its generator tag is unhooked on «wp».
+class FakeSitePress {
+	public function meta_generator_tag() {}
+}
+$sitepress = new FakeSitePress();
+$GLOBALS['hooks']['wp'][0]();
+$out['wpml'] = array_map( static fn( $r ) => array( $r[0], $r[1][1] ), $GLOBALS['removed'] ?? array() );
 
 echo json_encode( $out );
