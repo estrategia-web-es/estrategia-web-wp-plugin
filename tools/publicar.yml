@@ -109,3 +109,18 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release upload "$ETIQUETA" "${{ steps.deploy.outputs.zip-path }}" --clobber
+
+  # Once it is on WordPress.org (only on a real release, not the dry run): the
+  # issues of this release go to «Publicado» on the board and get the label
+  # «publicado», which starts Tafona's verification (David, 27-11-2026).
+  # Without the secret TAFONA_TOKEN in this repo they get the label but are
+  # not verified on their own: the run says so with a warning.
+  publicado:
+    needs: publicar
+    if: github.event_name == 'release'
+    permissions: { contents: read, issues: write, pull-requests: read }
+    uses: estrategia-web-es/tafona/.github/workflows/publicado.yml@main
+    with:
+      version: ${{ github.event.release.tag_name }}
+    secrets:
+      TAFONA_TOKEN: ${{ secrets.TAFONA_TOKEN }}
