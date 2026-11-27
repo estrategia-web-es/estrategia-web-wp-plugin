@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Module Name: Content migrations
- * Description: Runs the content migrations the site's child theme ships in its migraciones/ folder, once each, when the theme's version changes or from WP-CLI.
+ * Description: Runs the content migrations the site's child theme ships in its migraciones/ folder, once each, only from WP-CLI (the deploy runs it); the dashboard warns of pending ones.
  * Default: off
  * Requires:
  * Category: Content
@@ -33,17 +33,23 @@ defined( 'ABSPATH' ) || exit;
  * (exception or false), it stops there and the rest do not run; a failed one
  * is tried again next time (it is not «applied»).
  *
- * When: when the theme's Version (style.css) differs from the last one seen
- * (option estrategia_web_migraciones_version), or with WP-CLI:
+ * When (decision by David, 27-11-2026): ONLY the deploy runs them. aplicar.sh,
+ * right after copying the child theme, runs
  *
- *     wp estrategia-web migraciones estado
- *     wp estrategia-web migraciones aplicar [--seco]
+ *     wp estrategia migrar [--seco]
+ *     wp estrategia estado
  *
- * A lock (add_option is atomic) stops two simultaneous visits from running
- * the same migration twice; it expires after 5 minutes. The version is
- * written ONLY if the run ended well: if the lock is held or a migration
- * fails, it is not, and the next load tries again (the ones already applied
- * are not repeated: they are recorded one by one).
+ * If a migration fails the command exits with an error and the deploy goes
+ * red. NEVER on a visit: nothing on init or any request hook, so a migration
+ * does not run half-way with traffic and no visitor can trigger one. The
+ * command can be repeated with no effect: what is applied is not applied again.
+ *
+ * If the plugin is deployed but the command was not run, administrators see a
+ * notice on the dashboard (admin_notices) listing the pending ones. It only
+ * warns; it does not run anything.
+ *
+ * A lock (add_option is atomic) stops two simultaneous runs from applying the
+ * same migration twice; it expires after 5 minutes.
  *
  * Log: every run leaves a line in the PHP error log and fires the action
  * estrategia_web_migracion( $name, $result, $detail ). (There is no shared
@@ -58,14 +64,14 @@ defined( 'ABSPATH' ) || exit;
 require_once __DIR__ . '/includes/class-migracion.php';
 require_once __DIR__ . '/includes/class-runner.php';
 
-add_action( 'init', array( Runner::class, 'on_init' ), 20 );
+add_action( 'admin_notices', array( Runner::class, 'notice' ) );
 
 add_action(
 	'plugins_loaded',
 	static function () {
 		if ( defined( 'WP_CLI' ) && WP_CLI && class_exists( '\WP_CLI' ) ) {
 			require_once __DIR__ . '/includes/class-cli.php';
-			\WP_CLI::add_command( 'estrategia-web migraciones', Cli::class );
+			\WP_CLI::add_command( 'estrategia', Cli::class );
 		}
 	},
 	0

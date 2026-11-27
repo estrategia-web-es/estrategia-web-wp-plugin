@@ -13,7 +13,7 @@ final class Cli {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp estrategia-web migraciones estado
+	 *     wp estrategia estado
 	 *
 	 * @param array $args  Unused.
 	 * @param array $assoc Unused.
@@ -35,7 +35,7 @@ final class Cli {
 	}
 
 	/**
-	 * Applies the pending migrations, in order, stopping at the first failure.
+	 * Applies the pending migrations, in order, stopping at the first failure (exit code 1, so the deploy goes red). Safe to repeat: what is applied is not applied again.
 	 *
 	 * ## OPTIONS
 	 *
@@ -44,12 +44,12 @@ final class Cli {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp estrategia-web migraciones aplicar --seco
+	 *     wp estrategia migrar --seco
 	 *
 	 * @param array $args  Unused.
 	 * @param array $assoc Flags.
 	 */
-	public function aplicar( $args, $assoc ) {
+	public function migrar( $args, $assoc ) {
 		$dry = ! empty( $assoc['seco'] );
 		$res = Runner::run( $dry );
 		foreach ( $res['applied'] as $name ) {

@@ -65,29 +65,27 @@ $out['falla_hecho'] = array_map( static fn( $d ) => $d['resultado'], Runner::don
 $out['falla_pendientes'] = array_keys( Runner::pending( $files, Runner::done() ) );
 $out['falla_acciones'] = $GLOBALS['actions'];
 
-// Theme version: not recorded if a migration fails or the lock is held.
+// A failure is logged; the next run retries only what failed; repeating does nothing.
 $GLOBALS['opts'] = array();
 $GLOBALS['actions'] = array();
-$r1 = Runner::run_for_version( '1.1', $files );
-$out['ver_falla_status']   = $r1['status'];
-$out['ver_falla_apuntada'] = $GLOBALS['opts'][ Runner::OPT_VERSION ] ?? null;
-$out['ver_falla_hecho']    = array_map( static fn( $d ) => $d['resultado'], Runner::done() );
-$out['ver_falla_log']      = $GLOBALS['actions'];
-// Next load: the good one is not repeated, the failed one is retried (and fails again).
+Runner::run( false, $files );
+$out['ver_falla_log'] = $GLOBALS['actions'];
 $GLOBALS['actions'] = array();
-$r2 = Runner::run_for_version( '1.1', $files );
-$out['ver_reintento'] = array( $r2['status'], $r2['applied'], $r2['failed'] );
-$out['ver_reintento_apuntada'] = $GLOBALS['opts'][ Runner::OPT_VERSION ] ?? null;
-// Fixed: now it runs to the end and the version is recorded.
+$r2 = Runner::run( false, $files );
+$out['reintento'] = array( $r2['status'], $r2['applied'], $r2['failed'] );
 $mk( '2026-11-27-segunda', 'return "dos";' );
-$r3 = Runner::run_for_version( '1.1', $files );
-$out['ver_ok'] = array( $r3['status'], $r3['applied'], $GLOBALS['opts'][ Runner::OPT_VERSION ] ?? null );
-$out['ver_igual'] = Runner::run_for_version( '1.1', $files );
-// Lock held: version not recorded.
-$GLOBALS['opts'] = array( Runner::OPT_LOCK => time() );
-Runner::run_for_version( '2.0', $files );
-$out['ver_bloqueo_apuntada'] = $GLOBALS['opts'][ Runner::OPT_VERSION ] ?? null;
+$r3 = Runner::run( false, $files );
+$out['arreglada'] = array( $r3['status'], $r3['applied'] );
+$out['repetir'] = Runner::run( false, $files )['applied'];
 $mk( '2026-11-27-segunda', 'throw new \RuntimeException("rota");' );
+
+// The notice's list: pending names only; nothing is written.
+$GLOBALS['opts'] = array( Runner::OPT_DONE => array( '2026-11-26-primera' => array( 'resultado' => 'ok' ) ) );
+$before = $GLOBALS['opts'];
+$out['avisa'] = Runner::pending_names( $files );
+$out['avisa_no_escribe'] = $GLOBALS['opts'] === $before;
+// No request entry point in the runner.
+$out['sin_init'] = ! method_exists( Runner::class, 'on_init' ) && ! method_exists( Runner::class, 'run_for_version' );
 
 // Lock held by someone else: nothing runs; a stale lock is replaced.
 $GLOBALS['opts'] = array( Runner::OPT_LOCK => time() );

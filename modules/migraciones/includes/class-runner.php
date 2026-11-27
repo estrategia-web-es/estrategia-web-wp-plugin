@@ -9,36 +9,36 @@ defined( 'ABSPATH' ) || exit;
  */
 final class Runner {
 
-	const OPT_DONE    = 'estrategia_web_migraciones';
-	const OPT_VERSION = 'estrategia_web_migraciones_version';
-	const OPT_LOCK    = 'estrategia_web_migraciones_lock';
-	const LOCK_TTL    = 300;
+	const OPT_DONE = 'estrategia_web_migraciones';
+	const OPT_LOCK = 'estrategia_web_migraciones_lock';
+	const LOCK_TTL = 300;
 
 	/**
-	 * Hooked to init: runs when the theme's version changed.
+	 * Names of the pending migrations (never applied successfully). Read-only.
+	 *
+	 * @return string[]
 	 */
-	public static function on_init(): void {
-		self::run_for_version( (string) wp_get_theme()->get( 'Version' ) );
+	public static function pending_names( ?array $files = null ): array {
+		return array_keys( self::pending( $files ?? self::files(), self::done() ) );
 	}
 
 	/**
-	 * Runs the pending migrations if $version is not the one recorded. The
-	 * version is recorded ONLY when the run ended well: if the lock is held or
-	 * a migration fails, it is not, so the next load tries again (issue #18:
-	 * «si una falla, se para ahí»). What was applied before the failure stays
-	 * recorded per migration, and the failure is logged (apply_one).
-	 *
-	 * @return array|null The run result, or null if nothing had to run.
+	 * Dashboard notice: administrators see which migrations are pending. It
+	 * only warns; it never runs them (only the deploy does, via WP-CLI).
 	 */
-	public static function run_for_version( string $version, ?array $files = null ): ?array {
-		if ( '' === $version || get_option( self::OPT_VERSION ) === $version ) {
-			return null;
+	public static function notice(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
 		}
-		$res = self::run( false, $files );
-		if ( 'ok' === $res['status'] ) {
-			update_option( self::OPT_VERSION, $version, false );
+		$names = self::pending_names();
+		if ( ! $names ) {
+			return;
 		}
-		return $res;
+		printf(
+			'<div class="notice notice-warning"><p>%s</p><p>%s</p><p><code>wp estrategia migrar</code></p></div>',
+			esc_html__( 'Content migrations are pending: the deploy did not run them. They are NOT run from here.', 'estrategiaweb-toolkit' ),
+			esc_html( implode( ', ', $names ) )
+		);
 	}
 
 	/**
