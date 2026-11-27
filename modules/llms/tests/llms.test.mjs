@@ -46,10 +46,11 @@ after(async () => {
   await reset();
 });
 
-test("without text, /llms.txt is WordPress's normal 404", async () => {
+test("without saved text, /llms.txt serves the generated draft (not a 404)", async () => {
   const r = await get("/llms.txt");
-  assert.equal(r.status, 404);
-  assert.match(r.headers.get("content-type"), /text\/html/);
+  assert.equal(r.status, 200);
+  assert.equal(r.headers.get("content-type"), "text/plain; charset=utf-8");
+  assert.match(await r.text(), /^# .+/);
 });
 
 test("with text: 200, text/plain with charset, noindex, nosniff, and the text as it was written (%xx and <…> included)", async () => {
